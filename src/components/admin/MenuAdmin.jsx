@@ -23,7 +23,7 @@ function MenuAdmin(props) {
                     <h1 className='text-blue-500 text-2xl font-bold'>FIMO</h1>
                     <h1 className='text-pink-500 text-2xl font-bold'>Admin</h1>
                 </div> : <img src={Logo} alt="" className="w-20 h-15" />}
-                <button onClick={() => setmMenu(!Menu)} className='text-green-500 text-3xl ' >{!Menu ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}</button>
+                <button onClick={() => setmMenu(!Menu)} className='text-green-500 text-3xl  cursor-pointer ' >{!Menu ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}</button>
 
             </div>
 
@@ -33,7 +33,7 @@ function MenuAdmin(props) {
                         {Menu ? <MdDashboard className='text-3xl' /> : <div className="flex items-center gap-2"> <MdDashboard /> <p>Dashboard</p></div>}
 
                         <button onClick={() => setDashboard(!Dashboard)}
-                            className='hover:scale-150 duration-300 hover:text-yellow-400'>
+                            className='hover:scale-150 duration-300 hover:text-yellow-400  cursor-pointer'>
                             {Dashboard ? <FaCaretSquareUp /> : <FaCaretSquareDown />}
                         </button>
                     </div>
@@ -58,7 +58,7 @@ function MenuAdmin(props) {
                         </div>}
 
                         <button onClick={() => setCategories(!Categories)}
-                            className='hover:scale-150 duration-300 hover:text-yellow-400'>
+                            className='hover:scale-150 duration-300 hover:text-yellow-400  cursor-pointer'>
                             {Categories ? <FaCaretSquareUp /> : <FaCaretSquareDown />}
                         </button>
                     </div>
@@ -81,7 +81,7 @@ function MenuAdmin(props) {
                             <p>Movies Manage</p>
                         </div>}
                         <button onClick={() => setMovies(!Movies)}
-                            className='hover:scale-150 duration-300 hover:text-yellow-400'>
+                            className='hover:scale-150 duration-300 hover:text-yellow-400  cursor-pointer'>
                             {Movies ? <FaCaretSquareUp /> : <FaCaretSquareDown />}
                         </button>
                     </div>
@@ -103,7 +103,7 @@ function MenuAdmin(props) {
                         </div>}
 
                         <button onClick={() => setUser(!User)}
-                            className='hover:scale-150 duration-300 hover:text-yellow-400'>
+                            className='hover:scale-150 duration-300 hover:text-yellow-400  cursor-pointer'>
                             {User ? <FaCaretSquareUp /> : <FaCaretSquareDown />}
                         </button>
                     </div>
@@ -128,7 +128,7 @@ function MenuAdmin(props) {
                         </div>}
 
                         <button onClick={() => setCastAndCrew(!CastAndCrew)}
-                            className='hover:scale-150 duration-300 hover:text-yellow-400'>
+                            className='hover:scale-150 duration-300 hover:text-yellow-400  cursor-pointer'>
                             {CastAndCrew ? <FaCaretSquareUp /> : <FaCaretSquareDown />}
                         </button>
                     </div>
@@ -153,7 +153,7 @@ function MenuAdmin(props) {
                         </div>}
 
                         <button onClick={() => setPlant(!Plant)}
-                            className='hover:scale-150 duration-300 hover:text-yellow-400'>
+                            className='hover:scale-150 duration-300 hover:text-yellow-400  cursor-pointer'>
                             {Plant ? <FaCaretSquareUp /> : <FaCaretSquareDown />}
                         </button>
                     </div>
@@ -178,7 +178,7 @@ function MenuAdmin(props) {
                         </div>}
 
                         <button onClick={() => setReview(!Review)}
-                            className='hover:scale-150 duration-300 hover:text-yellow-400'>
+                            className='hover:scale-150 duration-300 hover:text-yellow-400  cursor-pointer'>
                             {Review ? <FaCaretSquareUp /> : <FaCaretSquareDown />}
                         </button>
                     </div>
