@@ -31,22 +31,12 @@ function Search() {
                     <input
                         type="text"
                         placeholder='Search categories...'
-                        className='w-full pl-4 pr-10 py-2
-                    rounded-lg
-                    bg-zinc-900
-                    border border-zinc-700
-                    text-sm
-                    placeholder-gray-400
-                    focus:outline-none
-                    focus:border-gray-400
-                    transition'
-                    />
-
-                    <BsSearch className='absolute right-3 top-1/2 -translate-y-1/2 text-2xl cursor-pointer' />
+                        className='w-full pl-4 pr-10 py-2 rounded-lg bg-zinc-900  border border-zinc-700 text-sm  placeholder-gray-400 focus:outline-none focus:border-gray-400 '/>
+                    <BsSearch className='absolute hover:text-green-600 hover:scale-110 duration-200 right-3 top-1/2 -translate-y-1/2 text-2xl cursor-pointer' />
                 </div>
 
                 <button className='p-2 rounded-2xl  hover:bg-green-500 cursor-pointer hover:text-red-700 hover:scale-125 duration-300 bg-amber-400 text-blue-500'>
-                    <IoMdAddCircle  className='text-xl' />
+                    <IoMdAddCircle className='text-xl' />
                 </button>
 
             </div>
