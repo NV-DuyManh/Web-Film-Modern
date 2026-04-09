@@ -8,7 +8,6 @@ import { MdEmail } from 'react-icons/md';
 function HeaderAdmin() {
     return (
         <>
-            {/* STYLE */}
             <style>{`
                 .animated-bg {
                     background: linear-gradient(-45deg, #0f172a, #020617, #1e1b4b, #020617);
@@ -44,7 +43,7 @@ function HeaderAdmin() {
             `}</style>
 
             <div className='animated-bg p-4 '>
-                <div className='flex justify-between items-center text-gray-200 shadow-xl'>
+                <div className='flex justify-between items-center text-gray-200 shadow-xl ml-4 mr-4'>
 
                     <h1 className='text-3xl font-bold tracking-wide glow-text'>
                         Welcome

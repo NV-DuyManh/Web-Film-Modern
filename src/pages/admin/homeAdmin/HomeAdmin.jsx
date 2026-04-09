@@ -5,7 +5,7 @@ import Search from '../../../components/admin/Search';
 
 function HomeAdmin(props) {
     return (
-        <div className='flex'>
+        <div className='md:flex'>
             <MenuAdmin />
             <div className='flex-1'>
                 <HeaderAdmin />
