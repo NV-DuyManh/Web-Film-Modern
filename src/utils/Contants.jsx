@@ -4,7 +4,7 @@ import { RiVipDiamondFill } from "react-icons/ri";
 
 export const LISTMENU = [
     {
-        name: "Meta Data",
+        name: "Metadata",
         icon:  <MdCategory  />,
         subMenu: [
             {
@@ -18,7 +18,7 @@ export const LISTMENU = [
         ]
     },
     {
-        name: "Movies Management",
+        name: "Movies",
         icon:  <MdLocalMovies />,
         subMenu: [
             {
@@ -36,7 +36,7 @@ export const LISTMENU = [
         ]
     },
     {
-        name: "Users Management",
+        name: "Users",
         icon: <FaUsers />,
         subMenu: [
             {
@@ -54,7 +54,7 @@ export const LISTMENU = [
         ]
     },
     {
-        name: "Cast & Crew",
+        name: "Cast",
         icon: <FaUserSecret />,
         subMenu: [
             {
@@ -72,7 +72,7 @@ export const LISTMENU = [
         ]
     },
     {
-        name: "Plans & Pricing",
+        name: "Plans",
         icon:   <MdOutlinePriceChange />,
         subMenu: [
             {

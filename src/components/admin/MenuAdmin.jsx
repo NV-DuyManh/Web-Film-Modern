@@ -13,13 +13,13 @@ function MenuAdmin(props) {
 
     const [Menu, setmMenu] = useState(false);
     return (
-        <div className={`flex flex-col p-3 bg-linear-to-r from-[#1e293b] to-[#475569] text-white md:h-screen transition-all duration-500 ease-in-out ${Menu ? "md:w-23" : "md:w-71"}`}>
+        <div className={`flex flex-col p-3 bg-linear-to-r from-[#1e293b] to-[#475569] text-white md:h-screen transition-all duration-500 ease-in-out ${Menu ? "md:w-23" : "md:w-49"}`}>
             <div className="flex justify-center items-center relative">
                 {!Menu ? <div className='flex justify-center items-center gap-1'>
                     <h1 className='text-blue-500 text-2xl font-bold'>FIMO</h1>
                     <h1 className='text-pink-500 text-2xl font-bold'>Admin</h1>
-                </div> : <img src={Logo} alt="" className="w-15" />}
-                <button onClick={() => setmMenu(!Menu)} className='text-white text-xl right-0 flex justify-center items-center w-10 h-10  cursor-pointer absolute md:-right-3 md:translate-x-1/2 border-2 bg-black/50 rounded-full' >{!Menu ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}</button>
+                </div> : <img src={Logo} alt="" className="w-20 h-10" />}
+                <button onClick={() => setmMenu(!Menu)} className='text-white text-xl right-0 flex justify-center items-center w-8 h-8  cursor-pointer absolute md:-right-3 md:translate-x-1/2 border-2 bg-black/50 rounded-full' >{!Menu ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}</button>
             </div>
             <ul className={`flex flex-col gap-3 mt-3 ${Menu ? "max-md:hidden":""}`}>
                 <li className='flex flex-col gap-2  '>
