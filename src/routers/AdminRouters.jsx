@@ -1,10 +1,22 @@
 import React from 'react';
 import DashBoard from '../pages/admin/dashBoard/DashBoard';
-import MetaData from '../pages/admin/metaData/MetaData';
-import Movies from '../pages/admin/movies/Movies';
-import Users from '../pages/admin/community/Users';
-import Cast from '../pages/admin/cast/Cast';
-import Plans from '../pages/admin/plans/Plans';
+import Categories from '../pages/admin/metaData/categories/Categories';
+import CategoriesType from '../pages/admin/metaData/categoryType/CategoriesType';
+import MoviesList from '../pages/admin/movies/moviesList/MoviesList';
+import Episodes from '../pages/admin/movies/episodes/Episodes';
+import ShowTimes from '../pages/admin/movies/showTimes/ShowTimes';
+import Users from '../pages/admin/community/users/Users';
+import Reviews from '../pages/admin/community/reviews/Reviews';
+import Comments from '../pages/admin/community/comments/Comments';
+import Actors from '../pages/admin/cast/actors/Actors';
+import Authors from '../pages/admin/cast/authors/Authors';
+import Characters from '../pages/admin/cast/characters/Characters';
+import Plans from '../pages/admin/billing/plans/Plans';
+import Features from '../pages/admin/billing/features/Features';
+import Packages from '../pages/admin/billing/packages/Packages';
+import RentMovies from '../pages/admin/vip/rentMovies/RentMovies';
+import Subscriptions from '../pages/admin/vip/subscriptions/Subscriptions';
+import { Route, Routes } from 'react-router-dom';
 
 function AdminRouters(props) {
     const adminRouter = [
@@ -13,29 +25,69 @@ function AdminRouters(props) {
             element: <DashBoard />
         },
         {
-            path: "/metaData",
-            element: <MetaData />
+            path: "/metadata/categories",
+            element: <Categories />
         },
         {
-            path: "/movies",
-            element: <Movies />
+            path: "/metadata/categoriesType",
+            element: <CategoriesType />
         },
         {
-            path: "/users",
+            path: "/movies/moviesList",
+            element: <MoviesList />
+        },
+        {
+            path: "/movies/episodes",
+            element: <Episodes />
+        },
+        {
+            path: "/movies/showTimes",
+            element: <ShowTimes />
+        },
+        {
+            path: "/community/users",
             element: <Users />
         },
         {
-            path: "/cast",
-            element: <Cast />
+            path: "/community/reviews",
+            element: <Reviews />
         },
         {
-            path: "/plans",
+            path: "/community/comments",
+            element: <Comments />
+        },
+        {
+            path: "/cast/actors",
+            element: <Actors />
+        },
+        {
+            path: "/cast/authors",
+            element: <Authors />
+        },
+        {
+            path: "/cast/characters",
+            element: <Characters />
+        },
+        {
+            path: "/billing/plans",
             element: <Plans />
         },
         {
-            path: "/vip",
-            element: <Vip />
+            path: "/billing/features",
+            element: <Features />
         },
+        {
+            path: "/billing/packages",
+            element: <Packages />
+        },
+        {
+            path: "/vip/rentMovies",
+            element: <RentMovies />
+        },
+        {
+            path: "/vip/subscriptions",
+            element: <Subscriptions/>
+        }
     ]
     return (
         <Routes>
