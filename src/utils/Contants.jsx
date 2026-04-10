@@ -13,7 +13,7 @@ export const LISTMENU = [
             },
             {
                 title: "Category Type",
-                path: "/category_type"
+                path: "/categoriesType"
             }
         ]
     },
@@ -54,7 +54,7 @@ export const LISTMENU = [
         ]
     },
     {
-        name: "Cast",
+        name: "Entity",
         icon: <FaUserSecret />,
         subMenu: [
             {
@@ -95,11 +95,11 @@ export const LISTMENU = [
         subMenu: [
             {
                 title: "RentMovies",
-                path: "/rent_movies"
+                path: "/rentMovies"
             },
             {
-                title: "Subcriptions",
-                path: "/subcriptions"
+                title: "Subscriptions",
+                path: "/subscriptions"
             }
         ]
     },

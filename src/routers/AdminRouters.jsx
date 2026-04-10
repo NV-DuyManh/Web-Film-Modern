@@ -22,77 +22,77 @@ function AdminRouters(props) {
     const adminRouter = [
         {
             path: "/",
-            element: <DashBoard />
+            element: <DashBoard/>
         },
         {
-            path: "/metadata/categories",
+            path: "/categories",
             element: <Categories />
         },
         {
-            path: "/metadata/categoriesType",
+            path: "/categoriesType",
             element: <CategoriesType />
         },
         {
-            path: "/movies/moviesList",
+            path: "/movies",
             element: <MoviesList />
         },
         {
-            path: "/movies/episodes",
+            path: "episodes",
             element: <Episodes />
         },
         {
-            path: "/movies/showTimes",
+            path: "/showTimes",
             element: <ShowTimes />
         },
         {
-            path: "/community/users",
+            path: "/users",
             element: <Users />
         },
         {
-            path: "/community/reviews",
+            path: "/reviews",
             element: <Reviews />
         },
         {
-            path: "/community/comments",
+            path: "/comments",
             element: <Comments />
         },
         {
-            path: "/cast/actors",
+            path: "/actors",
             element: <Actors />
         },
         {
-            path: "/cast/authors",
+            path: "/authors",
             element: <Authors />
         },
         {
-            path: "/cast/characters",
+            path: "/characters",
             element: <Characters />
         },
         {
-            path: "/billing/plans",
+            path: "/plans",
             element: <Plans />
         },
         {
-            path: "/billing/features",
+            path: "/features",
             element: <Features />
         },
         {
-            path: "/billing/packages",
+            path: "/packages",
             element: <Packages />
         },
         {
-            path: "/vip/rentMovies",
+            path: "/rentMovies",
             element: <RentMovies />
         },
         {
-            path: "/vip/subscriptions",
-            element: <Subscriptions/>
+            path: "/subscriptions",
+            element: <Subscriptions />
         }
     ]
     return (
         <Routes>
             {adminRouter.map((p, index) => (
-                <Route path={p.path} element={p.element} />
+                <Route key={index} path={p.path} element={p.element} />
             ))}
         </Routes>
     );
