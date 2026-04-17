@@ -1,7 +1,13 @@
 @keyframes gradientMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .glass {
@@ -11,21 +17,16 @@
     border-radius: 14px;
 }
 
-/* TEXT */
 .glow-text {
     background: linear-gradient(90deg, #60a5fa, #a78bfa, #38bdf8, #22d3ee, #818cf8, #60a5fa);
     background-size: 200% auto;
-
     background-clip: text;
     -webkit-background-clip: text;
-
     color: transparent;
     -webkit-text-fill-color: transparent;
-
     animation: textMove 4s linear infinite;
 }
 
-/* SEARCH */
 .search {
     position: relative;
 }
@@ -56,7 +57,7 @@
     box-shadow: 0 0 15px rgba(34, 197, 94, 0.7);
 }
 
-.search-input:focus + .search-icon {
+.search-input:focus+.search-icon {
     color: #4ade80 !important;
 }
 
@@ -77,53 +78,47 @@
     filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.8));
 }
 
-/* TEXT ANIMATION */
 @keyframes textMove {
-    0% { background-position: 0% center; }
-    100% { background-position: 200% center; }
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
 }
 
-/* SPIN */
 .spin {
     animation: spin 1s linear infinite;
     font-size: 18px;
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-/* ================= TABLE ================= */
-
 .table-wrapper {
-    padding: 2px; /* 👈 tạo lớp viền ngoài */
+    padding: 2px;
     border-radius: 16px;
-
-    background: linear-gradient(
-        120deg,
-        rgba(0, 255, 255, 0.4),
-        rgba(139, 92, 246, 0.4)
-    );
-
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.5),
-        0 0 25px rgba(0, 255, 255, 0.15);
+    background: linear-gradient(120deg, rgba(0, 255, 255, 0.4), rgba(139, 92, 246, 0.4));
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 255, 255, 0.15);
 }
 
 .table-container {
     background: rgba(15, 23, 42, 0.92);
     border-radius: 14px;
     overflow: hidden;
-
-    border: 1px solid rgba(255, 255, 255, 0.06); /* 👈 viền trong */
+    border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* HEADER */
 .table-header {
     background: linear-gradient(90deg, #06b6d4, #8b5cf6);
     height: 42px;
-    border-bottom: 1px solid rgba(255,255,255,0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .table-header th {
@@ -133,7 +128,6 @@
     padding: 10px 12px;
 }
 
-/* BODY */
 .table-row {
     height: 42px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
@@ -150,7 +144,6 @@
     padding: 10px 12px;
 }
 
-/* BUTTON */
 .action-btn {
     padding: 4px 8px;
     border-radius: 6px;
@@ -162,7 +155,6 @@
     font-size: 14px;
 }
 
-/* EDIT */
 .btn-edit {
     background: linear-gradient(90deg, #22d3ee, #3b82f6);
     color: white;
@@ -172,7 +164,6 @@
     box-shadow: 0 0 6px #38bdf8;
 }
 
-/* DELETE */
 .btn-delete {
     background: linear-gradient(90deg, #f97316, #ef4444);
     color: white;
@@ -182,7 +173,6 @@
     box-shadow: 0 0 6px #f97316;
 }
 
-/* FOOTER */
 .table-footer {
     display: flex;
     justify-content: flex-end;
@@ -192,7 +182,111 @@
     color: #cbd5f5;
 }
 
-/* OPTIONAL HOVER GLOW */
 .table-container:hover {
-    box-shadow: 0 0 20px rgba(139,92,246,0.2);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+}
+
+.modal-backdrop-x {
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(3px);
+}
+
+.modal-inner {
+    position: relative;
+    border-radius: 16px !important;
+    overflow: hidden;
+    background: rgba(18, 28, 45, 0.96) !important;
+    border: 1.5px solid transparent;
+    background-image: linear-gradient(rgba(18, 28, 45, 0.96), rgba(18, 28, 45, 0.96)), linear-gradient(120deg, #22c55e, #eab308);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 12px rgba(34, 197, 94, 0.25);
+}
+
+.modal-header-x {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(90deg, #8b5cf6, #ec4899);
+    padding: 14px 20px;
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.25);
+}
+
+.modal-body-x {
+    padding: 14px 20px;
+}
+
+.modal-input-x {
+    margin-top: 12px !important;
+}
+
+.modal-input-x .MuiOutlinedInput-root {
+    background: transparent;
+    border-radius: 8px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+}
+
+.modal-input-x input,
+.modal-input-x textarea {
+    color: #ffffff !important;
+}
+
+.modal-input-x label {
+    color: #d1d5db !important;
+    transition: all 0.3s ease;
+}
+
+.modal-input-x .MuiOutlinedInput-notchedOutline {
+    border-color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.modal-input-x:hover .MuiOutlinedInput-root {
+    transform: scale(1.01);
+}
+
+.modal-input-x:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #fde047;
+    box-shadow: 0 0 10px rgba(253, 224, 71, 0.4);
+}
+
+.modal-input-x .Mui-focused.MuiOutlinedInput-root {
+    transform: scale(1.02);
+}
+
+.modal-input-x .Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #4ade80;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+}
+
+.modal-input-x label.Mui-focused {
+    color: #4ade80 !important;
+}
+
+.modal-actions-x {
+    padding: 14px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.btn-cancel-x {
+    background: #ef4444 !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+}
+
+.btn-cancel-x:hover {
+    background: #dc2626 !important;
+}
+
+.btn-submit-x {
+    background: linear-gradient(90deg, #22c55e, #eab308) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+}
+
+.btn-submit-x:hover {
+    box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
 }
