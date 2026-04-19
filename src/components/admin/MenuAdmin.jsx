@@ -6,7 +6,7 @@ import { MdDashboard } from 'react-icons/md';
 import Logo from "../../assets/Logo.png";
 import { LISTMENU } from '../../utils/Contants';
 
-function MenuAdmin(props) {
+function MenuAdmin() {
     const [show, setShow] = useState(null);
     const [Menu, setmMenu] = useState(false);
     const location = useLocation();
@@ -23,7 +23,7 @@ function MenuAdmin(props) {
     }, [activePath]);
 
     return (
-        <div className={`flex flex-col p-3 bg-[#0a192f] text-white sm:min-h-screen transition-all duration-500 ease-in-out relative shadow-[2px_0_15px_rgba(0,0,0,0.5)] shrink-0 ${Menu ? "sm:w-[80px]" : "sm:w-[240px]"}`}>
+        <div className={`flex flex-col p-3 bg-[#0a192f] text-white sm:min-h-screen transition-all duration-500 ease-in-out relative shadow-[2px_0_15px_rgba(0,0,0,0.5)] shrink-0 ${Menu ? "sm:w-20" : "sm:w-60"}`}>
             
             <div className="flex justify-center items-center relative h-14 mb-4 mt-2 shrink-0">
                 {!Menu ? (
@@ -50,8 +50,8 @@ function MenuAdmin(props) {
                             ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400 shadow-[inset_4px_0_0_0_#22d3ee,0_0_15px_rgba(34,211,238,0.1)]" 
                             : "bg-slate-800/90 text-gray-300 hover:bg-slate-700 hover:border-cyan-500/30 hover:text-cyan-400"} 
                         ${Menu ? "sm:justify-center px-0" : "justify-start"}`}>
-                        <MdDashboard className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${activePath === "/" ? "drop-shadow-[0_0_5px_rgba(34,211,238,1)]" : ""}`} />
-                        <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition-all duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-[140px]"}`}>
+                        <MdDashboard className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${activePath === "/" ? "drop-shadow-[0_0_5px_#22d3ee]" : ""}`} />
+                        <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition-all duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-36"}`}>
                             Dashboard
                         </p>
                     </Link>
@@ -72,8 +72,8 @@ function MenuAdmin(props) {
                                 ${Menu ? "sm:justify-center px-0" : ""}`}
                             >
                                 <div className="flex items-center gap-3 overflow-hidden">
-                                    <span className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${isParentActive ? "text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,1)]" : ""}`}>{item.icon}</span>
-                                    <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition-all duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-[100px]"}`}>
+                                    <span className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${isParentActive ? "text-cyan-400 drop-shadow-[0_0_5px_#22d3ee]" : ""}`}>{item.icon}</span>
+                                    <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition-all duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-32"}`}>
                                         {item.name}
                                     </p>
                                 </div>
@@ -84,11 +84,8 @@ function MenuAdmin(props) {
                             </div>
 
                             {Menu ? (
-                                <div className="hidden group-hover:sm:block absolute top-0 left-full z-[100]">
-                                    
-                                    {/* CÂY CẦU TÀNG HÌNH: Khối bọc to rộng ra cả phía trên, dưới và trái. 
-                                        Bất chấp bạn lia chuột chéo cỡ nào cũng không bị tuột hover nữa! */}
-                                    <div className="absolute -left-8 -top-4 -bottom-4 w-12 bg-transparent cursor-pointer"></div>
+                                <div className="hidden group-hover:sm:block absolute top-0 left-full z-50">
+                                    <div className="absolute left-0 top-0 bottom-0 w-2 bg-transparent"></div>
 
                                     <div className="w-48 ml-2 bg-[#0f172a] border border-slate-700 rounded-lg shadow-2xl overflow-hidden relative">
                                         <div className="flex flex-col p-2">
