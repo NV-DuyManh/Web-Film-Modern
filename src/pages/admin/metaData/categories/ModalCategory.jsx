@@ -19,7 +19,7 @@ export default function ModalCategory({open, onChangeInput, handleClose, addCate
             BackdropProps={{ className: "modal-backdrop-x" }}
         >
             <DialogTitle className="modal-header-x">
-                {category.id ? "Update Category" : "Add Category"}
+                {category.id ? "UPDATE CATEGORY" : "ADD CATEGORY"}
             </DialogTitle>
 
             <DialogContent className="modal-body-x">

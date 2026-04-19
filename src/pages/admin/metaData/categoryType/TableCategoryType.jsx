@@ -3,7 +3,7 @@
 // function TableCategoryType(props) {
 //     return (
 //         <div>
-            
+
 //         </div>
 //     );
 // }
@@ -20,7 +20,6 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 
 function TableCategoryType({ handleClickOpen, setCategoryType, categoryType }) {
-    // Gọi dữ liệu từ Context ở đây
     const categoryTypes = useContext(CategoryTypeContext);
     const [open, setOpen] = useState(false);
 
@@ -114,6 +113,8 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType }) {
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
+                titleDelete={"DELETE CATEGORY TYPE"}
+                contentDelete={"Are you sure you want to delete this category type?"}
             />
         </div>
     );

@@ -113,6 +113,8 @@ function TableCategory({ handleClickOpen, setCategory, category }) {
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
+                titleDelete={"DELETE CATEGORY"}
+                contentDelete={"Are you sure you want to delete this category?"}
             />
         </div>
     );

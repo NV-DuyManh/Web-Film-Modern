@@ -5,7 +5,7 @@ import { addDocument, updateDocument } from '../../../../services/firebaseServic
 import TableCategory from './TableCategory';
 const inner = { name: "", description: "" };
 function Categories(props) {
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const [category, setCategory] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ function Categories(props) {
         newError.name = category.name ? "" : "Please enter your name";
         newError.description = category.description ? "" : "Please enter your description";
         setError(newError);
-        return Object.values(newError).some(e => e !== "");  
+        return Object.values(newError).some(e => e !== "");
     }
     const addCategory = async () => {
         if (validation()) {
@@ -42,16 +42,14 @@ function Categories(props) {
     return (
         <div>
             <Search
-                open={open}
-                name={"Categories"}
-                setOpen={setOpen}
+                name={"List Categories"}
+                tuKhoa={"Search Category ...."}
                 handleClickOpen={handleClickOpen}
-                handleClose={handleClose} />
+            />
             <ModalCategory
                 addCategory={addCategory}
                 onChangeInput={onChangeInput}
                 open={open}
-                setOpen={setOpen}
                 handleClickOpen={handleClickOpen}
                 handleClose={handleClose}
                 error={error}

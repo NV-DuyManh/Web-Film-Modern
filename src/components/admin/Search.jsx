@@ -2,18 +2,17 @@ import React from 'react';
 import { BsSearch } from 'react-icons/bs';
 import { IoMdAddCircle } from 'react-icons/io';
 
-function Search({ handleClickOpen, name }) {
+function Search({ handleClickOpen, name, tuKhoa }) {
 
     return (
         <div className='grid lg:grid-cols-8 gap-3 p-4 bg-black/20 text-white items-center'> 
-            <h1 className='font-bold text-3xl glow-text lg:col-span-2 '>
-                List {name}
+            <h1 className='font-bold text-3xl glow-text lg:col-span-2 '>{name}
             </h1>
 
             <div className="search lg:col-span-4">
                 <input
                     type="text"
-                    placeholder="Search categories..."
+                    placeholder={tuKhoa}
                     className="search-input"
                 />
 

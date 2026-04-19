@@ -209,10 +209,10 @@
 
 .modal-header-x {
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 800 !important;
     color: #ffffff;
     background: linear-gradient(90deg, #8b5cf6, #ec4899);
-    padding: 14px 20px;
+    padding: 10px 20px !important;
     box-shadow: 0 4px 15px rgba(236, 72, 153, 0.25);
 }
 
@@ -299,39 +299,63 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px; 
-    padding: 6px 16px; 
-    border-radius: 8px; 
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 8px;
     font-weight: 700;
-    font-size: 13px; 
-    text-transform: uppercase; 
+    font-size: 13px;
+    text-transform: uppercase;
     letter-spacing: 1px;
-    
+
     color: #ffffff;
-    background: transparent; 
-    border: 2px solid #00FFFF; 
+    background: transparent;
+    border: 2px solid #00FFFF;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    
+
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.4), inset 0 0 5px rgba(0, 255, 255, 0.2);
-    text-shadow: 0 0 5px #00FFFF; 
+    text-shadow: 0 0 5px #00FFFF;
 }
 
 .btn-add:hover {
     transform: translateY(-1px);
-    
+
 
     background: #00FFFF;
-    color: #111827; 
-    text-shadow: none; 
-    
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.8), 
-                0 0 30px rgba(0, 255, 255, 0.6), 
-                0 0 10px rgba(255, 255, 255, 0.8) inset; 
+    color: #111827;
+    text-shadow: none;
+
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.8),
+        0 0 30px rgba(0, 255, 255, 0.6),
+        0 0 10px rgba(255, 255, 255, 0.8) inset;
 }
 
 
 .btn-add svg {
-    font-size: 18px; 
+    font-size: 18px;
     transition: transform 0.3s ease;
+}
+
+.btn-neutral-x {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    transition: 0.2s;
+}
+
+.btn-neutral-x:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+.btn-danger-x {
+    background: linear-gradient(90deg, #ef4444, #f97316) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+}
+
+.btn-danger-x:hover {
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
 }
