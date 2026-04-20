@@ -102,7 +102,7 @@ function TableActor({ handleClickOpen, setActor, actor }) {
                             setPage={setPage}
                             rowsPerPage={rowsPerPage}
                             setRowsPerPage={setRowsPerPage}
-                            totalItems={actor?.length || 0}
+                            totalItems={actors?.length || 0}
                         />
                     </div>
 
