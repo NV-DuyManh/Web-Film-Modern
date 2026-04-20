@@ -37,7 +37,7 @@ function MenuAdmin() {
 
                 <button 
                     onClick={() => setmMenu(!Menu)} 
-                    className='absolute right-0 sm:-right-3 sm:translate-x-1/2 flex justify-center items-center w-9 h-9 cursor-pointer rounded-full bg-slate-800 border border-white/20 text-gray-300 hover:text-cyan-400 hover:border-cyan-400 hover:shadow-[0_0_10px_rgba(34,211,238,0.5)] transition-all duration-300 z-50'
+                    className='absolute right-0 sm:-right-3 sm:translate-x-1/2 flex justify-center items-center w-9 h-9 cursor-pointer rounded-full bg-[#0f172a] border border-cyan-400 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)] hover:bg-cyan-400 hover:text-[#0f172a] hover:shadow-[0_0_20px_rgba(34,211,238,0.9),inset_0_0_5px_rgba(255,255,255,0.4)] hover:scale-110 transition-all duration-300 z-50'
                 >
                     {!Menu ? <AiOutlineMenuFold size={20} /> : <AiOutlineMenuUnfold size={20} />}
                 </button>
