@@ -105,8 +105,8 @@ function CategoriesType(props) {
     return (
         <div>
             <Search
-                name={"Categories Type"}
-                tuKhoa={"Search Category Type ...."}
+                name={"List Categories Type"}
+                tuKhoa={"Search Category Type"}
                 handleClickOpen={handleClickOpen}
             />
             <ModalCategoryType

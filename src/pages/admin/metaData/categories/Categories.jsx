@@ -43,7 +43,7 @@ function Categories(props) {
         <div>
             <Search
                 name={"List Categories"}
-                tuKhoa={"Search Category ...."}
+                tuKhoa={"Search Category"}
                 handleClickOpen={handleClickOpen}
             />
             <ModalCategory
