@@ -6,7 +6,7 @@ import AdminRouters from '../../../routers/AdminRouters';
 
 function HomeAdmin(props) {
     return (
-        <div className='md:flex'>
+        <div className='sm:flex'>
             <MenuAdmin />
             <div className='flex-1'>
                 <HeaderAdmin />

@@ -25,7 +25,7 @@ function MenuAdmin() {
     return (
         <div className={`flex flex-col p-3 bg-[#0a192f] text-white sm:min-h-screen transition-all duration-500 ease-in-out relative shadow-[2px_0_15px_rgba(0,0,0,0.5)] shrink-0 ${Menu ? "sm:w-20" : "sm:w-60"}`}>
             
-            <div className="flex justify-center items-center relative h-14 mb-4 mt-2 shrink-0">
+            <div className="flex justify-center items-center relative h-8 mb-4 mt-2 shrink-0">
                 {!Menu ? (
                     <div className='flex justify-center items-center gap-1 whitespace-nowrap overflow-hidden transition-all duration-300 w-full'>
                         <h1 className='text-cyan-400 text-2xl font-extrabold tracking-widest drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]'>FIMO</h1>
