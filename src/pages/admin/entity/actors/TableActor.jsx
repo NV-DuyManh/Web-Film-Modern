@@ -68,21 +68,23 @@ function TableActor({ handleClickOpen, setActor, actor }) {
                                     </td>
 
                                     <td className="table-cell">
+                                        {row.imgUrl && <img src={row.imgUrl} alt={row.name} className="w-20 object-cover rounded-md" />}
+                                    </td>
+
+                                    <td className="table-cell">
                                         {row.name}
                                     </td>
 
                                     <td className="table-cell">
                                         {row.description}
                                     </td>
-                                    
+
+
+
                                     <td className="table-cell">
-                                        {row.imgUrl}
+                                        {row.sexID}
                                     </td>
-                                    
-                                    <td className="table-cell">
-                                        {row.sexId}
-                                    </td>
-                                    
+
                                     <td className="table-cell">
                                         {row.countriesID}
                                     </td>

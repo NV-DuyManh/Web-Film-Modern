@@ -3,7 +3,7 @@ import Search from '../../../../components/admin/Search';
 import ModalActor from './ModalActor';
 import TableActor from './TableActor';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
-const inner = { name: "", description: "", imgUrl: "", sexId: "", countriesID: "" };
+const inner = { name: "", description: "", imgUrl: "", sexID: "", countriesID: "" };
 function Actors() {
     const [open, setOpen] = useState(false);
     const [actor, setActor] = useState(inner);
@@ -27,7 +27,7 @@ function Actors() {
         newError.name = actor.name ? "" : "Please enter your name";
         newError.description = actor.description ? "" : "Please enter your description";
         newError.imgUrl = actor.imgUrl ? "" : "Please enter your imgUrl";
-        newError.sexId = actor.sexId ? "" : "Please enter your sex";
+        newError.sexID = actor.sexID ? "" : "Please enter your sex";
         newError.countriesID = actor.countriesID ? "" : "Please enter your country";
         setError(newError);
         return Object.values(newError).some(e => e !== "");

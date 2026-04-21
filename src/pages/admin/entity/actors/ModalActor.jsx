@@ -26,6 +26,18 @@ export default function ModalActor({ open, onChangeInput, handleClose, addactor,
             <DialogContent className="modal-body-x">
                 <TextField
                     className="modal-input-x"
+                    name="imgUrl"
+                    onChange={onChangeInput}
+                    fullWidth
+                    multiline
+                    label="Image"
+                    variant="outlined"
+                    value={actor.imgUrl}
+                    helperText={error.imgUrl}
+                    error={!!error.imgUrl}
+                />
+                <TextField
+                    className="modal-input-x"
                     name="name"
                     onChange={onChangeInput}
                     fullWidth
@@ -50,27 +62,15 @@ export default function ModalActor({ open, onChangeInput, handleClose, addactor,
                 />
                 <TextField
                     className="modal-input-x"
-                    name="imgUrl"
-                    onChange={onChangeInput}
-                    fullWidth
-                    multiline
-                    label="Image"
-                    variant="outlined"
-                    value={actor.imgUrl}
-                    helperText={error.imgUrl}
-                    error={!!error.imgUrl}
-                />
-                <TextField
-                    className="modal-input-x"
-                    name="sexId"
+                    name="sexID"
                     onChange={onChangeInput}
                     fullWidth
                     multiline
                     label="Sex"
                     variant="outlined"
-                    value={actor.sexId}
-                    helperText={error.sexId}
-                    error={!!error.sexId}
+                    value={actor.sexID}
+                    helperText={error.sexID}
+                    error={!!error.sexID}
                 />
                 <TextField
                     className="modal-input-x"
