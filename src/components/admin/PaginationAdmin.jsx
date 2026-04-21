@@ -127,7 +127,7 @@ export default function PaginationAdmin({
                         onChange={(e, value) => setPage(value)}
                         shape="rounded"
                         siblingCount={1}
-                        boundaryCount={0}
+                        boundaryCount={1} // Đã đổi thành 1 để luôn hiện trang đầu và cuối
                         sx={{
                             "& .MuiPaginationItem-root": {
                                 color: "rgba(255, 255, 255, 0.6)",

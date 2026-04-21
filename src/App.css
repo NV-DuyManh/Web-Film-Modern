@@ -169,22 +169,38 @@
     font-size: 14px;
 }
 
+.btn-edit, .btn-delete {
+    cursor: pointer;
+}
+
 .btn-edit {
     background: linear-gradient(90deg, #22d3ee, #3b82f6);
     color: white;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .btn-edit:hover {
-    box-shadow: 0 0 6px #38bdf8;
+    background: #00ff55;
+    color: #0f172a;
+    transform: scale(1.08);
+    box-shadow: 0 0 12px #00ff55, 
+                0 0 25px #00cc44, 
+                inset 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
 .btn-delete {
     background: linear-gradient(90deg, #f97316, #ef4444);
     color: white;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .btn-delete:hover {
-    box-shadow: 0 0 6px #f97316;
+    background: #ffea00;
+    color: #0f172a;
+    transform: scale(1.08);
+    box-shadow: 0 0 12px #ffea00, 
+                0 0 25px #ffb300, 
+                inset 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
 .table-footer {
