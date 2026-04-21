@@ -123,16 +123,18 @@
 }
 
 .table-container {
-    background: rgba(15, 23, 42, 0.92);
     border-radius: 14px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .table-header {
-    background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+    background: linear-gradient(90deg, rgba(6, 182, 212, 0.6), rgba(139, 92, 246, 0.6));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     height: 42px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .table-header th {
@@ -143,6 +145,8 @@
 }
 
 .table-row {
+    background: rgba(15, 23, 42, 0.92);
+
     height: 42px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     transition: 0.2s;

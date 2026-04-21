@@ -23,7 +23,7 @@ function MenuAdmin() {
     }, [activePath]);
 
     return (
-        <div className={`flex flex-col p-3 bg-[#0a192f] text-white sm:min-h-screen transition-all duration-500 ease-in-out relative shadow-[2px_0_15px_rgba(0,0,0,0.5)] shrink-0 ${Menu ? "sm:w-20" : "sm:w-60"}`}>
+        <div className={`flex flex-col p-3 bg-[#0a192f]/80 text-white sm:min-h-screen transition-all duration-500 ease-in-out relative shadow-[2px_0_15px_rgba(0,0,0,0.5)] shrink-0 ${Menu ? "sm:w-20" : "sm:w-60"}`}>
             
             <div className="flex justify-center items-center relative h-8 mb-4 mt-2 shrink-0">
                 {!Menu ? (
@@ -37,7 +37,7 @@ function MenuAdmin() {
 
                 <button 
                     onClick={() => setmMenu(!Menu)} 
-                    className='absolute right-0 sm:-right-3 sm:translate-x-1/2 flex justify-center items-center w-9 h-9 cursor-pointer rounded-full bg-[#0f172a] border border-cyan-400 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)] hover:bg-cyan-400 hover:text-[#0f172a] hover:shadow-[0_0_20px_rgba(34,211,238,0.9),inset_0_0_5px_rgba(255,255,255,0.4)] hover:scale-110 transition-all duration-300 z-50'
+                    className='absolute right-0 sm:-right-3 sm:translate-x-1/2 flex justify-center items-center w-9 h-9 cursor-pointer rounded-full bg-[#0f172a]/20 border border-cyan-400 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)] hover:bg-cyan-400 hover:text-[#0f172a] hover:shadow-[0_0_20px_rgba(34,211,238,0.9),inset_0_0_5px_rgba(255,255,255,0.4)] hover:scale-110 transition-all duration-300 z-50'
                 >
                     {!Menu ? <AiOutlineMenuFold size={20} /> : <AiOutlineMenuUnfold size={20} />}
                 </button>

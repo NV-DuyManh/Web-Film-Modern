@@ -44,8 +44,7 @@ export default function PaginationAdmin({
     };
 
     return (
-        <div className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-slate-900/20 px-6 py-2 backdrop-blur-md">
-            
+<div className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-[rgba(15,23,42,0.1)] px-6 py-2 backdrop-blur-[2px]">            
             <div className="flex items-center gap-3">
                 <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Rows</span>
                 <Select
@@ -127,7 +126,7 @@ export default function PaginationAdmin({
                         onChange={(e, value) => setPage(value)}
                         shape="rounded"
                         siblingCount={1}
-                        boundaryCount={1} // Đã đổi thành 1 để luôn hiện trang đầu và cuối
+                        boundaryCount={1} 
                         sx={{
                             "& .MuiPaginationItem-root": {
                                 color: "rgba(255, 255, 255, 0.6)",
