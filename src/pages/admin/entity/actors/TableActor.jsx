@@ -30,7 +30,7 @@ function TableActor({ handleClickOpen, setActor, actor }) {
     };
 
     const handleDeleted = async () => {
-        await deleteDocument("Categories", category);
+        await deleteDocument("Actor", actor);
 
         if (page > 1 && currentData.length === 1) {
             setPage(page - 1);
@@ -50,9 +50,9 @@ function TableActor({ handleClickOpen, setActor, actor }) {
                         <thead className="table-header">
                             <tr>
                                 <th>ID</th>
+                                <th>IMAGE</th>
                                 <th>NAME</th>
                                 <th>DESCRIPTION</th>
-                                <th>IMAGE</th>
                                 <th>SEX</th>
                                 <th>COUNTRY</th>
                                 <th className="text-right">ACTIONS</th>
@@ -78,8 +78,6 @@ function TableActor({ handleClickOpen, setActor, actor }) {
                                     <td className="table-cell">
                                         {row.description}
                                     </td>
-
-
 
                                     <td className="table-cell">
                                         {row.sexID}
