@@ -52,6 +52,9 @@ function TableActor({ handleClickOpen, setActor, actor }) {
                                 <th>ID</th>
                                 <th>NAME</th>
                                 <th>DESCRIPTION</th>
+                                <th>IMAGE</th>
+                                <th>SEX</th>
+                                <th>COUNTRY</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
@@ -70,6 +73,18 @@ function TableActor({ handleClickOpen, setActor, actor }) {
 
                                     <td className="table-cell">
                                         {row.description}
+                                    </td>
+                                    
+                                    <td className="table-cell">
+                                        {row.imgUrl}
+                                    </td>
+                                    
+                                    <td className="table-cell">
+                                        {row.sexId}
+                                    </td>
+                                    
+                                    <td className="table-cell">
+                                        {row.countriesID}
                                     </td>
 
                                     <td className="table-cell text-right">

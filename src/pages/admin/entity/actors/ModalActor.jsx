@@ -48,6 +48,42 @@ export default function ModalActor({ open, onChangeInput, handleClose, addactor,
                     helperText={error.description}
                     error={!!error.description}
                 />
+                <TextField
+                    className="modal-input-x"
+                    name="imgUrl"
+                    onChange={onChangeInput}
+                    fullWidth
+                    multiline
+                    label="Image"
+                    variant="outlined"
+                    value={actor.imgUrl}
+                    helperText={error.imgUrl}
+                    error={!!error.imgUrl}
+                />
+                <TextField
+                    className="modal-input-x"
+                    name="sexId"
+                    onChange={onChangeInput}
+                    fullWidth
+                    multiline
+                    label="Sex"
+                    variant="outlined"
+                    value={actor.sexId}
+                    helperText={error.sexId}
+                    error={!!error.sexId}
+                />
+                <TextField
+                    className="modal-input-x"
+                    name="countriesID"
+                    onChange={onChangeInput}
+                    fullWidth
+                    multiline
+                    label="Country"
+                    variant="outlined"
+                    value={actor.countriesID}
+                    helperText={error.countriesID}
+                    error={!!error.countriesID}
+                />
             </DialogContent>
 
             <DialogActions className="modal-actions-x">
