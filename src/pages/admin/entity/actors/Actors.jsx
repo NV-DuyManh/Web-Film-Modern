@@ -3,7 +3,8 @@ import Search from '../../../../components/admin/Search';
 import ModalActor from './ModalActor';
 import TableActor from './TableActor';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
-const inner = { name: "", description: "", imgUrl: "", sexID: "", countriesID: "" };
+import LOGO from "../../../../assets/Logo.png";
+const inner = { name: "", description: "", imgUrl: LOGO, sexID: "", countriesID: "" };
 function Actors() {
     const [open, setOpen] = useState(false);
     const [actor, setActor] = useState(inner);
@@ -41,6 +42,17 @@ function Actors() {
         handleClose();
         setLoading(false);
     }
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setActor({ ...actor, imgUrl: reader.result });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
     return (
         <div>
             <Search
@@ -49,6 +61,7 @@ function Actors() {
                 tuKhoa={"Search Actor"}
             />
             <ModalActor
+                handleImageChange={handleImageChange}
                 addactor={addactor}
                 onChangeInput={onChangeInput}
                 open={open}

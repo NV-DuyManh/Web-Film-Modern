@@ -44,9 +44,7 @@ function TableActor({ handleClickOpen, setActor, actor }) {
 
             <div className="table-wrapper">
                 <div className="table-container">
-
                     <table className="w-full text-left">
-
                         <thead className="table-header">
                             <tr>
                                 <th>ID</th>
@@ -62,31 +60,24 @@ function TableActor({ handleClickOpen, setActor, actor }) {
                         <tbody>
                             {currentData.map((row, index) => (
                                 <tr key={index} className="table-row">
-
                                     <td className="table-cell">
                                         {start + index + 1}
                                     </td>
-
                                     <td className="table-cell">
-                                        {row.imgUrl && <img src={row.imgUrl} alt={row.name} className="w-20 object-cover rounded-md" />}
+                                        {row.imgUrl && <img src={row.imgUrl} alt={row.name} className="w-10 h-10 object-cover rounded-full" />}
                                     </td>
-
                                     <td className="table-cell">
                                         {row.name}
                                     </td>
-
                                     <td className="table-cell">
                                         {row.description}
                                     </td>
-
                                     <td className="table-cell">
                                         {row.sexID}
                                     </td>
-
                                     <td className="table-cell">
                                         {row.countriesID}
                                     </td>
-
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">
                                             <button
@@ -108,9 +99,7 @@ function TableActor({ handleClickOpen, setActor, actor }) {
                                 </tr>
                             ))}
                         </tbody>
-
                     </table>
-
                     <div className="table-footer">
                         <PaginationAdmin
                             page={page}
@@ -120,10 +109,8 @@ function TableActor({ handleClickOpen, setActor, actor }) {
                             totalItems={actors?.length || 0}
                         />
                     </div>
-
                 </div>
             </div>
-
             <ModalDelete
                 handleClose={handleClose}
                 open={open}

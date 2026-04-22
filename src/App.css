@@ -102,7 +102,7 @@
 
 .spin {
     animation: spin 1s linear infinite;
-    font-size: 18px;
+   
 }
 
 @keyframes spin {
@@ -318,13 +318,14 @@
     background: linear-gradient(90deg, #22c55e, #eab308) !important;
     color: white !important;
     border-radius: 8px !important;
-    padding: 6px 14px !important;
 }
 
 .btn-submit-x:hover {
     box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
 }
-
+.css-1uent87-MuiButtonBase-root-MuiButton-root {
+    padding: 8px 29px !important;
+}
 .btn-add {
     display: flex;
     align-items: center;
