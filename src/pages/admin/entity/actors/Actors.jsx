@@ -4,12 +4,28 @@ import ModalActor from './ModalActor';
 import TableActor from './TableActor';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import LOGO from "../../../../assets/Logo.png";
+
 const inner = { name: "", description: "", imgUrl: LOGO, sexID: "", countriesID: "" };
+
+const getBase64FromUrl = async (url) => {
+    const data = await fetch(url);
+    const blob = await data.blob();
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+            const base64data = reader.result;
+            resolve(base64data);
+        };
+    });
+};
+
 function Actors() {
     const [open, setOpen] = useState(false);
     const [actor, setActor] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+
     const handleClickOpen = () => {
         setOpen(true);
         setActor(inner);
@@ -19,6 +35,7 @@ function Actors() {
     const handleClose = () => {
         setOpen(false);
     };
+
     const onChangeInput = (e) => {
         setActor({ ...actor, [e.target.name]: e.target.value })
     }
@@ -33,12 +50,21 @@ function Actors() {
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     }
+
     const addactor = async () => {
         if (validation()) {
             return;
         }
         setLoading(true);
-        !actor.id ? await addDocument("Actor", actor) : await updateDocument("Actor", actor);
+
+        let submitData = { ...actor };
+
+        if (submitData.imgUrl === LOGO) {
+            submitData.imgUrl = await getBase64FromUrl(LOGO);
+        }
+
+        !actor.id ? await addDocument("Actor", submitData) : await updateDocument("Actor", submitData);
+        
         handleClose();
         setLoading(false);
     }
@@ -53,6 +79,7 @@ function Actors() {
             reader.readAsDataURL(file);
         }
     };
+
     return (
         <div>
             <Search

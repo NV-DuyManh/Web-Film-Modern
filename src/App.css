@@ -2,11 +2,9 @@
     0% {
         background-position: 0% 50%;
     }
-
     50% {
         background-position: 100% 50%;
     }
-
     100% {
         background-position: 0% 50%;
     }
@@ -94,7 +92,6 @@
     0% {
         background-position: 0% center;
     }
-
     100% {
         background-position: 200% center;
     }
@@ -102,14 +99,12 @@
 
 .spin {
     animation: spin 1s linear infinite;
-   
 }
 
 @keyframes spin {
     from {
         transform: rotate(0deg);
     }
-
     to {
         transform: rotate(360deg);
     }
@@ -146,7 +141,6 @@
 
 .table-row {
     background: rgba(15, 23, 42, 0.92);
-
     height: 42px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     transition: 0.2s;
@@ -251,7 +245,8 @@
 }
 
 .modal-input-x {
-    margin-top: 12px !important;
+    margin-top: 16px !important;
+    width: 100%;
 }
 
 .modal-input-x .MuiOutlinedInput-root {
@@ -266,36 +261,133 @@
     color: #ffffff !important;
 }
 
-.modal-input-x label {
-    color: #d1d5db !important;
-    transition: all 0.3s ease;
-}
-
 .modal-input-x .MuiOutlinedInput-notchedOutline {
     border-color: rgba(255, 255, 255, 0.3);
     transition: all 0.3s ease;
 }
 
-.modal-input-x:hover .MuiOutlinedInput-root {
-    transform: scale(1.01);
-}
-
 .modal-input-x:hover .MuiOutlinedInput-notchedOutline {
-    border-color: #fde047;
+    border-color: #fde047 !important;
     box-shadow: 0 0 10px rgba(253, 224, 71, 0.4);
 }
 
-.modal-input-x .Mui-focused.MuiOutlinedInput-root {
-    transform: scale(1.02);
+.modal-input-x .Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: #4ade80 !important;
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
 }
 
-.modal-input-x .Mui-focused .MuiOutlinedInput-notchedOutline {
-    border-color: #4ade80;
-    box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+.modal-input-x:hover .MuiOutlinedInput-root,
+.modal-input-x .Mui-focused.MuiOutlinedInput-root {
+    transform: scale(1.01);
+}
+
+.modal-input-x label {
+    color: #d1d5db !important;
+    transition: all 0.3s ease;
 }
 
 .modal-input-x label.Mui-focused {
     color: #4ade80 !important;
+}
+
+.modal-input-x .Mui-error .MuiOutlinedInput-notchedOutline {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2) !important;
+}
+
+.modal-input-x label.Mui-error {
+    color: #ef4444 !important;
+}
+
+.modal-input-x .MuiFormHelperText-root.Mui-error {
+    color: #ef4444;
+    margin-left: 12px;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.gender-box-wrapper {
+    margin-top: 28px !important;
+    width: 100%;
+}
+
+.gender-box {
+    position: relative;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.gender-box:hover, .gender-box:focus-within {
+    border-color: #fde047;
+    box-shadow: 0 0 10px rgba(253, 224, 71, 0.4);
+    transform: scale(1.01);
+}
+
+.gender-box:focus-within {
+    box-shadow: 0 0 15px rgba(253, 224, 71, 0.6);
+}
+
+.gender-box.error {
+    border-color: #ef4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+.gender-label {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    padding: 0 4px;
+    font-size: 12px;
+    letter-spacing: 0.025em;
+    background-color: #121c2d;
+    color: #d1d5db;
+    transition: all 0.3s ease;
+}
+
+.gender-box:hover .gender-label, .gender-box:focus-within .gender-label {
+    color: #fde047;
+}
+
+.gender-box.error .gender-label {
+    color: #ef4444;
+}
+
+.gender-error-text {
+    color: #ef4444;
+    font-size: 12px;
+    margin-top: 4px;
+    margin-left: 12px;
+    letter-spacing: 0.025em;
+}
+
+.upload-container {
+    margin-top: 32px;
+    padding: 16px;
+    border: 1px dashed #4b5563;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(30, 41, 59, 0.3);
+    transition: all 0.3s ease;
+}
+
+.upload-container:hover {
+    border-color: #22d3ee;
+}
+
+.upload-title {
+    color: #9ca3af;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 0.025em;
+    font-size: 14px;
 }
 
 .modal-actions-x {
@@ -323,9 +415,11 @@
 .btn-submit-x:hover {
     box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
 }
+
 .css-1uent87-MuiButtonBase-root-MuiButton-root {
     padding: 8px 29px !important;
 }
+
 .btn-add {
     display: flex;
     align-items: center;
@@ -337,30 +431,24 @@
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 1px;
-
     color: #ffffff;
     background: transparent;
     border: 2px solid #00FFFF;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
     box-shadow: 0 0 10px rgba(0, 255, 255, 0.4), inset 0 0 5px rgba(0, 255, 255, 0.2);
     text-shadow: 0 0 5px #00FFFF;
 }
 
 .btn-add:hover {
     transform: translateY(-1px);
-
-
     background: #00FFFF;
     color: #111827;
     text-shadow: none;
-
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.8),
-        0 0 30px rgba(0, 255, 255, 0.6),
-        0 0 10px rgba(255, 255, 255, 0.8) inset;
+                0 0 30px rgba(0, 255, 255, 0.6),
+                0 0 10px rgba(255, 255, 255, 0.8) inset;
 }
-
 
 .btn-add svg {
     font-size: 18px;

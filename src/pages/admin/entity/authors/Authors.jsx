@@ -31,7 +31,7 @@ function Authors() {
         newError.name = author.name ? "" : "Please enter your name";
         newError.description = author.description ? "" : "Please enter your description";
         newError.imgUrl = author.imgUrl ? "" : "Please enter your image";
-        newError.sexID = author.imgUrl ? "" : "Please enter your sex";
+        newError.sexID = author.sexID ? "" : "Please enter your sex";
         newError.countriesID = author.countriesID ? "" : "Please enter your country";
         setError(newError);
         return Object.values(newError).some(e => e !== "");
