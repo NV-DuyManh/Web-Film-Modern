@@ -3,14 +3,29 @@ import Search from '../../../../components/admin/Search';
 import ModalAuthors from './ModalAuthors';
 import TableAuthors from './TableAuthors';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
+import LOGO from "../../../../assets/Logo.png";
 
-const inner = { name: "", description: "", imgUrl: "", sexID: "", countriesID: "" };
+const inner = { name: "", description: "", imgUrl: LOGO, sexID: "", countriesID: "" };
+
+const getBase64FromUrl = async (url) => {
+    const data = await fetch(url);
+    const blob = await data.blob();
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+            const base64data = reader.result;
+            resolve(base64data);
+        };
+    });
+};
 
 function Authors() {
     const [open, setOpen] = useState(false);
     const [author, setAuthor] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -42,19 +57,40 @@ function Authors() {
             return;
         }
         setLoading(true);
-        !author.id ? await addDocument("Author", author) : await updateDocument("Author", author);
+
+        let submitData = { ...author };
+
+        if (submitData.imgUrl === LOGO) {
+            submitData.imgUrl = await getBase64FromUrl(LOGO);
+        }
+
+        !author.id ? await addDocument("Author", submitData) : await updateDocument("Author", submitData);
+        
         handleClose();
         setLoading(false);
     }
+
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setAuthor({ ...author, imgUrl: reader.result });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     return (
         <div>
             <Search
                 handleClickOpen={handleClickOpen}
                 name={"List Authors"}
-                tuKhoa={"Search Author"}
+                tuKhoa={"Search Author by Name"}
+                onSearch={setSearchQuery}
             />
             <ModalAuthors
+                handleImageChange={handleImageChange}
                 addauthor={addauthor}
                 onChangeInput={onChangeInput}
                 open={open}
@@ -68,6 +104,7 @@ function Authors() {
                 setAuthor={setAuthor}
                 handleClickOpen={handleClickOpen}
                 author={author}
+                searchQuery={searchQuery}
             />
         </div>
     );
