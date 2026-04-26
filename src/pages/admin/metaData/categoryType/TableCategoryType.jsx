@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -7,7 +7,7 @@ import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 
-function TableCategoryType({ handleClickOpen, setCategoryType, categoryType }) {
+function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, search }) {
     const categoryTypes = useContext(CategoryTypeContext);
     const [open, setOpen] = useState(false);
 
@@ -15,7 +15,8 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType }) {
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const start = (page - 1) * rowsPerPage;
-    const currentData = categoryTypes?.slice(start, start + rowsPerPage) || [];
+    const dataSearch = useMemo(() => categoryTypes.filter(e => e?.name.toLowerCase().includes(search.toLowerCase())), [search, categoryTypes])
+    const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
     const handleClickOpenDele = (row) => {
         setOpen(true);
@@ -91,7 +92,7 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType }) {
                             setPage={setPage}
                             rowsPerPage={rowsPerPage}
                             setRowsPerPage={setRowsPerPage}
-                            totalItems={categoryTypes?.length || 0}
+                            totalItems={dataSearch?.length || 0}
                         />
                     </div>
                 </div>

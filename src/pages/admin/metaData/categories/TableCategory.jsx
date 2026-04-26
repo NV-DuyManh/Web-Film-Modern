@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { CategoriesContext } from '../../../../contexts/CategoryProvider';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -7,7 +7,7 @@ import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../app.css";
 
-function TableCategory({ handleClickOpen, setCategory, category }) {
+function TableCategory({ handleClickOpen, setCategory, category, search }) {
     const categories = useContext(CategoriesContext);
     const [open, setOpen] = useState(false);
 
@@ -15,7 +15,9 @@ function TableCategory({ handleClickOpen, setCategory, category }) {
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const start = (page - 1) * rowsPerPage;
-    const currentData = categories?.slice(start, start + rowsPerPage) || [];
+
+    const dataSearch = useMemo(() => categories.filter(e => e.name.toLowerCase().includes(search.toLowerCase())), [search, categories])
+    const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
     const handleClickOpenDele = (row) => {
         setOpen(true);
@@ -38,6 +40,7 @@ function TableCategory({ handleClickOpen, setCategory, category }) {
 
         handleClose();
     };
+
 
     return (
         <div className="p-5">
@@ -102,7 +105,7 @@ function TableCategory({ handleClickOpen, setCategory, category }) {
                             setPage={setPage}
                             rowsPerPage={rowsPerPage}
                             setRowsPerPage={setRowsPerPage}
-                            totalItems={categories?.length || 0}
+                            totalItems={dataSearch?.length || 0}
                         />
                     </div>
 

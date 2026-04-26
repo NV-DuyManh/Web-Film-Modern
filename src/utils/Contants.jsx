@@ -18,11 +18,11 @@ export const LISTMENU = [
         ]
     },
     {
-        name: "Movies",
+        name: "Media",
         icon: <MdLocalMovies />,
         subMenu: [
             {
-                title: "Movies List",
+                title: "Movies",
                 path: "/movies"
             },
             {
@@ -72,7 +72,7 @@ export const LISTMENU = [
         ]
     },
     {
-        name: "Billing",
+        name: "Vip",
         icon: <MdOutlinePriceChange />,
         subMenu: [
             {
@@ -90,7 +90,7 @@ export const LISTMENU = [
         ]
     },
     {
-        name: "Vip",
+        name: "Bills",
         icon: <RiVipDiamondFill />,
         subMenu: [
             {

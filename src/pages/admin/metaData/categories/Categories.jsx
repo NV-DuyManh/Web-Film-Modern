@@ -9,6 +9,12 @@ function Categories(props) {
     const [category, setCategory] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+
+    const [search, setSearch] = useState("");
+    const onChangeSearch = (e) => {
+        setSearch(e.target.value)
+    }
+
     const handleClickOpen = () => {
         setOpen(true);
         setCategory(inner);
@@ -18,9 +24,6 @@ function Categories(props) {
     const handleClose = () => {
         setOpen(false);
     };
-    const onChangeInput = (e) => {
-        setCategory({ ...category, [e.target.name]: e.target.value })
-    }
 
     const validation = () => {
         const newError = {};
@@ -39,12 +42,17 @@ function Categories(props) {
         setLoading(false);
     }
 
+    const onChangeInput = (e) => {
+        setCategory({ ...category, [e.target.name]: e.target.value })
+    }
+
     return (
         <div>
             <Search
                 name={"List Categories"}
                 tuKhoa={"Search Category"}
                 handleClickOpen={handleClickOpen}
+                onChangeSearch={onChangeSearch}
             />
             <ModalCategory
                 addCategory={addCategory}
@@ -60,6 +68,7 @@ function Categories(props) {
                 setCategory={setCategory}
                 handleClickOpen={handleClickOpen}
                 category={category}
+                search={search}
             />
         </div>
     );

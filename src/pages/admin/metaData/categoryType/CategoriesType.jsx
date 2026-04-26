@@ -18,6 +18,10 @@ function CategoriesType(props) {
         setError(inner);
     };
 
+    const [search, setSearch] = useState("");
+    const onChangeSearch = (e) => {
+        setSearch(e.target.value);
+    }
     const handleClose = () => {
         setOpen(false);
     };
@@ -31,7 +35,7 @@ function CategoriesType(props) {
         newError.name = categoryType.name ? "" : "Please enter your name";
         newError.description = categoryType.description ? "" : "Please enter your description";
         setError(newError);
-        return Object.values(newError).some(e => e !== "");  
+        return Object.values(newError).some(e => e !== "");
     }
 
     const addCategoryType = async () => {
@@ -39,8 +43,8 @@ function CategoriesType(props) {
             return;
         }
         setLoading(true);
-        !categoryType.id 
-            ? await addDocument("CategoryTypes", categoryType) 
+        !categoryType.id
+            ? await addDocument("CategoryTypes", categoryType)
             : await updateDocument("CategoryTypes", categoryType);
         handleClose();
         setLoading(false);
@@ -52,6 +56,7 @@ function CategoriesType(props) {
                 name={"List Categories Type"}
                 tuKhoa={"Search Category Type"}
                 handleClickOpen={handleClickOpen}
+                onChangeSearch={onChangeSearch}
             />
             <ModalCategoryType
                 addCategoryType={addCategoryType}
@@ -67,6 +72,7 @@ function CategoriesType(props) {
                 setCategoryType={setCategoryType}
                 handleClickOpen={handleClickOpen}
                 categoryType={categoryType}
+                search={search}
             />
         </div>
     );
