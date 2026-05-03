@@ -25,7 +25,11 @@ function Authors() {
     const [author, setAuthor] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
+    
+    const [search, setSearch] = useState("");
+    const onChangeSearch = (e) => {
+        setSearch(e.target.value)
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -65,7 +69,7 @@ function Authors() {
         }
 
         !author.id ? await addDocument("Author", submitData) : await updateDocument("Author", submitData);
-        
+
         handleClose();
         setLoading(false);
     }
@@ -87,7 +91,7 @@ function Authors() {
                 handleClickOpen={handleClickOpen}
                 name={"List Authors"}
                 tuKhoa={"Search Author by Name"}
-                onSearch={setSearchQuery}
+                onChangeSearch={onChangeSearch}
             />
             <ModalAuthors
                 handleImageChange={handleImageChange}
@@ -104,7 +108,7 @@ function Authors() {
                 setAuthor={setAuthor}
                 handleClickOpen={handleClickOpen}
                 author={author}
-                searchQuery={searchQuery}
+                search={search}
             />
         </div>
     );

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
@@ -7,23 +7,22 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 
-function TableAuthors({ handleClickOpen, setAuthor, author, searchQuery = "" }) {
+function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
     const authors = useContext(AuthorContext);
     const [open, setOpen] = useState(false);
 
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const filteredData = authors?.filter((item) => 
-        item.name && item.name.toLowerCase().includes(searchQuery.toLowerCase())
-    ) || [];
-
     const start = (page - 1) * rowsPerPage;
-    const currentData = filteredData.slice(start, start + rowsPerPage);
+
+    const dataSearch = useMemo(() => authors?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())), [search, authors]);
+
+    const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
     useEffect(() => {
         setPage(1);
-    }, [searchQuery]);
+    }, [search]);
 
     const handleClickOpenDele = (row) => {
         setOpen(true);
@@ -112,7 +111,7 @@ function TableAuthors({ handleClickOpen, setAuthor, author, searchQuery = "" }) 
                             setPage={setPage}
                             rowsPerPage={rowsPerPage}
                             setRowsPerPage={setRowsPerPage}
-                            totalItems={filteredData.length || 0}
+                            totalItems={dataSearch?.length || 0}
                         />
                     </div>
                 </div>

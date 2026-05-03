@@ -26,6 +26,11 @@ function Actors() {
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
 
+    const [search, setSearch] = useState("");
+    const onChangeSearch = (e) => {
+        setSearch(e.target.value)
+    }
+
     const handleClickOpen = () => {
         setOpen(true);
         setActor(inner);
@@ -64,7 +69,7 @@ function Actors() {
         }
 
         !actor.id ? await addDocument("Actor", submitData) : await updateDocument("Actor", submitData);
-        
+
         handleClose();
         setLoading(false);
     }
@@ -86,6 +91,7 @@ function Actors() {
                 handleClickOpen={handleClickOpen}
                 name={"List Actor"}
                 tuKhoa={"Search Actor"}
+                onChangeSearch={onChangeSearch}
             />
             <ModalActor
                 handleImageChange={handleImageChange}
@@ -101,7 +107,9 @@ function Actors() {
             <TableActor
                 setActor={setActor}
                 handleClickOpen={handleClickOpen}
-                actor={actor} />
+                actor={actor}
+                search={search}
+            />
         </div>
     );
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CategoriesContext } from '../../../../contexts/CategoryProvider';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -18,7 +18,9 @@ function TableCategory({ handleClickOpen, setCategory, category, search }) {
 
     const dataSearch = useMemo(() => categories.filter(e => e.name.toLowerCase().includes(search.toLowerCase())), [search, categories])
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
-
+    useEffect(() => {
+        setPage(1);
+    }, [search]);
     const handleClickOpenDele = (row) => {
         setOpen(true);
         setCategory(row);

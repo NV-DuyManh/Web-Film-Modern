@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
@@ -7,7 +7,7 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../app.css";
 import { ActorContext } from '../../../../contexts/ActorProvider';
 
-function TableActor({ handleClickOpen, setActor, actor }) {
+function TableActor({ handleClickOpen, setActor, actor, search }) {
     const actors = useContext(ActorContext);
     const [open, setOpen] = useState(false);
 
@@ -15,8 +15,12 @@ function TableActor({ handleClickOpen, setActor, actor }) {
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const start = (page - 1) * rowsPerPage;
-    const currentData = actors?.slice(start, start + rowsPerPage) || [];
 
+    const dataSearch = useMemo(() => actors.filter(e => e.name.toLowerCase().includes(search.toLowerCase())), [search, actors])
+    const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
+    useEffect(() => {
+        setPage(1);
+    }, [search]);
     const handleClickOpenDele = (row) => {
         setOpen(true);
         setActor(row);

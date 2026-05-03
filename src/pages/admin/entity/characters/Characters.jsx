@@ -25,7 +25,10 @@ function Characters() {
     const [character, setCharacter] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
-    const [searchQuery, setSearchQuery] = useState("");
+    const [search, setSearch] = useState("");
+    const onChangeSearch = (e) => {
+        setSearch(e.target.value)
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -65,7 +68,7 @@ function Characters() {
         }
 
         !character.id ? await addDocument("Character", submitData) : await updateDocument("Character", submitData);
-        
+
         handleClose();
         setLoading(false);
     }
@@ -87,7 +90,7 @@ function Characters() {
                 handleClickOpen={handleClickOpen}
                 name={"List Characters"}
                 tuKhoa={"Search Character by Name"}
-                onSearch={setSearchQuery}
+                onChangeSearch={onChangeSearch}
             />
             <ModalCharacters
                 handleImageChange={handleImageChange}
@@ -104,7 +107,7 @@ function Characters() {
                 setCharacter={setCharacter}
                 handleClickOpen={handleClickOpen}
                 character={character}
-                searchQuery={searchQuery}
+                search={search}
             />
         </div>
     );
