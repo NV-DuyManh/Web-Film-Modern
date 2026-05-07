@@ -8,6 +8,7 @@ import CategoryTypeProvider from './contexts/CategoryTypeProvider.jsx'
 import ActorProvider from './contexts/ActorProvider.jsx'
 import AuthorProvider from './contexts/AuthorProvider.jsx'
 import CharacterProvider from './contexts/CharacterProvider.jsx'
+import MovieProvider from './contexts/MovieProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -17,7 +18,9 @@ createRoot(document.getElementById('root')).render(
           <ActorProvider>
             <AuthorProvider>
               <CharacterProvider>
-                <App />
+                <MovieProvider>
+                  <App />
+                </MovieProvider>
               </CharacterProvider>
             </AuthorProvider>
           </ActorProvider>
