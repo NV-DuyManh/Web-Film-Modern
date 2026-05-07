@@ -10,14 +10,25 @@ import { uploadImageToCloudinary } from '../../../../config/cloudiaryConfig';
 import LOGO from "../../../../assets/Logo.png";
 
 const innerMovie = {
-    name: "", description: "", imgUrl: LOGO, trailerUrl: "", duration: 0,
-    views: 0, rating: 0, endEpisode: 1, category_Type_Id: "", productionYear: new Date().getFullYear(),
-    list_Category: "", list_Actor: "", list_Character: "", planID: "", rent: 0, status: "Coming Soon"
+    name: "", description: "", imgUrl: LOGO, trailerUrl: "", duration: "",
+    views: 0, rating: 5, endEpisode: "", category_Type_Id: "", productionYear: "",
+    list_Category: "", list_Actor: "", list_Character: "", planID: "", rent: "", status: "Coming Soon"
+};
+
+const getBase64FromUrl = async (url) => {
+    const data = await fetch(url);
+    const blob = await data.blob();
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => resolve(reader.result);
+    });
 };
 
 function MoviesList() {
-    const movies = useContext(MovieContext); // Lấy data từ Context tổng
+    const movies = useContext(MovieContext);
     const [movie, setMovie] = useState(innerMovie);
+    const [error, setError] = useState(innerMovie);
     const [openForm, setOpenForm] = useState(false);
     const [openView, setOpenView] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
@@ -25,27 +36,81 @@ function MoviesList() {
     const [search, setSearch] = useState("");
 
     const onChangeSearch = (e) => setSearch(e.target.value);
-    const onChangeInput = (e) => setMovie({ ...movie, [e.target.name]: e.target.value });
+    
+    const onChangeInput = (e) => {
+        setMovie({ ...movie, [e.target.name]: e.target.value });
+    };
 
-    const handleClickOpenAdd = () => { setMovie(innerMovie); setOpenForm(true); };
-    const handleEdit = (row) => { setMovie(row); setOpenForm(true); };
+    const handleClickOpenAdd = () => { 
+        setMovie(innerMovie); 
+        setError(innerMovie);
+        setOpenForm(true); 
+    };
+    
+    const handleEdit = (row) => { 
+        setMovie(row); 
+        setError(innerMovie);
+        setOpenForm(true); 
+    };
+
     const handleView = (row) => { setMovie(row); setOpenView(true); };
     const handleDeletePrompt = (row) => { setMovie(row); setOpenDelete(true); };
 
-    const addOrUpdateMovie = async () => {
-        if (!movie.name) return;
-        setLoading(true);
-        let submitData = { ...movie };
+    const validation = () => {
+        const newError = {};
+        newError.name = movie.name ? "" : "Required";
+        newError.description = movie.description ? "" : "Required";
+        newError.productionYear = movie.productionYear !== "" ? "" : "Required";
+        newError.duration = movie.duration !== "" ? "" : "Required";
+        newError.endEpisode = movie.endEpisode !== "" ? "" : "Required";
+        newError.category_Type_Id = movie.category_Type_Id ? "" : "Required";
+        newError.trailerUrl = movie.trailerUrl ? "" : "Required";
+        newError.list_Category = movie.list_Category ? "" : "Required";
+        newError.list_Actor = movie.list_Actor ? "" : "Required";
+        newError.list_Character = movie.list_Character ? "" : "Required";
+        newError.rent = movie.rent !== "" ? "" : "Required";
+        newError.planID = movie.planID ? "" : "Required";
         
-        // Logic upload ảnh nếu có file mới (giả sử bạn chọn file qua handleImageChange)
-        if (submitData.imgFile) {
-            submitData.imgUrl = await uploadImageToCloudinary(submitData.imgFile, "Movies");
-            delete submitData.imgFile;
-        }
+        setError(newError);
+        return Object.values(newError).some(e => e !== "");
+    };
 
-        !movie.id ? await addDocument("Movies", submitData) : await updateDocument("Movies", submitData);
-        setOpenForm(false);
-        setLoading(false);
+    const addOrUpdateMovie = async () => {
+        if (validation()) return; 
+        
+        setLoading(true);
+        try {
+            let submitData = { ...movie };
+
+            if (submitData.imgUrl === LOGO) {
+                submitData.imgUrl = await getBase64FromUrl(LOGO);
+            }
+
+            if (submitData.imgFile) {
+                submitData.imgUrl = await uploadImageToCloudinary(submitData.imgFile, "Movies");
+                delete submitData.imgFile;
+            }
+
+            submitData.duration = Number(submitData.duration) || 0;
+            submitData.views = Number(submitData.views) || 0;
+            submitData.rating = Number(submitData.rating) || 5;
+            submitData.endEpisode = Number(submitData.endEpisode) || 0;
+            submitData.productionYear = Number(submitData.productionYear) || 0;
+            submitData.rent = Number(submitData.rent) || 0;
+
+            if (!movie.id) {
+                submitData.createdAt = new Date().toISOString();
+                await addDocument("Movies", submitData);
+            } else {
+                await updateDocument("Movies", submitData);
+            }
+
+            setOpenForm(false);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleDeleted = async () => {
@@ -55,16 +120,8 @@ function MoviesList() {
 
     return (
         <div>
-            <Search name="List Movies" tuKhoa="Search Movie..." onChangeSearch={onChangeSearch} handleClickOpen={handleClickOpenAdd} />
-            
-            <TableMovies 
-                movies={movies} 
-                search={search} 
-                handleView={handleView} 
-                handleEdit={handleEdit} 
-                handleDelete={handleDeletePrompt} 
-            />
-
+            <Search name="List Movies" tuKhoa="Search Movie by Name" onChangeSearch={onChangeSearch} handleClickOpen={handleClickOpenAdd} />
+            <TableMovies movies={movies} search={search} handleView={handleView} handleEdit={handleEdit} handleDelete={handleDeletePrompt} />
             <ModalMovies 
                 open={openForm} 
                 handleClose={() => setOpenForm(false)} 
@@ -73,16 +130,15 @@ function MoviesList() {
                 addOrUpdateMovie={addOrUpdateMovie} 
                 loading={loading} 
                 setMovie={setMovie}
+                error={error}
             />
-
             <ModalViewMovie open={openView} handleClose={() => setOpenView(false)} movie={movie} />
-
             <ModalDelete 
                 open={openDelete} 
                 handleClose={() => setOpenDelete(false)} 
                 handleDeleted={handleDeleted} 
                 titleDelete="DELETE MOVIE" 
-                contentDelete="Are you sure you want to delete this movie?" 
+                contentDelete={`Are you sure you want to delete "${movie?.name}"?`} 
             />
         </div>
     );
