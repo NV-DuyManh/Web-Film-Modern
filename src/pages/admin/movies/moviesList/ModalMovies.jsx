@@ -25,29 +25,88 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
     };
 
     return (
-        <Dialog open={open} TransitionComponent={Transition} keepMounted onClose={handleClose} maxWidth="lg" fullWidth PaperProps={{ className: "modal-inner" }} BackdropProps={{ className: "modal-backdrop-x" }}>
+        <Dialog
+            open={open}
+            TransitionComponent={Transition}
+            keepMounted onClose={handleClose}
+            maxWidth="lg"
+            fullWidth
+            PaperProps={{ className: "modal-inner" }}
+            BackdropProps={{ className: "modal-backdrop-x" }}
+        >
             <DialogTitle className="modal-header-x">{movie.id ? "UPDATE MOVIE" : "ADD NEW MOVIE"}</DialogTitle>
             <DialogContent className="modal-body-x grid grid-cols-12 gap-8 h-[75vh] overflow-y-auto custom-scrollbar p-8 pt-10">
 
                 <div className="col-span-12 lg:col-span-7 space-y-8 mt-5">
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
                         <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest">Task 1: General Info</p>
-                        <TextField className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Movie Name" value={movie.name} error={!!error.name} helperText={error.name} />
-                        <TextField className="modal-input-x" name="description" onChange={onChangeInput} fullWidth multiline rows={3} label="Description" value={movie.description} error={!!error.description} helperText={error.description} />
+                        <TextField
+                            className="modal-input-x"
+                            name="name"
+                            onChange={onChangeInput}
+                            fullWidth
+                            label="Movie Name"
+                            value={movie.name}
+                            error={!!error.name}
+                            helperText={error.name}
+                        />
+                        <TextField
+                            className="modal-input-x"
+                            name="description"
+                            onChange={onChangeInput}
+                            fullWidth
+                            multiline
+                            rows={3}
+                            label="Description"
+                            value={movie.description}
+                            error={!!error.description}
+                            helperText={error.description}
+                        />
                     </div>
 
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
                         <p className="text-purple-400 text-xs font-bold uppercase tracking-widest">Task 2: Specification</p>
                         <div className="grid grid-cols-3 gap-4">
-                            <TextField className="modal-input-x" name="productionYear" onChange={handleNumberChange} label="Year" value={movie.productionYear} error={!!error.productionYear} helperText={error.productionYear} />
-                            <TextField className="modal-input-x" name="duration" onChange={handleNumberChange} label="Duration" value={movie.duration} error={!!error.duration} helperText={error.duration} />
-                            <TextField className="modal-input-x" name="endEpisode" onChange={handleNumberChange} label="Episodes" value={movie.endEpisode} error={!!error.endEpisode} helperText={error.endEpisode} />
+                            <TextField
+                                className="modal-input-x"
+                                name="productionYear"
+                                onChange={handleNumberChange}
+                                label="Year"
+                                value={movie.productionYear}
+                                error={!!error.productionYear}
+                                helperText={error.productionYear}
+                            />
+                            <TextField
+                                className="modal-input-x"
+                                name="duration"
+                                onChange={handleNumberChange}
+                                label="Duration"
+                                value={movie.duration}
+                                error={!!error.duration}
+                                helperText={error.duration}
+                            />
+                            <TextField
+                                className="modal-input-x"
+                                name="endEpisode"
+                                onChange={handleNumberChange}
+                                label="Episodes"
+                                value={movie.endEpisode}
+                                error={!!error.endEpisode}
+                                helperText={error.endEpisode}
+                            />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <TextField select className="modal-input-x" name="status" onChange={onChangeInput} label="Status" value={movie.status || "Coming Soon"} SelectProps={{ MenuProps: menuProps }}>
+                            <TextField
+                                select
+                                className="modal-input-x"
+                                name="status"
+                                onChange={onChangeInput}
+                                label="Status"
+                                value={movie.status || "Coming Soon"}
+                                SelectProps={{ MenuProps: menuProps }}>
                                 <MenuItem value="Coming Soon">Coming Soon</MenuItem>
                                 <MenuItem value="Now Showing">Now Showing</MenuItem>
-                                <MenuItem value="Ended">Ended</MenuItem>
+                                <MenuItem value="Completed">Completed</MenuItem>
                             </TextField>
                             <TextField select className="modal-input-x" name="rating" onChange={onChangeInput} label="Rating" value={movie.rating || 5} SelectProps={{ MenuProps: menuProps }}>
                                 {[1, 2, 3, 4, 5].map(num => <MenuItem key={num} value={num}>{num} Stars</MenuItem>)}
@@ -57,9 +116,36 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
 
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
                         <p className="text-yellow-400 text-xs font-bold uppercase tracking-widest">Task 3: Media & Classification</p>
-                        <TextField className="modal-input-x" name="category_Type_Id" onChange={onChangeInput} fullWidth label="Category Type ID" value={movie.category_Type_Id} error={!!error.category_Type_Id} helperText={error.category_Type_Id} />
-                        <TextField className="modal-input-x" name="trailerUrl" onChange={onChangeInput} fullWidth label="Trailer URL" value={movie.trailerUrl} error={!!error.trailerUrl} helperText={error.trailerUrl} />
-                        <TextField className="modal-input-x" name="list_Category" onChange={onChangeInput} fullWidth label="List Category" value={movie.list_Category} error={!!error.list_Category} helperText={error.list_Category} />
+                        <TextField
+                            className="modal-input-x"
+                            name="category_Type_Id"
+                            onChange={onChangeInput}
+                            fullWidth
+                            label="Category Type"
+                            value={movie.category_Type_Id}
+                            error={!!error.category_Type_Id}
+                            helperText={error.category_Type_Id}
+                        />
+                        <TextField
+                            className="modal-input-x"
+                            name="trailerUrl"
+                            onChange={onChangeInput}
+                            fullWidth
+                            label="Trailer URL"
+                            value={movie.trailerUrl}
+                            error={!!error.trailerUrl}
+                            helperText={error.trailerUrl}
+                        />
+                        <TextField
+                            className="modal-input-x"
+                            name="list_Category"
+                            onChange={onChangeInput}
+                            fullWidth
+                            label="List Category"
+                            value={movie.list_Category}
+                            error={!!error.list_Category}
+                            helperText={error.list_Category}
+                        />
                     </div>
                 </div>
 
@@ -78,11 +164,45 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
 
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
                         <p className="text-green-400 text-xs font-bold uppercase tracking-widest">Task 4: Cast & Billing</p>
-                        <TextField className="modal-input-x" name="list_Actor" onChange={onChangeInput} fullWidth label="List Actor" value={movie.list_Actor} error={!!error.list_Actor} helperText={error.list_Actor} />
-                        <TextField className="modal-input-x" name="list_Character" onChange={onChangeInput} fullWidth label="List Character" value={movie.list_Character} error={!!error.list_Character} helperText={error.list_Character} />
+                        <TextField
+                            className="modal-input-x"
+                            name="list_Actor"
+                            onChange={onChangeInput}
+                            fullWidth
+                            label="List Actor"
+                            value={movie.list_Actor}
+                            error={!!error.list_Actor}
+                            helperText={error.list_Actor}
+                        />
+                        <TextField
+                            className="modal-input-x"
+                            name="list_Character"
+                            onChange={onChangeInput}
+                            fullWidth
+                            label="List Character"
+                            value={movie.list_Character}
+                            error={!!error.list_Character}
+                            helperText={error.list_Character}
+                        />
                         <div className="grid grid-cols-2 gap-4">
-                            <TextField className="modal-input-x" name="rent" onChange={handleNumberChange} label="Rent Price" value={movie.rent} error={!!error.rent} helperText={error.rent} />
-                            <TextField className="modal-input-x" name="planID" onChange={onChangeInput} label="Plan ID" value={movie.planID} error={!!error.planID} helperText={error.planID} />
+                            <TextField
+                                className="modal-input-x"
+                                name="rent"
+                                onChange={handleNumberChange}
+                                label="Rent Price"
+                                value={movie.rent}
+                                error={!!error.rent}
+                                helperText={error.rent}
+                            />
+                            <TextField
+                                className="modal-input-x"
+                                name="planID"
+                                onChange={onChangeInput}
+                                label="Plan"
+                                value={movie.planID}
+                                error={!!error.planID}
+                                helperText={error.planID}
+                            />
                         </div>
                     </div>
                 </div>

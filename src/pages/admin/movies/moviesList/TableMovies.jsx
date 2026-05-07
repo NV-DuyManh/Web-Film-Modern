@@ -26,7 +26,8 @@ function TableMovies({ movies, search, handleView, handleEdit, handleDelete }) {
                                 <th className="w-16">ID</th>
                                 <th className="w-24">IMAGE</th>
                                 <th>NAME</th>
-                                <th className="text-center">RATING</th>
+                                <th>ACTORS</th>
+                                <th>CHARACTERS</th>
                                 <th className="text-center">DURATION</th>
                                 <th className="text-center">EPISODE</th>
                                 <th className="text-center">STATUS</th>
@@ -38,11 +39,14 @@ function TableMovies({ movies, search, handleView, handleEdit, handleDelete }) {
                                 <tr key={row.id} className="table-row">
                                     <td className="table-cell">{(page - 1) * rowsPerPage + index + 1}</td>
                                     <td className="table-cell py-2">
-                                        <img src={row.imgUrl} alt={row.name} className="w-14 h-20 object-cover rounded-md shadow-md border border-white/10" />
+                                        <img src={row.imgUrl} alt={row.name} className="w-32 h-32 object-cover rounded-md shadow-md border border-white/10" />
                                     </td>
-                                    <td className="table-cell">{row.name}</td>
-                                    <td className="table-cell text-center">
-                                        <span className="text-yellow-400">★</span> {row.rating}
+                                    <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">{row.name}</td>
+                                    <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
+                                        {row.list_Actor || "N/A"}
+                                    </td>
+                                    <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
+                                        {row.list_Character || "N/A"}
                                     </td>
                                     <td className="table-cell text-center">
                                         {row.duration ? `${row.duration} mins` : "N/A"}
@@ -52,7 +56,7 @@ function TableMovies({ movies, search, handleView, handleEdit, handleDelete }) {
                                     </td>
                                     <td className="table-cell text-center">
                                         <span className={`px-2 py-1 text-[10px] rounded uppercase tracking-wider font-bold ${
-                                            row.status === 'Ended' ? 'bg-red-500/20 text-red-400' 
+                                            row.status === 'Completed' ? 'bg-yellow-500/20 text-yellow-400' 
                                             : row.status === 'Now Showing' ? 'bg-green-500/20 text-green-400' 
                                             : 'bg-cyan-500/20 text-cyan-400'
                                         }`}>
@@ -61,7 +65,7 @@ function TableMovies({ movies, search, handleView, handleEdit, handleDelete }) {
                                     </td>
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">
-                                            <button onClick={() => handleView(row)} className="action-btn btn-edit bg-transparent border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black">
+                                            <button onClick={() => handleView(row)} className="action-btn bg-linear-to-r from-yellow-400 to-amber-500 text-slate-900 hover:from-amber-500 hover:to-orange-500 hover:text-white hover:shadow-[0_0_15px_rgba(245,158,11,0.6)] hover:scale-110 transition-all">
                                                 <FaEye size={16}/>
                                             </button>
                                             <button onClick={() => handleEdit(row)} className="action-btn btn-edit">

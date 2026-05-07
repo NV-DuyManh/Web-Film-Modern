@@ -58,18 +58,18 @@ function MoviesList() {
 
     const validation = () => {
         const newError = {};
-        newError.name = movie.name ? "" : "Required";
-        newError.description = movie.description ? "" : "Required";
-        newError.productionYear = movie.productionYear !== "" ? "" : "Required";
-        newError.duration = movie.duration !== "" ? "" : "Required";
-        newError.endEpisode = movie.endEpisode !== "" ? "" : "Required";
-        newError.category_Type_Id = movie.category_Type_Id ? "" : "Required";
-        newError.trailerUrl = movie.trailerUrl ? "" : "Required";
-        newError.list_Category = movie.list_Category ? "" : "Required";
-        newError.list_Actor = movie.list_Actor ? "" : "Required";
-        newError.list_Character = movie.list_Character ? "" : "Required";
-        newError.rent = movie.rent !== "" ? "" : "Required";
-        newError.planID = movie.planID ? "" : "Required";
+        newError.name = movie.name ? "" : "Please enter film name";
+        newError.description = movie.description ? "" : "Please enter description";
+        newError.productionYear = movie.productionYear !== "" ? "" : "Please enter production year";
+        newError.duration = movie.duration !== "" ? "" : "Please enter duration";
+        newError.endEpisode = movie.endEpisode !== "" ? "" : "Please enter end episode";
+        newError.category_Type_Id = movie.category_Type_Id ? "" : "Please enter category type";
+        newError.trailerUrl = movie.trailerUrl ? "" : "Please enter trailer Url";
+        newError.list_Category = movie.list_Category ? "" : "Please enter your name";
+        newError.list_Actor = movie.list_Actor ? "" : "Please enter actor";
+        newError.list_Character = movie.list_Character ? "" : "Please enter your character";
+        newError.rent = movie.rent !== "" ? "" : "Please enter rent";
+        newError.planID = movie.planID ? "" : "Please enter your plan";
         
         setError(newError);
         return Object.values(newError).some(e => e !== "");
