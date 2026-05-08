@@ -11,7 +11,7 @@ import LOGO from "../../../../assets/Logo.png";
 
 const innerMovie = {
     name: "", description: "", imgUrl: LOGO, trailerUrl: "", duration: "",
-    views: 0, rating: 5, endEpisode: "", category_Type_Id: "", productionYear: "",
+    views: 1, rating: 5, endEpisode: "", category_Type_Id: "", productionYear: "",
     list_Category: "", list_Actor: "", list_Character: "", planID: "", rent: "", status: "Coming Soon"
 };
 
