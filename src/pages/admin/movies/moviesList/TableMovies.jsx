@@ -39,7 +39,7 @@ function TableMovies({ movies, search, handleView, handleEdit, handleDelete }) {
                                 <tr key={row.id} className="table-row">
                                     <td className="table-cell">{(page - 1) * rowsPerPage + index + 1}</td>
                                     <td className="table-cell py-2">
-                                        <img src={row.imgUrl} alt={row.name} className="w-32 h-32 object-cover rounded-md shadow-md border border-white/10" />
+                                        <img src={row.imgUrl} alt={row.name} className="w-32 h-20 object-cover rounded-md shadow-md border border-white/10" />
                                     </td>
                                     <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">{row.name}</td>
                                     <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
