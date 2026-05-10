@@ -1,10 +1,10 @@
+// src/pages/admin/movies/moviesList/TableMovies.jsx
 import React, { useState, useMemo, useEffect } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { FaEye } from 'react-icons/fa';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 
-function TableMovies({ movies, search, handleView, handleEdit, handleDelete }) {
+function TableMovies({ movies, search, handleEdit, handleDelete }) {
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -26,11 +26,10 @@ function TableMovies({ movies, search, handleView, handleEdit, handleDelete }) {
                                 <th className="w-16">ID</th>
                                 <th className="w-24 text-center">IMAGE</th>
                                 <th>NAME</th>
-                                <th>ACTORS</th>
-                                <th >CHARACTERS</th>
+                                <th>COUNTRY</th>
                                 <th className="text-center">DURATION</th>
                                 <th className="text-center">EPISODE</th>
-                                <th className="text-center">STATUS</th>
+                                <th className="text-center">RENT</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
@@ -43,10 +42,7 @@ function TableMovies({ movies, search, handleView, handleEdit, handleDelete }) {
                                     </td>
                                     <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">{row.name}</td>
                                     <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
-                                        {row.list_Actor || "N/A"}
-                                    </td>
-                                    <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
-                                        {row.list_Character || "N/A"}
+                                        {row.countriesID || "N/A"}
                                     </td>
                                     <td className="table-cell text-center">
                                         {row.duration ? `${row.duration} mins` : "N/A"}
@@ -55,19 +51,10 @@ function TableMovies({ movies, search, handleView, handleEdit, handleDelete }) {
                                         {row.endEpisode ? `${row.endEpisode} eps` : "N/A"}
                                     </td>
                                     <td className="table-cell text-center">
-                                        <span className={`px-2 py-1 text-[10px] rounded uppercase tracking-wider font-bold ${
-                                            row.status === 'Completed' ? 'bg-yellow-500/20 text-yellow-400' 
-                                            : row.status === 'Now Showing' ? 'bg-green-500/20 text-green-400' 
-                                            : 'bg-cyan-500/20 text-cyan-400'
-                                        }`}>
-                                            {row.status}
-                                        </span>
+                                        {row.rent ? `${row.rent} VND` : "Free"}
                                     </td>
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">
-                                            <button onClick={() => handleView(row)} className="action-btn bg-linear-to-r from-yellow-400 to-amber-500 text-slate-900 hover:from-amber-500 hover:to-orange-500 hover:text-white hover:shadow-[0_0_15px_rgba(245,158,11,0.6)] hover:scale-110 transition-all">
-                                                <FaEye size={16}/>
-                                            </button>
                                             <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
                                                 <CiEdit size={16}/>
                                             </button>
