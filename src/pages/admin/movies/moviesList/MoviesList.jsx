@@ -1,4 +1,3 @@
-// src/pages/admin/movies/moviesList/MoviesList.jsx
 import React, { useState, useContext, useMemo, useEffect } from 'react';
 import Search from '../../../../components/admin/Search';
 import TableMovies from './TableMovies';

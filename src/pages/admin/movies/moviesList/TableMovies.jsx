@@ -1,4 +1,3 @@
-// src/pages/admin/movies/moviesList/TableMovies.jsx
 import React, { useState, useMemo, useEffect } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';

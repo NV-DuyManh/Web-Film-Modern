@@ -59,7 +59,7 @@ export default function ModalChoose({ handleClickChoose, handleCloseChoose, open
                                     src={item.imgUrl} 
                                     alt={item.name} 
                                 />
-                                <h1 className={`text-xs font-bold text-center max-w-[80px] truncate ${isSelected ? "text-cyan-400" : "text-gray-200"}`}>
+                                <h1 className={`text-xs font-bold text-center max-w-20 truncate ${isSelected ? "text-cyan-400" : "text-gray-200"}`}>
                                     {item.name}
                                 </h1>
                             </div>
