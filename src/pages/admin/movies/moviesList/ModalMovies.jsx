@@ -62,13 +62,21 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
         } else if (type === "characters") {
             setMovie(pre => ({ ...pre, list_Character: toggleById(pre.list_Character, id) }));
         } else if (type === "categoryTypes") {
-            setMovie(pre => ({ ...pre, category_Type_Id: id })); // Chọn 1 cho Category Type
+            setMovie(pre => ({ ...pre, category_Type_Id: toggleById(pre.category_Type_Id, id) }));
         }
     };
 
     const toggleById = (list, id) => {
         if (!Array.isArray(list)) list = [];
         return list.includes(id) ? list.filter(e => e !== id) : [...list, id];
+    };
+
+    const getSelectedItems = () => {
+        if (type === "actors") return movie.list_Actor || [];
+        if (type === "authors") return movie.authors || [];
+        if (type === "characters") return movie.list_Character || [];
+        if (type === "categoryTypes") return movie.category_Type_Id || [];
+        return [];
     };
 
     return (
@@ -181,15 +189,18 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                         <p className="text-green-400 text-xs font-bold uppercase tracking-widest">Task 3: Classifications & Crew</p>
                         
                         <div className='flex items-center text-white gap-2'>
-                            <label className="font-medium">Category Type</label>
+                            <label className="font-medium">Category Types</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("categoryTypes")} className='cursor-pointer text-2xl text-cyan-400 hover:scale-110 transition-transform' />
                         </div>
                         <div className='text-white flex gap-2 flex-wrap min-h-[30px]'>
-                            {movie.category_Type_Id && (
-                                <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-full text-sm font-bold shadow-[0_0_10px_rgba(34,211,238,0.2)]">
-                                    {categoryTypes?.find(e => e.id === movie.category_Type_Id)?.name}
-                                </span>
-                            )}
+                            {movie.category_Type_Id?.map((item) => {
+                                const categoryType = categoryTypes?.find(e => e.id === item);
+                                return categoryType ? (
+                                    <span key={item} className="px-3 py-1 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-full text-sm font-bold shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+                                        {categoryType.name}
+                                    </span>
+                                ) : null;
+                            })}
                         </div>
 
                         <div className='flex items-center text-white gap-2 mt-4'>
@@ -245,7 +256,14 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                     {loading ? <FaSpinner className="spin" /> : "Save Movie"}
                 </Button>
             </DialogActions>
-            <ModalChoose handleClickChoose={handleClickChoose} type={type} dataChoose={dataChoose} handleCloseChoose={handleCloseChoose} openChoose={openChoose} />
+            <ModalChoose 
+                handleClickChoose={handleClickChoose} 
+                type={type} 
+                dataChoose={dataChoose} 
+                handleCloseChoose={handleCloseChoose} 
+                openChoose={openChoose} 
+                selectedItems={getSelectedItems()}
+            />
         </Dialog>
     );
 }

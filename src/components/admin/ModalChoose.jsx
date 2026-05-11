@@ -11,7 +11,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataChoose, type }) {
+export default function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataChoose, type, selectedItems = [] }) {
     return (
         <Dialog
             open={openChoose}
@@ -25,22 +25,46 @@ export default function ModalChoose({ handleClickChoose, handleCloseChoose, open
             <DialogTitle className="modal-header-x text-white uppercase tracking-wider">Choose {type}</DialogTitle>
             <DialogContent className="modal-body-x p-6">
                 <div className="flex gap-4 flex-wrap mt-4 justify-center">
-                    {dataChoose?.map((item) => (
-                        type === "categoryTypes" ? (
+                    {dataChoose?.map((item) => {
+                        const isSelected = selectedItems.includes(item.id);
+
+                        return type === "categoryTypes" ? (
                             <button 
                                 key={item.id} 
                                 onClick={() => handleClickChoose(item.id)} 
-                                className="px-5 py-2.5 rounded-xl bg-slate-800 text-gray-200 border border-slate-600 hover:bg-cyan-500/20 hover:text-cyan-400 hover:border-cyan-500/50 transition-all font-bold tracking-wide shadow-md"
+                                className={`px-5 py-2.5 rounded-xl border transition-all font-bold tracking-wide shadow-md ${
+                                    isSelected 
+                                        ? "bg-cyan-500 text-white border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.6)]" 
+                                        : "bg-slate-800 text-gray-200 border-slate-600 hover:bg-cyan-500/20 hover:text-cyan-400 hover:border-cyan-500/50"
+                                }`}
                             >
                                 {item.name}
                             </button>
                         ) : (
-                            <div key={item.id} onClick={() => handleClickChoose(item.id)} className="cursor-pointer flex flex-col items-center gap-2 hover:scale-110 transition-transform">
-                                <img className='w-16 h-16 rounded-full object-cover shadow-[0_0_10px_rgba(34,211,238,0.5)]' src={item.imgUrl} alt={item.name} />
-                                <h1 className="text-xs font-bold text-gray-200 text-center max-w-[80px] truncate">{item.name}</h1>
+                            <div 
+                                key={item.id} 
+                                onClick={() => handleClickChoose(item.id)} 
+                                className={`cursor-pointer flex flex-col items-center gap-2 transition-transform ${
+                                    isSelected 
+                                        ? "scale-110" 
+                                        : "hover:scale-110 opacity-70 hover:opacity-100"
+                                }`}
+                            >
+                                <img 
+                                    className={`w-16 h-16 rounded-full object-cover transition-all ${
+                                        isSelected 
+                                            ? "ring-4 ring-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.8)]" 
+                                            : "shadow-md"
+                                    }`} 
+                                    src={item.imgUrl} 
+                                    alt={item.name} 
+                                />
+                                <h1 className={`text-xs font-bold text-center max-w-[80px] truncate ${isSelected ? "text-cyan-400" : "text-gray-200"}`}>
+                                    {item.name}
+                                </h1>
                             </div>
-                        )
-                    ))}
+                        );
+                    })}
                 </div>
             </DialogContent>
             <DialogActions className="modal-actions-x">

@@ -11,7 +11,7 @@ import LOGO from "../../../../assets/Logo.png";
 
 const innerMovie = {
     name: "", description: "", imgUrl: LOGO, duration: "", endEpisode: "", 
-    category_Type_Id: "", countriesID: "", authors: [], planID: "", rent: "", 
+    category_Type_Id: [], countriesID: "", authors: [], planID: "", rent: "", 
     list_Actor: [], list_Character: []
 };
 
@@ -61,7 +61,7 @@ function MoviesList() {
         newError.countriesID = movie.countriesID ? "" : "Please select country";
         newError.duration = movie.duration !== "" ? "" : "Please enter duration";
         newError.endEpisode = movie.endEpisode !== "" ? "" : "Please enter end episode";
-        newError.category_Type_Id = movie.category_Type_Id ? "" : "Please select category type";
+        newError.category_Type_Id = movie.category_Type_Id?.length > 0 ? "" : "Please select category type";
         newError.planID = movie.planID ? "" : "Please select plan";
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
         setError(newError);
