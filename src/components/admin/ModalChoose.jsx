@@ -22,14 +22,24 @@ export default function ModalChoose({ handleClickChoose, handleCloseChoose, open
             fullWidth
             PaperProps={{ className: "modal-inner" }}
         >
-            <DialogTitle className="modal-header-x text-white">Choose {type}</DialogTitle>
+            <DialogTitle className="modal-header-x text-white uppercase tracking-wider">Choose {type}</DialogTitle>
             <DialogContent className="modal-body-x p-6">
                 <div className="flex gap-4 flex-wrap mt-4 justify-center">
                     {dataChoose?.map((item) => (
-                        <div key={item.id} onClick={() => handleClickChoose(item.id)} className="cursor-pointer flex flex-col items-center gap-2 hover:scale-110 transition-transform">
-                            <img className='w-16 h-16 rounded-full object-cover shadow-[0_0_10px_rgba(34,211,238,0.5)]' src={item.imgUrl} alt={item.name} />
-                            <h1 className="text-xs font-bold text-gray-200">{item.name}</h1>
-                        </div>
+                        type === "categoryTypes" ? (
+                            <button 
+                                key={item.id} 
+                                onClick={() => handleClickChoose(item.id)} 
+                                className="px-5 py-2.5 rounded-xl bg-slate-800 text-gray-200 border border-slate-600 hover:bg-cyan-500/20 hover:text-cyan-400 hover:border-cyan-500/50 transition-all font-bold tracking-wide shadow-md"
+                            >
+                                {item.name}
+                            </button>
+                        ) : (
+                            <div key={item.id} onClick={() => handleClickChoose(item.id)} className="cursor-pointer flex flex-col items-center gap-2 hover:scale-110 transition-transform">
+                                <img className='w-16 h-16 rounded-full object-cover shadow-[0_0_10px_rgba(34,211,238,0.5)]' src={item.imgUrl} alt={item.name} />
+                                <h1 className="text-xs font-bold text-gray-200 text-center max-w-[80px] truncate">{item.name}</h1>
+                            </div>
+                        )
                     ))}
                 </div>
             </DialogContent>

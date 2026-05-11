@@ -11,8 +11,8 @@ import LOGO from "../../../../assets/Logo.png";
 
 const innerMovie = {
     name: "", description: "", imgUrl: LOGO, duration: "", endEpisode: "", 
-    category_Type_Id: "", countriesID: "", authors: "", planID: "", rent: "", 
-    list_Actor: []
+    category_Type_Id: "", countriesID: "", authors: [], planID: "", rent: "", 
+    list_Actor: [], list_Character: []
 };
 
 const getBase64FromUrl = async (url) => {
@@ -62,7 +62,6 @@ function MoviesList() {
         newError.duration = movie.duration !== "" ? "" : "Please enter duration";
         newError.endEpisode = movie.endEpisode !== "" ? "" : "Please enter end episode";
         newError.category_Type_Id = movie.category_Type_Id ? "" : "Please select category type";
-        newError.authors = movie.authors ? "" : "Please select author";
         newError.planID = movie.planID ? "" : "Please select plan";
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
         setError(newError);

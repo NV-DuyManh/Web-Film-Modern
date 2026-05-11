@@ -7,6 +7,7 @@ import ModalChoose from '../../../../components/admin/ModalChoose';
 import { ActorContext } from '../../../../contexts/ActorProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
+import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import { COUNTRIES } from '../../../../utils/Contants';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -18,15 +19,19 @@ const menuProps = {
 export default function ModalMovies({ open, handleClose, movie, onChangeInput, addOrUpdateMovie, loading, setMovie, error }) {
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);
+    
     const actors = useContext(ActorContext);
     const categoryTypes = useContext(CategoryTypeContext);
     const authorsList = useContext(AuthorContext);
+    const characters = useContext(CharacterContext);
     const [type, setType] = useState("");
 
     const handleClickOpenChoose = (type) => {
-        if (type === "actors") {
-            setDataChoose(actors);
-        }
+        if (type === "actors") setDataChoose(actors);
+        else if (type === "authors") setDataChoose(authorsList);
+        else if (type === "characters") setDataChoose(characters);
+        else if (type === "categoryTypes") setDataChoose(categoryTypes);
+        
         setType(type);
         setOpenChoose(true);
     };
@@ -52,10 +57,17 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
     const handleClickChoose = (id) => {
         if (type === "actors") {
             setMovie(pre => ({ ...pre, list_Actor: toggleById(pre.list_Actor, id) }));
+        } else if (type === "authors") {
+            setMovie(pre => ({ ...pre, authors: toggleById(pre.authors, id) }));
+        } else if (type === "characters") {
+            setMovie(pre => ({ ...pre, list_Character: toggleById(pre.list_Character, id) }));
+        } else if (type === "categoryTypes") {
+            setMovie(pre => ({ ...pre, category_Type_Id: id })); // Chọn 1 cho Category Type
         }
     };
 
     const toggleById = (list, id) => {
+        if (!Array.isArray(list)) list = [];
         return list.includes(id) ? list.filter(e => e !== id) : [...list, id];
     };
 
@@ -137,40 +149,6 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                         </div>
                         <div className="grid grid-cols-2 gap-4">
                             <TextField
-                                select
-                                className="modal-input-x"
-                                name="category_Type_Id"
-                                onChange={onChangeInput}
-                                label="Category Type"
-                                value={movie.category_Type_Id}
-                                error={!!error.category_Type_Id}
-                                helperText={error.category_Type_Id}
-                                SelectProps={{ MenuProps: menuProps }}
-                            >
-                                {categoryTypes?.map(ct => <MenuItem key={ct.id} value={ct.id}>{ct.name}</MenuItem>)}
-                            </TextField>
-                            <TextField
-                                select
-                                className="modal-input-x"
-                                name="authors"
-                                onChange={onChangeInput}
-                                label="Authors"
-                                value={movie.authors}
-                                error={!!error.authors}
-                                helperText={error.authors}
-                                SelectProps={{ MenuProps: menuProps }}
-                            >
-                                {authorsList?.map(a => <MenuItem key={a.id} value={a.id}>{a.name}</MenuItem>)}
-                            </TextField>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="col-span-12 lg:col-span-5 space-y-8 mt-5">
-                    <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
-                        <p className="text-green-400 text-xs font-bold uppercase tracking-widest">Task 3: Cast & Billing</p>
-                        <div className="grid grid-cols-2 gap-4">
-                            <TextField
                                 className="modal-input-x"
                                 name="rent"
                                 onChange={handleNumberChange}
@@ -195,14 +173,55 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 <MenuItem value="Premium">Premium</MenuItem>
                             </TextField>
                         </div>
-                        <div className='flex items-center text-white gap-2 mt-4'>
-                            <label>Actor</label>
-                            <TbCategoryFilled onClick={() => handleClickOpenChoose("actors")} className='cursor-pointer text-2xl' />
+                    </div>
+                </div>
+
+                <div className="col-span-12 lg:col-span-5 space-y-8 mt-5">
+                    <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
+                        <p className="text-green-400 text-xs font-bold uppercase tracking-widest">Task 3: Classifications & Crew</p>
+                        
+                        <div className='flex items-center text-white gap-2'>
+                            <label className="font-medium">Category Type</label>
+                            <TbCategoryFilled onClick={() => handleClickOpenChoose("categoryTypes")} className='cursor-pointer text-2xl text-cyan-400 hover:scale-110 transition-transform' />
                         </div>
-                        <div className='text-white flex gap-2 flex-wrap'>
+                        <div className='text-white flex gap-2 flex-wrap min-h-[30px]'>
+                            {movie.category_Type_Id && (
+                                <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-full text-sm font-bold shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+                                    {categoryTypes?.find(e => e.id === movie.category_Type_Id)?.name}
+                                </span>
+                            )}
+                        </div>
+
+                        <div className='flex items-center text-white gap-2 mt-4'>
+                            <label className="font-medium">Authors</label>
+                            <TbCategoryFilled onClick={() => handleClickOpenChoose("authors")} className='cursor-pointer text-2xl text-yellow-400 hover:scale-110 transition-transform' />
+                        </div>
+                        <div className='text-white flex gap-2 flex-wrap min-h-[40px]'>
+                            {movie.authors?.map((item) => {
+                                const author = authorsList?.find(e => e.id === item);
+                                return author ? <img key={item} className='w-10 h-10 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)]' src={author.imgUrl} alt={author.name} title={author.name} /> : null;
+                            })}
+                        </div>
+
+                        <div className='flex items-center text-white gap-2 mt-4'>
+                            <label className="font-medium">Actors</label>
+                            <TbCategoryFilled onClick={() => handleClickOpenChoose("actors")} className='cursor-pointer text-2xl text-pink-400 hover:scale-110 transition-transform' />
+                        </div>
+                        <div className='text-white flex gap-2 flex-wrap min-h-[40px]'>
                             {movie.list_Actor?.map((item) => {
                                 const actor = actors?.find(e => e.id === item);
-                                return actor ? <img key={item} className='w-10 h-10 rounded-full object-cover' src={actor.imgUrl} alt={actor.name} title={actor.name} /> : null;
+                                return actor ? <img key={item} className='w-10 h-10 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)]' src={actor.imgUrl} alt={actor.name} title={actor.name} /> : null;
+                            })}
+                        </div>
+
+                        <div className='flex items-center text-white gap-2 mt-4'>
+                            <label className="font-medium">Characters</label>
+                            <TbCategoryFilled onClick={() => handleClickOpenChoose("characters")} className='cursor-pointer text-2xl text-green-400 hover:scale-110 transition-transform' />
+                        </div>
+                        <div className='text-white flex gap-2 flex-wrap min-h-[40px]'>
+                            {movie.list_Character?.map((item) => {
+                                const character = characters?.find(e => e.id === item);
+                                return character ? <img key={item} className='w-10 h-10 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)]' src={character.imgUrl} alt={character.name} title={character.name} /> : null;
                             })}
                         </div>
                     </div>
