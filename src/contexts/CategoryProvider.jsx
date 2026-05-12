@@ -11,7 +11,6 @@ function CategoryProvider({children}) {
         });
         return () => unsubcribe();
     }, []);
-   
     return (
         <CategoriesContext.Provider value={categories}>
             {children}
