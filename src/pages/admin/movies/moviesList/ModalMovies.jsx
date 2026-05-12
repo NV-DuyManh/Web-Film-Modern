@@ -1,3 +1,4 @@
+// src/pages/admin/movies/moviesList/ModalMovies.jsx
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, MenuItem } from '@mui/material';
 import { FaCloudUploadAlt, FaSpinner, FaTimesCircle } from 'react-icons/fa';
@@ -7,6 +8,7 @@ import { ActorContext } from '../../../../contexts/ActorProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
+import { PlanContext } from '../../../../contexts/PlanProvider'; // Import thêm PlanContext
 import { COUNTRIES } from '../../../../utils/Contants';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -23,6 +25,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
     const categoryTypes = useContext(CategoryTypeContext);
     const authorsList = useContext(AuthorContext);
     const characters = useContext(CharacterContext);
+    const plansList = useContext(PlanContext); // Sử dụng PlanContext
     const [type, setType] = useState("");
 
     const handleClickOpenChoose = (type) => {
@@ -72,13 +75,13 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
 
     const handleRemoveItem = (itemType, id) => {
         if (itemType === "actors") {
-            setMovie(pre => ({ ...pre, list_Actor: pre.list_Actor.filter(e => e !== id) }));
+            setMovie(pre => ({ ...pre, list_Actor: (pre.list_Actor || []).filter(e => e !== id) }));
         } else if (itemType === "authors") {
-            setMovie(pre => ({ ...pre, authors: pre.authors.filter(e => e !== id) }));
+            setMovie(pre => ({ ...pre, authors: (pre.authors || []).filter(e => e !== id) }));
         } else if (itemType === "characters") {
-            setMovie(pre => ({ ...pre, list_Character: pre.list_Character.filter(e => e !== id) }));
+            setMovie(pre => ({ ...pre, list_Character: (pre.list_Character || []).filter(e => e !== id) }));
         } else if (itemType === "categoryTypes") {
-            setMovie(pre => ({ ...pre, category_Type_Id: pre.category_Type_Id.filter(e => e !== id) }));
+            setMovie(pre => ({ ...pre, category_Type_Id: (pre.category_Type_Id || []).filter(e => e !== id) }));
         }
     };
 
@@ -187,9 +190,12 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 helperText={error.planID}
                                 SelectProps={{ MenuProps: menuProps }}
                             >
-                                <MenuItem value="Free">Free</MenuItem>
-                                <MenuItem value="VIP">VIP</MenuItem>
-                                <MenuItem value="Premium">Premium</MenuItem>
+                                {/* Thay đổi tại đây: render danh sách plan động */}
+                                {plansList?.map(plan => (
+                                    <MenuItem key={plan.id} value={plan.id}>
+                                        {plan.name}
+                                    </MenuItem>
+                                ))}
                             </TextField>
                         </div>
                     </div>
@@ -208,12 +214,12 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 const categoryType = categoryTypes?.find(e => e.id === item);
                                 return categoryType ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1">
-                                        <span className="px-3 py-1 bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 rounded-lg text-sm font-bold shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+                                        <span className="px-3 py-1.5 bg-gray-300 text-gray-800 border border-gray-400 rounded-lg text-sm font-bold shadow-sm">
                                             {categoryType.name}
                                         </span>
                                         <FaTimesCircle 
                                             onClick={() => handleRemoveItem("categoryTypes", item)}
-                                            className="absolute -top-2 -right-2 text-red-500 bg-white rounded-full text-[15px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-sm"
+                                            className="absolute -top-2 -right-2 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
                                     </div>
                                 ) : null;
@@ -229,10 +235,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 const author = authorsList?.find(e => e.id === item);
                                 return author ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1">
-                                        <img className='w-10 h-10 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30' src={author.imgUrl} alt={author.name} title={author.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30' src={author.imgUrl} alt={author.name} title={author.name} />
                                         <FaTimesCircle 
                                             onClick={() => handleRemoveItem("authors", item)}
-                                            className="absolute -top-1.5 -right-1 text-red-500 bg-white rounded-full text-[14px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-sm"
+                                            className="absolute -top-1.5 -right-1.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
                                     </div>
                                 ) : null;
@@ -248,10 +254,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 const actor = actors?.find(e => e.id === item);
                                 return actor ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1">
-                                        <img className='w-10 h-10 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30' src={actor.imgUrl} alt={actor.name} title={actor.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30' src={actor.imgUrl} alt={actor.name} title={actor.name} />
                                         <FaTimesCircle 
                                             onClick={() => handleRemoveItem("actors", item)}
-                                            className="absolute -top-1.5 -right-1 text-red-500 bg-white rounded-full text-[14px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-sm"
+                                            className="absolute -top-1.5 -right-1.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
                                     </div>
                                 ) : null;
@@ -267,10 +273,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 const character = characters?.find(e => e.id === item);
                                 return character ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1">
-                                        <img className='w-10 h-10 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30' src={character.imgUrl} alt={character.name} title={character.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30' src={character.imgUrl} alt={character.name} title={character.name} />
                                         <FaTimesCircle 
                                             onClick={() => handleRemoveItem("characters", item)}
-                                            className="absolute -top-1.5 -right-1 text-red-500 bg-white rounded-full text-[14px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-sm"
+                                            className="absolute -top-1.5 -right-1.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
                                     </div>
                                 ) : null;

@@ -11,11 +11,11 @@ import Comments from '../pages/admin/community/comments/Comments';
 import Actors from '../pages/admin/entity/actors/Actors';
 import Authors from '../pages/admin/entity/authors/Authors';
 import Characters from '../pages/admin/entity/characters/Characters';
-import Plans from '../pages/admin/billing/plans/Plans';
-import Features from '../pages/admin/billing/features/Features';
-import Packages from '../pages/admin/billing/packages/Packages';
-import RentMovies from '../pages/admin/vip/rentMovies/RentMovies';
-import Subscriptions from '../pages/admin/vip/subscriptions/Subscriptions';
+import Plans from '../pages/admin/vip/plans/Plans';
+import Features from '../pages/admin/vip/features/Features';
+import Packages from '../pages/admin/vip/packages/Packages';
+import RentMovies from '../pages/admin/bills/rentMovies/RentMovies';
+import Subscriptions from '../pages/admin/bills/subscriptions/Subscriptions';
 import { Route, Routes } from 'react-router-dom';
 
 function AdminRouters(props) {
