@@ -2,9 +2,11 @@
     0% {
         background-position: 0% 50%;
     }
+
     50% {
         background-position: 100% 50%;
     }
+
     100% {
         background-position: 0% 50%;
     }
@@ -92,6 +94,7 @@
     0% {
         background-position: 0% center;
     }
+
     100% {
         background-position: 200% center;
     }
@@ -105,6 +108,7 @@
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }
@@ -167,7 +171,8 @@
     font-size: 14px;
 }
 
-.btn-edit, .btn-delete {
+.btn-edit,
+.btn-delete {
     cursor: pointer;
 }
 
@@ -181,9 +186,9 @@
     background: #00ff55;
     color: #0f172a;
     transform: scale(1.08);
-    box-shadow: 0 0 12px #00ff55, 
-                0 0 25px #00cc44, 
-                inset 0 0 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 12px #00ff55,
+        0 0 25px #00cc44,
+        inset 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
 .btn-delete {
@@ -196,9 +201,9 @@
     background: #ffea00;
     color: #0f172a;
     transform: scale(1.08);
-    box-shadow: 0 0 12px #ffea00, 
-                0 0 25px #ffb300, 
-                inset 0 0 8px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 12px #ffea00,
+        0 0 25px #ffb300,
+        inset 0 0 8px rgba(0, 0, 0, 0.3);
 }
 
 .table-footer {
@@ -247,6 +252,10 @@
 .modal-input-x {
     margin-top: 16px !important;
     width: 100%;
+
+    .MuiSelect-icon {
+        color: #fff !important;
+    }
 }
 
 .modal-input-x .MuiOutlinedInput-root {
@@ -453,8 +462,8 @@
     color: #111827;
     text-shadow: none;
     box-shadow: 0 0 15px rgba(0, 255, 255, 0.8),
-                0 0 30px rgba(0, 255, 255, 0.6),
-                0 0 10px rgba(255, 255, 255, 0.8) inset;
+        0 0 30px rgba(0, 255, 255, 0.6),
+        0 0 10px rgba(255, 255, 255, 0.8) inset;
 }
 
 .btn-add svg {
@@ -486,13 +495,13 @@
     box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
 }
 
-.MuiAutocomplete-clearIndicator, 
+.MuiAutocomplete-clearIndicator,
 .MuiAutocomplete-popupIndicator {
     color: #e5e7eb !important;
     transition: all 0.3s ease;
 }
 
-.MuiAutocomplete-clearIndicator:hover, 
+.MuiAutocomplete-clearIndicator:hover,
 .MuiAutocomplete-popupIndicator:hover {
     color: #4ade80 !important;
     transform: scale(1.1);

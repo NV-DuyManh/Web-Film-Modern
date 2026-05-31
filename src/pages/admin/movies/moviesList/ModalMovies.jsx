@@ -213,7 +213,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                             {movie.category_Type_Id?.map((item) => {
                                 const categoryType = categoryTypes?.find(e => e.id === item);
                                 return categoryType ? (
-                                    <div key={item} className="relative inline-block mt-1 mr-1">
+                                    <div key={item} className="relative inline-block mt-2 mr-1">
                                         <span className="px-3 py-1.5 bg-gray-300 text-gray-800 border border-gray-400 rounded-lg text-sm font-bold shadow-sm">
                                             {categoryType.name}
                                         </span>
@@ -238,7 +238,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                         <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30' src={author.imgUrl} alt={author.name} title={author.name} />
                                         <FaTimesCircle
                                             onClick={() => handleRemoveItem("authors", item)}
-                                            className="absolute -top-1.5 -right-1.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
+                                            className="absolute -top-0.5 -right-0.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
                                     </div>
                                 ) : null;
@@ -257,7 +257,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                         <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30' src={actor.imgUrl} alt={actor.name} title={actor.name} />
                                         <FaTimesCircle
                                             onClick={() => handleRemoveItem("actors", item)}
-                                            className="absolute -top-1.5 -right-1.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
+                                            className="absolute -top-0.5 -right-0.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
                                     </div>
                                 ) : null;
@@ -276,7 +276,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                         <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30' src={character.imgUrl} alt={character.name} title={character.name} />
                                         <FaTimesCircle
                                             onClick={() => handleRemoveItem("characters", item)}
-                                            className="absolute -top-1.5 -right-1.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
+                                            className="absolute -top-0.5 -right-0.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
                                     </div>
                                 ) : null;
