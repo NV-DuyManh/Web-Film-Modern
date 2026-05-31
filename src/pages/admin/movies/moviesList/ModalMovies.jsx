@@ -20,7 +20,7 @@ const menuProps = {
 export default function ModalMovies({ open, handleClose, movie, onChangeInput, addOrUpdateMovie, loading, setMovie, error }) {
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);
-    
+
     const actors = useContext(ActorContext);
     const categoryTypes = useContext(CategoryTypeContext);
     const authorsList = useContext(AuthorContext);
@@ -33,7 +33,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
         else if (type === "authors") setDataChoose(authorsList);
         else if (type === "characters") setDataChoose(characters);
         else if (type === "categoryTypes") setDataChoose(categoryTypes);
-        
+
         setType(type);
         setOpenChoose(true);
     };
@@ -190,7 +190,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 helperText={error.planID}
                                 SelectProps={{ MenuProps: menuProps }}
                             >
-                                {/* Thay đổi tại đây: render danh sách plan động */}
+
                                 {plansList?.map(plan => (
                                     <MenuItem key={plan.id} value={plan.id}>
                                         {plan.name}
@@ -204,7 +204,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                 <div className="col-span-12 lg:col-span-5 space-y-8 mt-5">
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
                         <p className="text-green-400 text-xs font-bold uppercase tracking-widest">Task 3: Classifications & Crew</p>
-                        
+
                         <div className='flex items-center text-white gap-2'>
                             <label className="font-medium">Category Types</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("categoryTypes")} className='cursor-pointer text-2xl text-cyan-400 hover:scale-110 transition-transform' />
@@ -217,7 +217,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                         <span className="px-3 py-1.5 bg-gray-300 text-gray-800 border border-gray-400 rounded-lg text-sm font-bold shadow-sm">
                                             {categoryType.name}
                                         </span>
-                                        <FaTimesCircle 
+                                        <FaTimesCircle
                                             onClick={() => handleRemoveItem("categoryTypes", item)}
                                             className="absolute -top-2 -right-2 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
@@ -236,7 +236,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 return author ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1">
                                         <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30' src={author.imgUrl} alt={author.name} title={author.name} />
-                                        <FaTimesCircle 
+                                        <FaTimesCircle
                                             onClick={() => handleRemoveItem("authors", item)}
                                             className="absolute -top-1.5 -right-1.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
@@ -255,7 +255,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 return actor ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1">
                                         <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30' src={actor.imgUrl} alt={actor.name} title={actor.name} />
-                                        <FaTimesCircle 
+                                        <FaTimesCircle
                                             onClick={() => handleRemoveItem("actors", item)}
                                             className="absolute -top-1.5 -right-1.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
@@ -274,7 +274,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 return character ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1">
                                         <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30' src={character.imgUrl} alt={character.name} title={character.name} />
-                                        <FaTimesCircle 
+                                        <FaTimesCircle
                                             onClick={() => handleRemoveItem("characters", item)}
                                             className="absolute -top-1.5 -right-1.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110 hover:text-red-600 transition-transform shadow-md"
                                         />
@@ -303,12 +303,12 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                     {loading ? <FaSpinner className="spin" /> : "Save Movie"}
                 </Button>
             </DialogActions>
-            <ModalChoose 
-                handleClickChoose={handleClickChoose} 
-                type={type} 
-                dataChoose={dataChoose} 
-                handleCloseChoose={handleCloseChoose} 
-                openChoose={openChoose} 
+            <ModalChoose
+                handleClickChoose={handleClickChoose}
+                type={type}
+                dataChoose={dataChoose}
+                handleCloseChoose={handleCloseChoose}
+                openChoose={openChoose}
                 selectedItems={getSelectedItems()}
             />
         </Dialog>
