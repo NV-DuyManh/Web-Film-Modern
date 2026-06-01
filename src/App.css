@@ -52,6 +52,7 @@
     color: white;
     font-size: 0.875rem;
     transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 234, 0, 0.7);
 }
 
 .search-input::placeholder {
