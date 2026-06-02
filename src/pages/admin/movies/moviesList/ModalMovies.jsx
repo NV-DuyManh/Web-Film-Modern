@@ -8,7 +8,7 @@ import { ActorContext } from '../../../../contexts/ActorProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
-import { PlanContext } from '../../../../contexts/PlanProvider'; // Import thêm PlanContext
+import { PlanContext } from '../../../../contexts/PlanProvider';
 import { COUNTRIES } from '../../../../utils/Contants';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -25,8 +25,9 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
     const categoryTypes = useContext(CategoryTypeContext);
     const authorsList = useContext(AuthorContext);
     const characters = useContext(CharacterContext);
-    const plansList = useContext(PlanContext); // Sử dụng PlanContext
+    const plansList = useContext(PlanContext);
     const [type, setType] = useState("");
+
 
     const handleClickOpenChoose = (type) => {
         if (type === "actors") setDataChoose(actors);
@@ -57,14 +58,25 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
     };
 
     const handleClickChoose = (id) => {
-        if (type === "actors") {
-            setMovie(pre => ({ ...pre, list_Actor: toggleById(pre.list_Actor, id) }));
-        } else if (type === "authors") {
-            setMovie(pre => ({ ...pre, authors: toggleById(pre.authors, id) }));
-        } else if (type === "characters") {
-            setMovie(pre => ({ ...pre, list_Character: toggleById(pre.list_Character, id) }));
-        } else if (type === "categoryTypes") {
-            setMovie(pre => ({ ...pre, category_Type_Id: toggleById(pre.category_Type_Id, id) }));
+        switch (type) {
+            case "actors":
+                setMovie(pre => ({ ...pre, list_Actor: toggleById(pre.list_Actor, id) }));
+                break;
+
+            case "authors":
+                setMovie(pre => ({ ...pre, authors: toggleById(pre.authors, id) }));
+                break;
+
+            case "characters":
+                setMovie(pre => ({ ...pre, list_Character: toggleById(pre.list_Character, id) }));
+                break;
+
+            case "categoryTypes":
+                setMovie(pre => ({ ...pre, category_Type_Id: toggleById(pre.category_Type_Id, id) }));
+                break;
+
+            default:
+                break;
         }
     };
 
@@ -74,25 +86,46 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
     };
 
     const handleRemoveItem = (itemType, id) => {
-        if (itemType === "actors") {
-            setMovie(pre => ({ ...pre, list_Actor: (pre.list_Actor || []).filter(e => e !== id) }));
-        } else if (itemType === "authors") {
-            setMovie(pre => ({ ...pre, authors: (pre.authors || []).filter(e => e !== id) }));
-        } else if (itemType === "characters") {
-            setMovie(pre => ({ ...pre, list_Character: (pre.list_Character || []).filter(e => e !== id) }));
-        } else if (itemType === "categoryTypes") {
-            setMovie(pre => ({ ...pre, category_Type_Id: (pre.category_Type_Id || []).filter(e => e !== id) }));
+        switch (itemType) {
+            case "actors":
+                setMovie(pre => ({ ...pre, list_Actor: (pre.list_Actor || []).filter(e => e !== id) }));
+                break;
+
+            case "authors":
+                setMovie(pre => ({ ...pre, authors: (pre.authors || []).filter(e => e !== id) }));
+                break;
+
+            case "characters":
+                setMovie(pre => ({ ...pre, list_Character: (pre.list_Character || []).filter(e => e !== id) }));
+                break;
+
+            case "categoryTypes":
+                setMovie(pre => ({ ...pre, category_Type_Id: (pre.category_Type_Id || []).filter(e => e !== id) }));
+                break;
+
+            default:
+                break;
         }
     };
 
     const getSelectedItems = () => {
-        if (type === "actors") return movie.list_Actor || [];
-        if (type === "authors") return movie.authors || [];
-        if (type === "characters") return movie.list_Character || [];
-        if (type === "categoryTypes") return movie.category_Type_Id || [];
-        return [];
-    };
+        switch (type) {
+            case "actors":
+                return movie.list_Actor || [];
 
+            case "authors":
+                return movie.authors || [];
+
+            case "characters":
+                return movie.list_Character || [];
+
+            case "categoryTypes":
+                return movie.category_Type_Id || [];
+
+            default:
+                return [];
+        }
+    };
     return (
         <Dialog
             open={open}
@@ -197,6 +230,42 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                     </MenuItem>
                                 ))}
                             </TextField>
+                            <TextField
+                                select
+                                className="modal-input-x"
+                                name="categoryTypes"
+                                onChange={onChangeInput}
+                                label="Category Type"
+                                value={movie.categoryTypes}
+                                error={!!error.categoryTypes}
+                                helperText={error.categoryTypes}
+                                SelectProps={{ MenuProps: menuProps }}
+                            >
+
+                                {categoryTypes?.map(categoryTypes => (
+                                    <MenuItem key={categoryTypes.id} value={categoryTypes.id}>
+                                        {categoryTypes.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
+                            <TextField
+                                select
+                                className="modal-input-x"
+                                name="author"
+                                onChange={onChangeInput}
+                                label="Authors"
+                                value={movie.author}
+                                error={!!error.author}
+                                helperText={error.author}
+                                SelectProps={{ MenuProps: menuProps }}
+                            >
+
+                                {authorsList?.map(author => (
+                                    <MenuItem key={author.id} value={author.id}>
+                                        {author.name}
+                                    </MenuItem>
+                                ))}
+                            </TextField>
                         </div>
                     </div>
                 </div>
@@ -206,10 +275,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                         <p className="text-green-400 text-xs font-bold uppercase tracking-widest">Task 3: Classifications & Crew</p>
 
                         <div className='flex items-center text-white gap-2'>
-                            <label className="font-medium">Category Types</label>
+                            <label className="font-medium">Categories</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("categoryTypes")} className='cursor-pointer text-2xl text-cyan-400 hover:scale-110 transition-transform' />
                         </div>
-                        <div className='text-white flex gap-2 flex-wrap min-h-7.5'>
+                        <div className='text-white flex gap-2 flex-wrap'>
                             {movie.category_Type_Id?.map((item) => {
                                 const categoryType = categoryTypes?.find(e => e.id === item);
                                 return categoryType ? (
@@ -225,12 +294,12 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 ) : null;
                             })}
                         </div>
-
+                        {/* 
                         <div className='flex items-center text-white gap-2 mt-4'>
                             <label className="font-medium">Authors</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("authors")} className='cursor-pointer text-2xl text-yellow-400 hover:scale-110 transition-transform' />
                         </div>
-                        <div className='text-white flex gap-2 flex-wrap min-h-10'>
+                        <div className='text-white flex gap-2 flex-wrap'>
                             {movie.authors?.map((item) => {
                                 const author = authorsList?.find(e => e.id === item);
                                 return author ? (
@@ -243,13 +312,13 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                     </div>
                                 ) : null;
                             })}
-                        </div>
+                        </div> */}
 
-                        <div className='flex items-center text-white gap-2 mt-4'>
+                        <div className='flex items-center text-white gap-2'>
                             <label className="font-medium">Actors</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("actors")} className='cursor-pointer text-2xl text-pink-400 hover:scale-110 transition-transform' />
                         </div>
-                        <div className='text-white flex gap-2 flex-wrap min-h-10'>
+                        <div className='text-white flex gap-2 flex-wrap'>
                             {movie.list_Actor?.map((item) => {
                                 const actor = actors?.find(e => e.id === item);
                                 return actor ? (
@@ -264,11 +333,11 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                             })}
                         </div>
 
-                        <div className='flex items-center text-white gap-2 mt-4'>
+                        <div className='flex items-center text-white gap-2'>
                             <label className="font-medium">Characters</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("characters")} className='cursor-pointer text-2xl text-green-400 hover:scale-110 transition-transform' />
                         </div>
-                        <div className='text-white flex gap-2 flex-wrap min-h-10'>
+                        <div className='text-white flex gap-2 flex-wrap'>
                             {movie.list_Character?.map((item) => {
                                 const character = characters?.find(e => e.id === item);
                                 return character ? (

@@ -173,7 +173,6 @@ class Plans {
     + name: text
     + level: int
     + price: float
-    + billingCycle: text
 }
 
 class Features {
@@ -188,7 +187,6 @@ class Packages {
     + planID: text
     + discount: float
     + time: int
-    + name: text
 }
 
 class Countries {

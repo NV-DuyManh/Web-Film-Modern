@@ -1,15 +1,27 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
+import { IconButton, Tooltip } from '@mui/material';
+import { FaUsers } from 'react-icons/fa';
+import { ActorContext } from '../../../../contexts/ActorProvider';
+import { AuthorContext } from '../../../../contexts/AuthorProvider';
+import { getObjectById } from '../../../../services/firebaseReponse';
+import { CharacterContext } from '../../../../contexts/CharacterProvider';
+import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
+import { BiSolidCategoryAlt } from 'react-icons/bi';
 
 function TableMovies({ movies, search, handleEdit, handleDelete }) {
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
+    const actors = useContext(ActorContext);
+    const authorsList = useContext(AuthorContext);
+    const characters = useContext(CharacterContext);
+    const categoryTypes = useContext(CategoryTypeContext);
 
-    const dataSearch = useMemo(() => 
-        movies?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())), 
-    [search, movies]);
+    const dataSearch = useMemo(() =>
+        movies?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())),
+        [search, movies]);
 
     const currentData = dataSearch?.slice((page - 1) * rowsPerPage, page * rowsPerPage) || [];
 
@@ -24,11 +36,12 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                             <tr>
                                 <th className="w-16">ID</th>
                                 <th className="w-24 text-center">IMAGE</th>
-                                <th>NAME</th>
-                                <th>COUNTRY</th>
+                                <th className="text-center">NAME</th>
+                                <th className="text-center">COUNTRY</th>
                                 <th className="text-center">DURATION</th>
                                 <th className="text-center">EPISODE</th>
-                                <th className="text-center">RENT</th>
+                                <th className="text-center">ENTITY</th>
+                                <th className="text-center">CATEGORIES</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
@@ -39,26 +52,52 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                                     <td className="table-cell py-2">
                                         <img src={row.imgUrl} alt={row.name} className="w-24 h-24 object-cover rounded-md shadow-md border border-white/10" />
                                     </td>
-                                    <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">{row.name}</td>
-                                    <td className="table-cell min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
+                                    <td className="table-cell text-center min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">{row.name}</td>
+                                    <td className="table-cell text-center min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
                                         {row.countriesID || "N/A"}
                                     </td>
                                     <td className="table-cell text-center">
                                         {row.duration ? `${row.duration} mins` : "N/A"}
                                     </td>
                                     <td className="table-cell text-center">
-                                        {row.endEpisode ? `${row.endEpisode} eps` : "N/A"}
+                                        {row.endEpisode ? `${row.endEpisode}` : "N/A"}
                                     </td>
                                     <td className="table-cell text-center">
-                                        {row.rent ? `${row.rent} VND` : "Free"}
+                                        <Tooltip title={
+                                            <div className='flex gap-2 flex-wrap'>{row.list_Actor.map(p => (
+                                                <img src={getObjectById(actors, p).imgUrl} alt={row.name} className="w-10 h-10 object-cover rounded-full" />
+                                            ))}
+                                                {row.list_Character.map(p => (
+                                                    <img src={getObjectById(characters, p).imgUrl} alt={row.name} className="w-10 h-10 object-cover rounded-full" />
+                                                ))}
+                                            </div>
+                                        }>
+                                            <IconButton>
+                                                <FaUsers className='text-green-500' />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </td>
+                                    <td className="table-cell text-center">
+                                        <Tooltip title={
+                                            <div className='flex gap-2 flex-wrap'>{
+                                                row.category_Type_Id.map(p => (
+                                                    getObjectById(categoryTypes, p).name
+                                                )).join(", ")}
+                                            </div>
+                                        }>
+                                            <IconButton>
+                                                <BiSolidCategoryAlt className='text-purple-400' />
+                                            </IconButton>
+                                        </Tooltip>
+
                                     </td>
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">
                                             <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
-                                                <CiEdit size={16}/>
+                                                <CiEdit size={16} />
                                             </button>
                                             <button onClick={() => handleDelete(row)} className="action-btn btn-delete">
-                                                <RiDeleteBin6Fill size={16}/>
+                                                <RiDeleteBin6Fill size={16} />
                                             </button>
                                         </div>
                                     </td>
