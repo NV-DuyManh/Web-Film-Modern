@@ -7,7 +7,7 @@ function CharacterProvider({ children }) {
     const [characters, setCharacters] = useState([]);
 
     useEffect(() => {
-        const unsubcribe = fetchDocumentsRealtime("Character", (characterList) => {
+        const unsubcribe = fetchDocumentsRealtime("Characters", (characterList) => {
             setCharacters(characterList);
         });
         return () => unsubcribe();

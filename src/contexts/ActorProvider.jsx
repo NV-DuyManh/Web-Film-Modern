@@ -6,7 +6,7 @@ function ActorProvider({ children }) {
     const [actors, setActors] = useState([]);
 
     useEffect(() => {
-        const unsubcribe = fetchDocumentsRealtime("Actor", (actorList) => {
+        const unsubcribe = fetchDocumentsRealtime("Actors", (actorList) => {
             setActors(actorList);
         });
         return () => unsubcribe();

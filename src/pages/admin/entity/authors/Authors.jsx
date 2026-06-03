@@ -68,7 +68,7 @@ function Authors() {
             submitData.imgUrl = await getBase64FromUrl(LOGO);
         }
 
-        !author.id ? await addDocument("Author", submitData) : await updateDocument("Author", submitData);
+        !author.id ? await addDocument("Authors", submitData) : await updateDocument("Authors", submitData);
 
         handleClose();
         setLoading(false);

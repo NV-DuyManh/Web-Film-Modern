@@ -37,7 +37,7 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
     };
 
     const handleDeleted = async () => {
-        await deleteDocument("Author", author);
+        await deleteDocument("Authors", author);
 
         if (page > 1 && currentData.length === 1) {
             setPage(page - 1);

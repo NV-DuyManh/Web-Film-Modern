@@ -34,7 +34,7 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
     };
 
     const handleDeleted = async () => {
-        await deleteDocument("Actor", actor);
+        await deleteDocument("Actors", actor);
 
         if (page > 1 && currentData.length === 1) {
             setPage(page - 1);

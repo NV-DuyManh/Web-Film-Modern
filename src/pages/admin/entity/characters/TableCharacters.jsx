@@ -34,7 +34,7 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
     };
 
     const handleDeleted = async () => {
-        await deleteDocument("Character", character);
+        await deleteDocument("Characters", character);
 
         if (page > 1 && currentData.length === 1) {
             setPage(page - 1);

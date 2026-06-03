@@ -68,7 +68,7 @@ function Actors() {
             submitData.imgUrl = await getBase64FromUrl(LOGO);
         }
 
-        !actor.id ? await addDocument("Actor", submitData) : await updateDocument("Actor", submitData);
+        !actor.id ? await addDocument("Actors", submitData) : await updateDocument("Actors", submitData);
 
         handleClose();
         setLoading(false);

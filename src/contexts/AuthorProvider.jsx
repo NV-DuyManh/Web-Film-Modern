@@ -7,7 +7,7 @@ function AuthorProvider({ children }) {
     const [authors, setAuthors] = useState([]);
 
     useEffect(() => {
-        const unsubcribe = fetchDocumentsRealtime("Author", (authorList) => {
+        const unsubcribe = fetchDocumentsRealtime("Authors", (authorList) => {
             setAuthors(authorList);
         });
         return () => unsubcribe();
