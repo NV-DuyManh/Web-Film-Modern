@@ -543,3 +543,17 @@
     color: #0f172a !important;
     padding-left: 20px !important;
 }
+
+/* Fix trình duyệt autofill làm trắng input */
+.modal-input-x input:-webkit-autofill,
+.modal-input-x input:-webkit-autofill:hover,
+.modal-input-x input:-webkit-autofill:focus,
+.modal-input-x textarea:-webkit-autofill,
+.modal-input-x textarea:-webkit-autofill:hover,
+.modal-input-x textarea:-webkit-autofill:focus {
+    -webkit-text-fill-color: #ffffff !important;
+    caret-color: #ffffff !important;
+    box-shadow: 0 0 0px 1000px transparent inset !important;
+    -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+    transition: background-color 9999s ease-in-out 0s !important;
+}
