@@ -5,11 +5,18 @@ import TableCharacters from './TableCharacters';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import LOGO from "../../../../assets/Logo.png";
 
-const inner = { name: "", description: "", imgUrl: LOGO, roleType: "" };
+const inner = {
+    name: "",
+    description: "",
+    imgUrl: LOGO,
+    sexID: "",
+    countriesID: ""
+};
 
 const getBase64FromUrl = async (url) => {
     const data = await fetch(url);
     const blob = await data.blob();
+
     return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(blob);
@@ -26,8 +33,9 @@ function Characters() {
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
+
     const onChangeSearch = (e) => {
-        setSearch(e.target.value)
+        setSearch(e.target.value);
     }
 
     const handleClickOpen = () => {
@@ -41,15 +49,17 @@ function Characters() {
     };
 
     const onChangeInput = (e) => {
-        setCharacter({ ...character, [e.target.name]: e.target.value })
+        setCharacter({ ...character, [e.target.name]: e.target.value });
     }
 
     const validation = () => {
         const newError = {};
-        newError.name = character.name ? "" : "Please enter your name";
-        newError.description = character.description ? "" : "Please enter your description";
-        newError.imgUrl = character.imgUrl ? "" : "Please enter your image";
-        newError.roleType = character.roleType ? "" : "Please enter your role type";
+
+        newError.name = character.name ? "" : "Please enter character name";
+        newError.description = character.description ? "" : "Please enter description";
+        newError.imgUrl = character.imgUrl ? "" : "Please enter image";
+        newError.sexID = character.sexID ? "" : "Please select sex";
+        newError.countriesID = character.countriesID ? "" : "Please select country";
 
         setError(newError);
         return Object.values(newError).some(e => e !== "");
@@ -59,6 +69,7 @@ function Characters() {
         if (validation()) {
             return;
         }
+
         setLoading(true);
 
         let submitData = { ...character };
@@ -75,11 +86,14 @@ function Characters() {
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
+
         if (file) {
             const reader = new FileReader();
+
             reader.onload = () => {
                 setCharacter({ ...character, imgUrl: reader.result });
             };
+
             reader.readAsDataURL(file);
         }
     };
@@ -92,6 +106,7 @@ function Characters() {
                 tuKhoa={"Search Character by Name"}
                 onChangeSearch={onChangeSearch}
             />
+
             <ModalCharacters
                 handleImageChange={handleImageChange}
                 addcharacter={addcharacter}
@@ -103,6 +118,7 @@ function Characters() {
                 loading={loading}
                 character={character}
             />
+
             <TableCharacters
                 setCharacter={setCharacter}
                 handleClickOpen={handleClickOpen}

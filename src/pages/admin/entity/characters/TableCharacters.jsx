@@ -10,13 +10,18 @@ import { CharacterContext } from '../../../../contexts/CharacterProvider';
 function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
     const characters = useContext(CharacterContext);
     const [open, setOpen] = useState(false);
+
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const start = (page - 1) * rowsPerPage;
-    const dataSearch = useMemo(() => characters?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())), [search, characters]);
+
+    const dataSearch = useMemo(() => {
+        return characters?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase()));
+    }, [search, characters]);
 
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
+
     useEffect(() => {
         setPage(1);
     }, [search]);
@@ -50,30 +55,64 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                     <table className="w-full text-left">
                         <thead className="table-header">
                             <tr>
-                                <th>STT</th>
-                                <th>IMAGE</th>
-                                <th>NAME</th>
-                                <th>DESCRIPTION</th>
-                                <th>ROLE</th>
+                                <th>ID</th>
+                                <th className='text-center'>IMAGE</th>
+                                <th className='text-center'>NAME</th>
+                                <th className='text-center'>DESCRIPTION</th>
+                                <th className='text-center'>SEX</th>
+                                <th className='text-center'>COUNTRY</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             {currentData.map((row, index) => (
-                                <tr key={index} className="table-row">
-                                    <td className="table-cell">{start + index + 1}</td>
+                                <tr key={row.id || index} className="table-row">
                                     <td className="table-cell">
-                                        {row.imgUrl && <img src={row.imgUrl} alt={row.name} className="w-10 h-10 object-cover rounded-full" />}
+                                        {start + index + 1}
                                     </td>
-                                    <td className="table-cell">{row.name}</td>
-                                    <td className="table-cell">{row.description}</td>
-                                    <td className="table-cell">{row.roleType}</td>
+
+                                    <td className="table-cell">
+                                        <div className="flex justify-center items-center">
+                                            {row.imgUrl && (
+                                                <img
+                                                    src={row.imgUrl}
+                                                    alt={row.name}
+                                                    className="w-17 h-17 object-cover rounded-full"
+                                                />
+                                            )}
+                                        </div>
+                                    </td>
+
+                                    <td className="table-cell text-center">
+                                        {row.name}
+                                    </td>
+
+                                    <td className="table-cell text-center">
+                                        {row.description}
+                                    </td>
+
+                                    <td className="table-cell text-center">
+                                        {row.sexID}
+                                    </td>
+
+                                    <td className="table-cell text-center">
+                                        {row.countriesID}
+                                    </td>
+
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">
-                                            <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
+                                            <button
+                                                onClick={() => handleEdit(row)}
+                                                className="action-btn btn-edit"
+                                            >
                                                 <CiEdit />
                                             </button>
-                                            <button onClick={() => handleClickOpenDele(row)} className="action-btn btn-delete">
+
+                                            <button
+                                                onClick={() => handleClickOpenDele(row)}
+                                                className="action-btn btn-delete"
+                                            >
                                                 <RiDeleteBin6Fill />
                                             </button>
                                         </div>
@@ -82,23 +121,25 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                             ))}
                         </tbody>
                     </table>
+
                     <div className="table-footer">
                         <PaginationAdmin
                             page={page}
                             setPage={setPage}
                             rowsPerPage={rowsPerPage}
                             setRowsPerPage={setRowsPerPage}
-                            totalItems={dataSearch.length || 0}
+                            totalItems={dataSearch?.length || 0}
                         />
                     </div>
                 </div>
             </div>
+
             <ModalDelete
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE CHARACTER"}
-                contentDelete={"Are you sure you want to delete this character?"}
+                contentDelete={`Are you sure you want to delete the character "${character?.name}"?`}
             />
         </div>
     );

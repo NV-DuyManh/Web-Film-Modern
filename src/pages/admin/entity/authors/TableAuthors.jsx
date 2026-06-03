@@ -53,37 +53,51 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                     <table className="w-full text-left">
                         <thead className="table-header">
                             <tr>
-                                <th>STT</th>
-                                <th>IMAGE</th>
-                                <th>NAME</th>
-                                <th>DESCRIPTION</th>
-                                <th>SEX</th>
-                                <th>COUNTRY</th>
+                                <th>ID</th>
+                                <th className='text-center'>IMAGE</th>
+                                <th className='text-center'>NAME</th>
+                                <th className='text-center'>DESCRIPTION</th>
+                                <th className='text-center'>SEX</th>
+                                <th className='text-center'>COUNTRY</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {currentData.map((row, index) => (
-                                <tr key={index} className="table-row">
+                                <tr key={row.id || index} className="table-row">
                                     <td className="table-cell">
                                         {start + index + 1}
                                     </td>
+
                                     <td className="table-cell">
-                                        {row.imgUrl && <img src={row.imgUrl} alt={row.name} className="w-10 h-10 object-cover rounded-full" />}
+                                        <div className="flex justify-center items-center">
+                                            {row.imgUrl && (
+                                                <img
+                                                    src={row.imgUrl}
+                                                    alt={row.name}
+                                                    className="w-17 h-17 object-cover rounded-full"
+                                                />
+                                            )}
+                                        </div>
                                     </td>
-                                    <td className="table-cell">
+
+                                    <td className="table-cell text-center">
                                         {row.name}
                                     </td>
-                                    <td className="table-cell">
+
+                                    <td className="table-cell text-center">
                                         {row.description}
                                     </td>
-                                    <td className="table-cell">
+
+                                    <td className="table-cell text-center">
                                         {row.sexID}
                                     </td>
-                                    <td className="table-cell">
+
+                                    <td className="table-cell text-center">
                                         {row.countriesID}
                                     </td>
+
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">
                                             <button
@@ -105,6 +119,7 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                             ))}
                         </tbody>
                     </table>
+
                     <div className="table-footer">
                         <PaginationAdmin
                             page={page}
@@ -116,12 +131,13 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                     </div>
                 </div>
             </div>
+
             <ModalDelete
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE AUTHOR"}
-                contentDelete={"Are you sure you want to delete this author?"}
+                contentDelete={`Are you sure you want to delete the author "${author?.name}"?`}
             />
         </div>
     );

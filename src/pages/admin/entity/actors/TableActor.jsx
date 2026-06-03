@@ -52,11 +52,11 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                         <thead className="table-header">
                             <tr>
                                 <th>ID</th>
-                                <th>IMAGE</th>
-                                <th>NAME</th>
-                                <th>DESCRIPTION</th>
-                                <th>SEX</th>
-                                <th>COUNTRY</th>
+                                <th className='text-center'>IMAGE</th>
+                                <th className='text-center'>NAME</th>
+                                <th className='text-center'>DESCRIPTION</th>
+                                <th className='text-center'>SEX</th>
+                                <th className='text-center'>COUNTRY</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
@@ -68,18 +68,26 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                                         {start + index + 1}
                                     </td>
                                     <td className="table-cell">
-                                        {row.imgUrl && <img src={row.imgUrl} alt={row.name} className="w-10 h-10 object-cover rounded-full" />}
+                                        <div className="flex justify-center items-center">
+                                            {row.imgUrl && (
+                                                <img
+                                                    src={row.imgUrl}
+                                                    alt={row.name}
+                                                    className="w-17 h-17 object-cover rounded-full"
+                                                />
+                                            )}
+                                        </div>
                                     </td>
-                                    <td className="table-cell">
+                                    <td className="table-cell text-center">
                                         {row.name}
                                     </td>
-                                    <td className="table-cell">
+                                    <td className="table-cell text-center">
                                         {row.description}
                                     </td>
-                                    <td className="table-cell">
+                                    <td className="table-cell text-center">
                                         {row.sexID}
                                     </td>
-                                    <td className="table-cell">
+                                    <td className="table-cell text-center">
                                         {row.countriesID}
                                     </td>
                                     <td className="table-cell text-right">

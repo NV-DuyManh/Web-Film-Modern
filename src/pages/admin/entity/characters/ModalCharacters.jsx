@@ -1,7 +1,21 @@
 import * as React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, styled, TextField } from '@mui/material';
+import {
+    Autocomplete,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    FormControl,
+    FormControlLabel,
+    Radio,
+    RadioGroup,
+    styled,
+    TextField
+} from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { FaCloudUploadAlt, FaSpinner } from 'react-icons/fa';
+import { COUNTRIES } from '../../../../utils/Contants';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -46,57 +60,145 @@ export default function ModalCharacters({ open, onChangeInput, handleClose, addc
                     helperText={error.name}
                     error={!!error.name}
                 />
-                
+
                 <TextField
                     className="modal-input-x"
                     name="description"
                     onChange={onChangeInput}
                     fullWidth
                     multiline
-                    rows={3}
+                    rows={2}
                     label="Description"
                     variant="outlined"
                     value={character.description}
                     helperText={error.description}
                     error={!!error.description}
                 />
-                
-                <TextField
+
+                <Autocomplete
                     className="modal-input-x"
-                    name="roleType"
-                    onChange={onChangeInput}
-                    fullWidth
-                    label="Role"
-                    variant="outlined"
-                    value={character.roleType}
-                    helperText={error.roleType}
-                    error={!!error.roleType}
+                    disablePortal
+                    options={COUNTRIES}
+                    value={character.countriesID || null}
+                    onChange={(e, value) => {
+                        onChangeInput({
+                            target: {
+                                name: "countriesID",
+                                value: value || ""
+                            }
+                        });
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Country"
+                            helperText={error.countriesID}
+                            error={!!error.countriesID}
+                        />
+                    )}
                 />
+
+                <FormControl className="gender-box-wrapper" error={!!error.sexID}>
+                    <div className={`gender-box ${!!error.sexID ? "error" : ""}`}>
+                        <span className="gender-label">Gender</span>
+
+                        <RadioGroup
+                            name="sexID"
+                            value={character.sexID}
+                            onChange={onChangeInput}
+                            sx={{
+                                flexDirection: "row",
+                                width: "100%",
+                                justifyContent: "space-around"
+                            }}
+                        >
+                            <FormControlLabel
+                                value="Female"
+                                control={
+                                    <Radio
+                                        sx={{
+                                            color: !!error.sexID ? "#ef4444" : "#4ade80",
+                                            "&.Mui-checked": { color: "#4ade80" }
+                                        }}
+                                    />
+                                }
+                                label="Female"
+                                sx={{
+                                    color: "#e5e7eb",
+                                    margin: 0
+                                }}
+                            />
+
+                            <FormControlLabel
+                                value="Male"
+                                control={
+                                    <Radio
+                                        sx={{
+                                            color: !!error.sexID ? "#ef4444" : "#4ade80",
+                                            "&.Mui-checked": { color: "#4ade80" }
+                                        }}
+                                    />
+                                }
+                                label="Male"
+                                sx={{
+                                    color: "#e5e7eb",
+                                    margin: 0
+                                }}
+                            />
+
+                            <FormControlLabel
+                                value="Other"
+                                control={
+                                    <Radio
+                                        sx={{
+                                            color: !!error.sexID ? "#ef4444" : "#4ade80",
+                                            "&.Mui-checked": { color: "#4ade80" }
+                                        }}
+                                    />
+                                }
+                                label="Other"
+                                sx={{
+                                    color: "#e5e7eb",
+                                    margin: 0
+                                }}
+                            />
+                        </RadioGroup>
+                    </div>
+
+                    {error.sexID && (
+                        <p className="gender-error-text">{error.sexID}</p>
+                    )}
+                </FormControl>
 
                 <div className="upload-container">
                     <span className="upload-title">Character Photo</span>
+
                     <div className="relative w-36 h-36 rounded-full border-2 border-transparent hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-black">
-                        <img 
-                            src={character.imgUrl} 
-                            alt="Character Avatar" 
-                            className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-30" 
+                        <img
+                            src={character.imgUrl}
+                            alt="Character Avatar"
+                            className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-30"
                         />
+
                         <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! !p-0! rounded-full! cursor-pointer">
                             <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
+
                             <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                 <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-1" />
-                                <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider">Upload</span>
+                                <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider">
+                                    Upload
+                                </span>
                             </div>
                         </Button>
                     </div>
                 </div>
-
             </DialogContent>
 
             <DialogActions className="modal-actions-x">
                 <Button onClick={handleClose} className="btn-cancel-x">
                     Cancel
                 </Button>
+
                 <Button disabled={loading} onClick={addcharacter} className="btn-submit-x">
                     {loading ? <FaSpinner className="spin text-xl" /> : character.id ? "UPDATE" : "ADD"}
                 </Button>
