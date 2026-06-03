@@ -79,7 +79,7 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                                     <td className="table-cell text-center">
                                         {row.description}
                                     </td>
-                                    <td className="table-cell text-center text-center">
+                                    <td className="table-cell  text-center">
                                         <span className={`${row.available ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-red-500/20 text-red-400 border-red-500/30"} px-2 py-1 rounded text-xs font-bold border`}>
                                             {row.available ? "True" : "False"}
                                         </span>
