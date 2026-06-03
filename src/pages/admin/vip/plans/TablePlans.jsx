@@ -16,7 +16,11 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
 
     const start = (page - 1) * rowsPerPage;
 
-    const dataSearch = useMemo(() => plans?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())), [search, plans]);
+    const dataSearch = useMemo(() => {
+        return plans
+            ?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase()))
+            ?.sort((a, b) => Number(a.level) - Number(b.level));
+    }, [search, plans]);
 
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
@@ -53,11 +57,10 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                     <table className="w-full text-left">
                         <thead className="table-header">
                             <tr>
-                                <th>STT</th>
-                                <th>NAME</th>
-                                <th className="text-center">LEVEL</th>
-                                <th>PRICE</th>
-                                <th>BILLING CYCLE</th>
+                                <th >STT</th>
+                                <th className='text-center'>NAME</th>
+                                <th className='text-center'>LEVEL</th>
+                                <th className='text-center'>PRICE</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
@@ -68,7 +71,7 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                                     <td className="table-cell">
                                         {start + index + 1}
                                     </td>
-                                    <td className="table-cell font-bold text-cyan-400">
+                                    <td className="table-cell text-center    font-bold text-cyan-400">
                                         {row.name}
                                     </td>
                                     <td className="table-cell text-center">
@@ -76,11 +79,8 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                                             Lvl {row.level}
                                         </span>
                                     </td>
-                                    <td className="table-cell text-green-400 font-bold">
-                                        ${row.price}
-                                    </td>
-                                    <td className="table-cell">
-                                        {row.billingCycle}
+                                    <td className="table-cell text-center text-green-400 font-bold">
+                                        {row.price} VND
                                     </td>
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">

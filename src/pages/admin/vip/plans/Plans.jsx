@@ -4,7 +4,7 @@ import ModalPlans from './ModalPlans';
 import TablePlans from './TablePlans';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 
-const inner = { name: "", level: "", price: "", billingCycle: "" };
+const inner = { name: "", level: "", price: "" };
 
 function Plans() {
     const [open, setOpen] = useState(false);
@@ -13,6 +13,7 @@ function Plans() {
     const [loading, setLoading] = useState(false);
 
     const [search, setSearch] = useState("");
+
     const onChangeSearch = (e) => {
         setSearch(e.target.value);
     }
@@ -36,8 +37,7 @@ function Plans() {
         newError.name = plan.name ? "" : "Please enter plan name";
         newError.level = plan.level !== "" ? "" : "Please enter plan level";
         newError.price = plan.price !== "" ? "" : "Please enter plan price";
-        newError.billingCycle = plan.billingCycle ? "" : "Please select billing cycle";
-        
+
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     }
@@ -46,6 +46,7 @@ function Plans() {
         if (validation()) {
             return;
         }
+
         setLoading(true);
 
         let submitData = { ...plan };

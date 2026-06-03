@@ -10,6 +10,8 @@ import AuthorProvider from './contexts/AuthorProvider.jsx'
 import CharacterProvider from './contexts/CharacterProvider.jsx'
 import MovieProvider from './contexts/MovieProvider.jsx'
 import PlanProvider from './contexts/PlanProvider.jsx'
+import PackageProvider from './contexts/PackageProvider.jsx'
+import FeatureProvider from './contexts/FeatureProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,7 +23,11 @@ createRoot(document.getElementById('root')).render(
               <CharacterProvider>
                 <MovieProvider>
                   <PlanProvider>
-                    <App />
+                    <FeatureProvider>
+                      <PackageProvider>
+                        <App />
+                      </PackageProvider>
+                    </FeatureProvider>
                   </PlanProvider>
                 </MovieProvider>
               </CharacterProvider>

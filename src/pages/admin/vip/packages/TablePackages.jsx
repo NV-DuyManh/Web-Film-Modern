@@ -5,11 +5,11 @@ import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
-import { FeatureContext } from '../../../../contexts/FeatureProvider';
+import { PackageContext } from '../../../../contexts/PackageProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 
-function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
-    const features = useContext(FeatureContext);
+function TablePackages({ handleClickOpen, setPackageItem, packageItem, search }) {
+    const packages = useContext(PackageContext);
     const plans = useContext(PlanContext);
     const [open, setOpen] = useState(false);
 
@@ -22,7 +22,7 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
         return plans?.find(e => e.id === planID)?.name || "N/A";
     }
 
-    const dataSearch = useMemo(() => features?.filter(e => e?.description?.toLowerCase().includes(search.toLowerCase())), [search, features]);
+    const dataSearch = useMemo(() => packages?.filter(e => getPlanName(e?.planID)?.toLowerCase().includes(search.toLowerCase())), [search, packages, plans]);
 
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
@@ -32,18 +32,18 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
 
     const handleClickOpenDele = (row) => {
         setOpen(true);
-        setFeature(row);
+        setPackageItem(row);
     };
 
     const handleClose = () => setOpen(false);
 
     const handleEdit = (row) => {
         handleClickOpen();
-        setFeature(row);
+        setPackageItem(row);
     };
 
     const handleDeleted = async () => {
-        await deleteDocument("Features", feature);
+        await deleteDocument("Packages", packageItem);
 
         if (page > 1 && currentData.length === 1) {
             setPage(page - 1);
@@ -61,8 +61,8 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                             <tr>
                                 <th>ID</th>
                                 <th className="text-center">PLAN</th>
-                                <th className="text-center">DESCRIPTION</th>
-                                <th className="text-center">AVAILABLE</th>
+                                <th className="text-center">DISCOUNT</th>
+                                <th className="text-center">TIME</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
@@ -76,12 +76,12 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                                     <td className="table-cell text-center font-bold text-cyan-400">
                                         {getPlanName(row.planID)}
                                     </td>
-                                    <td className="table-cell text-center">
-                                        {row.description}
+                                    <td className="table-cell text-center text-green-400 font-bold">
+                                        {row.discount} %
                                     </td>
-                                    <td className="table-cell text-center text-center">
-                                        <span className={`${row.available ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-red-500/20 text-red-400 border-red-500/30"} px-2 py-1 rounded text-xs font-bold border`}>
-                                            {row.available ? "True" : "False"}
+                                    <td className="table-cell text-center">
+                                        <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold border border-yellow-500/30">
+                                            {row.time === 1 ? "1 Month" : `${row.time} Months`}
                                         </span>
                                     </td>
                                     <td className="table-cell text-right">
@@ -120,11 +120,11 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
-                titleDelete={"DELETE FEATURE"}
-                contentDelete={"Are you sure you want to delete this feature?"}
+                titleDelete={"DELETE PACKAGE"}
+                contentDelete={"Are you sure you want to delete this package?"}
             />
         </div>
     );
 }
 
-export default TableFeatures;
+export default TablePackages;

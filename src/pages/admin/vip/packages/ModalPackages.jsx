@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, MenuItem } from '@mui/material';
 import { FaSpinner } from 'react-icons/fa';
+import { useContext } from 'react';
+import { PlanContext } from '../../../../contexts/PlanProvider';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -10,8 +12,9 @@ const menuProps = {
     PaperProps: { sx: { bgcolor: '#1e293b', color: 'white', border: '1px solid rgba(255,255,255,0.1)' } }
 };
 
-export default function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading, plan }) {
-    
+export default function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, loading, packageItem }) {
+    const plans = useContext(PlanContext);
+
     const handleNumberChange = (e, isFloat = false) => {
         const regex = isFloat ? /[^0-9.]/g : /[^0-9]/g;
         const onlyNums = e.target.value.replace(regex, '');
@@ -31,56 +34,70 @@ export default function ModalPlans({ open, onChangeInput, handleClose, addPlan, 
             fullWidth
         >
             <DialogTitle className="modal-header-x">
-                {plan.id ? "UPDATE PLAN" : "ADD NEW PLAN"}
+                {packageItem.id ? "UPDATE PACKAGE" : "ADD NEW PACKAGE"}
             </DialogTitle>
 
             <DialogContent className="modal-body-x">
                 <TextField
+                    select
                     className="modal-input-x"
-                    name="name"
+                    name="planID"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Plan Name"
+                    label="Plan"
                     variant="outlined"
-                    value={plan.name}
-                    helperText={error.name}
-                    error={!!error.name}
-                />
-                
+                    value={packageItem.planID || ""}
+                    helperText={error.planID}
+                    error={!!error.planID}
+                    SelectProps={{ MenuProps: menuProps }}
+                >
+                    {plans?.map((item) => (
+                        <MenuItem key={item.id} value={item.id}>
+                            {item.name}
+                        </MenuItem>
+                    ))}
+                </TextField>
+
                 <div className="grid grid-cols-2 gap-4">
                     <TextField
                         className="modal-input-x"
-                        name="level"
-                        onChange={(e) => handleNumberChange(e, false)}
-                        fullWidth
-                        label="Level"
-                        variant="outlined"
-                        value={plan.level}
-                        helperText={error.level}
-                        error={!!error.level}
-                    />
-                    
-                    <TextField
-                        className="modal-input-x"
-                        name="price"
+                        name="discount"
                         onChange={(e) => handleNumberChange(e, true)}
                         fullWidth
-                        label="Price"
+                        label="Discount"
                         variant="outlined"
-                        value={plan.price}
-                        helperText={error.price}
-                        error={!!error.price}
+                        value={packageItem.discount}
+                        helperText={error.discount}
+                        error={!!error.discount}
                     />
+
+                    <TextField
+                        select
+                        className="modal-input-x"
+                        name="time"
+                        onChange={onChangeInput}
+                        fullWidth
+                        label="Duration"
+                        variant="outlined"
+                        value={packageItem.time}
+                        helperText={error.time}
+                        error={!!error.time}
+                        SelectProps={{ MenuProps: menuProps }}
+                    >
+                        <MenuItem value={1}>1 Month</MenuItem>
+                        <MenuItem value={3}>3 Months</MenuItem>
+                        <MenuItem value={6}>6 Months</MenuItem>
+                        <MenuItem value={12}>12 Months</MenuItem>
+                    </TextField>
                 </div>
-                
             </DialogContent>
-            
+
             <DialogActions className="modal-actions-x">
                 <Button onClick={handleClose} className="btn-cancel-x">
                     Cancel
                 </Button>
-                <Button disabled={loading} onClick={addPlan} className="btn-submit-x">
-                    {loading ? <FaSpinner className="spin text-xl" /> : plan.id ? "UPDATE" : "ADD"}
+                <Button disabled={loading} onClick={addPackage} className="btn-submit-x">
+                    {loading ? <FaSpinner className="spin text-xl" /> : packageItem.id ? "UPDATE" : "ADD"}
                 </Button>
             </DialogActions>
         </Dialog>
