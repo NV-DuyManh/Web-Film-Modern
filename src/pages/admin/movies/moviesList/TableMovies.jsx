@@ -8,7 +8,7 @@ import { ActorContext } from '../../../../contexts/ActorProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
-import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
+import { CategoriesContext } from '../../../../contexts/CategoryProvider';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 
 function TableMovies({ movies, search, handleEdit, handleDelete }) {
@@ -17,8 +17,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
     const actors = useContext(ActorContext);
     const authorsList = useContext(AuthorContext);
     const characters = useContext(CharacterContext);
-    const categoryTypes = useContext(CategoryTypeContext);
-
+    const categories = useContext(CategoriesContext);
     const dataSearch = useMemo(() =>
         movies?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())),
         [search, movies]);
@@ -79,10 +78,11 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                                     </td>
                                     <td className="table-cell text-center">
                                         <Tooltip title={
-                                            <div className='flex gap-2 flex-wrap'>{
-                                                row.category_Type_Id.map(p => (
-                                                    getObjectById(categoryTypes, p).name
-                                                )).join(", ")}
+                                            <div className='flex gap-2 flex-wrap'>
+                                                {(row.list_Category || [])
+                                                    .map(p => getObjectById(categories, p)?.name)
+                                                    .filter(Boolean)
+                                                    .join(", ")}
                                             </div>
                                         }>
                                             <IconButton>

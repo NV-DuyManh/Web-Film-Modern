@@ -10,8 +10,8 @@ import LOGO from "../../../../assets/Logo.png";
 
 const innerMovie = {
     name: "", description: "", imgUrl: LOGO, duration: "", endEpisode: "",
-    category_Type_Id: [], countriesID: "", author: "", planID: "", rent: "",
-    list_Actor: [], list_Character: []
+    list_Category: [], countriesID: "", author: "", planID: "", rent: "",
+    list_Actor: [], list_Character: [], category_Type_Id: ""
 };
 
 const getBase64FromUrl = async (url) => {
@@ -62,8 +62,9 @@ function MoviesList() {
         newError.endEpisode = movie.endEpisode !== "" ? "" : "Please enter end episode";
         newError.planID = movie.planID ? "" : "Please select plan";
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
-        newError.category_Type_Id = movie.category_Type_Id ? "" : "Please select category type";
+        newError.list_Category = movie.list_Category?.length > 0 ? "" : "Please select category";
         newError.author = movie.author ? "" : "Please select authors";
+        newError.category_Type_Id = movie.category_Type_Id ? "" : "Please select category type";
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     };
