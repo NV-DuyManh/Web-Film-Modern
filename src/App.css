@@ -565,7 +565,31 @@
     border-radius: 10px !important;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
     margin-top: 8px !important;
-    overflow: hidden !important;
+
+    max-height: 280px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
+
+.MuiMenu-paper::-webkit-scrollbar {
+    width: 6px;
+}
+
+.MuiMenu-paper::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.MuiMenu-paper::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.45);
+    border-radius: 999px;
+}
+
+.MuiMenu-paper::-webkit-scrollbar-thumb:hover {
+    background: rgba(148, 163, 184, 0.7);
+}
+
+.MuiMenu-paper .MuiMenu-list {
+    padding: 6px !important;
 }
 
 .MuiMenu-paper .MuiMenuItem-root {
@@ -574,7 +598,8 @@
     padding: 10px 18px !important;
     color: #d1d5db !important;
     transition: all 0.2s ease !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.04) !important;
+    border-radius: 8px !important;
+    border-bottom: none !important;
 }
 
 .MuiMenu-paper .MuiMenuItem-root:hover {
