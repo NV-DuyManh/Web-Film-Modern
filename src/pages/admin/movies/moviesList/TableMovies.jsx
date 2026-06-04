@@ -188,6 +188,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                                 <th className="w-16">ID</th>
                                 <th className="w-24 text-center">IMAGE</th>
                                 <th className="text-center">NAME</th>
+                                <th className="text-center">DESCRIPTION</th>
                                 <th className="text-center">COUNTRY</th>
                                 <th className="text-center">DURATION</th>
                                 <th className="text-center">EPISODE</th>
@@ -216,7 +217,11 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                                         {row.name}
                                     </td>
 
-                                    <td className="table-cell text-center min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
+                                    <td className="table-cell text-center min-w-70 max-w-90 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
+                                        {row.description || "N/A"}
+                                    </td>
+
+                                    <td className="table-cell text-center min-w-36 max-w-45 whitespace-normal wrap-break-words text-xs leading-relaxed text-gray-300">
                                         {row.countriesID || "N/A"}
                                     </td>
 
