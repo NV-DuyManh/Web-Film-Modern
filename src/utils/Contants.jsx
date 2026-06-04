@@ -2,6 +2,42 @@ import { FaUsers, FaUserSecret } from "react-icons/fa";
 import { MdCategory, MdDashboard, MdLocalMovies, MdOutlinePriceChange } from "react-icons/md";
 import { RiVipDiamondFill } from "react-icons/ri";
 
+export const LISTCLIENT = [
+    {
+        title: "Home",
+        path: "/",
+    },
+    {
+        title: "Thể loại",
+        path: "/category",
+    },
+    {
+        title: "Phim lẻ",
+        path: "/singleMovies",
+    },
+    {
+        title: "Phim bộ",
+        path: "/series",
+    },
+    {
+        title: "Phim bộ",
+        path: "/series",
+    },
+    {
+        title: "Quốc gia",
+        path: "/country",
+    },
+    {
+        title: "Diễn viên",
+        path: "/actors",
+    },
+    {
+        title: "Lịch chiếu",
+        path: "/showtimes",
+    }
+];
+
+
 export const LISTMENU = [
     {
         name: "Metadata",
@@ -304,3 +340,4 @@ export const COUNTRIES = [
 ];
 
 export const cloud_name = "duuujvsz7";
+
