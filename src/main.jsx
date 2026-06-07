@@ -12,6 +12,8 @@ import MovieProvider from './contexts/MovieProvider.jsx'
 import PlanProvider from './contexts/PlanProvider.jsx'
 import PackageProvider from './contexts/PackageProvider.jsx'
 import FeatureProvider from './contexts/FeatureProvider.jsx'
+import EpisodeProvider from './contexts/EpisodeProvider.jsx'
+import ShowTimeProvider from './contexts/ShowTimeProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -25,7 +27,11 @@ createRoot(document.getElementById('root')).render(
                   <PlanProvider>
                     <FeatureProvider>
                       <PackageProvider>
-                        <App />
+                        <EpisodeProvider>
+                          <ShowTimeProvider>
+                            <App />
+                          </ShowTimeProvider>
+                        </EpisodeProvider>
                       </PackageProvider>
                     </FeatureProvider>
                   </PlanProvider>
