@@ -20,8 +20,8 @@ export const LISTCLIENT = [
         path: "/series",
     },
     {
-        title: "Phim bộ",
-        path: "/series",
+        title: "Chủ đề",
+        path: "/topic",
     },
     {
         title: "Quốc gia",
