@@ -1,184 +1,252 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
-
+import { FaPlay, FaHeart, FaInfoCircle } from 'react-icons/fa';
 import './SlideBanner.css';
 
-import { FreeMode, Navigation } from 'swiper/modules';
+import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 
 export default function SlideBanner() {
-    const [mainSwiper, setMainSwiper] = useState(null);
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
-    const [activeIndex, setActiveIndex] = useState(0);
-
-    const slides = [
-        "https://swiperjs.com/demos/images/abstract-1.jpg",
-        "https://swiperjs.com/demos/images/abstract-2.jpg",
-        "https://swiperjs.com/demos/images/abstract-3.jpg",
-        "https://swiperjs.com/demos/images/abstract-4.jpg",
-        "https://swiperjs.com/demos/images/abstract-5.jpg",
-        "https://swiperjs.com/demos/images/abstract-6.jpg",
-        "https://swiperjs.com/demos/images/abstract-7.jpg",
-        "https://swiperjs.com/demos/images/abstract-8.jpg",
-        "https://swiperjs.com/demos/images/abstract-9.jpg",
-        "https://swiperjs.com/demos/images/abstract-10.jpg",
-    ];
-
-    const loopSlides = useMemo(() => {
-        return [...slides, ...slides, ...slides];
-    }, []);
-
-    const getRealIndex = (index) => {
-        return ((index % slides.length) + slides.length) % slides.length;
-    };
-
-    const resetToMiddleIfNeeded = (swiper) => {
-        if (!swiper || swiper.destroyed) return;
-
-        const length = slides.length;
-        const currentIndex = swiper.activeIndex;
-
-        if (currentIndex < length) {
-            swiper.slideTo(currentIndex + length, 0, false);
-        }
-
-        if (currentIndex >= length * 2) {
-            swiper.slideTo(currentIndex - length, 0, false);
-        }
-    };
-
-    const getNearestLoopIndex = (realIndex, swiper) => {
-        if (!swiper || swiper.destroyed) return realIndex + slides.length;
-
-        const length = slides.length;
-        const currentIndex = swiper.activeIndex;
-
-        const positions = [
-            realIndex,
-            realIndex + length,
-            realIndex + length * 2
-        ];
-
-        return positions.reduce((nearest, item) => {
-            return Math.abs(item - currentIndex) < Math.abs(nearest - currentIndex)
-                ? item
-                : nearest;
-        }, positions[0]);
-    };
-
-    const handleMainSlideChange = (swiper) => {
-        const realIndex = getRealIndex(swiper.activeIndex);
-        setActiveIndex(realIndex);
-
-        if (thumbsSwiper && !thumbsSwiper.destroyed) {
-            const thumbIndex = getNearestLoopIndex(realIndex, thumbsSwiper);
-            thumbsSwiper.slideTo(thumbIndex, 450);
-        }
-    };
-
-    const handleMainTransitionEnd = (swiper) => {
-        resetToMiddleIfNeeded(swiper);
-    };
-
-    const handleThumbTransitionEnd = (swiper) => {
-        resetToMiddleIfNeeded(swiper);
-    };
-
-    const handleThumbClick = (realIndex) => {
-        setActiveIndex(realIndex);
-
-        if (mainSwiper && !mainSwiper.destroyed) {
-            const mainIndex = getNearestLoopIndex(realIndex, mainSwiper);
-            mainSwiper.slideTo(mainIndex, 550);
-        }
-
-        if (thumbsSwiper && !thumbsSwiper.destroyed) {
-            const thumbIndex = getNearestLoopIndex(realIndex, thumbsSwiper);
-            thumbsSwiper.slideTo(thumbIndex, 500);
-        }
-    };
 
     return (
         <div className='slide-banner relative'>
             <Swiper
-                onSwiper={setMainSwiper}
-                onSlideChange={handleMainSlideChange}
-                onTransitionEnd={handleMainTransitionEnd}
-                initialSlide={slides.length}
                 style={{
                     '--swiper-navigation-color': '#fff',
                     '--swiper-pagination-color': '#fff',
                 }}
                 spaceBetween={10}
                 navigation={false}
-                speed={650}
-                modules={[FreeMode, Navigation]}
+                loop={false}
+                thumbs={{
+                    swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
+                }}
+                modules={[FreeMode, Navigation, Thumbs]}
                 className="mySwiper2"
             >
-                {loopSlides.map((item, index) => {
-                    const realIndex = getRealIndex(index);
+                <SwiperSlide>
+                    <img
+                        className="banner-img"
+                        src="https://swiperjs.com/demos/images/abstract-1.jpg"
+                        alt=""
+                        draggable="false"
+                    />
 
-                    return (
-                        <SwiperSlide key={index}>
-                            <img className="banner-img" src={item} alt="" />
+                    <div className='banner-info absolute left-10 top-1/2 -translate-y-1/2 max-w-150 text-white'>
+                        <h1 className='text-left text-4xl font-black leading-tight tracking-tight text-white'>
+                            Đại Ca Ha Ha Ha
+                        </h1>
 
-                            {realIndex === 0 && (
-                                <div className='banner-info absolute left-10 top-1/2 -translate-y-1/2 bg-amber-300'>
-                                    <h1 className='text-left'>Địa Ngục Độc Thân</h1>
-                                    <h2 className='text-left'>Single in</h2>
+                        <h2 className='mt-3 text-left text-lg font-semibold text-yellow-300'>
+                            Boss
+                        </h2>
 
-                                    <div className='flex gap-2'>
-                                        <button className='border py-1 px-2 rounded-md'> ferfer</button>
-                                        <button className='border py-1 px-2 rounded-md'> ferfer</button>
-                                        <button className='border py-1 px-2 rounded-md'> ferfer</button>
-                                        <button className='border py-1 px-2 rounded-md'> ferfer</button>
-                                    </div>
+                        <div className='mt-2 flex flex-wrap gap-2'>
+                            <button className='rounded-md border border-yellow-300/70 bg-black/35 px-3 py-1.5 text-sm font-bold text-yellow-200 backdrop-blur-md transition-all duration-300 hover:bg-yellow-300 hover:text-black'>
+                                ferfer
+                            </button>
 
-                                    <h5 className='bg-gray-400 p-1 w-30 mt-2 '>Hài Hước</h5>
+                            <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black'>
+                                ferfer
+                            </button>
 
-                                    <p className='w-200 text-left text-wrap'>
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque dolorem mollitia sunt blanditiis ea a aliquid optio neque corporis quo.
-                                    </p>
-                                </div>
-                            )}
-                        </SwiperSlide>
-                    );
-                })}
+                            <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black'>
+                                ferfer
+                            </button>
+
+                            <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black'>
+                                ferfer
+                            </button>
+                        </div>
+
+                        <div className='flex flex-wrap gap-2'>
+                            <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)]'>
+                                Hài Hước
+                            </h5>
+
+                            <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)]'>
+                                Hài Hước
+                            </h5>
+                        </div>
+
+                        <p className='mt-5 max-w-130 text-left text-base leading-7 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]'>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque dolorem mollitia sunt blanditiis ea a aliquid optio neque corporis quo.
+                        </p>
+
+                        <div className='mt-7 flex items-center gap-5'>
+                            <button className='group flex h-15 w-15 items-center justify-center rounded-full bg-[#f6d878] text-2xl text-black shadow-[0_0_24px_rgba(246,216,120,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[#ffe28a] hover:shadow-[0_0_32px_rgba(246,216,120,0.55)] active:scale-95'>
+                                <FaPlay className='ml-1 transition-transform duration-300 group-hover:scale-110' />
+                            </button>
+
+                            <div className='flex h-13 overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-[inset_0_0_22px_rgba(255,255,255,0.04)]'>
+                                <button className='group flex h-full w-16 items-center justify-center text-xl text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
+                                    <FaHeart className='transition-all duration-300 group-hover:scale-110 group-hover:text-pink-300' />
+                                </button>
+
+                                <div className='h-full w-px bg-white/10'></div>
+
+                                <button className='group flex h-full w-16 items-center justify-center text-xl text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
+                                    <FaInfoCircle className='transition-all duration-300 group-hover:scale-110 group-hover:text-yellow-200' />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </SwiperSlide>
+
+                <SwiperSlide>
+                    <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-2.jpg" alt="" draggable="false" />
+
+                           <div className='banner-info absolute left-10 top-1/2 -translate-y-1/2 max-w-150 text-white'>
+                        <h1 className='text-left text-4xl font-black leading-tight tracking-tight text-white'>
+                            Đại Ca Ha Ha Ha
+                        </h1>
+
+                        <h2 className='mt-3 text-left text-lg font-semibold text-yellow-300'>
+                            Boss
+                        </h2>
+
+                        <div className='mt-2 flex flex-wrap gap-2'>
+                            <button className='rounded-md border border-yellow-300/70 bg-black/35 px-3 py-1.5 text-sm font-bold text-yellow-200 backdrop-blur-md transition-all duration-300 hover:bg-yellow-300 hover:text-black'>
+                                ferfer
+                            </button>
+
+                            <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black'>
+                                ferfer
+                            </button>
+
+                            <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black'>
+                                ferfer
+                            </button>
+
+                            <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black'>
+                                ferfer
+                            </button>
+                        </div>
+
+                        <div className='flex flex-wrap gap-2'>
+                            <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)]'>
+                                Hài Hước
+                            </h5>
+
+                            <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)]'>
+                                Hài Hước
+                            </h5>
+                        </div>
+
+                        <p className='mt-5 max-w-130 text-left text-base leading-7 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]'>
+                            Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque dolorem mollitia sunt blanditiis ea a aliquid optio neque corporis quo.
+                        </p>
+
+                        <div className='mt-7 flex items-center gap-5'>
+                            <button className='group flex h-15 w-15 items-center justify-center rounded-full bg-[#f6d878] text-2xl text-black shadow-[0_0_24px_rgba(246,216,120,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[#ffe28a] hover:shadow-[0_0_32px_rgba(246,216,120,0.55)] active:scale-95'>
+                                <FaPlay className='ml-1 transition-transform duration-300 group-hover:scale-110' />
+                            </button>
+
+                            <div className='flex h-13 overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-[inset_0_0_22px_rgba(255,255,255,0.04)]'>
+                                <button className='group flex h-full w-16 items-center justify-center text-xl text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
+                                    <FaHeart className='transition-all duration-300 group-hover:scale-110 group-hover:text-pink-300' />
+                                </button>
+
+                                <div className='h-full w-px bg-white/10'></div>
+
+                                <button className='group flex h-full w-16 items-center justify-center text-xl text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
+                                    <FaInfoCircle className='transition-all duration-300 group-hover:scale-110 group-hover:text-yellow-200' />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </SwiperSlide>
+
+                <SwiperSlide>
+                    <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-3.jpg" alt="" draggable="false" />
+                </SwiperSlide>
+
+                <SwiperSlide>
+                    <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-4.jpg" alt="" draggable="false" />
+                </SwiperSlide>
+
+                <SwiperSlide>
+                    <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-5.jpg" alt="" draggable="false" />
+                </SwiperSlide>
+
+                <SwiperSlide>
+                    <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-6.jpg" alt="" draggable="false" />
+                </SwiperSlide>
+
+                <SwiperSlide>
+                    <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-7.jpg" alt="" draggable="false" />
+                </SwiperSlide>
+
+                <SwiperSlide>
+                    <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-8.jpg" alt="" draggable="false" />
+                </SwiperSlide>
+
+                <SwiperSlide>
+                    <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-9.jpg" alt="" draggable="false" />
+                </SwiperSlide>
+
+                <SwiperSlide>
+                    <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-10.jpg" alt="" draggable="false" />
+                </SwiperSlide>
             </Swiper>
 
             <div className='absolute z-10 w-130 right-10 bottom-10'>
                 <Swiper
                     onSwiper={setThumbsSwiper}
-                    onTransitionEnd={handleThumbTransitionEnd}
-                    initialSlide={slides.length}
                     spaceBetween={10}
                     slidesPerView={6}
-                    centeredSlides={true}
-                    freeMode={false}
+                    freeMode={true}
                     watchSlidesProgress={true}
                     grabCursor={true}
                     allowTouchMove={true}
-                    speed={500}
-                    modules={[FreeMode, Navigation]}
+                    loop={false}
+                    modules={[FreeMode, Navigation, Thumbs]}
                     className="mySwiper thumb-swiper"
                 >
-                    {loopSlides.map((item, index) => {
-                        const realIndex = getRealIndex(index);
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-1.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
 
-                        return (
-                            <SwiperSlide
-                                key={index}
-                                className={activeIndex === realIndex ? "thumb-active" : ""}
-                                onClick={() => handleThumbClick(realIndex)}
-                            >
-                                <img src={item} alt="" />
-                            </SwiperSlide>
-                        );
-                    })}
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-2.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-3.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-4.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-5.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-6.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-7.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-8.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-9.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
+
+                    <SwiperSlide>
+                        <img src="https://swiperjs.com/demos/images/abstract-10.jpg" alt="" draggable="false" />
+                    </SwiperSlide>
                 </Swiper>
             </div>
         </div>

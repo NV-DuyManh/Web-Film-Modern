@@ -2,6 +2,18 @@
     width: 100%;
     height: 650px;
     overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.slide-banner * {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.slide-banner img {
+    -webkit-user-drag: none;
+    pointer-events: none;
 }
 
 .mySwiper2 {
@@ -26,6 +38,11 @@
     z-index: 30;
     padding: 18px;
     color: #111827;
+    pointer-events: auto;
+}
+
+.banner-info button {
+    pointer-events: auto;
 }
 
 .mySwiper {
@@ -89,8 +106,7 @@
     transform: translateY(-1px) scale(0.97);
 }
 
-.thumb-swiper .swiper-slide-thumb-active,
-.thumb-swiper .thumb-active {
+.thumb-swiper .swiper-slide-thumb-active {
     opacity: 1;
     border-color: #ffffff;
     box-shadow:
@@ -99,8 +115,7 @@
         0 8px 18px rgba(0, 0, 0, 0.36);
 }
 
-.thumb-swiper .swiper-slide-thumb-active img,
-.thumb-swiper .thumb-active img {
+.thumb-swiper .swiper-slide-thumb-active img {
     filter: brightness(1.05) saturate(1.18);
 }
 
