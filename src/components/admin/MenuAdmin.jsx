@@ -3,7 +3,7 @@ import { useLocation, Link } from 'react-router-dom';
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from 'react-icons/ai';
 import { FaCaretSquareDown, FaCaretSquareUp } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
-import Logo from "../../assets/Logo.png";
+import Logo3 from "../../assets/Logo3.png";
 import { LISTMENU } from '../../utils/Contants';
 
 function MenuAdmin() {
@@ -28,11 +28,11 @@ function MenuAdmin() {
             <div className="flex justify-center items-center relative h-8 mb-4 mt-2 shrink-0">
                 {!Menu ? (
                     <div className='flex justify-center items-center gap-1 whitespace-nowrap overflow-hidden transition-all duration-300 w-full'>
-                        <h1 className='text-cyan-400 text-2xl font-extrabold tracking-widest drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]'>FIMO</h1>
+                        <h1 className='text-cyan-400 text-2xl font-extrabold tracking-widest drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]'>MFilm</h1>
                         <h1 className='text-pink-500 text-2xl font-extrabold tracking-widest drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]'>Admin</h1>
                     </div>
                 ) : (
-                    <img src={Logo} alt="Logo" className="w-full h-10 object-contain transition-all duration-300 px-1" />
+                    <img src={Logo3} alt="Logo" className="w-full h-10 object-contain transition-all duration-300 px-1" />
                 )}
 
                 <button 

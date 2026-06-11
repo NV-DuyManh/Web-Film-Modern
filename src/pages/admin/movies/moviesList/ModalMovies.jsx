@@ -10,6 +10,7 @@ import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { COUNTRIES } from '../../../../utils/Contants';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
+import Logo4 from "../../../../assets/Logo4.png";
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 const VisuallyHiddenInput = styled('input')({ clip: 'rect(0 0 0 0)', height: 1, position: 'absolute', width: 1 });
@@ -29,6 +30,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
     const plansList = useContext(PlanContext);
     const [type, setType] = useState("");
 
+    const posterPreview = movie.imgFile ? movie.imgUrl : movie.id ? movie.imgUrl || Logo4 : Logo4;
 
     const handleClickOpenChoose = (type) => {
         if (type === "actors") setDataChoose(actors);
@@ -48,7 +50,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = () => setMovie({ ...movie, imgUrl: reader.result, imgFile: file });
+            reader.onload = () => setMovie(pre => ({ ...pre, imgUrl: reader.result, imgFile: file }));
             reader.readAsDataURL(file);
         }
     };
@@ -127,6 +129,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                 return [];
         }
     };
+
     return (
         <Dialog
             open={open}
@@ -224,7 +227,6 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 helperText={error.planID}
                                 SelectProps={{ MenuProps: menuProps }}
                             >
-
                                 {plansList?.map(plan => (
                                     <MenuItem key={plan.id} value={plan.id}>
                                         {plan.name}
@@ -259,7 +261,6 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 helperText={error.author}
                                 SelectProps={{ MenuProps: menuProps }}
                             >
-
                                 {authorsList?.map(author => (
                                     <MenuItem key={author.id} value={author.id}>
                                         {author.name}
@@ -337,7 +338,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 flex flex-col items-center">
                         <p className="text-pink-400 text-xs font-bold uppercase tracking-widest text-center mb-4">Movie Poster</p>
                         <div className="relative w-48 aspect-2/3 rounded-2xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-pink-400">
-                            <img src={movie.imgUrl} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
+                            <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
                             <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                 <FaCloudUploadAlt className="text-5xl text-pink-400 mb-2" />
                                 <span className="text-white text-sm font-bold">Upload</span>
