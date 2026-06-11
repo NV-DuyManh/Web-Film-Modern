@@ -101,7 +101,7 @@ export default function SlideBanner() {
                 <SwiperSlide>
                     <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-2.jpg" alt="" draggable="false" />
 
-                           <div className='banner-info absolute left-10 top-1/2 -translate-y-1/2 max-w-150 text-white'>
+                    <div className='banner-info absolute max-w-150 text-white'>
                         <h1 className='text-left text-4xl font-black leading-tight tracking-tight text-white'>
                             Đại Ca Ha Ha Ha
                         </h1>
