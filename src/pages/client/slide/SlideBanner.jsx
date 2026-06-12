@@ -102,16 +102,12 @@ export default function SlideBanner() {
                     <img className="banner-img" src="https://swiperjs.com/demos/images/abstract-2.jpg" alt="" draggable="false" />
 
                     <div className='banner-info absolute max-w-150 text-white'>
-                        <h1 className='text-left text-4xl font-black leading-tight tracking-tight text-white'>
-                            Đại Ca Ha Ha Ha
-                        </h1>
+                        <h1 className='text-left text-4xl font-black leading-tight tracking-tight text-white'>Đại Ca Ha Ha Ha</h1>
 
-                        <h2 className='mt-3 text-left text-lg font-semibold text-yellow-300'>
-                            Boss
-                        </h2>
+                        <h2 className='mt-3 text-left text-lg font-semibold text-yellow-300'>Boss</h2>
 
                         <div className='mt-2 flex flex-wrap gap-2'>
-                            <button className='rounded-md border border-yellow-300/70 bg-black/35 px-3 py-1.5 text-sm font-bold text-yellow-200 backdrop-blur-md transition-all duration-300 hover:bg-yellow-300 hover:text-black'>
+                            <button className='rounded-md border border-yellow-300/70 bg-black/35 px-3 py-1.5 text-sm font-bold text-yellow-200  transition-all duration-300 hover:bg-yellow-300 hover:text-black'>
                                 ferfer
                             </button>
 
