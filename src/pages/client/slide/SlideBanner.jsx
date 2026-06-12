@@ -32,7 +32,7 @@ export default function SlideBanner() {
                 <SwiperSlide>
                     <img
                         className="banner-img"
-                        src="https://swiperjs.com/demos/images/abstract-1.jpg"
+                        src="https://www.elleman.vn/app/uploads/2026/01/11/255832/Dai-ca-Hahaha-1.jpeg"
                         alt=""
                         draggable="false"
                     />
@@ -209,7 +209,7 @@ export default function SlideBanner() {
                     className="mySwiper thumb-swiper"
                 >
                     <SwiperSlide>
-                        <img src="https://swiperjs.com/demos/images/abstract-1.jpg" alt="" draggable="false" />
+                        <img src="https://www.elleman.vn/app/uploads/2026/01/11/255832/Dai-ca-Hahaha-1.jpeg" alt="" draggable="false" />
                     </SwiperSlide>
 
                     <SwiperSlide>
