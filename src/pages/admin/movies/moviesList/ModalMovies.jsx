@@ -10,7 +10,7 @@ import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { COUNTRIES } from '../../../../utils/Contants';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
-import Logo4 from "../../../../assets/Logo4.png";
+import Logo5 from "../../../../assets/Logo5.png";
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 const VisuallyHiddenInput = styled('input')({ clip: 'rect(0 0 0 0)', height: 1, position: 'absolute', width: 1 });
@@ -30,7 +30,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
     const plansList = useContext(PlanContext);
     const [type, setType] = useState("");
 
-    const posterPreview = movie.imgFile ? movie.imgUrl : movie.id ? movie.imgUrl || Logo4 : Logo4;
+    const posterPreview = movie.imgFile ? movie.imgUrl : movie.id ? movie.imgUrl || Logo5 : Logo5;
 
     const handleClickOpenChoose = (type) => {
         if (type === "actors") setDataChoose(actors);
