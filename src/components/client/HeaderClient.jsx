@@ -15,10 +15,7 @@ function HeaderClient() {
         <header className="fixed top-0 left-0 z-100 w-full border-b border-white/10 bg-black/45 text-white backdrop-blur-xl">
             <div className="flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1150px]:gap-4 min-[1150px]:px-8">
                 <Link to="/" className="flex shrink-0 items-center">
-                    <img
-                        src={Logo2}
-                        alt="MFILM"
-                        className="h-10.5 w-auto object-contain sm:h-13 md:h-15"
+                    <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15"
                     />
                 </Link>
 
@@ -36,11 +33,10 @@ function HeaderClient() {
                         <Link
                             key={index}
                             to={item.path}
-                            className={`rounded-full px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${
-                                location.pathname === item.path
-                                    ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.35)]"
-                                    : "text-gray-200 hover:bg-white/10 hover:text-yellow-300"
-                            }`}
+                            className={`rounded-full px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${location.pathname === item.path
+                                ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.35)]"
+                                : "text-gray-200 hover:bg-white/10 hover:text-yellow-300"
+                                }`}
                         >
                             {item.title}
                         </Link>
@@ -63,9 +59,8 @@ function HeaderClient() {
             </div>
 
             <div
-                className={`overflow-hidden border-t border-white/10 bg-black/80 backdrop-blur-xl transition-all duration-300 min-[1150px]:hidden ${
-                    openMenu ? "max-h-105 opacity-100" : "max-h-0 opacity-0"
-                }`}
+                className={`overflow-hidden border-t border-white/10 bg-black/80 backdrop-blur-xl transition-all duration-300 min-[1150px]:hidden ${openMenu ? "max-h-105 opacity-100" : "max-h-0 opacity-0"
+                    }`}
             >
                 <div className="flex flex-col gap-2 px-4 py-4">
                     {LISTCLIENT.map((item, index) => (
@@ -73,11 +68,10 @@ function HeaderClient() {
                             key={index}
                             to={item.path}
                             onClick={() => setOpenMenu(false)}
-                            className={`rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300 ${
-                                location.pathname === item.path
-                                    ? "bg-yellow-400 text-black"
-                                    : "bg-white/5 text-gray-200 hover:bg-white/10 hover:text-yellow-300"
-                            }`}
+                            className={`rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300 ${location.pathname === item.path
+                                ? "bg-yellow-400 text-black"
+                                : "bg-white/5 text-gray-200 hover:bg-white/10 hover:text-yellow-300"
+                                }`}
                         >
                             {item.title}
                         </Link>
