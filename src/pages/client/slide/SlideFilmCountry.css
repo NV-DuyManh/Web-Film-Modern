@@ -1,26 +1,22 @@
 .country-section {
     display: flex;
-    align-items: stretch; 
+    align-items: center;
     gap: 40px;
-    padding: 40px;
+    padding: 40px 60px;
     background: #212330;
+    overflow: hidden;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    width: 100%;
-    box-sizing: border-box;
 }
 
 .country-sidebar {
-    width: 220px;
+    width: 180px;
     flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center; 
 }
 
 .country-sidebar h2 {
     margin: 0 0 30px 0;
-    font-size: 36px;
-    line-height: 1.3;
+    font-size: 32px;
+    line-height: 1.4;
     color: white;
     font-weight: 700;
 }
@@ -35,56 +31,29 @@
     gap: 8px;
     color: white;
     text-decoration: none;
-    font-size: 15px;
-    transition: color 0.2s ease;
+    font-size: 14px;
 }
 
-.country-sidebar .view-all:hover {
-    color: #f482c3;
-}
-
-/* KHU VỰC SLIDER */
 .country-slider {
     flex: 1;
     min-width: 0;
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    --swiper-navigation-size: 16px; 
-    --swiper-theme-color: #1a1a1a;
-}
-
-.country-slider .swiper {
-    width: 100%;
-    padding-bottom: 45px !important; /* Không gian đáy để nhét số trang 1/4 */
-}
-
-.swiper-slide {
-    height: auto; 
 }
 
 .movie-card {
-    width: 100%;
-    display: block; /* Ép block để không lỗi padding bên trong */
+    text-align: left;
     cursor: pointer;
 }
 
-/* KHUNG ẢNH 16:9 CHUẨN MỰC */
 .movie-image {
-    position: relative; /* Trục tọa độ cho thẻ img absolute bên trong */
+    position: relative;
     width: 100%;
-    padding-top: 56.25%; /* Hack tỷ lệ rạp phim */
+    aspect-ratio: 16 / 9;
     border-radius: 8px;
     overflow: hidden;
-    background-color: #1a1c26;
 }
 
-/* NEO ẢNH CỨNG LÊN GÓC TRÊN, KHÔNG BAO GIỜ BỊ CHÌM */
 .movie-image img {
-    position: absolute; 
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -102,7 +71,6 @@
     left: 10px;
     display: flex;
     gap: 6px;
-    z-index: 2;
 }
 
 .tag {
@@ -123,7 +91,7 @@
 
 .movie-card h3 {
     margin: 14px 0 6px 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: white;
     white-space: nowrap;
@@ -134,38 +102,47 @@
 .movie-card p {
     margin: 0;
     color: #8c909e;
-    font-size: 14px;
+    font-size: 13px;
 }
 
-/* --- MŨI TÊN --- */
+/* --- FIX LỖI TẠI ĐÂY --- */
+
+/* Không dùng overflow: visible nữa để ảnh không đè lên chữ */
+.country-slider .swiper {
+    padding: 5px 0; /* Thêm chút không gian an toàn cho viền */
+}
+
+/* Custom Navigation Buttons */
 .country-slider .swiper-button-next,
 .country-slider .swiper-button-prev {
+    width: 40px !important;
+    height: 40px !important;
     background-color: #ffffff !important;
-    width: 44px !important;
-    height: 44px !important;
-    border-radius: 50% !important;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    top: calc(50% - 22px) !important;
-    margin-top: 0 !important;
+    border-radius: 50%;
+    color: #1a1a1a !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    margin-top: -45px; /* Giữ vị trí căn giữa bức ảnh */
+    opacity: 1 !important;
+    transition: transform 0.2s ease;
 }
 
+.country-slider .swiper-button-next::after,
+.country-slider .swiper-button-prev::after {
+    font-size: 14px !important;
+    font-weight: 900 !important;
+}
+
+/* Đưa nút bấm lùi vào MẶT TRONG của slider thay vì nhô ra ngoài */
+/* Nút sẽ nổi lên trên mép ảnh cực kỳ gọn gàng */
 .country-slider .swiper-button-prev {
-    left: -20px !important;
+    left: 10px !important;
 }
 
 .country-slider .swiper-button-next {
-    right: -20px !important;
+    right: 10px !important;
 }
 
-/* --- PHÂN TRANG (PAGINATION FRACTION) --- */
-.country-slider .swiper-pagination-fraction {
-    bottom: 0 !important;
-    color: #8c909e;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.country-slider .swiper-pagination-current {
-    color: #ffffff;
-    font-size: 18px;
+.country-slider .swiper-button-next:hover,
+.country-slider .swiper-button-prev:hover {
+    transform: scale(1.1);
 }
