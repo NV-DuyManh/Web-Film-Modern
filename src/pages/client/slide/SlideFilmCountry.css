@@ -105,14 +105,10 @@
     font-size: 13px;
 }
 
-/* --- FIX LỖI TẠI ĐÂY --- */
-
-/* Không dùng overflow: visible nữa để ảnh không đè lên chữ */
 .country-slider .swiper {
-    padding: 5px 0; /* Thêm chút không gian an toàn cho viền */
+    padding: 5px 0; 
 }
 
-/* Custom Navigation Buttons */
 .country-slider .swiper-button-next,
 .country-slider .swiper-button-prev {
     width: 40px !important;
@@ -121,7 +117,7 @@
     border-radius: 50%;
     color: #1a1a1a !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    margin-top: -45px; /* Giữ vị trí căn giữa bức ảnh */
+    margin-top: -45px; 
     opacity: 1 !important;
     transition: transform 0.2s ease;
 }
@@ -132,8 +128,6 @@
     font-weight: 900 !important;
 }
 
-/* Đưa nút bấm lùi vào MẶT TRONG của slider thay vì nhô ra ngoài */
-/* Nút sẽ nổi lên trên mép ảnh cực kỳ gọn gàng */
 .country-slider .swiper-button-prev {
     left: 10px !important;
 }

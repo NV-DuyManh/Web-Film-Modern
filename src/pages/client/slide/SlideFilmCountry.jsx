@@ -85,7 +85,7 @@ export default function SlideFilmCountry() {
                     </Swiper>
                 </div>
             </div>
-                <div className="country-section">
+            <div className="country-section">
                 <div className="country-sidebar">
                     <h2>
                         Phim <span className="highlight">Hàn</span><br />

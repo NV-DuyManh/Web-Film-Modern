@@ -17,7 +17,7 @@ function CategoriesFilm() {
                 </h1>
 
                 <div className="grid grid-cols-1 gap-6 px-8 pb-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                    <Link to="/topics" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-emerald-300 via-blue-500 to-purple-600 px-7  shadow-[0_14px_35px_rgba(59,130,246,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(168,85,247,0.45)]'>
+                    <Link to="/topic" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-emerald-300 via-blue-500 to-purple-600 px-7  shadow-[0_14px_35px_rgba(59,130,246,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(168,85,247,0.45)]'>
                         <div className='rounded-full bg-white/25 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
                         <h2 className='text-2xl font-black '>Viễn Tưởng</h2>
                         <div className='mt-4 flex items-center justify-center gap-2 text-lg font-semibold'>
@@ -26,7 +26,7 @@ function CategoriesFilm() {
                         </div>
                     </Link>
 
-                    <Link to="/topics" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-pink-500 via-red-500 to-yellow-500 px-7 shadow-[0_14px_35px_rgba(239,68,68,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(249,115,22,0.45)]'>
+                    <Link to="/topic" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-pink-500 via-red-500 to-yellow-500 px-7 shadow-[0_14px_35px_rgba(239,68,68,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(249,115,22,0.45)]'>
                         <div className='rounded-full bg-white/25 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
                         <h2 className='text-2xl font-black'>Hành Động</h2>
                         <div className='mt-4 flex items-center justify-center gap-2 text-lg font-semibold'>
@@ -35,7 +35,7 @@ function CategoriesFilm() {
                         </div>
                     </Link>
 
-                    <Link to="/topics" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-yellow-200 via-green-200 to-green-500 px-7 shadow-[0_14px_35px_rgba(34,197,94,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(34,197,94,0.45)]'>
+                    <Link to="/topic" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-yellow-200 via-green-200 to-green-500 px-7 shadow-[0_14px_35px_rgba(34,197,94,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(34,197,94,0.45)]'>
                         <div className='rounded-full bg-white/30 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
                         <h2 className=' text-2xl font-black'>Tình Cảm</h2>
                         <div className='mt-4 flex items-center justify-center gap-2 text-lg font-semibold'>
@@ -44,7 +44,7 @@ function CategoriesFilm() {
                         </div>
                     </Link>
 
-                    <Link to="/topics" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-purple-200 via-purple-400 to-purple-800 px-7 shadow-[0_14px_35px_rgba(147,51,234,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(147,51,234,0.45)]'>
+                    <Link to="/topic" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-purple-200 via-purple-400 to-purple-800 px-7 shadow-[0_14px_35px_rgba(147,51,234,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(147,51,234,0.45)]'>
                         <div className='rounded-full bg-white/25 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
                         <h2 className='text-2xl font-black'>Hài Hước</h2>
                         <div className='mt-4 flex items-center justify-center gap-2 text-lg font-semibold'>
@@ -53,7 +53,7 @@ function CategoriesFilm() {
                         </div>
                     </Link>
 
-                    <Link to="/topics" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-red-400 via-gray-300 to-blue-500 px-7 shadow-[0_14px_35px_rgba(96,165,250,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(96,165,250,0.45)]'>
+                    <Link to="/topic" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-red-400 via-gray-300 to-blue-500 px-7 shadow-[0_14px_35px_rgba(96,165,250,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(96,165,250,0.45)]'>
                         <div className='rounded-full bg-white/25 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
                         <h2 className='text-2xl font-black'>Kinh Dị</h2>
                         <div className='mt-4 flex items-center justify-center gap-2 text-lg font-semibold'>
@@ -62,7 +62,7 @@ function CategoriesFilm() {
                         </div>
                     </Link>
 
-                    <Link to="/topics" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-yellow-200 via-pink-200 to-pink-400 px-7  shadow-[0_14px_35px_rgba(244,114,182,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(244,114,182,0.45)]'>
+                    <Link to="/topic" className='group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br from-yellow-200 via-pink-200 to-pink-400 px-7  shadow-[0_14px_35px_rgba(244,114,182,0.25)] transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_18px_45px_rgba(244,114,182,0.45)]'>
                         <div className='rounded-full bg-white/35 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
                         <h2 className='text-2xl font-black'>Hoạt Hình</h2>
                         <div className='mt-4 flex items-center justify-center gap-2 text-lg font-semibold'>
