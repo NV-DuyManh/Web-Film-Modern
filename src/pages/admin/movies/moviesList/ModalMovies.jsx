@@ -342,8 +342,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
 
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 flex flex-col items-center">
                         <p className="text-pink-400 text-xs font-bold uppercase tracking-widest text-center mb-4">Movie Poster</p>
-                        <div className="relative w-48 aspect-2/3 rounded-2xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-pink-400">
-                            <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
+                        <div className="relative w-80 aspect-video rounded-2xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-pink-400">                            <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
                             <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                 <FaCloudUploadAlt className="text-5xl text-pink-400 mb-2" />
                                 <span className="text-white text-sm font-bold">Upload</span>

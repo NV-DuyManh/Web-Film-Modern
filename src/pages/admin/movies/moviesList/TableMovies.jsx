@@ -62,9 +62,9 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
 
         const tooltipWidth =
             totalItems <= 1 ? "w-[145px]" :
-            totalItems === 2 ? "w-[190px]" :
-            totalItems <= 4 ? "w-[260px]" :
-            "w-[380px]";
+                totalItems === 2 ? "w-[190px]" :
+                    totalItems <= 4 ? "w-[260px]" :
+                        "w-[380px]";
 
         const renderItem = (item) => (
             <div
@@ -186,7 +186,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                         <thead className="table-header">
                             <tr>
                                 <th className="w-16">ID</th>
-                                <th className="w-24 text-center">IMAGE</th>
+                             <th className="w-40 text-center">IMAGE</th>
                                 <th className="text-center">NAME</th>
                                 <th className="text-center">DESCRIPTION</th>
                                 <th className="text-center">COUNTRY</th>
@@ -209,7 +209,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                                         <img
                                             src={row.imgUrl}
                                             alt={row.name}
-                                            className="w-24 h-24 object-cover rounded-md shadow-md border border-white/10"
+                                            className="w-40 h-24 object-cover rounded-md shadow-md border border-white/10"
                                         />
                                     </td>
 
