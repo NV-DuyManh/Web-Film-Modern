@@ -11,9 +11,9 @@ function App() {
 
   return (
     <>
-      {/* <NoelBackground /> */}
-       {/* <HomeAdmin /> */}
-      <LayoutClient />
+      <NoelBackground />
+       <HomeAdmin />
+      {/* <LayoutClient /> */}
     </>
 
 
