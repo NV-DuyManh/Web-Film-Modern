@@ -36,7 +36,6 @@
 
 .banner-info {
     z-index: 30;
-    padding: 18px;
     color: #111827;
     pointer-events: auto;
 }
@@ -143,5 +142,10 @@
     .thumb-swiper .swiper-slide {
         height: 38px;
         border-radius: 5px;
+    }
+
+    .banner-info {
+        left: 8px !important;
+        max-width: 90% !important;
     }
 }

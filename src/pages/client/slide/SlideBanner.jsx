@@ -31,7 +31,7 @@ export default function SlideBanner() {
                 className="mySwiper2"
             >
                 {movies.map((e) => (
-                    <SwiperSlide>
+                    <SwiperSlide key={e.id}>
                         <img
                             className="banner-img"
                             src={e.imgUrl}
@@ -39,45 +39,45 @@ export default function SlideBanner() {
                             draggable="false"
                         />
 
-                        <div className='banner-info absolute left-10 top-1/2 -translate-y-1/2 max-w-150 text-white'>
-                            <h1 className='text-left text-4xl font-black leading-tight tracking-tight text-white'>
+                        <div className='banner-info absolute left-10 top-1/2 -translate-y-1/2 max-w-150 text-white bg-linear-to-r from-black/80 via-black/60 to-transparent rounded-2xl p-6'>
+                            <h1 className='text-left text-5xl font-black leading-tight tracking-tight text-white [text-shadow:0_3px_12px_rgba(0,0,0,0.9),0_6px_20px_rgba(0,0,0,0.8)]'>
                                 {e.name}
                             </h1>
 
-                            <h2 className='mt-3 text-left text-lg font-semibold text-yellow-300'>
-                                Boss
+                            <h2 className='mt-3 text-left text-lg font-semibold text-yellow-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.85)]'>
+                                {e.name}
                             </h2>
 
-                            <div className='mt-2 flex flex-wrap gap-2'>
-                                <button className='rounded-md border border-yellow-300/70 bg-black/35 px-3 py-1.5 text-sm font-bold text-yellow-200 backdrop-blur-md transition-all duration-300 hover:bg-yellow-300 hover:text-black'>
+                            <div className='mt-3 flex flex-wrap gap-2'>
+                                <button className='rounded-md border border-yellow-300/70 bg-black/35 px-3 py-1.5 text-sm font-bold text-yellow-200 backdrop-blur-md transition-all duration-300 hover:bg-yellow-300 hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
                                     ferfer
                                 </button>
 
-                                <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black'>
+                                <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
                                     ferfer
                                 </button>
 
-                                <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black'>
+                                <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
                                     ferfer
                                 </button>
 
-                                <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black'>
+                                <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
                                     ferfer
                                 </button>
                             </div>
 
                             <div className='flex flex-wrap gap-2'>
-                                <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)]'>
+                                <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)] text-shadow:0_1px_3px_rgba(0,0,0,0.5)'>
                                     Hài Hước
                                 </h5>
 
-                                <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)]'>
+                                <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)] text-shadow:0_1px_3px_rgba(0,0,0,0.5)'>
                                     Hài Hước
                                 </h5>
                             </div>
 
-                            <p className='mt-5 max-w-130 text-left text-base leading-7 text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.7)]'>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Cumque dolorem mollitia sunt blanditiis ea a aliquid optio neque corporis quo.
+                            <p className='mt-5 max-w-130 text-left text-base leading-7 text-white text-shadow:0_2px_8px_rgba(0,0,0,0.8)'>
+                                {e.description}
                             </p>
 
                             <div className='mt-7 flex items-center gap-5'>
@@ -100,8 +100,6 @@ export default function SlideBanner() {
                         </div>
                     </SwiperSlide>
                 ))}
-
-
             </Swiper>
 
             <div className='absolute z-10 w-130 right-10 bottom-10'>
@@ -118,11 +116,10 @@ export default function SlideBanner() {
                     className="mySwiper thumb-swiper"
                 >
                     {movies.map((e) => (
-                        <SwiperSlide>
+                        <SwiperSlide key={e.id}>
                             <img src={e.imgUrl} alt="" draggable="false" />
                         </SwiperSlide>
                     ))}
-
                 </Swiper>
             </div>
         </div>
