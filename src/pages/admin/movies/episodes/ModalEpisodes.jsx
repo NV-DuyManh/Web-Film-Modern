@@ -1,13 +1,17 @@
 import * as React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
 import { FaSpinner } from 'react-icons/fa';
+import { useContext } from 'react';
+import { MovieContext } from '../../../../contexts/MovieProvider';
+import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
+import { getObjectById } from '../../../../services/firebaseReponse';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, error, loading, episode }) {
-
+export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, error, loading, episode, setEpisode }) {
+    const movies = useContext(MovieContext);
     const handleNumberChange = (e) => {
         const onlyNums = e.target.value.replace(/[^0-9]/g, '');
         onChangeInput({ target: { name: e.target.name, value: onlyNums } });
@@ -30,43 +34,48 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
             </DialogTitle>
 
             <DialogContent className="modal-body-x">
-                <div className="grid grid-cols-2 gap-4">
-                    <TextField
-                        className="modal-input-x"
-                        name="numberEpisode"
-                        onChange={handleNumberChange}
-                        fullWidth
-                        label="Episode Number"
-                        variant="outlined"
-                        value={episode.numberEpisode}
-                        helperText={error.numberEpisode}
-                        error={!!error.numberEpisode}
-                    />
-
-                    <TextField
-                        className="modal-input-x"
-                        name="duration"
-                        onChange={handleNumberChange}
-                        fullWidth
-                        label="Duration"
-                        variant="outlined"
-                        value={episode.duration}
-                        helperText={error.duration}
-                        error={!!error.duration}
-                    />
-                </div>
+                <Autocomplete
+                    options={movies || []}
+                    getOptionLabel={(option) => option.name}
+                    disablePortal
+                    value={getObjectById(movies,episode.movieID) || null}
+                    onChange={(event, newValue) => setEpisode({...episode, movieID : newValue.id}) }
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Movie"
+                            error={!!error.movieID }
+                            helperText={error.movieID }
+                            className="modal-input-x"
+                        />
+                    )}
+                />
+                <TextField
+                    className="modal-input-x"
+                    name="numberEpisode"
+                    onChange={handleNumberChange}
+                    fullWidth
+                    label="Episode Number"
+                    variant="outlined"
+                    value={episode.numberEpisode}
+                    helperText={error.numberEpisode}
+                    error={!!error.numberEpisode}
+                />
 
                 <TextField
                     className="modal-input-x"
-                    name="title"
+                    name="url"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Title"
+                    label="Url"
                     variant="outlined"
-                    value={episode.title}
-                    helperText={error.title}
-                    error={!!error.title}
+                    value={episode.url}
+                    helperText={error.url}
+                    error={!!error.url}
                 />
+
+
+
             </DialogContent>
 
             <DialogActions className="modal-actions-x">

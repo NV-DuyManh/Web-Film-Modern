@@ -80,6 +80,7 @@ class Episodes {
     + url: text
     + duration: int
     + createdAt: datetime
+    + moviesID: text
 }
 
 class ShowTimes {

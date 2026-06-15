@@ -41,7 +41,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
             ?.filter(e =>
                 e?.title?.toLowerCase().includes(keyword) ||
                 String(e?.numberEpisode || "").includes(keyword) ||
-                String(e?.duration || "").includes(keyword)
+                String(e?.url || "").includes(keyword)
             )
             ?.sort((a, b) => Number(a.numberEpisode) - Number(b.numberEpisode));
     }, [search, episodes]);
@@ -84,7 +84,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                                 <th>ID</th>
                                 <th className="text-center">NUMBER</th>
                                 <th className="text-center">TITLE</th>
-                                <th className="text-center">DURATION</th>
+                                <th className="text-center">URL</th>
                                 <th className="text-center">CREATED AT</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
@@ -108,7 +108,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                                     </td>
 
                                     <td className="table-cell text-center text-green-400 font-bold">
-                                        {row.duration} minutes
+                                        {row.url}
                                     </td>
 
                                     <td className="table-cell text-center text-gray-300">

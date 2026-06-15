@@ -168,20 +168,25 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                             error={!!error.description}
                             helperText={error.description}
                         />
-                        <TextField
-                            select
-                            className="modal-input-x"
-                            name="countriesID"
-                            onChange={onChangeInput}
-                            fullWidth
-                            label="Country"
-                            value={movie.countriesID}
-                            error={!!error.countriesID}
-                            helperText={error.countriesID}
-                            SelectProps={{ MenuProps: menuProps }}
-                        >
-                            {COUNTRIES?.map(c => <MenuItem key={c} value={c}>{c}</MenuItem>)}
-                        </TextField>
+                        <Autocomplete
+                            options={COUNTRIES || []}
+                            value={movie.countriesID || null}
+                            onChange={(event, newValue) => {
+                                setMovie(prev => ({
+                                    ...prev,
+                                    countriesID: newValue || ""
+                                }));
+                            }}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Country"
+                                    error={!!error.countriesID}
+                                    helperText={error.countriesID}
+                                    className="modal-input-x"
+                                />
+                            )}
+                        />
                     </div>
 
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">

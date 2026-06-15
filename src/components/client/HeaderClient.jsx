@@ -6,10 +6,16 @@ import { IoClose } from 'react-icons/io5';
 import { LISTCLIENT } from '../../utils/Contants';
 import { Link, useLocation } from 'react-router-dom';
 import Logo2 from '../../assets/Logo2.png';
+import LogIn from '../../pages/client/auth/LogIn';
 
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
+    const [open, setOpen] = React.useState(false);
+    const [isSearching, setIsSearching] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
     const location = useLocation();
+
 
     return (
         <header className="fixed top-0 left-0 z-100 w-full border-b border-white/10 bg-black/30 text-white backdrop-blur-xl">
@@ -24,6 +30,8 @@ function HeaderClient() {
                         className="w-full min-w-0 rounded-full border border-white/15 bg-white/10 px-4 py-2 pr-10 text-sm text-white outline-none transition-all duration-300 placeholder:text-gray-400 hover:border-yellow-400/60 focus:border-yellow-400 focus:bg-white/15 focus:shadow-[0_0_18px_rgba(250,204,21,0.25)] sm:px-5 sm:py-2.5 sm:pr-11"
                         type="text"
                         placeholder="Tìm kiếm..."
+                        onFocus={() => setIsSearching(true)}
+                        onBlur={() => setIsSearching(false)}
                     />
                     <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-300 sm:right-4 sm:text-xl" />
                 </div>
@@ -44,11 +52,16 @@ function HeaderClient() {
                 </nav>
 
                 <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
-                    <button className="hidden shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white px-4 py-2.5 text-sm font-bold text-black transition-all duration-300 hover:bg-yellow-400 hover:shadow-[0_0_18px_rgba(250,204,21,0.35)] min-[1150px]:flex xl:px-5">
+                    <button
+                        onClick={handleOpen}
+                        className={`flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white px-4 py-2.5 text-sm font-bold text-black transition-all duration-300 hover:bg-yellow-400 hover:shadow-[0_0_18px_rgba(250,204,21,0.35)] min-[1150px]:flex xl:px-5 ${isSearching
+                                ? "max-md:hidden pointer-events-none"
+                                : ""
+                            }`}
+                    >
                         <FaUser />
                         Thành viên
                     </button>
-
                     <button
                         onClick={() => setOpenMenu(!openMenu)}
                         className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl text-white transition-all duration-300 hover:border-yellow-400 hover:text-yellow-300 sm:h-11 sm:w-11 min-[1150px]:hidden"
@@ -76,15 +89,12 @@ function HeaderClient() {
                             {item.title}
                         </Link>
                     ))}
-
-                    <button className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-black transition-all duration-300 hover:bg-yellow-400">
-                        <FaUser />
-                        Thành viên
-                    </button>
                 </div>
             </div>
+            <LogIn open={open} handleClose={handleClose} />
         </header>
     );
+
 }
 
 export default HeaderClient;

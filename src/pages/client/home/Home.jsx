@@ -8,7 +8,7 @@ function Home(props) {
         <div>
             <SlideBanner />
             <CategoriesFilm />
-            <SlideFilmCountry />
+            <SlideFilmCountry  />
         </div>
     );
 }

@@ -4,7 +4,7 @@ import ModalEpisodes from './ModalEpisodes';
 import TableEpisodes from './TableEpisodes';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 
-const inner = { numberEpisode: "", title: "", duration: "" };
+const inner = { numberEpisode: "", movieID: "", url: "" };
 
 function Episodes() {
     const [open, setOpen] = useState(false);
@@ -35,8 +35,8 @@ function Episodes() {
     const validation = () => {
         const newError = {};
         newError.numberEpisode = episode.numberEpisode !== "" ? "" : "Please enter episode number";
-        newError.title = episode.title ? "" : "Please enter episode title";
-        newError.duration = episode.duration !== "" ? "" : "Please enter duration";
+        newError.movieID = episode.movieID ? "" : "Please enter episode title";
+        newError.url = episode.url ? "" : "Please enter episode url";
 
         setError(newError);
         return Object.values(newError).some(e => e !== "");
@@ -51,7 +51,7 @@ function Episodes() {
 
         let submitData = { ...episode };
         submitData.numberEpisode = parseInt(submitData.numberEpisode) || 0;
-        submitData.duration = parseInt(submitData.duration) || 0;
+        submitData.url = parseInt(submitData.url);
 
         if (!episode.id) {
             submitData.createdAt = new Date().toISOString();
@@ -80,6 +80,7 @@ function Episodes() {
                 error={error}
                 loading={loading}
                 episode={episode}
+                setEpisode={setEpisode}
             />
             <TableEpisodes
                 setEpisode={setEpisode}
