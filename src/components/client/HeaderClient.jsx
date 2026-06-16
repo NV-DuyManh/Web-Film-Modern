@@ -18,7 +18,7 @@ function HeaderClient() {
 
 
     return (
-        <header className="fixed top-0 left-0 z-100 w-full border-b border-white/10 bg-black/30 text-white backdrop-blur-xl">
+        <header className="fixed top-0 left-0 z-100 w-full border-b border-white/10 bg-black/70 text-white backdrop-blur-xl">
             <div className="flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1150px]:gap-4 min-[1150px]:px-8">
                 <Link to="/" className="flex shrink-0 items-center">
                     <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15"

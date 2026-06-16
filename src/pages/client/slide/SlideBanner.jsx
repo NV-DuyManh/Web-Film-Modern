@@ -10,10 +10,16 @@ import './SlideBanner.css';
 
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
 import { MovieContext } from '../../../contexts/MovieProvider';
+import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
+import { getObjectById } from '../../../services/firebaseReponse';
+import { CategoriesContext } from '../../../contexts/CategoryProvider';
 
 export default function SlideBanner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
-    const movies = useContext(MovieContext)
+    const movies = useContext(MovieContext);
+    const categoryTypes = useContext(CategoryTypeContext);
+    const categories = useContext(CategoriesContext);
+
     return (
         <div className='slide-banner relative'>
             <Swiper
@@ -45,12 +51,12 @@ export default function SlideBanner() {
                             </h1>
 
                             <h2 className='mt-3 text-left text-lg font-semibold text-yellow-300 [text-shadow:0_2px_8px_rgba(0,0,0,0.85)]'>
-                                {e.name}
+                                {getObjectById(categoryTypes, e.category_Type_Id)?.name}
                             </h2>
 
                             <div className='mt-3 flex flex-wrap gap-2'>
                                 <button className='rounded-md border border-yellow-300/70 bg-black/35 px-3 py-1.5 text-sm font-bold text-yellow-200 backdrop-blur-md transition-all duration-300 hover:bg-yellow-300 hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
-                                    ferfer
+                                    {e.duration + " mins"}
                                 </button>
 
                                 <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
@@ -67,13 +73,20 @@ export default function SlideBanner() {
                             </div>
 
                             <div className='flex flex-wrap gap-2'>
-                                <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)] text-shadow:0_1px_3px_rgba(0,0,0,0.5)'>
-                                    Hài Hước
-                                </h5>
+                                {e.list_Category?.map((categoryId) => {
+                                    const categoryName = getObjectById(categories, categoryId)?.name;
 
-                                <h5 className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)] text-shadow:0_1px_3px_rgba(0,0,0,0.5)'>
-                                    Hài Hước
-                                </h5>
+                                    if (!categoryName) return null;
+
+                                    return (
+                                        <h5
+                                            key={categoryId}
+                                            className='mt-4 w-fit cursor-pointer rounded-md border border-white/15 bg-white/15 px-3 py-1 text-xs font-semibold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)] text-shadow:0_1px_3px_rgba(0,0,0,0.5)'
+                                        >
+                                            {categoryName}
+                                        </h5>
+                                    );
+                                })}
                             </div>
 
                             <p className='mt-5 max-w-130 text-left text-base leading-7 text-white text-shadow:0_2px_8px_rgba(0,0,0,0.8)'>

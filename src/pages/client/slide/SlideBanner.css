@@ -4,6 +4,7 @@
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
+    margin-top: 78px;
 }
 
 .slide-banner * {
