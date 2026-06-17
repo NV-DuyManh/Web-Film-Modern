@@ -56,7 +56,7 @@ export default function SlideFilmCountry() {
                                     <div className="movie-image">
                                         <img src={e.imgUrl} alt={e.name} draggable="false" />
                                         <div className="tags-container">
-                                            <span className="tag gray">{e.duration + " phút"}</span>
+                                            <span className="tag yellow">{e.duration + " Phút"}</span>
                                         </div>
                                     </div>
                                     <h3>{e.name}</h3>

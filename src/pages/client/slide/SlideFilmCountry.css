@@ -40,7 +40,6 @@
     position: relative;
 }
 
-/* Nút điều hướng: Sắc nét, tương phản cao */
 .nav-btn {
     position: absolute;
     top: calc(50% - 28px); 
@@ -59,7 +58,6 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5); 
 }
 
-/* Hover: Sáng rực màu vàng */
 .nav-btn--prev {
     left: 0;
     transform: translate(-50%, -50%);
@@ -86,7 +84,6 @@
     transform: translate(50%, -50%) scale(1.15);
 }
 
-/* Logic ẩn nút tự động của Swiper */
 .nav-btn.swiper-button-disabled {
     opacity: 0;
     visibility: hidden;
@@ -128,24 +125,41 @@
     bottom: 10px;
     left: 10px;
     display: flex;
+    flex-wrap: wrap;
     gap: 6px;
 }
 
 .tag {
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 3px 8px;
+    border-radius: 6px; 
     font-size: 12px;
     font-weight: 700;
-    color: white;
+    border: 1px solid transparent; 
+    background: rgba(15, 23, 42, 0.7); 
+    backdrop-filter: blur(4px); 
 }
 
-.tag.gray {
-    background: rgba(105, 105, 115, 0.85);
+
+.tag.yellow {
+    color: #facc15;
+    border-color: #facc15;
 }
 
-.tag.blue {
-    background: #2068ff;
+.tag.cyan {
+    color: #22d3ee;
+    border-color: #22d3ee;
 }
+
+.tag.green {
+    color: #4ade80;
+    border-color: #4ade80;
+}
+
+.tag.pink {
+    color: #ff7eb3; 
+    border-color: #ff7eb3;
+}
+
 
 .movie-card h3 {
     margin: 14px 0 6px 0;
@@ -165,4 +179,4 @@
 
 .country-slider .swiper {
     padding: 5px 0;
-}   
+}
