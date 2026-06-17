@@ -7,11 +7,17 @@ import "swiper/css/navigation";
 
 import "./SlideFilmCountry.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useContext } from "react";
+import { MovieContext } from "../../../contexts/MovieProvider";
+import { getObjectById } from "../../../services/firebaseReponse";
+import { AuthorContext } from "../../../contexts/AuthorProvider";
 
 export default function SlideFilmCountry() {
     const prevRef = useRef(null);
     const nextRef = useRef(null);
     const swiperRef = useRef(null);
+    const movies = useContext(MovieContext);
+    const authors = useContext(AuthorContext);
     useEffect(() => {
         if (swiperRef.current && swiperRef.current.params) {
             swiperRef.current.params.navigation.prevEl = prevRef.current;
@@ -24,8 +30,7 @@ export default function SlideFilmCountry() {
         <div className="country-section md:flex">
             <div className="country-sidebar flex md:flex-col max-md:justify-between max-md:w-full">
                 <h2>
-                    Phim <span className="highlight">Hàn</span><br />
-                    Quốc <span className="highlight">mới</span>
+                    Phim <span className="highlight">Nhật</span><br /> Bản <span className="highlight">mới</span>
                 </h2>
 
                 <div className="view-all">Xem toàn bộ <span>&gt;</span></div>
@@ -57,71 +62,24 @@ export default function SlideFilmCountry() {
                         },
                     }}
                 >
-                         <SwiperSlide>
+                    {movies.map((e) =>
+                    (<SwiperSlide>
                         <div className="movie-card">
                             <div className="movie-image">
-                                <img src="https://media-cdn-v2.laodong.vn/storage/newsportal/2026/3/24/1674322/Nu-Hoang-Nuoc-Mat-1A-01.jpg" />
+                                <img src={e.imgUrl} />
                                 <div className="tags-container">
-                                    <span className="tag gray">PĐ. 16</span>
+                                    <span className="tag gray">{e.duration + " phút"}</span>
                                 </div>
                             </div>
-                            <h3>Nữ Hoàng Nước Mắt</h3>
-                            <p>Queen of Tears</p>
+                            <h3>{e.name}</h3>
+                            <p>
+                                {getObjectById(authors, e.author)?.name}
+                            </p>
                         </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="movie-card">
-                            <div className="movie-image">
-                                <img src="https://media-cdn-v2.laodong.vn/storage/newsportal/2026/3/24/1674322/Nu-Hoang-Nuoc-Mat-1A-01.jpg" />
-                                <div className="tags-container">
-                                    <span className="tag gray">PĐ. 16</span>
-                                </div>
-                            </div>
-                            <h3>Nữ Hoàng Nước Mắt</h3>
-                            <p>Queen of Tears</p>
-                        </div>
-                    </SwiperSlide>
-                    <SwiperSlide>
-                        <div className="movie-card">
-                            <div className="movie-image">
-                                <img src="https://media-cdn-v2.laodong.vn/storage/newsportal/2026/3/24/1674322/Nu-Hoang-Nuoc-Mat-1A-01.jpg" />
-                                <div className="tags-container">
-                                    <span className="tag gray">PĐ. 16</span>
-                                </div>
-                            </div>
-                            <h3>Nữ Hoàng Nước Mắt</h3>
-                            <p>Queen of Tears</p>
-                        </div>
-                    </SwiperSlide>
+                    </SwiperSlide>)
 
-                    <SwiperSlide>
-                        <div className="movie-card">
-                            <div className="movie-image">
-                                <img src="https://media-cdn-v2.laodong.vn/storage/newsportal/2026/3/24/1674322/Nu-Hoang-Nuoc-Mat-1A-01.jpg" />
-                                <div className="tags-container">
-                                    <span className="tag gray">PĐ. 16</span>
-                                </div>
-                            </div>
-                            <h3>Nữ Hoàng Nước Mắt</h3>
-                            <p>Queen of Tears</p>
-                        </div>
-                    </SwiperSlide>
+                    )}
 
-                    <SwiperSlide>
-                        <div className="movie-card">
-                            <div className="movie-image">
-                                <img src="https://media-cdn-v2.laodong.vn/storage/newsportal/2026/3/24/1674322/Nu-Hoang-Nuoc-Mat-1A-01.jpg" />
-                                <div className="tags-container">
-                                    <span className="tag gray">PĐ. 16</span>
-                                </div>
-                            </div>
-                            <h3>Nữ Hoàng Nước Mắt</h3>
-                            <p>Queen of Tears</p>
-                        </div>
-                    </SwiperSlide>
-
-
-                    {/* Các SwiperSlide khác */}
                 </Swiper>
 
                 <button
