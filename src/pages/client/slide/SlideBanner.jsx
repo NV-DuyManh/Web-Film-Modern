@@ -13,13 +13,16 @@ import { MovieContext } from '../../../contexts/MovieProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 import { getObjectById } from '../../../services/firebaseReponse';
 import { CategoriesContext } from '../../../contexts/CategoryProvider';
+import { AuthorContext } from '../../../contexts/AuthorProvider';
+import { PlanContext } from '../../../contexts/PlanProvider';
 
 export default function SlideBanner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const movies = useContext(MovieContext);
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoriesContext);
-
+    const authors = useContext(AuthorContext);
+    const plans = useContext(PlanContext);
     return (
         <div className='slide-banner relative'>
             <Swiper
@@ -55,20 +58,20 @@ export default function SlideBanner() {
                             </h2>
 
                             <div className='mt-3 flex flex-wrap gap-2'>
-                                <button className='rounded-md border border-yellow-300/70 bg-black/35 px-3 py-1.5 text-sm font-bold text-yellow-200 backdrop-blur-md transition-all duration-300 hover:bg-yellow-300 hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
-                                    {e.duration + " mins"}
+                                <button className='rounded-md border border-yellow-400 bg-yellow-400/20 px-2.5 py-1 text-[13px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
+                                    {getObjectById(plans, e.planID)?.name}
                                 </button>
 
-                                <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
-                                    ferfer
+                                <button className='rounded-md border border-cyan-400 bg-cyan-400/20 px-2.5 py-1 text-[13px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
+                                    {getObjectById(authors, e.author)?.name}
                                 </button>
 
-                                <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
-                                    ferfer
+                                <button className='rounded-md border border-green-400 bg-green-400/20 px-2.5 py-1 text-[13px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
+                                    {e.endEpisode + " Tập"}
                                 </button>
 
-                                <button className='rounded-md border border-white/35 bg-white/10 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:bg-white hover:text-black text-shadow:0_1px_3px_rgba(0,0,0,0.6)'>
-                                    ferfer
+                                <button className='rounded-md border border-pink-400 bg-pink-400/20 px-2.5 py-1 text-[13px] font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition-all duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
+                                    {e.duration + " Phút"}
                                 </button>
                             </div>
 

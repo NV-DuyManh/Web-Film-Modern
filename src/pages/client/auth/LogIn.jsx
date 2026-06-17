@@ -22,6 +22,7 @@ export default function LogIn({ open, handleClose }) {
         }}
         keepMounted
         onClose={handleClose}
+        disableScrollLock={true}
         aria-describedby="alert-dialog-slide-description"
         role="alertdialog"
       >
