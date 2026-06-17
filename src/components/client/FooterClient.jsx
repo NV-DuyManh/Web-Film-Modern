@@ -75,21 +75,21 @@ function FooterClient() {
                         </h2>
 
                         <div className='mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row'>
-                            <a href="" className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition-all duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
+                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition-all duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
                                 <FaApple className='text-4xl' />
                                 <div className='text-left leading-none'>
                                     <p className='text-xs font-semibold'>Download on the</p>
                                     <h3 className='text-2xl font-bold'>App Store</h3>
                                 </div>
-                            </a>
+                            </div>
 
-                            <a href="" className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition-all duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
+                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition-all duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
                                 <FaGooglePlay className='text-3xl text-green-400' />
                                 <div className='text-left leading-none'>
                                     <p className='text-xs font-semibold'>GET IT ON</p>
                                     <h3 className='text-2xl font-bold'>Google Play</h3>
                                 </div>
-                            </a>
+                            </div>
                         </div>
 
                         <div className='mt-8 flex w-full items-center justify-center'>
