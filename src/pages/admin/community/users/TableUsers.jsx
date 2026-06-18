@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Users(props) {
+function TableUsers(props) {
     return (
         <div>
             
@@ -8,4 +8,4 @@ function Users(props) {
     );
 }
 
-export default Users;
+export default TableUsers;
