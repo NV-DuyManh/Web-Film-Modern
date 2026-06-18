@@ -1,16 +1,16 @@
 import React from 'react';
-import SlideBanner from '../slide/SlideBanner';
 import CategoriesFilm from '../categoriesFilm/CategoriesFilm';
-import SlideFilmCountry from '../slide/SlideFilmCountry';
-import Cinema from '../cinema/Cinema';
+import Cinema from './cinema/Cinema';
+import Banner from './banner/Banner';
+import FilmCountry from './filmCountry/FilmCountry';
 
 function Home(props) {
     return (
         <div>
-            <SlideBanner />
+            <Banner />
             <CategoriesFilm />
-            <SlideFilmCountry  />
-            <Cinema/>
+            <FilmCountry />
+            <Cinema />
         </div>
     );
 }

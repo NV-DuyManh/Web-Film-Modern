@@ -6,15 +6,15 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import { FaPlay, FaHeart, FaInfoCircle } from 'react-icons/fa';
-import './SlideBanner.css';
+import './Banner.css';
 
 import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
-import { MovieContext } from '../../../contexts/MovieProvider';
-import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
-import { getObjectById } from '../../../services/firebaseReponse';
-import { CategoriesContext } from '../../../contexts/CategoryProvider';
-import { AuthorContext } from '../../../contexts/AuthorProvider';
-import { PlanContext } from '../../../contexts/PlanProvider';
+import { MovieContext } from '../../../../contexts/MovieProvider';
+import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
+import { getObjectById } from '../../../../services/firebaseReponse';
+import { CategoriesContext } from '../../../../contexts/CategoryProvider';
+import { AuthorContext } from '../../../../contexts/AuthorProvider';
+import { PlanContext } from '../../../../contexts/PlanProvider';
 
 export default function SlideBanner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);

@@ -1,0 +1,70 @@
+.cinema-slider-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.cinema-swiper {
+    width: 100%;
+    padding: 10px 0 20px 0 !important;
+}
+
+.cinema-nav-btn {
+    position: absolute;
+    top: 35%;
+    z-index: 40;
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.cinema-nav-btn--prev {
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+
+.cinema-nav-btn--prev:hover {
+    background: #22d3ee;
+    color: #000000;
+    border-color: #22d3ee;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+    transform: translate(-50%, -50%) scale(1.15);
+}
+
+.cinema-nav-btn--next {
+    right: 0;
+    transform: translate(50%, -50%);
+}
+
+.cinema-nav-btn--next:hover {
+    background: #22d3ee;
+    color: #000000;
+    border-color: #22d3ee;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+    transform: translate(50%, -50%) scale(1.15);
+}
+
+.cinema-nav-btn.swiper-button-disabled {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .cinema-nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+        top: 32%;
+    }
+}

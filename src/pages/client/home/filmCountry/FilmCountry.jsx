@@ -4,11 +4,11 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 
-import "./SlideFilmCountry.css";
+import "./FilmCountry.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { MovieContext } from "../../../contexts/MovieProvider";
-import { getObjectById } from "../../../services/firebaseReponse";
-import { AuthorContext } from "../../../contexts/AuthorProvider";
+import { MovieContext } from "../../../../contexts/MovieProvider";
+import { getObjectById } from "../../../../services/firebaseReponse";
+import { AuthorContext } from "../../../../contexts/AuthorProvider";
 
 export default function SlideFilmCountry() {
     const prevRef = useRef(null);
