@@ -92,8 +92,8 @@ function HeaderClient() {
                     ))}
                 </div>
             </div>
-            {/* <LogIn open={open} handleClose={handleClose} /> */}
-            <Register open={open} handleClose={handleClose} />
+            <LogIn open={open} handleClose={handleClose} />
+            {/* <Register open={open} handleClose={handleClose} /> */}
         </header>
     );
 
