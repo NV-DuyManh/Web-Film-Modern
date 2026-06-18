@@ -76,7 +76,7 @@ export default function LogIn({ open, handleClose, onSwitchToRegister }) {
                         <img src={Logo2} alt="MFILM" className="h-28 w-auto object-contain" />
                     </div>
                     <div className="flex-1 flex flex-col justify-center items-center space-y-4 relative z-10">
-                        <span className="text-[11px] font-bold tracking-widest px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
+                        <span className="text-[13px] font-bold tracking-widest px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
                             PHIM HAY ĐỈNH CAO
                         </span>
                         <h2 className="text-3xl font-black leading-tight text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]">
