@@ -3,6 +3,7 @@ import CategoriesFilm from '../categoriesFilm/CategoriesFilm';
 import Cinema from './cinema/Cinema';
 import Banner from './banner/Banner';
 import FilmCountry from './filmCountry/FilmCountry';
+import TopFilm from './topFilm/TopFilm';
 
 function Home(props) {
     return (
@@ -10,6 +11,7 @@ function Home(props) {
             <Banner />
             <CategoriesFilm />
             <FilmCountry />
+            <TopFilm/>
             <Cinema />
         </div>
     );
