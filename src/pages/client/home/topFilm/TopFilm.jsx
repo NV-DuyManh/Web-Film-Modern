@@ -42,14 +42,14 @@ export default function TopFilm() {
                         <SwiperSlide key={e.id}>
                             <div className="group cursor-pointer flex flex-col h-full">
                                 
-                                <div className="relative w-full aspect-[2/3] rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                     <img 
                                         src={e.imgUrl} 
                                         alt={e.name} 
                                         className="w-full h-full object-cover" 
                                         draggable="false"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-30"></div>
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-30"></div>
                                     
                                     <div className="absolute bottom-2 right-2 flex gap-1 z-20">
                                         <span className="bg-slate-700/80 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded">
