@@ -1,16 +1,14 @@
-import React, { createContext, useState, useEffect } from 'react';
-import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '../config/firebaseConfig';
+import React, { createContext, useEffect, useState } from 'react';
+import { fetchDocumentsRealtime } from '../services/firebaseService';
 
 export const UserContext = createContext();
 
-export const UserProvider = ({ children }) => {
+function UserProvider({ children }) {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(collection(db, "Users"), (snapshot) => {
-            const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            setUsers(data);
+        const unsubscribe = fetchDocumentsRealtime("Users", (userList) => {
+            setUsers(userList);
         });
         return () => unsubscribe();
     }, []);
@@ -20,4 +18,6 @@ export const UserProvider = ({ children }) => {
             {children}
         </UserContext.Provider>
     );
-};
+}
+
+export default UserProvider;
