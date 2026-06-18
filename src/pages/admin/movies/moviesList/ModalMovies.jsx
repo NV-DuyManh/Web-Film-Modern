@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, MenuItem, Autocomplete } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete } from '@mui/material';
 import { FaCloudUploadAlt, FaSpinner, FaTimesCircle } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
@@ -14,9 +14,6 @@ import Logo5 from "../../../../assets/Logo5.png";
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 const VisuallyHiddenInput = styled('input')({ clip: 'rect(0 0 0 0)', height: 1, position: 'absolute', width: 1 });
-const menuProps = {
-    PaperProps: { sx: { bgcolor: '#1e293b', color: 'white', border: '1px solid rgba(255,255,255,0.1)' } }
-};
 
 export default function ModalMovies({ open, handleClose, movie, onChangeInput, addOrUpdateMovie, loading, setMovie, error }) {
     const [openChoose, setOpenChoose] = useState(false);
@@ -65,19 +62,15 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
             case "actors":
                 setMovie(pre => ({ ...pre, list_Actor: toggleById(pre.list_Actor, id) }));
                 break;
-
             case "authors":
                 setMovie(pre => ({ ...pre, authors: toggleById(pre.authors, id) }));
                 break;
-
             case "characters":
                 setMovie(pre => ({ ...pre, list_Character: toggleById(pre.list_Character, id) }));
                 break;
-
             case "categories":
                 setMovie(pre => ({ ...pre, list_Category: toggleById(pre.list_Category, id) }));
                 break;
-
             default:
                 break;
         }
@@ -93,19 +86,15 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
             case "actors":
                 setMovie(pre => ({ ...pre, list_Actor: (pre.list_Actor || []).filter(e => e !== id) }));
                 break;
-
             case "authors":
                 setMovie(pre => ({ ...pre, authors: (pre.authors || []).filter(e => e !== id) }));
                 break;
-
             case "characters":
                 setMovie(pre => ({ ...pre, list_Character: (pre.list_Character || []).filter(e => e !== id) }));
                 break;
-
             case "categories":
                 setMovie(pre => ({ ...pre, list_Category: (pre.list_Category || []).filter(e => e !== id) }));
                 break;
-
             default:
                 break;
         }
@@ -115,16 +104,12 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
         switch (type) {
             case "actors":
                 return movie.list_Actor || [];
-
             case "authors":
                 return movie.authors || [];
-
             case "characters":
                 return movie.list_Character || [];
-
             case "categories":
                 return movie.list_Category || [];
-
             default:
                 return [];
         }
@@ -171,6 +156,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                         <Autocomplete
                             options={COUNTRIES || []}
                             value={movie.countriesID || null}
+                            classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                             onChange={(event, newValue) => {
                                 setMovie(prev => ({
                                     ...prev,
@@ -221,57 +207,60 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
                                 error={!!error.rent}
                                 helperText={error.rent}
                             />
-                            <TextField
-                                select
-                                className="modal-input-x"
-                                name="planID"
-                                onChange={onChangeInput}
-                                label="Plan"
-                                value={movie.planID}
-                                error={!!error.planID}
-                                helperText={error.planID}
-                                SelectProps={{ MenuProps: menuProps }}
-                            >
-                                {plansList?.map(plan => (
-                                    <MenuItem key={plan.id} value={plan.id}>
-                                        {plan.name}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                            <TextField
-                                select
-                                className="modal-input-x"
-                                name="category_Type_Id"
-                                onChange={onChangeInput}
-                                label="Category Type"
-                                value={movie.category_Type_Id || ""}
-                                error={!!error.category_Type_Id}
-                                helperText={error.category_Type_Id}
-                                SelectProps={{ MenuProps: menuProps }}
-                            >
-                                {categoryTypes?.map((categoryType) => (
-                                    <MenuItem key={categoryType.id} value={categoryType.id}>
-                                        {categoryType.name}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                            <TextField
-                                select
-                                className="modal-input-x"
-                                name="author"
-                                onChange={onChangeInput}
-                                label="Authors"
-                                value={movie.author}
-                                error={!!error.author}
-                                helperText={error.author}
-                                SelectProps={{ MenuProps: menuProps }}
-                            >
-                                {authorsList?.map(author => (
-                                    <MenuItem key={author.id} value={author.id}>
-                                        {author.name}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
+                            <Autocomplete
+                                options={plansList || []}
+                                getOptionLabel={(option) => option?.name || ""}
+                                value={plansList?.find(p => p.id === movie.planID) || null}
+                                classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                                onChange={(event, newValue) => {
+                                    onChangeInput({ target: { name: "planID", value: newValue?.id || "" } });
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Plan"
+                                        error={!!error.planID}
+                                        helperText={error.planID}
+                                        className="modal-input-x"
+                                    />
+                                )}
+                            />
+                            <Autocomplete
+                                options={categoryTypes || []}
+                                getOptionLabel={(option) => option?.name || ""}
+                                value={categoryTypes?.find(c => c.id === movie.category_Type_Id) || null}
+                                classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                                onChange={(event, newValue) => {
+                                    onChangeInput({ target: { name: "category_Type_Id", value: newValue?.id || "" } });
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Category Type"
+                                        error={!!error.category_Type_Id}
+                                        helperText={error.category_Type_Id}
+                                        className="modal-input-x"
+                                    />
+                                )}
+                            />
+                            <Autocomplete
+                                options={authorsList || []}
+                                getOptionLabel={(option) => option?.name || ""}
+                                value={authorsList?.find(a => a.id === movie.author) || null}
+                                classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                                onChange={(event, newValue) => {
+                                    onChangeInput({ target: { name: "author", value: newValue?.id || "" } });
+                                }}
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label="Authors"
+                                        error={!!error.author}
+                                        helperText={error.author}
+                                        className="modal-input-x"
+                                    />
+                                )}
+                            />
                         </div>
                     </div>
                 </div>
@@ -342,7 +331,8 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, a
 
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 flex flex-col items-center">
                         <p className="text-pink-400 text-xs font-bold uppercase tracking-widest text-center mb-4">Movie Poster</p>
-                        <div className="relative w-80 aspect-video rounded-2xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-pink-400">                            <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
+                        <div className="relative w-80 aspect-video rounded-2xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-pink-400">
+                            <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
                             <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                 <FaCloudUploadAlt className="text-5xl text-pink-400 mb-2" />
                                 <span className="text-white text-sm font-bold">Upload</span>

@@ -6,9 +6,12 @@ import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 import { EpisodeContext } from '../../../../contexts/EpisodeProvider';
+import { MovieContext } from '../../../../contexts/MovieProvider';
+import { getObjectById } from '../../../../services/firebaseReponse';
 
 function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
     const episodes = useContext(EpisodeContext);
+    const movies = useContext(MovieContext);
     const [open, setOpen] = useState(false);
 
     const [page, setPage] = useState(1);
@@ -18,9 +21,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
 
     const formatDateTime = (value) => {
         if (!value) return "N/A";
-
         let date;
-
         if (value?.toDate) {
             date = value.toDate();
         } else if (value?.seconds) {
@@ -28,9 +29,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
         } else {
             date = new Date(value);
         }
-
         if (isNaN(date.getTime())) return value;
-
         return date.toLocaleString("vi-VN");
     };
 
@@ -38,13 +37,16 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
         const keyword = search.toLowerCase();
 
         return episodes
-            ?.filter(e =>
-                e?.title?.toLowerCase().includes(keyword) ||
-                String(e?.numberEpisode || "").includes(keyword) ||
-                String(e?.url || "").includes(keyword)
-            )
+            ?.filter(e => {
+                const movieName = getObjectById(movies, e.movieID)?.name?.toLowerCase() || "";
+                return (
+                    String(e?.numberEpisode || "").includes(keyword) ||
+                    String(e?.url || "").includes(keyword) ||
+                    movieName.includes(keyword)
+                );
+            })
             ?.sort((a, b) => Number(a.numberEpisode) - Number(b.numberEpisode));
-    }, [search, episodes]);
+    }, [search, episodes, movies]);
 
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
@@ -83,7 +85,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                             <tr>
                                 <th>ID</th>
                                 <th className="text-center">NUMBER</th>
-                                <th className="text-center">TITLE</th>
+                                <th className="text-center">MOVIE</th>
                                 <th className="text-center">URL</th>
                                 <th className="text-center">CREATED AT</th>
                                 <th className="text-right">ACTIONS</th>
@@ -91,49 +93,52 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                         </thead>
 
                         <tbody>
-                            {currentData.map((row, index) => (
-                                <tr key={row.id || index} className="table-row">
-                                    <td className="table-cell">
-                                        {start + index + 1}
-                                    </td>
+                            {currentData.map((row, index) => {
+                                const movieName = getObjectById(movies, row.movieID)?.name || "Unknown Movie";
+                                return (
+                                    <tr key={row.id || index} className="table-row">
+                                        <td className="table-cell">
+                                            {start + index + 1}
+                                        </td>
 
-                                    <td className="table-cell text-center">
-                                        <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold border border-yellow-500/30">
-                                            Episode {row.numberEpisode}
-                                        </span>
-                                    </td>
+                                        <td className="table-cell text-center">
+                                            <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold border border-yellow-500/30">
+                                                Episode {row.numberEpisode}
+                                            </span>
+                                        </td>
 
-                                    <td className="table-cell text-center font-bold text-cyan-400">
-                                        {row.title}
-                                    </td>
+                                        <td className="table-cell text-center font-bold text-cyan-400">
+                                            {movieName}
+                                        </td>
 
-                                    <td className="table-cell text-center text-green-400 font-bold">
-                                        {row.url}
-                                    </td>
+                                        <td className="table-cell text-center text-green-400 font-bold max-w-50 truncate">
+                                            {row.url}
+                                        </td>
 
-                                    <td className="table-cell text-center text-gray-300">
-                                        {formatDateTime(row.createdAt)}
-                                    </td>
+                                        <td className="table-cell text-center text-gray-300">
+                                            {formatDateTime(row.createdAt)}
+                                        </td>
 
-                                    <td className="table-cell text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <button
-                                                onClick={() => handleEdit(row)}
-                                                className="action-btn btn-edit"
-                                            >
-                                                <CiEdit />
-                                            </button>
+                                        <td className="table-cell text-right">
+                                            <div className="flex justify-end gap-2">
+                                                <button
+                                                    onClick={() => handleEdit(row)}
+                                                    className="action-btn btn-edit"
+                                                >
+                                                    <CiEdit />
+                                                </button>
 
-                                            <button
-                                                onClick={() => handleClickOpenDele(row)}
-                                                className="action-btn btn-delete"
-                                            >
-                                                <RiDeleteBin6Fill />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                                                <button
+                                                    onClick={() => handleClickOpenDele(row)}
+                                                    className="action-btn btn-delete"
+                                                >
+                                                    <RiDeleteBin6Fill />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
 
@@ -154,7 +159,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                 open={open}
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE EPISODE"}
-                contentDelete={`Are you sure you want to delete the episode "${episode?.title}"?`}
+                contentDelete={`Are you sure you want to delete Episode ${episode?.numberEpisode}?`}
             />
         </div>
     );

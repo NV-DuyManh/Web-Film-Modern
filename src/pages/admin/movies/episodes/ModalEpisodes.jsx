@@ -3,7 +3,6 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, S
 import { FaSpinner } from 'react-icons/fa';
 import { useContext } from 'react';
 import { MovieContext } from '../../../../contexts/MovieProvider';
-import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -12,6 +11,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, error, loading, episode, setEpisode }) {
     const movies = useContext(MovieContext);
+
     const handleNumberChange = (e) => {
         const onlyNums = e.target.value.replace(/[^0-9]/g, '');
         onChangeInput({ target: { name: e.target.name, value: onlyNums } });
@@ -37,15 +37,19 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
                 <Autocomplete
                     options={movies || []}
                     getOptionLabel={(option) => option.name}
-                    disablePortal
-                    value={getObjectById(movies,episode.movieID) || null}
-                    onChange={(event, newValue) => setEpisode({...episode, movieID : newValue.id}) }
+                    classes={{
+                        paper: 'neon-paper',
+                        listbox: 'neon-listbox',
+                        option: 'neon-option'
+                    }}
+                    value={getObjectById(movies, episode.movieID) || null}
+                    onChange={(event, newValue) => setEpisode({ ...episode, movieID: newValue?.id || "" })}
                     renderInput={(params) => (
                         <TextField
                             {...params}
                             label="Movie"
-                            error={!!error.movieID }
-                            helperText={error.movieID }
+                            error={!!error.movieID}
+                            helperText={error.movieID}
                             className="modal-input-x"
                         />
                     )}
@@ -73,9 +77,6 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
                     helperText={error.url}
                     error={!!error.url}
                 />
-
-
-
             </DialogContent>
 
             <DialogActions className="modal-actions-x">

@@ -35,7 +35,7 @@ function Episodes() {
     const validation = () => {
         const newError = {};
         newError.numberEpisode = episode.numberEpisode !== "" ? "" : "Please enter episode number";
-        newError.movieID = episode.movieID ? "" : "Please enter episode title";
+        newError.movieID = episode.movieID ? "" : "Please select a movie";
         newError.url = episode.url ? "" : "Please enter episode url";
 
         setError(newError);
@@ -51,7 +51,6 @@ function Episodes() {
 
         let submitData = { ...episode };
         submitData.numberEpisode = parseInt(submitData.numberEpisode) || 0;
-        submitData.url = parseInt(submitData.url);
 
         if (!episode.id) {
             submitData.createdAt = new Date().toISOString();
@@ -69,7 +68,7 @@ function Episodes() {
             <Search
                 handleClickOpen={handleClickOpen}
                 name={"List Episodes"}
-                tuKhoa={"Search Episode by Title"}
+                tuKhoa={"Search Episode"}
                 onChangeSearch={onChangeSearch}
             />
             <ModalEpisodes
