@@ -1,124 +1,122 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent } from '@mui/material';
-import { IoClose } from 'react-icons/io5';
+import { Dialog, DialogContent, TextField, InputAdornment, IconButton } from '@mui/material';
+import { IoClose, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 import { FcGoogle } from 'react-icons/fc';
 import Logo2 from '../../../assets/Logo2.png';
 
 export default function LogIn({ open, handleClose }) {
-  const [isLogin, setIsLogin] = useState(true);
+    const [showPassword, setShowPassword] = useState(false);
 
-  return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      maxWidth="md"
-      fullWidth
-      disableScrollLock={true}
-      sx={{
-        '& .MuiDialog-paper': {
-          backgroundColor: '#000000',
-          backgroundImage: 'none',
-        },
-        '& .MuiDialogContent-root': {
-          backgroundColor: '#000000',
-          padding: 0,
-        }
-      }}
-      PaperProps={{
-        className: "rounded-2xl overflow-hidden bg-black text-white border border-neutral-900"
-      }}
-    >
-      <DialogContent className="p-0 flex flex-col md:flex-row overflow-hidden">
-        <div className="hidden md:flex w-1/2 bg-neutral-950 border-r border-neutral-900 flex-col justify-between p-10 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(234,179,8,0.08)_0%,transparent_70%)] z-0" />
-          <div className="relative z-10">
-            <img src={Logo2} alt="MFILM" className="h-10 w-auto" />
-          </div>
-          <div className="relative z-10 space-y-3">
-            <span className="inline-block text-xs font-semibold tracking-widest uppercase px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/25">
-              Điện ảnh đỉnh cao
-            </span>
-            <h2 className="text-3xl font-bold leading-snug text-white">
-              Chào mừng<br />đến với MFILM
-            </h2>
-            <p className="text-sm text-neutral-500 leading-relaxed">
-              Trải nghiệm kho phim khổng lồ, chất lượng cao,<br />mọi lúc mọi nơi.
-            </p>
-          </div>
-        </div>
+    return (
+        <Dialog
+            open={open}
+            onClose={handleClose}
+            maxWidth="md"
+            fullWidth
+            disableScrollLock={true}
+            sx={{
+                '& .MuiDialog-paper': {
+                    backgroundColor: '#0f172a',
+                    backgroundImage: 'none',
+                },
+                '& .MuiDialogContent-root': {
+                    backgroundColor: '#0f172a',
+                    padding: 0,
+                }
+            }}
+            PaperProps={{
+                className: "rounded-2xl overflow-hidden bg-slate-900 text-white border border-slate-800 shadow-2xl"
+            }}
+        >
+            <DialogContent className="p-0 flex flex-col md:flex-row overflow-hidden">
 
-        <div className="w-full md:w-1/2 p-8 relative bg-black">
-          <button
-            onClick={handleClose}
-            className="absolute right-5 top-5 text-neutral-600 hover:text-white transition-colors"
-          >
-            <IoClose size={22} />
-          </button>
+                <div className="hidden md:flex w-1/2 bg-slate-950 border-r border-slate-900 flex-col items-center p-10 relative overflow-hidden text-center ">
+                    <div className="drop-shadow-[0_0_25px_rgba(255,255,255,0.05)] relative z-10">
+                        <img src={Logo2} alt="MFILM" className="h-28 w-auto object-contain" />
+                    </div>
 
-          <h2 className="text-2xl font-bold mb-1 text-white">
-            {isLogin ? 'Đăng nhập' : 'Đăng ký'}
-          </h2>
-          <p className="text-sm mb-7 text-neutral-500">
-            {isLogin ? 'Chưa có tài khoản? ' : 'Đã có tài khoản? '}
-            <button
-              onClick={() => setIsLogin(!isLogin)}
-              className="font-semibold text-yellow-400 hover:underline"
-            >
-              {isLogin ? 'Đăng ký ngay' : 'Đăng nhập'}
-            </button>
-          </p>
+                    <div className="flex-1 flex flex-col justify-center items-center space-y-4 relative z-10">
+                        <span className="text-[11px] font-bold tracking-widest px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
+                            PHIM HAY ĐỈNH CAO
+                        </span>
 
-          <div className="space-y-3">
-            {!isLogin && (
-              <input
-                type="text"
-                placeholder="Tên hiển thị"
-                className="w-full rounded-xl p-3 text-sm text-white placeholder-neutral-600 bg-neutral-950 border border-neutral-800 outline-none focus:border-yellow-400 transition-colors"
-              />
-            )}
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full rounded-xl p-3 text-sm text-white placeholder-neutral-600 bg-neutral-950 border border-neutral-800 outline-none focus:border-yellow-400 transition-colors"
-            />
-            <input
-              type="password"
-              placeholder="Mật khẩu"
-              className="w-full rounded-xl p-3 text-sm text-white placeholder-neutral-600 bg-neutral-950 border border-neutral-800 outline-none focus:border-yellow-400 transition-colors"
-            />
-            {!isLogin && (
-              <input
-                type="password"
-                placeholder="Nhập lại mật khẩu"
-                className="w-full rounded-xl p-3 text-sm text-white placeholder-neutral-600 bg-neutral-950 border border-neutral-800 outline-none focus:border-yellow-400 transition-colors"
-              />
-            )}
-          </div>
+                        <h2 className="text-3xl font-black leading-tight text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]">
+                            Chào mừng<br />đến với <span className="text-yellow-400">MFILM</span>
+                        </h2>
+                    </div>
+                </div>
 
-          {isLogin && (
-            <div className="text-right mt-2">
-              <button className="text-xs text-neutral-500 hover:text-yellow-400 transition-colors">
-                Quên mật khẩu?
-              </button>
-            </div>
-          )}
+                <div className="w-full md:w-1/2 pt-12 pb-8 px-8 relative bg-slate-900">
+                    <button
+                        onClick={handleClose}
+                        className="absolute cursor-pointer right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-red-600 hover:shadow-[0_0_15px_rgba(239,68,68,0.6)] active:scale-95"
+                    >
+                        <IoClose size={22} />
+                    </button>
 
-          <button className="w-full font-bold py-3 mt-5 rounded-xl text-sm tracking-wide bg-yellow-400 hover:bg-yellow-500 text-black transition-all">
-            {isLogin ? 'Đăng nhập' : 'Đăng ký'}
-          </button>
+                    <h2 className="text-2xl font-bold mb-3 text-white">
+                        Đăng nhập
+                    </h2>
+                    <p className="text-sm mb-8 text-slate-400">
+                        Chưa có tài khoản?{' '}
+                        <button className="font-semibold cursor-pointer text-yellow-400 hover:underline transition-colors">
+                            Đăng ký ngay
+                        </button>
+                    </p>
 
-          <div className="my-5 flex items-center gap-3 text-xs text-neutral-700">
-            <div className="h-px flex-1 bg-neutral-900" />
-            <span>Hoặc</span>
-            <div className="h-px flex-1 bg-neutral-900" />
-          </div>
+                    <div className="space-y-5">
+                        <TextField
+                            className="modal-input-x"
+                            fullWidth
+                            label="Email"
+                            type="email"
+                            variant="outlined"
+                        />
 
-          <button className="flex items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-neutral-950 border border-neutral-800 hover:border-neutral-600 transition-all">
-            <FcGoogle size={18} />
-            {isLogin ? 'Đăng nhập với Google' : 'Đăng ký với Google'}
-          </button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+                        <TextField
+                            className="modal-input-x"
+                            fullWidth
+                            label="Mật khẩu"
+                            type={showPassword ? "text" : "password"}
+                            variant="outlined"
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            edge="end"
+                                            sx={{ color: '#94a3b8' }}
+                                        >
+                                            {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
+                            }}
+                        />
+                    </div>
+
+                    <div className="text-right mt-3">
+                        <button className="text-xs cursor-pointer text-slate-400 hover:text-yellow-400 transition-colors">
+                            Quên mật khẩu?
+                        </button>
+                    </div>
+
+                    <button className="w-full cursor-pointer font-bold py-3 mt-6 rounded-xl text-sm tracking-wide bg-yellow-400 hover:bg-yellow-500 text-black transition-all shadow-[0_4px_14px_rgba(250,204,21,0.2)]">
+                        Đăng nhập
+                    </button>
+
+                    <div className="my-6 flex items-center gap-3 text-xs text-slate-500">
+                        <div className="h-px flex-1 bg-slate-700" />
+                        <p className='text-white'>Hoặc</p>
+                        <div className="h-px flex-1 bg-slate-700" />
+                    </div>
+
+                    <button className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition-all">
+                        <FcGoogle size={18} />
+                        Đăng nhập với Google
+                    </button>
+                </div>
+            </DialogContent>
+        </Dialog>
+    );
 }

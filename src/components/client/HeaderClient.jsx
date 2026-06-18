@@ -7,6 +7,7 @@ import { LISTCLIENT } from '../../utils/Contants';
 import { Link, useLocation } from 'react-router-dom';
 import Logo2 from '../../assets/Logo2.png';
 import LogIn from '../../pages/client/auth/LogIn';
+import Register from '../../pages/client/auth/Register';
 
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
@@ -91,7 +92,8 @@ function HeaderClient() {
                     ))}
                 </div>
             </div>
-            <LogIn open={open} handleClose={handleClose} />
+            {/* <LogIn open={open} handleClose={handleClose} /> */}
+            <Register open={open} handleClose={handleClose} />
         </header>
     );
 
