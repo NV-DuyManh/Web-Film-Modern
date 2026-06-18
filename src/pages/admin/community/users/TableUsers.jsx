@@ -1,4 +1,3 @@
-// src/pages/admin/community/users/TableUsers.jsx
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';

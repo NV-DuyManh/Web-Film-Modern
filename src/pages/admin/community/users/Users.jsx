@@ -1,4 +1,3 @@
-// src/pages/admin/community/users/Users.jsx
 import React, { useState } from 'react';
 import Search from '../../../../components/admin/Search';
 import ModalUsers from './ModalUsers';
