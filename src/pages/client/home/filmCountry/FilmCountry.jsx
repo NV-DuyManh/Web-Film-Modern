@@ -1,16 +1,14 @@
-import React, { useEffect, useRef, useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-
-import "./FilmCountry.css";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { MovieContext } from "../../../../contexts/MovieProvider";
 import { getObjectById } from "../../../../services/firebaseReponse";
 import { AuthorContext } from "../../../../contexts/AuthorProvider";
 
-export default function SlideFilmCountry() {
+export default function FilmCountry() {
     const prevRef = useRef(null);
     const nextRef = useRef(null);
     const swiperRef = useRef(null);
@@ -27,17 +25,17 @@ export default function SlideFilmCountry() {
     }, []);
 
     return (
-        <div className="country-section md:flex">
-            <div className="country-sidebar flex md:flex-col max-md:justify-between max-md:w-full">
-                <h2>
-                    Phim <span className="highlight">Nhật</span><br /> Bản <span className="highlight">mới</span>
+        <div className="country-section md:flex gap-10 py-10 px-6 md:px-15 bg-[#212330] overflow-hidden font-sans">
+            <div className="country-sidebar shrink-0 flex md:flex-col max-md:justify-between max-md:w-full">
+                <h2 className="m-0 md:mb-8 text-3xl font-bold text-white leading-snug">
+                    Phim <span className="text-[#f482c3]">Nhật</span><br /> Bản <span className="text-[#f482c3]">mới</span>
                 </h2>
-                <div className="view-all">Xem toàn bộ <span>&gt;</span></div>
+                <div className="inline-flex items-center gap-2 text-white text-sm cursor-pointer">Xem toàn bộ <span>&gt;</span></div>
             </div>
 
-            <div className="country-slider">
-                <div className="slider-wrapper">
-                    <button ref={prevRef} className="nav-btn nav-btn--prev">
+            <div className="country-slider flex-1 min-w-0">
+                <div className="movie-slider-wrapper relative group/slider">
+                    <button ref={prevRef} className="movie-nav-btn movie-nav-btn--prev" draggable="false">
                         <FaChevronLeft />
                     </button>
 
@@ -49,24 +47,27 @@ export default function SlideFilmCountry() {
                             768: { slidesPerView: 2, spaceBetween: 15 },
                             1024: { slidesPerView: 3, spaceBetween: 20 },
                         }}
+                        className="movie-swiper"
                     >
                         {movies.map((e) => (
-                            <SwiperSlide key={e.id}>
-                                <div className="movie-card">
-                                    <div className="movie-image">
-                                        <img src={e.imgUrl} alt={e.name} draggable="false" />
-                                        <div className="tags-container">
-                                            <span className="tag yellow">{e.duration + " Phút"}</span>
+                            <SwiperSlide>
+                                <div className="group cursor-pointer flex flex-col h-full">
+                                    <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                        <img src={e.imgUrl} alt="" draggable="false" className="w-full h-full object-cover" />
+                                        <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5 z-20">
+                                            <span className="px-2 py-0.5 rounded-md text-xs font-bold border border-[#facc15] text-[#facc15] bg-slate-900/70 backdrop-blur-sm">{e.duration + " Phút"}</span>
                                         </div>
                                     </div>
-                                    <h3>{e.name}</h3>
-                                    <p>{getObjectById(authors, e.author)?.name}</p>
+                                    <div className="pt-3 flex flex-col transition-transform duration-300 group-hover:-translate-y-1">
+                                        <h3 className="m-0 text-base font-bold text-white truncate transition-colors group-hover:text-[#facc15]">{e.name}</h3>
+                                        <p className="m-0 mt-1 text-[#8c909e] text-sm">{getObjectById(authors, e.author)?.name}</p>
+                                    </div>
                                 </div>
                             </SwiperSlide>
                         ))}
                     </Swiper>
 
-                    <button ref={nextRef} className="nav-btn nav-btn--next">
+                    <button ref={nextRef} className="movie-nav-btn movie-nav-btn--next" draggable="false">
                         <FaChevronRight />
                     </button>
                 </div>
