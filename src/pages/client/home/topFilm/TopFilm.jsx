@@ -20,7 +20,7 @@ export default function TopFilm() {
             </div>
 
             <div className="top-slider-wrapper relative group/slider">
-                <button className="top-nav-btn top-nav-btn--prev">
+                <button className="top-nav-btn top-nav-btn--prev" draggable="false">
                     <FaChevronLeft />
                 </button>
 
@@ -71,7 +71,7 @@ export default function TopFilm() {
                                             {e.name}
                                         </h3>
                                         <p className="text-slate-400 text-[10px] md:text-xs truncate mt-0.5">
-                                            {e.name} (Sub)
+                                            {e.name}
                                         </p>
                                         <div className="flex items-center gap-1.5 mt-1 text-[9px] md:text-[11px] text-slate-500 font-medium">
                                             <span className="text-slate-300 font-semibold">T16</span>
@@ -86,7 +86,7 @@ export default function TopFilm() {
                     ))}
                 </Swiper>
 
-                <button className="top-nav-btn top-nav-btn--next">
+                <button className="top-nav-btn top-nav-btn--next" draggable="false">
                     <FaChevronRight />
                 </button>
             </div>

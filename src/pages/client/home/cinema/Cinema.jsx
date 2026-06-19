@@ -34,7 +34,7 @@ export default function Cinema() {
             </div>
 
             <div className="cinema-slider-wrapper">
-                <button ref={prevRef} className="cinema-nav-btn cinema-nav-btn--prev">
+                <button ref={prevRef} className="cinema-nav-btn cinema-nav-btn--prev" draggable="false">
                     <FaChevronLeft />
                 </button>
 
@@ -86,7 +86,7 @@ export default function Cinema() {
                                         {e.name}
                                     </h3>
                                     <p className="text-slate-400 text-xs md:text-sm truncate mt-0.5">
-                                        {e.name} (Sub)
+                                        {e.name}
                                     </p>
                                     <div className="flex items-center gap-2 mt-2 text-[11px] md:text-xs text-slate-500 font-medium">
                                         <span className="text-slate-300 font-semibold">T16</span>
@@ -101,7 +101,7 @@ export default function Cinema() {
                     ))}
                 </Swiper>
 
-                <button ref={nextRef} className="cinema-nav-btn cinema-nav-btn--next">
+                <button ref={nextRef} className="cinema-nav-btn cinema-nav-btn--next" draggable="false">
                     <FaChevronRight />
                 </button>
             </div>

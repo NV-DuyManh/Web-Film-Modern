@@ -6,9 +6,9 @@ import FooterClient from '../../components/client/FooterClient';
 function LayoutClient(props) {
     return (
         <div>
-        <HeaderClient/>
-        <ClientRouters/>
-        <FooterClient/>
+            <HeaderClient />
+            <ClientRouters />
+            <FooterClient />
         </div>
     );
 }

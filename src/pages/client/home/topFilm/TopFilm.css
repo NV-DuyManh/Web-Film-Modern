@@ -1,6 +1,14 @@
 .top-slider-wrapper {
     position: relative;
     width: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.top-slider-wrapper * {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
 }
 
 .top-swiper {
@@ -29,6 +37,8 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     opacity: 1;
     visibility: visible;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .top-nav-btn--prev {
