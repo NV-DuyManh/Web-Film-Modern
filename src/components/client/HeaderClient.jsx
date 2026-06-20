@@ -19,7 +19,7 @@ function HeaderClient() {
 
 
     return (
-        <header className="fixed top-0 left-0 z-100 w-full border-b border-white/10 bg-black/70 text-white backdrop-blur-xl">
+        <div className="fixed top-0 left-0 z-100 w-full border-b border-white/10 bg-black/70 text-white backdrop-blur-xl">
             <div className="flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1150px]:gap-4 min-[1150px]:px-8">
                 <Link to="/" className="flex shrink-0 items-center">
                     <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15"
@@ -29,15 +29,12 @@ function HeaderClient() {
                 <div className="relative min-w-0 flex-1 min-[1150px]:max-w-75 xl:max-w-95">
                     <input
                         className="w-full min-w-0 rounded-full border border-white/15 bg-white/10 px-4 py-2 pr-10 text-sm text-white outline-none transition-all duration-300 placeholder:text-gray-400 hover:border-yellow-400/60 focus:border-yellow-400 focus:bg-white/15 focus:shadow-[0_0_18px_rgba(250,204,21,0.25)] sm:px-5 sm:py-2.5 sm:pr-11"
-                        type="text"
-                        placeholder="Tìm kiếm..."
-                        onFocus={() => setIsSearching(true)}
-                        onBlur={() => setIsSearching(false)}
+                        type="text" placeholder="Tìm kiếm..." onFocus={() => setIsSearching(true)} onBlur={() => setIsSearching(false)}
                     />
                     <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-300 sm:right-4 sm:text-xl" />
                 </div>
 
-                <nav className="hidden shrink-0 items-center gap-1 min-[1150px]:flex">
+                <div className="hidden shrink-0 items-center gap-1 min-[1150px]:flex">
                     {LISTCLIENT.map((item, index) => (
                         <Link
                             key={index}
@@ -50,18 +47,13 @@ function HeaderClient() {
                             {item.title}
                         </Link>
                     ))}
-                </nav>
+                </div>
 
                 <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
                     <button
-                        onClick={handleOpen}
-                        className={`flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white px-4 py-2.5 text-sm font-bold text-black transition-all duration-300 hover:bg-yellow-400 hover:shadow-[0_0_18px_rgba(250,204,21,0.35)] min-[1150px]:flex xl:px-5 ${isSearching
-                            ? "max-md:hidden pointer-events-none"
-                            : ""
-                            }`}
-                    >
-                        <FaUser />
-                        Thành viên
+                        onClick={handleOpen} className={`flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white px-4 py-2.5 text-sm font-bold text-black transition-all duration-300 hover:bg-yellow-400 hover:shadow-[0_0_18px_rgba(250,204,21,0.35)] min-[1150px]:flex xl:px-5 ${isSearching
+                            ? "max-md:hidden pointer-events-none" : ""}`} >
+                        <FaUser /> Thành viên
                     </button>
                     <button
                         onClick={() => setOpenMenu(!openMenu)}
@@ -94,7 +86,7 @@ function HeaderClient() {
             </div>
             <LogIn open={open} handleClose={handleClose} />
             {/* <Register open={open} handleClose={handleClose} /> */}
-        </header>
+        </div>
     );
 
 }

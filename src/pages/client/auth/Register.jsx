@@ -4,7 +4,7 @@ import { IoClose, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 import { FcGoogle } from 'react-icons/fc';
 import Logo2 from '../../../assets/Logo2.png';
 
-export default function Register({ open, handleClose, onSwitchToLogin }) {
+export default function Register({ open, handleClose }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -98,7 +98,7 @@ export default function Register({ open, handleClose, onSwitchToLogin }) {
                     <h2 className="text-2xl font-bold mb-3 text-white">Đăng ký tài khoản</h2>
                     <p className="text-sm mb-8 text-slate-400">
                         Đã có tài khoản?{' '}
-                        <button onClick={onSwitchToLogin} className="font-semibold cursor-pointer text-yellow-400 hover:underline transition-colors">
+                        <button className="font-semibold cursor-pointer text-yellow-400 hover:underline transition-colors">
                             Đăng nhập
                         </button>
                     </p>
