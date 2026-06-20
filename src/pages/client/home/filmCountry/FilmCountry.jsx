@@ -25,9 +25,9 @@ export default function FilmCountry() {
     }, []);
 
     return (
-        <div className="country-section md:flex gap-10 py-10 px-6 md:px-15 bg-[#212330] overflow-hidden font-sans">
-            <div className="country-sidebar shrink-0 flex md:flex-col max-md:justify-between max-md:w-full">
-                <h2 className="m-0 md:mb-8 text-3xl font-bold text-white leading-snug">
+        <div className="country-section md:flex gap-10 py-5 px-6 md:px-15 bg-[#212330] overflow-hidden font-sans">
+            <div className="country-sidebar justify-center items-center md:justify-start mt-4 shrink-0 flex flex-col max-md:justify-between max-md:w-full">
+                <h2 className="m-0  md:mb-5 text-3xl font-bold text-white leading-snug">
                     Phim <span className="text-[#f482c3]">Nhật</span><br /> Bản <span className="text-[#f482c3]">mới</span>
                 </h2>
                 <div className="inline-flex items-center gap-2 text-white text-sm cursor-pointer">Xem toàn bộ <span>&gt;</span></div>

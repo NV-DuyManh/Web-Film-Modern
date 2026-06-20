@@ -4,15 +4,23 @@ import Cinema from './cinema/Cinema';
 import Banner from './banner/Banner';
 import FilmCountry from './filmCountry/FilmCountry';
 import TopFilm from './topFilm/TopFilm';
+import FilmNew from './filmNew/FilmNew';
+import FilmComing from './filmComing/FilmComing';
+import FilmHongKong from './filmHongKong/FilmHongKong';
+import Anime from './anime/Anime';
 
 function Home(props) {
     return (
         <div>
             <Banner />
             <CategoriesFilm />
+            <FilmNew/>
             <FilmCountry />
             <TopFilm/>
             <Cinema />
+            <FilmComing/>
+            <Anime/>
+            <FilmHongKong/>
         </div>
     );
 }
