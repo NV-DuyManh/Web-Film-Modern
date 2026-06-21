@@ -1,12 +1,15 @@
 import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import Slide from '@mui/material/Slide';
+import { AuthContext } from '../contexts/AuthProvider';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function LogOut({ open, handleClose, handleConfirm }) {
+    const { isLogin, loginByUser, handleLogout } = React.useContext(AuthContext);
+
     return (
         <Dialog
             open={open}
@@ -34,7 +37,7 @@ export default function LogOut({ open, handleClose, handleConfirm }) {
                 <Button onClick={handleClose} className="btn-neutral-x">
                     Hủy bỏ
                 </Button>
-                <Button onClick={handleConfirm} className="btn-danger-x">
+                <Button onClick={handleLogout} className="btn-danger-x">
                     Đăng xuất
                 </Button>
             </DialogActions>
