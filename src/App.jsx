@@ -1,19 +1,21 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import './App.css'
 import HomeAdmin from './pages/admin/homeAdmin/HomeAdmin'
 import { BrowserRouter } from 'react-router-dom'
 import AdminRouters from './routers/AdminRouters'
 import NoelBackground from './components/NoelBackground'
 import LayoutClient from './pages/client/LayoutClient'
+import { AuthContext } from './contexts/AuthProvider'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { isLogin } = useContext(AuthContext);
 
   return (
     <>
-      {/* <NoelBackground />
-       <HomeAdmin /> */}
-      <LayoutClient />
+      {
+        isLogin?.role == "admin" ? <>  <NoelBackground />
+          <HomeAdmin /></> : <LayoutClient />
+      }
     </>
 
 

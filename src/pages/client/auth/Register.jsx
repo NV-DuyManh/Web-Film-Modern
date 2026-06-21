@@ -1,69 +1,58 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Dialog, DialogContent, TextField, InputAdornment, IconButton } from '@mui/material';
 import { IoClose, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 import { FcGoogle } from 'react-icons/fc';
 import Logo2 from '../../../assets/Logo2.png';
+import { addDocument } from '../../../services/firebaseService';
+import { UserContext } from '../../../contexts/UserProvider';
+import { ROLES } from '../../../utils/Contants';
 
-export default function Register({ open, handleClose }) {
+export default function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+    const users = useContext(UserContext);
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        displayName: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
+        displayName: '', email: '', password: '', confirmPassword: '', role: ROLES.USER
     });
 
     const [errors, setErrors] = useState({});
-
-    useEffect(() => {
-        if (!open) {
-            setFormData({
-                displayName: '',
-                email: '',
-                password: '',
-                confirmPassword: ''
-            });
-            setErrors({});
-            setShowPassword(false);
-            setShowConfirmPassword(false);
-        }
-    }, [open]);
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-
-        if (errors[name]) {
-            setErrors({ ...errors, [name]: '' });
-        }
     };
 
-    const handleSubmit = () => {
+    const validation = () => {
         let newErrors = {};
 
         if (!formData.displayName.trim()) newErrors.displayName = 'Vui lòng nhập tên hiển thị';
         if (!formData.email.trim()) newErrors.email = 'Vui lòng nhập email';
+        if (users.some(e => e.email == formData.email)) newErrors.email = 'Email da duoc su dung';
         if (!formData.password) newErrors.password = 'Vui lòng nhập mật khẩu';
         if (!formData.confirmPassword) {
             newErrors.confirmPassword = 'Vui lòng xác nhận mật khẩu';
         } else if (formData.password !== formData.confirmPassword) {
             newErrors.confirmPassword = 'Mật khẩu không khớp';
         }
+        setErrors(newErrors);
+        return Object.keys(newErrors).some(e => e !== ""); // true co loi 
+    };
 
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
+    const addRegister = async () => {
+        if (validation()) {
             return;
         }
-
-        console.log("Đăng ký thành công với data:", formData);
-    };
+        setLoading(true);
+        const { confirmPassword, ...submitData } = formData;
+        await addDocument("Users", submitData);
+        handleCloseRegister();
+        setLoading(false);
+    }
 
     return (
         <Dialog
-            open={open}
-            onClose={handleClose}
+            open={openRegister}
+            onClose={handleCloseRegister}
             maxWidth="md"
             fullWidth
             disableScrollLock={true}
@@ -91,14 +80,14 @@ export default function Register({ open, handleClose }) {
                 </div>
 
                 <div className="w-full md:w-1/2 pt-12 pb-8 px-8 relative bg-slate-900 flex flex-col justify-center">
-                    <button onClick={handleClose} className="absolute cursor-pointer right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-red-600 active:scale-95">
+                    <button onClick={handleCloseRegister} className="absolute cursor-pointer right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-red-600 active:scale-95">
                         <IoClose size={22} />
                     </button>
 
                     <h2 className="text-2xl font-bold mb-3 text-white">Đăng ký tài khoản</h2>
                     <p className="text-sm mb-8 text-slate-400">
                         Đã có tài khoản?{' '}
-                        <button className="font-semibold cursor-pointer text-yellow-400 hover:underline transition-colors">
+                        <button onClick={handleOpenLogin} className="font-semibold cursor-pointer text-yellow-400 hover:underline transition-colors">
                             Đăng nhập
                         </button>
                     </p>
@@ -153,7 +142,7 @@ export default function Register({ open, handleClose }) {
                         />
                     </div>
 
-                    <button onClick={handleSubmit} className="w-full cursor-pointer font-bold py-3 mt-6 rounded-xl text-sm tracking-wide bg-yellow-400 hover:bg-yellow-500 text-black transition-all shadow-[0_4px_14px_rgba(250,204,21,0.2)]">
+                    <button onClick={addRegister} className="w-full cursor-pointer font-bold py-3 mt-6 rounded-xl text-sm tracking-wide bg-yellow-400 hover:bg-yellow-500 text-black transition-all shadow-[0_4px_14px_rgba(250,204,21,0.2)]">
                         Đăng ký ngay
                     </button>
 

@@ -339,5 +339,10 @@ export const COUNTRIES = [
     "Zimbabwe"
 ];
 
+export const ROLES = {
+    ADMIN: 'admin',        // Quản trị viên cấp cao
+    MODERATOR: 'moderator', // Quản trị viên cấp trung (người kiểm duyệt)
+    USER: 'user',          // Người dùng thông thường
+};
 export const cloud_name = "duuujvsz7";
 
