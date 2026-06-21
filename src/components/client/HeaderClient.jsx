@@ -25,7 +25,6 @@ function HeaderClient() {
     const handleCloseRegister = () => setOpenRegister(false);
     const location = useLocation();
 
-    // Xử lý click ra ngoài để đóng menu
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -103,10 +102,8 @@ function HeaderClient() {
                                     <FaChevronDown className={`text-sm text-cyan-400 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`} />
                                 </button>
 
-                                {/* Dropdown Menu (Hiệu ứng Admin) */}
                                 <div className={`absolute right-0 top-full mt-4 w-80 rounded-2xl bg-[#0a192f]/95 backdrop-blur-xl border border-slate-700/80 shadow-[0_15px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(34,211,238,0.15)] overflow-hidden transition-all duration-300 origin-top-right ${isDropdownOpen ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
 
-                                    {/* User Info */}
                                     <div className="flex items-center gap-4 p-5 border-b border-slate-700/80 bg-linear-to-r from-blue-900/10 to-transparent">
                                         <img
                                             src={isLogin?.avatarUrl || "https://i.pravatar.cc/150?img=3"}
@@ -141,7 +138,6 @@ function HeaderClient() {
                                         </div>
                                     </div>
 
-                                    {/* Nav Items */}
                                     <div className="p-3 flex flex-col gap-1.5">
                                         <button className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
                                             <FaRegHeart className="text-pink-400 text-lg drop-shadow-[0_0_5px_rgba(236,72,153,0.5)]" /> Yêu thích

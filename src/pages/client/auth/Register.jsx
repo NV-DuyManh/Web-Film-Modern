@@ -27,7 +27,7 @@ export default function Register({ openRegister, handleCloseRegister, handleOpen
 
         if (!formData.displayName.trim()) newErrors.displayName = 'Vui lòng nhập tên hiển thị';
         if (!formData.email.trim()) newErrors.email = 'Vui lòng nhập email';
-        if (users.some(e => e.email == formData.email)) newErrors.email = 'Email da duoc su dung';
+        if (users.some(e => e.email == formData.email)) newErrors.email = 'Email đã được sử dụng';
         if (!formData.password) newErrors.password = 'Vui lòng nhập mật khẩu';
         if (!formData.confirmPassword) {
             newErrors.confirmPassword = 'Vui lòng xác nhận mật khẩu';
