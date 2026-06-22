@@ -1,51 +1,63 @@
-.slide-banner {
-    width: 100%;
-    height: 380px;
-    overflow: hidden;
-    user-select: none;
-    -webkit-user-select: none;
-    margin-top: 67px; 
-    position: relative;
+.anime-container {
     background-color: #111827;
+    width: 100%;
+    color: white;
+    padding: 16px 20px;
+    overflow: hidden;
+    font-family: sans-serif;
+}
+
+@media (min-width: 768px) {
+    .anime-container {
+        padding: 20px 40px;
+    }
+}
+
+.anime-slide-wrapper {
+    position: relative;
+    width: 100%;
+    border-radius: 16px;
+    overflow: hidden;
+    height: 380px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
 @media (min-width: 480px) {
-    .slide-banner {
+    .anime-slide-wrapper {
         height: 420px;
     }
 }
 
 @media (min-width: 768px) {
-    .slide-banner {
+    .anime-slide-wrapper {
         height: 480px;
-        margin-top: 77px; 
     }
 }
 
 @media (min-width: 1024px) {
-    .slide-banner {
+    .anime-slide-wrapper {
         height: 600px;
-        margin-top: 85px; 
     }
 }
 
-.slide-banner * {
+.anime-slide-wrapper * {
     user-select: none;
     -webkit-user-select: none;
 }
 
-.mySwiper2 {
+.anime-main-swiper {
     width: 100%;
     height: 100%;
 }
 
-.mySwiper2 .swiper-slide {
+.anime-main-swiper .swiper-slide {
     position: relative;
     width: 100%;
     height: 100%;
 }
 
-.banner-img {
+.anime-main-img {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -55,7 +67,7 @@
     -webkit-user-drag: none;
 }
 
-.banner-info-box {
+.anime-info-box {
     position: absolute;
     z-index: 30;
     top: 42%;
@@ -74,14 +86,14 @@
 }
 
 @media (min-width: 480px) {
-    .banner-info-box {
+    .anime-info-box {
         padding: 24px;
         top: 45%;
     }
 }
 
 @media (min-width: 1024px) {
-    .banner-info-box {
+    .anime-info-box {
         top: 50%;
         left: 40px;
         transform: translateY(-50%);
@@ -92,32 +104,32 @@
     }
 }
 
-.banner-info-box button {
+.anime-info-box button {
     pointer-events: auto;
 }
 
-.thumb-wrapper {
+.anime-thumb-wrapper {
     position: absolute;
     z-index: 40;
 }
 
-.thumb-swiper {
+.anime-thumb-swiper {
     padding: 16px 4px;
     cursor: grab;
 }
 
-.thumb-swiper:active {
+.anime-thumb-swiper:active {
     cursor: grabbing;
 }
 
-.thumb-swiper .swiper-slide {
+.anime-thumb-swiper .swiper-slide {
     overflow: hidden;
     cursor: pointer;
     background: #000;
     transition: all 0.3s ease;
 }
 
-.thumb-swiper .swiper-slide img {
+.anime-thumb-swiper .swiper-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -128,56 +140,48 @@
 }
 
 @media (min-width: 1024px) {
-    .thumb-wrapper {
+    .anime-thumb-wrapper {
         bottom: 30px;
         right: 40px;
-        width: 600px; 
+        width: 380px; 
     }
 
-    .thumb-swiper .swiper-slide {
-        aspect-ratio: 16/9;
-        height: auto;
+    .anime-thumb-swiper .swiper-slide {
+        aspect-ratio: 2/3;
         border-radius: 8px;
         opacity: 1;
         border: 2px solid transparent;
         transform: scale(1);
     }
 
-    .thumb-swiper .swiper-slide:hover {
+    .anime-thumb-swiper .swiper-slide:hover {
         transform: translateY(-4px) scale(1.02);
         border-color: #00f2fe;
         box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
     }
 
-    .thumb-swiper .swiper-slide:hover img {
+    .anime-thumb-swiper .swiper-slide:hover img {
         transform: scale(1.05);
         filter: brightness(1.1) contrast(1.1);
     }
 
-    .thumb-swiper .swiper-slide:active {
+    .anime-thumb-swiper .swiper-slide:active {
         transform: scale(0.97);
     }
 
-    .thumb-swiper .swiper-slide-thumb-active {
-        opacity: 1;
+    .anime-thumb-swiper .swiper-slide-thumb-active {
         border-color: #facc15;
         box-shadow: 0 4px 15px rgba(250, 204, 21, 0.5);
         transform: scale(1.05);
     }
 
-    .thumb-swiper .swiper-slide-thumb-active img {
+    .anime-thumb-swiper .swiper-slide-thumb-active img {
         filter: brightness(1.1) contrast(1.1);
     }
 }
 
-@media (min-width: 1280px) {
-    .thumb-wrapper {
-        width: 750px; 
-    }
-}
-
 @media (max-width: 1023px) {
-    .thumb-wrapper {
+    .anime-thumb-wrapper {
         bottom: 12px;
         left: 50%;
         transform: translateX(-50%);
@@ -186,16 +190,16 @@
         justify-content: center;
     }
 
-    .thumb-swiper {
+    .anime-thumb-swiper {
         width: auto;
         max-width: 95%;
     }
 
-    .thumb-swiper .swiper-wrapper {
+    .anime-thumb-swiper .swiper-wrapper {
         justify-content: center;
     }
 
-    .thumb-swiper .swiper-slide {
+    .anime-thumb-swiper .swiper-slide {
         width: 40px !important;
         height: 40px !important;
         border-radius: 50%;
@@ -205,37 +209,37 @@
     }
 
     @media (min-width: 480px) {
-        .thumb-swiper .swiper-slide {
+        .anime-thumb-swiper .swiper-slide {
             width: 50px !important;
             height: 50px !important;
         }
     }
 
     @media (min-width: 768px) {
-        .thumb-swiper .swiper-slide {
+        .anime-thumb-swiper .swiper-slide {
             width: 65px !important;
             height: 65px !important;
         }
     }
 
-    .thumb-swiper .swiper-slide:hover {
+    .anime-thumb-swiper .swiper-slide:hover {
         transform: translateY(-2px) scale(1.05);
         border-color: #00f2fe;
         box-shadow: 0 4px 12px rgba(0, 242, 254, 0.4);
     }
 
-    .thumb-swiper .swiper-slide:hover img {
+    .anime-thumb-swiper .swiper-slide:hover img {
         filter: brightness(1.1) contrast(1.1);
     }
 
-    .thumb-swiper .swiper-slide-thumb-active {
+    .anime-thumb-swiper .swiper-slide-thumb-active {
         border-radius: 50%;
         transform: scale(1.1);
         border-color: #facc15;
         box-shadow: 0 4px 12px rgba(250, 204, 21, 0.5);
     }
 
-    .thumb-swiper .swiper-slide-thumb-active img {
+    .anime-thumb-swiper .swiper-slide-thumb-active img {
         filter: brightness(1.1) contrast(1.1);
     }
 }

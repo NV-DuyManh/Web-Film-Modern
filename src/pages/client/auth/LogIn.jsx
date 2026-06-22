@@ -9,7 +9,7 @@ import { AuthContext } from '../../../contexts/AuthProvider';
 export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
     const [showPassword, setShowPassword] = useState(false);
     const users = useContext(UserContext);
-    const { isLogin , loginByUser  , handleLogout  } = useContext(AuthContext);
+    const { loginByUser } = useContext(AuthContext);
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -36,6 +36,7 @@ export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister 
             setErrors({ ...errors, [name]: '' });
         }
     };
+
     const validation = () => {
         let newErrors = {};
 
@@ -49,19 +50,28 @@ export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister 
             newErrors.password = 'Vui lòng nhập mật khẩu';
         }
 
+        setErrors(newErrors);
+
         if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
+            return true;
         }
 
-        console.log("Đăng nhập thành công với data:", formData);
+        return false;
     };
+
     const handleLogin = () => {
         if (validation()) return;
+
         const userLogin = users.find((e) => e.email === formData.email.trim() && e.password === formData.password);
-        loginByUser(userLogin);
-        handleCloseLogin();
+        
+        if (userLogin) {
+            loginByUser(userLogin);
+            handleCloseLogin();
+        } else {
+            setErrors({ email: 'Tài khoản hoặc mật khẩu không chính xác' });
+        }
     }
+
     return (
         <Dialog
             open={openLogin}
