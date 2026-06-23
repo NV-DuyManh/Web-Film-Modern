@@ -66,13 +66,18 @@
     position: absolute;
     inset: 0;
     z-index: 20;
-    background: linear-gradient(to top, rgba(17, 24, 39, 0.8) 0%, rgba(17, 24, 39, 0.3) 50%, transparent 100%);
     pointer-events: none;
 }
 
-@media (min-width: 768px) {
+@media (max-width: 1023px) {
     .anime-overlay {
-        background: linear-gradient(to top, rgba(17, 24, 39, 0.8) 0%, rgba(17, 24, 39, 0.2) 50%, transparent 100%);
+        background: radial-gradient(circle at center, rgba(17, 24, 39, 0.2) 0%, rgba(17, 24, 39, 0.6) 60%, rgba(17, 24, 39, 0.8) 100%);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+    .anime-overlay {
+        background: radial-gradient(circle at center, rgba(17, 24, 39, 0.15) 0%, rgba(17, 24, 39, 0.5) 60%, rgba(17, 24, 39, 0.75) 100%);
     }
 }
 
@@ -261,5 +266,39 @@
 
     .anime-thumb-swiper .swiper-slide-thumb-active img {
         filter: brightness(1.1) contrast(1.1);
+    }
+}
+
+@media (max-width: 1023px) {
+    .anime-info-box {
+        animation: slideInUp 0.8s ease-out forwards;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 20px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+@media (min-width: 1024px) {
+    .anime-info-box {
+        animation: slideInLeft 0.8s ease-out forwards;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
     }
 }
