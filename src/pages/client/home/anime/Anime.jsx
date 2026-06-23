@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { FreeMode, Navigation, Thumbs } from 'swiper/modules';
+import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
+import 'swiper/css/effect-fade';
 import { FaPlay, FaHeart, FaInfoCircle, FaChevronRight } from 'react-icons/fa';
 import './Anime.css';
 
@@ -17,6 +18,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 
 export default function Anime() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [activeIndex, setActiveIndex] = useState(0);
     const movies = useContext(MovieContext);
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoriesContext);
@@ -43,10 +45,13 @@ export default function Anime() {
                     spaceBetween={0}
                     navigation={false}
                     loop={false}
+                    effect={'fade'}
+                    fadeEffect={{ crossFade: true }}
+                    onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
                     thumbs={{
                         swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
                     }}
-                    modules={[FreeMode, Navigation, Thumbs]}
+                    modules={[FreeMode, Navigation, Thumbs, EffectFade]}
                     className="anime-main-swiper"
                 >
                     {movies?.map((e) => (
@@ -94,14 +99,14 @@ export default function Anime() {
                                         return (
                                             <h5
                                                 key={categoryId}
-                                                className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-white/20 bg-white/5 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-gray-300 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black hover:shadow-[0_0_16px_rgba(250,204,21,0.35)]'
+                                                className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-purple-500/40 bg-purple-500/30 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-purple-200 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-purple-400 hover:bg-purple-500 hover:text-white hover:shadow-[0_0_16px_rgba(168,85,247,0.6)]'
                                             >
                                                 {categoryName}
                                             </h5>
                                         );
                                     })}
                                     {(!e.list_Category || e.list_Category.length === 0) && (
-                                        <h5 className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-white/20 bg-white/5 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-gray-300 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-yellow-300/70 hover:bg-yellow-300 hover:text-black'>
+                                        <h5 className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-purple-500/40 bg-purple-500/30 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-purple-200 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-purple-400 hover:bg-purple-500 hover:text-white hover:shadow-[0_0_16px_rgba(168,85,247,0.6)]'>
                                             Hoạt hình
                                         </h5>
                                     )}
@@ -111,7 +116,7 @@ export default function Anime() {
                                     {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
                                 </p>
 
-                                <div className='mt-4 sm:mt-6 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
+                                <div className='mt-4 lg:mb-5 sm:mt-6 lg:-translate-y-2 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
                                     <button className='group flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-[#f6d878] text-lg sm:text-xl text-black shadow-[0_0_24px_rgba(246,216,120,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[#ffe28a] hover:shadow-[0_0_32px_rgba(246,216,120,0.55)] active:scale-95'>
                                         <FaPlay className='ml-1 transition-transform duration-300 group-hover:scale-110' />
                                     </button>
@@ -152,8 +157,8 @@ export default function Anime() {
                         modules={[FreeMode, Navigation, Thumbs]}
                         className="anime-thumb-swiper"
                     >
-                        {movies?.map((e) => (
-                            <SwiperSlide key={e.id}>
+                        {movies?.map((e, index) => (
+                            <SwiperSlide key={e.id} className={activeIndex === index ? "custom-thumb-active" : ""}>
                                 <img src={e.imgUrl} alt={e.name} draggable="false" />
                             </SwiperSlide>
                         ))}

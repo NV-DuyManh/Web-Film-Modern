@@ -100,6 +100,14 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+}
+
+.anime-main-swiper .swiper-slide:not(.swiper-slide-active) .anime-info-box,
+.anime-main-swiper .swiper-slide:not(.swiper-slide-active) .anime-info-box * {
+    pointer-events: none !important;
+}
+
+.anime-main-swiper .swiper-slide-active .anime-info-box {
     pointer-events: auto;
 }
 
@@ -121,10 +129,6 @@
     }
 }
 
-.anime-info-box button {
-    pointer-events: auto;
-}
-
 .anime-thumb-wrapper {
     position: absolute;
     z-index: 40;
@@ -144,6 +148,8 @@
     cursor: pointer;
     background: #000;
     transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
 }
 
 .anime-thumb-swiper .swiper-slide img {
@@ -153,7 +159,7 @@
     pointer-events: none;
     -webkit-user-drag: none;
     transition: all 0.3s ease;
-    filter: brightness(0.7) contrast(1.1);
+    filter: brightness(0.85) contrast(1.1);
 }
 
 @media (min-width: 1024px) {
@@ -166,35 +172,39 @@
     .anime-thumb-swiper .swiper-slide {
         aspect-ratio: 2/3;
         border-radius: 8px;
-        opacity: 0.8;
+        opacity: 0.85;
         border: 2px solid transparent;
-        transform: scale(1);
+        transform: scale(1.03);
     }
 
     .anime-thumb-swiper .swiper-slide:hover {
-        transform: translateY(-4px) scale(1.02);
+        transform: translateY(-4px) scale(1.08);
         border-color: #00f2fe;
         box-shadow: 0 4px 15px rgba(0, 242, 254, 0.4);
+        z-index: 5;
     }
 
     .anime-thumb-swiper .swiper-slide:hover img {
         transform: scale(1.05);
-        filter: brightness(1.1) contrast(1.1);
+        filter: brightness(1.2) contrast(1.1);
     }
 
     .anime-thumb-swiper .swiper-slide:active {
-        transform: scale(0.97);
+        transform: scale(0.99);
     }
 
+    .anime-thumb-swiper .swiper-slide.custom-thumb-active,
     .anime-thumb-swiper .swiper-slide-thumb-active {
         opacity: 1;
         border-color: #facc15;
-        box-shadow: 0 4px 15px rgba(250, 204, 21, 0.5);
-        transform: scale(1.05);
+        box-shadow: 0 4px 18px rgba(250, 204, 21, 0.6);
+        transform: scale(1.1);
+        z-index: 10;
     }
 
+    .anime-thumb-swiper .swiper-slide.custom-thumb-active img,
     .anime-thumb-swiper .swiper-slide-thumb-active img {
-        filter: brightness(1.1) contrast(1.1);
+        filter: brightness(1.2) contrast(1.1);
     }
 }
 
@@ -227,9 +237,9 @@
         width: 38px !important;
         height: 38px !important;
         border-radius: 50%;
-        opacity: 0.8;
+        opacity: 0.85;
         border: 2px solid transparent;
-        transform: scale(1);
+        transform: scale(1.03);
     }
 
     @media (min-width: 480px) {
@@ -247,25 +257,29 @@
     }
 
     .anime-thumb-swiper .swiper-slide:hover {
-        transform: translateY(-2px) scale(1.05);
+        transform: translateY(-2px) scale(1.1);
         border-color: #00f2fe;
         box-shadow: 0 4px 12px rgba(0, 242, 254, 0.4);
+        z-index: 5;
     }
 
     .anime-thumb-swiper .swiper-slide:hover img {
-        filter: brightness(1.1) contrast(1.1);
+        filter: brightness(1.2) contrast(1.1);
     }
 
+    .anime-thumb-swiper .swiper-slide.custom-thumb-active,
     .anime-thumb-swiper .swiper-slide-thumb-active {
         border-radius: 50%;
         opacity: 1;
-        transform: scale(1.1);
+        transform: scale(1.15);
         border-color: #facc15;
-        box-shadow: 0 4px 12px rgba(250, 204, 21, 0.5);
+        box-shadow: 0 4px 15px rgba(250, 204, 21, 0.5);
+        z-index: 10;
     }
 
+    .anime-thumb-swiper .swiper-slide.custom-thumb-active img,
     .anime-thumb-swiper .swiper-slide-thumb-active img {
-        filter: brightness(1.1) contrast(1.1);
+        filter: brightness(1.2) contrast(1.1);
     }
 }
 
