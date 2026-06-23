@@ -99,17 +99,12 @@ export default function Anime() {
                                         return (
                                             <h5
                                                 key={categoryId}
-                                                className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-purple-500/40 bg-purple-500/30 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-purple-200 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-purple-400 hover:bg-purple-500 hover:text-white hover:shadow-[0_0_16px_rgba(168,85,247,0.6)]'
+                                                className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-purple-500/60 bg-purple-600/50 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-purple-400 hover:bg-purple-500 hover:text-white hover:shadow-[0_0_16px_rgba(168,85,247,0.8)]'
                                             >
                                                 {categoryName}
                                             </h5>
                                         );
                                     })}
-                                    {(!e.list_Category || e.list_Category.length === 0) && (
-                                        <h5 className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-purple-500/40 bg-purple-500/30 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-purple-200 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-purple-400 hover:bg-purple-500 hover:text-white hover:shadow-[0_0_16px_rgba(168,85,247,0.6)]'>
-                                            Hoạt hình
-                                        </h5>
-                                    )}
                                 </div>
 
                                 <p className='hidden lg:block mt-3 lg:mt-4 max-w-130 text-left text-sm leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-3'>
