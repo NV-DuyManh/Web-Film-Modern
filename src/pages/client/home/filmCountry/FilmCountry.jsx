@@ -26,7 +26,7 @@ export default function FilmCountry() {
 
     return (
         <div className="country-section w-full md:flex gap-10 py-5 px-6 md:px-10 bg-[#111827] overflow-hidden font-sans">
-            <div className="country-sidebar justify-center items-center md:justify-start mt-4 shrink-0 flex flex-col max-md:justify-between max-md:w-full">
+            <div className="country-sidebar justify-center items-center md:items-start md:justify-start mt-4 shrink-0 flex flex-col max-md:justify-between max-md:w-full">
                 <h2 className="m-0  md:mb-5 text-3xl font-bold text-white leading-snug">
                     Phim <span className="text-[#f482c3]">Nhật</span><br className="hidden md:block" /> Bản <span className="text-[#f482c3]">mới</span>
                 </h2>
@@ -45,7 +45,8 @@ export default function FilmCountry() {
                         breakpoints={{
                             0: { slidesPerView: 1, spaceBetween: 10 },
                             768: { slidesPerView: 2, spaceBetween: 15 },
-                            1024: { slidesPerView: 3, spaceBetween: 20 },
+                            1024: { slidesPerView: 3, spaceBetween: 20 }, 
+                            1280: { slidesPerView: 4, spaceBetween: 24 }
                         }}
                         className="movie-swiper"
                     >
