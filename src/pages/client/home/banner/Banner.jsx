@@ -6,7 +6,7 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import 'swiper/css/effect-fade';
-import { FaPlay, FaHeart, FaInfoCircle } from 'react-icons/fa';
+import { FaPlay, FaHeart, FaInfoCircle, FaChevronRight } from 'react-icons/fa';
 import './Banner.css';
 
 import { MovieContext } from '../../../../contexts/MovieProvider';
@@ -16,9 +16,8 @@ import { CategoriesContext } from '../../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 
-export default function SlideBanner() {
+export default function Banner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
-    const [activeIndex, setActiveIndex] = useState(0);
     const movies = useContext(MovieContext);
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoriesContext);
@@ -37,7 +36,6 @@ export default function SlideBanner() {
                 loop={false}
                 effect={'fade'}
                 fadeEffect={{ crossFade: true }}
-                onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
                 thumbs={{
                     swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
                 }}
@@ -65,19 +63,19 @@ export default function SlideBanner() {
                             </h2>
 
                             <div className='mt-3 sm:mt-4 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
-                                <button className='rounded-md border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
+                                <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
                                     {getObjectById(plans, e.planID)?.name || "Premium"}
                                 </button>
 
-                                <button className='rounded-md border border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
+                                <button className='rounded-md cursor-pointer border border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
                                     {getObjectById(authors, e.author)?.name || "Đang cập nhật"}
                                 </button>
 
-                                <button className='rounded-md border border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
+                                <button className='rounded-md cursor-pointer border border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
                                     {e.endEpisode} Tập
                                 </button>
 
-                                <button className='rounded-md border border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition-all duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
+                                <button className='rounded-md cursor-pointer border border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition-all duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
                                     {e.duration} Phút
                                 </button>
                             </div>
@@ -94,7 +92,7 @@ export default function SlideBanner() {
                                             {categoryName}
                                         </h5>
                                     );
-                                })}
+                                })}                           
                             </div>
 
                             <p className='hidden lg:block mt-3 lg:mt-4 max-w-130 text-left text-sm leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-3'>
@@ -141,8 +139,8 @@ export default function SlideBanner() {
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="thumb-swiper"
                 >
-                    {movies?.map((e, index) => (
-                        <SwiperSlide key={e.id} className={activeIndex === index ? "custom-thumb-active" : ""}>
+                    {movies?.map((e) => (
+                        <SwiperSlide key={e.id}>
                             <img src={e.imgUrl} alt={e.name} draggable="false" />
                         </SwiperSlide>
                     ))}

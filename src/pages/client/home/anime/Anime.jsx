@@ -18,7 +18,6 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 
 export default function Anime() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
-    const [activeIndex, setActiveIndex] = useState(0);
     const movies = useContext(MovieContext);
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoriesContext);
@@ -47,7 +46,6 @@ export default function Anime() {
                     loop={false}
                     effect={'fade'}
                     fadeEffect={{ crossFade: true }}
-                    onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
                     thumbs={{
                         swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
                     }}
@@ -74,20 +72,20 @@ export default function Anime() {
                                     {getObjectById(categoryTypes, e.category_Type_Id)?.name || "Series Movie"}
                                 </h2>
 
-                                <div className='mt-3 sm:mt-4 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
-                                    <button className='rounded-md border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
+                                <div className='mt-3  sm:mt-4 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
+                                    <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
                                         {getObjectById(plans, e.planID)?.name || "Premium"}
                                     </button>
 
-                                    <button className='rounded-md border border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
+                                    <button className='rounded-md border cursor-pointer border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
                                         {getObjectById(authors, e.author)?.name || "Đang cập nhật"}
                                     </button>
 
-                                    <button className='rounded-md border border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
+                                    <button className='rounded-md border cursor-pointer border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
                                         {e.endEpisode} Tập
                                     </button>
 
-                                    <button className='rounded-md border border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition-all duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
+                                    <button className='rounded-md border cursor-pointer border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition-all duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
                                         {e.duration} Phút
                                     </button>
                                 </div>
@@ -111,7 +109,7 @@ export default function Anime() {
                                     {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
                                 </p>
 
-                                <div className='mt-4 lg:mb-5 sm:mt-6 lg:-translate-y-2 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
+                                <div className='mt-4 sm:mt-6 lg:-translate-y-2 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
                                     <button className='group flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-[#f6d878] text-lg sm:text-xl text-black shadow-[0_0_24px_rgba(246,216,120,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[#ffe28a] hover:shadow-[0_0_32px_rgba(246,216,120,0.55)] active:scale-95'>
                                         <FaPlay className='ml-1 transition-transform duration-300 group-hover:scale-110' />
                                     </button>
@@ -152,8 +150,8 @@ export default function Anime() {
                         modules={[FreeMode, Navigation, Thumbs]}
                         className="anime-thumb-swiper"
                     >
-                        {movies?.map((e, index) => (
-                            <SwiperSlide key={e.id} className={activeIndex === index ? "custom-thumb-active" : ""}>
+                        {movies?.map((e) => (
+                            <SwiperSlide key={e.id}>
                                 <img src={e.imgUrl} alt={e.name} draggable="false" />
                             </SwiperSlide>
                         ))}
