@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { CategoriesContext } from '../../../contexts/CategoryProvider';
 
 function CategoriesFilm() {
-    const categories = useContext(CategoriesContext); // Sửa useEffect thành useContext
+    const categories = useContext(CategoriesContext); 
 
 
     const categoryStyles = [
@@ -17,30 +17,26 @@ function CategoriesFilm() {
     ];
 
     return (
-        <div className='relative overflow-hidden bg-[#191b24] py-12'>
+        <div className=' w-full overflow-hidden bg-[#111827] py-5 px-6 md:px-10'>
+            <h1 className='mb-6  text-2xl md:text-3xl font-black text-white drop-shadow-[0_0_14px_rgba(255,255,255,0.18)] '>
+                Bạn đang quan tâm gì?
+            </h1>
 
-            
-            <div>
-                <h1 className='mb-8 ml-10 text-3xl font-black text-white drop-shadow-[0_0_14px_rgba(255,255,255,0.18)] md:ml-13'>
-                    Bạn đang quan tâm gì?
-                </h1>
-
-                <div className="grid grid-cols-2 gap-6 px-8 pb-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                    {categories.slice(0, 6).map((e, index) => (
-                        <Link 
-                            key={e.id} 
-                            to={`/topic/${e.id}`} 
-                            className={`group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br px-7 transition-all duration-300 hover:-translate-y-2 ${categoryStyles[index % categoryStyles.length]}`}
-                        >
-                            <div className='rounded-full bg-white/25 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
-                            <h2 className='text-2xl font-black whitespace-nowrap tuncate'>{e.name}</h2>
-                            <div className='mt-4 flex items-center justify-center gap-2 text-lg font-semibold whitespace-nowrap'>
-                                <p>Xem chủ đề</p>
-                                <FaChevronRight className='transition-all duration-300 group-hover:translate-x-1' />
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+            <div className="grid grid-cols-2 gap-6  pb-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+                {categories.slice(0, 6).map((e, index) => (
+                    <Link
+                        key={e.id}
+                        to={`/topic/${e.id}`}
+                        className={`group flex h-34 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-2xl bg-linear-to-br px-7 transition-all duration-300 hover:-translate-y-2 ${categoryStyles[index % categoryStyles.length]}`}
+                    >
+                        <div className='rounded-full bg-white/25 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
+                        <h2 className='text-2xl font-black whitespace-nowrap tuncate'>{e.name}</h2>
+                        <div className='mt-4 flex items-center justify-center gap-2 text-lg font-semibold whitespace-nowrap'>
+                            <p>Xem chủ đề</p>
+                            <FaChevronRight className='transition-all duration-300 group-hover:translate-x-1' />
+                        </div>
+                    </Link>
+                ))}
             </div>
         </div>
     );

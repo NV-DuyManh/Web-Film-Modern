@@ -9,6 +9,7 @@ import Logo2 from '../../assets/Logo2.png';
 import LogIn from '../../pages/client/auth/LogIn';
 import Register from '../../pages/client/auth/Register';
 import { AuthContext } from '../../contexts/AuthProvider';
+import Coder from '../../assets/Coder.png';
 
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
@@ -93,7 +94,7 @@ function HeaderClient() {
                                             />
                                         ) : (
                                             <img
-                                                src="https://i.pravatar.cc/150?img=3"
+                                                src={Coder}
                                                 alt="avatar"
                                                 className="h-10 w-10 rounded-full object-cover ring-2 ring-transparent group-hover:ring-cyan-400 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                                             />
@@ -106,14 +107,14 @@ function HeaderClient() {
 
                                     <div className="flex items-center gap-4 p-5 border-b border-slate-700/80 bg-linear-to-r from-blue-900/10 to-transparent">
                                         <img
-                                            src={isLogin?.avatarUrl || "https://i.pravatar.cc/150?img=3"}
+                                            src={isLogin?.avatarUrl || Coder}
                                             alt="avatar"
                                             className="w-12 h-12 rounded-full object-cover ring-2 ring-cyan-500 shadow-[0_0_10px_rgba(34,211,238,0.4)] shrink-0"
                                         />
 
                                         <div className="flex items-center gap-2 mb-1">
                                             <p className="text-[16px] font-bold text-white truncate tracking-wide">
-                                                {isLogin?.name || 'Nguyễn Văn A'}
+                                                {isLogin?.displayName || 'Nguyễn Văn A'}
                                             </p>
                                         </div>
 
@@ -138,7 +139,11 @@ function HeaderClient() {
                                         </div>
                                     </div>
 
-                                    <div className="p-3 flex flex-col gap-1.5">
+                                    <div className="px-3 flex flex-col  ">
+                                        <button className="w-full mt-2 flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                            <FaUser className="text-purple-400 text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" /> Tài khoản
+                                        </button>
+
                                         <button className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
                                             <FaRegHeart className="text-pink-400 text-lg drop-shadow-[0_0_5px_rgba(236,72,153,0.5)]" /> Yêu thích
                                         </button>
@@ -151,17 +156,11 @@ function HeaderClient() {
                                             <FaHistory className="text-yellow-400 text-lg drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]" /> Xem tiếp
                                         </button>
 
-                                        <button className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
-                                            <FaUser className="text-purple-400 text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" /> Tài khoản
-                                        </button>
 
                                         <div className="h-px bg-slate-700/80 my-1 mx-2"></div>
 
                                         <button
-                                            onClick={() => {
-                                                handleLogout();
-                                                setIsDropdownOpen(false);
-                                            }}
+                                            onClick={() => {handleLogout(); setIsDropdownOpen(false);}}
                                             className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/15 rounded-xl transition-all duration-300 hover:translate-x-1"
                                         >
                                             <FaSignOutAlt className="text-lg drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]" /> Thoát
