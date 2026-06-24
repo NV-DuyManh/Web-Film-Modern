@@ -31,12 +31,12 @@ export default function FilmNew() {
                 <Swiper
                     modules={[Navigation]}
                     navigation={{ nextEl: '.filmnew-next-btn', prevEl: '.filmnew-prev-btn' }}
-                        breakpoints={{
-                            0: { slidesPerView: 1, spaceBetween: 10 },
-                            768: { slidesPerView: 2, spaceBetween: 15 },
-                            1024: { slidesPerView: 3, spaceBetween: 20 },
-                            1280: { slidesPerView: 4, spaceBetween: 24 }
-                        }}
+                    breakpoints={{
+                        0: { slidesPerView: 1, spaceBetween: 10 },
+                        500: { slidesPerView: 2, spaceBetween: 12 },
+                        768: { slidesPerView: 3, spaceBetween: 15 },
+                        1024: { slidesPerView: 4, spaceBetween: 20 },
+                    }}
                     className="movie-swiper"
                 >
                     {movies?.map((e) => (

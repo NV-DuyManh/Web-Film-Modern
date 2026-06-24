@@ -33,9 +33,9 @@ export default function FilmComing() {
                     navigation={{ nextEl: '.filmcoming-next-btn', prevEl: '.filmcoming-prev-btn' }}
                     breakpoints={{
                         0: { slidesPerView: 1, spaceBetween: 10 },
-                        768: { slidesPerView: 2, spaceBetween: 15 },
-                        1024: { slidesPerView: 3, spaceBetween: 20 },
-                        1280: { slidesPerView: 4, spaceBetween: 24 }
+                        500: { slidesPerView: 2, spaceBetween: 12 },
+                        768: { slidesPerView: 3, spaceBetween: 15 },
+                        1024: { slidesPerView: 4, spaceBetween: 20 },
                     }}
                     className="movie-swiper"
                 >
