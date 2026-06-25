@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { CategoriesContext } from '../../../contexts/CategoryProvider';
+import { CategoriesContext } from '../../../../contexts/CategoryProvider';
 
 function CategoriesFilm() {
     const categories = useContext(CategoriesContext); 

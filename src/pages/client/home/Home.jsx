@@ -1,5 +1,5 @@
 import React from 'react';
-import CategoriesFilm from '../categoriesFilm/CategoriesFilm';
+import CategoriesFilm from './categoriesFilm/CategoriesFilm';
 import Cinema from './cinema/Cinema';
 import Banner from './banner/Banner';
 import FilmCountry from './filmCountry/FilmCountry';
@@ -8,7 +8,7 @@ import FilmNew from './filmNew/FilmNew';
 import FilmComing from './filmComing/FilmComing';
 import FilmHongKong from './filmHongKong/FilmHongKong';
 import Anime from './anime/Anime';
-
+import PlayFilm from './playFilm/PlayFilm';
 function Home(props) {
     return (
         <div>
@@ -21,6 +21,7 @@ function Home(props) {
             <FilmComing/>
             <Anime/>
             <FilmHongKong/>
+            <PlayFilm/>
         </div>
     );
 }
