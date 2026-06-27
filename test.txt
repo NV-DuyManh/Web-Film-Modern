@@ -1,0 +1,22 @@
+         <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500 mb-4">
+                    <span className="hover:text-yellow-400 cursor-pointer transition-colors">RoPhim</span>
+                    <FaChevronRight className="text-[10px]" />
+                    <span className="hover:text-yellow-400 cursor-pointer transition-colors">Chủ Đề Phim Bộ</span>
+                    <FaChevronRight className="text-[10px]" />
+                    <span className="hover:text-yellow-400 cursor-pointer transition-colors">Thông Tin Phim</span>
+                    <FaChevronRight className="text-[10px]" />
+                    <span className="text-gray-300">Tình Yêu Có Pháo Hoa - Tập 1</span>
+                </div>
+
+
+                        {/* <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-black/90 to-transparent flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div className="flex items-center gap-4">
+                                <button><FaPlay className="text-white hover:text-yellow-400" /></button>
+                                <span className="text-xs sm:text-sm font-medium">0:00 / 45:45</span>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <button><FaVolumeUp className="text-white hover:text-yellow-400" /></button>
+                                <button><FaExpand className="text-white hover:text-yellow-400" /></button>
+                                <button><FaEllipsisV className="text-white hover:text-yellow-400" /></button>
+                            </div>
+                        </div> */}
