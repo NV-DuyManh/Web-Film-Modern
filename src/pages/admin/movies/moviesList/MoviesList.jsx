@@ -9,7 +9,11 @@ import { uploadImageToCloudinary } from '../../../../config/cloudiaryConfig';
 import LOGO from "../../../../assets/Logo.png";
 
 const innerMovie = {
-    name: "", description: "", imgUrl: LOGO, duration: "", endEpisode: "",
+    name: "", otherName: "", description: "", 
+    imgUrl: LOGO, bannerUrl: LOGO, 
+    releaseYear: "", duration: "", endEpisode: "",
+    ageRating: "", status: "", 
+    hasSub: false, hasDub: false, episodeSub: "", episodeDub: "",
     list_Category: [], countriesID: "", author: "", planID: "", rent: "",
     list_Actor: [], list_Character: [], category_Type_Id: ""
 };
@@ -38,6 +42,10 @@ function MoviesList() {
     const onChangeInput = (e) => {
         setMovie({ ...movie, [e.target.name]: e.target.value });
     };
+    
+    const onCheckboxChange = (e) => {
+        setMovie({ ...movie, [e.target.name]: e.target.checked });
+    };
 
     const handleClickOpenAdd = () => {
         setMovie(innerMovie);
@@ -56,10 +64,16 @@ function MoviesList() {
     const validation = () => {
         const newError = {};
         newError.name = movie.name ? "" : "Please enter film name";
-        newError.description = movie.description ? "" : "Please enter description";
+        newError.releaseYear = movie.releaseYear !== "" ? "" : "Please enter release year";
+        newError.ageRating = movie.ageRating ? "" : "Please select age rating";
+        newError.status = movie.status ? "" : "Please select status";
         newError.countriesID = movie.countriesID ? "" : "Please select country";
         newError.duration = movie.duration !== "" ? "" : "Please enter duration";
         newError.endEpisode = movie.endEpisode !== "" ? "" : "Please enter end episode";
+        
+        if (movie.hasSub && movie.episodeSub === "") newError.episodeSub = "Please enter Sub episode count";
+        if (movie.hasDub && movie.episodeDub === "") newError.episodeDub = "Please enter Dub episode count";
+
         newError.planID = movie.planID ? "" : "Please select plan";
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
         newError.list_Category = movie.list_Category?.length > 0 ? "" : "Please select category";
@@ -76,18 +90,25 @@ function MoviesList() {
         try {
             let submitData = { ...movie };
 
-            if (submitData.imgUrl === LOGO) {
-                submitData.imgUrl = await getBase64FromUrl(LOGO);
-            }
-
+            if (submitData.imgUrl === LOGO) submitData.imgUrl = await getBase64FromUrl(LOGO);
             if (submitData.imgFile) {
                 submitData.imgUrl = await uploadImageToCloudinary(submitData.imgFile, "Movies");
                 delete submitData.imgFile;
             }
 
+            if (submitData.bannerUrl === LOGO) submitData.bannerUrl = await getBase64FromUrl(LOGO);
+            if (submitData.bannerFile) {
+                submitData.bannerUrl = await uploadImageToCloudinary(submitData.bannerFile, "Banners");
+                delete submitData.bannerFile;
+            }
+
+            submitData.releaseYear = Number(submitData.releaseYear) || new Date().getFullYear();
             submitData.duration = Number(submitData.duration) || 0;
             submitData.endEpisode = Number(submitData.endEpisode) || 0;
             submitData.rent = Number(submitData.rent) || 0;
+            
+            submitData.episodeSub = submitData.hasSub ? (Number(submitData.episodeSub) || 0) : 0;
+            submitData.episodeDub = submitData.hasDub ? (Number(submitData.episodeDub) || 0) : 0;
 
             if (!movie.id) {
                 submitData.createdAt = new Date().toISOString();
@@ -114,21 +135,15 @@ function MoviesList() {
             <Search name="List Movies" tuKhoa="Search Movie by Name" onChangeSearch={onChangeSearch} handleClickOpen={handleClickOpenAdd} />
             <TableMovies movies={movies} search={search} handleEdit={handleEdit} handleDelete={handleDeletePrompt} />
             <ModalMovies
-                open={openForm}
-                handleClose={() => setOpenForm(false)}
-                movie={movie}
-                onChangeInput={onChangeInput}
+                open={openForm} handleClose={() => setOpenForm(false)}
+                movie={movie} onChangeInput={onChangeInput}
+                onCheckboxChange={onCheckboxChange}
                 addOrUpdateMovie={addOrUpdateMovie}
-                loading={loading}
-                setMovie={setMovie}
-                error={error}
+                loading={loading} setMovie={setMovie} error={error}
             />
             <ModalDelete
-                open={openDelete}
-                handleClose={() => setOpenDelete(false)}
-                handleDeleted={handleDeleted}
-                titleDelete="DELETE MOVIE"
-                contentDelete={`Are you sure you want to delete "${movie?.name}"?`}
+                open={openDelete} handleClose={() => setOpenDelete(false)} handleDeleted={handleDeleted}
+                titleDelete="DELETE MOVIE" contentDelete={`Are you sure you want to delete "${movie?.name}"?`}
             />
         </div>
     );
