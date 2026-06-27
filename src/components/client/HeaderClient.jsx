@@ -11,9 +11,12 @@ import Register from '../../pages/client/auth/Register';
 import { AuthContext } from '../../contexts/AuthProvider';
 import Coder from '../../assets/Coder.png';
 import PlayFilm from '../../pages/client/home/playFilm/PlayFilm';
+import { IoMdArrowDropdown } from 'react-icons/io';
+import Category from '../../pages/client/category/Category';
 
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
+    const [openCate, setOpenCate] = useState(false);
     const [openLogin, setOpenLogin] = useState(false);
     const [openRegister, setOpenRegister] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
@@ -38,7 +41,7 @@ function HeaderClient() {
     }, []);
 
     return (
-        <div className="fixed top-0 left-0 z-100 w-full border-b border-white/10 bg-black/90 text-white backdrop-blur-xl">
+        <div className="fixed top-0 left-0 z-100 w-full border-b border-white/10 bg-black/20 text-white backdrop-blur-xl">
             <div className="flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1150px]:gap-4 min-[1150px]:px-8">
                 <Link to="/" className="flex shrink-0 items-center">
                     <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
@@ -52,18 +55,17 @@ function HeaderClient() {
                     <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-300 sm:right-4 sm:text-xl" />
                 </div>
 
-                <div className="hidden shrink-0 items-center gap-1 min-[1150px]:flex">
+                <div className={`shrink-0 items-center gap-1  max-md:absolute max-md:flex-col flex max-md:bg-black max-md:w-full bottom-0 left-0 max-md:translate-y-full ${openMenu ? "flex" : "max-md:hidden"} `}>
+
                     {LISTCLIENT.map((item, index) => (
-                        <Link
-                            key={index}
-                            to={item.path}
-                            className={`rounded-full px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${location.pathname === item.path
-                                ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.35)]"
-                                : "text-gray-200 hover:bg-white/10 hover:text-yellow-300"
-                                }`}
-                        >
-                            {item.title}
-                        </Link>
+                        <li  onClick={() => setOpenCate(item.path == "/category" ? !openCate : openCate)} className={` relative  cursor-pointer flex items-center rounded-full max-md:w-full px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${location.pathname === item.path
+                            ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.35)]"
+                            : "text-gray-200 hover:bg-white/10 hover:text-yellow-300"
+                            }`}>
+                            {item.title} {item.path == "/category" || item.path == "/country" ? <IoMdArrowDropdown /> : ""}
+
+                            {item.path == "/category" && <Category openCate={openCate} />}
+                        </li>
                     ))}
                 </div>
 
@@ -87,9 +89,9 @@ function HeaderClient() {
                                     className="flex items-center gap-2 cursor-pointer transition-all duration-300 hover:-translate-y-1 group"
                                 >
                                     <div className="relative">
-                                        {isLogin?.avatarUrl ? (
+                                        {isLogin?.imgUrl ? (
                                             <img
-                                                src={isLogin.avatarUrl}
+                                                src={isLogin.imgUrl}
                                                 alt="avatar"
                                                 className="h-10 w-10 rounded-full object-cover ring-2 ring-transparent group-hover:ring-cyan-400 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                                             />
@@ -108,7 +110,7 @@ function HeaderClient() {
 
                                     <div className="flex items-center gap-4 p-5 border-b border-slate-700/80 bg-linear-to-r from-blue-900/10 to-transparent">
                                         <img
-                                            src={isLogin?.avatarUrl || Coder}
+                                            src={isLogin?.imgUrl || Coder}
                                             alt="avatar"
                                             className="w-12 h-12 rounded-full object-cover ring-2 ring-cyan-500 shadow-[0_0_10px_rgba(34,211,238,0.4)] shrink-0"
                                         />
@@ -161,7 +163,7 @@ function HeaderClient() {
                                         <div className="h-px bg-slate-700/80 my-1 mx-2"></div>
 
                                         <button
-                                            onClick={() => {handleLogout(); setIsDropdownOpen(false);}}
+                                            onClick={() => { handleLogout(); setIsDropdownOpen(false); }}
                                             className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/15 rounded-xl transition-all duration-300 hover:translate-x-1"
                                         >
                                             <FaSignOutAlt className="text-lg drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]" /> Thoát
@@ -181,25 +183,7 @@ function HeaderClient() {
                 </div>
             </div>
 
-            <div
-                className={`overflow-hidden border-t border-white/10 bg-black/80 backdrop-blur-xl transition-all duration-300 min-[1150px]:hidden ${openMenu ? "max-h-105 opacity-100" : "max-h-0 opacity-0"}`}
-            >
-                <div className="flex flex-col gap-2 px-4 py-4">
-                    {LISTCLIENT.map((item, index) => (
-                        <Link
-                            key={index}
-                            to={item.path}
-                            onClick={() => setOpenMenu(false)}
-                            className={`rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300 ${location.pathname === item.path
-                                ? "bg-yellow-400 text-black"
-                                : "bg-white/5 text-gray-200 hover:bg-white/10 hover:text-yellow-300"
-                                }`}
-                        >
-                            {item.title}
-                        </Link>
-                    ))}
-                </div>
-            </div>
+
             <LogIn openLogin={openLogin} handleCloseLogin={handleCloseLogin} handleOpenRegister={handleOpenRegister} />
             <Register openRegister={openRegister} handleCloseRegister={handleCloseRegister} handleOpenLogin={handleOpenLogin} />
             {/* <PlayFilm  handleOpenLogin={handleOpenLogin}/> */}

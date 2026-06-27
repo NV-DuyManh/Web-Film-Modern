@@ -10,7 +10,7 @@ export default function PlayFilm({ handleOpenLogin }) {
     const movies = useContext(MovieContext);
     const plans = useContext(PlanContext);
     return (
-        <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10">
+        <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25">
             <div className=" mx-auto px-4 sm:px-6 pt-4">
 
                 <div className="flex items-center gap-3 mb-6">

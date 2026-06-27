@@ -12,6 +12,9 @@
     }
 }
 
+li {
+    list-style: none;
+}
 .glass {
     backdrop-filter: blur(12px);
     background: rgba(15, 23, 42, 0.6);

@@ -5,6 +5,10 @@ import { FcGoogle } from 'react-icons/fc';
 import Logo2 from '../../../assets/Logo2.png';
 import { UserContext } from '../../../contexts/UserProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../../../config/firebaseConfig';
+import { ROLES } from '../../../utils/Contants';
+import { addDocument } from '../../../services/firebaseService';
 
 export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
     const [showPassword, setShowPassword] = useState(false);
@@ -72,6 +76,33 @@ export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister 
         }
     }
 
+    // Google sign-in
+    const signInWithGoogle = async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+            const existingCustomer = users.find(c => c.email === user.email);
+            let loggedInCustomer;
+
+            if (!existingCustomer) {
+                const newCustomer = {
+                    displayName: user.displayName,
+                    imgUrl: user.photoURL,
+                    role: ROLES.USER,
+                    email: user.email
+                };
+               const userNew =  await addDocument('Users', newCustomer);
+
+                loggedInCustomer = userNew ;
+            } else {
+                loggedInCustomer = existingCustomer;
+            }
+             loginByUser(loggedInCustomer);
+             handleCloseLogin();
+        } catch (error) {
+           alert('Đăng nhập thất bại. Vui lòng thử lại.');
+        }
+    };
     return (
         <Dialog
             open={openLogin}
@@ -157,7 +188,7 @@ export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister 
                         <div className="h-px flex-1 bg-slate-700" />
                     </div>
 
-                    <button className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition-all">
+                    <button onClick={signInWithGoogle} className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition-all">
                         <FcGoogle size={18} /> Đăng nhập với Google
                     </button>
                 </div>

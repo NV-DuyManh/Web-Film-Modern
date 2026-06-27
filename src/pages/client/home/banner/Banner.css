@@ -4,7 +4,6 @@
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
-    margin-top: 67px; 
     position: relative;
     background-color: #111827;
 }
@@ -17,15 +16,13 @@
 
 @media (min-width: 768px) {
     .slide-banner {
-        height: 480px;
-        margin-top: 77px; 
+        height: 480px; 
     }
 }
 
 @media (min-width: 1024px) {
     .slide-banner {
         height: 600px;
-        margin-top: 85px; 
     }
 }
 

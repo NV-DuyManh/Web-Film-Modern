@@ -8,7 +8,7 @@ import Series from '../pages/client/series/Series';
 import Country from '../pages/client/country/Country';
 import Actors from '../pages/client/actors/Actors';
 import Showtimes from '../pages/client/showtimes/Showtimes';
-
+import PlayFilm from '../pages/client/home/playFilm/PlayFilm';
 function ClientRouters(props) {
     const clientRouter = [
         {
@@ -20,10 +20,6 @@ function ClientRouters(props) {
             element: <Topic />
         },
         {
-            path: "/category",
-            element: <Category />
-        },
-        {
             path: "/singleMovies",
             element: <SingleMovies />
         },
@@ -33,7 +29,7 @@ function ClientRouters(props) {
         },
         {
             path: "/country",
-            element: <Country/>
+            element: <Country />
         },
         {
             path: "/actors",
@@ -43,6 +39,11 @@ function ClientRouters(props) {
             path: "/showtimes",
             element: <Showtimes />
         },
+        {
+            path: "/play/:id",
+            element: <PlayFilm />
+        },
+
     ]
     return (
         <div>
