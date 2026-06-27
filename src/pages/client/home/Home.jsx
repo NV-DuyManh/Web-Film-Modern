@@ -9,6 +9,7 @@ import FilmComing from './filmComing/FilmComing';
 import FilmHongKong from './filmHongKong/FilmHongKong';
 import Anime from './anime/Anime';
 import PlayFilm from './playFilm/PlayFilm';
+import Comment from './comment/Comment';
 function Home(props) {
     return (
         <div>
@@ -18,6 +19,7 @@ function Home(props) {
             <FilmCountry />
             <TopFilm/>
             <Cinema />
+            <Comment/>
             <FilmComing/>
             <Anime/>
             <FilmHongKong/>

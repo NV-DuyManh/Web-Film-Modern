@@ -10,6 +10,7 @@ import LogIn from '../../pages/client/auth/LogIn';
 import Register from '../../pages/client/auth/Register';
 import { AuthContext } from '../../contexts/AuthProvider';
 import Coder from '../../assets/Coder.png';
+import PlayFilm from '../../pages/client/home/playFilm/PlayFilm';
 
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
@@ -201,6 +202,7 @@ function HeaderClient() {
             </div>
             <LogIn openLogin={openLogin} handleCloseLogin={handleCloseLogin} handleOpenRegister={handleOpenRegister} />
             <Register openRegister={openRegister} handleCloseRegister={handleCloseRegister} handleOpenLogin={handleOpenLogin} />
+            {/* <PlayFilm  handleOpenLogin={handleOpenLogin}/> */}
         </div>
     );
 }
