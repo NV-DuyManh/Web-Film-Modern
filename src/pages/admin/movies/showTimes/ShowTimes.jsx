@@ -30,6 +30,7 @@ function ShowTimes() {
 
     const onChangeInput = (e) => {
         setShowTime({ ...showTime, [e.target.name]: e.target.value });
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {

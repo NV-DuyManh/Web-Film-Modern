@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
 import { FaSpinner } from 'react-icons/fa';
 import { useContext } from 'react';
 import { MovieContext } from '../../../../contexts/MovieProvider';
@@ -7,10 +7,6 @@ import { MovieContext } from '../../../../contexts/MovieProvider';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
-
-const menuProps = {
-    PaperProps: { sx: { bgcolor: '#1e293b', color: 'white', border: '1px solid rgba(255,255,255,0.1)' } }
-};
 
 export default function ModalShowTimes({ open, onChangeInput, handleClose, addShowTime, error, loading, showTime }) {
     const movies = useContext(MovieContext);
@@ -51,25 +47,26 @@ export default function ModalShowTimes({ open, onChangeInput, handleClose, addSh
             </DialogTitle>
 
             <DialogContent className="modal-body-x">
-                <TextField
-                    select
-                    className="modal-input-x"
-                    name="movieId"
-                    onChange={onChangeInput}
-                    fullWidth
-                    label="Movie"
-                    variant="outlined"
-                    value={showTime.movieId || ""}
-                    helperText={error.movieId}
-                    error={!!error.movieId}
-                    SelectProps={{ MenuProps: menuProps }}
-                >
-                    {movies?.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                            {item.name}
-                        </MenuItem>
-                    ))}
-                </TextField>
+                <Autocomplete
+                    options={movies || []}
+                    getOptionLabel={(option) => option.name}
+                    classes={{
+                        paper: 'neon-paper',
+                        listbox: 'neon-listbox',
+                        option: 'neon-option'
+                    }}
+                    value={movies?.find(m => m.id === showTime.movieId) || null}
+                    onChange={(event, newValue) => onChangeInput({ target: { name: "movieId", value: newValue?.id || "" } })}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            label="Movie"
+                            error={!!error.movieId}
+                            helperText={error.movieId}
+                            className="modal-input-x"
+                        />
+                    )}
+                />
 
                 <div className="grid grid-cols-2 gap-4">
                     <TextField
@@ -84,6 +81,12 @@ export default function ModalShowTimes({ open, onChangeInput, handleClose, addSh
                         helperText={error.time}
                         error={!!error.time}
                         InputLabelProps={{ shrink: true }}
+                        sx={{
+                            '& input::-webkit-calendar-picker-indicator': {
+                                filter: 'invert(1)',
+                                cursor: 'pointer'
+                            }
+                        }}
                     />
 
                     <TextField
