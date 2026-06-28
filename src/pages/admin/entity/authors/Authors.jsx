@@ -42,7 +42,8 @@ function Authors() {
     };
 
     const onChangeInput = (e) => {
-        setAuthor({ ...author, [e.target.name]: e.target.value })
+        setAuthor({ ...author, [e.target.name]: e.target.value });
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {
@@ -80,6 +81,7 @@ function Authors() {
             const reader = new FileReader();
             reader.onload = () => {
                 setAuthor({ ...author, imgUrl: reader.result });
+                setError(prev => ({ ...prev, imgUrl: "" }));
             };
             reader.readAsDataURL(file);
         }

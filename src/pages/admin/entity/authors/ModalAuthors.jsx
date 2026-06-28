@@ -67,6 +67,7 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                     disablePortal
                     options={COUNTRIES}
                     fullWidth
+                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                     PopperProps={{ placement: "top-end" }}
                     value={author.countriesID}
                     onChange={(e, value) => {

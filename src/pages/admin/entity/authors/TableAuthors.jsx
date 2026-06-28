@@ -7,6 +7,14 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 
+const getSexStyle = (sex) => {
+    switch (sex) {
+        case "Male": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+        case "Female": return "bg-pink-500/20 text-pink-400 border-pink-500/30";
+        default: return "bg-cyan-500/20 text-cyan-400 border-cyan-500/30";
+    }
+};
+
 function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
     const authors = useContext(AuthorContext);
     const [open, setOpen] = useState(false);
@@ -91,7 +99,9 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                                     </td>
 
                                     <td className="table-cell text-center">
-                                        {row.sexID}
+                                        <span className={`px-3 py-1 rounded-full text-[11px] font-bold border ${getSexStyle(row.sexID)}`}>
+                                            {row.sexID || "N/A"}
+                                        </span>
                                     </td>
 
                                     <td className="table-cell text-center">
