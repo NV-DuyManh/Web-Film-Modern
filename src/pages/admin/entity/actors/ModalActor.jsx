@@ -67,6 +67,7 @@ export default function ModalActor({ open, onChangeInput, handleClose, addactor,
                     disablePortal
                     options={COUNTRIES}
                     fullWidth
+                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                     PopperProps={{ placement: "top-end" }}
                     value={actor.countriesID}
                     onChange={(e, value) => {
