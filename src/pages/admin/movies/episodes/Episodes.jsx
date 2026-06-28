@@ -29,7 +29,7 @@ function Episodes() {
     };
 
     const onChangeInput = (e) => {
-        setEpisode({ ...episode, [e.target.name]: e.target.value });
+        setEpisode(prev => ({ ...prev, [e.target.name]: e.target.value }));
         setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 

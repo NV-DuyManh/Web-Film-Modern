@@ -3,7 +3,6 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, S
 import { FaSpinner } from 'react-icons/fa';
 import { useContext } from 'react';
 import { MovieContext } from '../../../../contexts/MovieProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -36,14 +35,10 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
             <DialogContent className="modal-body-x">
                 <Autocomplete
                     options={movies || []}
-                    getOptionLabel={(option) => option.name}
-                    classes={{
-                        paper: 'neon-paper',
-                        listbox: 'neon-listbox',
-                        option: 'neon-option'
-                    }}
-                    value={getObjectById(movies, episode.movieID) || null}
-                    onChange={(event, newValue) => onChangeInput({ target: { name: "movieID", value: newValue?.id || "" } })}
+                    getOptionLabel={(opt) => opt?.name || ""}
+                    value={movies?.find(m => m.id === episode.movieID) || null}
+                    onChange={(e, val) => onChangeInput({ target: { name: "movieID", value: val?.id || "" } })}
+                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                     renderInput={(params) => (
                         <TextField
                             {...params}
