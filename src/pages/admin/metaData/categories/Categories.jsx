@@ -3,7 +3,9 @@ import ModalCategory from './ModalCategory';
 import Search from "../../../../components/admin/Search";
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import TableCategory from './TableCategory';
+
 const inner = { name: "", description: "" };
+
 function Categories(props) {
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState(inner);
@@ -32,6 +34,7 @@ function Categories(props) {
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     }
+
     const addCategory = async () => {
         if (validation()) {
             return;
@@ -43,7 +46,8 @@ function Categories(props) {
     }
 
     const onChangeInput = (e) => {
-        setCategory({ ...category, [e.target.name]: e.target.value })
+        setCategory({ ...category, [e.target.name]: e.target.value });
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     return (
