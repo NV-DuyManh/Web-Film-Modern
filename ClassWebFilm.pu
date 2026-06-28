@@ -71,6 +71,15 @@ class Movies {
     + planID: text
     + rent: int
     + status: text
+    + bannerUrl: text
+    + otherName: text
+    + releaseYear: int
+    + ageRating: text
+    + hasSub: boolean
+    + hasDub: boolean
+    + episodeSub: int
+    + episodeDub: int
+    + episodeVoice: int
 }
 
 class Episodes {

@@ -13,7 +13,8 @@ const innerMovie = {
     imgUrl: LOGO, bannerUrl: LOGO, 
     releaseYear: "", duration: "", endEpisode: "",
     ageRating: "", status: "", 
-    hasSub: false, hasDub: false, episodeSub: "", episodeDub: "",
+    hasSub: false, hasDub: false, hasVoice: false, 
+    episodeSub: "", episodeDub: "", episodeVoice: "",
     list_Category: [], countriesID: "", author: "", planID: "", rent: "",
     list_Actor: [], list_Character: [], category_Type_Id: ""
 };
@@ -41,10 +42,12 @@ function MoviesList() {
 
     const onChangeInput = (e) => {
         setMovie({ ...movie, [e.target.name]: e.target.value });
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     };
     
     const onCheckboxChange = (e) => {
         setMovie({ ...movie, [e.target.name]: e.target.checked });
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     };
 
     const handleClickOpenAdd = () => {
@@ -73,6 +76,7 @@ function MoviesList() {
         
         if (movie.hasSub && movie.episodeSub === "") newError.episodeSub = "Please enter Sub episode count";
         if (movie.hasDub && movie.episodeDub === "") newError.episodeDub = "Please enter Dub episode count";
+        if (movie.hasVoice && movie.episodeVoice === "") newError.episodeVoice = "Please enter Voice episode count";
 
         newError.planID = movie.planID ? "" : "Please select plan";
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
@@ -109,6 +113,7 @@ function MoviesList() {
             
             submitData.episodeSub = submitData.hasSub ? (Number(submitData.episodeSub) || 0) : 0;
             submitData.episodeDub = submitData.hasDub ? (Number(submitData.episodeDub) || 0) : 0;
+            submitData.episodeVoice = submitData.hasVoice ? (Number(submitData.episodeVoice) || 0) : 0;
 
             if (!movie.id) {
                 submitData.createdAt = new Date().toISOString();

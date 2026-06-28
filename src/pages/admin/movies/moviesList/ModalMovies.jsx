@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, MenuItem, Checkbox, FormControlLabel } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel } from '@mui/material';
 import { FaCloudUploadAlt, FaSpinner, FaTimesCircle } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
@@ -14,10 +14,6 @@ import Logo5 from "../../../../assets/Logo5.png";
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 const VisuallyHiddenInput = styled('input')({ clip: 'rect(0 0 0 0)', height: 1, position: 'absolute', width: 1 });
-
-const menuProps = {
-    PaperProps: { sx: { bgcolor: '#1e293b', color: 'white', border: '1px solid rgba(255,255,255,0.1)' } }
-};
 
 const STATUS_OPTIONS = [
     { id: "Sắp chiếu", name: "Sắp chiếu" },
@@ -78,32 +74,28 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
         }
     };
 
-    // Hàm gốc: Chỉ cho phép nhập số
     const handleNumberChange = (e) => {
         const onlyNums = e.target.value.replace(/[^0-9]/g, '');
         onChangeInput({ target: { name: e.target.name, value: onlyNums } });
     };
 
-    // Hàm mới: Cho phép nhập "?" hoặc Số cho ô Total Episodes
     const handleEndEpisodeChange = (e) => {
         let val = e.target.value;
         if (val.includes('?')) {
-            val = '?'; // Nếu gõ '?' thì gán cứng là '?' luôn
+            val = '?'; 
         } else {
-            val = val.replace(/[^0-9]/g, ''); // Nếu không phải '?' thì bắt buộc là số
+            val = val.replace(/[^0-9]/g, ''); 
         }
         onChangeInput({ target: { name: 'endEpisode', value: val } });
     };
 
-    // Hàm mới: Quản lý số tập Sub/Dub (Không được vượt quá Total Episodes)
     const handleSubDubChange = (e) => {
         let val = e.target.value.replace(/[^0-9]/g, '');
         const maxVal = parseInt(movie.endEpisode, 10);
 
-        // Nếu endEpisode là số hợp lệ (không phải "?") và giá trị nhập vào lớn hơn maxVal
         if (val !== "" && !isNaN(maxVal)) {
             if (parseInt(val, 10) > maxVal) {
-                val = maxVal.toString(); // Chặn lại ở mức Max
+                val = maxVal.toString(); 
             }
         }
         onChangeInput({ target: { name: e.target.name, value: val } });
@@ -163,7 +155,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <Autocomplete
                                 options={COUNTRIES || []} value={movie.countriesID || null}
                                 classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
-                                onChange={(e, newValue) => setMovie(prev => ({ ...prev, countriesID: newValue || "" }))}
+                                onChange={(e, newValue) => onChangeInput({ target: { name: "countriesID", value: newValue || "" } })}
                                 renderInput={(params) => <TextField {...params} label="Country" error={!!error.countriesID} helperText={error.countriesID} className="modal-input-x" />}
                             />
                             <TextField className="modal-input-x" name="releaseYear" onChange={handleNumberChange} label="Release Year" value={movie.releaseYear} error={!!error.releaseYear} helperText={error.releaseYear} />
@@ -194,32 +186,44 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 <TextField className="modal-input-x" name="endEpisode" onChange={handleEndEpisodeChange} label="Total Episodes (Max)" value={movie.endEpisode} error={!!error.endEpisode} helperText={error.endEpisode} />
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4 mt-6 mb-2">
+                            <div className="grid grid-cols-3 gap-4 mt-6 mb-2">
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasSub || false} onChange={onCheckboxChange} name="hasSub" sx={{ color: '#06b6d4', '&.Mui-checked': { color: '#22d3ee' }, padding: '4px' }} />}
-                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Vietsub (Phụ đề)</span>}
+                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Vietsub (PĐ)</span>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasDub || false} onChange={onCheckboxChange} name="hasDub" sx={{ color: '#ec4899', '&.Mui-checked': { color: '#f472b6' }, padding: '4px' }} />}
-                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Thuyết minh (Lồng tiếng)</span>}
+                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Thuyết minh</span>}
+                                        sx={{ margin: 0 }}
+                                    />
+                                </div>
+                                <div className="flex justify-center items-center pl-2">
+                                    <FormControlLabel
+                                        control={<Checkbox checked={movie.hasVoice || false} onChange={onCheckboxChange} name="hasVoice" sx={{ color: '#f97316', '&.Mui-checked': { color: '#fb923c' }, padding: '4px' }} />}
+                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Lồng tiếng</span>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     {movie.hasSub && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeSub" onChange={handleSubDubChange} label="Số tập Vietsub hiện có" value={movie.episodeSub} error={!!error.episodeSub} helperText={error.episodeSub} />
+                                        <TextField className="modal-input-x mt-2!" name="episodeSub" onChange={handleSubDubChange} label="Số tập PĐ" value={movie.episodeSub} error={!!error.episodeSub} helperText={error.episodeSub} />
                                     )}
                                 </div>
                                 <div>
                                     {movie.hasDub && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeDub" onChange={handleSubDubChange} label="Số tập Thuyết minh hiện có" value={movie.episodeDub} error={!!error.episodeDub} helperText={error.episodeDub} />
+                                        <TextField className="modal-input-x mt-2!" name="episodeDub" onChange={handleSubDubChange} label="Số tập TM" value={movie.episodeDub} error={!!error.episodeDub} helperText={error.episodeDub} />
+                                    )}
+                                </div>
+                                <div>
+                                    {movie.hasVoice && (
+                                        <TextField className="modal-input-x mt-2!" name="episodeVoice" onChange={handleSubDubChange} label="Số tập LT" value={movie.episodeVoice} error={!!error.episodeVoice} helperText={error.episodeVoice} />
                                     )}
                                 </div>
                             </div>

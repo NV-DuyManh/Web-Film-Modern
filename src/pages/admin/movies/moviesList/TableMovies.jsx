@@ -10,6 +10,15 @@ import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import { CategoriesContext } from '../../../../contexts/CategoryProvider';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 
+const getStatusStyle = (status) => {
+    switch(status) {
+        case "Sắp chiếu": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
+        case "Đang chiếu": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+        case "Hoàn thành": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+        default: return "bg-slate-500/20 text-slate-400 border-slate-500/30";
+    }
+};
+
 function TableMovies({ movies, search, handleEdit, handleDelete }) {
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -135,7 +144,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
 
                                     <td className="table-cell text-center whitespace-normal">
                                         <div className="flex flex-col gap-1 items-center justify-center">
-                                            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getStatusStyle(row.status)}`}>
                                                 {row.status || "N/A"}
                                             </span>
                                             <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">
@@ -159,6 +168,12 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                                             {row.hasDub && (
                                                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-500/10 text-pink-400 border border-pink-500/30 w-full text-center">
                                                     Dub: {row.episodeDub}/{row.endEpisode}
+                                                </span>
+                                            )}
+
+                                            {row.hasVoice && (
+                                                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-500/10 text-orange-400 border border-orange-500/30 w-full text-center">
+                                                    Lồng tiếng: {row.episodeVoice}/{row.endEpisode}
                                                 </span>
                                             )}
                                         </div>
