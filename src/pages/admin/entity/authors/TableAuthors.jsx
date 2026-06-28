@@ -130,8 +130,10 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                                     <td className="table-cell text-center text-cyan-400 font-bold">
                                         {row.countriesID}
                                     </td>
-                                    <td className="table-cell text-center max-w-50 truncate text-[12px] text-gray-400" title={row.description}>
-                                        {row.description || "N/A"}
+                                    <td className="table-cell text-center max-w-50 whitespace-normal text-[12px] text-gray-400" title={row.description}>
+                                        <div className="line-clamp-3 leading-relaxed text-left">
+                                            {row.description || "N/A"}
+                                        </div>
                                     </td>
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">
