@@ -6,6 +6,7 @@ import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 import { UserContext } from '../../../../contexts/UserProvider';
+import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 
 function TableUsers({ handleClickOpen, setUser, user, search }) {
     const users = useContext(UserContext);
@@ -31,6 +32,8 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
         setPage(1);
     }, [search]);
 
+    const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
+
     const handleClickOpenDele = (row) => {
         setOpen(true);
         setUser(row);
@@ -53,13 +56,36 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
         handleClose();
     };
 
+    const handleBulkDeleted = async () => {
+        await Promise.all(
+            selectedIds.map(id => {
+                const item = users.find(c => c.id === id);
+                return item ? deleteDocument("Users", item) : Promise.resolve();
+            })
+        );
+        const remaining = currentData.filter(row => !selectedIds.includes(row.id)).length;
+        if (page > 1 && remaining === 0) setPage(page - 1);
+        clearSelected();
+        setOpenBulk(false);
+    };
+
     return (
         <div className="p-5">
+            <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
             <div className="table-wrapper">
                 <div className="table-container">
                     <table className="w-full text-left">
                         <thead className="table-header">
                             <tr>
+                                <th style={{ width: '40px', padding: '10px 12px' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={isAllSelected}
+                                        ref={el => { if (el) el.indeterminate = isIndeterminate; }}
+                                        onChange={handleSelectAll}
+                                        style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                    />
+                                </th>
                                 <th>ID</th>
                                 <th className='text-center'>AVATAR</th>
                                 <th className='text-center'>NAME</th>
@@ -71,8 +97,18 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                         </thead>
 
                         <tbody>
-                            {currentData.map((row, index) => (
-                                <tr key={row.id || index} className="table-row">
+                            {currentData.map((row, index) => {
+                                const isSelected = selectedIds.includes(row.id);
+                                return (
+                                <tr key={row.id || index} className="table-row" style={isSelected ? { background: 'rgba(34,211,238,0.07)' } : {}}>
+                                    <td className="table-cell" style={{ width: '40px' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={isSelected}
+                                            onChange={() => handleSelectRow(row.id)}
+                                            style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                        />
+                                    </td>
                                     <td className="table-cell">
                                         {start + index + 1}
                                     </td>
@@ -82,21 +118,21 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                                                 <img
                                                     src={row.avatarUrl}
                                                     alt={row.name}
-                                                    className="w-17 h-17 object-cover rounded-full"
+                                                    className="w-17 h-17 object-cover rounded-full shadow-md"
                                                 />
                                             )}
                                         </div>
                                     </td>
-                                    <td className="table-cell text-center">
+                                    <td className="table-cell text-center font-bold text-white">
                                         {row.name}
                                     </td>
-                                    <td className="table-cell text-center">
+                                    <td className="table-cell text-center text-cyan-400">
                                         {row.email}
                                     </td>
                                     <td className="table-cell text-center">
                                         {row.phone}
                                     </td>
-                                    <td className="table-cell text-center">
+                                    <td className="table-cell text-center text-pink-400">
                                         {row.sexId}
                                     </td>
                                     <td className="table-cell text-right">
@@ -117,7 +153,7 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
+                            )})}
                         </tbody>
                     </table>
                     
@@ -132,12 +168,21 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                     </div>
                 </div>
             </div>
+            
             <ModalDelete
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE USER"}
                 contentDelete={`Are you sure you want to delete user "${user?.name}"?`}
+            />
+            
+            <ModalDelete
+                handleClose={() => setOpenBulk(false)}
+                open={openBulk}
+                handleDeleted={handleBulkDeleted}
+                titleDelete={"DELETE SELECTED"}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected user${selectedIds.length > 1 ? 's' : ''}?`}
             />
         </div>
     );

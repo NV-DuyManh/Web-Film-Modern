@@ -48,7 +48,8 @@ function Users() {
     };
 
     const onChangeInput = (e) => {
-        setUser({ ...user, [e.target.name]: e.target.value });
+        setUser(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {
@@ -97,7 +98,7 @@ function Users() {
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setUser({ ...user, avatarUrl: reader.result });
+                setUser(prev => ({ ...prev, avatarUrl: reader.result }));
             };
             reader.readAsDataURL(file);
         }
