@@ -49,19 +49,16 @@ function Characters() {
     };
 
     const onChangeInput = (e) => {
-        setCharacter({ ...character, [e.target.name]: e.target.value });
+        setCharacter(prev => ({ ...prev, [e.target.name]: e.target.value }));
         setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {
         const newError = {};
-
-        newError.name = character.name ? "" : "Please enter character name";
-        newError.description = character.description ? "" : "Please enter description";
-        newError.imgUrl = character.imgUrl ? "" : "Please enter image";
-        newError.sexID = character.sexID ? "" : "Please select sex";
-        newError.countriesID = character.countriesID ? "" : "Please select country";
-
+        newError.name = character.name ? "" : "Please enter your name";
+        newError.description = character.description ? "" : "Please enter your description";
+        newError.countriesID = character.countriesID ? "" : "Please select your country";
+        newError.sexID = character.sexID ? "" : "Please select your gender";
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     }
@@ -70,7 +67,6 @@ function Characters() {
         if (validation()) {
             return;
         }
-
         setLoading(true);
 
         let submitData = { ...character };
@@ -92,7 +88,7 @@ function Characters() {
             const reader = new FileReader();
 
             reader.onload = () => {
-                setCharacter({ ...character, imgUrl: reader.result });
+                setCharacter(prev => ({ ...prev, imgUrl: reader.result }));
                 setError(prev => ({ ...prev, imgUrl: "" }));
             };
 

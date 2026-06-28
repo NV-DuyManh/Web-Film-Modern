@@ -87,6 +87,7 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                                 <th className="text-center">NAME</th>
                                 <th className="text-center">GENDER</th>
                                 <th className="text-center">COUNTRY</th>
+                                <th className="text-center">DESCRIPTION</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
@@ -125,6 +126,9 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                                     </td>
                                     <td className="table-cell text-center text-cyan-400 font-bold">
                                         {row.countriesID}
+                                    </td>
+                                    <td className="table-cell text-center max-w-50 truncate text-[12px] text-gray-400" title={row.description}>
+                                        {row.description || "N/A"}
                                     </td>
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">
