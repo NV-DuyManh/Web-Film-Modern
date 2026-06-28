@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -6,7 +6,7 @@ import ModalDelete from '../../../../components/admin/ModalDelete';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
-import "../../../../App.css";
+import "../../../../app.css";
 
 function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, search }) {
     const categoryTypes = useContext(CategoryTypeContext);
@@ -15,9 +15,10 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const start = (page - 1) * rowsPerPage;
-    const dataSearch = useMemo(() => categoryTypes.filter(e => e?.name.toLowerCase().includes(search.toLowerCase())), [search, categoryTypes]);
+
+    const dataSearch = useMemo(() => categoryTypes.filter(e => e.name.toLowerCase().includes(search.toLowerCase())), [search, categoryTypes]);
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
-    
+
     useEffect(() => { setPage(1); }, [search]);
 
     const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
@@ -55,11 +56,12 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
 
     return (
         <div className="p-5">
+
             <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
 
             <div className="table-wrapper">
                 <div className="table-container">
-                    <table className="w-full text-left text-white" style={{ tableLayout: 'fixed' }}>
+                    <table className="w-full text-left">
                         <thead className="table-header">
                             <tr>
                                 <th style={{ width: '40px', padding: '10px 12px' }}>
@@ -71,10 +73,10 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th style={{ width: '60px', padding: '12px' }}>ID</th>
-                                <th style={{ width: '200px', padding: '12px', textAlign: 'center' }}>NAME</th>
-                                <th style={{ padding: '12px', textAlign: 'center' }}>DESCRIPTION</th>
-                                <th style={{ width: '120px', padding: '12px', textAlign: 'right' }}>ACTIONS</th>
+                                <th>ID</th>
+                                <th className="text-center">NAME</th>
+                                <th className="text-center">DESCRIPTION</th>
+                                <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -82,11 +84,11 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                                 const isSelected = selectedIds.includes(row.id);
                                 return (
                                     <tr
-                                        key={row.id}
+                                        key={index}
                                         className="table-row"
                                         style={isSelected ? { background: 'rgba(34,211,238,0.07)' } : {}}
                                     >
-                                        <td style={{ padding: '12px' }}>
+                                        <td className="table-cell" style={{ width: '40px' }}>
                                             <input
                                                 type="checkbox"
                                                 checked={isSelected}
@@ -94,10 +96,10 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                                                 style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                             />
                                         </td>
-                                        <td style={{ padding: '12px' }}>{start + index + 1}</td>
-                                        <td style={{ padding: '12px', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.name}</td>
-                                        <td style={{ padding: '12px', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.description}</td>
-                                        <td style={{ padding: '12px', textAlign: 'right' }}>
+                                        <td className="table-cell">{start + index + 1}</td>
+                                        <td className="table-cell text-center">{row.name}</td>
+                                        <td className="table-cell text-center">{row.description}</td>
+                                        <td className="table-cell text-right">
                                             <div className="flex justify-end gap-2">
                                                 <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
                                                     <CiEdit />
@@ -138,7 +140,7 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                 open={openBulk}
                 handleDeleted={handleBulkDeleted}
                 titleDelete={"DELETE SELECTED"}
-                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected items?`}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected categor${selectedIds.length > 1 ? 'ies' : 'y'}?`}
             />
         </div>
     );
