@@ -30,6 +30,7 @@ function Episodes() {
 
     const onChangeInput = (e) => {
         setEpisode({ ...episode, [e.target.name]: e.target.value });
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {

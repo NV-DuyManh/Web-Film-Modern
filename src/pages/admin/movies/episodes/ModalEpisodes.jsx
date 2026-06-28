@@ -43,7 +43,7 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
                         option: 'neon-option'
                     }}
                     value={getObjectById(movies, episode.movieID) || null}
-                    onChange={(event, newValue) => setEpisode({ ...episode, movieID: newValue?.id || "" })}
+                    onChange={(event, newValue) => onChangeInput({ target: { name: "movieID", value: newValue?.id || "" } })}
                     renderInput={(params) => (
                         <TextField
                             {...params}
