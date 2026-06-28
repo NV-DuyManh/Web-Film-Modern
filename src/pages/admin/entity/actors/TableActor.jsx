@@ -7,6 +7,14 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../app.css";
 import { ActorContext } from '../../../../contexts/ActorProvider';
 
+const getSexStyle = (sex) => {
+    switch (sex) {
+        case "Male": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+        case "Female": return "bg-pink-500/20 text-pink-400 border-pink-500/30";
+        default: return "bg-cyan-500/20 text-cyan-400 border-cyan-500/30";
+    }
+};
+
 function TableActor({ handleClickOpen, setActor, actor, search }) {
     const actors = useContext(ActorContext);
     const [open, setOpen] = useState(false);
@@ -18,9 +26,11 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
 
     const dataSearch = useMemo(() => actors.filter(e => e.name.toLowerCase().includes(search.toLowerCase())), [search, actors])
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
+    
     useEffect(() => {
         setPage(1);
     }, [search]);
+    
     const handleClickOpenDele = (row) => {
         setOpen(true);
         setActor(row);
@@ -85,7 +95,9 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                                         {row.description}
                                     </td>
                                     <td className="table-cell text-center">
-                                        {row.sexID}
+                                        <span className={`px-3 py-1 rounded-full text-[11px] font-bold border ${getSexStyle(row.sexID)}`}>
+                                            {row.sexID || "N/A"}
+                                        </span>
                                     </td>
                                     <td className="table-cell text-center">
                                         {row.countriesID}

@@ -42,7 +42,8 @@ function Actors() {
     };
 
     const onChangeInput = (e) => {
-        setActor({ ...actor, [e.target.name]: e.target.value })
+        setActor({ ...actor, [e.target.name]: e.target.value });
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {
@@ -80,6 +81,7 @@ function Actors() {
             const reader = new FileReader();
             reader.onload = () => {
                 setActor({ ...actor, imgUrl: reader.result });
+                setError(prev => ({ ...prev, imgUrl: "" }));
             };
             reader.readAsDataURL(file);
         }
