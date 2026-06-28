@@ -3,6 +3,7 @@ import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
+import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
@@ -10,16 +11,17 @@ import "../../../../App.css";
 function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, search }) {
     const categoryTypes = useContext(CategoryTypeContext);
     const [open, setOpen] = useState(false);
-
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const start = (page - 1) * rowsPerPage;
-    const dataSearch = useMemo(() => categoryTypes.filter(e => e?.name.toLowerCase().includes(search.toLowerCase())), [search, categoryTypes])
+    const dataSearch = useMemo(() => categoryTypes.filter(e => e?.name.toLowerCase().includes(search.toLowerCase())), [search, categoryTypes]);
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
-    useEffect(() => {
-        setPage(1);
-    }, [search]);
+    
+    useEffect(() => { setPage(1); }, [search]);
+
+    const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
+
     const handleClickOpenDele = (row) => {
         setOpen(true);
         setCategoryType(row);
@@ -34,57 +36,80 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
 
     const handleDeleted = async () => {
         await deleteDocument("CategoryTypes", categoryType);
-
-        if (page > 1 && currentData.length === 1) {
-            setPage(page - 1);
-        }
-
+        if (page > 1 && currentData.length === 1) setPage(page - 1);
         handleClose();
+    };
+
+    const handleBulkDeleted = async () => {
+        await Promise.all(
+            selectedIds.map(id => {
+                const item = categoryTypes.find(c => c.id === id);
+                return item ? deleteDocument("CategoryTypes", item) : Promise.resolve();
+            })
+        );
+        const remaining = currentData.filter(row => !selectedIds.includes(row.id)).length;
+        if (page > 1 && remaining === 0) setPage(page - 1);
+        clearSelected();
+        setOpenBulk(false);
     };
 
     return (
         <div className="p-5">
+            <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
+
             <div className="table-wrapper">
                 <div className="table-container">
-                    <table className="w-full text-left">
+                    <table className="w-full text-left text-white" style={{ tableLayout: 'fixed' }}>
                         <thead className="table-header">
                             <tr>
-                                <th>ID</th>
-                                <th>NAME</th>
-                                <th>DESCRIPTION</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th style={{ width: '40px', padding: '10px 12px' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={isAllSelected}
+                                        ref={el => { if (el) el.indeterminate = isIndeterminate; }}
+                                        onChange={handleSelectAll}
+                                        style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                    />
+                                </th>
+                                <th style={{ width: '60px', padding: '12px' }}>ID</th>
+                                <th style={{ width: '200px', padding: '12px', textAlign: 'center' }}>NAME</th>
+                                <th style={{ padding: '12px', textAlign: 'center' }}>DESCRIPTION</th>
+                                <th style={{ width: '120px', padding: '12px', textAlign: 'right' }}>ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {currentData.map((row, index) => (
-                                <tr key={index} className="table-row">
-                                    <td className="table-cell">
-                                        {start + index + 1}
-                                    </td>
-                                    <td className="table-cell">
-                                        {row.name}
-                                    </td>
-                                    <td className="table-cell">
-                                        {row.description}
-                                    </td>
-                                    <td className="table-cell text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <button
-                                                onClick={() => handleEdit(row)}
-                                                className="action-btn btn-edit"
-                                            >
-                                                <CiEdit />
-                                            </button>
-                                            <button
-                                                onClick={() => handleClickOpenDele(row)}
-                                                className="action-btn btn-delete"
-                                            >
-                                                <RiDeleteBin6Fill />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
+                            {currentData.map((row, index) => {
+                                const isSelected = selectedIds.includes(row.id);
+                                return (
+                                    <tr
+                                        key={row.id}
+                                        className="table-row"
+                                        style={isSelected ? { background: 'rgba(34,211,238,0.07)' } : {}}
+                                    >
+                                        <td style={{ padding: '12px' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={isSelected}
+                                                onChange={() => handleSelectRow(row.id)}
+                                                style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                            />
+                                        </td>
+                                        <td style={{ padding: '12px' }}>{start + index + 1}</td>
+                                        <td style={{ padding: '12px', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.name}</td>
+                                        <td style={{ padding: '12px', textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{row.description}</td>
+                                        <td style={{ padding: '12px', textAlign: 'right' }}>
+                                            <div className="flex justify-end gap-2">
+                                                <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
+                                                    <CiEdit />
+                                                </button>
+                                                <button onClick={() => handleClickOpenDele(row)} className="action-btn btn-delete">
+                                                    <RiDeleteBin6Fill />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
 
@@ -106,6 +131,14 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE CATEGORY TYPE"}
                 contentDelete={"Are you sure you want to delete this category type?"}
+            />
+
+            <ModalDelete
+                handleClose={() => setOpenBulk(false)}
+                open={openBulk}
+                handleDeleted={handleBulkDeleted}
+                titleDelete={"DELETE SELECTED"}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected items?`}
             />
         </div>
     );

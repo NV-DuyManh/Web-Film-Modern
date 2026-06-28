@@ -11,6 +11,11 @@ function CategoriesType(props) {
     const [categoryType, setCategoryType] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState("");
+
+    const onChangeSearch = (e) => {
+        setSearch(e.target.value);
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -18,16 +23,13 @@ function CategoriesType(props) {
         setError(inner);
     };
 
-    const [search, setSearch] = useState("");
-    const onChangeSearch = (e) => {
-        setSearch(e.target.value);
-    }
     const handleClose = () => {
         setOpen(false);
     };
 
     const onChangeInput = (e) => {
-        setCategoryType({ ...categoryType, [e.target.name]: e.target.value })
+        setCategoryType({ ...categoryType, [e.target.name]: e.target.value });
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {
