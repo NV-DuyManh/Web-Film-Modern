@@ -29,7 +29,7 @@ const AGE_RATING_OPTIONS = [
     { id: "T18", name: "T18" }
 ];
 
-export default function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, setMovie, error }) {
+export default function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, setMovie, error, setError }) {
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);
 
@@ -105,7 +105,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
         switch (type) {
             case "actors": setMovie(pre => ({ ...pre, list_Actor: toggleById(pre.list_Actor, id) })); break;
             case "characters": setMovie(pre => ({ ...pre, list_Character: toggleById(pre.list_Character, id) })); break;
-            case "categories": setMovie(pre => ({ ...pre, list_Category: toggleById(pre.list_Category, id) })); break;
+            case "categories": 
+                setMovie(pre => ({ ...pre, list_Category: toggleById(pre.list_Category, id) })); 
+                if (setError) setError(pre => ({ ...pre, list_Category: "" }));
+                break;
             default: break;
         }
     };
@@ -244,6 +247,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         <div className='flex items-center text-white gap-2'>
                             <label className="font-medium">Categories</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("categories")} className='cursor-pointer text-2xl text-cyan-400 hover:scale-110 transition-transform' />
+                            {error.list_Category && <span className="text-red-500 text-xs italic">{error.list_Category}</span>}
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
                             {movie.list_Category?.map((item) => {

@@ -41,12 +41,12 @@ function MoviesList() {
     const onChangeSearch = (e) => setSearch(e.target.value);
 
     const onChangeInput = (e) => {
-        setMovie({ ...movie, [e.target.name]: e.target.value });
+        setMovie(prev => ({ ...prev, [e.target.name]: e.target.value }));
         setError(prev => ({ ...prev, [e.target.name]: "" }));
     };
     
     const onCheckboxChange = (e) => {
-        setMovie({ ...movie, [e.target.name]: e.target.checked });
+        setMovie(prev => ({ ...prev, [e.target.name]: e.target.checked }));
         setError(prev => ({ ...prev, [e.target.name]: "" }));
     };
 
@@ -67,6 +67,7 @@ function MoviesList() {
     const validation = () => {
         const newError = {};
         newError.name = movie.name ? "" : "Please enter film name";
+        newError.description = movie.description ? "" : "Please enter description";
         newError.releaseYear = movie.releaseYear !== "" ? "" : "Please enter release year";
         newError.ageRating = movie.ageRating ? "" : "Please select age rating";
         newError.status = movie.status ? "" : "Please select status";
@@ -144,7 +145,7 @@ function MoviesList() {
                 movie={movie} onChangeInput={onChangeInput}
                 onCheckboxChange={onCheckboxChange}
                 addOrUpdateMovie={addOrUpdateMovie}
-                loading={loading} setMovie={setMovie} error={error}
+                loading={loading} setMovie={setMovie} error={error} setError={setError}
             />
             <ModalDelete
                 open={openDelete} handleClose={() => setOpenDelete(false)} handleDeleted={handleDeleted}
