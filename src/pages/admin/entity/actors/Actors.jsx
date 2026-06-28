@@ -42,7 +42,7 @@ function Actors() {
     };
 
     const onChangeInput = (e) => {
-        setActor({ ...actor, [e.target.name]: e.target.value });
+        setActor(prev => ({ ...prev, [e.target.name]: e.target.value }));
         setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
@@ -50,9 +50,8 @@ function Actors() {
         const newError = {};
         newError.name = actor.name ? "" : "Please enter your name";
         newError.description = actor.description ? "" : "Please enter your description";
-        newError.imgUrl = actor.imgUrl ? "" : "Please enter your imgUrl";
-        newError.sexID = actor.sexID ? "" : "Please enter your sex";
-        newError.countriesID = actor.countriesID ? "" : "Please enter your country";
+        newError.countriesID = actor.countriesID ? "" : "Please select your country";
+        newError.sexID = actor.sexID ? "" : "Please select your gender";
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     }
@@ -80,7 +79,7 @@ function Actors() {
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setActor({ ...actor, imgUrl: reader.result });
+                setActor(prev => ({ ...prev, imgUrl: reader.result }));
                 setError(prev => ({ ...prev, imgUrl: "" }));
             };
             reader.readAsDataURL(file);
