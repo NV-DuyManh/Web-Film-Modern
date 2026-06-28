@@ -50,6 +50,7 @@ function Characters() {
 
     const onChangeInput = (e) => {
         setCharacter({ ...character, [e.target.name]: e.target.value });
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {
@@ -92,6 +93,7 @@ function Characters() {
 
             reader.onload = () => {
                 setCharacter({ ...character, imgUrl: reader.result });
+                setError(prev => ({ ...prev, imgUrl: "" }));
             };
 
             reader.readAsDataURL(file);

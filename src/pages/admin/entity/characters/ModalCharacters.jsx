@@ -79,6 +79,8 @@ export default function ModalCharacters({ open, onChangeInput, handleClose, addc
                     className="modal-input-x"
                     disablePortal
                     options={COUNTRIES}
+                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                    PopperProps={{ placement: "top-end" }}
                     value={character.countriesID || null}
                     onChange={(e, value) => {
                         onChangeInput({
