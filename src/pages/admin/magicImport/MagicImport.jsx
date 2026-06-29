@@ -4,10 +4,14 @@ import { parseTSV, mapMovieData } from '../../../utils/MagicParser';
 import { db } from '../../../config/firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 
+// Import TOÀN BỘ các Context liên quan để map ID
 import { CategoriesContext } from '../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
+import { ActorContext } from '../../../contexts/ActorProvider';
+import { CharacterContext } from '../../../contexts/CharacterProvider';
+
 import LOGO from "../../../assets/Logo.png";
 
 function MagicImport() {
@@ -16,11 +20,13 @@ function MagicImport() {
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
 
-    // Lấy dữ liệu từ Context
-    const categories = useContext(CategoriesContext);
-    const authors = useContext(AuthorContext);
-    const plans = useContext(PlanContext);
-    const categoryTypes = useContext(CategoryTypeContext);
+    // Lấy dữ liệu từ TẤT CẢ Context
+    const categories = useContext(CategoriesContext) || [];
+    const authors = useContext(AuthorContext) || [];
+    const plans = useContext(PlanContext) || [];
+    const categoryTypes = useContext(CategoryTypeContext) || [];
+    const actors = useContext(ActorContext) || [];
+    const characters = useContext(CharacterContext) || [];
 
     // Xử lý nút Nhận diện
     const handleParse = () => {
@@ -34,22 +40,29 @@ function MagicImport() {
         setPreviewData(mappedData);
     };
 
-    // Xử lý nút Import
+    // Xử lý nút Import FULL Trường
     const handleExecuteImport = async () => {
         if (previewData.length === 0) return;
         setLoading(true);
 
+        // Tạo mảng tạm cục bộ để cache dữ liệu, tránh tạo trùng lặp trong cùng 1 lần import
         let localCategories = [...categories];
         let localAuthors = [...authors];
+        let localActors = [...actors];
+        let localCharacters = [...characters];
+        let localCategoryTypes = [...categoryTypes];
 
         const defaultPlanID = plans.length > 0 ? plans[0].id : "";
-        const defaultCategoryTypeID = categoryTypes.length > 0 ? categoryTypes[0].id : "";
 
         try {
             for (const movie of previewData) {
                 let list_Category = [];
+                let list_Actor = [];
+                let list_Character = [];
                 let authorID = "";
+                let category_Type_Id = "";
 
+                // 1. Xử lý Thể Loại (Categories)
                 if (movie.rawCategories) {
                     const catNames = movie.rawCategories.split(',').map(c => c.trim());
                     for (const cName of catNames) {
@@ -57,30 +70,70 @@ function MagicImport() {
                         if (existCat) {
                             list_Category.push(existCat.id);
                         } else {
-                            const docRef = await addDoc(collection(db, "Categories"), { name: cName, description: "" });
+                            const docRef = await addDoc(collection(db, "Categories"), { name: cName, description: "Auto Gen" });
                             list_Category.push(docRef.id);
                             localCategories.push({ id: docRef.id, name: cName });
                         }
                     }
                 }
 
+                // 2. Xử lý Loại Phim (CategoryType - VD: Phim Lẻ, Phim Bộ, Anime...)
+                if (movie.rawCategoryType) {
+                    const existCatType = localCategoryTypes.find(c => c.name.toLowerCase() === movie.rawCategoryType.toLowerCase());
+                    if (existCatType) {
+                        category_Type_Id = existCatType.id;
+                    } else {
+                        const docRef = await addDoc(collection(db, "CategoryType"), { name: movie.rawCategoryType, description: "Auto Gen" });
+                        category_Type_Id = docRef.id;
+                        localCategoryTypes.push({ id: docRef.id, name: movie.rawCategoryType });
+                    }
+                } else {
+                    category_Type_Id = localCategoryTypes.length > 0 ? localCategoryTypes[0].id : "";
+                }
+
+                // 3. Xử lý Đạo diễn (Authors)
                 if (movie.rawAuthor) {
                     const existAuthor = localAuthors.find(a => a.name.toLowerCase() === movie.rawAuthor.toLowerCase());
                     if (existAuthor) {
                         authorID = existAuthor.id;
                     } else {
-                        const docRef = await addDoc(collection(db, "Authors"), { 
-                            name: movie.rawAuthor, 
-                            imgUrl: LOGO, 
-                            description: "AI Auto Generated",
-                            sexID: "Other",
-                            countriesID: movie.countriesID
-                        });
+                        const docRef = await addDoc(collection(db, "Authors"), { name: movie.rawAuthor, imgUrl: LOGO, description: "Auto Gen", sexID: "Other", countriesID: movie.countriesID });
                         authorID = docRef.id;
                         localAuthors.push({ id: docRef.id, name: movie.rawAuthor });
                     }
                 }
 
+                // 4. Xử lý Diễn viên (Actors)
+                if (movie.rawActors) {
+                    const actorNames = movie.rawActors.split(',').map(a => a.trim());
+                    for (const aName of actorNames) {
+                        const existActor = localActors.find(a => a.name.toLowerCase() === aName.toLowerCase());
+                        if (existActor) {
+                            list_Actor.push(existActor.id);
+                        } else {
+                            const docRef = await addDoc(collection(db, "Actors"), { name: aName, imgUrl: LOGO, description: "Auto Gen", sexID: "Other", countriesID: movie.countriesID });
+                            list_Actor.push(docRef.id);
+                            localActors.push({ id: docRef.id, name: aName });
+                        }
+                    }
+                }
+
+                // 5. Xử lý Nhân vật (Characters)
+                if (movie.rawCharacters) {
+                    const charNames = movie.rawCharacters.split(',').map(c => c.trim());
+                    for (const cName of charNames) {
+                        const existChar = localCharacters.find(c => c.name.toLowerCase() === cName.toLowerCase());
+                        if (existChar) {
+                            list_Character.push(existChar.id);
+                        } else {
+                            const docRef = await addDoc(collection(db, "Characters"), { name: cName, imgUrl: LOGO, description: "Auto Gen" });
+                            list_Character.push(docRef.id);
+                            localCharacters.push({ id: docRef.id, name: cName });
+                        }
+                    }
+                }
+
+                // 6. Gắn kết TOÀN BỘ dữ liệu vào Object Phim
                 const submitMovie = {
                     name: movie.name,
                     otherName: movie.otherName,
@@ -101,23 +154,25 @@ function MagicImport() {
                     rent: movie.rent,
                     countriesID: movie.countriesID,
                     planID: defaultPlanID,
-                    category_Type_Id: defaultCategoryTypeID,
+                    category_Type_Id: category_Type_Id,
                     list_Category: list_Category,
                     author: authorID,
-                    list_Actor: [],
-                    list_Character: [],
+                    list_Actor: list_Actor,
+                    list_Character: list_Character,
+                    showtimes: movie.rawShowtimes || "", // Nếu có bảng ShowTime riêng, sau này có thể tách ra tương tự
                     createdAt: new Date().toISOString()
                 };
 
+                // Lưu lên Firebase
                 await addDoc(collection(db, "Movies"), submitMovie);
             }
 
-            setSuccessMsg(`Đã import thành công ${previewData.length} dữ liệu!`);
+            setSuccessMsg(`Đã import FULL thành công ${previewData.length} bộ phim và các thực thể liên quan!`);
             setPreviewData([]);
             setInputText("");
         } catch (error) {
-            console.error(error);
-            alert("Có lỗi xảy ra, vui lòng kiểm tra console!");
+            console.error("Lỗi khi import:", error);
+            alert("Có lỗi xảy ra, vui lòng kiểm tra F12 Console!");
         } finally {
             setLoading(false);
         }
@@ -131,12 +186,13 @@ function MagicImport() {
                 </div>
                 <div>
                     <h1 className='text-3xl font-black tracking-wide glow-text uppercase'>Magic Import</h1>
-                    <p className='text-gray-400 text-sm mt-1'>Copy bảng từ Excel/ChatGPT và Paste vào đây để tự động phân tích & Import.</p>
+                    <p className='text-gray-400 text-sm mt-1'>Copy bảng từ Excel/ChatGPT và Paste vào đây để tự động phân tích full dữ liệu.</p>
                 </div>
             </div>
 
-            <div className='grid grid-cols-1 lg:grid-cols-2 gap-8'>
-                <div className='flex flex-col gap-4'>
+            <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
+                {/* Khu vực Nhập liệu */}
+                <div className='col-span-1 lg:col-span-4 flex flex-col gap-4'>
                     <div className='bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl relative group transition-all hover:border-cyan-500/50'>
                         <h2 className='text-cyan-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
                             <FaCloudUploadAlt className="text-xl" /> Khu vực Paste Dữ Liệu
@@ -156,36 +212,58 @@ function MagicImport() {
                     </div>
                 </div>
 
-                <div className='flex flex-col gap-4'>
+                {/* Khu vực Preview FULL TRƯỜNG */}
+                <div className='col-span-1 lg:col-span-8 flex flex-col gap-4'>
                     <div className='bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl h-full flex flex-col'>
                         <h2 className='text-pink-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between'>
-                            <span>Bảng Xem Trước (Preview)</span>
+                            <span>Bảng Xem Trước (Có thể cuộn ngang)</span>
                             <span className="bg-pink-500/20 text-pink-300 px-3 py-1 rounded-full text-xs border border-pink-500/30">
                                 {previewData.length} items
                             </span>
                         </h2>
                         
-                        <div className='flex-1 border border-white/10 rounded-xl bg-black/40 overflow-hidden relative'>
+                        <div className='flex-1 border border-white/10 rounded-xl bg-black/40 relative overflow-hidden'>
                             {previewData.length > 0 ? (
-                                <div className='overflow-auto h-82.5 custom-scrollbar p-2'>
-                                    <table className='w-full text-left whitespace-nowrap text-xs'>
-                                        <thead className='text-gray-400 border-b border-white/10'>
+                                /* Vùng chứa scroll ngang và dọc */
+                                <div className='overflow-auto h-100 custom-scrollbar p-2'>
+                                    <table className='w-full text-left whitespace-nowrap text-xs min-w-max'>
+                                        <thead className='text-gray-400 border-b border-white/10 bg-slate-800/50 sticky top-0 z-10'>
                                             <tr>
-                                                <th className='p-2'>Tên Phim</th>
-                                                <th className='p-2'>Quốc Gia</th>
-                                                <th className='p-2'>Năm</th>
-                                                <th className='p-2'>Thể Loại</th>
-                                                <th className='p-2'>Đạo Diễn</th>
+                                                <th className='p-3'>Tên Phim</th>
+                                                <th className='p-3'>Tên Gốc</th>
+                                                <th className='p-3'>Loại Phim</th>
+                                                <th className='p-3'>Thể Loại</th>
+                                                <th className='p-3'>Đạo Diễn</th>
+                                                <th className='p-3'>Diễn Viên</th>
+                                                <th className='p-3'>Nhân Vật</th>
+                                                <th className='p-3'>Quốc Gia</th>
+                                                <th className='p-3'>Năm</th>
+                                                <th className='p-3'>Số Tập</th>
+                                                <th className='p-3'>Thời Lượng</th>
+                                                <th className='p-3'>Độ Tuổi</th>
+                                                <th className='p-3'>Trạng Thái</th>
+                                                <th className='p-3'>Giá Thuê</th>
+                                                <th className='p-3'>Lịch Chiếu</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {previewData.map((row, idx) => (
-                                                <tr key={idx} className='border-b border-white/5 hover:bg-white/5 text-gray-200'>
-                                                    <td className='p-2 font-bold text-cyan-300'>{row.name}</td>
-                                                    <td className='p-2'>{row.countriesID}</td>
-                                                    <td className='p-2 text-yellow-400'>{row.releaseYear}</td>
-                                                    <td className='p-2 text-pink-300 truncate max-w-30'>{row.rawCategories}</td>
-                                                    <td className='p-2 text-green-300'>{row.rawAuthor}</td>
+                                                <tr key={idx} className='border-b border-white/5 hover:bg-white/5 text-gray-200 transition-colors'>
+                                                    <td className='p-3 font-bold text-cyan-300'>{row.name}</td>
+                                                    <td className='p-3 text-gray-400'>{row.otherName}</td>
+                                                    <td className='p-3 text-purple-300'>{row.rawCategoryType}</td>
+                                                    <td className='p-3 text-pink-300'>{row.rawCategories}</td>
+                                                    <td className='p-3 text-green-300'>{row.rawAuthor}</td>
+                                                    <td className='p-3 text-blue-300 max-w-37.5 truncate' title={row.rawActors}>{row.rawActors}</td>
+                                                    <td className='p-3 text-orange-300 max-w-37.5 truncate' title={row.rawCharacters}>{row.rawCharacters}</td>
+                                                    <td className='p-3'>{row.countriesID}</td>
+                                                    <td className='p-3 text-yellow-400'>{row.releaseYear}</td>
+                                                    <td className='p-3 font-mono'>{row.endEpisode}</td>
+                                                    <td className='p-3 font-mono'>{row.duration}p</td>
+                                                    <td className='p-3 font-mono'>{row.ageRating}</td>
+                                                    <td className='p-3'>{row.status}</td>
+                                                    <td className='p-3 font-mono text-green-400'>{row.rent.toLocaleString()}</td>
+                                                    <td className='p-3'>{row.rawShowtimes}</td>
                                                 </tr>
                                             ))}
                                         </tbody>

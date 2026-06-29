@@ -23,17 +23,26 @@ export const parseTSV = (text) => {
 
 export const mapMovieData = (parsedData) => {
     return parsedData.map(row => ({
+        // Thông tin cơ bản
         name: row["Movie Name"] || row["Name"] || "",
         otherName: row["Original Name"] || "",
         countriesID: row["Country"] || "Japan",
         releaseYear: parseInt(row["Year"]) || new Date().getFullYear(),
+        
+        // Các trường phân loại & thực thể (Đã thêm Full)
         rawCategories: row["Categories"] || "",
+        rawCategoryType: row["CategoryType"] || "", 
+        rawAuthor: row["Director"] || "",
+        rawActors: row["Actors"] || "",
+        rawCharacters: row["Characters"] || "",
+        
+        // Trạng thái & Giá trị
         status: row["Status"] || "Đang chiếu",
         ageRating: row["Age"] || "T13",
         duration: parseInt(row["Duration"]) || 0,
         endEpisode: parseInt(row["Episodes"]) || 1,
         rent: parseFloat(row["Rent Price"]) || 0,
-        rawAuthor: row["Director"] || "",
+        rawShowtimes: row["Showtimes"] || "",
         
         // Các trường mặc định cho Firebase
         description: "Nội dung đang được cập nhật...",
