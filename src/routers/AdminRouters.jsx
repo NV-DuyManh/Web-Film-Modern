@@ -17,12 +17,13 @@ import Packages from '../pages/admin/vip/packages/Packages';
 import RentMovies from '../pages/admin/bills/rentMovies/RentMovies';
 import Subscriptions from '../pages/admin/bills/subscriptions/Subscriptions';
 import { Route, Routes } from 'react-router-dom';
+import MagicImport from '../pages/admin/magicImport/MagicImport';
 
 function AdminRouters(props) {
     const adminRouter = [
         {
             path: "/",
-            element: <DashBoard/>
+            element: <DashBoard />
         },
         {
             path: "/categories",
@@ -87,6 +88,10 @@ function AdminRouters(props) {
         {
             path: "/subscriptions",
             element: <Subscriptions />
+        },
+        {
+            path: "/magicImport",
+            element: <MagicImport />
         }
     ]
     return (

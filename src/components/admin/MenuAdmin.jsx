@@ -16,9 +16,12 @@ function MenuAdmin() {
 
     useEffect(() => {
         LISTMENU.forEach((item, index) => {
-            const isSubActive = item.subMenu.some(sub => sub.path === activePath);
-            if (isSubActive) {
-                setShow(index + 1);
+            // Fix: Phải kiểm tra xem item có subMenu không rồi mới quét
+            if (item.subMenu) {
+                const isSubActive = item.subMenu.some(sub => sub.path === activePath);
+                if (isSubActive) {
+                    setShow(index + 1);
+                }
             }
         });
     }, [activePath]);
@@ -59,6 +62,30 @@ function MenuAdmin() {
                 </li>
 
                 {LISTMENU.map((item, index) => {
+                    // TRƯỜNG HỢP 1: Menu không có subMenu (Là nút bấm trực tiếp như Magic Import)
+                    if (!item.subMenu) {
+                        const isActive = activePath === item.path;
+                        return (
+                            <li key={index} className='flex flex-col relative group'>
+                                <Link to={item.path}
+                                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-300 border border-transparent
+                                        ${isActive
+                                            ? "bg-cyan-600/10 border-cyan-500/30 text-cyan-400 shadow-[inset_4px_0_0_0_#22d3ee]"
+                                            : "bg-slate-800/90 text-gray-200 hover:bg-slate-700 hover:border-yellow-500/30 hover:text-yellow-400"}
+                                        ${Menu ? "sm:justify-center px-0" : ""}`}
+                                >
+                                    <div className="flex items-center gap-3 overflow-hidden">
+                                        <span className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-cyan-400 drop-shadow-[0_0_5px_#22d3ee]" : ""}`}>{item.icon}</span>
+                                        <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition-all duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-32"}`}>
+                                            {item.name}
+                                        </p>
+                                    </div>
+                                </Link>
+                            </li>
+                        );
+                    }
+
+                    // TRƯỜNG HỢP 2: Menu có subMenu (Là Dropdown xổ xuống - Giữ nguyên logic cũ)
                     const isOpen = show === (index + 1);
                     const isParentActive = item.subMenu.some(sub => sub.path === activePath);
 
@@ -93,8 +120,8 @@ function MenuAdmin() {
                                             <div className="px-3 py-2 mb-1 text-[11px] font-bold text-gray-400 uppercase tracking-widest border-b border-slate-700">
                                                 {item.name}
                                             </div>
-                                            {item.subMenu.map((sub) => (
-                                                <Link to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 whitespace-nowrap
+                                            {item.subMenu.map((sub, subIdx) => (
+                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 whitespace-nowrap
                                                     ${activePath === sub.path
                                                         ? "bg-yellow-500/20 text-yellow-400 shadow-[inset_3px_0_0_0_#eab308]"
                                                         : "text-gray-300 hover:bg-slate-800 hover:text-cyan-400 hover:pl-4"}`}>
@@ -108,8 +135,8 @@ function MenuAdmin() {
                                 <div className={`grid transition-[grid-template-rows] duration-300 ease-in-out ${isOpen ? "grid-rows-[1fr] mt-2" : "grid-rows-[0fr] mt-0"}`}>
                                     <div className="overflow-hidden">
                                         <div className={`flex flex-col gap-1 w-[85%] ml-auto border-l-2 pl-3 py-1 ${isParentActive ? "border-cyan-500/50" : "border-slate-700"}`}>
-                                            {item.subMenu.map((sub) => (
-                                                <Link to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 text-nowrap
+                                            {item.subMenu.map((sub, subIdx) => (
+                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 text-nowrap
                                                     ${activePath === sub.path
                                                         ? "bg-yellow-500/20 text-yellow-400 shadow-[inset_3px_0_0_0_#eab308] translate-x-1"
                                                         : "text-gray-400 hover:bg-slate-800 hover:text-yellow-300 hover:translate-x-1"}`}>

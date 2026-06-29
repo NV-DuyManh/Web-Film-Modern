@@ -1,4 +1,4 @@
-import { FaUsers, FaUserSecret } from "react-icons/fa";
+import { FaUsers, FaUserSecret, FaMagic } from "react-icons/fa";
 import { MdCategory, MdDashboard, MdLocalMovies, MdOutlinePriceChange } from "react-icons/md";
 import { RiVipDiamondFill } from "react-icons/ri";
 
@@ -139,6 +139,11 @@ export const LISTMENU = [
             }
         ]
     },
+    {
+        name: "Magic Import",
+        icon: <FaMagic />,
+        path: "/magicImport"
+    }
 
 ];
 
@@ -345,4 +350,3 @@ export const ROLES = {
     USER: 'user',          // Người dùng thông thường
 };
 export const cloud_name = "duuujvsz7";
-
