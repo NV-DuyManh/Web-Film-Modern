@@ -7,6 +7,7 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 import { FeatureContext } from '../../../../contexts/FeatureProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
+import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 
 function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
     const features = useContext(FeatureContext);
@@ -30,6 +31,8 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
         setPage(1);
     }, [search]);
 
+    const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
+
     const handleClickOpenDele = (row) => {
         setOpen(true);
         setFeature(row);
@@ -52,13 +55,36 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
         handleClose();
     };
 
+    const handleBulkDeleted = async () => {
+        await Promise.all(
+            selectedIds.map(id => {
+                const item = features.find(c => c.id === id);
+                return item ? deleteDocument("Features", item) : Promise.resolve();
+            })
+        );
+        const remaining = currentData.filter(row => !selectedIds.includes(row.id)).length;
+        if (page > 1 && remaining === 0) setPage(page - 1);
+        clearSelected();
+        setOpenBulk(false);
+    };
+
     return (
         <div className="p-5">
+            <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
             <div className="table-wrapper">
                 <div className="table-container">
-                    <table className="w-full text-left">
+                    <table className="w-full text-left whitespace-nowrap">
                         <thead className="table-header">
                             <tr>
+                                <th style={{ width: '40px', padding: '10px 12px' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={isAllSelected}
+                                        ref={el => { if (el) el.indeterminate = isIndeterminate; }}
+                                        onChange={handleSelectAll}
+                                        style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                    />
+                                </th>
                                 <th>ID</th>
                                 <th className="text-center">PLAN</th>
                                 <th className="text-center">DESCRIPTION</th>
@@ -68,16 +94,28 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                         </thead>
 
                         <tbody>
-                            {currentData.map((row, index) => (
-                                <tr key={row.id || index} className="table-row">
+                            {currentData.map((row, index) => {
+                                const isSelected = selectedIds.includes(row.id);
+                                return (
+                                <tr key={row.id || index} className="table-row" style={isSelected ? { background: 'rgba(34,211,238,0.07)' } : {}}>
+                                    <td className="table-cell" style={{ width: '40px' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={isSelected}
+                                            onChange={() => handleSelectRow(row.id)}
+                                            style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                        />
+                                    </td>
                                     <td className="table-cell">
                                         {start + index + 1}
                                     </td>
                                     <td className="table-cell text-center font-bold text-cyan-400">
                                         {getPlanName(row.planID)}
                                     </td>
-                                    <td className="table-cell text-center">
-                                        {row.description}
+                                    <td className="table-cell text-center max-w-50 whitespace-normal text-[12px] text-gray-400" title={row.description}>
+                                        <div className="line-clamp-3 leading-relaxed text-center">
+                                            {row.description || "N/A"}
+                                        </div>
                                     </td>
                                     <td className="table-cell  text-center">
                                         <span className={`${row.available ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-red-500/20 text-red-400 border-red-500/30"} px-2 py-1 rounded text-xs font-bold border`}>
@@ -102,7 +140,7 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
+                            )})}
                         </tbody>
                     </table>
                     <div className="table-footer">
@@ -122,6 +160,13 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE FEATURE"}
                 contentDelete={"Are you sure you want to delete this feature?"}
+            />
+            <ModalDelete
+                handleClose={() => setOpenBulk(false)}
+                open={openBulk}
+                handleDeleted={handleBulkDeleted}
+                titleDelete={"DELETE SELECTED"}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected feature${selectedIds.length > 1 ? 's' : ''}?`}
             />
         </div>
     );

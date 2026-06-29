@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
 import { FaSpinner } from 'react-icons/fa';
 import { useContext } from 'react';
 import { PlanContext } from '../../../../contexts/PlanProvider';
@@ -8,9 +8,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const menuProps = {
-    PaperProps: { sx: { bgcolor: '#1e293b', color: 'white', border: '1px solid rgba(255,255,255,0.1)' } }
-};
+const AVAILABLE_OPTIONS = [
+    { id: true, label: "True" },
+    { id: false, label: "False" }
+];
 
 export default function ModalFeatures({ open, onChangeInput, handleClose, addFeature, error, loading, feature }) {
     const plans = useContext(PlanContext);
@@ -32,25 +33,22 @@ export default function ModalFeatures({ open, onChangeInput, handleClose, addFea
             </DialogTitle>
 
             <DialogContent className="modal-body-x">
-                <TextField
-                    select
-                    className="modal-input-x"
-                    name="planID"
-                    onChange={onChangeInput}
-                    fullWidth
-                    label="Plan"
-                    variant="outlined"
-                    value={feature.planID || ""}
-                    helperText={error.planID}
-                    error={!!error.planID}
-                    SelectProps={{ MenuProps: menuProps }}
-                >
-                    {plans?.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                            {item.name}
-                        </MenuItem>
-                    ))}
-                </TextField>
+                <Autocomplete
+                    options={plans || []}
+                    getOptionLabel={(opt) => opt?.name || ""}
+                    value={plans?.find(p => p.id === feature.planID) || null}
+                    onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })}
+                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                    renderInput={(params) => (
+                        <TextField 
+                            {...params} 
+                            label="Plan" 
+                            error={!!error.planID} 
+                            helperText={error.planID} 
+                            className="modal-input-x" 
+                        />
+                    )}
+                />
 
                 <TextField
                     className="modal-input-x"
@@ -66,22 +64,22 @@ export default function ModalFeatures({ open, onChangeInput, handleClose, addFea
                     error={!!error.description}
                 />
 
-                <TextField
-                    select
-                    className="modal-input-x"
-                    name="available"
-                    onChange={onChangeInput}
-                    fullWidth
-                    label="Available"
-                    variant="outlined"
-                    value={feature.available}
-                    helperText={error.available}
-                    error={!!error.available}
-                    SelectProps={{ MenuProps: menuProps }}
-                >
-                    <MenuItem value={true}>True</MenuItem>
-                    <MenuItem value={false}>False</MenuItem>
-                </TextField>
+                <Autocomplete
+                    options={AVAILABLE_OPTIONS}
+                    getOptionLabel={(opt) => opt.label}
+                    value={feature.available !== "" ? AVAILABLE_OPTIONS.find(a => a.id === feature.available) : null}
+                    onChange={(e, val) => onChangeInput({ target: { name: "available", value: val !== null ? val.id : "" } })}
+                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                    renderInput={(params) => (
+                        <TextField 
+                            {...params} 
+                            label="Available" 
+                            error={!!error.available} 
+                            helperText={error.available} 
+                            className="modal-input-x" 
+                        />
+                    )}
+                />
             </DialogContent>
 
             <DialogActions className="modal-actions-x">

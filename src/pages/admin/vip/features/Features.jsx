@@ -29,7 +29,8 @@ function Features() {
     };
 
     const onChangeInput = (e) => {
-        setFeature({ ...feature, [e.target.name]: e.target.value });
+        setFeature(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {
