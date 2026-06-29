@@ -83,7 +83,7 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th >STT</th>
+                                <th >ID</th>
                                 <th className='text-center'>NAME</th>
                                 <th className='text-center'>LEVEL</th>
                                 <th className='text-center'>PRICE</th>
