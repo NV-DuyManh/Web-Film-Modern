@@ -6,6 +6,7 @@ import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 import { PlanContext } from '../../../../contexts/PlanProvider';
+import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 
 function TablePlans({ handleClickOpen, setPlan, plan, search }) {
     const plans = useContext(PlanContext);
@@ -27,6 +28,8 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
     useEffect(() => {
         setPage(1);
     }, [search]);
+
+    const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
 
     const handleClickOpenDele = (row) => {
         setOpen(true);
@@ -50,13 +53,36 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
         handleClose();
     };
 
+    const handleBulkDeleted = async () => {
+        await Promise.all(
+            selectedIds.map(id => {
+                const item = plans.find(c => c.id === id);
+                return item ? deleteDocument("Plans", item) : Promise.resolve();
+            })
+        );
+        const remaining = currentData.filter(row => !selectedIds.includes(row.id)).length;
+        if (page > 1 && remaining === 0) setPage(page - 1);
+        clearSelected();
+        setOpenBulk(false);
+    };
+
     return (
         <div className="p-5">
+            <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
             <div className="table-wrapper">
                 <div className="table-container">
-                    <table className="w-full text-left">
+                    <table className="w-full text-left whitespace-nowrap">
                         <thead className="table-header">
                             <tr>
+                                <th style={{ width: '40px', padding: '10px 12px' }}>
+                                    <input
+                                        type="checkbox"
+                                        checked={isAllSelected}
+                                        ref={el => { if (el) el.indeterminate = isIndeterminate; }}
+                                        onChange={handleSelectAll}
+                                        style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                    />
+                                </th>
                                 <th >STT</th>
                                 <th className='text-center'>NAME</th>
                                 <th className='text-center'>LEVEL</th>
@@ -66,8 +92,18 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                         </thead>
 
                         <tbody>
-                            {currentData.map((row, index) => (
-                                <tr key={row.id || index} className="table-row">
+                            {currentData.map((row, index) => {
+                                const isSelected = selectedIds.includes(row.id);
+                                return (
+                                <tr key={row.id || index} className="table-row" style={isSelected ? { background: 'rgba(34,211,238,0.07)' } : {}}>
+                                    <td className="table-cell" style={{ width: '40px' }}>
+                                        <input
+                                            type="checkbox"
+                                            checked={isSelected}
+                                            onChange={() => handleSelectRow(row.id)}
+                                            style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                        />
+                                    </td>
                                     <td className="table-cell">
                                         {start + index + 1}
                                     </td>
@@ -100,7 +136,7 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                                         </div>
                                     </td>
                                 </tr>
-                            ))}
+                            )})}
                         </tbody>
                     </table>
                     <div className="table-footer">
@@ -120,6 +156,13 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE PLAN"}
                 contentDelete={`Are you sure you want to delete the plan "${plan?.name}"?`}
+            />
+            <ModalDelete
+                handleClose={() => setOpenBulk(false)}
+                open={openBulk}
+                handleDeleted={handleBulkDeleted}
+                titleDelete={"DELETE SELECTED"}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected plan${selectedIds.length > 1 ? 's' : ''}?`}
             />
         </div>
     );

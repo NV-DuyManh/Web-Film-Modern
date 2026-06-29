@@ -29,7 +29,8 @@ function Plans() {
     };
 
     const onChangeInput = (e) => {
-        setPlan({ ...plan, [e.target.name]: e.target.value });
+        setPlan(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {
