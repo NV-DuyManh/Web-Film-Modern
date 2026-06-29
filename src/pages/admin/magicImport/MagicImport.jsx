@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { FaMagic, FaCloudUploadAlt, FaSpinner, FaCheckCircle } from 'react-icons/fa';
+import { FaMagic, FaCloudUploadAlt, FaSpinner, FaCheckCircle, FaFileExcel } from 'react-icons/fa';
+import * as XLSX from 'xlsx'; // Import thư viện Excel
 import { parseTSV, mapMovieData } from '../../../utils/MagicParser';
 import { db } from '../../../config/firebaseConfig';
 import { collection, addDoc } from 'firebase/firestore';
 
-// Import TOÀN BỘ các Context liên quan để map ID
 import { CategoriesContext } from '../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -20,7 +20,6 @@ function MagicImport() {
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
 
-    // Lấy dữ liệu từ TẤT CẢ Context
     const categories = useContext(CategoriesContext) || [];
     const authors = useContext(AuthorContext) || [];
     const plans = useContext(PlanContext) || [];
@@ -28,16 +27,49 @@ function MagicImport() {
     const actors = useContext(ActorContext) || [];
     const characters = useContext(CharacterContext) || [];
 
-    // Xử lý nút Nhận diện
+    // Xử lý Parse Text (Dán từ Clipboard)
     const handleParse = () => {
         setSuccessMsg("");
         const rawData = parseTSV(inputText);
         if (rawData.length === 0) {
-            alert("Không tìm thấy dữ liệu hợp lệ. Vui lòng copy bảng chứa Header!");
+            alert("Không tìm thấy dữ liệu hợp lệ. Vui lòng kiểm tra lại định dạng!");
             return;
         }
         const mappedData = mapMovieData(rawData);
         setPreviewData(mappedData);
+    };
+
+    // XỬ LÝ UPLOAD FILE EXCEL
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setSuccessMsg("");
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            const bstr = evt.target.result;
+            const wb = XLSX.read(bstr, { type: 'binary' });
+            const wsname = wb.SheetNames[0]; // Lấy sheet đầu tiên
+            const ws = wb.Sheets[wsname];
+            
+            // Convert Excel sang JSON
+            const data = XLSX.utils.sheet_to_json(ws);
+            
+            // Format lại object key thành chữ thường để mapMovieData có thể đọc được
+            const formattedData = data.map(row => {
+                const newRow = {};
+                for (let key in row) {
+                    newRow[key.toLowerCase().trim()] = String(row[key]);
+                }
+                return newRow;
+            });
+            
+            const mappedData = mapMovieData(formattedData);
+            setPreviewData(mappedData);
+            setSuccessMsg(`Đã đọc thành công file Excel với ${mappedData.length} dòng!`);
+        };
+        reader.readAsBinaryString(file);
+        e.target.value = null; // Reset input file
     };
 
     // Xử lý nút Import FULL Trường
@@ -45,7 +77,6 @@ function MagicImport() {
         if (previewData.length === 0) return;
         setLoading(true);
 
-        // Tạo mảng tạm cục bộ để cache dữ liệu, tránh tạo trùng lặp trong cùng 1 lần import
         let localCategories = [...categories];
         let localAuthors = [...authors];
         let localActors = [...actors];
@@ -62,7 +93,6 @@ function MagicImport() {
                 let authorID = "";
                 let category_Type_Id = "";
 
-                // 1. Xử lý Thể Loại (Categories)
                 if (movie.rawCategories) {
                     const catNames = movie.rawCategories.split(',').map(c => c.trim());
                     for (const cName of catNames) {
@@ -77,7 +107,6 @@ function MagicImport() {
                     }
                 }
 
-                // 2. Xử lý Loại Phim (CategoryType - VD: Phim Lẻ, Phim Bộ, Anime...)
                 if (movie.rawCategoryType) {
                     const existCatType = localCategoryTypes.find(c => c.name.toLowerCase() === movie.rawCategoryType.toLowerCase());
                     if (existCatType) {
@@ -91,7 +120,6 @@ function MagicImport() {
                     category_Type_Id = localCategoryTypes.length > 0 ? localCategoryTypes[0].id : "";
                 }
 
-                // 3. Xử lý Đạo diễn (Authors)
                 if (movie.rawAuthor) {
                     const existAuthor = localAuthors.find(a => a.name.toLowerCase() === movie.rawAuthor.toLowerCase());
                     if (existAuthor) {
@@ -103,7 +131,6 @@ function MagicImport() {
                     }
                 }
 
-                // 4. Xử lý Diễn viên (Actors)
                 if (movie.rawActors) {
                     const actorNames = movie.rawActors.split(',').map(a => a.trim());
                     for (const aName of actorNames) {
@@ -118,7 +145,6 @@ function MagicImport() {
                     }
                 }
 
-                // 5. Xử lý Nhân vật (Characters)
                 if (movie.rawCharacters) {
                     const charNames = movie.rawCharacters.split(',').map(c => c.trim());
                     for (const cName of charNames) {
@@ -133,7 +159,6 @@ function MagicImport() {
                     }
                 }
 
-                // 6. Gắn kết TOÀN BỘ dữ liệu vào Object Phim
                 const submitMovie = {
                     name: movie.name,
                     otherName: movie.otherName,
@@ -159,11 +184,10 @@ function MagicImport() {
                     author: authorID,
                     list_Actor: list_Actor,
                     list_Character: list_Character,
-                    showtimes: movie.rawShowtimes || "", // Nếu có bảng ShowTime riêng, sau này có thể tách ra tương tự
+                    showtimes: movie.rawShowtimes || "", 
                     createdAt: new Date().toISOString()
                 };
 
-                // Lưu lên Firebase
                 await addDoc(collection(db, "Movies"), submitMovie);
             }
 
@@ -186,16 +210,15 @@ function MagicImport() {
                 </div>
                 <div>
                     <h1 className='text-3xl font-black tracking-wide glow-text uppercase'>Magic Import</h1>
-                    <p className='text-gray-400 text-sm mt-1'>Copy bảng từ Excel/ChatGPT và Paste vào đây để tự động phân tích full dữ liệu.</p>
+                    <p className='text-gray-400 text-sm mt-1'>Copy bảng từ Excel/ChatGPT hoặc Upload File Excel để phân tích dữ liệu.</p>
                 </div>
             </div>
 
             <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
-                {/* Khu vực Nhập liệu */}
                 <div className='col-span-1 lg:col-span-4 flex flex-col gap-4'>
                     <div className='bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl relative group transition-all hover:border-cyan-500/50'>
                         <h2 className='text-cyan-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
-                            <FaCloudUploadAlt className="text-xl" /> Khu vực Paste Dữ Liệu
+                            <FaCloudUploadAlt className="text-xl" /> Khu vực Nhập Dữ Liệu
                         </h2>
                         <textarea
                             className='w-full h-100 bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-gray-300 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.2)] custom-scrollbar'
@@ -203,16 +226,28 @@ function MagicImport() {
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
                         />
-                        <button 
-                            onClick={handleParse}
-                            className='w-full mt-4 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(8,145,178,0.4)] hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] active:scale-95'
-                        >
-                            Nhận Diện Dữ Liệu
-                        </button>
+                        
+                        <div className="flex flex-col gap-3 mt-4">
+                            <button 
+                                onClick={handleParse}
+                                className='w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(8,145,178,0.4)] hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] active:scale-95'
+                            >
+                                Nhận Diện Dữ Liệu
+                            </button>
+                            
+                            <label className='w-full py-3 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold tracking-wider uppercase transition-all cursor-pointer shadow-[0_0_15px_rgba(5,150,105,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] active:scale-95'>
+                                <FaFileExcel className="text-xl" /> Upload Excel
+                                <input 
+                                    type="file" 
+                                    accept=".xlsx, .xls, .csv" 
+                                    onChange={handleFileUpload} 
+                                    className="hidden" 
+                                />
+                            </label>
+                        </div>
                     </div>
                 </div>
 
-                {/* Khu vực Preview FULL TRƯỜNG */}
                 <div className='col-span-1 lg:col-span-8 flex flex-col gap-4'>
                     <div className='bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl h-full flex flex-col'>
                         <h2 className='text-pink-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between'>
@@ -224,7 +259,6 @@ function MagicImport() {
                         
                         <div className='flex-1 border border-white/10 rounded-xl bg-black/40 relative overflow-hidden'>
                             {previewData.length > 0 ? (
-                                /* Vùng chứa scroll ngang và dọc */
                                 <div className='overflow-auto h-100 custom-scrollbar p-2'>
                                     <table className='w-full text-left whitespace-nowrap text-xs min-w-max'>
                                         <thead className='text-gray-400 border-b border-white/10 bg-slate-800/50 sticky top-0 z-10'>
@@ -243,7 +277,6 @@ function MagicImport() {
                                                 <th className='p-3'>Độ Tuổi</th>
                                                 <th className='p-3'>Trạng Thái</th>
                                                 <th className='p-3'>Giá Thuê</th>
-                                                <th className='p-3'>Lịch Chiếu</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -263,7 +296,6 @@ function MagicImport() {
                                                     <td className='p-3 font-mono'>{row.ageRating}</td>
                                                     <td className='p-3'>{row.status}</td>
                                                     <td className='p-3 font-mono text-green-400'>{row.rent.toLocaleString()}</td>
-                                                    <td className='p-3'>{row.rawShowtimes}</td>
                                                 </tr>
                                             ))}
                                         </tbody>
