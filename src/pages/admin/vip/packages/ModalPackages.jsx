@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
 import { FaSpinner } from 'react-icons/fa';
 import { useContext } from 'react';
 import { PlanContext } from '../../../../contexts/PlanProvider';
@@ -8,9 +8,12 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const menuProps = {
-    PaperProps: { sx: { bgcolor: '#1e293b', color: 'white', border: '1px solid rgba(255,255,255,0.1)' } }
-};
+const TIME_OPTIONS = [
+    { id: 1, label: "1 Month" },
+    { id: 3, label: "3 Months" },
+    { id: 6, label: "6 Months" },
+    { id: 12, label: "12 Months" }
+];
 
 export default function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, loading, packageItem }) {
     const plans = useContext(PlanContext);
@@ -38,25 +41,22 @@ export default function ModalPackages({ open, onChangeInput, handleClose, addPac
             </DialogTitle>
 
             <DialogContent className="modal-body-x">
-                <TextField
-                    select
-                    className="modal-input-x"
-                    name="planID"
-                    onChange={onChangeInput}
-                    fullWidth
-                    label="Plan"
-                    variant="outlined"
-                    value={packageItem.planID || ""}
-                    helperText={error.planID}
-                    error={!!error.planID}
-                    SelectProps={{ MenuProps: menuProps }}
-                >
-                    {plans?.map((item) => (
-                        <MenuItem key={item.id} value={item.id}>
-                            {item.name}
-                        </MenuItem>
-                    ))}
-                </TextField>
+                <Autocomplete
+                    options={plans || []}
+                    getOptionLabel={(opt) => opt?.name || ""}
+                    value={plans?.find(p => p.id === packageItem.planID) || null}
+                    onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })}
+                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                    renderInput={(params) => (
+                        <TextField 
+                            {...params} 
+                            label="Plan" 
+                            error={!!error.planID} 
+                            helperText={error.planID} 
+                            className="modal-input-x" 
+                        />
+                    )}
+                />
 
                 <div className="grid grid-cols-2 gap-4">
                     <TextField
@@ -64,31 +64,29 @@ export default function ModalPackages({ open, onChangeInput, handleClose, addPac
                         name="discount"
                         onChange={(e) => handleNumberChange(e, true)}
                         fullWidth
-                        label="Discount"
+                        label="Discount (%)"
                         variant="outlined"
                         value={packageItem.discount}
                         helperText={error.discount}
                         error={!!error.discount}
                     />
 
-                    <TextField
-                        select
-                        className="modal-input-x"
-                        name="time"
-                        onChange={onChangeInput}
-                        fullWidth
-                        label="Duration"
-                        variant="outlined"
-                        value={packageItem.time}
-                        helperText={error.time}
-                        error={!!error.time}
-                        SelectProps={{ MenuProps: menuProps }}
-                    >
-                        <MenuItem value={1}>1 Month</MenuItem>
-                        <MenuItem value={3}>3 Months</MenuItem>
-                        <MenuItem value={6}>6 Months</MenuItem>
-                        <MenuItem value={12}>12 Months</MenuItem>
-                    </TextField>
+                    <Autocomplete
+                        options={TIME_OPTIONS}
+                        getOptionLabel={(opt) => opt.label}
+                        value={TIME_OPTIONS.find(t => t.id === packageItem.time) || null}
+                        onChange={(e, val) => onChangeInput({ target: { name: "time", value: val ? val.id : "" } })}
+                        classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                        renderInput={(params) => (
+                            <TextField 
+                                {...params} 
+                                label="Duration" 
+                                error={!!error.time} 
+                                helperText={error.time} 
+                                className="modal-input-x" 
+                            />
+                        )}
+                    />
                 </div>
             </DialogContent>
 

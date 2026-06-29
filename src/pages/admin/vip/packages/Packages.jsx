@@ -29,7 +29,8 @@ function Packages() {
     };
 
     const onChangeInput = (e) => {
-        setPackageItem({ ...packageItem, [e.target.name]: e.target.value });
+        setPackageItem(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        setError(prev => ({ ...prev, [e.target.name]: "" }));
     }
 
     const validation = () => {
