@@ -216,7 +216,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
 
                                                 {row.hasVoice && (
                                                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-500/10 text-orange-400 border border-orange-500/30 w-full text-center">
-                                                        Lồng tiếng: {row.episodeVoice}/{row.endEpisode}
+                                                        Voice: {row.episodeVoice}/{row.endEpisode}
                                                     </span>
                                                 )}
                                             </div>

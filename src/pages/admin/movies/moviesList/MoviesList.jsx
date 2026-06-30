@@ -66,7 +66,7 @@ function MoviesList() {
 
     const validation = () => {
         const newError = {};
-        newError.name = movie.name ? "" : "Please enter film name";
+        newError.name = movie.name ? "" : "Please enter movie name";
         newError.description = movie.description ? "" : "Please enter description";
         newError.releaseYear = movie.releaseYear !== "" ? "" : "Please enter release year";
         newError.ageRating = movie.ageRating ? "" : "Please select age rating";
@@ -82,7 +82,7 @@ function MoviesList() {
         newError.planID = movie.planID ? "" : "Please select plan";
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
         newError.list_Category = movie.list_Category?.length > 0 ? "" : "Please select category";
-        newError.author = movie.author ? "" : "Please select authors";
+        newError.author = movie.author ? "" : "Please select director";
         newError.category_Type_Id = movie.category_Type_Id ? "" : "Please select category type";
         setError(newError);
         return Object.values(newError).some(e => e !== "");

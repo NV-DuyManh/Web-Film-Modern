@@ -193,21 +193,21 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasSub || false} onChange={onCheckboxChange} name="hasSub" sx={{ color: '#06b6d4', '&.Mui-checked': { color: '#22d3ee' }, padding: '4px' }} />}
-                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Vietsub (PĐ)</span>}
+                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Subtitled</span>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasDub || false} onChange={onCheckboxChange} name="hasDub" sx={{ color: '#ec4899', '&.Mui-checked': { color: '#f472b6' }, padding: '4px' }} />}
-                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Thuyết minh</span>}
+                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Dubbed</span>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasVoice || false} onChange={onCheckboxChange} name="hasVoice" sx={{ color: '#f97316', '&.Mui-checked': { color: '#fb923c' }, padding: '4px' }} />}
-                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Lồng tiếng</span>}
+                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Voiceover</span>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
@@ -216,17 +216,17 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     {movie.hasSub && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeSub" onChange={handleSubDubChange} label="Số tập PĐ" value={movie.episodeSub} error={!!error.episodeSub} helperText={error.episodeSub} />
+                                        <TextField className="modal-input-x mt-2!" name="episodeSub" onChange={handleSubDubChange} label="Sub Episodes" value={movie.episodeSub} error={!!error.episodeSub} helperText={error.episodeSub} />
                                     )}
                                 </div>
                                 <div>
                                     {movie.hasDub && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeDub" onChange={handleSubDubChange} label="Số tập TM" value={movie.episodeDub} error={!!error.episodeDub} helperText={error.episodeDub} />
+                                        <TextField className="modal-input-x mt-2!" name="episodeDub" onChange={handleSubDubChange} label="Dub Episodes" value={movie.episodeDub} error={!!error.episodeDub} helperText={error.episodeDub} />
                                     )}
                                 </div>
                                 <div>
                                     {movie.hasVoice && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeVoice" onChange={handleSubDubChange} label="Số tập LT" value={movie.episodeVoice} error={!!error.episodeVoice} helperText={error.episodeVoice} />
+                                        <TextField className="modal-input-x mt-2!" name="episodeVoice" onChange={handleSubDubChange} label="Voice Episodes" value={movie.episodeVoice} error={!!error.episodeVoice} helperText={error.episodeVoice} />
                                     )}
                                 </div>
                             </div>
