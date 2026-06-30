@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { FaMagic, FaCloudUploadAlt, FaSpinner, FaCheckCircle, FaFileExcel, FaTrash } from 'react-icons/fa';
+import { FaMagic, FaCloudUploadAlt, FaSpinner, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
-import { collection, doc, setDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, updateDoc } from 'firebase/firestore'; 
 
 import { CategoriesContext } from '../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../contexts/AuthorProvider';
@@ -12,6 +12,8 @@ import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 import { ActorContext } from '../../../contexts/ActorProvider';
 import { CharacterContext } from '../../../contexts/CharacterProvider';
 import { MovieContext } from '../../../contexts/MovieProvider';
+import { EpisodeContext } from '../../../contexts/EpisodeProvider';
+import { ShowTimeContext } from '../../../contexts/ShowTimeProvider';
 
 import LOGO from "../../../assets/Logo.png";
 
@@ -20,6 +22,7 @@ function MagicImport() {
     const [previewData, setPreviewData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
+    const [mode, setMode] = useState('IMPORT'); 
 
     const categories = useContext(CategoriesContext) || [];
     const authors = useContext(AuthorContext) || [];
@@ -28,6 +31,8 @@ function MagicImport() {
     const actors = useContext(ActorContext) || [];
     const characters = useContext(CharacterContext) || [];
     const existingMovies = useContext(MovieContext) || []; 
+    const existingEpisodes = useContext(EpisodeContext) || [];
+    const existingShowtimes = useContext(ShowTimeContext) || [];
 
     const handleParse = () => {
         const rawData = parseTSV(inputText);
@@ -69,158 +74,186 @@ function MagicImport() {
         let localCharacters = [...characters];
         let localCategoryTypes = [...categoryTypes];
         let localMovies = [...existingMovies]; 
+        let localEpisodes = [...existingEpisodes];
+        let localShowtimes = [...existingShowtimes];
 
-        let importedCount = 0;
-        let skippedCount = 0;
+        let moviesAdded = 0, moviesUpdated = 0, epsAdded = 0, showtimesAdded = 0;
 
         try {
             for (const movie of previewData) {
-                const isExistMovie = localMovies.find(m => m?.name && movie?.name && m.name.toLowerCase() === movie.name.toLowerCase());
+                let currentMovieId = "";
+                const existingMovie = localMovies.find(m => m?.name && movie?.name && m.name.toLowerCase() === movie.name.toLowerCase());
                 
-                if (isExistMovie) {
-                    skippedCount++; 
-                    continue; 
-                }
+                if (existingMovie && mode === 'IMPORT') {
+                    currentMovieId = existingMovie.id; 
+                } else {
+                    let list_Category = [];
+                    let list_Actor = [];
+                    let list_Character = [];
+                    let authorID = "";
+                    let category_Type_Id = "";
 
-                let list_Category = [];
-                let list_Actor = [];
-                let list_Character = [];
-                let authorID = "";
-                let category_Type_Id = "";
-
-                // 1. Categories
-                if (movie.rawCategories) {
-                    const names = movie.rawCategories.split(',').map(n => n.trim());
-                    for (const name of names) {
-                        const exist = localCategories.find(c => c.name.toLowerCase() === name.toLowerCase());
-                        if (exist) list_Category.push(exist.id);
-                        else {
-                            const newRef = doc(collection(db, "Categories"));
-                            await setDoc(newRef, { id: newRef.id, name, description: movie.rawCategoryDesc || "Đang cập nhật..." });
-                            list_Category.push(newRef.id);
-                            localCategories.push({ id: newRef.id, name });
+                    // 1. Categories
+                    if (movie.rawCategories) {
+                        const names = movie.rawCategories.split(',').map(n => n.trim());
+                        const descs = movie.rawCategoryDesc ? movie.rawCategoryDesc.split('|').map(d => d.trim()) : [];
+                        for (let i = 0; i < names.length; i++) {
+                            const name = names[i];
+                            const exist = localCategories.find(c => c.name.toLowerCase() === name.toLowerCase());
+                            const finalDesc = descs[i] || "Đang cập nhật..."; 
+                            if (exist) {
+                                list_Category.push(exist.id);
+                                if (mode === 'UPDATE') await updateDoc(doc(db, "Categories", exist.id), { description: finalDesc });
+                            } else {
+                                const newRef = doc(collection(db, "Categories"));
+                                await setDoc(newRef, { id: newRef.id, name, description: finalDesc });
+                                list_Category.push(newRef.id);
+                                localCategories.push({ id: newRef.id, name });
+                            }
                         }
                     }
-                }
 
-                // 2. CategoryType
-                if (movie.rawCategoryType) {
-                    const exist = localCategoryTypes.find(c => c.name.toLowerCase() === movie.rawCategoryType.toLowerCase());
-                    if (exist) category_Type_Id = exist.id;
-                    else {
-                        const newRef = doc(collection(db, "CategoryType"));
-                        await setDoc(newRef, { id: newRef.id, name: movie.rawCategoryType, description: "Đang cập nhật..." });
-                        category_Type_Id = newRef.id;
-                        localCategoryTypes.push({ id: newRef.id, name: movie.rawCategoryType });
-                    }
-                }
-
-                // 3. Authors
-                if (movie.rawAuthor) {
-                    const exist = localAuthors.find(a => a.name.toLowerCase() === movie.rawAuthor.toLowerCase());
-                    if (exist) authorID = exist.id;
-                    else {
-                        const newRef = doc(collection(db, "Authors"));
-                        await setDoc(newRef, { 
-                            id: newRef.id, name: movie.rawAuthor, imgUrl: LOGO, description: movie.rawAuthorDesc || "Đang cập nhật...", sexID: movie.gender, countriesID: movie.countriesID 
-                        });
-                        authorID = newRef.id;
-                        localAuthors.push({ id: newRef.id, name: movie.rawAuthor });
-                    }
-                }
-
-                // 4. Actors
-                if (movie.rawActors) {
-                    const names = movie.rawActors.split(',').map(n => n.trim());
-                    for (const name of names) {
-                        const exist = localActors.find(a => a.name.toLowerCase() === name.toLowerCase());
-                        if (exist) list_Actor.push(exist.id);
+                    // 2. CategoryType
+                    if (movie.rawCategoryType) {
+                        const exist = localCategoryTypes.find(c => c.name.toLowerCase() === movie.rawCategoryType.toLowerCase());
+                        if (exist) category_Type_Id = exist.id;
                         else {
-                            const newRef = doc(collection(db, "Actors"));
-                            await setDoc(newRef, { 
-                                id: newRef.id, name, imgUrl: LOGO, description: movie.rawActorDesc || "Đang cập nhật...", sexID: movie.gender, countriesID: movie.countriesID 
-                            });
-                            list_Actor.push(newRef.id);
-                            localActors.push({ id: newRef.id, name });
+                            const newRef = doc(collection(db, "CategoryType"));
+                            await setDoc(newRef, { id: newRef.id, name: movie.rawCategoryType, description: "Đang cập nhật..." });
+                            category_Type_Id = newRef.id;
+                            localCategoryTypes.push({ id: newRef.id, name: movie.rawCategoryType });
                         }
                     }
-                }
 
-                // 5. Characters
-                if (movie.rawCharacters) {
-                    const names = movie.rawCharacters.split(',').map(n => n.trim());
-                    for (const name of names) {
-                        const exist = localCharacters.find(c => c.name.toLowerCase() === name.toLowerCase());
-                        if (exist) list_Character.push(exist.id);
-                        else {
-                            const newRef = doc(collection(db, "Characters"));
-                            await setDoc(newRef, { 
-                                id: newRef.id, name, imgUrl: LOGO, description: movie.rawCharacterDesc || "Đang cập nhật..." 
-                            });
-                            list_Character.push(newRef.id);
-                            localCharacters.push({ id: newRef.id, name });
+                    // 3. Authors
+                    if (movie.rawAuthor) {
+                        const exist = localAuthors.find(a => a.name.toLowerCase() === movie.rawAuthor.toLowerCase());
+                        const finalDesc = movie.rawAuthorDesc || "Đang cập nhật...";
+                        const finalGender = movie.gender ? movie.gender.split('|')[0].trim() : "Male";
+                        
+                        if (exist) {
+                            authorID = exist.id;
+                            if (mode === 'UPDATE') await updateDoc(doc(db, "Authors", exist.id), { description: finalDesc, sexID: finalGender });
+                        } else {
+                            const newRef = doc(collection(db, "Authors"));
+                            await setDoc(newRef, { id: newRef.id, name: movie.rawAuthor, imgUrl: LOGO, description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
+                            authorID = newRef.id;
+                            localAuthors.push({ id: newRef.id, name: movie.rawAuthor });
                         }
+                    }
+
+                    // 4. Actors (Tách giới tính bằng |)
+                    if (movie.rawActors) {
+                        const names = movie.rawActors.split(',').map(n => n.trim());
+                        const descs = movie.rawActorDesc ? movie.rawActorDesc.split('|').map(d => d.trim()) : [];
+                        const genders = movie.gender ? movie.gender.split('|').map(g => g.trim()) : [];
+                        for (let i = 0; i < names.length; i++) {
+                            const name = names[i];
+                            const finalDesc = descs[i] || "Đang cập nhật...";
+                            const finalGender = genders[i] || "Male";
+                            
+                            const exist = localActors.find(a => a.name.toLowerCase() === name.toLowerCase());
+                            if (exist) {
+                                list_Actor.push(exist.id);
+                                if (mode === 'UPDATE') await updateDoc(doc(db, "Actors", exist.id), { description: finalDesc, sexID: finalGender });
+                            } else {
+                                const newRef = doc(collection(db, "Actors"));
+                                await setDoc(newRef, { id: newRef.id, name, imgUrl: LOGO, description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
+                                list_Actor.push(newRef.id);
+                                localActors.push({ id: newRef.id, name });
+                            }
+                        }
+                    }
+
+                    // 5. Characters (Tách giới tính bằng |)
+                    if (movie.rawCharacters) {
+                        const names = movie.rawCharacters.split(',').map(n => n.trim());
+                        const descs = movie.rawCharacterDesc ? movie.rawCharacterDesc.split('|').map(d => d.trim()) : [];
+                        const genders = movie.charGender ? movie.charGender.split('|').map(g => g.trim()) : [];
+                        for (let i = 0; i < names.length; i++) {
+                            const name = names[i];
+                            const finalDesc = descs[i] || "Đang cập nhật...";
+                            const finalGender = genders[i] || "Male";
+                            
+                            const exist = localCharacters.find(c => c.name.toLowerCase() === name.toLowerCase());
+                            if (exist) {
+                                list_Character.push(exist.id);
+                                if (mode === 'UPDATE') await updateDoc(doc(db, "Characters", exist.id), { description: finalDesc, sexID: finalGender });
+                            } else {
+                                const newRef = doc(collection(db, "Characters"));
+                                await setDoc(newRef, { id: newRef.id, name, imgUrl: LOGO, description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
+                                list_Character.push(newRef.id);
+                                localCharacters.push({ id: newRef.id, name });
+                            }
+                        }
+                    }
+
+                    let finalPlanID = plans.length > 0 ? plans[0].id : "";
+                    if (movie.rawPlan) {
+                        const foundPlan = plans.find(p => p.name.toLowerCase() === movie.rawPlan.toLowerCase());
+                        if (foundPlan) finalPlanID = foundPlan.id;
+                    }
+
+                    if (existingMovie && mode === 'UPDATE') {
+                        currentMovieId = existingMovie.id;
+                        const movieRef = doc(db, "Movies", currentMovieId);
+                        const updateData = { updatedAt: new Date().toISOString() };
+                        if (movie.description !== "Đang cập nhật...") updateData.description = movie.description;
+                        if (movie.duration > 0) updateData.duration = movie.duration;
+                        if (movie.rent >= 0) updateData.rent = movie.rent;
+                        if (movie.releaseYear) updateData.releaseYear = movie.releaseYear;
+                        if (authorID) updateData.author = authorID;
+                        if (category_Type_Id) updateData.category_Type_Id = category_Type_Id;
+                        
+                        updateData.list_Category = Array.from(new Set([...(existingMovie.list_Category || []), ...list_Category]));
+                        updateData.list_Actor = Array.from(new Set([...(existingMovie.list_Actor || []), ...list_Actor]));
+                        updateData.list_Character = Array.from(new Set([...(existingMovie.list_Character || []), ...list_Character]));
+
+                        await updateDoc(movieRef, updateData);
+                        moviesUpdated++;
+                    } else if (!existingMovie) {
+                        const movieRef = doc(collection(db, "Movies"));
+                        currentMovieId = movieRef.id;
+                        const submitMovie = {
+                            ...movie, id: currentMovieId, imgUrl: LOGO, bannerUrl: LOGO, list_Category, list_Actor, list_Character,
+                            author: authorID, category_Type_Id, planID: finalPlanID, createdAt: new Date().toISOString()
+                        };
+                        await setDoc(movieRef, submitMovie);
+                        localMovies.push({ id: currentMovieId, name: movie.name });
+                        moviesAdded++;
                     }
                 }
 
-                let finalPlanID = plans.length > 0 ? plans[0].id : "";
-                if (movie.rawPlan) {
-                    const foundPlan = plans.find(p => p.name.toLowerCase() === movie.rawPlan.toLowerCase());
-                    if (foundPlan) finalPlanID = foundPlan.id;
-                }
-
-                const movieRef = doc(collection(db, "Movies"));
-                const submitMovie = {
-                    ...movie,
-                    id: movieRef.id,
-                    imgUrl: LOGO,
-                    bannerUrl: LOGO,
-                    list_Category,
-                    list_Actor,
-                    list_Character,
-                    author: authorID,
-                    category_Type_Id,
-                    planID: finalPlanID,
-                    createdAt: new Date().toISOString()
-                };
-                await setDoc(movieRef, submitMovie);
-                
                 if (movie.epNumber && movie.epUrl) {
-                    const epRef = doc(collection(db, "Episodes"));
-                    await setDoc(epRef, {
-                        id: epRef.id,
-                        movieID: movieRef.id, 
-                        numberEpisode: Number(movie.epNumber),
-                        url: movie.epUrl,
-                        createdAt: new Date().toISOString()
-                    });
+                    const epExists = localEpisodes.find(e => e.movieID === currentMovieId && e.numberEpisode === Number(movie.epNumber));
+                    if (!epExists) {
+                        const epRef = doc(collection(db, "Episodes"));
+                        await setDoc(epRef, { id: epRef.id, movieID: currentMovieId, numberEpisode: Number(movie.epNumber), url: movie.epUrl, createdAt: new Date().toISOString() });
+                        localEpisodes.push({ movieID: currentMovieId, numberEpisode: Number(movie.epNumber) });
+                        epsAdded++;
+                    }
                 }
 
                 if (movie.rawShowtimes && movie.roomName) {
-                    const stRef = doc(collection(db, "ShowTimes")); 
-                    await setDoc(stRef, {
-                        id: stRef.id,
-                        movieId: movieRef.id, 
-                        time: movie.rawShowtimes,
-                        roomName: movie.roomName,
-                        createdAt: new Date().toISOString()
-                    });
+                    const stExists = localShowtimes.find(s => s.movieId === currentMovieId && s.roomName === movie.roomName && s.time === movie.rawShowtimes);
+                    if (!stExists) {
+                        const stRef = doc(collection(db, "ShowTimes")); 
+                        await setDoc(stRef, { id: stRef.id, movieId: currentMovieId, time: movie.rawShowtimes, roomName: movie.roomName, createdAt: new Date().toISOString() });
+                        localShowtimes.push({ movieId: currentMovieId, roomName: movie.roomName, time: movie.rawShowtimes });
+                        showtimesAdded++;
+                    }
                 }
-                
-                localMovies.push({ name: movie.name });
-                importedCount++;
             }
 
-            if (importedCount > 0) {
-                setSuccessMsg(`Đã import thành công ${importedCount} phim (kèm Tập & Lịch chiếu)! ${skippedCount > 0 ? `(Đã bỏ qua ${skippedCount} phim trùng)` : ""}`);
+            if (moviesAdded > 0 || epsAdded > 0 || showtimesAdded > 0 || moviesUpdated > 0) {
+                setSuccessMsg(`Import successful! Created ${moviesAdded} Movies, Updated ${moviesUpdated} Movies/Entities.`);
             } else {
-                setSuccessMsg(`Không có phim nào được thêm! Cả ${skippedCount} phim đều đã tồn tại.`);
+                setSuccessMsg(`No items processed! Data is already fully up-to-date.`);
             }
-            
             setPreviewData([]);
         } catch (error) {
             console.error(error);
-            alert("Có lỗi xảy ra, vui lòng mở F12 Console để xem chi tiết!");
+            alert("An error occurred! Please check F12 Console for details.");
         } finally {
             setLoading(false);
         }
@@ -241,19 +274,40 @@ function MagicImport() {
                 </div>
                 <div>
                     <h1 className='text-3xl font-black tracking-wide glow-text uppercase'>Magic Import</h1>
-                    <p className='text-gray-400 text-sm mt-1'>Copy bảng từ Excel hoặc Tải file Excel lên để tự động tạo Phim, Tập Phim & Lịch Chiếu.</p>
+                    <p className='text-gray-400 text-sm mt-1'>Copy table from Excel to automatically sync Movies, Episodes & Showtimes.</p>
                 </div>
             </div>
 
             <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
                 <div className='col-span-1 lg:col-span-4 flex flex-col gap-4'>
                     <div className='bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl relative group transition-all hover:border-cyan-500/50'>
+                        
+                        <div className="flex bg-slate-800 rounded-xl p-1 mb-5 border border-white/10 relative">
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900 p-1.5 rounded-full z-10">
+                                <FaExchangeAlt className="text-gray-500 text-xs" />
+                            </div>
+                            <button 
+                                onClick={() => setMode('IMPORT')}
+                                className={`flex-1 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
+                                    ${mode === 'IMPORT' ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                            >
+                                Import Only
+                            </button>
+                            <button 
+                                onClick={() => setMode('UPDATE')}
+                                className={`flex-1 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
+                                    ${mode === 'UPDATE' ? 'bg-fuchsia-500 text-white shadow-[0_0_15px_rgba(217,70,239,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                            >
+                                Smart Update
+                            </button>
+                        </div>
+
                         <h2 className='text-cyan-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
-                            <FaCloudUploadAlt className="text-xl" /> Khu Vực Nhập Dữ Liệu
+                            <FaCloudUploadAlt className="text-xl" /> Data Input Area
                         </h2>
                         <textarea
-                            className='w-full h-100 bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-gray-300 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.2)] custom-scrollbar'
-                            placeholder='Paste bảng dữ liệu vào đây...'
+                            className='w-full h-80 bg-black/40 border border-white/10 rounded-xl p-4 text-sm text-gray-300 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.2)] custom-scrollbar'
+                            placeholder='Paste data table here...'
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)} 
                         />
@@ -261,15 +315,11 @@ function MagicImport() {
                         <div className="flex flex-col gap-3 mt-4">
                             <button 
                                 onClick={handleParse}
-                                className='w-full py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold tracking-wider uppercase transition-all shadow-[0_0_15px_rgba(8,145,178,0.4)] hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] active:scale-95'
+                                className={`w-full py-3 rounded-xl text-white font-bold tracking-wider uppercase transition-all active:scale-95
+                                    ${mode === 'IMPORT' ? 'bg-cyan-600 hover:bg-cyan-500 shadow-[0_0_15px_rgba(8,145,178,0.4)]' : 'bg-fuchsia-600 hover:bg-fuchsia-500 shadow-[0_0_15px_rgba(192,38,211,0.4)]'}`}
                             >
-                                Nhận Diện Dữ Liệu
+                                Parse Data ({mode})
                             </button>
-                            
-                            <label className='w-full py-3 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold tracking-wider uppercase transition-all cursor-pointer shadow-[0_0_15px_rgba(5,150,105,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] active:scale-95'>
-                                <FaFileExcel className="text-xl" /> Tải Excel Lên
-                                <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileUpload} className="hidden" />
-                            </label>
                         </div>
                     </div>
                 </div>
@@ -277,7 +327,7 @@ function MagicImport() {
                 <div className='col-span-1 lg:col-span-8 flex flex-col gap-4'>
                     <div className='bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl h-full flex flex-col'>
                         <h2 className='text-pink-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between'>
-                            <span>Bảng Xem Trước (Cuộn Ngang)</span>
+                            <span>Preview Table ({mode === 'UPDATE' ? 'Update Mode' : 'Import Mode'})</span>
                             <span className="bg-pink-500/20 text-pink-300 px-3 py-1 rounded-full text-xs border border-pink-500/30">
                                 {previewData.length} items
                             </span>
@@ -290,8 +340,8 @@ function MagicImport() {
                                         <thead className='text-gray-400 border-b border-white/10 bg-slate-800/50 sticky top-0 z-10'>
                                             <tr>
                                                 <th className='p-3 text-center align-middle'>ACTION</th>
-                                                <th className='p-3 text-center align-middle'>NAME (Q.TẾ)</th>
-                                                <th className='p-3 text-center align-middle'>ORIGINAL NAME (VN)</th>
+                                                <th className='p-3 text-center align-middle'>NAME (INTL)</th>
+                                                <th className='p-3 text-center align-middle'>NAME (VN)</th>
                                                 <th className='p-3 text-center align-middle'>MOVIE DESC</th>
                                                 <th className='p-3 text-center align-middle'>TYPE</th>
                                                 <th className='p-3 text-center align-middle'>CATEGORIES</th>
@@ -303,6 +353,7 @@ function MagicImport() {
                                                 <th className='p-3 text-center align-middle'>CHARACTERS</th>
                                                 <th className='p-3 text-center align-middle'>CHAR DESC</th>
                                                 <th className='p-3 text-center align-middle'>GENDER</th>
+                                                <th className='p-3 text-center align-middle'>CHAR GENDER</th>
                                                 <th className='p-3 text-center align-middle'>INFO (YEAR/AGE/PLAN)</th>
                                                 <th className='p-3 text-center align-middle'>DURATION</th>
                                                 <th className='p-3 text-center align-middle'>RENT PRICE</th>
@@ -316,21 +367,22 @@ function MagicImport() {
                                         <tbody>
                                             {previewData.map((row, idx) => {
                                                 const isDuplicated = existingMovies.find(m => m?.name && row?.name && m.name.toLowerCase() === row.name.toLowerCase());
-                                                
                                                 return (
-                                                    <tr key={idx} className={`border-b border-white/5 transition-colors ${isDuplicated ? 'bg-red-500/10 hover:bg-red-500/20' : 'hover:bg-white/5 text-gray-200'}`}>
+                                                    <tr key={idx} className={`border-b border-white/5 transition-colors ${isDuplicated ? (mode === 'UPDATE' ? 'bg-fuchsia-500/10 hover:bg-fuchsia-500/20' : 'bg-indigo-500/10 hover:bg-indigo-500/20') : 'hover:bg-white/5 text-gray-200'}`}>
                                                         <td className='p-3 text-center align-middle'>
-                                                            <button 
-                                                                onClick={() => handleRemoveRow(idx)}
-                                                                className="p-1.5 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-all"
-                                                                title="Xóa khỏi bảng chờ"
-                                                            >
-                                                                <FaTrash size={14} />
-                                                            </button>
+                                                            <button onClick={() => handleRemoveRow(idx)} className="p-1.5 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-all" title="Remove row"><FaTrash size={14} /></button>
                                                         </td>
                                                         <td className='p-3 text-center align-middle font-bold text-cyan-300'>
                                                             {row.name} 
-                                                            {isDuplicated && <div className="mt-1 text-[9px] bg-red-500 text-white px-1.5 py-0.5 rounded uppercase inline-block">Bị trùng</div>}
+                                                            {isDuplicated ? (
+                                                                mode === 'UPDATE' ? (
+                                                                    <div className="mt-1 text-[9px] bg-fuchsia-500 text-white px-1.5 py-0.5 rounded uppercase block w-max mx-auto shadow-[0_0_8px_rgba(217,70,239,0.5)]">Will Update</div>
+                                                                ) : (
+                                                                    <div className="mt-1 text-[9px] bg-indigo-500 text-white px-1.5 py-0.5 rounded uppercase block w-max mx-auto shadow-[0_0_8px_rgba(99,102,241,0.5)]">Append Eps</div>
+                                                                )
+                                                            ) : (
+                                                                <div className="mt-1 text-[9px] bg-emerald-500 text-white px-1.5 py-0.5 rounded uppercase block w-max mx-auto shadow-[0_0_8px_rgba(16,185,129,0.5)]">Create New</div>
+                                                            )}
                                                         </td>
                                                         <td className='p-3 text-center align-middle text-emerald-300 font-semibold'>{row.otherName}</td>
                                                         <td className='p-3 text-center align-middle text-gray-300 truncate max-w-40' title={row.description}>{row.description}</td>
@@ -343,7 +395,8 @@ function MagicImport() {
                                                         <td className='p-3 text-center align-middle text-blue-200 truncate max-w-40' title={row.rawActorDesc}>{row.rawActorDesc}</td>
                                                         <td className='p-3 text-center align-middle text-orange-300 truncate max-w-30' title={row.rawCharacters}>{row.rawCharacters}</td>
                                                         <td className='p-3 text-center align-middle text-orange-200 truncate max-w-40' title={row.rawCharacterDesc}>{row.rawCharacterDesc}</td>
-                                                        <td className='p-3 text-center align-middle text-pink-300'>{row.gender}</td>
+                                                        <td className='p-3 text-center align-middle text-emerald-300 truncate max-w-20' title={row.gender}>{row.gender}</td>
+                                                        <td className='p-3 text-center align-middle text-emerald-300 truncate max-w-20' title={row.charGender}>{row.charGender}</td>
                                                         <td className='p-3 text-center align-middle'>
                                                             <div className="flex flex-col gap-1 items-center">
                                                                 <span className="text-yellow-400 font-bold">{row.releaseYear}</span>
@@ -353,15 +406,11 @@ function MagicImport() {
                                                         </td>
                                                         <td className='p-3 text-center align-middle font-mono'>{row.duration}m</td>
                                                         <td className='p-3 text-center align-middle font-mono text-green-400'>{row.rent.toLocaleString()}</td>
-                                                        <td className='p-3 text-center align-middle'>
-                                                            <span className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-1 rounded text-[11px] font-bold">{row.countriesID}</span>
-                                                        </td>
+                                                        <td className='p-3 text-center align-middle'><span className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-1 rounded text-[11px] font-bold">{row.countriesID}</span></td>
                                                         <td className='p-3 text-center align-middle'>
                                                             <div className="flex flex-col gap-1 items-center bg-purple-500/10 border border-purple-500/20 p-1.5 rounded-lg">
                                                                 <span className="text-purple-300 font-bold text-[13px]">Total: {row.endEpisode}</span>
-                                                                <span className="text-[10px] text-purple-400">
-                                                                    S:{row.episodeSub} | D:{row.episodeDub}
-                                                                </span>
+                                                                <span className="text-[10px] text-purple-400">S:{row.episodeSub} | D:{row.episodeDub}</span>
                                                             </div>
                                                         </td>
                                                         <td className='p-3 text-center align-middle'>
@@ -377,9 +426,7 @@ function MagicImport() {
                                                             </div>
                                                         </td>
                                                         <td className='p-3 text-center align-middle'>
-                                                            <span className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)}`}>
-                                                                {row.status}
-                                                            </span>
+                                                            <span className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)}`}>{row.status}</span>
                                                         </td>
                                                     </tr>
                                                 );
@@ -390,13 +437,13 @@ function MagicImport() {
                             ) : (
                                 <div className='absolute inset-0 flex flex-col items-center justify-center text-gray-500 opacity-50'>
                                     <FaMagic className='text-5xl mb-3' />
-                                    <p>Chưa có dữ liệu. Hãy nhập bảng từ Excel vào ô bên trái!</p>
+                                    <p>Data will appear here after parsing</p>
                                 </div>
                             )}
                         </div>
 
                         {successMsg && (
-                            <div className={`mt-4 p-3 border rounded-xl flex items-center justify-center gap-2 text-sm font-bold animate-pulse ${successMsg.includes('Không có') ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : 'bg-green-500/20 border-green-500/50 text-green-400'}`}>
+                            <div className={`mt-4 p-3 border rounded-xl flex items-center justify-center gap-2 text-sm font-bold animate-pulse ${successMsg.includes('No items') ? 'bg-orange-500/20 border-orange-500/50 text-orange-400' : 'bg-green-500/20 border-green-500/50 text-green-400'}`}>
                                 <FaCheckCircle /> {successMsg}
                             </div>
                         )}
@@ -406,10 +453,12 @@ function MagicImport() {
                             disabled={loading || previewData.length === 0}
                             className={`w-full mt-4 py-3 rounded-xl font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2
                                 ${previewData.length > 0 
-                                    ? 'bg-linear-to-r from-pink-500 to-yellow-500 hover:from-pink-400 hover:to-yellow-400 text-white shadow-[0_0_15px_rgba(236,72,153,0.5)] cursor-pointer hover:shadow-[0_0_25px_rgba(234,179,8,0.7)] active:scale-95' 
+                                    ? (mode === 'IMPORT' 
+                                        ? 'bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 shadow-[0_0_15px_rgba(6,182,212,0.5)]'
+                                        : 'bg-linear-to-r from-fuchsia-500 to-pink-500 hover:from-fuchsia-400 hover:to-pink-400 shadow-[0_0_15px_rgba(217,70,239,0.5)]')
                                     : 'bg-slate-700 text-slate-500 cursor-not-allowed border border-slate-600'}`}
                         >
-                            {loading ? <FaSpinner className="spin text-xl" /> : "Xác Nhận & Đẩy Dữ Liệu Lên Cloud"}
+                            {loading ? <FaSpinner className="spin text-xl" /> : `CONFIRM & EXECUTE (${mode})`}
                         </button>
                     </div>
                 </div>

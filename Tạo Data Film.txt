@@ -1,0 +1,28 @@
+Hãy đóng vai một chuyên gia dữ liệu và một người đam mê điện ảnh/anime. Nhiệm vụ của bạn là tạo ra một bảng dữ liệu định dạng TSV (Tab-Separated Values) cho [Số lượng] bộ phim [Thể loại/Tên phim cụ thể mà bạn muốn]. 
+
+Bảng dữ liệu phải có ĐÚNG 29 CỘT theo thứ tự chính xác sau đây, cách nhau bằng dấu Tab:
+Name	Original Name	Movie Description	Type	Categories	Cat Desc	Director	Dir Desc	Actors	Actor Desc	Characters	Char Desc	Gender	Char Gender	Plan	Country	Year	Episodes	Ep Sub	Ep Dub	Ep Voice	Episode Number	URL	Room	Time	Status	Age Rating	Duration	Rent Price
+
+BẠN PHẢI TUÂN THỦ NGHIÊM NGẶT CÁC QUY TẮC SAU ĐỐI VỚI DỮ LIỆU BÊN TRONG:
+
+1. QUY TẮC ĐỐI ỨNG 1:1 VÀ DẤU PHÂN CÁCH: 
+- Cột Name (Actors, Characters, Categories) ngăn cách bằng dấu phẩy (,).
+- Cột Description (Actor Desc, Char Desc, Cat Desc) và Gender (Gender, Char Gender) BẮT BUỘC phải dùng dấu gạch đứng ( | ) để ngăn cách.
+- Số lượng phần tử phải khớp nhau tuyệt đối. Ví dụ: Nếu có 4 Diễn viên, bắt buộc phải có đúng 4 đoạn mô tả diễn viên (ngăn cách bởi 3 dấu |) và 4 giới tính (Male/Female/Other ngăn cách bởi 3 dấu |). Làm tương tự cho Characters và Categories.
+
+2. QUY TẮC CÁ NHÂN HÓA MÔ TẢ (SỐ ÍT):
+- Mô tả Diễn viên, Đạo diễn, Nhân vật KHÔNG ĐƯỢC dùng từ chỉ số nhiều (như: những, các). Phải dùng danh xưng cá nhân hóa (Ông, Bà, Anh, Cô, Cậu bé, Hắn...).
+- Mỗi đoạn mô tả phải chi tiết, mang văn phong bách khoa toàn thư (Wikipedia).
+
+3. ĐỊNH DẠNG CÁC TRƯỜNG CỤ THỂ:
+- Name: Tên tiếng Anh / Quốc tế.
+- Original Name: Tên tiếng Việt.
+- Type: Chỉ dùng "Phim Lẻ" hoặc "Phim Bộ".
+- Plan: "Free", "VIP", hoặc "Premium".
+- Gender / Char Gender: Chỉ dùng "Male", "Female", hoặc "Other".
+- URL: Bắt buộc theo định dạng giả định: https://player.phimapi.com/player/?url=https://v7.kkphimplayer7.com/20260605/[tên_phim_viet_lien_khong_dau]/index.m3u8
+- Time: Định dạng ISO 8601, ví dụ: 2026-08-01T18:00
+- Status: "Đang chiếu", "Hoàn thành", hoặc "Sắp chiếu".
+- Age Rating: "P", "K", "T13", "T16", hoặc "T18".
+
+Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễn viên/nhân vật cho mỗi phim). Xuất kết quả dưới dạng text thuần (raw text) có thể copy được ngay.

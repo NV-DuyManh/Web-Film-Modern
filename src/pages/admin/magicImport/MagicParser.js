@@ -1,6 +1,8 @@
 export const parseTSV = (text) => {
     if (!text) return [];
-    let cleanText = text.replace(/\|/g, '\t').replace(/^[\t\s]+|[\t\s]+$/gm, '');
+    
+    // ĐÃ FIX BUG LỆCH CỘT: Xóa đoạn .replace(/\|/g, '\t') đi
+    let cleanText = text.replace(/^[\t\s]+|[\t\s]+$/gm, '');
     const lines = cleanText.split('\n').filter(line => line.trim() !== '' && !line.includes('---'));
     if (lines.length < 2) return [];
 
@@ -32,12 +34,13 @@ export const mapMovieData = (parsedData) => {
             otherName: row["original name"] || row["other name"] || row["tên gốc"] || row["tên tiếng việt"] || "",
             
             description: row["movie description"] || row["description"] || row["mô tả"] || "Đang cập nhật...",
-            rawCategoryDesc: row["cat desc"] || row["category description"] || row["mô tả thể loại"] || "Đang cập nhật...",
+            rawCategoryDesc: row["cat desc"] || row["category description"] || row["mô tả thể loại"] || "",
             rawAuthorDesc: row["dir desc"] || row["director description"] || row["mô tả đạo diễn"] || "Đang cập nhật...",
             rawActorDesc: row["actor desc"] || row["actor description"] || row["mô tả diễn viên"] || "Đang cập nhật...",
             rawCharacterDesc: row["char desc"] || row["character description"] || row["mô tả nhân vật"] || "Đang cập nhật...",
             
-            gender: row["gender"] || row["giới tính"] || "Other",
+            gender: row["gender"] || row["giới tính"] || "Male",
+            charGender: row["char gender"] || row["giới tính nhân vật"] || "Male",
             rawPlan: row["plan"] || row["gói"] || "",
             roomName: row["room"] || row["phòng chiếu"] || "",
             epNumber: parseInt(row["episode number"] || row["tập số"]) || "",
