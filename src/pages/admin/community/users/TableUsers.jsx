@@ -20,6 +20,7 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
     const dataSearch = useMemo(() => {
         const keyword = search.toLowerCase();
         return users?.filter(e => 
+            e?.displayName?.toLowerCase().includes(keyword) || 
             e?.name?.toLowerCase().includes(keyword) || 
             e?.email?.toLowerCase().includes(keyword) || 
             e?.phone?.toLowerCase().includes(keyword)
@@ -43,7 +44,16 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
 
     const handleEdit = (row) => {
         handleClickOpen();
-        setUser(row);
+        setUser({
+            ...row,
+            displayName: row.displayName || row.name || "", 
+            email: row.email || "", 
+            password: row.password || "", 
+            phone: row.phone || "", 
+            imgUrl: row.imgUrl || row.avatarUrl || "", 
+            sexId: row.sexId || "", 
+            role: row.role || 'user'
+        });
     };
 
     const handleDeleted = async () => {
@@ -92,6 +102,8 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                                 <th className='text-center'>EMAIL</th>
                                 <th className='text-center'>PHONE</th>
                                 <th className='text-center'>SEX</th>
+                                <th className='text-center'>ROLE</th>
+                                <th className='text-center'>PASSWORD</th>
                                 <th className="text-right">ACTIONS</th>
                             </tr>
                         </thead>
@@ -114,17 +126,17 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                                     </td>
                                     <td className="table-cell">
                                         <div className="flex justify-center items-center">
-                                            {row.avatarUrl && (
+                                            {(row.imgUrl || row.avatarUrl) && (
                                                 <img
-                                                    src={row.avatarUrl}
-                                                    alt={row.name}
+                                                    src={row.imgUrl || row.avatarUrl}
+                                                    alt={row.displayName || row.name}
                                                     className="w-17 h-17 object-cover rounded-full shadow-md"
                                                 />
                                             )}
                                         </div>
                                     </td>
                                     <td className="table-cell text-center font-bold text-white">
-                                        {row.name}
+                                        {row.displayName || row.name}
                                     </td>
                                     <td className="table-cell text-center text-cyan-400">
                                         {row.email}
@@ -132,8 +144,30 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                                     <td className="table-cell text-center">
                                         {row.phone}
                                     </td>
-                                    <td className="table-cell text-center text-pink-400">
-                                        {row.sexId}
+                                    <td className="table-cell text-center">
+                                        {row.sexId && (
+                                            <span className={`inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${
+                                                row.sexId === 'Male' 
+                                                    ? 'bg-sky-500/15 text-sky-400 border border-sky-500/30 shadow-[0_0_8px_rgba(14,165,233,0.2)]' 
+                                                    : row.sexId === 'Female' 
+                                                        ? 'bg-pink-500/15 text-pink-400 border border-pink-500/30 shadow-[0_0_8px_rgba(236,72,153,0.2)]' 
+                                                        : 'bg-violet-500/15 text-violet-400 border border-violet-500/30 shadow-[0_0_8px_rgba(139,92,246,0.2)]'
+                                            }`}>
+                                                {row.sexId}
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td className="table-cell text-center">
+                                        <span className={`inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${
+                                            row.role === 'admin' 
+                                                ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.25)]' 
+                                                : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
+                                        }`}>
+                                            {row.role === 'admin' ? '👑 Admin' : '👤 Client'}
+                                        </span>
+                                    </td>
+                                    <td className="table-cell text-center text-gray-400 font-bold text-sm">
+                                        {row.password}
                                     </td>
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">

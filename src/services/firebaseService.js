@@ -6,9 +6,13 @@ import { uploadImageToCloudinary } from "../config/cloudiaryConfig";
 export const addDocument = async (collectionName, values) => {
     try {
         // Nếu có ảnh, upload ảnh lên Cloudinary và cập nhật URL ảnh vào values
-        if (values.imgUrl) {
+        if (values.imgUrl && !values.imgUrl.includes("res.cloudinary.com")) {
             const imgUrl = await uploadImageToCloudinary(values.imgUrl, collectionName);
             values.imgUrl = imgUrl;
+        }
+        if (values.avatarUrl && !values.avatarUrl.includes("res.cloudinary.com")) {
+            const avatarUrl = await uploadImageToCloudinary(values.avatarUrl, collectionName);
+            values.avatarUrl = avatarUrl;
         }
         // Thêm tài liệu vào bộ sưu tập
         const docRef = await addDoc(collection(db, collectionName), values);
@@ -46,6 +50,16 @@ export const fetchDocumentsRealtime = (collectionName, callback) => {
 export const updateDocument = async (collectionName, values) => {
     // Tách id ra khỏi newValues
     const { id, ...updatedValues } = values;
+
+    if (updatedValues.imgUrl && !updatedValues.imgUrl.includes("res.cloudinary.com")) {
+        const imgUrl = await uploadImageToCloudinary(updatedValues.imgUrl, collectionName);
+        updatedValues.imgUrl = imgUrl;
+    }
+    
+    if (updatedValues.avatarUrl && !updatedValues.avatarUrl.includes("res.cloudinary.com")) {
+        const avatarUrl = await uploadImageToCloudinary(updatedValues.avatarUrl, collectionName);
+        updatedValues.avatarUrl = avatarUrl;
+    }
 
     await updateDoc(doc(collection(db, collectionName), values.id), updatedValues);
 };

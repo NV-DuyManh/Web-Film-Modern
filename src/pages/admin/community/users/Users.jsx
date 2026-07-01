@@ -5,7 +5,8 @@ import TableUsers from './TableUsers';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import LOGO from "../../../../assets/Logo.png";
 
-const inner = { name: "", email: "", password: "", phone: "", avatarUrl: LOGO, sexId: "" };
+const inner = { displayName: "", email: "", password: "", phone: "", imgUrl: LOGO, sexId: "", role: "user" };
+const innerError = { displayName: "", email: "", password: "", phone: "", imgUrl: "", sexId: "", role: "" };
 
 const getBase64FromUrl = (url) => {
     return new Promise((resolve) => {
@@ -29,8 +30,9 @@ const getBase64FromUrl = (url) => {
 function Users() {
     const [open, setOpen] = useState(false);
     const [user, setUser] = useState(inner);
-    const [error, setError] = useState(inner);
+    const [error, setError] = useState(innerError);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
     const [search, setSearch] = useState("");
 
     const onChangeSearch = (e) => {
@@ -40,7 +42,7 @@ function Users() {
     const handleClickOpen = () => {
         setOpen(true);
         setUser(inner);
-        setError(inner);
+        setError(innerError);
     };
 
     const handleClose = () => {
@@ -54,11 +56,10 @@ function Users() {
 
     const validation = () => {
         const newError = {};
-        newError.name = user.name ? "" : "Please enter name";
+        newError.displayName = user.displayName || user.name ? "" : "Please enter name";
         newError.email = user.email ? "" : "Please enter email";
         newError.password = user.password ? "" : "Please enter password";
-        newError.phone = user.phone ? "" : "Please enter phone";
-        newError.sexId = user.sexId ? "" : "Please select sex";
+        newError.role = user.role ? "" : "Please select role";
         
         setError(newError);
         return Object.values(newError).some(e => e !== "");
@@ -70,13 +71,22 @@ function Users() {
         }
         
         setLoading(true);
+        setProgress(20);
 
         try {
             let submitData = { ...user };
 
-            if (submitData.avatarUrl === LOGO) {
-                submitData.avatarUrl = await getBase64FromUrl(LOGO);
+            setProgress(50);
+
+            if (!submitData.imgUrl && submitData.avatarUrl) {
+                submitData.imgUrl = submitData.avatarUrl;
             }
+
+            if (submitData.imgUrl === LOGO || submitData.imgUrl?.includes("Logo.png")) {
+                submitData.imgUrl = await getBase64FromUrl(LOGO);
+            }
+
+            setProgress(75);
 
             if (!user.id) {
                 submitData.createdAt = new Date().toISOString();
@@ -85,11 +95,18 @@ function Users() {
                 await updateDocument("Users", submitData);
             }
 
-            handleClose();
+            setProgress(100);
+
+            setTimeout(() => {
+                handleClose();
+                setLoading(false);
+                setProgress(0);
+            }, 500);
         } catch (err) {
             console.error(err);
-        } finally {
+            alert("An error occurred, please try again!");
             setLoading(false);
+            setProgress(0);
         }
     }
 
@@ -98,7 +115,7 @@ function Users() {
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setUser(prev => ({ ...prev, avatarUrl: reader.result }));
+                setUser(prev => ({ ...prev, imgUrl: reader.result }));
             };
             reader.readAsDataURL(file);
         }
@@ -120,6 +137,7 @@ function Users() {
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 user={user}
             />
             <TableUsers
