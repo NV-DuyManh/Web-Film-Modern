@@ -3,30 +3,17 @@ import Search from '../../../../components/admin/Search';
 import ModalActor from './ModalActor';
 import TableActor from './TableActor';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
-import LOGO from "../../../../assets/Logo.png";
 
-const inner = { name: "", description: "", imgUrl: LOGO, sexID: "", countriesID: "" };
-
-const getBase64FromUrl = async (url) => {
-    const data = await fetch(url);
-    const blob = await data.blob();
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => {
-            const base64data = reader.result;
-            resolve(base64data);
-        };
-    });
-};
+const inner = { name: "", description: "", imgUrl: "", sexID: "", countriesID: "" };
 
 function Actors() {
     const [open, setOpen] = useState(false);
     const [actor, setActor] = useState(inner);
-    const [error, setError] = useState(inner);
+    const [error, setError] = useState({});
     const [loading, setLoading] = useState(false);
-
+    const [progress, setProgress] = useState(0);
     const [search, setSearch] = useState("");
+
     const onChangeSearch = (e) => {
         setSearch(e.target.value)
     }
@@ -34,11 +21,11 @@ function Actors() {
     const handleClickOpen = () => {
         setOpen(true);
         setActor(inner);
-        setError(inner);
+        setError({});
     };
 
     const handleClose = () => {
-        setOpen(false);
+        if (!loading) setOpen(false);
     };
 
     const onChangeInput = (e) => {
@@ -60,18 +47,41 @@ function Actors() {
         if (validation()) {
             return;
         }
+
         setLoading(true);
+        setProgress(20);
 
-        let submitData = { ...actor };
+        try {
+            let submitData = { ...actor };
 
-        if (submitData.imgUrl === LOGO) {
-            submitData.imgUrl = await getBase64FromUrl(LOGO);
+            setProgress(50);
+
+            if (!submitData.imgUrl || submitData.imgUrl.includes("Logo.png")) {
+                submitData.imgUrl = "";
+            }
+
+            setProgress(75);
+
+            if (!actor.id) {
+                await addDocument("Actors", submitData);
+            } else {
+                await updateDocument("Actors", submitData);
+            }
+
+            setProgress(100);
+
+            setTimeout(() => {
+                setOpen(false);
+                setLoading(false);
+                setProgress(0);
+            }, 500);
+
+        } catch (err) {
+            console.error(err);
+            alert("An error occurred, please try again!");
+            setLoading(false);
+            setProgress(0);
         }
-
-        !actor.id ? await addDocument("Actors", submitData) : await updateDocument("Actors", submitData);
-
-        handleClose();
-        setLoading(false);
     }
 
     const handleImageChange = (event) => {
@@ -99,10 +109,10 @@ function Actors() {
                 addactor={addactor}
                 onChangeInput={onChangeInput}
                 open={open}
-                handleClickOpen={handleClickOpen}
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 actor={actor}
             />
             <TableActor
