@@ -1,7 +1,6 @@
 export const parseTSV = (text) => {
     if (!text) return [];
     
-    // ĐÃ FIX BUG LỆCH CỘT: Xóa đoạn .replace(/\|/g, '\t') đi
     let cleanText = text.replace(/^[\t\s]+|[\t\s]+$/gm, '');
     const lines = cleanText.split('\n').filter(line => line.trim() !== '' && !line.includes('---'));
     if (lines.length < 2) return [];
