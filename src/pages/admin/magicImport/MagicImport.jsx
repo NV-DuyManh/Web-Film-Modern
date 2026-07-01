@@ -455,8 +455,8 @@ Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễ
                     <div className='bg-slate-900/20 backdrop-blur-lg border border-cyan-500/40 shadow-[0_0_20px_rgba(6,182,212,0.15)] rounded-2xl p-5 relative group transition-all'>
                         
                         <div className="flex bg-slate-800/50 rounded-xl p-1 mb-5 border border-white/10 relative">
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-slate-900/60 p-1.5 rounded-full z-10">
-                                <FaExchangeAlt className="text-gray-500 text-xs" />
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-yellow-600/60 p-2 flex justify-center items-center rounded-full z-10">
+                                <FaExchangeAlt className="text-yellow-300 text-xs " />
                             </div>
                             <button 
                                 onClick={() => setMode('IMPORT')}
