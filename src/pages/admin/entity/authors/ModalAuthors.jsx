@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
-import { FaCloudUploadAlt } from 'react-icons/fa';
+import { FaCloudUploadAlt, FaLink } from 'react-icons/fa';
 import { COUNTRIES } from '../../../../utils/Contants';
 import LOGO from "../../../../assets/Logo.png";
 
@@ -21,8 +21,14 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-export default function ModalAuthors({ open, onChangeInput, handleClose, addauthor, error, loading, progress, author, handleImageChange }) {
-    const [uploadMode, setUploadMode] = React.useState('LOCAL');
+export default function ModalAuthors({ open, onChangeInput, handleClose, addauthor, error, loading, progress, author, handleImageChange, setAuthor }) {
+    const [uploadMode, setUploadMode] = React.useState('file');
+
+    const handleUrlChange = (e) => {
+        const url = e.target.value;
+        if (setAuthor) setAuthor(pre => ({ ...pre, imgUrl: url, imgFile: null }));
+        else onChangeInput({ target: { name: 'imgUrl', value: url } });
+    };
     return (
         <Dialog
             open={open}
@@ -99,33 +105,23 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                     {error?.sexID && <span className="gender-error-text">{error.sexID}</span>}
                 </FormControl>
 
-                <div className="upload-container pb-2">
-                    <span className="upload-title">Author Photo</span>
+                <div className="upload-container pb-2 flex flex-col items-center">
+                    <span className="upload-title mb-3">Author Photo</span>
                     
-                    <div className="flex border-b border-white/10 w-full max-w-70 mx-auto mt-2 mb-6 relative">
-                        <button 
-                            type="button"
-                            onClick={() => setUploadMode('LOCAL')} 
-                            className={`flex-1 py-2 text-[11px] font-bold uppercase tracking-widest transition-all duration-300 border-b-2 ${uploadMode === 'LOCAL' 
-                                ? 'border-cyan-400 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-white/20'}`} 
-                        > 
-                            💻 UPLOAD 
+                    <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-4 w-full max-w-[200px] border border-white/10 mx-auto">
+                        <button type="button" onClick={() => setUploadMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${uploadMode === 'file' ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-[0_0_12px_rgba(34,211,238,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                            <FaCloudUploadAlt className="text-xs" /> File
                         </button>
-                        <button 
-                            type="button"
-                            onClick={() => setUploadMode('LINK')} 
-                            className={`flex-1 py-2 text-[11px] font-bold uppercase tracking-widest transition-all duration-300 border-b-2 ${uploadMode === 'LINK' 
-                                ? 'border-fuchsia-400 text-fuchsia-400 drop-shadow-[0_0_8px_rgba(217,70,239,0.8)]' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-white/20'}`} 
-                        > 
-                            🔗 URL 
+                        <button type="button" onClick={() => setUploadMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${uploadMode === 'url' ? 'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white shadow-[0_0_12px_rgba(217,70,239,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                            <FaLink className="text-xs" /> URL
                         </button>
                     </div>
 
                     <div className="flex flex-col items-center w-full min-h-40 justify-start">
-                        {uploadMode === 'LOCAL' && (
-                            <div className="relative w-36 h-36 rounded-full border-2 border-transparent hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-black">
+                        {uploadMode === 'file' ? (
+                            <div className="relative w-36 h-36 rounded-full border-2 border-dashed border-slate-600 hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-slate-900/50 flex items-center justify-center">
                                 <img 
-                                    src={author.imgUrl?.startsWith('http') ? LOGO : (author.imgUrl || LOGO)} 
+                                    src={author.imgFile ? URL.createObjectURL(author.imgFile) : (author.imgUrl || LOGO)} 
                                     alt="Author Avatar" 
                                     className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-30" 
                                 />
@@ -133,34 +129,31 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                                     <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
                                     <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-1" />
-                                        <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider">Upload Local</span>
+                                        <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider">Upload</span>
                                     </div>
                                 </Button>
                             </div>
-                        )}
-
-                        {uploadMode === 'LINK' && (
-                            <div className="w-full pt-4">
+                        ) : (
+                            <div className="w-full flex flex-col gap-4 items-center">
                                 <TextField
                                     className="modal-input-x w-full"
-                                    name="imgUrl"
-                                    onChange={onChangeInput}
-                                    label="Paste Image URL here"
-                                    variant="outlined"
+                                    placeholder="https://example.com/avatar.jpg"
                                     value={author.imgUrl?.startsWith('http') ? author.imgUrl : ''}
-                                    sx={{
-                                        "& .MuiOutlinedInput-root": {
-                                            transition: "all 0.3s ease",
-                                            "&.Mui-focused fieldset": {
-                                                borderColor: "#d946ef !important",
-                                                boxShadow: "0 0 15px rgba(217,70,239,0.5)"
-                                            }
-                                        },
-                                        "& label.Mui-focused": {
-                                            color: "#d946ef !important"
-                                        }
-                                    }}
+                                    onChange={handleUrlChange}
+                                    fullWidth
+                                    size="small"
+                                    InputProps={{ style: { fontSize: 12 } }}
                                 />
+                                <div className="w-36 h-36 rounded-full overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
+                                    {author.imgUrl?.startsWith('http') ? (
+                                        <img src={author.imgUrl} className="w-full h-full object-cover" alt="Preview" onError={(e) => e.target.src = LOGO} />
+                                    ) : (
+                                        <div className="flex flex-col items-center text-gray-500">
+                                            <FaLink className="text-3xl mb-1" />
+                                            <span className="text-[10px] font-bold">Paste URL</span>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         )}
                     </div>

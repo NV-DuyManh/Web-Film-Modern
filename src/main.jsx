@@ -18,6 +18,10 @@ import EpisodeProvider from './contexts/EpisodeProvider.jsx';
 import ShowTimeProvider from './contexts/ShowTimeProvider.jsx';
 import UserProvider from './contexts/UserProvider.jsx';
 import AuthProvider from './contexts/AuthProvider.jsx';
+import ReviewProvider from './contexts/ReviewProvider.jsx';
+import CommentProvider from './contexts/CommentProvider.jsx';
+import RentMovieProvider from './contexts/RentMovieProvider.jsx';
+import SubscriptionProvider from './contexts/SubscriptionProvider.jsx';
 
 const providers = [
   CategoryProvider,
@@ -32,6 +36,10 @@ const providers = [
   EpisodeProvider,
   ShowTimeProvider,
   UserProvider,
+  ReviewProvider,
+  CommentProvider,
+  RentMovieProvider,
+  SubscriptionProvider,
   AuthProvider
 ];
 

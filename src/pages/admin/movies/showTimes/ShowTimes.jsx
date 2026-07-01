@@ -11,6 +11,7 @@ function ShowTimes() {
     const [showTime, setShowTime] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const [search, setSearch] = useState("");
 
@@ -49,13 +50,27 @@ function ShowTimes() {
         }
 
         setLoading(true);
+        setProgress(20);
 
-        let submitData = { ...showTime };
+        try {
+            let submitData = { ...showTime };
 
-        !showTime.id ? await addDocument("ShowTimes", submitData) : await updateDocument("ShowTimes", submitData);
+            setProgress(50);
 
-        handleClose();
-        setLoading(false);
+            !showTime.id ? await addDocument("ShowTimes", submitData) : await updateDocument("ShowTimes", submitData);
+
+            setProgress(100);
+            setTimeout(() => {
+                handleClose();
+                setLoading(false);
+                setProgress(0);
+            }, 500);
+        } catch (err) {
+            console.error(err);
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            setLoading(false);
+            setProgress(0);
+        }
     }
 
     return (
@@ -73,6 +88,7 @@ function ShowTimes() {
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 showTime={showTime}
             />
             <TableShowTimes

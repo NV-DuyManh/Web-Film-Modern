@@ -131,6 +131,11 @@ li {
     border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+.table-container table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
 .table-header {
     background: linear-gradient(90deg, rgba(6, 182, 212, 0.6), rgba(139, 92, 246, 0.6));
     backdrop-filter: blur(6px);
@@ -150,7 +155,6 @@ li {
 .table-row {
     background: rgba(15, 23, 42, 0.92);
     height: 42px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     transition: 0.2s;
 }
 
@@ -162,6 +166,7 @@ li {
     color: #e5e7eb;
     font-size: 13px;
     padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
 }
 
 .action-btn {
@@ -712,3 +717,13 @@ li {
         top: calc(50% - 24px);
     }
 }
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+

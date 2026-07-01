@@ -1,24 +1,20 @@
-import * as React from 'react';
+import React, { useContext } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
-import { useContext } from 'react';
 import { MovieContext } from '../../../../contexts/MovieProvider';
+import { UserContext } from '../../../../contexts/UserProvider';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, error, loading, progress, episode, setEpisode }) {
+export default function ModalComments({ open, onChangeInput, handleClose, addComment, error, loading, progress, comment, setComment, setError }) {
     const movies = useContext(MovieContext);
-
-    const handleNumberChange = (e) => {
-        const onlyNums = e.target.value.replace(/[^0-9]/g, '');
-        onChangeInput({ target: { name: e.target.name, value: onlyNums } });
-    };
+    const users = useContext(UserContext);
 
     return (
         <Dialog
             open={open}
-            slots={{ transition: Transition }}
+            TransitionComponent={Transition}
             keepMounted
             onClose={handleClose}
             className="modal-wrapper"
@@ -28,48 +24,52 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
             fullWidth
         >
             <DialogTitle className="modal-header-x">
-                {episode.id ? "UPDATE EPISODE" : "ADD NEW EPISODE"}
+                {comment.id ? "UPDATE COMMENT" : "ADD COMMENT"}
             </DialogTitle>
 
-            <DialogContent className="modal-body-x">
+            <DialogContent className="modal-body-x grid grid-cols-1 gap-4 pt-4">
                 <Autocomplete
-                    options={movies || []}
-                    getOptionLabel={(opt) => opt?.name || ""}
-                    value={movies?.find(m => m.id === episode.movieID) || null}
-                    onChange={(e, val) => onChangeInput({ target: { name: "movieID", value: val?.id || "" } })}
-                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Movie"
-                            error={!!error.movieID}
-                            helperText={error.movieID}
-                            className="modal-input-x"
-                        />
-                    )}
-                />
-                <TextField
                     className="modal-input-x"
-                    name="numberEpisode"
-                    onChange={handleNumberChange}
+                    disablePortal
+                    options={movies || []}
+                    getOptionLabel={(option) => option.name || ""}
                     fullWidth
-                    label="Episode Number"
-                    variant="outlined"
-                    value={episode.numberEpisode}
-                    helperText={error.numberEpisode}
-                    error={!!error.numberEpisode}
+                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                    value={movies?.find(m => m.id === comment.moviesId) || null}
+                    onChange={(e, value) => {
+                        setComment(prev => ({ ...prev, moviesId: value ? value.id : "" }));
+                        setError(prev => ({ ...prev, moviesId: "" }));
+                    }}
+                    renderInput={(params) => <TextField {...params} label="Movie" helperText={error?.moviesId} error={!!error?.moviesId} />}
+                />
+
+                <Autocomplete
+                    className="modal-input-x"
+                    disablePortal
+                    options={users || []}
+                    getOptionLabel={(option) => option.displayName || option.name || option.email || ""}
+                    fullWidth
+                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
+                    value={users?.find(u => u.id === comment.userId) || null}
+                    onChange={(e, value) => {
+                        setComment(prev => ({ ...prev, userId: value ? value.id : "" }));
+                        setError(prev => ({ ...prev, userId: "" }));
+                    }}
+                    renderInput={(params) => <TextField {...params} label="User" helperText={error?.userId} error={!!error?.userId} />}
                 />
 
                 <TextField
-                    className="modal-input-x"
-                    name="url"
+                    className="modal-input-x mt-2"
+                    name="description"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Url"
+                    multiline
+                    rows={4}
+                    label="Comment Description"
                     variant="outlined"
-                    value={episode.url}
-                    helperText={error.url}
-                    error={!!error.url}
+                    value={comment.description}
+                    helperText={error?.description}
+                    error={!!error?.description}
                 />
             </DialogContent>
 
@@ -77,7 +77,7 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <span className="animate-pulse">Syncing to Cloud Database...</span>
+                            <span className="animate-pulse">Syncing to Database...</span>
                             <span>{progress}%</span>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
@@ -90,8 +90,8 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
                         <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
-                        <Button disabled={loading} onClick={addEpisode} className="btn-submit-x">
-                            {episode.id ? "Save Changes" : "Add Episode"}
+                        <Button disabled={loading} onClick={addComment} className="btn-submit-x">
+                            {comment.id ? "Save Changes" : "Add Comment"}
                         </Button>
                     </div>
                 )}

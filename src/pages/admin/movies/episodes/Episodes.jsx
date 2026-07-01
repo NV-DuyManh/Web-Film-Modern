@@ -11,6 +11,7 @@ function Episodes() {
     const [episode, setEpisode] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const [search, setSearch] = useState("");
 
@@ -49,19 +50,33 @@ function Episodes() {
         }
 
         setLoading(true);
+        setProgress(20);
 
-        let submitData = { ...episode };
-        submitData.numberEpisode = parseInt(submitData.numberEpisode) || 0;
+        try {
+            let submitData = { ...episode };
+            submitData.numberEpisode = parseInt(submitData.numberEpisode) || 0;
 
-        if (!episode.id) {
-            submitData.createdAt = new Date().toISOString();
-            await addDocument("Episodes", submitData);
-        } else {
-            await updateDocument("Episodes", submitData);
+            setProgress(50);
+
+            if (!episode.id) {
+                submitData.createdAt = new Date().toISOString();
+                await addDocument("Episodes", submitData);
+            } else {
+                await updateDocument("Episodes", submitData);
+            }
+
+            setProgress(100);
+            setTimeout(() => {
+                handleClose();
+                setLoading(false);
+                setProgress(0);
+            }, 500);
+        } catch (err) {
+            console.error(err);
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            setLoading(false);
+            setProgress(0);
         }
-
-        handleClose();
-        setLoading(false);
     }
 
     return (
@@ -79,6 +94,7 @@ function Episodes() {
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 episode={episode}
                 setEpisode={setEpisode}
             />

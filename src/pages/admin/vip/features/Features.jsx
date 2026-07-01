@@ -11,6 +11,7 @@ function Features() {
     const [feature, setFeature] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const [search, setSearch] = useState("");
 
@@ -49,14 +50,28 @@ function Features() {
         }
 
         setLoading(true);
+        setProgress(20);
 
-        let submitData = { ...feature };
-        submitData.available = submitData.available === true || submitData.available === "true";
+        try {
+            let submitData = { ...feature };
+            submitData.available = submitData.available === true || submitData.available === "true";
 
-        !feature.id ? await addDocument("Features", submitData) : await updateDocument("Features", submitData);
+            setProgress(50);
 
-        handleClose();
-        setLoading(false);
+            !feature.id ? await addDocument("Features", submitData) : await updateDocument("Features", submitData);
+
+            setProgress(100);
+            setTimeout(() => {
+                handleClose();
+                setLoading(false);
+                setProgress(0);
+            }, 500);
+        } catch (err) {
+            console.error(err);
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            setLoading(false);
+            setProgress(0);
+        }
     }
 
     return (
@@ -75,6 +90,7 @@ function Features() {
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 feature={feature}
             />
             <TableFeatures

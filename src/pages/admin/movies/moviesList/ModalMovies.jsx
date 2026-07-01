@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel } from '@mui/material';
-import { FaCloudUploadAlt, FaTimesCircle } from 'react-icons/fa';
+import { FaCloudUploadAlt, FaTimesCircle, FaLink } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
 import { ActorContext } from '../../../../contexts/ActorProvider';
@@ -40,6 +40,8 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
     const characters = useContext(CharacterContext);
     const plansList = useContext(PlanContext);
     const [type, setType] = useState("");
+    const [posterMode, setPosterMode] = useState("file");
+    const [bannerMode, setBannerMode] = useState("file");
 
     const posterPreview = movie.imgFile ? movie.imgUrl : (movie.imgUrl || Logo5);
     const bannerPreview = movie.bannerFile ? movie.bannerUrl : (movie.bannerUrl || Logo5);
@@ -77,6 +79,16 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
     const handleNumberChange = (e) => {
         const onlyNums = e.target.value.replace(/[^0-9]/g, '');
         onChangeInput({ target: { name: e.target.name, value: onlyNums } });
+    };
+
+    const handlePosterUrlChange = (e) => {
+        const url = e.target.value;
+        setMovie(pre => ({ ...pre, imgUrl: url, imgFile: null }));
+    };
+
+    const handleBannerUrlChange = (e) => {
+        const url = e.target.value;
+        setMovie(pre => ({ ...pre, bannerUrl: url, bannerFile: null }));
     };
 
     const handleEndEpisodeChange = (e) => {
@@ -299,26 +311,90 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
                         <div className="flex gap-4">
                             <div className="flex flex-col items-center w-1/3">
-                                <p className="text-white text-[11px] mb-2 font-bold opacity-70">Poster</p>
-                                <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-pink-400">
-                                    <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
-                                    <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
-                                        <FaCloudUploadAlt className="text-3xl text-pink-400 mb-1" />
-                                        <span className="text-white text-xs font-bold">Upload</span>
-                                        <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
-                                    </label>
+                                <p className="text-white text-[11px] mb-1 font-bold opacity-70">Poster</p>
+                                <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-2 w-full border border-white/10">
+                                    <button type="button" onClick={() => setPosterMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'file' ? 'bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-[0_0_12px_rgba(236,72,153,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                        <FaCloudUploadAlt className="text-xs" /> File
+                                    </button>
+                                    <button type="button" onClick={() => setPosterMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'url' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                        <FaLink className="text-xs" /> URL
+                                    </button>
                                 </div>
+                                {posterMode === 'file' ? (
+                                    <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-pink-400">
+                                        <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
+                                        <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
+                                            <FaCloudUploadAlt className="text-3xl text-pink-400 mb-1" />
+                                            <span className="text-white text-xs font-bold">Upload</span>
+                                            <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
+                                        </label>
+                                    </div>
+                                ) : (
+                                    <div className="w-full flex flex-col gap-2">
+                                        <TextField
+                                            className="modal-input-x"
+                                            placeholder="https://example.com/poster.jpg"
+                                            value={movie.imgUrl?.startsWith('http') ? movie.imgUrl : ''}
+                                            onChange={handlePosterUrlChange}
+                                            fullWidth
+                                            size="small"
+                                            InputProps={{ style: { fontSize: 11 } }}
+                                        />
+                                        <div className="w-full aspect-2/3 rounded-xl overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
+                                            {movie.imgUrl?.startsWith('http') ? (
+                                                <img src={movie.imgUrl} className="w-full h-full object-cover" alt="Poster Preview" onError={(e) => e.target.src = Logo5} />
+                                            ) : (
+                                                <div className="flex flex-col items-center text-gray-500">
+                                                    <FaLink className="text-2xl mb-1" />
+                                                    <span className="text-[10px] font-bold">Paste URL</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                             <div className="flex flex-col items-center w-2/3">
-                                <p className="text-white text-[11px] mb-2 font-bold opacity-70">Banner</p>
-                                <div className="relative w-full aspect-video rounded-xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-yellow-400">
-                                    <img src={bannerPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Banner" />
-                                    <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
-                                        <FaCloudUploadAlt className="text-4xl text-yellow-400 mb-1" />
-                                        <span className="text-white text-xs font-bold">Upload</span>
-                                        <VisuallyHiddenInput type="file" onChange={handleBannerChange} accept="image/*" />
-                                    </label>
+                                <p className="text-white text-[11px] mb-1 font-bold opacity-70">Banner</p>
+                                <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-2 w-full border border-white/10">
+                                    <button type="button" onClick={() => setBannerMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'file' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-[0_0_12px_rgba(234,179,8,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                        <FaCloudUploadAlt className="text-xs" /> File
+                                    </button>
+                                    <button type="button" onClick={() => setBannerMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'url' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                        <FaLink className="text-xs" /> URL
+                                    </button>
                                 </div>
+                                {bannerMode === 'file' ? (
+                                    <div className="relative w-full aspect-video rounded-xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-yellow-400">
+                                        <img src={bannerPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Banner" />
+                                        <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
+                                            <FaCloudUploadAlt className="text-4xl text-yellow-400 mb-1" />
+                                            <span className="text-white text-xs font-bold">Upload</span>
+                                            <VisuallyHiddenInput type="file" onChange={handleBannerChange} accept="image/*" />
+                                        </label>
+                                    </div>
+                                ) : (
+                                    <div className="w-full flex flex-col gap-2">
+                                        <TextField
+                                            className="modal-input-x"
+                                            placeholder="https://example.com/banner.jpg"
+                                            value={movie.bannerUrl?.startsWith('http') ? movie.bannerUrl : ''}
+                                            onChange={handleBannerUrlChange}
+                                            fullWidth
+                                            size="small"
+                                            InputProps={{ style: { fontSize: 11 } }}
+                                        />
+                                        <div className="w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
+                                            {movie.bannerUrl?.startsWith('http') ? (
+                                                <img src={movie.bannerUrl} className="w-full h-full object-cover" alt="Banner Preview" onError={(e) => e.target.src = Logo5} />
+                                            ) : (
+                                                <div className="flex flex-col items-center text-gray-500">
+                                                    <FaLink className="text-2xl mb-1" />
+                                                    <span className="text-[10px] font-bold">Paste URL</span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -11,6 +11,7 @@ function Plans() {
     const [plan, setPlan] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const [search, setSearch] = useState("");
 
@@ -49,15 +50,29 @@ function Plans() {
         }
 
         setLoading(true);
+        setProgress(20);
 
-        let submitData = { ...plan };
-        submitData.level = parseInt(submitData.level) || 0;
-        submitData.price = parseFloat(submitData.price) || 0;
+        try {
+            let submitData = { ...plan };
+            submitData.level = parseInt(submitData.level) || 0;
+            submitData.price = parseFloat(submitData.price) || 0;
 
-        !plan.id ? await addDocument("Plans", submitData) : await updateDocument("Plans", submitData);
+            setProgress(50);
 
-        handleClose();
-        setLoading(false);
+            !plan.id ? await addDocument("Plans", submitData) : await updateDocument("Plans", submitData);
+
+            setProgress(100);
+            setTimeout(() => {
+                handleClose();
+                setLoading(false);
+                setProgress(0);
+            }, 500);
+        } catch (err) {
+            console.error(err);
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            setLoading(false);
+            setProgress(0);
+        }
     }
 
     return (
@@ -76,6 +91,7 @@ function Plans() {
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 plan={plan}
             />
             <TablePlans

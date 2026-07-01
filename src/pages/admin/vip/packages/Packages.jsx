@@ -11,6 +11,7 @@ function Packages() {
     const [packageItem, setPackageItem] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const [search, setSearch] = useState("");
 
@@ -49,15 +50,29 @@ function Packages() {
         }
 
         setLoading(true);
+        setProgress(20);
 
-        let submitData = { ...packageItem };
-        submitData.discount = parseFloat(submitData.discount) || 0;
-        submitData.time = parseInt(submitData.time) || 0;
+        try {
+            let submitData = { ...packageItem };
+            submitData.discount = parseFloat(submitData.discount) || 0;
+            submitData.time = parseInt(submitData.time) || 0;
 
-        !packageItem.id ? await addDocument("Packages", submitData) : await updateDocument("Packages", submitData);
+            setProgress(50);
 
-        handleClose();
-        setLoading(false);
+            !packageItem.id ? await addDocument("Packages", submitData) : await updateDocument("Packages", submitData);
+
+            setProgress(100);
+            setTimeout(() => {
+                handleClose();
+                setLoading(false);
+                setProgress(0);
+            }, 500);
+        } catch (err) {
+            console.error(err);
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            setLoading(false);
+            setProgress(0);
+        }
     }
 
     return (
@@ -76,6 +91,7 @@ function Packages() {
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 packageItem={packageItem}
             />
             <TablePackages
