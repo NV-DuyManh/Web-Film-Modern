@@ -7,6 +7,7 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
+import LOGO from "../../../../assets/Logo.png";
 
 const getSexStyle = (sex) => {
     switch (sex) {
@@ -25,15 +26,10 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
 
     const start = (page - 1) * rowsPerPage;
 
-    const dataSearch = useMemo(() => {
-        return characters?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase()));
-    }, [search, characters]);
-
+    const dataSearch = useMemo(() => characters?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())), [search, characters]);
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
-    useEffect(() => {
-        setPage(1);
-    }, [search]);
+    useEffect(() => { setPage(1); }, [search]);
 
     const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
 
@@ -115,7 +111,7 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                                     <td className="flex justify-center items-center py-2">
                                         <div className="group relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-white/10 cursor-pointer">
                                             <img 
-                                                src={row.imgUrl} 
+                                                src={row.imgUrl || LOGO} 
                                                 alt={row.name} 
                                                 className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110 group-hover:opacity-80" 
                                             />
@@ -158,7 +154,6 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                             )})}
                         </tbody>
                     </table>
-
                     <div className="table-footer">
                         <PaginationAdmin
                             page={page}
