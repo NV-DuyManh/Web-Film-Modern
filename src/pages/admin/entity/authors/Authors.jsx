@@ -3,30 +3,17 @@ import Search from '../../../../components/admin/Search';
 import ModalAuthors from './ModalAuthors';
 import TableAuthors from './TableAuthors';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
-import LOGO from "../../../../assets/Logo.png";
 
-const inner = { name: "", description: "", imgUrl: LOGO, sexID: "", countriesID: "" };
-
-const getBase64FromUrl = async (url) => {
-    const data = await fetch(url);
-    const blob = await data.blob();
-    return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(blob);
-        reader.onloadend = () => {
-            const base64data = reader.result;
-            resolve(base64data);
-        };
-    });
-};
+const inner = { name: "", description: "", imgUrl: "", sexID: "", countriesID: "" };
 
 function Authors() {
     const [open, setOpen] = useState(false);
     const [author, setAuthor] = useState(inner);
-    const [error, setError] = useState(inner);
+    const [error, setError] = useState({});
     const [loading, setLoading] = useState(false);
-    
+    const [progress, setProgress] = useState(0);
     const [search, setSearch] = useState("");
+
     const onChangeSearch = (e) => {
         setSearch(e.target.value)
     }
@@ -34,11 +21,11 @@ function Authors() {
     const handleClickOpen = () => {
         setOpen(true);
         setAuthor(inner);
-        setError(inner);
+        setError({});
     };
 
     const handleClose = () => {
-        setOpen(false);
+        if (!loading) setOpen(false);
     };
 
     const onChangeInput = (e) => {
@@ -60,18 +47,41 @@ function Authors() {
         if (validation()) {
             return;
         }
+
         setLoading(true);
+        setProgress(20);
 
-        let submitData = { ...author };
+        try {
+            let submitData = { ...author };
 
-        if (submitData.imgUrl === LOGO) {
-            submitData.imgUrl = await getBase64FromUrl(LOGO);
+            setProgress(50);
+
+            if (!submitData.imgUrl || submitData.imgUrl.includes("Logo.png")) {
+                submitData.imgUrl = "";
+            }
+
+            setProgress(75);
+
+            if (!author.id) {
+                await addDocument("Authors", submitData);
+            } else {
+                await updateDocument("Authors", submitData);
+            }
+
+            setProgress(100);
+
+            setTimeout(() => {
+                setOpen(false);
+                setLoading(false);
+                setProgress(0);
+            }, 500);
+
+        } catch (err) {
+            console.error(err);
+            alert("An error occurred, please try again!");
+            setLoading(false);
+            setProgress(0);
         }
-
-        !author.id ? await addDocument("Authors", submitData) : await updateDocument("Authors", submitData);
-
-        handleClose();
-        setLoading(false);
     }
 
     const handleImageChange = (event) => {
@@ -99,10 +109,10 @@ function Authors() {
                 addauthor={addauthor}
                 onChangeInput={onChangeInput}
                 open={open}
-                handleClickOpen={handleClickOpen}
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 author={author}
             />
             <TableAuthors

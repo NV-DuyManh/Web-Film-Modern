@@ -7,6 +7,7 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
+import LOGO from "../../../../assets/Logo.png";
 
 const getSexStyle = (sex) => {
     switch (sex) {
@@ -26,12 +27,9 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
     const start = (page - 1) * rowsPerPage;
 
     const dataSearch = useMemo(() => authors?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())), [search, authors]);
-
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
-    useEffect(() => {
-        setPage(1);
-    }, [search]);
+    useEffect(() => { setPage(1); }, [search]);
 
     const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
 
@@ -113,7 +111,7 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                                     <td className="flex justify-center items-center py-2">
                                         <div className="group relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-white/10 cursor-pointer">
                                             <img 
-                                                src={row.imgUrl} 
+                                                src={row.imgUrl || LOGO} 
                                                 alt={row.name} 
                                                 className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110 group-hover:opacity-80" 
                                             />
@@ -156,7 +154,6 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                             )})}
                         </tbody>
                     </table>
-
                     <div className="table-footer">
                         <PaginationAdmin
                             page={page}
@@ -168,7 +165,6 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                     </div>
                 </div>
             </div>
-
             <ModalDelete
                 handleClose={handleClose}
                 open={open}
@@ -176,7 +172,6 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                 titleDelete={"DELETE AUTHOR"}
                 contentDelete={`Are you sure you want to delete the author "${author?.name}"?`}
             />
-
             <ModalDelete
                 handleClose={() => setOpenBulk(false)}
                 open={openBulk}

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
-import { FaCloudUploadAlt, FaSpinner } from 'react-icons/fa';
+import { FaCloudUploadAlt } from 'react-icons/fa';
 import { COUNTRIES } from '../../../../utils/Contants';
+import LOGO from "../../../../assets/Logo.png";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -20,7 +21,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-export default function ModalAuthors({ open, onChangeInput, handleClose, addauthor, error, loading, author, handleImageChange }) {
+export default function ModalAuthors({ open, onChangeInput, handleClose, addauthor, error, loading, progress, author, handleImageChange }) {
     return (
         <Dialog
             open={open}
@@ -44,8 +45,8 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                     label="Name"
                     variant="outlined"
                     value={author.name}
-                    helperText={error.name}
-                    error={!!error.name}
+                    helperText={error?.name}
+                    error={!!error?.name}
                 />
                 
                 <TextField
@@ -58,8 +59,8 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                     label="Description"
                     variant="outlined"
                     value={author.description}
-                    helperText={error.description}
-                    error={!!error.description}
+                    helperText={error?.description}
+                    error={!!error?.description}
                 />
                 
                 <Autocomplete
@@ -69,40 +70,39 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                     fullWidth
                     classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                     PopperProps={{ placement: "top-end" }}
-                    value={author.countriesID}
+                    value={author.countriesID || null}
                     onChange={(e, value) => {
                         onChangeInput({ target: { name: "countriesID", value: value }, });
                     }}
                     renderInput={(params) => <TextField {...params} 
                         label="Country"
-                        helperText={error.countriesID}
-                        error={!!error.countriesID} />}
+                        helperText={error?.countriesID}
+                        error={!!error?.countriesID} />}
                 />
                 
-                <FormControl className="gender-box-wrapper" error={!!error.sexID}>
-                    <div className={`gender-box ${!!error.sexID ? 'error' : ''}`}>
+                <FormControl className="gender-box-wrapper" error={!!error?.sexID}>
+                    <div className={`gender-box ${!!error?.sexID ? 'error' : ''}`}>
                         <span className="gender-label">Gender</span>
                         
                         <RadioGroup
-                            aria-labelledby="demo-radio-buttons-group-label"
                             name="sexID"
                             sx={{ flexDirection: "row", width: '100%', justifyContent: 'space-around' }}
                             value={author.sexID}
                             onChange={onChangeInput}
                         >
-                            <FormControlLabel value="Female" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
-                            <FormControlLabel value="Male" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Male" sx={{ color: '#e5e7eb', margin: 0 }} />
-                            <FormControlLabel value="Other" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Other" sx={{ color: '#e5e7eb', margin: 0 }} />
+                            <FormControlLabel value="Female" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
+                            <FormControlLabel value="Male" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Male" sx={{ color: '#e5e7eb', margin: 0 }} />
+                            <FormControlLabel value="Other" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Other" sx={{ color: '#e5e7eb', margin: 0 }} />
                         </RadioGroup>
                     </div>
-                    {error.sexID && <span className="gender-error-text">{error.sexID}</span>}
+                    {error?.sexID && <span className="gender-error-text">{error.sexID}</span>}
                 </FormControl>
 
                 <div className="upload-container">
                     <span className="upload-title">Author Photo</span>
                     <div className="relative w-36 h-36 rounded-full border-2 border-transparent hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-black">
                         <img 
-                            src={author.imgUrl} 
+                            src={author.imgUrl || LOGO} 
                             alt="Author Avatar" 
                             className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-30" 
                         />
@@ -115,16 +115,30 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                         </Button>
                     </div>
                 </div>
-
             </DialogContent>
             
-            <DialogActions className="modal-actions-x">
-                <Button onClick={handleClose} className="btn-cancel-x">
-                    Cancel
-                </Button>
-                <Button disabled={loading} onClick={addauthor} className="btn-submit-x">
-                    {loading ? <FaSpinner className="spin text-xl" /> : author.id ? "UPDATE" : "ADD"}
-                </Button>
+            <DialogActions className="modal-actions-x p-6 w-full flex flex-col">
+                {loading ? (
+                    <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
+                        <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
+                            <span className="animate-pulse">Syncing Data...</span>
+                            <span>{progress}%</span>
+                        </div>
+                        <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
+                            <div 
+                                className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                    </div>
+                ) : (
+                    <div className="w-full flex justify-end gap-3 pt-2">
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
+                        <Button onClick={addauthor} disabled={loading} className="btn-submit-x">
+                            {author.id ? "UPDATE" : "ADD"}
+                        </Button>
+                    </div>
+                )}
             </DialogActions>
         </Dialog>
     );
