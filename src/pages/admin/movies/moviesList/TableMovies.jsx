@@ -12,6 +12,7 @@ import { BiSolidCategoryAlt } from 'react-icons/bi';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
+import Logo5 from '../../../../assets/Logo5.png';
 
 const getStatusStyle = (status) => {
     switch(status) {
@@ -82,7 +83,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
             return (
                 <div key={item.id} className="group flex w-17 flex-col items-center cursor-pointer">
                     <div className="relative h-12 w-12">
-                        <img src={item.imgUrl} alt={item.name} className={`h-12 w-12 rounded-full object-cover ring-2 ring-white/10 transition-all duration-300 group-hover:scale-110 ${hoverRing}`} />
+                        <img src={item.imgUrl || Logo5} alt={item.name} className={`h-12 w-12 rounded-full object-cover ring-2 ring-white/10 transition-all duration-300 group-hover:scale-110 ${hoverRing}`} />
                     </div>
                     <p className={`mt-1.5 max-w-16.5 truncate text-center text-[11px] font-semibold text-gray-200 transition-all duration-300 ${hoverText}`}>{item.name}</p>
                 </div>
@@ -177,7 +178,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                                         <td className="table-cell text-center">{(page - 1) * rowsPerPage + index + 1}</td>
 
                                         <td className="py-2 flex justify-center">
-                                            <img src={row.imgUrl} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10" />
+                                            <img src={row.imgUrl || Logo5} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10" />
                                         </td>
 
                                         <td className="table-cell text-center min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed">

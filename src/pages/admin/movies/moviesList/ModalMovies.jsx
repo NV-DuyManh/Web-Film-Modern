@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel } from '@mui/material';
-import { FaCloudUploadAlt, FaSpinner, FaTimesCircle } from 'react-icons/fa';
+import { FaCloudUploadAlt, FaTimesCircle } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
 import { ActorContext } from '../../../../contexts/ActorProvider';
@@ -29,7 +29,7 @@ const AGE_RATING_OPTIONS = [
     { id: "T18", name: "T18" }
 ];
 
-export default function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, setMovie, error, setError }) {
+export default function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, progress, setMovie, error, setError }) {
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);
 
@@ -41,8 +41,8 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
     const plansList = useContext(PlanContext);
     const [type, setType] = useState("");
 
-    const posterPreview = movie.imgFile ? movie.imgUrl : movie.id ? movie.imgUrl || Logo5 : Logo5;
-    const bannerPreview = movie.bannerFile ? movie.bannerUrl : movie.id ? movie.bannerUrl || Logo5 : Logo5;
+    const posterPreview = movie.imgFile ? movie.imgUrl : (movie.imgUrl || Logo5);
+    const bannerPreview = movie.bannerFile ? movie.bannerUrl : (movie.bannerUrl || Logo5);
 
     const handleClickOpenChoose = (type) => {
         if (type === "actors") setDataChoose(actors);
@@ -150,18 +150,18 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
                         <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest">Task 1: General Info</p>
                         <div className="grid grid-cols-2 gap-4">
-                            <TextField className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Movie Name" value={movie.name} error={!!error.name} helperText={error.name} />
-                            <TextField className="modal-input-x" name="otherName" onChange={onChangeInput} fullWidth label="Other/Original Name" value={movie.otherName} error={!!error.otherName} helperText={error.otherName} />
+                            <TextField className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Movie Name" value={movie.name} error={!!error?.name} helperText={error?.name} />
+                            <TextField className="modal-input-x" name="otherName" onChange={onChangeInput} fullWidth label="Other/Original Name" value={movie.otherName} error={!!error?.otherName} helperText={error?.otherName} />
                         </div>
-                        <TextField className="modal-input-x" name="description" onChange={onChangeInput} fullWidth multiline rows={3} label="Description" value={movie.description} error={!!error.description} helperText={error.description} />
+                        <TextField className="modal-input-x" name="description" onChange={onChangeInput} fullWidth multiline rows={3} label="Description" value={movie.description} error={!!error?.description} helperText={error?.description} />
                         <div className="grid grid-cols-2 gap-4">
                             <Autocomplete
                                 options={COUNTRIES || []} value={movie.countriesID || null}
                                 classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                                 onChange={(e, newValue) => onChangeInput({ target: { name: "countriesID", value: newValue || "" } })}
-                                renderInput={(params) => <TextField {...params} label="Country" error={!!error.countriesID} helperText={error.countriesID} className="modal-input-x" />}
+                                renderInput={(params) => <TextField {...params} label="Country" error={!!error?.countriesID} helperText={error?.countriesID} className="modal-input-x" />}
                             />
-                            <TextField className="modal-input-x" name="releaseYear" onChange={handleNumberChange} label="Release Year" value={movie.releaseYear} error={!!error.releaseYear} helperText={error.releaseYear} />
+                            <TextField className="modal-input-x" name="releaseYear" onChange={handleNumberChange} label="Release Year" value={movie.releaseYear} error={!!error?.releaseYear} helperText={error?.releaseYear} />
                         </div>
                     </div>
 
@@ -172,21 +172,21 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 options={STATUS_OPTIONS} getOptionLabel={(opt) => opt?.name || ""} value={STATUS_OPTIONS.find(s => s.id === movie.status) || null}
                                 classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                                 onChange={(e, val) => onChangeInput({ target: { name: "status", value: val?.id || "" } })}
-                                renderInput={(params) => <TextField {...params} label="Status" error={!!error.status} helperText={error.status} className="modal-input-x" />}
+                                renderInput={(params) => <TextField {...params} label="Status" error={!!error?.status} helperText={error?.status} className="modal-input-x" />}
                             />
                             <Autocomplete
                                 options={AGE_RATING_OPTIONS} getOptionLabel={(opt) => opt?.name || ""} value={AGE_RATING_OPTIONS.find(a => a.id === movie.ageRating) || null}
                                 classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                                 onChange={(e, val) => onChangeInput({ target: { name: "ageRating", value: val?.id || "" } })}
-                                renderInput={(params) => <TextField {...params} label="Age Rating" error={!!error.ageRating} helperText={error.ageRating} className="modal-input-x" />}
+                                renderInput={(params) => <TextField {...params} label="Age Rating" error={!!error?.ageRating} helperText={error?.ageRating} className="modal-input-x" />}
                             />
-                            <TextField className="modal-input-x" name="rent" onChange={handleNumberChange} label="Rent Price" value={movie.rent} error={!!error.rent} helperText={error.rent} />
+                            <TextField className="modal-input-x" name="rent" onChange={handleNumberChange} label="Rent Price" value={movie.rent} error={!!error?.rent} helperText={error?.rent} />
                         </div>
 
                         <div className="border border-white/10 rounded-xl p-4 bg-slate-900/30">
                             <div className="grid grid-cols-2 gap-4">
-                                <TextField className="modal-input-x" name="duration" onChange={handleNumberChange} label="Duration (Mins)" value={movie.duration} error={!!error.duration} helperText={error.duration} />
-                                <TextField className="modal-input-x" name="endEpisode" onChange={handleEndEpisodeChange} label="Total Episodes (Max)" value={movie.endEpisode} error={!!error.endEpisode} helperText={error.endEpisode} />
+                                <TextField className="modal-input-x" name="duration" onChange={handleNumberChange} label="Duration (Mins)" value={movie.duration} error={!!error?.duration} helperText={error?.duration} />
+                                <TextField className="modal-input-x" name="endEpisode" onChange={handleEndEpisodeChange} label="Total Episodes (Max)" value={movie.endEpisode} error={!!error?.endEpisode} helperText={error?.endEpisode} />
                             </div>
 
                             <div className="grid grid-cols-3 gap-4 mt-6 mb-2">
@@ -216,26 +216,26 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     {movie.hasSub && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeSub" onChange={handleSubDubChange} label="Sub Episodes" value={movie.episodeSub} error={!!error.episodeSub} helperText={error.episodeSub} />
+                                        <TextField className="modal-input-x mt-2!" name="episodeSub" onChange={handleSubDubChange} label="Sub Episodes" value={movie.episodeSub} error={!!error?.episodeSub} helperText={error?.episodeSub} />
                                     )}
                                 </div>
                                 <div>
                                     {movie.hasDub && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeDub" onChange={handleSubDubChange} label="Dub Episodes" value={movie.episodeDub} error={!!error.episodeDub} helperText={error.episodeDub} />
+                                        <TextField className="modal-input-x mt-2!" name="episodeDub" onChange={handleSubDubChange} label="Dub Episodes" value={movie.episodeDub} error={!!error?.episodeDub} helperText={error?.episodeDub} />
                                     )}
                                 </div>
                                 <div>
                                     {movie.hasVoice && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeVoice" onChange={handleSubDubChange} label="Voice Episodes" value={movie.episodeVoice} error={!!error.episodeVoice} helperText={error.episodeVoice} />
+                                        <TextField className="modal-input-x mt-2!" name="episodeVoice" onChange={handleSubDubChange} label="Voice Episodes" value={movie.episodeVoice} error={!!error?.episodeVoice} helperText={error?.episodeVoice} />
                                     )}
                                 </div>
                             </div>
                         </div>
 
                         <div className="grid grid-cols-3 gap-4 mt-2">
-                            <Autocomplete options={plansList || []} getOptionLabel={(opt) => opt?.name || ""} value={plansList?.find(p => p.id === movie.planID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Plan" error={!!error.planID} helperText={error.planID} className="modal-input-x" />} />
-                            <Autocomplete options={categoryTypes || []} getOptionLabel={(opt) => opt?.name || ""} value={categoryTypes?.find(c => c.id === movie.category_Type_Id) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "category_Type_Id", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Category Type" error={!!error.category_Type_Id} helperText={error.category_Type_Id} className="modal-input-x" />} />
-                            <Autocomplete options={authorsList || []} getOptionLabel={(opt) => opt?.name || ""} value={authorsList?.find(a => a.id === movie.author) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "author", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Director" error={!!error.author} helperText={error.author} className="modal-input-x" />} />
+                            <Autocomplete options={plansList || []} getOptionLabel={(opt) => opt?.name || ""} value={plansList?.find(p => p.id === movie.planID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Plan" error={!!error?.planID} helperText={error?.planID} className="modal-input-x" />} />
+                            <Autocomplete options={categoryTypes || []} getOptionLabel={(opt) => opt?.name || ""} value={categoryTypes?.find(c => c.id === movie.category_Type_Id) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "category_Type_Id", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Category Type" error={!!error?.category_Type_Id} helperText={error?.category_Type_Id} className="modal-input-x" />} />
+                            <Autocomplete options={authorsList || []} getOptionLabel={(opt) => opt?.name || ""} value={authorsList?.find(a => a.id === movie.author) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "author", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Director" error={!!error?.author} helperText={error?.author} className="modal-input-x" />} />
                         </div>
                     </div>
                 </div>
@@ -247,7 +247,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         <div className='flex items-center text-white gap-2'>
                             <label className="font-medium">Categories</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("categories")} className='cursor-pointer text-2xl text-cyan-400 hover:scale-110 transition-transform' />
-                            {error.list_Category && <span className="text-red-500 text-xs italic">{error.list_Category}</span>}
+                            {error?.list_Category && <span className="text-red-500 text-xs italic">{error.list_Category}</span>}
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
                             {movie.list_Category?.map((item) => {
@@ -270,7 +270,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 const actor = actors?.find(e => e.id === item);
                                 return actor ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30' src={actor.imgUrl} alt={actor.name} title={actor.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30' src={actor.imgUrl || Logo5} alt={actor.name} title={actor.name} />
                                         <FaTimesCircle onClick={() => handleRemoveItem("actors", item)} className="absolute -top-0.5 -right-0.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110" />
                                     </div>
                                 ) : null;
@@ -286,7 +286,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 const character = characters?.find(e => e.id === item);
                                 return character ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30' src={character.imgUrl} alt={character.name} title={character.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30' src={character.imgUrl || Logo5} alt={character.name} title={character.name} />
                                         <FaTimesCircle onClick={() => handleRemoveItem("characters", item)} className="absolute -top-0.5 -right-0.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110" />
                                     </div>
                                 ) : null;
@@ -325,12 +325,31 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
                 </div>
             </DialogContent>
-            <DialogActions className="modal-actions-x p-6">
-                <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
-                <Button onClick={addOrUpdateMovie} disabled={loading} className="btn-submit-x">
-                    {loading ? <FaSpinner className="spin" /> : "Save Movie"}
-                </Button>
+            
+            <DialogActions className="modal-actions-x p-6 w-full flex flex-col">
+                {loading ? (
+                    <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
+                        <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
+                            <span className="animate-pulse">Syncing to Cloud Database...</span>
+                            <span>{progress}%</span>
+                        </div>
+                        <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
+                            <div 
+                                className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                    </div>
+                ) : (
+                    <div className="w-full flex justify-end gap-3 pt-2">
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
+                        <Button onClick={addOrUpdateMovie} disabled={loading} className="btn-submit-x">
+                            {movie.id ? 'Save Changes' : 'Create Movie'}
+                        </Button>
+                    </div>
+                )}
             </DialogActions>
+
             <ModalChoose
                 handleClickChoose={handleClickChoose} type={type} dataChoose={dataChoose}
                 handleCloseChoose={handleCloseChoose} openChoose={openChoose} selectedItems={getSelectedItems()}
