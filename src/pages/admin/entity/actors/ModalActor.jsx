@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
-import { FaCloudUploadAlt } from 'react-icons/fa';
+import { FaCloudUploadAlt, FaExchangeAlt } from 'react-icons/fa';
 import { COUNTRIES } from '../../../../utils/Contants';
 import LOGO from "../../../../assets/Logo.png";
 
@@ -22,6 +22,8 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading, progress, actor, handleImageChange }) {
+    const [uploadMode, setUploadMode] = React.useState('LOCAL');
+
     return (
         <Dialog
             open={open}
@@ -98,21 +100,70 @@ export default function ModalActor({ open, onChangeInput, handleClose, addactor,
                     {error?.sexID && <span className="gender-error-text">{error.sexID}</span>}
                 </FormControl>
 
-                <div className="upload-container">
+                <div className="upload-container pb-2">
                     <span className="upload-title">Actor Photo</span>
-                    <div className="relative w-36 h-36 rounded-full border-2 border-transparent hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-black">
-                        <img 
-                            src={actor.imgUrl || LOGO} 
-                            alt="Actor Avatar" 
-                            className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-30" 
-                        />
-                        <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! !p-0! rounded-full! cursor-pointer">
-                            <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
-                            <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-1" />
-                                <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider">Upload</span>
+                    
+                    <div className="flex border-b border-white/10 w-full max-w-65 mx-auto mt-2 mb-6">
+                        <button 
+                            type="button"
+                            onClick={() => setUploadMode('LOCAL')} 
+                            className={`flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${uploadMode === 'LOCAL' 
+                                ? 'border-cyan-400 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-white/20'}`} 
+                        > 
+                            UPLOAD 
+                        </button>
+                        <button 
+                            type="button"
+                            onClick={() => setUploadMode('LINK')} 
+                            className={`flex-1 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all duration-300 border-b-2 ${uploadMode === 'LINK' 
+                                ? 'border-fuchsia-400 text-fuchsia-400 drop-shadow-[0_0_8px_rgba(217,70,239,0.8)]' : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-white/20'}`} 
+                        > 
+                            URL 
+                        </button>
+                    </div>
+
+                    <div className="flex flex-col items-center w-full min-h-40 justify-start">
+                        {uploadMode === 'LOCAL' && (
+                            <div className="relative w-36 h-36 rounded-full border-2 border-transparent hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-black">
+                                <img 
+                                    src={actor.imgUrl?.startsWith('http') ? LOGO : (actor.imgUrl || LOGO)} 
+                                    alt="Actor Avatar" 
+                                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-30" 
+                                />
+                                <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! !p-0! rounded-full! cursor-pointer">
+                                    <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                        <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-1" />
+                                        <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider">Upload Local</span>
+                                    </div>
+                                </Button>
                             </div>
-                        </Button>
+                        )}
+
+                        {uploadMode === 'LINK' && (
+                            <div className="w-full pt-2">
+                                <TextField
+                                    className="modal-input-x w-full"
+                                    name="imgUrl"
+                                    onChange={onChangeInput}
+                                    label="Paste Image URL here"
+                                    variant="outlined"
+                                    value={actor.imgUrl?.startsWith('http') ? actor.imgUrl : ''}
+                                    sx={{
+                                        "& .MuiOutlinedInput-root": {
+                                            transition: "all 0.3s ease",
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: "#d946ef !important",
+                                                boxShadow: "0 0 15px rgba(217,70,239,0.5)"
+                                            }
+                                        },
+                                        "& label.Mui-focused": {
+                                            color: "#d946ef !important"
+                                        }
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
             </DialogContent>
