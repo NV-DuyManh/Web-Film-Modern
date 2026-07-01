@@ -87,10 +87,12 @@ function MoviesList() {
             
             setProgress(30);
 
+            const isLocalAsset = (url) => url && !url.startsWith("http") && !url.startsWith("data:");
+
             if (submitData.imgFile) {
                 submitData.imgUrl = await uploadImageToCloudinary(submitData.imgFile, "Movies");
                 delete submitData.imgFile;
-            } else if (!submitData.imgUrl || submitData.imgUrl.includes("Logo5.png") || submitData.imgUrl.includes("Logo.png")) {
+            } else if (!submitData.imgUrl || isLocalAsset(submitData.imgUrl)) {
                 submitData.imgUrl = "";
             }
 
@@ -99,7 +101,7 @@ function MoviesList() {
             if (submitData.bannerFile) {
                 submitData.bannerUrl = await uploadImageToCloudinary(submitData.bannerFile, "Banners");
                 delete submitData.bannerFile;
-            } else if (!submitData.bannerUrl || submitData.bannerUrl.includes("Logo5.png") || submitData.bannerUrl.includes("Logo.png")) {
+            } else if (!submitData.bannerUrl || isLocalAsset(submitData.bannerUrl)) {
                 submitData.bannerUrl = "";
             }
 
