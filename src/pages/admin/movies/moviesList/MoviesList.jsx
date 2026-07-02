@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import Search from '../../../../components/admin/Search';
+import Search from '../../../../components/admin/search/Search';
 import TableMovies from './TableMovies';
 import ModalMovies from './ModalMovies';
 import ModalDelete from '../../../../components/admin/ModalDelete';

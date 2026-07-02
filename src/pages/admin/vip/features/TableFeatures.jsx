@@ -8,6 +8,8 @@ import "../../../../App.css";
 import { FeatureContext } from '../../../../contexts/FeatureProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
     const features = useContext(FeatureContext);
@@ -23,7 +25,7 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
         return plans?.find(e => e.id === planID)?.name || "N/A";
     }
 
-    const dataSearch = useMemo(() => features?.filter(e => e?.description?.toLowerCase().includes(search.toLowerCase())), [search, features]);
+    const dataSearch = useMemo(() => features?.filter(e => searchTV(e?.description).includes(searchTV(search))), [search, features]);
 
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 

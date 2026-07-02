@@ -7,6 +7,8 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.css";
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 function TablePlans({ handleClickOpen, setPlan, plan, search }) {
     const plans = useContext(PlanContext);
@@ -19,7 +21,7 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
 
     const dataSearch = useMemo(() => {
         return plans
-            ?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase()))
+            ?.filter(e => searchTV(e?.name).includes(searchTV(search)))
             ?.sort((a, b) => Number(a.level) - Number(b.level));
     }, [search, plans]);
 

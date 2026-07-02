@@ -8,6 +8,8 @@ import "../../../../App.css";
 import { PackageContext } from '../../../../contexts/PackageProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 function TablePackages({ handleClickOpen, setPackageItem, packageItem, search }) {
     const packages = useContext(PackageContext);
@@ -23,7 +25,7 @@ function TablePackages({ handleClickOpen, setPackageItem, packageItem, search })
         return plans?.find(e => e.id === planID)?.name || "N/A";
     }
 
-    const dataSearch = useMemo(() => packages?.filter(e => getPlanName(e?.planID)?.toLowerCase().includes(search.toLowerCase())), [search, packages, plans]);
+    const dataSearch = useMemo(() => packages?.filter(e => searchTV(getPlanName(e?.planID)).includes(searchTV(search))), [search, packages, plans]);
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
     useEffect(() => { setPage(1); }, [search]);

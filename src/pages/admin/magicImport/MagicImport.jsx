@@ -22,6 +22,7 @@ function MagicImport() {
     const [previewData, setPreviewData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
+    const [isCopied, setIsCopied] = useState(false);
     const [mode, setMode] = useState('IMPORT'); 
     
     // PROGRESS STATES FOR ULTRA SMOOTH CRAWLING
@@ -179,8 +180,8 @@ Rent Price: 30000
 Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễn viên/nhân vật cho mỗi phim). Xuất kết quả dưới dạng text thuần (raw text) có thể copy được ngay.`;
 
         navigator.clipboard.writeText(promptText);
-        setSuccessMsg(`Copied AI Prompt for ${promptCount} "${promptTheme}" movies!`);
-        setTimeout(() => setSuccessMsg(""), 4000); 
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
     };
 
     const handleExecuteImport = async () => {
@@ -414,10 +415,10 @@ Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễ
                     <button 
                         onClick={handleClearAll}
                         title="Clear all inputs and tables"
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
+                        className="flex hover:scale-105 cursor-pointer items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
                     >
                         <FaEraser className="text-sm" />
-                        <span className="text-xs font-bold uppercase tracking-wider hidden sm:block">Clear</span>
+                        <span className="text-xs font-bold  uppercase tracking-wider hidden sm:block">Clear</span>
                     </button>
 
                     {/* AI PROMPT GENERATOR */}
@@ -442,9 +443,17 @@ Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễ
                         />
                         <button 
                             onClick={handleCopyPrompt}
-                            className="px-4 py-2 rounded-lg bg-pink-600 hover:bg-pink-500 text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(219,39,119,0.4)] active:scale-95"
+                            className={`px-4 py-2 cursor-pointer hover:scale-105 rounded-lg text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 active:scale-95 ${isCopied ? 'bg-emerald-600 shadow-[0_0_15px_rgba(5,150,105,0.6)]' : 'bg-pink-600 hover:bg-pink-500 shadow-[0_0_10px_rgba(219,39,119,0.4)]'}`}
                         >
-                            <FaCopy className="text-sm"/> Copy
+                            {isCopied ? (
+                                <>
+                                    <FaCheckCircle className="text-sm" /> Copied!
+                                </>
+                            ) : (
+                                <>
+                                    <FaCopy className="text-sm"/> Copy
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -460,14 +469,14 @@ Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễ
                             </div>
                             <button 
                                 onClick={() => setMode('IMPORT')}
-                                className={`flex-1 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
+                                className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
                                     ${mode === 'IMPORT' ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                             >
                                 Import Only
                             </button>
                             <button 
                                 onClick={() => setMode('UPDATE')}
-                                className={`flex-1 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
+                                className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
                                     ${mode === 'UPDATE' ? 'bg-fuchsia-500 text-white shadow-[0_0_15px_rgba(217,70,239,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
                             >
                                 Smart Update
@@ -487,13 +496,13 @@ Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễ
                         <div className="flex flex-col gap-3 mt-4">
                             <button 
                                 onClick={handleParse}
-                                className={`w-full py-3 rounded-xl text-white font-bold tracking-wider uppercase transition-all active:scale-95
+                                className={`w-full cursor-pointer hover:scale-105 py-3 rounded-xl text-white font-bold tracking-wider uppercase transition-all active:scale-95
                                     ${mode === 'IMPORT' ? 'bg-cyan-600 hover:bg-cyan-500 shadow-[0_0_15px_rgba(8,145,178,0.4)]' : 'bg-fuchsia-600 hover:bg-fuchsia-500 shadow-[0_0_15px_rgba(192,38,211,0.4)]'}`}
                             >
                                 Parse Data ({mode})
                             </button>
                             
-                            <label className='w-full py-3 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold tracking-wider uppercase transition-all cursor-pointer shadow-[0_0_15px_rgba(5,150,105,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] active:scale-95'>
+                            <label className='w-full  hover:scale-105 py-3 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold tracking-wider uppercase transition-all cursor-pointer shadow-[0_0_15px_rgba(5,150,105,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] active:scale-95'>
                                 <FaFileExcel className="text-xl" /> Upload Excel
                                 <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileUpload} className="hidden" />
                             </label>
@@ -520,6 +529,7 @@ Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễ
                                         <table className='w-full whitespace-nowrap text-xs min-w-max'>
                                             <thead className='text-gray-400 border-b border-white/10 bg-slate-800/40 sticky top-0 z-10'>
                                                 <tr>
+                                                    <th className='p-3 text-center align-middle'>STT</th>
                                                     <th className='p-3 text-center align-middle'>ACTION</th>
                                                     <th className='p-3 text-center align-middle'>NAME (INTL / SELECT)</th>
                                                     <th className='p-3 text-center align-middle'>NAME (VN)</th>
@@ -562,6 +572,9 @@ Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễ
 
                                                     return (
                                                         <tr key={idx} className={rowClass}>
+                                                            <td className='p-3 text-center align-middle font-bold text-gray-400'>
+                                                                {idx + 1}
+                                                            </td>
                                                             <td className='p-3 text-center align-middle'>
                                                                 <button onClick={() => handleRemoveRow(idx)} className="p-1.5 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-all" title="Remove row"><FaTrash size={14} /></button>
                                                             </td>

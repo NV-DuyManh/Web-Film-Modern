@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ModalCategory from './ModalCategory';
-import Search from "../../../../components/admin/Search";
+import Search from '../../../../components/admin/search/Search';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import TableCategory from './TableCategory';
 

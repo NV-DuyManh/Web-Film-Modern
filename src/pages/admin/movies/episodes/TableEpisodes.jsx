@@ -9,6 +9,8 @@ import { EpisodeContext } from '../../../../contexts/EpisodeProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
     const episodes = useContext(EpisodeContext);

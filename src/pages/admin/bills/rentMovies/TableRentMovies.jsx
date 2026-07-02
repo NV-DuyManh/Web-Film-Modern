@@ -9,6 +9,8 @@ import { RentMovieContext } from "../../../../contexts/RentMovieProvider";
 import { MovieContext } from "../../../../contexts/MovieProvider";
 import { UserContext } from "../../../../contexts/UserProvider";
 import DeleteBar, { useSelectRows } from "../../../../components/admin/DeleteBar";
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 function TableRentMovies({ handleClickOpen, setRentMovie, rentMovie, search }) {
     const rentMovies = useContext(RentMovieContext);
@@ -23,7 +25,7 @@ function TableRentMovies({ handleClickOpen, setRentMovie, rentMovie, search }) {
 
     const dataSearch = useMemo(() => {
         return rentMovies
-            ?.filter(e => e?.transactionID?.toLowerCase().includes(search.toLowerCase()))
+            ?.filter(e => searchTV(e?.transactionID).includes(searchTV(search)))
             ?.sort((a, b) => {
                 const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
                 const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;

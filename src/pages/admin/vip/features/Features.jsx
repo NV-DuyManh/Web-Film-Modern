@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Search from '../../../../components/admin/Search';
+import Search from '../../../../components/admin/search/Search';
 import ModalFeatures from './ModalFeatures';
 import TableFeatures from './TableFeatures';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';

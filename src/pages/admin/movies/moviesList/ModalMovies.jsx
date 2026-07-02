@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel } from '@mui/material';
-import { FaCloudUploadAlt, FaTimesCircle, FaLink } from 'react-icons/fa';
+import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
 import { ActorContext } from '../../../../contexts/ActorProvider';
@@ -265,9 +265,9 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             {movie.list_Category?.map((item) => {
                                 const category = categories?.find(e => e.id === item);
                                 return category ? (
-                                    <div key={item} className="relative inline-block mt-2 mr-1">
-                                        <span className="px-3 py-1.5 bg-gray-300 text-gray-800 border border-gray-400 rounded-lg text-sm font-bold shadow-sm">{category.name}</span>
-                                        <FaTimesCircle onClick={() => handleRemoveItem("categories", item)} className="absolute -top-2 -right-2 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110" />
+                                    <div key={item} className="relative inline-block mt-2 mr-1 group">
+                                        <span className="px-3 py-1.5 bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 rounded-lg text-[11px] font-bold tracking-wide uppercase shadow-[0_0_10px_rgba(6,182,212,0.15)] group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-400 group-hover:scale-105 group-hover:-translate-y-0.5 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] transition-all duration-300 inline-block cursor-default">{category.name}</span>
+                                        <FaTimesCircle onClick={() => handleRemoveItem("categories", item)} className="absolute -top-1.5 -right-1.5 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
                                     </div>
                                 ) : null;
                             })}
@@ -275,15 +275,18 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
                         <div className='flex items-center text-white gap-2'>
                             <label className="font-medium">Actors</label>
-                            <TbCategoryFilled onClick={() => handleClickOpenChoose("actors")} className='cursor-pointer text-2xl text-pink-400 hover:scale-110 transition-transform' />
+                            <FaUsers onClick={() => handleClickOpenChoose("actors")} className='cursor-pointer text-2xl text-pink-400 hover:scale-110 transition-transform' />
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
                             {movie.list_Actor?.map((item) => {
                                 const actor = actors?.find(e => e.id === item);
                                 return actor ? (
-                                    <div key={item} className="relative inline-block mt-1 mr-1">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30' src={actor.imgUrl || Logo5} alt={actor.name} title={actor.name} />
-                                        <FaTimesCircle onClick={() => handleRemoveItem("actors", item)} className="absolute -top-0.5 -right-0.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110" />
+                                    <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(236,72,153,0.8)] transition-all duration-300' src={actor.imgUrl || Logo5} alt={actor.name} />
+                                        <FaTimesCircle onClick={() => handleRemoveItem("actors", item)} className="absolute top-0 right-0 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
+                                        <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-pink-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
+                                            {actor.name}
+                                        </div>
                                     </div>
                                 ) : null;
                             })}
@@ -291,15 +294,18 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
                         <div className='flex items-center text-white gap-2 mt-4'>
                             <label className="font-medium">Characters</label>
-                            <TbCategoryFilled onClick={() => handleClickOpenChoose("characters")} className='cursor-pointer text-2xl text-green-400 hover:scale-110 transition-transform' />
+                            <FaUserNinja onClick={() => handleClickOpenChoose("characters")} className='cursor-pointer text-2xl text-green-400 hover:scale-110 transition-transform' />
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
                             {movie.list_Character?.map((item) => {
                                 const character = characters?.find(e => e.id === item);
                                 return character ? (
-                                    <div key={item} className="relative inline-block mt-1 mr-1">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30' src={character.imgUrl || Logo5} alt={character.name} title={character.name} />
-                                        <FaTimesCircle onClick={() => handleRemoveItem("characters", item)} className="absolute -top-0.5 -right-0.5 text-red-500 bg-white rounded-full text-[16px] cursor-pointer hover:scale-110" />
+                                    <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.8)] transition-all duration-300' src={character.imgUrl || Logo5} alt={character.name} />
+                                        <FaTimesCircle onClick={() => handleRemoveItem("characters", item)} className="absolute top-0 right-0 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
+                                        <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
+                                            {character.name}
+                                        </div>
                                     </div>
                                 ) : null;
                             })}

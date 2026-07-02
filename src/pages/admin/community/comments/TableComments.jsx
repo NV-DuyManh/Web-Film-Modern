@@ -9,6 +9,8 @@ import { CommentContext } from '../../../../contexts/CommentProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { UserContext } from '../../../../contexts/UserProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 function TableComments({ handleClickOpen, setComment, comment, search }) {
     const comments = useContext(CommentContext);
@@ -23,7 +25,7 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
 
     const dataSearch = useMemo(() => {
         return comments
-            ?.filter(e => e?.description?.toLowerCase().includes(search.toLowerCase()))
+            ?.filter(e => searchTV(e?.description).includes(searchTV(search)))
             ?.sort((a, b) => {
                 const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
                 const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;

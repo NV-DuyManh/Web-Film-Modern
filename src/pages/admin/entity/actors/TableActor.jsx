@@ -8,6 +8,8 @@ import "../../../../App.css";
 import { ActorContext } from '../../../../contexts/ActorProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import LOGO from "../../../../assets/Logo.png";
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 const getSexStyle = (sex) => {
     switch (sex) {
@@ -26,7 +28,7 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
 
     const start = (page - 1) * rowsPerPage;
 
-    const dataSearch = useMemo(() => actors.filter(e => e.name.toLowerCase().includes(search.toLowerCase())), [search, actors])
+    const dataSearch = useMemo(() => actors.filter(e => searchTV(e.name).includes(searchTV(search))), [search, actors])
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
     
     useEffect(() => { setPage(1); }, [search]);

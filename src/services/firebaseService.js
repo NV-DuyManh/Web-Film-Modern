@@ -1,11 +1,9 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, query, where } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { uploadImageToCloudinary } from "../config/cloudiaryConfig";
 
-// Thêm tài liệu mới vào một bộ sưu tập cụ thể với tùy chọn tải lên hình ảnh
 export const addDocument = async (collectionName, values) => {
     try {
-        // Nếu có ảnh, upload ảnh lên Cloudinary và cập nhật URL ảnh vào values
         if (values.imgUrl && !values.imgUrl.includes("res.cloudinary.com")) {
             const imgUrl = await uploadImageToCloudinary(values.imgUrl, collectionName);
             values.imgUrl = imgUrl;
@@ -14,15 +12,13 @@ export const addDocument = async (collectionName, values) => {
             const avatarUrl = await uploadImageToCloudinary(values.avatarUrl, collectionName);
             values.avatarUrl = avatarUrl;
         }
-        // Thêm tài liệu vào bộ sưu tập
+        
+        values.createdAt = Date.now();
+        values.updatedAt = Date.now();
+        
         const docRef = await addDoc(collection(db, collectionName), values);
-
-        // Lấy tài liệu đã thêm (bao gồm ID của tài liệu)
         const addedDoc = await getDoc(doc(db, collectionName, docRef.id));
-
-        // Trả về tài liệu đã thêm, bao gồm ID và các trường dữ liệu
         return { id: docRef.id, ...addedDoc.data() };
-
     } catch (error) {
         console.error('Error adding document:', error);
         throw error;
@@ -32,23 +28,25 @@ export const addDocument = async (collectionName, values) => {
 export const fetchDocumentsRealtime = (collectionName, callback) => {
     const collectionRef = collection(db, collectionName);
 
-    // Lắng nghe dữ liệu thay đổi trong thời gian thực
     const unsubscribe = onSnapshot(collectionRef, (querySnapshot) => {
         const documents = [];
         querySnapshot.forEach((doc) => {
             documents.push({ id: doc.id, ...doc.data() });
         });
 
-        // Gọi callback với dữ liệu mới nhất
+        documents.sort((a, b) => {
+            const timeA = a.createdAt || 0;
+            const timeB = b.createdAt || 0;
+            return timeB - timeA;
+        });
+
         callback(documents);
     });
 
-    // Hàm trả về unsubscribe để có thể dừng lắng nghe khi không cần nữa
     return unsubscribe;
 };
 
 export const updateDocument = async (collectionName, values) => {
-    // Tách id ra khỏi newValues
     const { id, ...updatedValues } = values;
 
     if (updatedValues.imgUrl && !updatedValues.imgUrl.includes("res.cloudinary.com")) {
@@ -61,10 +59,61 @@ export const updateDocument = async (collectionName, values) => {
         updatedValues.avatarUrl = avatarUrl;
     }
 
+    updatedValues.updatedAt = Date.now();
+
     await updateDoc(doc(collection(db, collectionName), values.id), updatedValues);
 };
 
 export const deleteDocument = async (collectionName, values) => {
-    // Xóa tài liệu khỏi Firestore
-    await deleteDoc(doc(collection(db, collectionName), values.id));
+    const id = values.id;
+
+    if (collectionName === "Movies") {
+        const epQ = query(collection(db, "Episodes"), where("movieID", "==", id));
+        const epSnap = await getDocs(epQ);
+        epSnap.forEach(async (docSnap) => await deleteDoc(doc(db, "Episodes", docSnap.id)));
+
+        const stQ = query(collection(db, "ShowTimes"), where("movieId", "==", id));
+        const stSnap = await getDocs(stQ);
+        stSnap.forEach(async (docSnap) => await deleteDoc(doc(db, "ShowTimes", docSnap.id)));
+
+        const cmQ = query(collection(db, "Comments"), where("moviesId", "==", id));
+        const cmSnap = await getDocs(cmQ);
+        cmSnap.forEach(async (docSnap) => await deleteDoc(doc(db, "Comments", docSnap.id)));
+
+        const rvQ = query(collection(db, "Reviews"), where("moviesId", "==", id));
+        const rvSnap = await getDocs(rvQ);
+        rvSnap.forEach(async (docSnap) => await deleteDoc(doc(db, "Reviews", docSnap.id)));
+    } 
+    else if (["Characters", "Actors", "Categories", "Authors"].includes(collectionName)) {
+        const moviesSnap = await getDocs(collection(db, "Movies"));
+        for (const docSnap of moviesSnap.docs) {
+            const movieData = docSnap.data();
+            let needsUpdate = false;
+            let updatedData = {};
+
+            if (collectionName === "Characters" && movieData.list_Character?.includes(id)) {
+                updatedData.list_Character = movieData.list_Character.filter(e => e !== id);
+                needsUpdate = true;
+            }
+            if (collectionName === "Actors" && movieData.list_Actor?.includes(id)) {
+                updatedData.list_Actor = movieData.list_Actor.filter(e => e !== id);
+                needsUpdate = true;
+            }
+            if (collectionName === "Categories" && movieData.list_Category?.includes(id)) {
+                updatedData.list_Category = movieData.list_Category.filter(e => e !== id);
+                needsUpdate = true;
+            }
+            if (collectionName === "Authors" && (movieData.author === id || movieData.author_id === id)) {
+                if (movieData.author === id) updatedData.author = "";
+                if (movieData.author_id === id) updatedData.author_id = "";
+                needsUpdate = true;
+            }
+
+            if (needsUpdate) {
+                await updateDoc(doc(db, "Movies", docSnap.id), updatedData);
+            }
+        }
+    }
+
+    await deleteDoc(doc(collection(db, collectionName), id));
 };

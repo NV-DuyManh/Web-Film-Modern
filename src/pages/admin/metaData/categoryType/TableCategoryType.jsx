@@ -7,6 +7,8 @@ import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../app.css";
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, search }) {
     const categoryTypes = useContext(CategoryTypeContext);
@@ -16,7 +18,7 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
 
     const start = (page - 1) * rowsPerPage;
 
-    const dataSearch = useMemo(() => categoryTypes.filter(e => e.name.toLowerCase().includes(search.toLowerCase())), [search, categoryTypes]);
+    const dataSearch = useMemo(() => categoryTypes.filter(e => searchTV(e.name).includes(searchTV(search))), [search, categoryTypes]);
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
     useEffect(() => { setPage(1); }, [search]);

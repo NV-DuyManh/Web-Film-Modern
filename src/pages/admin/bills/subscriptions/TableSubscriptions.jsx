@@ -9,6 +9,8 @@ import { SubscriptionContext } from "../../../../contexts/SubscriptionProvider";
 import { PlanContext } from "../../../../contexts/PlanProvider";
 import { UserContext } from "../../../../contexts/UserProvider";
 import DeleteBar, { useSelectRows } from "../../../../components/admin/DeleteBar";
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 function TableSubscriptions({ handleClickOpen, setSubscription, subscription, search }) {
     const subscriptions = useContext(SubscriptionContext);
@@ -23,7 +25,7 @@ function TableSubscriptions({ handleClickOpen, setSubscription, subscription, se
 
     const dataSearch = useMemo(() => {
         return subscriptions
-            ?.filter(e => e?.transactionID?.toLowerCase().includes(search.toLowerCase()))
+            ?.filter(e => searchTV(e?.transactionID).includes(searchTV(search)))
             ?.sort((a, b) => {
                 const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
                 const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;

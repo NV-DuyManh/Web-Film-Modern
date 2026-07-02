@@ -8,6 +8,8 @@ import "../../../../App.css";
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import LOGO from "../../../../assets/Logo.png";
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 const getSexStyle = (sex) => {
     switch (sex) {
@@ -26,7 +28,7 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
 
     const start = (page - 1) * rowsPerPage;
 
-    const dataSearch = useMemo(() => characters?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())), [search, characters]);
+    const dataSearch = useMemo(() => characters?.filter(e => searchTV(e?.name).includes(searchTV(search))), [search, characters]);
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
     useEffect(() => { setPage(1); }, [search]);

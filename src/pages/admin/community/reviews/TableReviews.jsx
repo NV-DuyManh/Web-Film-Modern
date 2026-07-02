@@ -10,6 +10,8 @@ import { MovieContext } from '../../../../contexts/MovieProvider';
 import { UserContext } from '../../../../contexts/UserProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { Rating } from '@mui/material';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 function TableReviews({ handleClickOpen, setReview, review, search }) {
     const reviews = useContext(ReviewContext);
@@ -24,7 +26,7 @@ function TableReviews({ handleClickOpen, setReview, review, search }) {
 
     const dataSearch = useMemo(() => {
         return reviews
-            ?.filter(e => e?.content?.toLowerCase().includes(search.toLowerCase()))
+            ?.filter(e => searchTV(e?.content).includes(searchTV(search)))
             ?.sort((a, b) => {
                 const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
                 const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;

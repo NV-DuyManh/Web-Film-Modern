@@ -13,6 +13,8 @@ import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
 import Logo5 from '../../../../assets/Logo5.png';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 const getStatusStyle = (status) => {
     switch(status) {
@@ -32,7 +34,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
     const categories = useContext(CategoriesContext);
 
     const dataSearch = useMemo(() =>
-        movies?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase()) || e?.otherName?.toLowerCase().includes(search.toLowerCase())),
+        movies?.filter(e => searchTV(e?.name).includes(searchTV(search)) || searchTV(e?.otherName).includes(searchTV(search))),
         [search, movies]
     );
 

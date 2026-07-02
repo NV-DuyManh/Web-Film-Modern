@@ -8,6 +8,8 @@ import "../../../../App.css";
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import LOGO from "../../../../assets/Logo.png";
+import { searchTV } from '../../../../components/admin/search/SearchTV';
+
 
 const getSexStyle = (sex) => {
     switch (sex) {
@@ -26,7 +28,7 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
 
     const start = (page - 1) * rowsPerPage;
 
-    const dataSearch = useMemo(() => authors?.filter(e => e?.name?.toLowerCase().includes(search.toLowerCase())), [search, authors]);
+    const dataSearch = useMemo(() => authors?.filter(e => searchTV(e?.name).includes(searchTV(search))), [search, authors]);
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
     useEffect(() => { setPage(1); }, [search]);
