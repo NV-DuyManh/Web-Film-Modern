@@ -11,6 +11,7 @@ function Categories(props) {
     const [category, setCategory] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const [search, setSearch] = useState("");
     const onChangeSearch = (e) => {
@@ -40,9 +41,21 @@ function Categories(props) {
             return;
         }
         setLoading(true);
-        !category.id ? await addDocument("Categories", category) : await updateDocument("Categories", category);
-        handleClose();
-        setLoading(false);
+        setProgress(20);
+        try {
+            setProgress(50);
+            !category.id ? await addDocument("Categories", category) : await updateDocument("Categories", category);
+            setProgress(100);
+            setTimeout(() => {
+                handleClose();
+                setLoading(false);
+                setProgress(0);
+            }, 500);
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            setProgress(0);
+        }
     }
 
     const onChangeInput = (e) => {
@@ -66,6 +79,7 @@ function Categories(props) {
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 category={category}
             />
             <TableCategory

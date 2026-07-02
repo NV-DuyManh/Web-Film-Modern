@@ -625,6 +625,10 @@ li {
     transition: all 0.3s ease !important;
 }
 
+.MuiAutocomplete-noOptions {
+    color: #ffffff !important;
+}
+
 .movie-slider-wrapper {
     position: relative;
     width: 100%;

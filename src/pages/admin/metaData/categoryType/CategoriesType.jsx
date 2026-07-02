@@ -11,6 +11,7 @@ function CategoriesType(props) {
     const [categoryType, setCategoryType] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
+    const [progress, setProgress] = useState(0);
 
     const [search, setSearch] = useState("");
     const onChangeSearch = (e) => {
@@ -40,9 +41,21 @@ function CategoriesType(props) {
             return;
         }
         setLoading(true);
-        !categoryType.id ? await addDocument("CategoryTypes", categoryType) : await updateDocument("CategoryTypes", categoryType);
-        handleClose();
-        setLoading(false);
+        setProgress(20);
+        try {
+            setProgress(50);
+            !categoryType.id ? await addDocument("CategoryTypes", categoryType) : await updateDocument("CategoryTypes", categoryType);
+            setProgress(100);
+            setTimeout(() => {
+                handleClose();
+                setLoading(false);
+                setProgress(0);
+            }, 500);
+        } catch (err) {
+            console.error(err);
+            setLoading(false);
+            setProgress(0);
+        }
     }
 
     const onChangeInput = (e) => {
@@ -66,6 +79,7 @@ function CategoriesType(props) {
                 handleClose={handleClose}
                 error={error}
                 loading={loading}
+                progress={progress}
                 categoryType={categoryType}
             />
             <TableCategoryType

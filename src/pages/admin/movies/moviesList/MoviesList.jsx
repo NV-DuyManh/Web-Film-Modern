@@ -6,9 +6,11 @@ import ModalDelete from '../../../../components/admin/ModalDelete';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { addDocument, updateDocument, deleteDocument } from '../../../../services/firebaseService';
 import { uploadImageToCloudinary } from '../../../../config/cloudiaryConfig';
+import LOGO_POSTER from "../../../../assets/Logo6.png";
+import LOGO_BANNER from "../../../../assets/Logo5.png";
 
 const innerMovie = { 
-    name: "", otherName: "", description: "", imgUrl: "", bannerUrl: "", 
+    name: "", otherName: "", description: "", imgUrl: LOGO_POSTER, bannerUrl: LOGO_BANNER, 
     releaseYear: "", duration: "", endEpisode: "", ageRating: "", status: "", 
     hasSub: false, hasDub: false, hasVoice: false, 
     episodeSub: "", episodeDub: "", episodeVoice: "", 
@@ -93,7 +95,7 @@ function MoviesList() {
                 submitData.imgUrl = await uploadImageToCloudinary(submitData.imgFile, "Movies");
                 delete submitData.imgFile;
             } else if (!submitData.imgUrl || isLocalAsset(submitData.imgUrl)) {
-                submitData.imgUrl = "";
+                submitData.imgUrl = LOGO_POSTER;
             }
 
             setProgress(50);
@@ -102,7 +104,7 @@ function MoviesList() {
                 submitData.bannerUrl = await uploadImageToCloudinary(submitData.bannerFile, "Banners");
                 delete submitData.bannerFile;
             } else if (!submitData.bannerUrl || isLocalAsset(submitData.bannerUrl)) {
-                submitData.bannerUrl = "";
+                submitData.bannerUrl = LOGO_BANNER;
             }
 
             setProgress(70);

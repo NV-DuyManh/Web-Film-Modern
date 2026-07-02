@@ -7,7 +7,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalCategory({open, onChangeInput, handleClose, addCategory, error, loading, category}) {
+export default function ModalCategory({open, onChangeInput, handleClose, addCategory, error, loading, progress, category}) {
     return (
         <Dialog
             open={open}
@@ -49,13 +49,28 @@ export default function ModalCategory({open, onChangeInput, handleClose, addCate
                 />
             </DialogContent>
 
-            <DialogActions className="modal-actions-x">
-                <Button onClick={handleClose} className="btn-cancel-x">
-                    Cancel
-                </Button>
-                <Button disabled={loading} onClick={addCategory} className="btn-submit-x">
-                    {loading ? <FaSpinner className="spin" /> : category.id ? "UPDATE" : "ADD"}
-                </Button>
+            <DialogActions className="modal-actions-x p-6 w-full flex flex-col">
+                {loading ? (
+                    <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
+                        <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
+                            <span className="animate-pulse">Syncing to Cloud Database...</span>
+                            <span>{progress}%</span>
+                        </div>
+                        <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
+                            <div 
+                                className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
+                    </div>
+                ) : (
+                    <div className="w-full flex justify-end gap-3 pt-2">
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
+                        <Button disabled={loading} onClick={addCategory} className="btn-submit-x">
+                            {category.id ? "UPDATE" : "ADD"}
+                        </Button>
+                    </div>
+                )}
             </DialogActions>
         </Dialog>
     );

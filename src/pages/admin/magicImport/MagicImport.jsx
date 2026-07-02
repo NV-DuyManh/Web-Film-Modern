@@ -16,6 +16,8 @@ import { EpisodeContext } from '../../../contexts/EpisodeProvider';
 import { ShowTimeContext } from '../../../contexts/ShowTimeProvider';
 
 import LOGO from "../../../assets/Logo.png";
+import LOGO_POSTER from "../../../assets/Logo6.png";
+import LOGO_BANNER from "../../../assets/Logo5.png";
 
 function MagicImport() {
     const [inputText, setInputText] = useState("");
@@ -133,14 +135,15 @@ BẠN PHẢI TUÂN THỦ NGHIÊM NGẶT CÁC QUY TẮC SAU:
 - Cột Description (Actor Desc, Char Desc, Cat Desc) và Gender (Gender, Char Gender) BẮT BUỘC dùng dấu gạch đứng ( | ) để ngăn cách.
 - Số lượng phần tử phải khớp nhau tuyệt đối (Số lượng diễn viên = Số đoạn mô tả diễn viên = Số giới tính diễn viên).
 
-2. QUY TẮC MÔ TẢ (SỐ ÍT):
-- Mô tả Diễn viên, Đạo diễn, Nhân vật KHÔNG DÙNG từ chỉ số nhiều (như: những, các). Phải dùng danh xưng cá nhân (Ông, Bà, Anh, Cô, Cậu bé, Hắn...).
-- Mỗi đoạn mô tả phải chi tiết, văn phong bách khoa toàn thư.
+2. QUY TẮC MÔ TẢ CHI TIẾT (RẤT QUAN TRỌNG):
+- Độ dài: Các cột Movie Description, Cat Desc, Dir Desc, Actor Desc, Char Desc BẮT BUỘC phải chi tiết, MỖI ĐOẠN MÔ TẢ TỐI THIỂU 20 TỪ.
+- Liên kết phim (Actor/Director): Mô tả Đạo diễn (Dir Desc) và Diễn viên (Actor Desc) BẮT BUỘC phải nhắc đến phong cách nghệ thuật của họ và đề cập đến một số bộ phim tiêu biểu khác mà họ từng tham gia.
+- Xưng hô (Số ít): Khi mô tả Diễn viên, Đạo diễn, Nhân vật KHÔNG DÙNG từ chỉ số nhiều. Phải dùng danh xưng cá nhân (Ông, Bà, Anh, Cô, Cậu bé, Hắn...). Văn phong bách khoa toàn thư.
 
 3. ĐỊNH DẠNG TRƯỜNG CỤ THỂ:
 - URL: Sử dụng link mẫu: https://player.phimapi.com/player/?url=https://s6.kkphimplayer6.com/20251229/qOcvuFyt/index.m3u8 (Có thể thay đổi phần hash để đảm bảo tính duy nhất nếu cần).
 - Type: "Phim Lẻ" hoặc "Phim Bộ".
-- Plan: "Free", "VIP", hoặc "Premium".
+- Plan: BẮT BUỘC chọn một trong các giá trị sau (ghi đúng chính tả): ${plans.length > 0 ? plans.map(p => `"${p.name}"`).join(', ') : '"Free"'}.
 - Gender / Char Gender: Chỉ dùng "Male", "Female", hoặc "Other".
 - Time: Định dạng ISO 8601 (VD: 2026-08-01T18:00).
 - Status: "Đang chiếu", "Hoàn thành", "Sắp chiếu".
@@ -149,16 +152,16 @@ BẠN PHẢI TUÂN THỦ NGHIÊM NGẶT CÁC QUY TẮC SAU:
 MẪU 1 BỘ PHIM HOÀN CHỈNH (Hãy làm theo mẫu này):
 Name: Jujutsu Kaisen 0
 Original Name: Chú Thuật Hồi Chiến 0
-Movie Description: Yuta Okkotsu là một nam sinh trung học bị ám bởi linh hồn người bạn thanh mai trúc mã.
+Movie Description: Yuta Okkotsu là một thiếu niên nhút nhát vô tình bị ám bởi oán linh của cô bạn thanh mai trúc mã Rika Orimoto sau tai nạn thảm khốc, khiến cậu phải gia nhập trường Chú thuật để kiểm soát sức mạnh này.
 Type: Phim Lẻ
 Categories: Hành Động, Giả Tưởng
-Cat Desc: Thể loại hành động nhanh | Thế giới phép thuật hư cấu
+Cat Desc: Thể loại hành động sở hữu nhịp độ nhanh với các pha chiến đấu mãn nhãn, kịch tính | Thế giới giả tưởng hư cấu với hệ thống phép thuật độc đáo vượt ra ngoài định luật vật lý thông thường.
 Director: Sunghoo Park
-Dir Desc: Anh là một đạo diễn tài năng.
+Dir Desc: Anh là một đạo diễn tài năng người Hàn Quốc nổi tiếng với các pha hành động mượt mà, từng ghi dấu ấn cực kỳ đậm nét qua The God of High School và Jujutsu Kaisen.
 Actors: Megumi Ogata, Kana Hanazawa
-Actor Desc: Cô là một Seiyuu gạo cội | Nữ diễn viên lồng tiếng này sở hữu chất giọng trong trẻo.
+Actor Desc: Cô là một Seiyuu gạo cội chuyên lồng tiếng cho các nhân vật nam chính có nội tâm phức tạp, từng góp mặt trong siêu phẩm Neon Genesis Evangelion | Nữ diễn viên lồng tiếng hàng đầu này sở hữu chất giọng trong trẻo đặc trưng, từng tham gia rất nhiều dự án lớn như Psycho-Pass hay Tokyo Ghoul.
 Characters: Yuta Okkotsu, Rika Orimoto
-Char Desc: Cậu là một học sinh nhút nhát | Cô bé đáng thương này đã biến thành một oán linh mạnh mẽ.
+Char Desc: Cậu là một học sinh trung học mang trong mình nguồn chú lực khổng lồ nhưng lại luôn tự ti và sợ hãi sức mạnh của chính bản thân mình | Cô bé đáng thương này đã qua đời trong tai nạn giao thông và biến thành một oán linh đặc cấp luôn bảo vệ Yuta một cách thái quá.
 Gender: Female | Female
 Char Gender: Male | Female
 Plan: Premium
@@ -344,7 +347,7 @@ Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễ
                         const movieRef = doc(collection(db, "Movies"));
                         currentMovieId = movieRef.id;
                         const submitMovie = {
-                            ...movie, id: currentMovieId, imgUrl: LOGO, bannerUrl: LOGO, list_Category, list_Actor, list_Character,
+                            ...movie, id: currentMovieId, imgUrl: LOGO_POSTER, bannerUrl: LOGO_BANNER, list_Category, list_Actor, list_Character,
                             author: authorID, category_Type_Id, planID: finalPlanID, createdAt: new Date().toISOString()
                         };
                         await setDoc(movieRef, submitMovie);

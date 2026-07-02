@@ -109,7 +109,7 @@
 
 @media (min-width: 1024px) {
     .banner-info-box {
-        bottom: 40px; 
+        bottom: -40px; 
         left: 50px;
         transform: none;
         width: 60%;
