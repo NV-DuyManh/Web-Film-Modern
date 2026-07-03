@@ -174,6 +174,7 @@ BẠN PHẢI TUÂN THỦ NGHIÊM NGẶT CÁC QUY TẮC SAU:
 - Time: Định dạng ISO 8601 (VD: 2026-08-01T18:00).
 - Status: "Đang chiếu", "Hoàn thành", "Sắp chiếu".
 - Age Rating: "P", "K", "T13", "T16", "T18".
+- Phân bổ Tập phim (Episodes, Ep Sub, Ep Dub, Ep Voice): Hãy phân bổ hợp lý. Bắt buộc Ep Sub, Ep Dub, Ep Voice ĐỀU PHẢI có ít nhất 1 tập (dù phim lẻ hay bộ, cứ tự chế đại số liệu) để đảm bảo dữ liệu phong phú, KHÔNG ĐƯỢC để bằng 0. Cột Episodes là tổng số tập phim.
 
 MẪU 1 BỘ PHIM HOÀN CHỈNH (Hãy làm theo mẫu này):
 Name: Jujutsu Kaisen 0
@@ -196,7 +197,7 @@ Year: 2021
 Episodes: 1
 Ep Sub: 1
 Ep Dub: 1
-Ep Voice: 0
+Ep Voice: 1
 Episode Number: 1
 URL: https://player.phimapi.com/player/?url=https://s6.kkphimplayer6.com/20251229/qOcvuFyt/index.m3u8
 Room: Room A
@@ -206,7 +207,7 @@ Age Rating: T16
 Duration: 105
 Rent Price: 30000
 
-Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễn viên/nhân vật cho mỗi phim). Xuất kết quả dưới dạng text thuần (raw text) có thể copy được ngay.`;
+Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến số lượng thể loại, diễn viên, nhân vật sao cho thực tế và phù hợp với quy mô của từng phim (ít nhất là 4, phim có thể lên tới 15-20 người/thể loại). Tuyệt đối không được rập khuôn phim nào cũng có số lượng bằng nhau. Xuất kết quả dưới dạng text thuần (raw text) có thể copy được ngay.`;
 
         navigator.clipboard.writeText(promptText);
         setIsCopied(true);

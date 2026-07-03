@@ -172,14 +172,7 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
                                         InputProps={{ style: { fontSize: 12 } }}
                                     />
                                     <div className="w-44 h-44 rounded-full overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
-                                        {(user.imgUrl || user.avatarUrl)?.startsWith('http') ? (
-                                            <img src={(user.imgUrl || user.avatarUrl)} className="w-full h-full object-cover" alt="Preview" onError={(e) => e.target.src = LOGO} />
-                                        ) : (
-                                            <div className="flex flex-col items-center text-gray-500">
-                                                <FaLink className="text-3xl mb-1" />
-                                                <span className="text-[10px] font-bold">Paste URL</span>
-                                            </div>
-                                        )}
+                                        <img src={(user.imgUrl || user.avatarUrl || LOGO)} className="w-full h-full object-cover" alt="Preview" onError={(e) => e.target.src = LOGO} />
                                     </div>
                                 </div>
                             )}

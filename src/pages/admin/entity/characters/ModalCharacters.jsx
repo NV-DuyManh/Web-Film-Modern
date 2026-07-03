@@ -145,14 +145,7 @@ export default function ModalCharacters({ open, onChangeInput, handleClose, addc
                                     InputProps={{ style: { fontSize: 12 } }}
                                 />
                                 <div className="w-36 h-36 rounded-full overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
-                                    {character.imgUrl?.startsWith('http') ? (
-                                        <img src={character.imgUrl} className="w-full h-full object-cover" alt="Preview" onError={(e) => e.target.src = LOGO} />
-                                    ) : (
-                                        <div className="flex flex-col items-center text-gray-500">
-                                            <FaLink className="text-3xl mb-1" />
-                                            <span className="text-[10px] font-bold">Paste URL</span>
-                                        </div>
-                                    )}
+                                    <img src={character.imgUrl || LOGO} className="w-full h-full object-cover" alt="Preview" onError={(e) => e.target.src = LOGO} />
                                 </div>
                             </div>
                         )}

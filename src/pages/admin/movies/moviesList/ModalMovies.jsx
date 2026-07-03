@@ -347,14 +347,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                             InputProps={{ style: { fontSize: 11 } }}
                                         />
                                         <div className="w-full aspect-2/3 rounded-xl overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
-                                            {movie.imgUrl?.startsWith('http') ? (
-                                                <img src={movie.imgUrl} className="w-full h-full object-cover" alt="Poster Preview" onError={(e) => e.target.src = Logo5} />
-                                            ) : (
-                                                <div className="flex flex-col items-center text-gray-500">
-                                                    <FaLink className="text-2xl mb-1" />
-                                                    <span className="text-[10px] font-bold">Paste URL</span>
-                                                </div>
-                                            )}
+                                            <img src={movie.imgUrl || Logo5} className="w-full h-full object-cover" alt="Poster Preview" onError={(e) => e.target.src = Logo5} />
                                         </div>
                                     </div>
                                 )}
@@ -390,14 +383,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                             InputProps={{ style: { fontSize: 11 } }}
                                         />
                                         <div className="w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
-                                            {movie.bannerUrl?.startsWith('http') ? (
-                                                <img src={movie.bannerUrl} className="w-full h-full object-cover" alt="Banner Preview" onError={(e) => e.target.src = Logo5} />
-                                            ) : (
-                                                <div className="flex flex-col items-center text-gray-500">
-                                                    <FaLink className="text-2xl mb-1" />
-                                                    <span className="text-[10px] font-bold">Paste URL</span>
-                                                </div>
-                                            )}
+                                            <img src={movie.bannerUrl || Logo5} className="w-full h-full object-cover" alt="Banner Preview" onError={(e) => e.target.src = Logo5} />
                                         </div>
                                     </div>
                                 )}

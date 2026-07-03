@@ -8,6 +8,19 @@ import { AuthContext } from '../../contexts/AuthProvider';
 function HeaderAdmin() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const { isLogin, handleLogout } = useContext(AuthContext);
+    const dropdownRef = React.useRef(null);
+
+    React.useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <div>
@@ -22,24 +35,36 @@ function HeaderAdmin() {
                             <FiSearch />
                         </button>
 
-                        <button className="text-yellow-400 cursor-pointer drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-yellow-300 hover:drop-shadow-[0_0_15px_rgba(250,204,21,1)]">
-                            <IoIosNotifications />
+                        <button className="relative text-yellow-400 cursor-pointer drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-yellow-300 hover:drop-shadow-[0_0_15px_rgba(250,204,21,1)] group">
+                            <IoIosNotifications className="animate-bell" />
+                            <span className="absolute top-0 right-0.5 flex h-2.5 w-2.5 -mt-0.5 -mr-0.5">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-slate-900 shadow-[0_0_5px_rgba(239,68,68,0.8)]"></span>
+                            </span>
                         </button>
 
-                        <button className="text-purple-400 cursor-pointer drop-shadow-[0_0_4px_rgba(192,132,252,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-purple-300 hover:drop-shadow-[0_0_15px_rgba(192,132,252,1)]">
-                            <MdEmail />
+                        <button className="relative text-purple-400 cursor-pointer drop-shadow-[0_0_4px_rgba(192,132,252,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-purple-300 hover:drop-shadow-[0_0_15px_rgba(192,132,252,1)] group">
+                            <MdEmail className="animate-envelope" />
+                            <span className="absolute top-0 right-0 flex h-2.5 w-2.5 -mt-0.5 -mr-1">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" style={{ animationDuration: '2s' }}></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500 border border-slate-900 shadow-[0_0_5px_rgba(6,182,212,0.8)]"></span>
+                            </span>
                         </button>
 
-                        <div className="relative">
+                        <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="flex items-center justify-center text-green-400 cursor-pointer drop-shadow-[0_0_4px_rgba(74,222,128,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-110 hover:text-green-300 hover:drop-shadow-[0_0_15px_rgba(74,222,128,1)]"
+                                className="relative flex items-center justify-center text-green-400 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:scale-110 group"
                             >
+                                <div className="absolute inset-0 rounded-full bg-green-400 opacity-20 blur-sm group-hover:opacity-60 group-hover:animate-pulse transition-opacity duration-300"></div>
+                                
                                 {isLogin?.avatarUrl ? (
-                                    <img src={isLogin.avatarUrl} alt="avatar" className="w-8 h-8 rounded-full object-cover border-2 border-green-400" />
+                                    <img src={isLogin.avatarUrl} alt="avatar" className="relative z-10 w-9 h-9 rounded-full object-cover border-2 border-green-400 shadow-[0_0_10px_rgba(74,222,128,0.6)]" />
                                 ) : (
-                                    <FaUserCircle />
+                                    <FaUserCircle className="relative z-10 text-[32px] drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
                                 )}
+
+                                <span className="absolute bottom-0 right-0 z-20 w-3 h-3 bg-[#22c55e] border-2 border-[#1e293b] rounded-full shadow-[0_0_5px_rgba(34,197,94,1)]"></span>
                             </button>
 
                             {isDropdownOpen && (
