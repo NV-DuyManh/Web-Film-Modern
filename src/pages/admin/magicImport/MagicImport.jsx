@@ -24,6 +24,7 @@ function MagicImport() {
     const [previewData, setPreviewData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
     const [isCopied, setIsCopied] = useState(false);
     const [mode, setMode] = useState('IMPORT'); 
     
@@ -74,13 +75,26 @@ function MagicImport() {
     };
 
     const handleParse = () => {
+        if (!inputText || !inputText.trim()) {
+            setErrorMsg("⚠️ Vui lòng dán dữ liệu vào ô Data Input Area trước khi Parse!");
+            setTimeout(() => setErrorMsg(""), 4000);
+            return;
+        }
+
         const rawData = parseTSV(inputText);
+        if (!rawData || rawData.length === 0) {
+            setErrorMsg("⚠️ Không tìm thấy dữ liệu hợp lệ. Vui lòng kiểm tra lại cấu trúc copy từ Excel!");
+            setTimeout(() => setErrorMsg(""), 4000);
+            return;
+        }
+
         const mapped = enrichWithMovieMapping(mapMovieData(rawData));
         setPreviewData(mapped);
         setRowStatuses({});
         setVisualProgress(0);
         setCurrentImportIdx(-1);
         setSuccessMsg("");
+        setErrorMsg("");
     };
 
     const handleFileUpload = (e) => {
@@ -89,19 +103,31 @@ function MagicImport() {
         setSuccessMsg("");
         const reader = new FileReader();
         reader.onload = (evt) => {
-            const bstr = evt.target.result;
-            const wb = XLSX.read(bstr, { type: 'binary' });
-            const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-            const formattedData = data.map(row => {
-                const newRow = {};
-                for (let key in row) newRow[key.toLowerCase().trim()] = String(row[key]);
-                return newRow;
-            });
-            const mapped = enrichWithMovieMapping(mapMovieData(formattedData));
-            setPreviewData(mapped);
-            setRowStatuses({});
-            setVisualProgress(0);
-            setCurrentImportIdx(-1);
+            try {
+                const bstr = evt.target.result;
+                const wb = XLSX.read(bstr, { type: 'binary' });
+                const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                if (!data || data.length === 0) {
+                    setErrorMsg("⚠️ File Excel trống hoặc không hợp lệ!");
+                    setTimeout(() => setErrorMsg(""), 4000);
+                    return;
+                }
+                const formattedData = data.map(row => {
+                    const newRow = {};
+                    for (let key in row) newRow[key.toLowerCase().trim()] = String(row[key]);
+                    return newRow;
+                });
+                const mapped = enrichWithMovieMapping(mapMovieData(formattedData));
+                setPreviewData(mapped);
+                setRowStatuses({});
+                setVisualProgress(0);
+                setCurrentImportIdx(-1);
+                setSuccessMsg("");
+                setErrorMsg("");
+            } catch (err) {
+                setErrorMsg("⚠️ Đã có lỗi xảy ra khi đọc file Excel!");
+                setTimeout(() => setErrorMsg(""), 4000);
+            }
         };
         reader.readAsBinaryString(file);
         e.target.value = null;
@@ -497,6 +523,12 @@ Hãy tạo dữ liệu thật phong phú (ít nhất 4-5 thể loại, 4-5 diễ
                         />
                         
                         <div className="flex flex-col gap-3 mt-4">
+                            {errorMsg && (
+                                <div className="text-red-400 bg-red-500/10 border border-red-500/30 p-2.5 rounded-lg text-xs font-bold text-center shadow-[0_0_10px_rgba(239,68,68,0.1)]">
+                                    {errorMsg}
+                                </div>
+                            )}
+
                             <button 
                                 onClick={handleParse}
                                 className={`w-full cursor-pointer hover:scale-105 py-3 rounded-xl text-white font-bold tracking-wider uppercase transition-all active:scale-95

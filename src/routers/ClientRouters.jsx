@@ -8,7 +8,7 @@ import Series from '../pages/client/series/Series';
 import Country from '../pages/client/country/Country';
 import Actors from '../pages/client/actors/Actors';
 import Showtimes from '../pages/client/showtimes/Showtimes';
-import PlayFilm from '../pages/client/home/playFilm/PlayFilm';
+import PlayFilm from '../pages/client/watch/PlayFilm';
 function ClientRouters(props) {
     const clientRouter = [
         {

@@ -24,7 +24,7 @@ export default function FilmNew() {
             </div>
 
             <div className="movie-slider-wrapper relative group/slider">
-                <button className="movie-nav-btn movie-nav-btn--prev filmnew-prev-btn top-[40%]! max-md:top-[35%]!" draggable="false">
+                <button className="movie-nav-btn movie-nav-btn--prev filmnew-prev-btn" draggable="false">
                     <FaChevronLeft />
                 </button>
 
@@ -68,7 +68,7 @@ export default function FilmNew() {
                     ))}
                 </Swiper>
 
-                <button className="movie-nav-btn movie-nav-btn--next filmnew-next-btn top-[40%]! max-md:top-[35%]!" draggable="false">
+                <button className="movie-nav-btn movie-nav-btn--next filmnew-next-btn" draggable="false">
                     <FaChevronRight />
                 </button>
             </div>

@@ -10,7 +10,7 @@ import LogIn from '../../pages/client/auth/LogIn';
 import Register from '../../pages/client/auth/Register';
 import { AuthContext } from '../../contexts/AuthProvider';
 import Coder from '../../assets/Coder.png';
-import PlayFilm from '../../pages/client/home/playFilm/PlayFilm';
+import PlayFilm from '../../pages/client/watch/PlayFilm';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import Category from '../../pages/client/category/Category';
 

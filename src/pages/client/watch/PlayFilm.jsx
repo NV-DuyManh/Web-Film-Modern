@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { FaChevronLeft, FaChevronRight, FaPlay, FaVolumeUp, FaExpand, FaEllipsisV, FaComments, FaPaperPlane, FaClosedCaptioning, FaMicrophone, FaBell } from 'react-icons/fa';
-import { MovieContext } from '../../../../contexts/MovieProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
-import { PlanContext } from '../../../../contexts/PlanProvider';
+import { MovieContext } from '../../../contexts/MovieProvider';
+import { getObjectById } from '../../../services/firebaseReponse';
+import { PlanContext } from '../../../contexts/PlanProvider';
 
 export default function PlayFilm({ handleOpenLogin }) {
     const [activeAudio, setActiveAudio] = useState('vietsub');

@@ -648,28 +648,36 @@ li {
     padding-bottom: 24px !important;
 }
 
+/* Nav button positioning system:
+   Uses modern CSS :has() to detect the image aspect ratio and layout type
+   from the components and apply the perfectly measured top percentages.
+   No JS hooks needed, no layout classes needed!
+*/
+
 .movie-nav-btn {
     position: absolute;
-    top: calc(50% - 32px);
+    top: 40%; /* Default fallback */
     z-index: 40;
     background: rgba(17, 24, 39, 0.85);
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    width: 45px;
-    height: 45px;
+    width: 44px;
+    height: 44px;
     color: #ffffff;
     font-size: 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Removed 'all' and explicit 'top' to prevent jumping when dragged or rendered */
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
     opacity: 1;
     visibility: visible;
     outline: none;
     -webkit-tap-highlight-color: transparent;
+    transform: translateY(-50%);
 }
 
 .movie-nav-btn--prev {
@@ -704,22 +712,37 @@ li {
     pointer-events: none;
 }
 
+/* 1. Landscape (aspect-video) defaults */
+.movie-slider-wrapper:has(.aspect-video) .movie-nav-btn { top: 38%; }
+/* 2. Cinema (aspect-video + emerald badge) */
+.movie-slider-wrapper:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn { top: 34%; }
+/* 3. Portrait (aspect-2/3) defaults */
+.movie-slider-wrapper:has(.aspect-2\/3) .movie-nav-btn { top: 41%; }
+/* 4. TopFilm (aspect-2/3 + red text for numbers) */
+.movie-slider-wrapper:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn { top: 39%; }
+
 @media (max-width: 1024px) {
     .movie-nav-btn {
-        width: 38px;
-        height: 38px;
-        font-size: 14px;
-        top: calc(50% - 28px);
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
     }
+    .movie-slider-wrapper:has(.aspect-video) .movie-nav-btn { top: 38%; }
+    .movie-slider-wrapper:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn { top: 34%; }
+    .movie-slider-wrapper:has(.aspect-2\/3) .movie-nav-btn { top: 42%; }
+    .movie-slider-wrapper:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn { top: 40%; }
 }
 
 @media (max-width: 768px) {
     .movie-nav-btn {
-        width: 32px;
-        height: 32px;
-        font-size: 12px;
-        top: calc(50% - 24px);
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
     }
+    .movie-slider-wrapper:has(.aspect-video) .movie-nav-btn { top: 37%; }
+    .movie-slider-wrapper:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn { top: 32%; }
+    .movie-slider-wrapper:has(.aspect-2\/3) .movie-nav-btn { top: 48%; }
+    .movie-slider-wrapper:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn { top: 45%; }
 }
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
