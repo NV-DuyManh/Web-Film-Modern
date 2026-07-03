@@ -1,0 +1,844 @@
+// ============================================================================
+// BIẾN (VARIABLES) - Lưu trữ các mã màu dùng chung trong toàn bộ app
+// Giúp thay đổi màu sắc nhanh chóng ở một nơi duy nhất.
+// ============================================================================
+$primary-cyan: #00f2fe;    // Màu xanh lơ (dùng cho hiệu ứng sáng)
+$primary-green: #4ade80;   // Màu xanh lá (dùng cho success/focus)
+$primary-yellow: #facc15;  // Màu vàng (dùng cho hover/cảnh báo nhẹ)
+$primary-purple: #8b5cf6;  // Màu tím (dùng cho gradient)
+$primary-red: #ef4444;     // Màu đỏ (dùng cho lỗi/cảnh báo xoá)
+
+$table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
+
+// ============================================================================
+// ANIMATIONS (HIỆU ỨNG CHUYỂN ĐỘNG)
+// Các định nghĩa chuyển động được dùng lại ở nhiều component
+// ============================================================================
+// Chữ chạy màu lấp lánh
+@keyframes textMove {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
+}
+
+
+
+// ============================================================================
+// CÀI ĐẶT CHUNG (GLOBAL)
+// ============================================================================
+li {
+    list-style: none; // Xoá dấu chấm mặc định của danh sách
+}
+
+// ============================================================================
+// HIỆU ỨNG GIAO DIỆN CHUNG
+// ============================================================================
+
+// Chữ lấp lánh (dùng cho các tiêu đề quan trọng, tên app, hoặc vip/premium)
+.glow-text {
+    background: linear-gradient(90deg, #00f2fe, #fb8ef2, #f17007, #7b2ff7, #00f2fe);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: textMove 4s linear infinite;
+}
+
+.glow-text2 {
+    background: linear-gradient(90deg, #FEE140, #FA709A, #2bff14, #FA709A, #FEE140);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: textMove 4s linear infinite;
+}
+
+// ============================================================================
+// COMPONENT: KHUNG TÌM KIẾM (SEARCH)
+// Áp dụng: Header hoặc thanh công cụ Admin
+// ============================================================================
+.search {
+    position: relative;
+
+    &-input {
+        width: 100%;
+        padding: 0.5rem 2.5rem 0.5rem 1rem;
+        border-radius: 0.5rem;
+        background: rgba(24, 24, 27, 0.4);
+        border: 1px solid #3f3f46;
+        color: white;
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px rgba(255, 234, 0, 0.7);
+
+        &::placeholder {
+            color: #9ca3af;
+        }
+
+        &:hover {
+            border-color: $primary-green;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+        }
+
+        &:focus {
+            outline: none;
+            border-color: $primary-green;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.7);
+
+            // Khi input đang focus, đổi màu icon tìm kiếm kế bên nó
+            & + .search-icon {
+                color: $primary-green !important;
+            }
+        }
+    }
+
+    &-icon {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.25rem;
+        color: #9ca3af;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            color: $primary-yellow;
+            transform: translateY(-50%) scale(1.1);
+            filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.8));
+        }
+    }
+}
+
+// ============================================================================
+// COMPONENT: BẢNG DỮ LIỆU (TABLES)
+// Áp dụng: Trang quản trị Admin (Liệt kê phim, người dùng, thể loại...)
+// ============================================================================
+.table-wrapper {
+    padding: 2px;
+    border-radius: 16px;
+    background: linear-gradient(120deg, rgba(0, 255, 255, 0.4), rgba(139, 92, 246, 0.4));
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 25px rgba(0, 255, 255, 0.15);
+}
+
+.table-container {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+
+    &:hover {
+        box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+}
+
+.table-header {
+    background: linear-gradient(90deg, rgba(6, 182, 212, 0.6), rgba(139, 92, 246, 0.6));
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    height: 42px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    th {
+        color: #e0f2fe;
+        font-weight: 600;
+        font-size: 13px;
+        padding: 10px 12px;
+    }
+}
+
+.table-row {
+    background: $table-bg;
+    height: 42px;
+    transition: 0.2s;
+
+    &:hover {
+        background: rgba(59, 130, 246, 0.06);
+    }
+}
+
+.table-cell {
+    color: #e5e7eb;
+    font-size: 13px;
+    padding: 10px 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+// Chân bảng (Chứa phần phân trang - pagination)
+.table-footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 14px;
+    background: rgba(15, 23, 42, 0.9);
+    color: #cbd5f5;
+}
+
+// ============================================================================
+// COMPONENT: NÚT HÀNH ĐỘNG TRONG BẢNG (ACTION BUTTONS)
+// Áp dụng: Cột "Hành động" của bảng (Sửa / Xoá)
+// ============================================================================
+.action-btn {
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: 0.2s;
+    border: none;
+
+    svg {
+        font-size: 14px;
+    }
+}
+
+.btn-edit,
+.btn-delete {
+    cursor: pointer;
+}
+
+// Nút Sửa (Màu Xanh lơ)
+.btn-edit {
+    background: linear-gradient(90deg, #22d3ee, #3b82f6);
+    color: white;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &:hover {
+        background: #00ff55;
+        color: #0f172a;
+        transform: scale(1.08);
+        box-shadow: 0 0 12px #00ff55,
+            0 0 25px #00cc44,
+            inset 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+}
+
+// Nút Xoá (Màu Đỏ/Cam)
+.btn-delete {
+    background: linear-gradient(90deg, #f97316, #ef4444);
+    color: white;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &:hover {
+        background: #ffea00;
+        color: #0f172a;
+        transform: scale(1.08);
+        box-shadow: 0 0 12px #ffea00,
+            0 0 25px #ffb300,
+            inset 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+}
+
+
+// ============================================================================
+// COMPONENT: MODALS (HỘP THOẠI POPUP)
+// Áp dụng: Popup thêm mới/chỉnh sửa trong trang Admin
+// ============================================================================
+
+// Nền đen mờ khi popup mở ra
+.modal-backdrop-x {
+    background: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(3px);
+}
+
+// Nội dung chính của popup (viền màu neon chéo)
+.modal-inner {
+    position: relative;
+    border-radius: 16px !important;
+    overflow: hidden;
+    background: rgba(18, 28, 45, 0.96) !important;
+    border: 1.5px solid transparent;
+    background-image: linear-gradient(rgba(18, 28, 45, 0.96), rgba(18, 28, 45, 0.96)), linear-gradient(120deg, #22c55e, #eab308);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 12px rgba(34, 197, 94, 0.25);
+}
+
+// Tiêu đề của popup
+.modal-header-x {
+    font-size: 18px;
+    font-weight: 800 !important;
+    color: #ffffff;
+    background: linear-gradient(90deg, #8b5cf6, #ec4899);
+    padding: 10px 20px !important;
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.25);
+}
+
+// Phần chứa các ô nhập liệu trong popup
+.modal-body-x {
+    padding: 14px 20px;
+}
+
+// ============================================================================
+// COMPONENT: INPUTS TRONG MODAL (MUI OVERRIDES)
+// Áp dụng: Các ô điền Text, Textarea, Select trong Form Admin
+// ============================================================================
+.modal-input-x {
+    margin-top: 16px !important;
+    width: 100%;
+
+    .MuiSelect-icon {
+        color: #fff !important;
+    }
+
+    .MuiOutlinedInput-root {
+        background: transparent;
+        border-radius: 8px;
+        color: #ffffff;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    input,
+    textarea {
+        color: #ffffff !important;
+
+        // Fix lỗi trình duyệt tự điền tự động (autofill) làm nền input biến thành trắng
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover,
+        &:-webkit-autofill:focus {
+            -webkit-text-fill-color: #ffffff !important;
+            caret-color: #ffffff !important;
+            box-shadow: 0 0 0px 1000px transparent inset !important;
+            -webkit-box-shadow: 0 0 0px 1000px transparent inset !important;
+            transition: background-color 9999s ease-in-out 0s !important;
+        }
+    }
+
+    // Viền lúc bình thường
+    .MuiOutlinedInput-notchedOutline {
+        border-color: rgba(255, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    // Viền lúc di chuột vào (Hover)
+    &:hover .MuiOutlinedInput-notchedOutline {
+        border-color: #fde047 !important;
+        box-shadow: 0 0 10px rgba(253, 224, 71, 0.4);
+    }
+
+    // Viền lúc click chuột vào nhập liệu (Focus)
+    .Mui-focused {
+        .MuiOutlinedInput-notchedOutline {
+            border-color: $primary-green !important;
+            box-shadow: 0 0 12px rgba(74, 222, 128, 0.6);
+        }
+
+        &.MuiOutlinedInput-root {
+            transform: scale(1.02); // Phóng to nhẹ
+        }
+    }
+
+    // Nhãn (Placeholder thu nhỏ ở trên viền)
+    label {
+        color: #d1d5db !important;
+        transition: all 0.3s ease;
+
+        &.Mui-focused {
+            color: $primary-green !important;
+        }
+
+        &.Mui-error {
+            color: $primary-red !important;
+        }
+    }
+
+    // Trạng thái nhập sai/lỗi (Error)
+    .Mui-error {
+        .MuiOutlinedInput-notchedOutline {
+            border-color: $primary-red !important;
+            box-shadow: 0 0 10px rgba(239, 68, 68, 0.2) !important;
+        }
+    }
+
+    // Dòng text báo lỗi ở dưới input
+    .MuiFormHelperText-root.Mui-error {
+        color: $primary-red;
+        margin-left: 12px;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+}
+
+// ============================================================================
+// COMPONENT: GENDER BOX (KHUNG CHỌN GIỚI TÍNH BẰNG RADIO)
+// Áp dụng: Form Quản lý Người Dùng / Diễn Viên
+// ============================================================================
+.gender-box-wrapper {
+    margin-top: 28px !important;
+    width: 100%;
+}
+
+.gender-box {
+    position: relative;
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 8px 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        border-color: #fde047;
+        box-shadow: 0 0 10px rgba(253, 224, 71, 0.4);
+
+        .gender-label {
+            color: #fde047;
+        }
+    }
+
+    &:focus-within {
+        border-color: $primary-green;
+        box-shadow: 0 0 12px rgba(74, 222, 128, 0.6);
+        transform: scale(1.02);
+
+        .gender-label {
+            color: $primary-green;
+        }
+    }
+
+    &.error {
+        border-color: $primary-red;
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+
+        .gender-label {
+            color: $primary-red;
+        }
+    }
+}
+
+.gender-label {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    padding: 0 4px;
+    font-size: 12px;
+    letter-spacing: 0.025em;
+    background-color: #121c2d;
+    color: #d1d5db;
+    transition: all 0.3s ease;
+}
+
+.gender-error-text {
+    color: $primary-red;
+    font-size: 12px;
+    margin-top: 4px;
+    margin-left: 12px;
+    letter-spacing: 0.025em;
+}
+
+// ============================================================================
+// COMPONENT: UPLOAD FILE KÉO THẢ (DRAG & DROP AREA)
+// Áp dụng: Tải lên hình ảnh, poster, video phim
+// ============================================================================
+.upload-container {
+    margin-top: 32px;
+    padding: 16px;
+    border: 1px dashed #4b5563;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(30, 41, 59, 0.3);
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: #22d3ee; // Phát sáng viền màu cyan khi di chuột vào
+    }
+}
+
+.upload-title {
+    color: #9ca3af;
+    font-weight: 600;
+    margin-bottom: 16px;
+    letter-spacing: 0.025em;
+    font-size: 14px;
+}
+
+// ============================================================================
+// COMPONENT: CÁC NÚT BẤM (BUTTONS) KHÁC NHAU
+// ============================================================================
+
+// Khu vực chứa nút lưu/hủy dưới cùng của Modal
+.modal-actions-x {
+    padding: 14px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+// Nút Huỷ bỏ (Hủy trong Modal)
+.btn-cancel-x {
+    background: $primary-red !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    min-width: 110px !important;
+
+    &:hover {
+        background: #dc2626 !important;
+    }
+}
+
+// Nút Submit (Xác nhận/Lưu trong Modal)
+.btn-submit-x {
+    background: linear-gradient(90deg, #22c55e, #eab308) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 8px 16px !important;
+    min-width: 110px !important;
+
+    &:hover {
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+    }
+}
+
+.css-1uent87-MuiButtonBase-root-MuiButton-root {
+    padding: 8px 29px !important;
+}
+
+// Nút Thêm Mới ở trang danh sách Admin (Màu Cyan Neon)
+.btn-add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #ffffff;
+    background: transparent;
+    border: 2px solid #00FFFF;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.4), inset 0 0 5px rgba(0, 255, 255, 0.2);
+    text-shadow: 0 0 5px #00FFFF;
+
+    &:hover {
+        transform: translateY(-1px);
+        background: #00FFFF;
+        color: #111827;
+        text-shadow: none;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8),
+            0 0 30px rgba(0, 255, 255, 0.6),
+            0 0 10px rgba(255, 255, 255, 0.8) inset;
+    }
+
+    svg {
+        font-size: 18px;
+        transition: transform 0.3s ease;
+    }
+}
+
+// Nút Neutral (trung tính, không nổi bật, dùng cho các action phụ)
+.btn-neutral-x {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #d1d5db !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    transition: 0.2s;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2) !important;
+        color: #ffffff !important;
+    }
+}
+
+// Nút Danger (hành động nguy hiểm như Reset/Delete ngoài bảng)
+.btn-danger-x {
+    background: linear-gradient(90deg, #ef4444, #f97316) !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+
+    &:hover {
+        box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    }
+}
+
+// ============================================================================
+// COMPONENT: NEON SELECT / DROPDOWN
+// Áp dụng: Các ô xổ xuống (Select) có phong cách màu Cyberpunk/Neon
+// ============================================================================
+
+// Nền popup của ô select
+.neon-paper {
+    background-color: #0f172a !important;
+    border: 1px solid #22d3ee !important;
+    box-shadow: 0 4px 25px rgba(34, 211, 238, 0.25) !important;
+    border-radius: 8px !important;
+    margin-top: 4px !important;
+}
+
+// Vùng chứa danh sách các lựa chọn
+.neon-listbox {
+    padding: 6px !important;
+}
+
+// Từng dòng lựa chọn
+.neon-option {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 10px 14px !important;
+    border-radius: 6px !important;
+    margin: 2px 4px !important;
+    transition: all 0.2s ease !important;
+    color: #e2e8f0 !important;
+
+    // Khi option đang được chọn
+    &[aria-selected="true"] {
+        background-color: rgba(250, 204, 21, 0.15) !important;
+        color: #facc15 !important;
+        font-weight: 700 !important;
+        border-left: 3px solid #facc15 !important;
+        text-shadow: 0 0 8px rgba(250, 204, 21, 0.4) !important;
+    }
+
+    // Khi di chuột ngang qua option
+    &:hover,
+    &.Mui-focused {
+        background-color: rgba(34, 211, 238, 0.15) !important;
+        color: #22d3ee !important;
+        padding-left: 20px !important;
+        text-shadow: 0 0 8px rgba(34, 211, 238, 0.4) !important;
+    }
+}
+
+// Override style của MUI Menu (Khung menu xổ xuống mặc định của MUI)
+.MuiMenu-paper {
+    background-color: #111827 !important;
+    color: #e5e7eb !important;
+    border: 1px solid rgba(148, 163, 184, 0.25) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35) !important;
+    margin-top: 8px !important;
+
+    max-height: 280px !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    // Tuỳ chỉnh lại thanh cuộn scrollbar của menu
+    &::-webkit-scrollbar {
+        width: 6px;
+
+        &-track {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        &-thumb {
+            background: rgba(148, 163, 184, 0.45);
+            border-radius: 999px;
+
+            &:hover {
+                background: rgba(148, 163, 184, 0.7);
+            }
+        }
+    }
+
+    .MuiMenu-list {
+        padding: 6px !important;
+    }
+
+    .MuiMenuItem-root {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        padding: 10px 18px !important;
+        color: #d1d5db !important;
+        transition: all 0.2s ease !important;
+        border-radius: 8px !important;
+        border-bottom: none !important;
+
+        &:hover {
+            background-color: rgba(59, 130, 246, 0.16) !important;
+            color: #bfdbfe !important;
+            padding-left: 22px !important;
+        }
+
+        &.Mui-selected {
+            background-color: rgba(71, 85, 105, 0.55) !important;
+            color: #ffffff !important;
+            font-weight: 700 !important;
+
+            &:hover {
+                background-color: rgba(59, 130, 246, 0.24) !important;
+                color: #dbeafe !important;
+                padding-left: 22px !important;
+            }
+        }
+    }
+}
+
+// Sửa màu nút Xóa (Clear) và Xổ xuống (Popup Indicator) của MUI Autocomplete
+.MuiAutocomplete-clearIndicator,
+.MuiAutocomplete-popupIndicator {
+    color: #ffffff !important;
+    transition: all 0.3s ease !important;
+
+    svg {
+        fill: #ffffff !important;
+        transition: all 0.3s ease !important;
+    }
+}
+
+// Báo chữ rỗng "Không có dữ liệu" của Autocomplete sang màu trắng
+.MuiAutocomplete-noOptions {
+    color: #ffffff !important;
+}
+
+// ============================================================================
+// COMPONENT: SLIDER HIỂN THỊ PHIM (SWIPER)
+// Áp dụng: Danh sách phim cuộn ngang ở Trang chủ (Client)
+// ============================================================================
+
+// Vùng bọc ngoài Slider chống người dùng vô tình quét khối (select text) khi kéo thả
+.movie-slider-wrapper {
+    position: relative;
+    width: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+
+    * {
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-user-drag: none; // Không cho phép kéo hình ảnh ra ngoài
+    }
+
+    // Tự động thay đổi vị trí Nút Điều Hướng phụ thuộc vào Tỉ lệ hình ảnh của phim bên trong
+    // 1. Phim Tỉ lệ Màn hình ngang (aspect-video)
+    &:has(.aspect-video) .movie-nav-btn { top: 38%; }
+    
+    // 2. Phim Rạp (tỉ lệ ngang + huy hiệu màu emerald)
+    &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn { top: 34%; }
+    
+    // 3. Phim Tỉ lệ Dọc (aspect-2/3) - Poster thông thường
+    &:has(.aspect-2\/3) .movie-nav-btn { top: 41%; }
+    
+    // 4. Phim TopFilm (tỉ lệ dọc + số hạng màu đỏ)
+    &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn { top: 39%; }
+}
+
+// Vùng đệm cho khung slider
+.movie-swiper {
+    width: 100%;
+    padding-top: 24px !important;
+    padding-bottom: 24px !important;
+}
+
+// ============================================================================
+// COMPONENT: NÚT ĐIỀU HƯỚNG TRONG SLIDER PHIM (PREV / NEXT)
+// Áp dụng: Nút trái/phải trên Slider cuộn phim Trang chủ
+// ============================================================================
+.movie-nav-btn {
+    position: absolute;
+    top: 40%; // Mặc định nếu không tính được theo logic ở trên
+    z-index: 40;
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    color: #ffffff;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    opacity: 1;
+    visibility: visible;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transform: translateY(-50%);
+
+    // Nút lùi về trước (Trái)
+    &--prev {
+        left: 0;
+        transform: translate(-50%, -50%);
+
+        &:hover {
+            background: #22d3ee;
+            color: #000000;
+            border-color: #22d3ee;
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+            transform: translate(-50%, -50%) scale(1.15);
+        }
+    }
+
+    // Nút tiến lên (Phải)
+    &--next {
+        right: 0;
+        transform: translate(50%, -50%);
+
+        &:hover {
+            background: #22d3ee;
+            color: #000000;
+            border-color: #22d3ee;
+            box-shadow: 0 0 20px rgba(34, 211, 238, 0.5);
+            transform: translate(50%, -50%) scale(1.15);
+        }
+    }
+
+    // Ẩn nút đi khi không thể cuộn được nữa (đầu/cuối danh sách)
+    &.swiper-button-disabled {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none;
+    }
+}
+
+// ============================================================================
+// RESPONSIVE CHO SLIDER PHIM (MOBILE & TABLET)
+// Căn lại kích thước nút ấn và toạ độ Top cho phù hợp trên màn nhỏ
+// ============================================================================
+
+// Tablet & Màn hình vừa (< 1024px)
+@media (max-width: 1024px) {
+    .movie-nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 13px;
+    }
+    .movie-slider-wrapper {
+        &:has(.aspect-video) .movie-nav-btn { top: 38%; }
+        &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn { top: 34%; }
+        &:has(.aspect-2\/3) .movie-nav-btn { top: 42%; }
+        &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn { top: 40%; }
+    }
+}
+
+// Mobile (< 768px)
+@media (max-width: 768px) {
+    .movie-nav-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 11px;
+    }
+    .movie-slider-wrapper {
+        &:has(.aspect-video) .movie-nav-btn { top: 37%; }
+        &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn { top: 32%; }
+        &:has(.aspect-2\/3) .movie-nav-btn { top: 48%; }
+        &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn { top: 45%; }
+    }
+}
+
+// ============================================================================
+// MISC (Tùy chỉnh linh tinh khác)
+// ============================================================================
+
+// Làm sáng/đổi màu icon chọn ngày giờ của Input dạng Date/Time mặc định trình duyệt
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.6;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 1;
+    }
+}

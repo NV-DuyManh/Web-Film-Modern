@@ -1,10 +1,10 @@
-﻿import React, { useContext, useState, useEffect, useMemo } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import ModalDelete from "../../../../components/admin/ModalDelete";
 import { deleteDocument } from "../../../../services/firebaseService";
 import PaginationAdmin from "../../../../components/admin/PaginationAdmin";
-import "../../../../App.css";
+import "../../../../App.scss";
 import { SubscriptionContext } from "../../../../contexts/SubscriptionProvider";
 import { PlanContext } from "../../../../contexts/PlanProvider";
 import { UserContext } from "../../../../contexts/UserProvider";

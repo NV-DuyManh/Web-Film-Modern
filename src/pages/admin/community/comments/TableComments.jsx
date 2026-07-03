@@ -4,7 +4,7 @@ import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
-import "../../../../App.css";
+import "../../../../App.scss";
 import { CommentContext } from '../../../../contexts/CommentProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { UserContext } from '../../../../contexts/UserProvider';

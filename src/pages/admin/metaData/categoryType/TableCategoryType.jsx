@@ -6,7 +6,7 @@ import ModalDelete from '../../../../components/admin/ModalDelete';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
-import "../../../../App.css";
+import "../../../../App.scss";
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 

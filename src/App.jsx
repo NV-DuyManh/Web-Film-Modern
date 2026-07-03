@@ -1,5 +1,5 @@
 import { useContext, useState } from 'react'
-import './App.css'
+import './App.scss'
 import HomeAdmin from './pages/admin/homeAdmin/HomeAdmin'
 import { BrowserRouter } from 'react-router-dom'
 import AdminRouters from './routers/AdminRouters'
