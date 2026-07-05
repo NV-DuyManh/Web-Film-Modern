@@ -165,10 +165,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                     <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
                         <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest">Task 1: General Info</p>
                         <div className="grid grid-cols-2 gap-4">
-                            <TextField className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Movie Name" value={movie.name} error={!!error?.name} helperText={error?.name} />
-                            <TextField className="modal-input-x" name="otherName" onChange={onChangeInput} fullWidth label="Other/Original Name" value={movie.otherName} error={!!error?.otherName} helperText={error?.otherName} />
+                            <TextField variant="outlined" className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Movie Name" value={movie.name} error={!!error?.name} helperText={error?.name} />
+                            <TextField variant="outlined" className="modal-input-x" name="otherName" onChange={onChangeInput} fullWidth label="Other/Original Name" value={movie.otherName} error={!!error?.otherName} helperText={error?.otherName} />
                         </div>
-                        <TextField className="modal-input-x" name="description" onChange={onChangeInput} fullWidth multiline rows={3} label="Description" value={movie.description} error={!!error?.description} helperText={error?.description} />
+                        <TextField variant="outlined" className="modal-input-x" name="description" onChange={onChangeInput} fullWidth multiline rows={3} label="Description" value={movie.description} error={!!error?.description} helperText={error?.description} />
                         <div className="grid grid-cols-2 gap-4">
                             <Autocomplete
                                 options={COUNTRIES || []} value={movie.countriesID || null}
@@ -176,7 +176,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 onChange={(e, newValue) => onChangeInput({ target: { name: "countriesID", value: newValue || "" } })}
                                 renderInput={(params) => <TextField {...params} label="Country" error={!!error?.countriesID} helperText={error?.countriesID} className="modal-input-x" />}
                             />
-                            <TextField className="modal-input-x" name="releaseYear" onChange={handleNumberChange} label="Release Year" value={movie.releaseYear} error={!!error?.releaseYear} helperText={error?.releaseYear} />
+                            <TextField variant="outlined" className="modal-input-x" name="releaseYear" onChange={handleNumberChange} label="Release Year" value={movie.releaseYear} error={!!error?.releaseYear} helperText={error?.releaseYear} />
                         </div>
                     </div>
 
@@ -195,13 +195,13 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 onChange={(e, val) => onChangeInput({ target: { name: "ageRating", value: val?.id || "" } })}
                                 renderInput={(params) => <TextField {...params} label="Age Rating" error={!!error?.ageRating} helperText={error?.ageRating} className="modal-input-x" />}
                             />
-                            <TextField className="modal-input-x" name="rent" onChange={handleNumberChange} label="Rent Price" value={movie.rent} error={!!error?.rent} helperText={error?.rent} />
+                            <TextField variant="outlined" className="modal-input-x" name="rent" onChange={handleNumberChange} label="Rent Price" value={movie.rent} error={!!error?.rent} helperText={error?.rent} />
                         </div>
 
                         <div className="border border-white/10 rounded-xl p-4 bg-slate-900/30">
                             <div className="grid grid-cols-2 gap-4">
-                                <TextField className="modal-input-x" name="duration" onChange={handleNumberChange} label="Duration (Mins)" value={movie.duration} error={!!error?.duration} helperText={error?.duration} />
-                                <TextField className="modal-input-x" name="endEpisode" onChange={handleEndEpisodeChange} label="Total Episodes (Max)" value={movie.endEpisode} error={!!error?.endEpisode} helperText={error?.endEpisode} />
+                                <TextField variant="outlined" className="modal-input-x" name="duration" onChange={handleNumberChange} label="Duration (Mins)" value={movie.duration} error={!!error?.duration} helperText={error?.duration} />
+                                <TextField variant="outlined" className="modal-input-x" name="endEpisode" onChange={handleEndEpisodeChange} label="Total Episodes (Max)" value={movie.endEpisode} error={!!error?.endEpisode} helperText={error?.endEpisode} />
                             </div>
 
                             <div className="grid grid-cols-3 gap-4 mt-6 mb-2">
@@ -231,17 +231,17 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     {movie.hasSub && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeSub" onChange={handleSubDubChange} label="Sub Episodes" value={movie.episodeSub} error={!!error?.episodeSub} helperText={error?.episodeSub} />
+                                        <TextField variant="outlined" className="modal-input-x mt-2!" name="episodeSub" onChange={handleSubDubChange} label="Sub Episodes" value={movie.episodeSub} error={!!error?.episodeSub} helperText={error?.episodeSub} />
                                     )}
                                 </div>
                                 <div>
                                     {movie.hasDub && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeDub" onChange={handleSubDubChange} label="Dub Episodes" value={movie.episodeDub} error={!!error?.episodeDub} helperText={error?.episodeDub} />
+                                        <TextField variant="outlined" className="modal-input-x mt-2!" name="episodeDub" onChange={handleSubDubChange} label="Dub Episodes" value={movie.episodeDub} error={!!error?.episodeDub} helperText={error?.episodeDub} />
                                     )}
                                 </div>
                                 <div>
                                     {movie.hasVoice && (
-                                        <TextField className="modal-input-x mt-2!" name="episodeVoice" onChange={handleSubDubChange} label="Voice Episodes" value={movie.episodeVoice} error={!!error?.episodeVoice} helperText={error?.episodeVoice} />
+                                        <TextField variant="outlined" className="modal-input-x mt-2!" name="episodeVoice" onChange={handleSubDubChange} label="Voice Episodes" value={movie.episodeVoice} error={!!error?.episodeVoice} helperText={error?.episodeVoice} />
                                     )}
                                 </div>
                             </div>
@@ -276,7 +276,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         </div>
 
                         <div className='flex items-center text-white gap-2 mt-4'>
-                            <label className="font-medium">Directors</label>
+                            <label className="font-medium">Authors</label>
                             <FaUserTie onClick={() => handleClickOpenChoose("authors")} className='cursor-pointer text-2xl text-yellow-400 hover:scale-110 transition-transform' />
                             {error?.list_Author && <span className="text-red-500 text-xs italic">{error.list_Author}</span>}
                         </div>

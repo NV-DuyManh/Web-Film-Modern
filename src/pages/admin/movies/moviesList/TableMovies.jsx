@@ -3,7 +3,7 @@ import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import { IconButton, Tooltip } from '@mui/material';
-import { FaUsers } from 'react-icons/fa';
+import { FaUsers, FaEye } from 'react-icons/fa';
 import { ActorContext } from '../../../../contexts/ActorProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
@@ -25,7 +25,7 @@ const getStatusStyle = (status) => {
     }
 };
 
-function TableMovies({ movies, search, handleEdit, handleDelete }) {
+function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -179,8 +179,10 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
                                         </td>
                                         <td className="table-cell text-center">{(page - 1) * rowsPerPage + index + 1}</td>
 
-                                        <td className="py-2 flex justify-center">
-                                            <img src={row.imgUrl || Logo5} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10" />
+                                        <td className="table-cell">
+                                            <div className="flex justify-center">
+                                                <img src={row.imgUrl || Logo5} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10" />
+                                            </div>
                                         </td>
 
                                         <td className="table-cell text-center min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed">
@@ -243,6 +245,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete }) {
 
                                         <td className="table-cell text-right">
                                             <div className="flex justify-end gap-2">
+                                                <button onClick={() => handleView(row)} className="action-btn btn-view"><FaEye size={16} /></button>
                                                 <button onClick={() => handleEdit(row)} className="action-btn btn-edit"><CiEdit size={16} /></button>
                                                 <button onClick={() => handleDelete(row)} className="action-btn btn-delete"><RiDeleteBin6Fill size={16} /></button>
                                             </div>

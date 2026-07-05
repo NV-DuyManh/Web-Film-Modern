@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import Search from '../../../../components/admin/search/Search';
 import TableMovies from './TableMovies';
 import ModalMovies from './ModalMovies';
+import ModalViewMovie from './ModalViewMovie';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { addDocument, updateDocument, deleteDocument } from '../../../../services/firebaseService';
@@ -21,8 +22,10 @@ const innerMovie = {
 function MoviesList() {
     const movies = useContext(MovieContext);
     const [movie, setMovie] = useState(innerMovie);
+    const [movieView, setMovieView] = useState(null);
     const [error, setError] = useState({});
     const [openForm, setOpenForm] = useState(false);
+    const [openView, setOpenView] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -54,6 +57,11 @@ function MoviesList() {
         setMovie(editRow);
         setError({});
         setOpenForm(true);
+    };
+
+    const handleViewMovie = (row) => {
+        setMovieView(row);
+        setOpenView(true);
     };
 
     const handleDeletePrompt = (row) => {
@@ -155,9 +163,27 @@ function MoviesList() {
     return (
         <div>
             <Search name="List Movies" tuKhoa="Search Movie by Name" onChangeSearch={onChangeSearch} handleClickOpen={handleClickOpenAdd} />
-            <TableMovies movies={movies} search={search} handleEdit={handleEdit} handleDelete={handleDeletePrompt} />
-            <ModalMovies open={openForm} handleClose={() => !loading && setOpenForm(false)} movie={movie} onChangeInput={onChangeInput} onCheckboxChange={onCheckboxChange} addOrUpdateMovie={addOrUpdateMovie} loading={loading} progress={progress} setMovie={setMovie} error={error} setError={setError} />
-            <ModalDelete open={openDelete} handleClose={() => setOpenDelete(false)} handleDeleted={handleDeleted} titleDelete="DELETE MOVIE" contentDelete={`Are you sure you want to delete "${movie?.name}"?`} />
+            <TableMovies movies={movies} search={search} handleEdit={handleEdit} handleDelete={handleDeletePrompt} handleView={handleViewMovie} />
+            
+            <ModalMovies 
+                open={openForm} handleClose={() => setOpenForm(false)} 
+                movie={movie} setMovie={setMovie}
+                onChangeInput={onChangeInput} onCheckboxChange={onCheckboxChange} 
+                addOrUpdateMovie={addOrUpdateMovie} 
+                loading={loading} progress={progress}
+                error={error} setError={setError}
+            />
+
+            <ModalViewMovie 
+                open={openView} 
+                handleClose={() => setOpenView(false)} 
+                movie={movieView} 
+            />
+
+            <ModalDelete 
+                handleClose={() => setOpenDelete(false)} open={openDelete} handleDeleted={handleDeleted} 
+                titleDelete={"DELETE MOVIE"} contentDelete={`Are you sure you want to delete ${movie?.name}?`} 
+            />
         </div>
     );
 }

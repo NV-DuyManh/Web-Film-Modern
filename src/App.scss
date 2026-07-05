@@ -54,6 +54,28 @@ $table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
 }
 
 // ============================================================================
+// MODAL VIEW MOVIE - Hiệu ứng xem chi tiết phim
+// ============================================================================
+@keyframes borderGlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+@keyframes neonPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 0.8; }
+}
+
+.movie-view-modal {
+    .custom-scrollbar {
+        &::-webkit-scrollbar { width: 4px; }
+        &::-webkit-scrollbar-track { background: transparent; }
+        &::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.3); border-radius: 10px; }
+        &::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.6); }
+    }
+}
+
+// ============================================================================
 // CÀI ĐẶT CHUNG (GLOBAL)
 // ============================================================================
 li {
@@ -72,25 +94,49 @@ li {
 // HIỆU ỨNG GIAO DIỆN CHUNG
 // ============================================================================
 
+@keyframes textShine {
+    to {
+        background-position: -200% center;
+    }
+}
+
 // Chữ lấp lánh (dùng cho các tiêu đề quan trọng, tên app, hoặc vip/premium)
 .glow-text {
-    background: linear-gradient(90deg, #00f2fe, #fb8ef2, #f17007, #7b2ff7, #00f2fe);
+    background: linear-gradient(
+        90deg, 
+        #00f2fe 0%, 
+        #ff00ff 35%, 
+        #ffffff 45%, 
+        #ffffff 55%, 
+        #ff00ff 65%, 
+        #00f2fe 100%
+    );
     background-size: 200% auto;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
-    animation: textMove 4s linear infinite;
+    animation: textShine 2s linear infinite;
+    filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.7));
 }
 
 .glow-text2 {
-    background: linear-gradient(90deg, #FEE140, #FA709A, #2bff14, #FA709A, #FEE140);
+    background: linear-gradient(
+        90deg, 
+        #ff00ff 0%, 
+        #facc15 35%, 
+        #ffffff 45%, 
+        #ffffff 55%, 
+        #facc15 65%, 
+        #ff00ff 100%
+    );
     background-size: 200% auto;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
     -webkit-text-fill-color: transparent;
-    animation: textMove 4s linear infinite;
+    animation: textShine 2s linear infinite reverse;
+    filter: drop-shadow(0 0 8px rgba(255, 0, 255, 0.7));
 }
 
 // ============================================================================
@@ -105,29 +151,31 @@ li {
         padding: 0.5rem 2.5rem 0.5rem 1rem;
         border-radius: 0.5rem;
         background: rgba(24, 24, 27, 0.4);
-        border: 1px solid #3f3f46;
+        border: 1px solid $primary-cyan;
+        box-shadow: 0 0 15px rgba(0, 242, 254, 0.6), inset 0 0 5px rgba(0, 242, 254, 0.2);
         color: white;
         font-size: 0.875rem;
         transition: all 0.3s ease;
-        box-shadow: 0 0 15px rgba(255, 234, 0, 0.7);
 
         &::placeholder {
-            color: #9ca3af;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         &:hover {
             border-color: $primary-green;
-            box-shadow: 0 0 10px rgba(34, 197, 94, 0.4);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.8), inset 0 0 5px rgba(34, 197, 94, 0.3);
         }
 
         &:focus {
             outline: none;
-            border-color: $primary-green;
-            box-shadow: 0 0 15px rgba(34, 197, 94, 0.7);
+            border-color: #ff00ff;
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.9), inset 0 0 10px rgba(255, 0, 255, 0.4);
 
             // Khi input đang focus, đổi màu icon tìm kiếm kế bên nó
             & + .search-icon {
-                color: $primary-green !important;
+                color: #ff00ff !important;
+                filter: drop-shadow(0 0 8px #ff00ff);
+                transform: translateY(-50%) scale(1.15);
             }
         }
     }
@@ -138,14 +186,15 @@ li {
         top: 50%;
         transform: translateY(-50%);
         font-size: 1.25rem;
-        color: #9ca3af;
+        color: $primary-cyan;
+        filter: drop-shadow(0 0 5px $primary-cyan);
         cursor: pointer;
         transition: all 0.3s ease;
 
         &:hover {
             color: $primary-yellow;
             transform: translateY(-50%) scale(1.1);
-            filter: drop-shadow(0 0 6px rgba(250, 204, 21, 0.8));
+            filter: drop-shadow(0 0 8px $primary-yellow);
         }
     }
 }
@@ -206,7 +255,20 @@ li {
     color: #e5e7eb;
     font-size: 13px;
     padding: 10px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-bottom: 1px solid rgba(34, 211, 238, 0.35) !important;
+}
+
+// Căn giữa cột ACTIONS (header + cell + buttons) cho tất cả bảng
+th:last-child {
+    text-align: center !important;
+}
+
+td:last-child {
+    text-align: center !important;
+
+    .flex {
+        justify-content: center !important;
+    }
 }
 
 // Chân bảng (Chứa phần phân trang - pagination)
@@ -234,9 +296,26 @@ li {
     }
 }
 
+.btn-view,
 .btn-edit,
 .btn-delete {
     cursor: pointer;
+}
+
+// Nút Xem (Màu Tím/Hồng)
+.btn-view {
+    background: linear-gradient(90deg, #a855f7, #ec4899);
+    color: white;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &:hover {
+        background: #ff2d95;
+        color: #fff;
+        transform: scale(1.08);
+        box-shadow: 0 0 12px #ff2d95,
+            0 0 25px #ff69b4,
+            inset 0 0 8px rgba(0, 0, 0, 0.3);
+    }
 }
 
 // Nút Sửa (Màu Xanh lơ)

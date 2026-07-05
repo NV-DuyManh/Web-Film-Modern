@@ -48,7 +48,7 @@
 ### 🛡️ Admin Panel
 - 📊 **Analytics Dashboard**: Overview of platform statistics and metrics at a glance.
 - 📝 **Movie Management**: Complete CRUD operations for movies. Includes support for specifying release years, duration, age ratings, categories, and uploading posters/banners.
-- 👥 **Entity Management**: Easily manage Categories, Actors, Directors, and Characters.
+- 👥 **Entity Management**: Easily manage Categories, Actors, Authors, and Characters.
 - 🔐 **User Management**: Manage community users, roles, and permissions safely.
 - ⚡ **Magic Import**: Import movies and data efficiently using bulk tools.
 - ☁️ **Media Uploads**: Seamless integration with **Cloudinary** for blazing-fast image hosting.
