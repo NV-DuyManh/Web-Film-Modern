@@ -69,7 +69,7 @@ export default function DetailFilm() {
                             </p>
                             <p className="text-slate-400"><span className="font-bold text-white">Thời lượng:</span> {movie.time || 'Đang cập nhật'}</p>
                             <p className="text-slate-400"><span className="font-bold text-white">Quốc gia:</span> <span className="text-slate-300 hover:text-white cursor-pointer">{movie.countriesID}</span></p>
-                            <p className="text-slate-400"><span className="font-bold text-white">Đạo diễn:</span> <span className="text-slate-300 hover:text-white cursor-pointer">{getObjectById(authors, movie.author)?.name || 'Đang cập nhật'}</span></p>
+                            <p className="text-slate-400"><span className="font-bold text-white">Đạo diễn:</span> <span className="text-slate-300 hover:text-white cursor-pointer">{movie.list_Author?.length > 0 ? movie.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</span></p>
                         </div>
 
                         <div className="mt-4">

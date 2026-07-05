@@ -60,7 +60,7 @@ export default function FilmNew() {
                                         {e.name}
                                     </h3>
                                     <p className="text-slate-400 text-xs md:text-sm truncate mt-0.5">
-                                        {getObjectById(authors, e.author)?.name}
+                                        {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}
                                     </p>
                                 </div>
                             </div>

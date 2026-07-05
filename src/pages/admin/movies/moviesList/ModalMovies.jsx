@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel } from '@mui/material';
-import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja } from 'react-icons/fa';
+import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja, FaUserTie } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
 import { ActorContext } from '../../../../contexts/ActorProvider';
@@ -116,6 +116,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
     const handleClickChoose = (id) => {
         switch (type) {
             case "actors": setMovie(pre => ({ ...pre, list_Actor: toggleById(pre.list_Actor, id) })); break;
+            case "authors": setMovie(pre => ({ ...pre, list_Author: toggleById(pre.list_Author, id) })); break;
             case "characters": setMovie(pre => ({ ...pre, list_Character: toggleById(pre.list_Character, id) })); break;
             case "categories": 
                 setMovie(pre => ({ ...pre, list_Category: toggleById(pre.list_Category, id) })); 
@@ -133,6 +134,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
     const handleRemoveItem = (itemType, id) => {
         switch (itemType) {
             case "actors": setMovie(pre => ({ ...pre, list_Actor: (pre.list_Actor || []).filter(e => e !== id) })); break;
+            case "authors": setMovie(pre => ({ ...pre, list_Author: (pre.list_Author || []).filter(e => e !== id) })); break;
             case "characters": setMovie(pre => ({ ...pre, list_Character: (pre.list_Character || []).filter(e => e !== id) })); break;
             case "categories": setMovie(pre => ({ ...pre, list_Category: (pre.list_Category || []).filter(e => e !== id) })); break;
             default: break;
@@ -142,6 +144,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
     const getSelectedItems = () => {
         switch (type) {
             case "actors": return movie.list_Actor || [];
+            case "authors": return movie.list_Author || [];
             case "characters": return movie.list_Character || [];
             case "categories": return movie.list_Category || [];
             default: return [];
@@ -244,10 +247,9 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-3 gap-4 mt-2">
+                        <div className="grid grid-cols-2 gap-4 mt-2">
                             <Autocomplete options={plansList || []} getOptionLabel={(opt) => opt?.name || ""} value={plansList?.find(p => p.id === movie.planID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Plan" error={!!error?.planID} helperText={error?.planID} className="modal-input-x" />} />
                             <Autocomplete options={categoryTypes || []} getOptionLabel={(opt) => opt?.name || ""} value={categoryTypes?.find(c => c.id === movie.category_Type_Id) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "category_Type_Id", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Category Type" error={!!error?.category_Type_Id} helperText={error?.category_Type_Id} className="modal-input-x" />} />
-                            <Autocomplete options={authorsList || []} getOptionLabel={(opt) => opt?.name || ""} value={authorsList?.find(a => a.id === movie.author) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "author", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Director" error={!!error?.author} helperText={error?.author} className="modal-input-x" />} />
                         </div>
                     </div>
                 </div>
@@ -273,7 +275,27 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             })}
                         </div>
 
-                        <div className='flex items-center text-white gap-2'>
+                        <div className='flex items-center text-white gap-2 mt-4'>
+                            <label className="font-medium">Directors</label>
+                            <FaUserTie onClick={() => handleClickOpenChoose("authors")} className='cursor-pointer text-2xl text-yellow-400 hover:scale-110 transition-transform' />
+                            {error?.list_Author && <span className="text-red-500 text-xs italic">{error.list_Author}</span>}
+                        </div>
+                        <div className='text-white flex gap-2 flex-wrap'>
+                            {movie.list_Author?.map((item) => {
+                                const author = authorsList?.find(e => e.id === item);
+                                return author ? (
+                                    <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.8)] transition-all duration-300' src={author.imgUrl || Logo5} alt={author.name} />
+                                        <FaTimesCircle onClick={() => handleRemoveItem("authors", item)} className="absolute top-0 right-0 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
+                                        <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-yellow-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
+                                            {author.name}
+                                        </div>
+                                    </div>
+                                ) : null;
+                            })}
+                        </div>
+
+                        <div className='flex items-center text-white gap-2 mt-4'>
                             <label className="font-medium">Actors</label>
                             <FaUsers onClick={() => handleClickOpenChoose("actors")} className='cursor-pointer text-2xl text-pink-400 hover:scale-110 transition-transform' />
                         </div>

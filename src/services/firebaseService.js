@@ -4,11 +4,11 @@ import { uploadImageToCloudinary } from "../config/cloudiaryConfig";
 
 export const addDocument = async (collectionName, values) => {
     try {
-        if (values.imgUrl && !values.imgUrl.includes("res.cloudinary.com")) {
+        if (values.imgUrl && !values.imgUrl.includes("res.cloudinary.com") && (values.imgUrl.startsWith("data:image") || values.imgUrl.startsWith("http"))) {
             const imgUrl = await uploadImageToCloudinary(values.imgUrl, collectionName);
             values.imgUrl = imgUrl;
         }
-        if (values.avatarUrl && !values.avatarUrl.includes("res.cloudinary.com")) {
+        if (values.avatarUrl && !values.avatarUrl.includes("res.cloudinary.com") && (values.avatarUrl.startsWith("data:image") || values.avatarUrl.startsWith("http"))) {
             const avatarUrl = await uploadImageToCloudinary(values.avatarUrl, collectionName);
             values.avatarUrl = avatarUrl;
         }
@@ -49,12 +49,12 @@ export const fetchDocumentsRealtime = (collectionName, callback) => {
 export const updateDocument = async (collectionName, values) => {
     const { id, ...updatedValues } = values;
 
-    if (updatedValues.imgUrl && !updatedValues.imgUrl.includes("res.cloudinary.com")) {
+    if (updatedValues.imgUrl && !updatedValues.imgUrl.includes("res.cloudinary.com") && (updatedValues.imgUrl.startsWith("data:image") || updatedValues.imgUrl.startsWith("http"))) {
         const imgUrl = await uploadImageToCloudinary(updatedValues.imgUrl, collectionName);
         updatedValues.imgUrl = imgUrl;
     }
     
-    if (updatedValues.avatarUrl && !updatedValues.avatarUrl.includes("res.cloudinary.com")) {
+    if (updatedValues.avatarUrl && !updatedValues.avatarUrl.includes("res.cloudinary.com") && (updatedValues.avatarUrl.startsWith("data:image") || updatedValues.avatarUrl.startsWith("http"))) {
         const avatarUrl = await uploadImageToCloudinary(updatedValues.avatarUrl, collectionName);
         updatedValues.avatarUrl = avatarUrl;
     }
@@ -103,10 +103,19 @@ export const deleteDocument = async (collectionName, values) => {
                 updatedData.list_Category = movieData.list_Category.filter(e => e !== id);
                 needsUpdate = true;
             }
-            if (collectionName === "Authors" && (movieData.author === id || movieData.author_id === id)) {
-                if (movieData.author === id) updatedData.author = "";
-                if (movieData.author_id === id) updatedData.author_id = "";
-                needsUpdate = true;
+            if (collectionName === "Authors") {
+                if (movieData.author === id) {
+                    updatedData.author = "";
+                    needsUpdate = true;
+                }
+                if (movieData.author_id === id) {
+                    updatedData.author_id = "";
+                    needsUpdate = true;
+                }
+                if (movieData.list_Author?.includes(id)) {
+                    updatedData.list_Author = movieData.list_Author.filter(e => e !== id);
+                    needsUpdate = true;
+                }
             }
 
             if (needsUpdate) {

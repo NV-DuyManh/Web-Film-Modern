@@ -68,7 +68,7 @@ export default function TopFilm() {
                                             {e.name}
                                         </h3>
                                         <p className="text-slate-400 text-[10px] md:text-xs truncate mt-0.5">
-                                            {getObjectById(authors, e.author)?.name}
+                                            {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}
                                         </p>
                                         <div className="flex items-center gap-1.5 mt-1 text-[9px] md:text-[11px] text-slate-500 font-medium">
                                             <p className="text-yellow-300 font-semibold">{e.rent} VNĐ</p>

@@ -55,7 +55,7 @@ export default function Cinema() {
 
                                 <div className="pt-6 px-1 flex flex-col transition-transform duration-300 group-hover:-translate-y-1">
                                     <h3 className="text-white font-bold text-base md:text-lg truncate transition-colors group-hover:text-[#facc15]">{e.name}</h3>
-                                    <p className="text-slate-400 text-xs md:text-sm truncate mt-0.5">{getObjectById(authors, e.author)?.name}</p>
+                                    <p className="text-slate-400 text-xs md:text-sm truncate mt-0.5">{e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}</p>
                                     <div className="flex items-center gap-2 mt-2 text-[11px] md:text-xs text-slate-500 font-medium">
                                         <p className="font-semibold text-yellow-300">{e.rent} VNĐ</p>
                                         <p>•</p>

@@ -14,7 +14,7 @@ const innerMovie = {
     releaseYear: "", duration: "", endEpisode: "", ageRating: "", status: "", 
     hasSub: false, hasDub: false, hasVoice: false, 
     episodeSub: "", episodeDub: "", episodeVoice: "", 
-    list_Category: [], countriesID: "", author: "", planID: "", rent: "", 
+    list_Category: [], countriesID: "", list_Author: [], planID: "", rent: "", 
     list_Actor: [], list_Character: [], category_Type_Id: "" 
 };
 
@@ -47,7 +47,11 @@ function MoviesList() {
     };
 
     const handleEdit = (row) => {
-        setMovie(row);
+        const editRow = { ...row };
+        if ((!editRow.list_Author || editRow.list_Author.length === 0) && editRow.author) {
+            editRow.list_Author = [editRow.author];
+        }
+        setMovie(editRow);
         setError({});
         setOpenForm(true);
     };
@@ -73,7 +77,7 @@ function MoviesList() {
         newError.planID = movie.planID ? "" : "Please select plan";
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
         newError.list_Category = movie.list_Category?.length > 0 ? "" : "Please select category";
-        newError.author = movie.author ? "" : "Please select director";
+        newError.list_Author = movie.list_Author?.length > 0 ? "" : "Please select director(s)";
         newError.category_Type_Id = movie.category_Type_Id ? "" : "Please select category type";
         setError(newError);
         return Object.values(newError).some(e => e !== "");

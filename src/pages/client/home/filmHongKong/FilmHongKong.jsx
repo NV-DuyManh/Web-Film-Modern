@@ -70,7 +70,7 @@ export default function FilmHongKong() {
                                         {e.name}
                                     </h3>
                                     <p className="text-slate-400 text-[10px] md:text-xs truncate w-full mt-0.5">
-                                        {getObjectById(authors, e.author)?.name}
+                                        {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}
                                     </p>
                                 </div>
 

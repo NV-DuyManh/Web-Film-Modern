@@ -61,7 +61,7 @@ export default function FilmCountry() {
                                     </div>
                                     <div className="pt-3 flex flex-col transition-transform duration-300 group-hover:-translate-y-1">
                                         <h3 className="m-0 text-base font-bold text-white truncate transition-colors group-hover:text-[#facc15]">{e.name}</h3>
-                                        <p className="m-0 mt-1 text-[#8c909e] text-sm">{getObjectById(authors, e.author)?.name}</p>
+                                        <p className="m-0 mt-1 text-[#8c909e] text-sm">{e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}</p>
                                     </div>
                                 </div>
                             </SwiperSlide>
