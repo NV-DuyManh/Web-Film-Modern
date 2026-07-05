@@ -27,8 +27,6 @@
 
 ## 📸 Sneak Peek (Demo)
 
-> 💡 *Note: You can replace these placeholder images with your actual platform screenshots!*
-
 <div align="center">
   <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=800&q=80" width="48%" alt="Client Home Page Placeholder" style="border-radius: 10px; margin-right: 2%; border: 2px solid #333;" />
   <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" width="48%" alt="Admin Dashboard Placeholder" style="border-radius: 10px; border: 2px solid #333;" />
