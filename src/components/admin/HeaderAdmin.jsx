@@ -32,14 +32,14 @@ function HeaderAdmin() {
     return (
         <div>
             <div className='p-4 bg-blue-400/20'>
-                <div className='flex justify-between items-center text-gray-200 mx-4'>
-                    <h1 className='text-3xl font-bold tracking-wide flex items-center gap-3'>
+                <div className='flex justify-between items-center text-gray-200 ml-8 mr-4 md:ml-10 md:mr-6 lg:mx-4'>
+                    <h1 className='text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold tracking-wide flex items-center gap-1.5 md:gap-3 flex-wrap'>
                         <span className="glow-text2">{getGreeting()},</span>
                         <span className="glow-text">{isLogin?.name || 'Admin'}</span> 
-                        <span className="animate-bounce ml-1 inline-block">👋</span>
+                        <span className="animate-wave ml-1 inline-block">👋</span>
                     </h1>
 
-                    <div className="flex items-center gap-8 text-2xl">
+                    <div className="flex items-center gap-3 md:gap-5 lg:gap-8 text-xl lg:text-2xl shrink-0">
                         <button className="text-cyan-400 cursor-pointer drop-shadow-[0_0_4px_rgba(34,211,238,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-cyan-300 hover:drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
                             <FiSearch />
                         </button>

@@ -18,15 +18,22 @@ const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={r
 
 const NeonBadge = ({ icon: Icon, text, color = "cyan" }) => {
     const colorMap = {
-        cyan: "from-cyan-500/20 to-cyan-500/5 border-cyan-500/40 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.15)]",
-        yellow: "from-yellow-500/20 to-yellow-500/5 border-yellow-500/40 text-yellow-300 shadow-[0_0_15px_rgba(234,179,8,0.15)]",
-        purple: "from-purple-500/20 to-purple-500/5 border-purple-500/40 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.15)]",
-        green: "from-green-500/20 to-green-500/5 border-green-500/40 text-green-300 shadow-[0_0_15px_rgba(34,197,94,0.15)]",
-        pink: "from-pink-500/20 to-pink-500/5 border-pink-500/40 text-pink-300 shadow-[0_0_15px_rgba(236,72,153,0.15)]",
-        blue: "from-blue-500/20 to-blue-500/5 border-blue-500/40 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.15)]",
+        cyan: "from-cyan-500/10 to-transparent border-cyan-500/30 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:from-cyan-500/30 hover:to-cyan-500/10 hover:border-cyan-400 hover:text-cyan-100 hover:shadow-[0_0_25px_rgba(6,182,212,0.4)]",
+        yellow: "from-yellow-500/10 to-transparent border-yellow-500/30 text-yellow-300 shadow-[0_0_15px_rgba(234,179,8,0.15)] hover:from-yellow-500/30 hover:to-yellow-500/10 hover:border-yellow-400 hover:text-yellow-100 hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]",
+        purple: "from-purple-500/10 to-transparent border-purple-500/30 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.15)] hover:from-purple-500/30 hover:to-purple-500/10 hover:border-purple-400 hover:text-purple-100 hover:shadow-[0_0_25px_rgba(168,85,247,0.4)]",
+        green: "from-green-500/10 to-transparent border-green-500/30 text-green-300 shadow-[0_0_15px_rgba(34,197,94,0.15)] hover:from-green-500/30 hover:to-green-500/10 hover:border-green-400 hover:text-green-100 hover:shadow-[0_0_25px_rgba(34,197,94,0.4)]",
+        pink: "from-pink-500/10 to-transparent border-pink-500/30 text-pink-300 shadow-[0_0_15px_rgba(236,72,153,0.15)] hover:from-pink-500/30 hover:to-pink-500/10 hover:border-pink-400 hover:text-pink-100 hover:shadow-[0_0_25px_rgba(236,72,153,0.4)]",
+        blue: "from-blue-500/10 to-transparent border-blue-500/30 text-blue-300 shadow-[0_0_15px_rgba(59,130,246,0.15)] hover:from-blue-500/30 hover:to-blue-500/10 hover:border-blue-400 hover:text-blue-100 hover:shadow-[0_0_25px_rgba(59,130,246,0.4)]",
+        red: "from-red-500/10 to-transparent border-red-500/30 text-red-300 shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:from-red-500/30 hover:to-red-500/10 hover:border-red-400 hover:text-red-100 hover:shadow-[0_0_25px_rgba(239,68,68,0.4)]",
+        orange: "from-orange-500/10 to-transparent border-orange-500/30 text-orange-300 shadow-[0_0_15px_rgba(249,115,22,0.15)] hover:from-orange-500/30 hover:to-orange-500/10 hover:border-orange-400 hover:text-orange-100 hover:shadow-[0_0_25px_rgba(249,115,22,0.4)]",
+        slate: "from-slate-500/10 to-transparent border-slate-500/30 text-slate-300 shadow-[0_0_15px_rgba(100,116,139,0.15)] hover:from-slate-500/30 hover:to-slate-500/10 hover:border-slate-400 hover:text-slate-100 hover:shadow-[0_0_25px_rgba(100,116,139,0.4)]",
+        emerald: "from-emerald-500/10 to-transparent border-emerald-500/30 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)] hover:from-emerald-500/30 hover:to-emerald-500/10 hover:border-emerald-400 hover:text-emerald-100 hover:shadow-[0_0_25px_rgba(16,185,129,0.4)]",
+        fuchsia: "from-fuchsia-500/10 to-transparent border-fuchsia-500/30 text-fuchsia-300 shadow-[0_0_15px_rgba(217,70,239,0.15)] hover:from-fuchsia-500/30 hover:to-fuchsia-500/10 hover:border-fuchsia-400 hover:text-fuchsia-100 hover:shadow-[0_0_25px_rgba(217,70,239,0.4)]",
+        indigo: "from-indigo-500/10 to-transparent border-indigo-500/30 text-indigo-300 shadow-[0_0_15px_rgba(99,102,241,0.15)] hover:from-indigo-500/30 hover:to-indigo-500/10 hover:border-indigo-400 hover:text-indigo-100 hover:shadow-[0_0_25px_rgba(99,102,241,0.4)]",
+        rose: "from-rose-500/10 to-transparent border-rose-500/30 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.15)] hover:from-rose-500/30 hover:to-rose-500/10 hover:border-rose-400 hover:text-rose-100 hover:shadow-[0_0_25px_rgba(244,63,94,0.4)]",
     };
     return (
-        <div className={`flex items-center gap-2 bg-gradient-to-r ${colorMap[color]} px-3.5 py-2 rounded-xl border text-sm font-semibold backdrop-blur-sm hover:scale-105 transition-transform duration-300 cursor-default`}>
+        <div className={`flex items-center gap-2 bg-gradient-to-r ${colorMap[color]} px-3.5 py-2 rounded-xl border text-sm font-bold backdrop-blur-sm hover:-translate-y-1 transition-all duration-300 cursor-default`}>
             {Icon && <Icon className="text-sm" />} <span>{text}</span>
         </div>
     );
@@ -110,12 +117,12 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
 
     if (!movie) return null;
 
-    const getStatusStyle = (status) => {
+    const getStatusColor = (status) => {
         switch(status) {
-            case "Sắp chiếu": return "from-amber-500 to-orange-500 shadow-[0_0_20px_rgba(245,158,11,0.5)]";
-            case "Đang chiếu": return "from-emerald-500 to-green-400 shadow-[0_0_20px_rgba(16,185,129,0.5)]";
-            case "Hoàn thành": return "from-blue-500 to-cyan-400 shadow-[0_0_20px_rgba(59,130,246,0.5)]";
-            default: return "from-slate-500 to-slate-400 shadow-[0_0_20px_rgba(100,116,139,0.5)]";
+            case "Sắp chiếu": return "orange";
+            case "Đang chiếu": return "green";
+            case "Hoàn thành": return "cyan";
+            default: return "slate";
         }
     };
 
@@ -130,13 +137,28 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
             onClose={handleClose}
             maxWidth="lg"
             fullWidth
-            PaperProps={{ style: { background: 'transparent', boxShadow: 'none', overflow: 'auto', borderRadius: 24, maxHeight: '90vh' } }}
+            PaperProps={{ style: { background: 'transparent', boxShadow: 'none', overflow: 'visible', borderRadius: 24 } }}
         >
-            <div className="movie-view-modal relative rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar" style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.98), rgba(10,15,30,0.99))', maxHeight: '90vh' }}>
-
-                {/* ═══ Animated border glow ═══ */}
-                <div className="absolute inset-0 rounded-3xl pointer-events-none z-50" style={{ 
-                    background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.3), transparent, rgba(168,85,247,0.3), transparent)',
+            <div className="relative w-full rounded-3xl flex flex-col" style={{ 
+                background: 'linear-gradient(145deg, rgba(15,23,42,0.98), rgba(10,15,30,0.99))', 
+                maxHeight: '90vh' 
+            }}>
+                {/* ═══ Animated border outer glow (Blurry Aura) ═══ */}
+                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[1]" style={{ 
+                    background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.6), transparent, rgba(236,72,153,0.6), transparent)',
+                    backgroundSize: '200% 100%',
+                    animation: 'borderGlow 4s linear infinite',
+                    mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    WebkitMaskComposite: 'xor',
+                    maskComposite: 'exclude',
+                    padding: '3px',
+                    filter: 'blur(8px)',
+                    borderRadius: 24
+                }}></div>
+                {/* ═══ Animated border glow (Sharp Line) ═══ */}
+                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[2]" style={{ 
+                    background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.8), transparent, rgba(168,85,247,0.8), transparent)',
                     backgroundSize: '200% 100%',
                     animation: 'borderGlow 4s linear infinite',
                     mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
@@ -147,8 +169,11 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                     borderRadius: 24
                 }}></div>
 
+                {/* ═══ SCROLLABLE CONTENT ═══ */}
+                <div className="movie-view-modal w-full rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar relative z-10 flex-1 p-[2px]">
+
                 {/* ═══ HERO BANNER SECTION ═══ */}
-                <div className="relative w-full h-[220px] overflow-hidden">
+                <div className="relative w-full h-[220px] overflow-hidden rounded-t-[22px]">
                     <img 
                         src={movie.bannerUrl || movie.imgUrl || Logo5}
                         alt="banner"
@@ -159,15 +184,11 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] via-transparent to-transparent"></div>
                     <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f1e]/60 via-transparent to-[#0a0f1e]/60"></div>
                     
-                    {/* Scan line effect */}
-                    <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
-                        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px)',
-                    }}></div>
 
                     {/* Close button */}
                     <button 
                         onClick={handleClose}
-                        className="absolute top-5 right-5 z-50 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white/60 hover:text-cyan-400 hover:border-cyan-500/50 hover:bg-cyan-500/10 hover:rotate-90 hover:shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all duration-500 cursor-pointer"
+                        className="absolute top-5 right-5 z-50 w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
                     >
                         <FaTimesCircle size={20} />
                     </button>
@@ -178,45 +199,31 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                 {/* ═══ POSTER + TITLE OVERLAY ═══ */}
                 <div className="relative px-8 -mt-28 z-20 flex gap-7 items-end">
                     {/* Poster with neon frame */}
-                    <div className="relative shrink-0 group">
-                        <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-50 blur-md group-hover:opacity-80 transition-all duration-700"></div>
+                    <div className="relative shrink-0 group cursor-pointer">
+                        <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-50 blur-md group-hover:opacity-100 group-hover:blur-xl transition-all duration-700"></div>
                         <img 
                             src={movie.imgUrl || Logo5}
                             alt={movie.name}
-                            className="relative w-[170px] aspect-[2/3] object-cover rounded-2xl border-2 border-white/20 shadow-2xl z-10"
+                            className="relative w-[170px] aspect-[2/3] object-cover rounded-2xl border-2 border-white/20 shadow-2xl z-10 group-hover:-translate-y-4 group-hover:scale-105 transition-all duration-500"
                         />
                     </div>
 
                     {/* Title area */}
-                    <div className="flex-1 pb-4">
-                        <h2 
-                            className="text-3xl font-black mb-1 leading-tight"
-                            style={{
-                                background: 'linear-gradient(135deg, #22d3ee, #a855f7, #ec4899)',
-                                backgroundSize: '200% auto',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                animation: 'textMove 4s linear infinite',
-                                filter: 'drop-shadow(0 0 12px rgba(34,211,238,0.3))'
-                            }}
-                        >
+                    <div className="flex-1 pb-3">
+                        <h2 className="text-2xl md:text-4xl font-black glow-text tracking-tight mb-2" style={{ paddingBottom: '0.1em' }}>
                             {movie.name}
                         </h2>
                         {movie.otherName && (
                             <p className="text-gray-400 text-sm italic font-medium mb-3">{movie.otherName}</p>
                         )}
                         <div className="flex flex-wrap gap-2">
-                            <span className={`px-3.5 py-2 rounded-xl text-sm font-extrabold text-white bg-gradient-to-r ${getStatusStyle(movie.status)} border border-white/20 tracking-wide`}>
-                                {movie.status || "N/A"}
-                            </span>
-                            <span className="px-3.5 py-2 rounded-xl text-sm font-extrabold text-white bg-gradient-to-r from-red-600 to-rose-500 shadow-[0_0_15px_rgba(239,68,68,0.4)] border border-red-400/30">
-                                {movie.ageRating || "N/A"}
-                            </span>
-                            <NeonBadge icon={FaCalendarAlt} text={movie.releaseYear || "N/A"} color="cyan" />
+                            <NeonBadge text={movie.status || "N/A"} color={getStatusColor(movie.status)} />
+                            <NeonBadge text={movie.ageRating || "N/A"} color="red" />
+                            <NeonBadge icon={FaCalendarAlt} text={movie.releaseYear || "N/A"} color="indigo" />
                             <NeonBadge icon={FaClock} text={movie.duration ? `${movie.duration} min` : "N/A"} color="yellow" />
-                            <NeonBadge icon={FaTv} text={`${movie.endEpisode || "?"} Eps`} color="purple" />
-                            {movie.countriesID && <NeonBadge icon={FaGlobe} text={movie.countriesID} color="green" />}
-                            {currentPlan && <NeonBadge icon={FaCrown} text={currentPlan.name} color="pink" />}
+                            <NeonBadge icon={FaTv} text={`${movie.endEpisode || "?"} Eps`} color="fuchsia" />
+                            {movie.countriesID && <NeonBadge icon={FaGlobe} text={movie.countriesID} color="emerald" />}
+                            {currentPlan && <NeonBadge icon={FaCrown} text={currentPlan.name} color="rose" />}
                             {currentCategoryType && <NeonBadge icon={FaFilm} text={currentCategoryType.name} color="blue" />}
                         </div>
                     </div>
@@ -240,7 +247,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                                 {movie.list_Category?.map((catId, idx) => {
                                     const cat = categoriesList?.find(c => c.id === catId);
                                     return cat ? (
-                                        <span key={idx} className="px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/25 rounded-lg text-[11px] font-bold tracking-wide uppercase hover:bg-purple-500/20 hover:border-purple-400/40 hover:shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all duration-300 cursor-default">
+                                        <span key={idx} className="px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/25 rounded-lg text-[11px] font-bold tracking-wide uppercase hover:bg-purple-500/20 hover:border-purple-400/40 hover:-translate-y-1 hover:shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all duration-300 cursor-default">
                                             {cat.name}
                                         </span>
                                     ) : null;
@@ -252,17 +259,17 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                         <GlowCard title="Availability" icon={MdOutlineSubtitles} color="emerald">
                             <div className="flex flex-wrap gap-2">
                                 {movie.hasSub && (
-                                    <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(6,182,212,0.1)] hover:shadow-[0_0_15px_rgba(6,182,212,0.25)] transition-shadow duration-300">
+                                    <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(6,182,212,0.1)] hover:bg-cyan-500/20 hover:border-cyan-400/40 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(6,182,212,0.25)] transition-all duration-300 cursor-default">
                                         <MdOutlineSubtitles className="text-sm" /> Sub: {movie.episodeSub}/{movie.endEpisode}
                                     </div>
                                 )}
                                 {movie.hasDub && (
-                                    <div className="flex items-center gap-1.5 bg-pink-500/10 border border-pink-500/30 text-pink-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(236,72,153,0.1)] hover:shadow-[0_0_15px_rgba(236,72,153,0.25)] transition-shadow duration-300">
+                                    <div className="flex items-center gap-1.5 bg-pink-500/10 border border-pink-500/30 text-pink-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(236,72,153,0.1)] hover:bg-pink-500/20 hover:border-pink-400/40 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(236,72,153,0.25)] transition-all duration-300 cursor-default">
                                         <MdMic className="text-sm" /> Dub: {movie.episodeDub}/{movie.endEpisode}
                                     </div>
                                 )}
                                 {movie.hasVoice && (
-                                    <div className="flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/30 text-orange-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(249,115,22,0.1)] hover:shadow-[0_0_15px_rgba(249,115,22,0.25)] transition-shadow duration-300">
+                                    <div className="flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/30 text-orange-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(249,115,22,0.1)] hover:bg-orange-500/20 hover:border-orange-400/40 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(249,115,22,0.25)] transition-all duration-300 cursor-default">
                                         <MdOutlineVoiceChat className="text-sm" /> Voice: {movie.episodeVoice}/{movie.endEpisode}
                                     </div>
                                 )}
@@ -298,6 +305,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                         </span>
                     </div>
                 </div>
+            </div>
             </div>
         </Dialog>
     );

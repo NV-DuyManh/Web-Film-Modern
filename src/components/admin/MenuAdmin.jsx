@@ -16,7 +16,6 @@ function MenuAdmin() {
 
     useEffect(() => {
         LISTMENU.forEach((item, index) => {
-            // Fix: Phải kiểm tra xem item có subMenu không rồi mới quét
             if (item.subMenu) {
                 const isSubActive = item.subMenu.some(sub => sub.path === activePath);
                 if (isSubActive) {
@@ -30,14 +29,22 @@ function MenuAdmin() {
         <div className={`flex flex-col p-3 bg-[#0a192f]/80 text-white sm:min-h-screen transition-all duration-500 ease-in-out relative shadow-[2px_0_15px_rgba(0,0,0,0.5)] shrink-0 ${Menu ? "sm:w-20" : "sm:w-60"}`}>
 
             <div className="flex justify-center items-center relative h-8 mb-4 mt-2 shrink-0">
-                {!Menu ? (
-                    <div className='flex justify-center items-center gap-1 whitespace-nowrap overflow-hidden transition-all duration-300 w-full'>
-                        <h1 className='text-cyan-400 text-2xl font-extrabold tracking-widest drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]'>MFilm</h1>
-                        <h1 className='text-pink-500 text-2xl font-extrabold tracking-widest drop-shadow-[0_0_8px_rgba(236,72,153,0.6)]'>Admin</h1>
-                    </div>
-                ) : (
-                    <img src={Logo3} alt="Logo" className="w-full h-10 object-contain transition-all duration-300 px-1" />
-                )}
+                <div className={`justify-center items-center gap-2.5 whitespace-nowrap overflow-hidden transition-all duration-300 w-full ${!Menu ? 'flex' : 'hidden max-sm:flex'}`}>
+                    <h1 className='flex items-baseline font-black tracking-tighter uppercase' style={{ textShadow: '0 0 15px rgba(34,211,238,0.8)' }}>
+                        <span className="text-cyan-300 text-[28px]">M</span>
+                        <span className="text-cyan-500 text-[22px]">FILM</span>
+                    </h1>
+                    <div className="h-6 w-1 bg-gradient-to-b from-cyan-400 via-pink-500 to-fuchsia-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(236,72,153,0.9)]"></div>
+                    <h1 className='glow-text-multi text-lg font-black tracking-widest uppercase'>
+                        ADMIN
+                    </h1>
+                </div>
+                
+                <div className={`justify-center items-center transition-all duration-300 w-full ${Menu ? 'hidden sm:flex' : 'hidden'}`}>
+                    <h1 className='flex items-center justify-center font-black tracking-tighter uppercase' style={{ textShadow: '0 0 15px rgba(34,211,238,0.8)' }}>
+                        <span className="text-cyan-300 text-[32px] ml-1">M</span>
+                    </h1>
+                </div>
 
                 <button
                     onClick={() => setmMenu(!Menu)}
@@ -62,7 +69,6 @@ function MenuAdmin() {
                 </li>
 
                 {LISTMENU.map((item, index) => {
-                    // TRƯỜNG HỢP 1: Menu không có subMenu (Là nút bấm trực tiếp như Magic Import)
                     if (!item.subMenu) {
                         const isActive = activePath === item.path;
                         return (
@@ -85,7 +91,6 @@ function MenuAdmin() {
                         );
                     }
 
-                    // TRƯỜNG HỢP 2: Menu có subMenu (Là Dropdown xổ xuống - Giữ nguyên logic cũ)
                     const isOpen = show === (index + 1);
                     const isParentActive = item.subMenu.some(sub => sub.path === activePath);
 

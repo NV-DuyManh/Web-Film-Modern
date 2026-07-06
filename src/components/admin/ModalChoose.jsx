@@ -42,9 +42,8 @@ export default function ModalChoose({ handleClickChoose, handleCloseChoose, open
             PaperProps={{ className: "!bg-slate-900 !border !border-cyan-500/30 !rounded-2xl !shadow-[0_0_40px_rgba(6,182,212,0.25)] overflow-hidden" }}
         >
             <DialogTitle className="!bg-slate-800 !bg-gradient-to-b !from-cyan-900/60 !to-cyan-900/10 !border-b !border-cyan-400/60 !shadow-[0_5px_20px_-5px_rgba(34,211,238,0.4)] flex flex-col sm:flex-row justify-between items-start sm:items-center px-6 py-4 gap-4 relative z-10">
-                <span className="text-cyan-400 font-black uppercase tracking-widest text-sm flex items-center gap-2 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">
-                    <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(34,211,238,1)]"></span>
-                    Choose {type}
+                <span className="font-black uppercase tracking-widest text-sm flex items-center">
+                    <span className="glow-text-multi">Choose {type}</span>
                 </span>
                 
                 <div className="relative w-full sm:w-1/2 group">

@@ -18,9 +18,20 @@ import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 const getStatusStyle = (status) => {
     switch(status) {
-        case "Sắp chiếu": return "bg-amber-500/20 text-amber-400 border-amber-500/30";
-        case "Đang chiếu": return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
-        case "Hoàn thành": return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+        case "Sắp chiếu": return "bg-amber-500/10 text-amber-300 border-amber-400/50 shadow-[0_0_8px_rgba(251,191,36,0.4)]";
+        case "Đang chiếu": return "bg-emerald-500/10 text-emerald-300 border-emerald-400/50 shadow-[0_0_8px_rgba(52,211,153,0.4)]";
+        case "Hoàn thành": return "bg-purple-500/10 text-purple-300 border-purple-400/50 shadow-[0_0_8px_rgba(192,132,252,0.4)]";
+        default: return "bg-slate-500/10 text-slate-300 border-slate-400/50 shadow-[0_0_8px_rgba(148,163,184,0.4)]";
+    }
+};
+
+const getAgeRatingStyle = (ageRating) => {
+    switch(ageRating) {
+        case "P": return "bg-green-500/20 text-green-400 border-green-500/30";
+        case "K": return "bg-cyan-500/20 text-cyan-400 border-cyan-500/30";
+        case "T13": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+        case "T16": return "bg-orange-500/20 text-orange-400 border-orange-500/30";
+        case "T18": return "bg-red-500/20 text-red-400 border-red-500/30";
         default: return "bg-slate-500/20 text-slate-400 border-slate-500/30";
     }
 };
@@ -143,7 +154,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                     <table className="w-full text-left whitespace-nowrap">
                         <thead className="table-header">
                             <tr>
-                                <th style={{ width: '40px', padding: '10px 12px' }}>
+                                <th style={{ width: '40px' }}>
                                     <input
                                         type="checkbox"
                                         checked={isAllSelected}
@@ -152,15 +163,15 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th className="w-12 text-center">ID</th>
-                                <th className="w-24 text-center">POSTER</th>
-                                <th className="text-center">NAME</th>
-                                <th className="text-center">STATUS / AGE</th>
-                                <th className="text-center">YEAR</th>
-                                <th className="text-center">EPISODES</th>
-                                <th className="text-center">ENTITY</th>
-                                <th className="text-center">CATEGORIES</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th className="w-[4%] text-center">ID</th>
+                                <th className="w-[8%] text-center">POSTER</th>
+                                <th className="w-[18%] text-center">NAME</th>
+                                <th className="w-[12%] text-center">STATUS / AGE</th>
+                                <th className="w-[8%] text-center">YEAR</th>
+                                <th className="w-[12%] text-center">EPISODES</th>
+                                <th className="w-[12%] text-center">ENTITY</th>
+                                <th className="w-[12%] text-center">CATEGORIES</th>
+                                <th className="w-[12%] text-right">ACTIONS</th>
                             </tr>
                         </thead>
 
@@ -195,7 +206,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getStatusStyle(row.status)}`}>
                                                     {row.status || "N/A"}
                                                 </span>
-                                                <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">
+                                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getAgeRatingStyle(row.ageRating)}`}>
                                                     {row.ageRating || "N/A"}
                                                 </span>
                                             </div>

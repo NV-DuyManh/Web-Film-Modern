@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel } from '@mui/material';
-import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja, FaUserTie } from 'react-icons/fa';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel, IconButton } from '@mui/material';
+import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja, FaUserTie, FaTimes } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
 import { ActorContext } from '../../../../contexts/ActorProvider';
@@ -94,9 +94,9 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
     const handleEndEpisodeChange = (e) => {
         let val = e.target.value;
         if (val.includes('?')) {
-            val = '?'; 
+            val = '?';
         } else {
-            val = val.replace(/[^0-9]/g, ''); 
+            val = val.replace(/[^0-9]/g, '');
         }
         onChangeInput({ target: { name: 'endEpisode', value: val } });
     };
@@ -107,7 +107,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
         if (val !== "" && !isNaN(maxVal)) {
             if (parseInt(val, 10) > maxVal) {
-                val = maxVal.toString(); 
+                val = maxVal.toString();
             }
         }
         onChangeInput({ target: { name: e.target.name, value: val } });
@@ -118,8 +118,8 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
             case "actors": setMovie(pre => ({ ...pre, list_Actor: toggleById(pre.list_Actor, id) })); break;
             case "authors": setMovie(pre => ({ ...pre, list_Author: toggleById(pre.list_Author, id) })); break;
             case "characters": setMovie(pre => ({ ...pre, list_Character: toggleById(pre.list_Character, id) })); break;
-            case "categories": 
-                setMovie(pre => ({ ...pre, list_Category: toggleById(pre.list_Category, id) })); 
+            case "categories":
+                setMovie(pre => ({ ...pre, list_Category: toggleById(pre.list_Category, id) }));
                 if (setError) setError(pre => ({ ...pre, list_Category: "" }));
                 break;
             default: break;
@@ -158,12 +158,23 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
             PaperProps={{ className: "modal-inner" }}
             BackdropProps={{ className: "modal-backdrop-x" }}
         >
-            <DialogTitle className="modal-header-x">{movie.id ? "UPDATE MOVIE" : "ADD NEW MOVIE"}</DialogTitle>
+            <DialogTitle className="modal-header-x flex justify-between items-center">
+                <span className="glow-text-multi text-3xl md:text-4xl font-black tracking-tight" style={{ paddingBottom: '0.1em' }}>
+                    {movie.id ? "Update Movie" : "Add New Movie"}
+                </span>
+                <button
+                    onClick={handleClose}
+                    className="w-10 h-10 shrink-0 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/30 flex items-center justify-center text-red-500 hover:text-white hover:border-red-500 hover:bg-red-500 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] transition-all duration-300 cursor-pointer"
+                >
+                    <FaTimes size={20} style={{ strokeWidth: '1.5', stroke: 'currentColor' }} />
+                </button>
+            </DialogTitle>
             <DialogContent className="modal-body-x grid grid-cols-12 gap-8 h-[75vh] overflow-y-auto custom-scrollbar p-8 pt-10">
 
                 <div className="col-span-12 lg:col-span-7 space-y-8 mt-5">
-                    <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
-                        <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest">Task 1: General Info</p>
+                    <div className="relative bg-white/[0.02] p-5 rounded-2xl border border-cyan-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(6,182,212,0.05)]">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-blue-500 rounded-l-full"></div>
+                        <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest pl-3">Task 1: General Info</p>
                         <div className="grid grid-cols-2 gap-4">
                             <TextField variant="outlined" className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Movie Name" value={movie.name} error={!!error?.name} helperText={error?.name} />
                             <TextField variant="outlined" className="modal-input-x" name="otherName" onChange={onChangeInput} fullWidth label="Other/Original Name" value={movie.otherName} error={!!error?.otherName} helperText={error?.otherName} />
@@ -180,8 +191,9 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         </div>
                     </div>
 
-                    <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
-                        <p className="text-purple-400 text-xs font-bold uppercase tracking-widest">Task 2: Specification</p>
+                    <div className="relative bg-white/[0.02] p-5 rounded-2xl border border-purple-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.05)]">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-pink-500 rounded-l-full"></div>
+                        <p className="text-purple-400 text-xs font-bold uppercase tracking-widest pl-3">Task 2: Specification</p>
                         <div className="grid grid-cols-3 gap-4">
                             <Autocomplete
                                 options={STATUS_OPTIONS} getOptionLabel={(opt) => opt?.name || ""} value={STATUS_OPTIONS.find(s => s.id === movie.status) || null}
@@ -255,8 +267,9 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                 </div>
 
                 <div className="col-span-12 lg:col-span-5 space-y-6 mt-5">
-                    <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 space-y-4">
-                        <p className="text-green-400 text-xs font-bold uppercase tracking-widest">Task 3: Classifications</p>
+                    <div className="relative bg-white/[0.02] p-5 rounded-2xl border border-emerald-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-teal-500 rounded-l-full"></div>
+                        <p className="text-green-400 text-xs font-bold uppercase tracking-widest pl-3">Task 3: Classifications</p>
 
                         <div className='flex items-center text-white gap-2'>
                             <label className="font-medium">Categories</label>
@@ -334,8 +347,9 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         </div>
                     </div>
 
-                    <div className="bg-slate-800/20 p-5 rounded-2xl border border-white/5 flex flex-col gap-5">
-                        <p className="text-pink-400 text-xs font-bold uppercase tracking-widest text-center">Task 4: Media Uploads</p>
+                    <div className="relative bg-white/[0.02] p-5 rounded-2xl border border-pink-500/20 flex flex-col gap-5 overflow-hidden shadow-[0_0_15px_rgba(236,72,153,0.05)]">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-pink-400 to-rose-500 rounded-l-full"></div>
+                        <p className="text-pink-400 text-xs font-bold uppercase tracking-widest text-center pl-3">Task 4: Media Uploads</p>
 
                         <div className="flex gap-4">
                             <div className="flex flex-col items-center w-1/3">
@@ -415,7 +429,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
                 </div>
             </DialogContent>
-            
+
             <DialogActions className="modal-actions-x p-6 w-full flex flex-col">
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
@@ -424,7 +438,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <span>{progress}%</span>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div 
+                            <div
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -432,9 +446,11 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
+                        <Button onClick={handleClose} className="btn-cancel-x">
+                            Cancel
+                        </Button>
                         <Button onClick={addOrUpdateMovie} disabled={loading} className="btn-submit-x">
-                            {movie.id ? 'Save Changes' : 'Create Movie'}
+                            {movie.id ? 'Update Movie' : 'Create Movie'}
                         </Button>
                     </div>
                 )}

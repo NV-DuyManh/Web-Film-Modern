@@ -132,8 +132,8 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                                     <td className="table-cell text-center text-cyan-400 font-bold">
                                         {row.countriesID}
                                     </td>
-                                    <td className="table-cell text-center max-w-50 whitespace-normal text-[12px] text-gray-400" title={row.description}>
-                                        <div className="line-clamp-3 leading-relaxed text-left">
+                                    <td className="table-cell min-w-[350px] max-w-[600px] whitespace-normal text-[13px] text-gray-300">
+                                        <div className="leading-relaxed text-justify px-2 py-2">
                                             {row.description || "N/A"}
                                         </div>
                                     </td>
