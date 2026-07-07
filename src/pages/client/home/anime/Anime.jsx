@@ -18,6 +18,8 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 
 export default function Anime() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [mainSwiper, setMainSwiper] = useState(null);
+    const [activeIndex, setActiveIndex] = useState(0);
     const movies = useContext(MovieContext);
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoriesContext);
@@ -37,13 +39,21 @@ export default function Anime() {
 
             <div className='anime-slide-wrapper'>
                 <Swiper
+                    onSwiper={setMainSwiper}
                     style={{
                         '--swiper-navigation-color': '#fff',
                         '--swiper-pagination-color': '#fff',
                     }}
                     spaceBetween={0}
+                    onSlideChange={(swiper) => {
+                        setActiveIndex(swiper.realIndex);
+                        if (thumbsSwiper && !thumbsSwiper.destroyed) {
+                            thumbsSwiper.slideToLoop(swiper.realIndex);
+                        }
+                    }}
                     navigation={false}
-                    loop={false}
+                    loop={movies?.length >= 7}
+                    loopedSlides={movies?.length || 10}
                     effect={'fade'}
                     fadeEffect={{ crossFade: true }}
                     thumbs={{
@@ -135,23 +145,32 @@ export default function Anime() {
                     <Swiper
                         onSwiper={setThumbsSwiper}
                         breakpoints={{
-                            0: { slidesPerView: 5, spaceBetween: 8 },
-                            480: { slidesPerView: 5, spaceBetween: 10 },
-                            768: { slidesPerView: 5, spaceBetween: 12 },
-                            1024: { slidesPerView: 6, spaceBetween: 12 },
-                            1280: { slidesPerView: 6, spaceBetween: 14 }
+                            0: { slidesPerView: 7, spaceBetween: 6 },
+                            480: { slidesPerView: 7, spaceBetween: 8 },
+                            768: { slidesPerView: 7, spaceBetween: 10 },
+                            1024: { slidesPerView: 6, spaceBetween: 14 },
+                            1280: { slidesPerView: 6, spaceBetween: 16 }
                         }}
                         freeMode={true}
                         watchSlidesProgress={true}
                         grabCursor={true}
                         allowTouchMove={true}
-                        centerInsufficientSlides={true}
-                        loop={false}
+                        loop={movies?.length >= 7}
+                        loopedSlides={movies?.length || 10}
+                        slideToClickedSlide={true}
                         modules={[FreeMode, Navigation, Thumbs]}
                         className="anime-thumb-swiper"
                     >
-                        {movies?.map((e) => (
-                            <SwiperSlide key={e.id}>
+                        {movies?.map((e, index) => (
+                            <SwiperSlide
+                                key={e.id}
+                                onClick={() => {
+                                    if (mainSwiper && !mainSwiper.destroyed) {
+                                        mainSwiper.slideToLoop(index);
+                                    }
+                                }}
+                                className={activeIndex === index ? 'custom-thumb-active' : ''}
+                            >
                                 <img src={e.imgUrl} alt={e.name} draggable="false" />
                             </SwiperSlide>
                         ))}

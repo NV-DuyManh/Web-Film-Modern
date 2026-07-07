@@ -46,7 +46,15 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                 const episodeMatch = e.numberEpisode.toString().includes(keyword);
                 return movieNameMatch || episodeMatch;
             })
-            .sort((a, b) => b.createdAt?.localeCompare(a.createdAt));
+            .sort((a, b) => {
+                const getTime = (val) => {
+                    if (!val) return 0;
+                    if (val.toDate) return val.toDate().getTime();
+                    if (val.seconds) return val.seconds * 1000;
+                    return new Date(val).getTime() || 0;
+                };
+                return getTime(b.createdAt) - getTime(a.createdAt);
+            });
     }, [search, episodes, movies]);
 
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];

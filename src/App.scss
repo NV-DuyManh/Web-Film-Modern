@@ -1116,3 +1116,30 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
         opacity: 1;
     }
 }
+
+// ============================================================================
+// HEADER CLIENT CUSTOM EFFECTS
+// ============================================================================
+
+@keyframes sweepShine {
+    0% { transform: translateX(-150%) skewX(-20deg); }
+    15% { transform: translateX(300%) skewX(-20deg); }
+    100% { transform: translateX(300%) skewX(-20deg); }
+}
+
+.btn-shine-effect {
+    position: relative;
+    overflow: hidden;
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+        animation: sweepShine 3s infinite;
+        pointer-events: none;
+        z-index: 20;
+    }
+}

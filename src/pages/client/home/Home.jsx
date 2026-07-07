@@ -23,7 +23,6 @@ function Home(props) {
             <FilmComing/>
             <Anime/>
             <FilmHongKong/>
-            <DetailFilm/>
         </div>
     );
 }

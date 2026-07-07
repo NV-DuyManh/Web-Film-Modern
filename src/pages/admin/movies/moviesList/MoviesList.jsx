@@ -94,13 +94,21 @@ function MoviesList() {
     const addOrUpdateMovie = async () => {
         if (validation()) return;
         setLoading(true);
-        setProgress(10);
+        setProgress(20);
+
+        const progressInterval = setInterval(() => {
+            setProgress(prev => {
+                if (prev >= 80) {
+                    clearInterval(progressInterval);
+                    return 80;
+                }
+                return prev + Math.floor(Math.random() * 8) + 2;
+            });
+        }, 500);
         
         try {
             let submitData = { ...movie };
             
-            setProgress(30);
-
             const isLocalAsset = (url) => url && !url.startsWith("http") && !url.startsWith("data:");
 
             if (submitData.imgFile) {
@@ -110,16 +118,12 @@ function MoviesList() {
                 submitData.imgUrl = LOGO_POSTER;
             }
 
-            setProgress(50);
-
             if (submitData.bannerFile) {
                 submitData.bannerUrl = await uploadImageToCloudinary(submitData.bannerFile, "Banners");
                 delete submitData.bannerFile;
             } else if (!submitData.bannerUrl || isLocalAsset(submitData.bannerUrl)) {
                 submitData.bannerUrl = LOGO_BANNER;
             }
-
-            setProgress(70);
 
             submitData.releaseYear = Number(submitData.releaseYear) || new Date().getFullYear();
             submitData.duration = Number(submitData.duration) || 0;
@@ -129,8 +133,6 @@ function MoviesList() {
             submitData.episodeDub = submitData.hasDub ? (Number(submitData.episodeDub) || 0) : 0;
             submitData.episodeVoice = submitData.hasVoice ? (Number(submitData.episodeVoice) || 0) : 0;
 
-            setProgress(85);
-
             if (!movie.id) {
                 submitData.createdAt = new Date().toISOString();
                 await addDocument("Movies", submitData);
@@ -139,6 +141,7 @@ function MoviesList() {
                 await updateDocument("Movies", submitData);
             }
 
+            clearInterval(progressInterval);
             setProgress(100);
             
             setTimeout(() => {
@@ -148,6 +151,7 @@ function MoviesList() {
             }, 500);
 
         } catch (err) {
+            clearInterval(progressInterval);
             console.error(err);
             alert("Có lỗi xảy ra, vui lòng thử lại!");
             setLoading(false);

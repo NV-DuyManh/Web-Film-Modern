@@ -24,6 +24,7 @@ function HeaderClient() {
     const [isSearching, setIsSearching] = useState(false);
     const { isLogin, handleLogout } = useContext(AuthContext);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isScrolled, setIsScrolled] = useState(false);
     const dropdownRef = useRef(null);
     const cateRef = useRef(null);
     const countryRef = useRef(null);
@@ -57,35 +58,51 @@ function HeaderClient() {
         };
     }, []);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 10);
+        };
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
-        <div className="fixed top-0 left-0 z-100 w-full border-b border-white/10 bg-black/20 text-white backdrop-blur-xl">
-            <div className="flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1150px]:gap-4 min-[1150px]:px-8">
+        <div className="fixed top-0 left-0 z-[100] w-full text-white">
+            {/* Lớp nền tách biệt để không gây lỗi backdrop-filter cho các menu thả xuống */}
+            <div className={`absolute inset-0 -z-10 transition-all duration-500 ${isScrolled ? "bg-[#0b1221]/80 backdrop-blur-2xl border-b border-white/10 shadow-lg" : "bg-gradient-to-b from-black/80 via-black/20 to-transparent border-transparent"}`}></div>
+            
+            <div 
+                className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1150px]:gap-4 min-[1150px]:px-8 transition-all duration-500`}
+            >
                 <Link to="/" className="flex shrink-0 items-center">
                     <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
                 </Link>
 
                 <div className="relative min-w-0 flex-1 min-[1150px]:max-w-75 xl:max-w-95">
                     <input
-                        className="w-full min-w-0 rounded-full border border-white/15 bg-white/10 px-4 py-2 pr-10 text-sm text-white outline-none transition-all duration-300 placeholder:text-gray-400 hover:border-yellow-400/60 focus:border-yellow-400 focus:bg-white/15 focus:shadow-[0_0_18px_rgba(250,204,21,0.25)] sm:px-5 sm:py-2.5 sm:pr-11"
-                        type="text" placeholder="Tìm kiếm..." onFocus={() => setIsSearching(true)} onBlur={() => setIsSearching(false)}
+                        className="peer w-full min-w-0 rounded-full border-[1.5px] border-white/40 bg-black/20 backdrop-blur-xl shadow-[0_4px_15px_rgba(0,0,0,0.3)] px-5 py-2.5 pr-12 text-sm font-semibold text-white outline-none transition-all duration-300 placeholder:text-white/80 placeholder:font-medium hover:border-white/70 hover:bg-black/30 focus:border-cyan-400 focus:bg-[#0f172a]/90 focus:shadow-[0_0_20px_rgba(34,211,238,0.5)] sm:px-5 sm:py-2.5 sm:pr-12"
+                        style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+                        type="text" placeholder="Tìm kiếm phim..." onFocus={() => setIsSearching(true)} onBlur={() => setIsSearching(false)}
                     />
-                    <FiSearch className="absolute right-3 top-1/2 -translate-y-1/2 text-lg text-gray-300 sm:right-4 sm:text-xl" />
+                    <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-cyan-400 peer-focus:drop-shadow-[0_0_12px_rgba(34,211,238,1)]" />
                 </div>
 
-                <div className={`shrink-0 items-center gap-1  max-md:absolute max-md:flex-col flex max-md:bg-black max-md:w-full bottom-0 left-0 max-md:translate-y-full ${openMenu ? "flex" : "max-md:hidden"} `}>
+                <div className={`shrink-0 items-center gap-1 max-[1149px]:absolute max-[1149px]:flex-col flex max-[1149px]:bg-[#111827] max-[1149px]:w-full bottom-0 left-0 max-[1149px]:translate-y-full max-[1149px]:p-2 max-[1149px]:border-t max-[1149px]:border-white/10 ${openMenu ? "flex" : "max-[1149px]:hidden"} `}>
 
                     {LISTCLIENT.map((item, index) => (
-                        <li  
+                        <Link to={item.path} 
                             key={index}
                             ref={(el) => { 
                                 if (item.path === "/category") cateRef.current = el; 
                                 if (item.path === "/country") countryRef.current = el;
                             }}
-                            onClick={() => {
+                            onClick={(e) => {
                                 if (item.path === "/category") {
+                                    e.preventDefault();
                                     setOpenCate(!openCate);
                                     setOpenCountry(false);
                                 } else if (item.path === "/country") {
+                                    e.preventDefault();
                                     setOpenCountry(!openCountry);
                                     setOpenCate(false);
                                 } else {
@@ -93,15 +110,15 @@ function HeaderClient() {
                                     setOpenCountry(false);
                                 }
                             }} 
-                            className={` relative  cursor-pointer flex items-center rounded-full max-md:w-full px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${location.pathname === item.path
-                            ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.35)]"
-                            : "text-gray-200 hover:bg-white/10 hover:text-yellow-300"
+                            className={` relative  cursor-pointer flex items-center rounded-full max-[1149px]:w-full max-[1149px]:justify-center px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${location.pathname === item.path
+                            ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.5)]"
+                            : "text-gray-200 hover:bg-white/10 hover:text-yellow-400"
                             }`}>
                             {item.title} {item.path == "/category" || item.path == "/country" ? <IoMdArrowDropdown /> : ""}
 
                             {item.path == "/category" && <Category openCate={openCate} />}
                             {item.path == "/country" && <Country openCountry={openCountry} />}
-                        </li>
+                        </Link>
                     ))}
                 </div>
 
@@ -110,7 +127,7 @@ function HeaderClient() {
                         {!isLogin ? (
                             <button
                                 onClick={handleOpenLogin}
-                                className={`flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white px-4 py-2.5 text-sm font-bold text-black transition-all duration-300 hover:bg-yellow-400 hover:shadow-[0_0_18px_rgba(250,204,21,0.35)] min-[1150px]:flex xl:px-5 ${isSearching
+                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-yellow-400 via-yellow-300 to-amber-500 px-4 py-2.5 text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-[length:200%_auto] hover:bg-[position:right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] min-[1150px]:flex xl:px-5 ${isSearching
                                     ? "max-md:hidden pointer-events-none"
                                     : ""
                                     }`}
@@ -129,20 +146,20 @@ function HeaderClient() {
                                             <img
                                                 src={isLogin.imgUrl}
                                                 alt="avatar"
-                                                className="h-10 w-10 rounded-full object-cover ring-2 ring-transparent group-hover:ring-cyan-400 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+                                                className="h-10 w-10 rounded-full object-cover ring-2 ring-transparent transition-all duration-300 group-hover:ring-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                                             />
                                         ) : (
                                             <img
                                                 src={Coder}
                                                 alt="avatar"
-                                                className="h-10 w-10 rounded-full object-cover ring-2 ring-transparent group-hover:ring-cyan-400 transition-all shadow-[0_0_10px_rgba(0,0,0,0.5)]"
+                                                className="h-10 w-10 rounded-full object-cover ring-2 ring-transparent transition-all duration-300 group-hover:ring-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] shadow-[0_0_10px_rgba(0,0,0,0.5)]"
                                             />
                                         )}
                                     </div>
                                     <FaChevronDown className={`text-sm text-cyan-400 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`} />
                                 </button>
 
-                                <div className={`absolute right-0 top-full mt-4 w-80 rounded-2xl bg-[#0a192f]/95 backdrop-blur-xl border border-slate-700/80 shadow-[0_15px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(34,211,238,0.15)] overflow-hidden transition-all duration-300 origin-top-right ${isDropdownOpen ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
+                                <div className={`absolute right-0 top-full mt-4 w-80 rounded-2xl bg-black/80 border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(34,211,238,0.15)] overflow-hidden transition-all duration-300 origin-top-right ${isDropdownOpen ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
 
                                     <div className="flex items-center gap-4 p-5 border-b border-slate-700/80 bg-linear-to-r from-blue-900/10 to-transparent">
                                         <img
@@ -212,7 +229,7 @@ function HeaderClient() {
 
                     <button
                         onClick={() => setOpenMenu(!openMenu)}
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl text-white transition-all duration-300 hover:border-yellow-400 hover:text-yellow-300 sm:h-11 sm:w-11 min-[1150px]:hidden"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl text-white transition-all duration-300 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] sm:h-11 sm:w-11 min-[1150px]:hidden"
                     >
                         {openMenu ? <IoClose /> : <HiMenuAlt3 />}
                     </button>

@@ -1,0 +1,20 @@
+.neon-glow-active {
+    animation: headerNeonPulse 1.5s infinite alternate !important;
+}
+
+.neon-glow-hover:hover {
+    animation: headerNeonPulse 1.5s infinite alternate !important;
+}
+
+.neon-glow-focus:focus-within {
+    animation: headerNeonPulse 1.5s infinite alternate !important;
+}
+
+@keyframes headerNeonPulse {
+    0% {
+        box-shadow: 0 0 8px rgba(250, 204, 21, 0.6), 0 0 15px rgba(236, 72, 153, 0.4), 0 0 25px rgba(139, 92, 246, 0.3) !important;
+    }
+    100% {
+        box-shadow: 0 0 12px rgba(250, 204, 21, 0.8), 0 0 20px rgba(236, 72, 153, 0.6), 0 0 35px rgba(0, 242, 254, 0.5) !important;
+    }
+}

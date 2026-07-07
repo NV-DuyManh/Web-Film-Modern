@@ -1,11 +1,12 @@
 import React, { createContext, useEffect, useState, useContext } from 'react';
 import { UserContext } from './UserProvider';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 function AuthProvider({ children }) {
     const [isLogin, setIsLogin] = useState(null);
     const users = useContext(UserContext);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const user = JSON.parse(localStorage.getItem("isLogin"));
         if (user) {
@@ -35,6 +36,7 @@ function AuthProvider({ children }) {
     const handleLogout = () => {
         localStorage.removeItem("isLogin");
         setIsLogin(null);
+        navigate("/");
     }
     return (
         <AuthContext.Provider value={{ isLogin , loginByUser  , handleLogout }}>

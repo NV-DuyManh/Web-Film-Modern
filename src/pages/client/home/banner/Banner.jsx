@@ -19,22 +19,35 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Banner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
+    const [mainSwiper, setMainSwiper] = useState(null);
+    const [activeIndex, setActiveIndex] = useState(0);
     const movies = useContext(MovieContext);
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoriesContext);
     const authors = useContext(AuthorContext);
     const plans = useContext(PlanContext);
     const navigate = useNavigate();
+
+    if (!movies || movies.length === 0) return null;
+
     return (
         <div className='slide-banner'>
             <Swiper
+                onSwiper={setMainSwiper}
                 style={{
                     '--swiper-navigation-color': '#fff',
                     '--swiper-pagination-color': '#fff',
                 }}
                 spaceBetween={0}
+                onSlideChange={(swiper) => {
+                    setActiveIndex(swiper.realIndex);
+                    if (thumbsSwiper && !thumbsSwiper.destroyed) {
+                        thumbsSwiper.slideToLoop(swiper.realIndex);
+                    }
+                }}
                 navigation={false}
-                loop={false}
+                loop={movies?.length >= 7}
+                loopedSlides={movies?.length || 10}
                 effect={'fade'}
                 fadeEffect={{ crossFade: true }}
                 thumbs={{
@@ -47,7 +60,7 @@ export default function Banner() {
                     <SwiperSlide key={e.id}>
                         <img
                             className="banner-img"
-                            src={e.imgUrl}
+                            src={e.bannerUrl}
                             alt={e.name}
                             draggable="false"
                         />
@@ -60,7 +73,7 @@ export default function Banner() {
                             </h1>
 
                             <h2 className='mt-1.5 lg:mt-2 text-center lg:text-left text-sm sm:text-base font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
-                                {getObjectById(categoryTypes, e.category_Type_Id)?.name || "Series Movie"}
+                                {e.otherName}
                             </h2>
 
                             <div className='mt-3 sm:mt-4 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
@@ -126,8 +139,9 @@ export default function Banner() {
                 <Swiper
                     onSwiper={setThumbsSwiper}
                     breakpoints={{
-                        0: { slidesPerView: 'auto', spaceBetween: 8 },
-                        480: { slidesPerView: 'auto', spaceBetween: 10 },
+                        0: { slidesPerView: 7, spaceBetween: 6 },
+                        480: { slidesPerView: 7, spaceBetween: 8 },
+                        768: { slidesPerView: 7, spaceBetween: 10 },
                         1024: { slidesPerView: 6, spaceBetween: 14 },
                         1280: { slidesPerView: 6, spaceBetween: 16 }
                     }}
@@ -135,14 +149,23 @@ export default function Banner() {
                     watchSlidesProgress={true}
                     grabCursor={true}
                     allowTouchMove={true}
-                    centerInsufficientSlides={true}
-                    loop={false}
+                    loop={movies?.length >= 7}
+                    loopedSlides={movies?.length || 10}
+                    slideToClickedSlide={true}
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="thumb-swiper"
                 >
-                    {movies?.map((e) => (
-                        <SwiperSlide key={e.id}>
-                            <img src={e.imgUrl} alt={e.name} draggable="false" />
+                    {movies?.map((e, index) => (
+                        <SwiperSlide
+                            key={e.id}
+                            onClick={() => {
+                                if (mainSwiper && !mainSwiper.destroyed) {
+                                    mainSwiper.slideToLoop(index);
+                                }
+                            }}
+                            className={activeIndex === index ? 'custom-thumb-active' : ''}
+                        >
+                            <img src={e.bannerUrl} alt={e.name} draggable="false" />
                         </SwiperSlide>
                     ))}
                 </Swiper>
