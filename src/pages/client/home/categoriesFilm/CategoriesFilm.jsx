@@ -18,7 +18,7 @@ function CategoriesFilm() {
 
     return (
         <div className=' w-full overflow-hidden bg-[#111827] py-5 px-6 md:px-10'>
-            <h1 className='mb-6  text-2xl md:text-3xl font-black text-white drop-shadow-[0_0_14px_rgba(255,255,255,0.18)] '>
+            <h1 className='mb-6 text-2xl md:text-3xl font-bold glow-text-multi'>
                 Bạn đang quan tâm gì?
             </h1>
 

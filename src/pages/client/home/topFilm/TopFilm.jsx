@@ -16,7 +16,7 @@ export default function TopFilm() {
     return (
         <div className='bg-[#111827] w-full text-white py-10 px-6 md:px-10 overflow-hidden'>
             <div className='mb-2'>
-                <h1 className='font-bold text-2xl md:text-3xl'>Top 10 phim bộ hôm nay</h1>
+                <h1 className='font-bold text-2xl md:text-3xl glow-text-multi'>Top 10 phim bộ hôm nay</h1>
             </div>
 
             <div className="movie-slider-wrapper relative group/slider">

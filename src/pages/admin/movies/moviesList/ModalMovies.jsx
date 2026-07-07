@@ -375,7 +375,6 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                     <div className="w-full flex flex-col gap-2">
                                         <TextField
                                             className="modal-input-x"
-                                            placeholder="https://example.com/poster.jpg"
                                             value={movie.imgUrl?.startsWith('http') ? movie.imgUrl : ''}
                                             onChange={handlePosterUrlChange}
                                             fullWidth
@@ -411,7 +410,6 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                     <div className="w-full flex flex-col gap-2">
                                         <TextField
                                             className="modal-input-x"
-                                            placeholder="https://example.com/banner.jpg"
                                             value={movie.bannerUrl?.startsWith('http') ? movie.bannerUrl : ''}
                                             onChange={handleBannerUrlChange}
                                             fullWidth

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { AuthorContext } from '../../../contexts/AuthorProvider';
@@ -7,7 +7,6 @@ import { getObjectById } from '../../../services/firebaseReponse';
 import { PlanContext } from '../../../contexts/PlanProvider';
 
 export default function DetailFilm() {
-    const [activeTab, setActiveTab] = useState('tap-phim');
 
     const movies = useContext(MovieContext);
     const authors = useContext(AuthorContext);
@@ -153,59 +152,49 @@ export default function DetailFilm() {
 
                             <div className="flex gap-8 border-b border-slate-700/50 overflow-x-auto scrollbar-hide -mb-2">
                                 {['Tập phim', 'Gallery', 'Diễn viên', 'Đề xuất'].map((tab, i) => {
-                                    const tabId = tab.toLowerCase().replace(' ', '-');
                                     return (
-                                        <button 
+                                        <div 
                                             key={i}
-                                            onClick={() => setActiveTab(tabId)}
-                                            className={`pb-3 text-[15px] font-bold transition-colors whitespace-nowrap ${activeTab === tabId ? 'text-yellow-400 border-b-[3px] border-yellow-400' : 'text-slate-400 hover:text-white'}`}
+                                            className={`pb-3 text-[15px] font-bold whitespace-nowrap ${i === 0 ? 'text-yellow-400 border-b-[3px] border-yellow-400' : 'text-slate-400'}`}
                                         >
                                             {tab}
-                                        </button>
+                                        </div>
                                     )
                                 })}
                             </div>
                         </div>
 
-                        {activeTab === 'tap-phim' && (
-                            <div className="flex flex-col gap-5 animate-fade-in mt-2">
-                                <h3 className="text-xl font-bold text-white">Các bản chiếu</h3>
-                                
-                                <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-[320px] shadow-lg">
-                                    <div className="absolute top-0 right-0 w-[80%] h-full z-0">
-                                        <img 
-                                            src={movie.imgUrl || movie.bannerUrl} 
-                                            alt="bg" 
-                                            className="w-full h-full object-cover object-top opacity-50"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-r from-[#3b415a] via-[#3b415a]/80 to-transparent"></div>
+                        <div className="flex flex-col gap-5 animate-fade-in mt-2">
+                            <h3 className="text-xl font-bold text-white">Các bản chiếu</h3>
+                            
+                            <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-[320px] shadow-lg">
+                                <div className="absolute top-0 right-0 w-[80%] h-full z-0">
+                                    <img 
+                                        src={movie.imgUrl || movie.bannerUrl} 
+                                        alt="bg" 
+                                        className="w-full h-full object-cover object-top opacity-50"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-r from-[#3b415a] via-[#3b415a]/80 to-transparent"></div>
+                                </div>
+
+                                <div className="relative z-10 p-5 flex flex-col gap-4">
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="bg-[#6366f1] rounded flex items-center justify-center p-1.5 shadow">
+                                            <FaComment className="text-white text-[12px]" />
+                                        </div>
+                                        <span className="font-bold text-white text-[15px]">Vietsub #1</span>
+                                    </div>
+                                    
+                                    <div className="mt-1 mb-1">
+                                        <span className="font-black text-white text-xl">1</span>
                                     </div>
 
-                                    <div className="relative z-10 p-5 flex flex-col gap-4">
-                                        <div className="flex items-center gap-2.5">
-                                            <div className="bg-[#6366f1] rounded flex items-center justify-center p-1.5 shadow">
-                                                <FaComment className="text-white text-[12px]" />
-                                            </div>
-                                            <span className="font-bold text-white text-[15px]">Vietsub #1</span>
-                                        </div>
-                                        
-                                        <div className="mt-1 mb-1">
-                                            <span className="font-black text-white text-xl">1</span>
-                                        </div>
-
-                                        <button className="bg-white hover:bg-slate-100 text-black px-4 py-2 mt-1 rounded-md font-bold text-[13px] w-fit shadow-md transition-colors">
-                                            Xem bản này
-                                        </button>
-                                    </div>
+                                    <button className="bg-white hover:bg-slate-100 text-black px-4 py-2 mt-1 rounded-md font-bold text-[13px] w-fit shadow-md transition-colors">
+                                        Xem bản này
+                                    </button>
                                 </div>
                             </div>
-                        )}
-
-                        {activeTab !== 'tap-phim' && (
-                            <div className="py-10 text-slate-500 italic animate-fade-in pl-2 mt-2">
-                                Đang cập nhật nội dung cho tab {activeTab}...
-                            </div>
-                        )}
+                        </div>
 
                         <div className="mt-6 flex flex-col gap-4 animate-fade-in">
                             <div className="flex items-center gap-2 text-white">

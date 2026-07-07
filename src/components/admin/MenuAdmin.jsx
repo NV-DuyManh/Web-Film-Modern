@@ -39,7 +39,7 @@ function MenuAdmin() {
                         ADMIN
                     </h1>
                 </div>
-                
+
                 <div className={`justify-center items-center transition-all duration-300 w-full ${Menu ? 'hidden sm:flex' : 'hidden'}`}>
                     <h1 className='flex items-center justify-center font-black tracking-tighter uppercase' style={{ textShadow: '0 0 15px rgba(34,211,238,0.8)' }}>
                         <span className="text-cyan-300 text-[32px] ml-1">M</span>

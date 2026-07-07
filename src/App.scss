@@ -110,6 +110,8 @@ li {
 
 // Chữ lấp lánh (dùng cho các tiêu đề quan trọng, tên app, hoặc vip/premium)
 .glow-text {
+    width: fit-content;
+    display: inline-block;
     background: linear-gradient(
         90deg, 
         #00f2fe 0%, 
@@ -129,6 +131,8 @@ li {
 }
 
 .glow-text2 {
+    width: fit-content;
+    display: inline-block;
     background: linear-gradient(
         90deg, 
         #ff00ff 0%, 
@@ -148,6 +152,8 @@ li {
 }
 
 .glow-text-multi {
+    width: fit-content;
+    display: inline-block;
     background: linear-gradient(
         90deg, 
         #ff00ff 0%, 

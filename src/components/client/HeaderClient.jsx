@@ -13,16 +13,20 @@ import Coder from '../../assets/Coder.png';
 import PlayFilm from '../../pages/client/watch/PlayFilm';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import Category from '../../pages/client/category/Category';
+import Country from '../../pages/client/country/Country';
 
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
     const [openCate, setOpenCate] = useState(false);
+    const [openCountry, setOpenCountry] = useState(false);
     const [openLogin, setOpenLogin] = useState(false);
     const [openRegister, setOpenRegister] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
     const { isLogin, handleLogout } = useContext(AuthContext);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const cateRef = useRef(null);
+    const countryRef = useRef(null);
 
     const handleOpenLogin = () => { handleCloseRegister(); setOpenLogin(true); }
     const handleOpenRegister = () => { handleCloseLogin(); setOpenRegister(true); };
@@ -35,9 +39,22 @@ function HeaderClient() {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsDropdownOpen(false);
             }
+            if (cateRef.current && !cateRef.current.contains(event.target)) {
+                setOpenCate(false);
+            }
+            if (countryRef.current && !countryRef.current.contains(event.target)) {
+                setOpenCountry(false);
+            }
         }
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside, true);
+        document.addEventListener("touchstart", handleClickOutside, true);
+        document.addEventListener("pointerdown", handleClickOutside, true);
+        
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside, true);
+            document.removeEventListener("touchstart", handleClickOutside, true);
+            document.removeEventListener("pointerdown", handleClickOutside, true);
+        };
     }, []);
 
     return (
@@ -58,13 +75,32 @@ function HeaderClient() {
                 <div className={`shrink-0 items-center gap-1  max-md:absolute max-md:flex-col flex max-md:bg-black max-md:w-full bottom-0 left-0 max-md:translate-y-full ${openMenu ? "flex" : "max-md:hidden"} `}>
 
                     {LISTCLIENT.map((item, index) => (
-                        <li  onClick={() => setOpenCate(item.path == "/category" ? !openCate : openCate)} className={` relative  cursor-pointer flex items-center rounded-full max-md:w-full px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${location.pathname === item.path
+                        <li  
+                            key={index}
+                            ref={(el) => { 
+                                if (item.path === "/category") cateRef.current = el; 
+                                if (item.path === "/country") countryRef.current = el;
+                            }}
+                            onClick={() => {
+                                if (item.path === "/category") {
+                                    setOpenCate(!openCate);
+                                    setOpenCountry(false);
+                                } else if (item.path === "/country") {
+                                    setOpenCountry(!openCountry);
+                                    setOpenCate(false);
+                                } else {
+                                    setOpenCate(false);
+                                    setOpenCountry(false);
+                                }
+                            }} 
+                            className={` relative  cursor-pointer flex items-center rounded-full max-md:w-full px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${location.pathname === item.path
                             ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.35)]"
                             : "text-gray-200 hover:bg-white/10 hover:text-yellow-300"
                             }`}>
                             {item.title} {item.path == "/category" || item.path == "/country" ? <IoMdArrowDropdown /> : ""}
 
                             {item.path == "/category" && <Category openCate={openCate} />}
+                            {item.path == "/country" && <Country openCountry={openCountry} />}
                         </li>
                     ))}
                 </div>

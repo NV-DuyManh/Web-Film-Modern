@@ -28,7 +28,7 @@ export default function Anime() {
         <div className='anime-container'>
             <div className='flex justify-between items-center mb-4 sm:mb-6'>
                 <div className='flex items-center gap-2 sm:gap-3'>
-                    <h1 className='font-bold text-xl sm:text-2xl md:text-3xl text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.3)]'>
+                    <h1 className='font-bold text-xl sm:text-2xl md:text-3xl glow-text-multi'>
                         Kho Tàng Anime Mới Nhất
                     </h1>
                     <FaChevronRight className='border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full' />
