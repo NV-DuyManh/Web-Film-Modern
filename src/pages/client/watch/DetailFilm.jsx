@@ -23,7 +23,7 @@ export default function DetailFilm() {
     return (
         <div className="bg-[#0f1322] min-h-screen text-slate-300 font-sans relative text-sm pb-20">
             
-            <div className="w-full h-[450px] md:h-[550px] lg:h-[650px] relative z-0">
+            <div className="w-full h-112.5 md:h-137.5 lg:h-162.5 relative z-0">
                 <img 
                     src={movie.bannerUrl || movie.imgUrl} 
                     alt="Banner" 
@@ -33,7 +33,7 @@ export default function DetailFilm() {
 
             <div className="relative z-10 w-full bg-[#0f1322] rounded-t-[40px] pt-8 lg:pt-12 -mt-20 lg:-mt-32">
                 
-                <div className="w-full max-w-[1280px] mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+                <div className="w-full max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
                     
                     <div className="lg:col-span-3 flex flex-col gap-6">
                         
@@ -41,7 +41,7 @@ export default function DetailFilm() {
                             <img 
                                 src={movie.imgUrl} 
                                 alt={movie.name} 
-                                className="w-full aspect-[2/3] object-cover"
+                                className="w-full aspect-2/3 object-cover"
                             />
                         </div>
 
@@ -174,7 +174,7 @@ export default function DetailFilm() {
                                         alt="bg" 
                                         className="w-full h-full object-cover object-top opacity-50"
                                     />
-                                    <div className="absolute inset-0 bg-gradient-to-r from-[#3b415a] via-[#3b415a]/80 to-transparent"></div>
+                                    <div className="absolute inset-0 bg-linear-to-r from-[#3b415a] via-[#3b415a]/80 to-transparent"></div>
                                 </div>
 
                                 <div className="relative z-10 p-5 flex flex-col gap-4">
@@ -210,7 +210,7 @@ export default function DetailFilm() {
                                 <div className="bg-[#131722] rounded-lg relative overflow-hidden">
                                     <textarea 
                                         placeholder="Viết bình luận" 
-                                        className="w-full bg-transparent p-4 text-slate-300 resize-none outline-none min-h-[100px] text-[13px] placeholder-slate-600"
+                                        className="w-full bg-transparent p-4 text-slate-300 resize-none outline-none min-h-25 text-[13px] placeholder-slate-600"
                                         maxLength="1000"
                                     ></textarea>
                                     <span className="absolute top-4 right-4 text-[11px] text-slate-500 font-medium">0 / 1000</span>
@@ -218,7 +218,7 @@ export default function DetailFilm() {
                                 
                                 <div className="px-1 flex justify-between items-center pb-1">
                                     <div className="flex items-center gap-2.5 cursor-pointer group">
-                                        <div className="w-8 h-4 rounded-full border border-slate-500 relative flex items-center px-[3px] transition-colors group-hover:border-slate-400">
+                                        <div className="w-8 h-4 rounded-full border border-slate-500 relative flex items-center px-0.75 transition-colors group-hover:border-slate-400">
                                             <div className="w-2 h-2 bg-slate-500 rounded-full group-hover:bg-slate-400 transition-colors"></div>
                                         </div>
                                         <span className="text-[12px] font-bold text-slate-300">Tiết lộ?</span>
