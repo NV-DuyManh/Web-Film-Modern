@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight, FaPlay, FaVolumeUp, FaExpand, FaEllipsisV, FaComments, FaPaperPlane, FaClosedCaptioning, FaMicrophone, FaBell } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
@@ -8,42 +8,69 @@ import ListEpisodes from './ListEpisodes';
 import { EpisodeContext } from '../../../contexts/EpisodeProvider';
 
 export default function PlayFilm({ handleOpenLogin }) {
-    const { id } = useParams(); // 2 truong hop id tap phim or id phim 
+    const { id } = useParams(); 
     const navigate = useNavigate();
     const [activeAudio, setActiveAudio] = useState('vietsub');
     const movies = useContext(MovieContext);
     const plans = useContext(PlanContext);
     const episodes = useContext(EpisodeContext);
-    const movie = getObjectById(movies, id);
+
+    const currentEpisode = useMemo(() => {
+        return episodes.find(e => e.id == id);
+    }, [id, episodes]);
+
+    const movieId = currentEpisode ? currentEpisode.movieID : id;
+
+    const movie = useMemo(() => {
+        return getObjectById(movies, movieId) || {};
+    }, [movies, movieId]);
+
     const [playEpisodes, setPlayEpisodes] = useState({});
 
+
+
     const episodeShow = useMemo(() => {
-        let dataSort;
-        const episode = episodes.find(e => e.id == id);
-        if (episode) {
-            setPlayEpisodes(episode);
-            dataSort = episodes.filter(e => e.movieID == episode.movieID).sort((a, b) => a.numberEpisode - b.numberEpisode);
+        let dataSort = [];
+        if (currentEpisode) {
+            setPlayEpisodes(currentEpisode);
+            dataSort = episodes.filter(e => e.movieID == currentEpisode.movieID).sort((a, b) => a.numberEpisode - b.numberEpisode);
         } else {
             dataSort = episodes.filter(e => e.movieID == id).sort((a, b) => a.numberEpisode - b.numberEpisode);
-            setPlayEpisodes(dataSort[0]);
+            if (dataSort.length > 0) {
+                setPlayEpisodes(dataSort[0]);
+            }
         }
-
         return dataSort;
-    }, [id, episodes]);
+    }, [id, episodes, currentEpisode]);
 
     const handleClickEpisodes = (ep) => {
         setPlayEpisodes(ep);
-        window.scrollTo({ top: 0, behavior: "smooth" })
+        navigate(`/play/${ep.id}`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }
     return (
         <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25">
             <div className=" mx-auto px-4 sm:px-6 pt-4">
 
                 <div className="flex items-center gap-3 mb-6">
-                    <button className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-600 hover:border-yellow-400 hover:text-yellow-400 transition-all">
-                        <FaChevronLeft className="pr-0.5" />
+                    <button
+                        onClick={() => navigate(`/detaifilm/${movieId}`)}
+                        className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800/60 text-slate-300 hover:border-yellow-400 hover:text-yellow-400 hover:bg-yellow-400/10 transition-all cursor-pointer shadow-sm"
+                        title="Quay lại chi tiết phim"
+                    >
+                        <FaChevronLeft className="pr-0.5 text-sm" />
                     </button>
-                    <h1 className="text-lg sm:text-xl font-bold text-white">Xem phim {movie.name}</h1>
+                    <h1 className="text-lg sm:text-xl font-bold text-white flex flex-wrap items-center gap-2">
+                        <span>Xem phim <span className="text-yellow-400">{movie?.name}</span></span>
+                        {playEpisodes?.numberEpisode && (
+                            <>
+                                <span className="text-slate-500">•</span>
+                                <span className="px-2.5 py-0.5 bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 rounded-lg text-xs sm:text-sm font-extrabold shadow-sm">
+                                    Tập {playEpisodes.numberEpisode}
+                                </span>
+                            </>
+                        )}
+                    </h1>
                 </div>
 
                 <div className="w-full mb-8">
@@ -74,54 +101,50 @@ export default function PlayFilm({ handleOpenLogin }) {
                             </div>
                         </div>
 
-                        <div className="mt-6 flex items-center gap-3">
-                            <button
-                                onClick={() => setActiveAudio('vietsub')}
-                                className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors border ${activeAudio === 'vietsub'
-                                    ? 'bg-[#facc15]/20 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black'
-                                    : 'bg-transparent border-gray-600 text-gray-300 hover:bg-gray-800'
+                        {/* Server & Audio Control Bar */}
+                        <div className="mt-6 p-4 bg-[#14192b] rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+                            {/* Audio selection */}
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1">Bản chiếu:</span>
+                                <button
+                                    onClick={() => setActiveAudio('vietsub')}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
+                                        activeAudio === 'vietsub'
+                                            ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm'
+                                            : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46]'
                                     }`}
-                            >
-                                <FaClosedCaptioning /> Vietsub
-                            </button>
-                            <button
-                                onClick={() => setActiveAudio('thuyetminh')}
-                                className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium transition-colors border ${activeAudio === 'thuyetminh'
-                                    ? 'bg-[#facc15]/20 border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-black'
-                                    : 'bg-transparent border-gray-600 text-gray-300 hover:bg-gray-800'
+                                >
+                                    <FaClosedCaptioning className="text-sm" /> Vietsub
+                                </button>
+                                <button
+                                    onClick={() => setActiveAudio('thuyetminh')}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer border ${
+                                        activeAudio === 'thuyetminh'
+                                            ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm'
+                                            : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46]'
                                     }`}
-                            >
-                                <FaMicrophone /> Thuyết Minh
-                            </button>
-                        </div>
-
-                        <div className="mt-6 flex justify-center gap-3">
-                            <button className="px-6 py-2 rounded-md bg-yellow-400 text-black text-sm font-bold shadow-md hover:bg-yellow-500 transition-colors">SVR 1</button>
-                            <button className="px-6 py-2 rounded-md bg-[#b83280] text-white text-sm font-bold shadow-md hover:bg-[#9d2b6d] transition-colors">SVR 2</button>
-                            <button className="px-6 py-2 rounded-md bg-[#25855A] text-white text-sm font-bold shadow-md hover:bg-[#1f6e4a] transition-colors">SVR 3</button>
-                        </div>
-                        <ListEpisodes episodeShow={episodeShow} playEpisodes={playEpisodes} handleClickEpisodes={handleClickEpisodes} />
-                        <div className="mt-12">
-                            <h2 className="text-xl font-bold text-white flex items-center gap-2 mb-4">
-                                <FaComments className="text-gray-400" /> Bình luận
-                            </h2>
-                            <p className="text-sm text-gray-400 mb-4">
-                                Vui lòng <button onClick={handleOpenLogin} className="text-yellow-500 hover:underline font-medium">đăng nhập</button> để tham gia bình luận.
-                            </p>
-
-                            <div className="bg-[#161821] rounded-lg p-3 border border-gray-800 focus-within:border-gray-600 transition-colors">
-                                <textarea
-                                    rows="4"
-                                    placeholder="Viết bình luận"
-                                    className="w-full bg-transparent text-sm text-white outline-none resize-none placeholder-gray-600"
-                                ></textarea>
-                                <div className="flex justify-between items-center mt-2 border-t border-gray-800 pt-2">
-                                    <span className="text-xs text-gray-600">0 / 1000</span>
-                                    <button className="flex items-center gap-2 text-sm text-yellow-500 font-medium hover:text-yellow-400">
-                                        Gửi <FaPaperPlane />
-                                    </button>
-                                </div>
+                                >
+                                    <FaMicrophone className="text-sm" /> Thuyết Minh
+                                </button>
                             </div>
+
+                            {/* Server selection */}
+                            <div className="flex items-center gap-2">
+                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1">Server:</span>
+                                <button className="px-4 py-1.5 rounded-lg bg-yellow-400 text-black text-xs font-extrabold shadow-sm hover:bg-yellow-500 transition-all cursor-pointer">
+                                    SVR 1
+                                </button>
+                                <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition-all cursor-pointer">
+                                    SVR 2
+                                </button>
+                                <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition-all cursor-pointer">
+                                    SVR 3
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Episodes Grid */}
+                        <div className="mt-4">
                         </div>
                     </div>
                     <div className="w-full lg:w-[320px] xl:w-90 shrink-0">

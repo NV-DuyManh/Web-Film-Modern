@@ -3,7 +3,7 @@ import './App.scss'
 import HomeAdmin from './pages/admin/homeAdmin/HomeAdmin'
 import { BrowserRouter } from 'react-router-dom'
 import AdminRouters from './routers/AdminRouters'
-import NoelBackground from './components/NoelBackground'
+import NoelBackground from './components/admin/noelBackground/NoelBackground'
 import LayoutClient from './pages/client/LayoutClient'
 import { AuthContext } from './contexts/AuthProvider'
 

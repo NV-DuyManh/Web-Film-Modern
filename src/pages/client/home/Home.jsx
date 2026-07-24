@@ -10,6 +10,7 @@ import FilmHongKong from './filmHongKong/FilmHongKong';
 import Anime from './anime/Anime';
 import Comment from './comment/Comment';
 import DetailFilm from '../watch/DetailFilm';
+import Pay from '../pay/Pay';
 function Home(props) {
     return (
         <div>
@@ -23,6 +24,7 @@ function Home(props) {
             <FilmComing/>
             <Anime/>
             <FilmHongKong/>
+            <Pay/>
         </div>
     );
 }

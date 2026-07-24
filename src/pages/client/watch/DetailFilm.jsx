@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
@@ -11,23 +11,75 @@ import ListEpisodes from './ListEpisodes';
 
 export default function DetailFilm() {
     const { id } = useParams();
+    const [activeTab, setActiveTab] = useState('episodes');
     const movies = useContext(MovieContext);
     const authors = useContext(AuthorContext);
     const characters = useContext(CharacterContext);
     const plans = useContext(PlanContext);
     const episodes = useContext(EpisodeContext);
     const navigate = useNavigate();
-    const movie = getObjectById(movies, id);
+
+    const movie = useMemo(() => {
+        let found = getObjectById(movies, id);
+        if (!found) {
+            const ep = episodes.find(e => e.id == id);
+            if (ep) {
+                found = getObjectById(movies, ep.movieID);
+            }
+        }
+        return found;
+    }, [movies, episodes, id]);
+
+
 
     const topMovies = movies?.slice(0, 10) || [];
 
+    const realMovieId = movie?.id || id;
+
     const episodeShow = useMemo(() => {
-        return episodes.filter(e => e.movieID == id).sort((a, b) => a.numberEpisode - b.numberEpisode)
-    }, [id, episodes]);
+        return episodes.filter(e => e.movieID == realMovieId).sort((a, b) => a.numberEpisode - b.numberEpisode)
+    }, [realMovieId, episodes]);
+
+    const movieCharacters = useMemo(() => {
+        if (!movie) return [];
+        let charList = movie.character || movie.characters || movie.list_character || movie.list_Character;
+        if (Array.isArray(charList) && charList.length > 0) {
+            const resolved = charList.map(c => typeof c === 'string' ? getObjectById(characters, c) : c).filter(Boolean);
+            if (resolved.length > 0) return resolved;
+        }
+        return characters?.slice(0, 8) || [];
+    }, [movie, characters]);
+
+    const recommendedMovies = useMemo(() => {
+        return movies?.filter(m => m.id !== realMovieId).slice(0, 8) || [];
+    }, [movies, realMovieId]);
+
+    const galleryImages = useMemo(() => {
+        if (!movie) return [];
+        const list = [
+            movie.bannerUrl,
+            movie.imgUrl,
+            ...(Array.isArray(movie.gallery) ? movie.gallery : []),
+            ...(Array.isArray(movie.images) ? movie.images : [])
+        ].filter(Boolean);
+
+        return Array.from(new Set(list));
+    }, [movie]);
 
     const handleClickEpisodes = (ep) => {
         navigate(`/play/${ep.id}`);
     }
+
+    if (!movie) {
+        return (
+            <div className="bg-[#0f1322] min-h-screen text-slate-300 flex items-center justify-center py-20">
+                <div className="text-center space-y-4">
+                    <p className="text-lg font-bold text-slate-400">Đang tải thông tin phim...</p>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="bg-[#0f1322] min-h-screen text-slate-300 font-sans relative text-sm pb-20">
 
@@ -105,15 +157,20 @@ export default function DetailFilm() {
                                 {topMovies.map((m, index) => (
                                     <div key={index} className="flex items-center gap-3 group cursor-pointer">
                                         <div
-                                            className="text-4xl font-black italic w-6 text-center text-transparent"
-                                            style={{ WebkitTextStroke: '1px #475569', color: index < 3 ? 'transparent' : 'transparent' }}
+                                            className={`text-3xl sm:text-4xl font-black italic w-10 shrink-0 text-center transition-colors ${
+                                                index === 0
+                                                    ? "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+                                                    : index === 1
+                                                    ? "text-slate-200 drop-shadow-[0_0_8px_rgba(226,232,240,0.5)]"
+                                                    : index === 2
+                                                    ? "text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]"
+                                                    : "text-slate-400 group-hover:text-cyan-400"
+                                            }`}
                                         >
-                                            <span className={index === 0 ? "text-yellow-500 stroke-none" : index === 1 ? "text-slate-300 stroke-none" : index === 2 ? "text-amber-600 stroke-none" : ""}>
-                                                {index + 1}
-                                            </span>
+                                            {index + 1}
                                         </div>
-                                        <div className="w-10 h-14 rounded overflow-hidden shrink-0">
-                                            <img src={m.imgUrl} alt={m.name} className="w-full h-full object-cover" />
+                                        <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 border border-slate-700/60">
+                                            <img src={m.imgUrl} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                         </div>
                                         <div className="flex flex-col min-w-0">
                                             <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.name}</h4>
@@ -149,33 +206,139 @@ export default function DetailFilm() {
                                         <FaShare className="text-xl" />
                                         <span className="text-[10px] font-bold uppercase">Chia sẻ</span>
                                     </button>
-                                    <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
-                                        <FaComment className="text-xl" />
-                                        <span className="text-[10px] font-bold uppercase">Bình luận</span>
-                                    </button>
                                 </div>
                                 <button className="flex items-center gap-2 px-5 py-2 bg-blue-600/30 text-blue-400 rounded-full text-[13px] font-bold transition-colors hover:bg-blue-600/50">
                                     <FaStar /> 0 Đánh giá
                                 </button>
                             </div>
 
-                            <div className="flex gap-8 border-b border-slate-700/50 overflow-x-auto scrollbar-hide -mb-2">
-                                <div className="pb-3 text-[15px] font-bold whitespace-nowrap text-yellow-400 border-b-[3px] border-yellow-400 cursor-pointer hover:text-yellow-400 transition-colors">
+                            {/* Tabs Navigation */}
+                            <div className="flex items-center gap-6 md:gap-8 border-b border-slate-700/60 pb-1">
+                                <button
+                                    onClick={() => setActiveTab('episodes')}
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${
+                                        activeTab === 'episodes'
+                                            ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+                                            : "text-slate-400 hover:text-white"
+                                    }`}
+                                >
                                     Tập phim
-                                </div>
-                                <div className="pb-3 text-[15px] font-bold whitespace-nowrap text-slate-400 cursor-pointer hover:text-yellow-400 transition-colors">
+                                </button>
+
+                                <button
+                                    onClick={() => setActiveTab('gallery')}
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${
+                                        activeTab === 'gallery'
+                                            ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+                                            : "text-slate-400 hover:text-white"
+                                    }`}
+                                >
                                     Gallery
-                                </div>
-                                <div className="pb-3 text-[15px] font-bold whitespace-nowrap text-slate-400 cursor-pointer hover:text-yellow-400 transition-colors">
+                                </button>
+
+                                <button
+                                    onClick={() => setActiveTab('actors')}
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${
+                                        activeTab === 'actors'
+                                            ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+                                            : "text-slate-400 hover:text-white"
+                                    }`}
+                                >
                                     Diễn viên
-                                </div>
-                                <div className="pb-3 text-[15px] font-bold whitespace-nowrap text-slate-400 cursor-pointer hover:text-yellow-400 transition-colors">
+                                </button>
+
+                                <button
+                                    onClick={() => setActiveTab('recommend')}
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${
+                                        activeTab === 'recommend'
+                                            ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+                                            : "text-slate-400 hover:text-white"
+                                    }`}
+                                >
                                     Đề xuất
-                                </div>
+                                </button>
                             </div>
-                            <div className="mt-1">
+
+                            {/* Tab Contents */}
+                            {activeTab === 'episodes' && (
                                 <ListEpisodes handleClickEpisodes={handleClickEpisodes} episodeShow={episodeShow} />
-                            </div>
+                            )}
+                            {activeTab === 'gallery' && (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 py-2">
+                                    {galleryImages.length > 0 ? (
+                                        galleryImages.map((imgSrc, idx) => (
+                                            <div
+                                                key={idx}
+                                                className="relative rounded-2xl overflow-hidden aspect-16/9 border border-slate-800 shadow-md hover:border-yellow-400/60 transition-colors cursor-pointer"
+                                            >
+                                                <img
+                                                    src={imgSrc}
+                                                    alt={`Gallery ${idx + 1}`}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="col-span-full py-12 text-center text-slate-400 text-sm bg-[#131828]/60 rounded-2xl border border-slate-800/60">
+                                            Chưa có hình ảnh trong bộ sưu tập.
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            {activeTab === 'actors' && (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 py-2">
+                                    {movieCharacters.length > 0 ? (
+                                        movieCharacters.map((char, idx) => (
+                                            <div key={idx} className="flex flex-col items-center group cursor-pointer">
+                                                {/* Vertical Portrait Card */}
+                                                <div className="relative w-full aspect-3/4 rounded-2xl overflow-hidden border border-slate-800 shadow-lg group-hover:border-yellow-400 group-hover:shadow-[0_8px_25px_rgba(250,204,21,0.25)] group-hover:-translate-y-1 transition-all duration-300">
+                                                    <img
+                                                        src={char.imgUrl || char.img || 'https://via.placeholder.com/200x300'}
+                                                        alt={char.name}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                    />
+                                                    {/* Bottom Dark Gradient Overlay */}
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-3 text-center">
+                                                        <h4 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors truncate">
+                                                            {char.name}
+                                                        </h4>
+                                                    </div>
+                                                </div>
+
+                                                {/* Subtitle / Role below card (only rendered if role exists) */}
+                                                {char.role && (
+                                                    <p className="text-xs font-semibold text-rose-300 text-center mt-2 truncate w-full">
+                                                        {char.role}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="col-span-full py-12 text-center text-slate-400 text-sm bg-[#131828]/60 rounded-2xl border border-slate-800/60">
+                                            Chưa có thông tin diễn viên cho bộ phim này.
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            {activeTab === 'recommend' && (
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 py-2">
+                                    {recommendedMovies.map((m, idx) => (
+                                        <div
+                                            key={idx}
+                                            onClick={() => navigate(`/detaifilm/${m.id}`)}
+                                            className="group flex flex-col rounded-2xl overflow-hidden bg-[#141a2e]/80 border border-slate-800/80 hover:border-yellow-400/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer shadow-md"
+                                        >
+                                            <div className="aspect-2/3 w-full overflow-hidden">
+                                                <img src={m.imgUrl} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            </div>
+                                            <div className="p-3 flex flex-col">
+                                                <h4 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors truncate">{m.name}</h4>
+                                                <p className="text-xs text-slate-400 mt-1">{m.year || 2024} • {m.endEpisode || 0} Tập</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="flex flex-col gap-5 animate-fade-in mt-2">
@@ -207,46 +370,6 @@ export default function DetailFilm() {
                                         Xem bản này
                                     </button>
                                 </div>
-                            </div>
-                        </div>
-
-                        <div className="mt-6 flex flex-col gap-4 animate-fade-in">
-                            <div className="flex items-center gap-2 text-white">
-                                <FaComment className="text-xl" />
-                                <h3 className="text-xl font-bold">Bình luận (0)</h3>
-                            </div>
-
-                            <p className="text-sm text-slate-400">
-                                Vui lòng <span className="text-yellow-500 cursor-pointer hover:underline">đăng nhập</span> để tham gia bình luận.
-                            </p>
-
-                            <div className="bg-[#212738] border border-slate-700/50 rounded-xl p-3 flex flex-col gap-3 mt-3 shadow-lg">
-                                <div className="bg-[#131722] rounded-lg relative overflow-hidden">
-                                    <textarea
-                                        placeholder="Viết bình luận"
-                                        className="w-full bg-transparent p-4 text-slate-300 resize-none outline-none min-h-25 text-[13px] placeholder-slate-600"
-                                        maxLength="1000"
-                                    ></textarea>
-                                    <span className="absolute top-4 right-4 text-[11px] text-slate-500 font-medium">0 / 1000</span>
-                                </div>
-
-                                <div className="px-1 flex justify-between items-center pb-1">
-                                    <div className="flex items-center gap-2.5 cursor-pointer group">
-                                        <div className="w-8 h-4 rounded-full border border-slate-500 relative flex items-center px-0.75 transition-colors group-hover:border-slate-400">
-                                            <div className="w-2 h-2 bg-slate-500 rounded-full group-hover:bg-slate-400 transition-colors"></div>
-                                        </div>
-                                        <span className="text-[12px] font-bold text-slate-300">Tiết lộ?</span>
-                                    </div>
-
-                                    <button className="flex items-center gap-2 text-[#facc15] hover:text-yellow-400 font-bold text-[13px] transition-colors group">
-                                        Gửi <FaPaperPlane className="text-sm group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div className="flex flex-col items-center justify-center py-20 bg-[#151a2d] rounded-xl mt-4 text-slate-500 shadow-inner">
-                                <FaComment className="text-5xl mb-4 opacity-40" />
-                                <p className="text-[14px]">Chưa có bình luận nào</p>
                             </div>
                         </div>
 

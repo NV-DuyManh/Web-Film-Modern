@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import "./NoelBackground.css";
-import footer1 from "../assets/footer1.png";
-import footer2 from "../assets/footer2.png";
-import gift1 from "../assets/gift1.png";
-import gift2 from "../assets/gift2.png";
-import gift3 from "../assets/gift3.png";
-import gift4 from "../assets/gift4.png";
-import gift5 from "../assets/gift5.png";
-import gift6 from "../assets/gift6.png";
+import footer1 from "../../../assets/footer1.png";
+import footer2 from "../../../assets/footer2.png";
+import gift1 from "../../../assets/gift1.png";
+import gift2 from "../../../assets/gift2.png";
+import gift3 from "../../../assets/gift3.png";
+import gift4 from "../../../assets/gift4.png";
+import gift5 from "../../../assets/gift5.png";
+import gift6 from "../../../assets/gift6.png";
 
-import giving1 from "../assets/giving1.png";
-import giving2 from "../assets/giving2.png";
-import giving3 from "../assets/giving3.png";
-import santa from "../assets/santa-claus-hat.png";
-import snowman from "../assets/snowman.png";
+import giving1 from "../../../assets/giving1.png";
+import giving2 from "../../../assets/giving2.png";
+import giving3 from "../../../assets/giving3.png";
+import santa from "../../../assets/santa-claus-hat.png";
+import snowman from "../../../assets/snowman.png";
 
 const NOEL_IMAGES = [
     footer1, footer2, gift1, gift2, gift3, gift4, gift5, gift6, giving1, giving2, giving3, santa, snowman,
@@ -89,18 +89,18 @@ export default function NoelBackground() {
 // import { useEffect, useRef, useState } from "react";
 // import "./NoelBackground.css";
 
-// import footer1 from "../assets/footer1.png";
-// import footer2 from "../assets/footer2.png";
-// import gift1 from "../assets/gift1.png";
-// import gift2 from "../assets/gift2.png";
-// import gift3 from "../assets/gift3.png";
-// import gift4 from "../assets/gift4.png";
-// import gift5 from "../assets/gift5.png";
-// import gift6 from "../assets/gift6.png";
-// import giving1 from "../assets/giving1.png";
-// import giving2 from "../assets/giving2.png";
-// import giving3 from "../assets/giving3.png";
-// import snowman from "../assets/snowman.png";
+// import footer1 from "../../../assets/footer1.png";
+// import footer2 from "../../../assets/footer2.png";
+// import gift1 from "../../../assets/gift1.png";
+// import gift2 from "../../../assets/gift2.png";
+// import gift3 from "../../../assets/gift3.png";
+// import gift4 from "../../../assets/gift4.png";
+// import gift5 from "../../../assets/gift5.png";
+// import gift6 from "../../../assets/gift6.png";
+// import giving1 from "../../../assets/giving1.png";
+// import giving2 from "../../../assets/giving2.png";
+// import giving3 from "../../../assets/giving3.png";
+// import snowman from "../../../assets/snowman.png";
 
 // const NOEL_IMAGES = [
 //     footer1, footer2,

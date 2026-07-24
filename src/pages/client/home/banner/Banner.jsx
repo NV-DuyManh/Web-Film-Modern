@@ -69,11 +69,11 @@ export default function Banner() {
 
                         <div className='banner-info-box'>
                             <h1 className='text-center lg:text-left text-2xl sm:text-3xl lg:text-4xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
-                                {e.name}
+                                {e.otherName}
                             </h1>
 
                             <h2 className='mt-1.5 lg:mt-2 text-center lg:text-left text-sm sm:text-base font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
-                                {e.otherName}
+                                {e.name}
                             </h2>
 
                             <div className='mt-3 sm:mt-4 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>

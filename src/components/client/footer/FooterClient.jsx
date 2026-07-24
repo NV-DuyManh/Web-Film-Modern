@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaApple, FaFacebookF, FaGooglePlay, FaLinkedinIn, FaStar } from 'react-icons/fa';
-import Logo from '../../assets/Logo.png';
-import Logo2 from '../../assets/Logo2.png';
+import Logo from '../../../assets/Logo.png';
+import Logo2 from '../../../assets/Logo2.png';
 import { SiZalo } from 'react-icons/si';
 
 function FooterClient() {

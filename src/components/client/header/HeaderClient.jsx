@@ -3,17 +3,17 @@ import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown,
 import { FiSearch } from 'react-icons/fi';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { IoClose } from 'react-icons/io5';
-import { LISTCLIENT } from '../../utils/Contants';
+import { LISTCLIENT } from '../../../utils/Contants';
 import { Link, useLocation } from 'react-router-dom';
-import Logo2 from '../../assets/Logo2.png';
-import LogIn from '../../pages/client/auth/LogIn';
-import Register from '../../pages/client/auth/Register';
-import { AuthContext } from '../../contexts/AuthProvider';
-import Coder from '../../assets/Coder.png';
-import PlayFilm from '../../pages/client/watch/PlayFilm';
+import Logo2 from '../../../assets/Logo2.png';
+import LogIn from '../../../pages/client/auth/LogIn';
+import Register from '../../../pages/client/auth/Register';
+import { AuthContext } from '../../../contexts/AuthProvider';
+import Coder from '../../../assets/Coder.png';
+import PlayFilm from '../../../pages/client/watch/PlayFilm';
 import { IoMdArrowDropdown } from 'react-icons/io';
-import Category from '../../pages/client/category/Category';
-import Country from '../../pages/client/country/Country';
+import Category from '../../../pages/client/category/Category';
+import Country from '../../../pages/client/country/Country';
 
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
@@ -50,7 +50,7 @@ function HeaderClient() {
         document.addEventListener("mousedown", handleClickOutside, true);
         document.addEventListener("touchstart", handleClickOutside, true);
         document.addEventListener("pointerdown", handleClickOutside, true);
-        
+
         return () => {
             document.removeEventListener("mousedown", handleClickOutside, true);
             document.removeEventListener("touchstart", handleClickOutside, true);
@@ -60,18 +60,17 @@ function HeaderClient() {
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 10);
+            setIsScrolled(window.scrollY > 0);
         };
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     return (
-        <div className="fixed top-0 left-0 z-[100] w-full text-white">
-            {/* Lớp nền tách biệt để không gây lỗi backdrop-filter cho các menu thả xuống */}
-            <div className={`absolute inset-0 -z-10 transition-all duration-500 ${isScrolled ? "bg-[#0b1221]/80 backdrop-blur-2xl border-b border-white/10 shadow-lg" : "bg-gradient-to-b from-black/80 via-black/20 to-transparent border-transparent"}`}></div>
-            
-            <div 
+        <div className="fixed top-0 left-0 z-100 w-full text-white">
+            <div className={`absolute inset-0 -z-10 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${isScrolled ? "bg-[#0b1221]/60 backdrop-blur-2xl border-b border-white/10 shadow-lg" : "bg-linear-to-b from-black/80 via-black/20 to-transparent border-none shadow-none"}`}></div>
+
+            <div
                 className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1150px]:gap-4 min-[1150px]:px-8 transition-all duration-500`}
             >
                 <Link to="/" className="flex shrink-0 items-center">
@@ -90,10 +89,10 @@ function HeaderClient() {
                 <div className={`shrink-0 items-center gap-1 max-[1149px]:absolute max-[1149px]:flex-col flex max-[1149px]:bg-[#111827] max-[1149px]:w-full bottom-0 left-0 max-[1149px]:translate-y-full max-[1149px]:p-2 max-[1149px]:border-t max-[1149px]:border-white/10 ${openMenu ? "flex" : "max-[1149px]:hidden"} `}>
 
                     {LISTCLIENT.map((item, index) => (
-                        <Link to={item.path} 
+                        <Link to={item.path}
                             key={index}
-                            ref={(el) => { 
-                                if (item.path === "/category") cateRef.current = el; 
+                            ref={(el) => {
+                                if (item.path === "/category") cateRef.current = el;
                                 if (item.path === "/country") countryRef.current = el;
                             }}
                             onClick={(e) => {
@@ -109,11 +108,11 @@ function HeaderClient() {
                                     setOpenCate(false);
                                     setOpenCountry(false);
                                 }
-                            }} 
+                            }}
                             className={` relative  cursor-pointer flex items-center rounded-full max-[1149px]:w-full max-[1149px]:justify-center px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${location.pathname === item.path
-                            ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.5)]"
-                            : "text-gray-200 hover:bg-white/10 hover:text-yellow-400"
-                            }`}>
+                                ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.5)]"
+                                : "text-gray-200 hover:bg-white/10 hover:text-yellow-400"
+                                }`}>
                             {item.title} {item.path == "/category" || item.path == "/country" ? <IoMdArrowDropdown /> : ""}
 
                             {item.path == "/category" && <Category openCate={openCate} />}
@@ -127,7 +126,7 @@ function HeaderClient() {
                         {!isLogin ? (
                             <button
                                 onClick={handleOpenLogin}
-                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-2 rounded-full bg-gradient-to-r from-yellow-400 via-yellow-300 to-amber-500 px-4 py-2.5 text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-[length:200%_auto] hover:bg-[position:right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] min-[1150px]:flex xl:px-5 ${isSearching
+                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-2 rounded-full bg-linear-to-r from-yellow-400 via-yellow-300 to-amber-500 px-4 py-2.5 text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-size-[200%_auto] hover:bg-position-[right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] min-[1150px]:flex xl:px-5 ${isSearching
                                     ? "max-md:hidden pointer-events-none"
                                     : ""
                                     }`}
