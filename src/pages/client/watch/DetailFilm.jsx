@@ -155,17 +155,16 @@ export default function DetailFilm() {
                             </h3>
                             <div className="flex flex-col gap-4">
                                 {topMovies.map((m, index) => (
-                                    <div key={index} className="flex items-center gap-3 group cursor-pointer">
+                                    <div key={index} onClick={() => navigate(`/detaifilm/${m.id}`)} className="flex items-center gap-3 group cursor-pointer">
                                         <div
-                                            className={`text-3xl sm:text-4xl font-black italic w-10 shrink-0 text-center transition-colors ${
-                                                index === 0
+                                            className={`text-3xl sm:text-4xl font-black italic w-10 shrink-0 text-center transition-colors ${index === 0
                                                     ? "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
                                                     : index === 1
-                                                    ? "text-slate-200 drop-shadow-[0_0_8px_rgba(226,232,240,0.5)]"
-                                                    : index === 2
-                                                    ? "text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]"
-                                                    : "text-slate-400 group-hover:text-cyan-400"
-                                            }`}
+                                                        ? "text-slate-200 drop-shadow-[0_0_8px_rgba(226,232,240,0.5)]"
+                                                        : index === 2
+                                                            ? "text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]"
+                                                            : "text-slate-400 group-hover:text-cyan-400"
+                                                }`}
                                         >
                                             {index + 1}
                                         </div>
@@ -216,44 +215,40 @@ export default function DetailFilm() {
                             <div className="flex items-center gap-6 md:gap-8 border-b border-slate-700/60 pb-1">
                                 <button
                                     onClick={() => setActiveTab('episodes')}
-                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${
-                                        activeTab === 'episodes'
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'episodes'
                                             ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
                                             : "text-slate-400 hover:text-white"
-                                    }`}
+                                        }`}
                                 >
                                     Tập phim
                                 </button>
 
                                 <button
                                     onClick={() => setActiveTab('gallery')}
-                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${
-                                        activeTab === 'gallery'
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'gallery'
                                             ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
                                             : "text-slate-400 hover:text-white"
-                                    }`}
+                                        }`}
                                 >
                                     Gallery
                                 </button>
 
                                 <button
                                     onClick={() => setActiveTab('actors')}
-                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${
-                                        activeTab === 'actors'
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'actors'
                                             ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
                                             : "text-slate-400 hover:text-white"
-                                    }`}
+                                        }`}
                                 >
                                     Diễn viên
                                 </button>
 
                                 <button
                                     onClick={() => setActiveTab('recommend')}
-                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${
-                                        activeTab === 'recommend'
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'recommend'
                                             ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
                                             : "text-slate-400 hover:text-white"
-                                    }`}
+                                        }`}
                                 >
                                     Đề xuất
                                 </button>

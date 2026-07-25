@@ -73,7 +73,7 @@ function HeaderClient() {
             <div
                 className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1150px]:gap-4 min-[1150px]:px-8 transition-all duration-500`}
             >
-                <Link to="/" className="flex shrink-0 items-center">
+                <Link to="/" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex shrink-0 items-center">
                     <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
                 </Link>
 

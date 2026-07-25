@@ -60,14 +60,14 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                         <button
                             key={e.id || e.numberEpisode}
                             onClick={() => handleClickEpisodes(e)}
-                            className={`group flex h-10 sm:h-11 items-center justify-center gap-2 px-4.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer border whitespace-nowrap ${
+                            className={`group relative flex h-10 sm:h-11 items-center justify-center gap-2 px-5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer border whitespace-nowrap ${
                                 isActive
-                                    ? "bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-slate-950 border-amber-300 font-black shadow-[0_0_16px_rgba(245,158,11,0.45)] scale-[1.03]"
-                                    : "bg-[#0d121f] text-white border-slate-700/80 hover:border-amber-400 hover:bg-[#161d30] hover:text-amber-300 hover:-translate-y-0.5 hover:shadow-[0_4px_16px_rgba(245,158,11,0.2)]"
+                                    ? "ep-btn-active bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 border-amber-300 font-black scale-105 ring-2 ring-amber-400/50 ring-offset-2 ring-offset-[#0d0f14]"
+                                    : "bg-slate-700/80 text-white border-slate-500/60 hover:border-cyan-400 hover:bg-gradient-to-r hover:from-cyan-500/20 hover:to-blue-500/20 hover:text-cyan-300 hover:-translate-y-1 hover:shadow-[0_6px_20px_rgba(34,211,238,0.25)] hover:scale-[1.04] active:scale-95"
                             }`}
                         >
-                            <FaPlay className={`text-[10px] shrink-0 transition-colors ${isActive ? "text-slate-950" : "text-amber-400 group-hover:text-amber-300"}`} />
-                            <span>Tập {e.numberEpisode}</span>
+                            <FaPlay className={`text-[10px] shrink-0 transition-all duration-300 ${isActive ? "text-slate-950 drop-shadow-sm" : "text-amber-400 group-hover:text-cyan-400 group-hover:scale-110"}`} />
+                            <span className="relative">Tập {e.numberEpisode}</span>
                         </button>
                     );
                 })}

@@ -8,12 +8,8 @@ import LoadingScreen from '../../components/client/loadingScreen/LoadingScreen';
 function LayoutClient(props) {
     const location = useLocation();
     const scrollMap = useRef({});
+    const prevPath = useRef(location.pathname);
 
-    useEffect(() => {
-        if ('scrollRestoration' in window.history) {
-            window.history.scrollRestoration = 'manual';
-        }
-    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -24,9 +20,13 @@ function LayoutClient(props) {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [location.pathname]);
 
+
     useLayoutEffect(() => {
-        const targetY = scrollMap.current[location.pathname] || 0;
-        window.scrollTo(0, targetY);
+        if (prevPath.current !== location.pathname) {
+            const targetY = scrollMap.current[location.pathname] || 0;
+            window.scrollTo(0, targetY);
+            prevPath.current = location.pathname;
+        }
     }, [location.pathname]);
 
     return (
@@ -39,4 +39,5 @@ function LayoutClient(props) {
     );
 }
 
-export default LayoutClient;    
+export default LayoutClient;
+

@@ -7,6 +7,7 @@ import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
+import { Link } from 'react-router-dom';
 
 export default function Cinema() {
     const movies = useContext(MovieContext);
@@ -39,6 +40,7 @@ export default function Cinema() {
                 >
                     {movies?.map((e) => (
                         <SwiperSlide key={e.id}>
+                            <Link to={`/detaifilm/${e.id}`}>
                             <div className="group cursor-pointer flex flex-col">
                                 <div className="relative mb-2 w-full">
                                     <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
@@ -65,6 +67,7 @@ export default function Cinema() {
                                     </div>
                                 </div>
                             </div>
+                            </Link>
                         </SwiperSlide>
                     ))}
                 </Swiper>

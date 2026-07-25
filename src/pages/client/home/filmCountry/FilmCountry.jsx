@@ -7,6 +7,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { MovieContext } from "../../../../contexts/MovieProvider";
 import { getObjectById } from "../../../../services/firebaseReponse";
 import { AuthorContext } from "../../../../contexts/AuthorProvider";
+import { Link } from 'react-router-dom';
 
 export default function FilmCountry() {
     const prevRef = useRef(null);
@@ -51,7 +52,8 @@ export default function FilmCountry() {
                         className="movie-swiper"
                     >
                         {movies.map((e) => (
-                            <SwiperSlide>
+                            <SwiperSlide key={e.id}>
+                                <Link to={`/detaifilm/${e.id}`}>
                                 <div className="group cursor-pointer flex flex-col h-full">
                                     <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                         <img src={e.imgUrl} alt="" draggable="false" className="w-full h-full object-cover" />
@@ -64,6 +66,7 @@ export default function FilmCountry() {
                                         <p className="m-0 mt-1 text-[#8c909e] text-sm">{e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}</p>
                                     </div>
                                 </div>
+                                </Link>
                             </SwiperSlide>
                         ))}
                     </Swiper>

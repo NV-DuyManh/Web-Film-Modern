@@ -15,6 +15,7 @@ import { getObjectById } from '../../../../services/firebaseReponse';
 import { CategoriesContext } from '../../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
+import { useNavigate } from 'react-router-dom';
 
 export default function Anime() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -25,6 +26,7 @@ export default function Anime() {
     const categories = useContext(CategoriesContext);
     const authors = useContext(AuthorContext);
     const plans = useContext(PlanContext);
+    const navigate = useNavigate();
 
     return (
         <div className='anime-container'>
@@ -120,7 +122,7 @@ export default function Anime() {
                                 </p>
 
                                 <div className='mt-4 sm:mt-6 lg:-translate-y-2 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
-                                    <button className='group flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-[#f6d878] text-lg sm:text-xl text-black shadow-[0_0_24px_rgba(246,216,120,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[#ffe28a] hover:shadow-[0_0_32px_rgba(246,216,120,0.55)] active:scale-95'>
+                                    <button onClick={() => navigate(`/play/${e.id}`)} className='group flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-[#f6d878] text-lg sm:text-xl text-black shadow-[0_0_24px_rgba(246,216,120,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[#ffe28a] hover:shadow-[0_0_32px_rgba(246,216,120,0.55)] active:scale-95'>
                                         <FaPlay className='ml-1 transition-transform duration-300 group-hover:scale-110' />
                                     </button>
 
@@ -131,7 +133,7 @@ export default function Anime() {
 
                                         <div className='h-full w-px bg-white/10'></div>
 
-                                        <button className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
+                                        <button onClick={() => navigate(`/detaifilm/${e.id}`)} className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
                                             <FaInfoCircle className='transition-all duration-300 group-hover:scale-110 group-hover:text-yellow-200' />
                                         </button>
                                     </div>

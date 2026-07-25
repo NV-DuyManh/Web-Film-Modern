@@ -2,11 +2,11 @@
 // BIẾN (VARIABLES) - Lưu trữ các mã màu dùng chung trong toàn bộ app
 // Giúp thay đổi màu sắc nhanh chóng ở một nơi duy nhất.
 // ============================================================================
-$primary-cyan: #00f2fe;    // Màu xanh lơ (dùng cho hiệu ứng sáng)
-$primary-green: #4ade80;   // Màu xanh lá (dùng cho success/focus)
-$primary-yellow: #facc15;  // Màu vàng (dùng cho hover/cảnh báo nhẹ)
-$primary-purple: #8b5cf6;  // Màu tím (dùng cho gradient)
-$primary-red: #ef4444;     // Màu đỏ (dùng cho lỗi/cảnh báo xoá)
+$primary-cyan: #00f2fe; // Màu xanh lơ (dùng cho hiệu ứng sáng)
+$primary-green: #4ade80; // Màu xanh lá (dùng cho success/focus)
+$primary-yellow: #facc15; // Màu vàng (dùng cho hover/cảnh báo nhẹ)
+$primary-purple: #8b5cf6; // Màu tím (dùng cho gradient)
+$primary-red: #ef4444; // Màu đỏ (dùng cho lỗi/cảnh báo xoá)
 
 $table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
 
@@ -17,49 +17,123 @@ $table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
 
 
 @keyframes bell-ring {
-    0%, 100% { transform: rotate(0deg); }
-    10%, 30%, 50% { transform: rotate(15deg); }
-    20%, 40% { transform: rotate(-15deg); }
-    60%, 100% { transform: rotate(0deg); }
+
+    0%,
+    100% {
+        transform: rotate(0deg);
+    }
+
+    10%,
+    30%,
+    50% {
+        transform: rotate(15deg);
+    }
+
+    20%,
+    40% {
+        transform: rotate(-15deg);
+    }
+
+    60%,
+    100% {
+        transform: rotate(0deg);
+    }
 }
+
 .animate-bell {
     animation: bell-ring 2.5s ease-in-out infinite;
     transform-origin: top center;
 }
 
 @keyframes envelope-cool {
-    0%, 100% { transform: rotate(0deg) scale(1); }
-    5% { transform: rotate(-15deg) scale(1.15); }
-    10% { transform: rotate(15deg) scale(1.15); }
-    15% { transform: rotate(-15deg) scale(1.15); }
-    20% { transform: rotate(15deg) scale(1.15); }
-    25% { transform: rotate(0deg) scale(1.15); }
-    30%, 100% { transform: rotate(0deg) scale(1); }
+
+    0%,
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    5% {
+        transform: rotate(-15deg) scale(1.15);
+    }
+
+    10% {
+        transform: rotate(15deg) scale(1.15);
+    }
+
+    15% {
+        transform: rotate(-15deg) scale(1.15);
+    }
+
+    20% {
+        transform: rotate(15deg) scale(1.15);
+    }
+
+    25% {
+        transform: rotate(0deg) scale(1.15);
+    }
+
+    30%,
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
 }
+
 .animate-envelope {
     animation: envelope-cool 3s cubic-bezier(0.25, 0.8, 0.25, 1) infinite;
     transform-origin: center center;
 }
 
 @keyframes wave-bounce {
-    0% { transform: translateY(0) rotate( 0.0deg) }
-    10% { transform: translateY(-6px) rotate(14.0deg) }
-    20% { transform: translateY(0px) rotate(-8.0deg) }
-    30% { transform: translateY(-6px) rotate(14.0deg) }
-    40% { transform: translateY(0px) rotate(-4.0deg) }
-    50% { transform: translateY(-3px) rotate(10.0deg) }
-    60% { transform: translateY(0) rotate( 0.0deg) }
-    100% { transform: translateY(0) rotate( 0.0deg) }
+    0% {
+        transform: translateY(0) rotate(0.0deg)
+    }
+
+    10% {
+        transform: translateY(-6px) rotate(14.0deg)
+    }
+
+    20% {
+        transform: translateY(0px) rotate(-8.0deg)
+    }
+
+    30% {
+        transform: translateY(-6px) rotate(14.0deg)
+    }
+
+    40% {
+        transform: translateY(0px) rotate(-4.0deg)
+    }
+
+    50% {
+        transform: translateY(-3px) rotate(10.0deg)
+    }
+
+    60% {
+        transform: translateY(0) rotate(0.0deg)
+    }
+
+    100% {
+        transform: translateY(0) rotate(0.0deg)
+    }
 }
+
 .animate-wave {
     animation: wave-bounce 2.5s infinite ease-in-out;
     transform-origin: 70% 70%;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
 .animate-fade-in {
     animation: fadeIn 0.3s ease-out forwards;
 }
@@ -68,18 +142,35 @@ $table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
 // MODAL VIEW MOVIE - Hiệu ứng xem chi tiết phim
 // ============================================================================
 @keyframes borderGlow {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
+    }
 }
 
 
 
 .movie-view-modal {
     .custom-scrollbar {
-        &::-webkit-scrollbar { width: 4px; }
-        &::-webkit-scrollbar-track { background: transparent; }
-        &::-webkit-scrollbar-thumb { background: rgba(6, 182, 212, 0.3); border-radius: 10px; }
-        &::-webkit-scrollbar-thumb:hover { background: rgba(6, 182, 212, 0.6); }
+        &::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(6, 182, 212, 0.3);
+            border-radius: 10px;
+        }
+
+        &::-webkit-scrollbar-thumb:hover {
+            background: rgba(6, 182, 212, 0.6);
+        }
     }
 }
 
@@ -93,6 +184,7 @@ li {
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
+
 .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -112,15 +204,13 @@ li {
 .glow-text {
     width: fit-content;
     display: inline-block;
-    background: linear-gradient(
-        90deg, 
-        #00f2fe 0%, 
-        #ff00ff 35%, 
-        #ffffff 45%, 
-        #ffffff 55%, 
-        #ff00ff 65%, 
-        #00f2fe 100%
-    );
+    background: linear-gradient(90deg,
+            #00f2fe 0%,
+            #ff00ff 35%,
+            #ffffff 45%,
+            #ffffff 55%,
+            #ff00ff 65%,
+            #00f2fe 100%);
     background-size: 200% auto;
     background-clip: text;
     -webkit-background-clip: text;
@@ -133,15 +223,13 @@ li {
 .glow-text2 {
     width: fit-content;
     display: inline-block;
-    background: linear-gradient(
-        90deg, 
-        #ff00ff 0%, 
-        #facc15 35%, 
-        #ffffff 45%, 
-        #ffffff 55%, 
-        #facc15 65%, 
-        #ff00ff 100%
-    );
+    background: linear-gradient(90deg,
+            #ff00ff 0%,
+            #facc15 35%,
+            #ffffff 45%,
+            #ffffff 55%,
+            #facc15 65%,
+            #ff00ff 100%);
     background-size: 200% auto;
     background-clip: text;
     -webkit-background-clip: text;
@@ -154,16 +242,14 @@ li {
 .glow-text-multi {
     width: fit-content;
     display: inline-block;
-    background: linear-gradient(
-        90deg, 
-        #ff00ff 0%, 
-        #ffea00 15%, 
-        #ffffff 25%,   // Vệt sáng lướt qua
-        #ff0055 40%, 
-        #bf00ff 65%, 
-        #ffffff 80%,   // Vệt sáng lướt qua
-        #ff00ff 100%
-    );
+    background: linear-gradient(90deg,
+            #ff00ff 0%,
+            #ffea00 15%,
+            #ffffff 25%, // Vệt sáng lướt qua
+            #ff0055 40%,
+            #bf00ff 65%,
+            #ffffff 80%, // Vệt sáng lướt qua
+            #ff00ff 100%);
     background-size: 200% auto;
     background-clip: text;
     -webkit-background-clip: text;
@@ -206,7 +292,7 @@ li {
             box-shadow: 0 0 25px rgba(255, 0, 255, 0.9), inset 0 0 10px rgba(255, 0, 255, 0.4);
 
             // Khi input đang focus, đổi màu icon tìm kiếm kế bên nó
-            & + .search-icon {
+            &+.search-icon {
                 color: #ff00ff !important;
                 filter: drop-shadow(0 0 8px #ff00ff);
                 transform: translateY(-50%) scale(1.15);
@@ -293,14 +379,16 @@ li {
 }
 
 // Căn đều lề 2 bên của bảng cho đẹp và cân đối
-th:first-child, td:first-child {
+th:first-child,
+td:first-child {
     padding-left: 24px !important;
     text-align: center;
 }
 
-th:last-child, td:last-child {
+th:last-child,
+td:last-child {
     padding-right: 24px !important;
-    
+
     .flex {
         justify-content: flex-end;
     }
@@ -411,7 +499,7 @@ th:last-child, td:last-child {
     position: relative;
     border-radius: 24px !important;
     overflow: visible !important;
-    background: linear-gradient(145deg, rgba(15,23,42,0.98), rgba(10,15,30,0.99)) !important;
+    background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(10, 15, 30, 0.99)) !important;
     border: none !important;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
 
@@ -423,7 +511,7 @@ th:last-child, td:last-child {
         border-radius: 24px;
         pointer-events: none;
         z-index: 0;
-        background: linear-gradient(90deg, transparent, rgba(6,182,212,0.6), transparent, rgba(236,72,153,0.6), transparent);
+        background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.6), transparent, rgba(236, 72, 153, 0.6), transparent);
         background-size: 200% 100%;
         animation: borderGlow 4s linear infinite;
         mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -442,7 +530,7 @@ th:last-child, td:last-child {
         border-radius: 24px;
         pointer-events: none;
         z-index: 0;
-        background: linear-gradient(90deg, transparent, rgba(6,182,212,0.8), transparent, rgba(168,85,247,0.8), transparent);
+        background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.8), transparent, rgba(168, 85, 247, 0.8), transparent);
         background-size: 200% 100%;
         animation: borderGlow 4s linear infinite;
         mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -984,16 +1072,24 @@ th:last-child, td:last-child {
 
     // Tự động thay đổi vị trí Nút Điều Hướng phụ thuộc vào Tỉ lệ hình ảnh của phim bên trong
     // 1. Phim Tỉ lệ Màn hình ngang (aspect-video)
-    &:has(.aspect-video) .movie-nav-btn { top: 38%; }
-    
+    &:has(.aspect-video) .movie-nav-btn {
+        top: 38%;
+    }
+
     // 2. Phim Rạp (tỉ lệ ngang + huy hiệu màu emerald)
-    &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn { top: 34%; }
-    
+    &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn {
+        top: 34%;
+    }
+
     // 3. Phim Tỉ lệ Dọc (aspect-2/3) - Poster thông thường
-    &:has(.aspect-2\/3) .movie-nav-btn { top: 41%; }
-    
+    &:has(.aspect-2\/3) .movie-nav-btn {
+        top: 41%;
+    }
+
     // 4. Phim TopFilm (tỉ lệ dọc + số hạng màu đỏ)
-    &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn { top: 39%; }
+    &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn {
+        top: 39%;
+    }
 }
 
 // Vùng đệm cho khung slider
@@ -1079,11 +1175,23 @@ th:last-child, td:last-child {
         height: 36px;
         font-size: 13px;
     }
+
     .movie-slider-wrapper {
-        &:has(.aspect-video) .movie-nav-btn { top: 38%; }
-        &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn { top: 34%; }
-        &:has(.aspect-2\/3) .movie-nav-btn { top: 42%; }
-        &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn { top: 40%; }
+        &:has(.aspect-video) .movie-nav-btn {
+            top: 38%;
+        }
+
+        &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn {
+            top: 34%;
+        }
+
+        &:has(.aspect-2\/3) .movie-nav-btn {
+            top: 42%;
+        }
+
+        &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn {
+            top: 40%;
+        }
     }
 }
 
@@ -1094,11 +1202,23 @@ th:last-child, td:last-child {
         height: 30px;
         font-size: 11px;
     }
+
     .movie-slider-wrapper {
-        &:has(.aspect-video) .movie-nav-btn { top: 37%; }
-        &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn { top: 32%; }
-        &:has(.aspect-2\/3) .movie-nav-btn { top: 48%; }
-        &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn { top: 45%; }
+        &:has(.aspect-video) .movie-nav-btn {
+            top: 37%;
+        }
+
+        &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn {
+            top: 32%;
+        }
+
+        &:has(.aspect-2\/3) .movie-nav-btn {
+            top: 48%;
+        }
+
+        &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn {
+            top: 45%;
+        }
     }
 }
 
@@ -1122,14 +1242,23 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 // ============================================================================
 
 @keyframes sweepShine {
-    0% { transform: translateX(-150%) skewX(-20deg); }
-    15% { transform: translateX(300%) skewX(-20deg); }
-    100% { transform: translateX(300%) skewX(-20deg); }
+    0% {
+        transform: translateX(-150%) skewX(-20deg);
+    }
+
+    15% {
+        transform: translateX(300%) skewX(-20deg);
+    }
+
+    100% {
+        transform: translateX(300%) skewX(-20deg);
+    }
 }
 
 .btn-shine-effect {
     position: relative;
     overflow: hidden;
+
     &::after {
         content: '';
         position: absolute;
@@ -1137,9 +1266,150 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
         left: 0;
         width: 40%;
         height: 100%;
-        background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+        background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0) 100%);
         animation: sweepShine 3s infinite;
         pointer-events: none;
         z-index: 20;
     }
+}
+
+/* ===== Episode Button Animations ===== */
+@keyframes ep-pulse-glow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 15px rgba(250, 204, 21, 0.5), 0 0 30px rgba(250, 204, 21, 0.15);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(250, 204, 21, 0.7), 0 0 50px rgba(250, 204, 21, 0.25);
+    }
+}
+
+@keyframes ep-shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.ep-btn-active {
+    animation: ep-pulse-glow 2s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        background-size: 200% 100%;
+        animation: ep-shimmer 2.5s linear infinite;
+        pointer-events: none;
+    }
+}
+
+/* ===== Resume Playback Modal ===== */
+@keyframes resume-scale-up {
+    0% { opacity: 0; transform: scale(0.85) translateY(10px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.resume-modal {
+    background: linear-gradient(145deg, #1a1035 0%, #1e1245 50%, #2a1a4e 100%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1.25rem;
+    padding: 1.5rem;
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 2rem; /* Đẩy nhẹ lên trên một chút để tránh che sub */
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    animation: resume-scale-up 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    &__icon {
+        width: 3.25rem;
+        height: 3.25rem;
+        border-radius: 50%;
+        background: rgba(220, 38, 38, 0.9);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 0 20px rgba(220, 38, 38, 0.4);
+        margin-bottom: 0.25rem;
+        font-size: 1.25rem;
+    }
+
+    &__time {
+        color: #ef4444;
+        font-weight: 800;
+        font-size: 1.5rem;
+        letter-spacing: 0.05em;
+        text-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+        margin: 0.25rem 0;
+
+        @media (min-width: 640px) {
+            font-size: 1.75rem;
+        }
+    }
+
+    &__btn {
+        flex: 1;
+        padding: 0.6rem 1rem;
+        border-radius: 0.6rem;
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border: none;
+
+        &--primary {
+            background: #dc2626;
+            color: white;
+            box-shadow: 0 0 20px rgba(220, 38, 38, 0.35);
+
+            &:hover {
+                background: #ef4444;
+                box-shadow: 0 0 25px rgba(239, 68, 68, 0.5);
+            }
+        }
+
+        &--secondary {
+            background: #2d3040;
+            color: #9ca3af;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+
+            &:hover {
+                background: #3b3f54;
+                color: #e5e7eb;
+            }
+        }
+    }
+}
+
+/* Tắt vĩnh viễn các thông báo (Pause/Play) của Artplayer trên toàn hệ thống */
+.artplayer-app .art-notice,
+.artplayer-app .art-notice-inner {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    z-index: -9999 !important;
+    transform: scale(0) !important;
 }

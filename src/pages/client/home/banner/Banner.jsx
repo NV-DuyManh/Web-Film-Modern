@@ -125,7 +125,7 @@ export default function Banner() {
 
                                     <div className='h-full w-px bg-white/10'></div>
 
-                                    <button className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
+                                    <button onClick={() => navigate(`/detaifilm/${e.id}`)} className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
                                         <FaInfoCircle className='transition-all duration-300 group-hover:scale-110 group-hover:text-yellow-200' />
                                     </button>
                                 </div>
