@@ -13,12 +13,17 @@
     }
 }
 
+.anime-slide-outer {
+    position: relative;
+    margin-bottom: 60px;
+}
+
 .anime-slide-wrapper {
     position: relative;
     width: 100%;
     border-radius: 16px;
     overflow: hidden;
-    height: 400px;
+    height: 320px;
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 25px 50px -30px rgba(0, 0, 0, 0.5);
     background-color: #000;
@@ -26,13 +31,13 @@
 
 @media (min-width: 768px) {
     .anime-slide-wrapper {
-        height: 450px;
+        height: 380px;
     }
 }
 
 @media (min-width: 1024px) {
     .anime-slide-wrapper {
-        height: 520px;
+        height: 420px;
     }
 }
 
@@ -124,7 +129,7 @@
 
 @media (min-width: 1024px) {
     .anime-info-box {
-        bottom: 40px;
+        bottom: 80px;
         left: 50px;
         transform: none;
         width: 60%;
@@ -140,8 +145,10 @@
 }
 
 .anime-thumb-swiper {
-    padding: 16px 4px;
+    padding: 24px 10px !important;
+    margin: 0 !important;
     cursor: grab;
+    box-sizing: border-box;
 }
 
 .anime-thumb-swiper:active {
@@ -158,31 +165,37 @@
 }
 
 .anime-thumb-swiper .swiper-slide img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     pointer-events: none;
     -webkit-user-drag: none;
     transition: all 0.3s ease;
-    filter: brightness(0.85) contrast(1.1);
+    filter: brightness(0.95) contrast(1.05);
+    transform: translateZ(0);
 }
 
 @media (min-width: 1024px) {
     .anime-thumb-wrapper {
-        bottom: 30px;
-        right: 40px;
-        width: 440px;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%, 50%);
+        right: auto;
+        width: 90%;
+        max-width: 800px;
     }
 
     .anime-thumb-swiper .swiper-slide {
+        height: auto !important;
         aspect-ratio: 2/3;
         border-radius: 8px;
-        opacity: 0.85;
+        opacity: 1;
         border: 2px solid transparent;
         transform: scale(1);
     }
 
-    .anime-thumb-swiper .swiper-slide:not(.swiper-slide-thumb-active):not(.custom-thumb-active):hover {
+    .anime-thumb-swiper .swiper-slide:not(.custom-thumb-active):hover {
         opacity: 1;
         transform: translateY(-4px) scale(1.05);
         border-color: #00f2fe;
@@ -190,35 +203,34 @@
         z-index: 5;
     }
 
-    .anime-thumb-swiper .swiper-slide:hover img {
-        transform: scale(1.05);
-        filter: brightness(1.2) contrast(1.1);
+    .anime-thumb-swiper .swiper-slide:not(.custom-thumb-active):hover img {
+        transform: scale(1.05) translateZ(0);
+        filter: brightness(1.0) contrast(1.05);
     }
 
     .anime-thumb-swiper .swiper-slide:active {
         transform: scale(0.99);
     }
 
-    .anime-thumb-swiper .swiper-slide-thumb-active,
     .anime-thumb-swiper .custom-thumb-active {
         opacity: 1;
         border-color: #facc15;
         border-width: 3px;
-        box-shadow: 0 0 10px rgba(250, 204, 21, 0.6), 0 0 20px rgba(236, 72, 153, 0.4), 0 0 30px rgba(139, 92, 246, 0.3);
-        transform: scale(1);
-        z-index: 10;
+        box-shadow: 0 0 4px rgba(250, 204, 21, 0.6), 0 0 8px rgba(236, 72, 153, 0.4), 0 0 12px rgba(139, 92, 246, 0.3);
+        transform: scale(1.08);
+        z-index: 99 !important;
         animation: neonPulse 2s infinite alternate;
     }
 
-    .anime-thumb-swiper .swiper-slide-thumb-active img,
     .anime-thumb-swiper .custom-thumb-active img {
-        filter: brightness(1.2) contrast(1.1);
+        filter: brightness(1.0) contrast(1.05);
+        transform: scale(1.08) translateZ(0);
     }
 }
 
 @media (min-width: 1280px) {
     .anime-thumb-wrapper {
-        width: 500px;
+        max-width: 1100px;
     }
 }
 
@@ -266,25 +278,26 @@
         border-radius: 50%;
     }
 
-    .anime-thumb-swiper .swiper-slide:hover img {
-        filter: brightness(1.2) contrast(1.1);
+    .anime-thumb-swiper .swiper-slide:not(.swiper-slide-thumb-active):not(.custom-thumb-active):hover img {
+        filter: brightness(1.0) contrast(1.05);
+        transform: translateZ(0);
     }
 
     .anime-thumb-swiper .swiper-slide-thumb-active,
     .anime-thumb-swiper .custom-thumb-active {
         border-radius: 50%;
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1.1);
         border-color: #facc15;
         border-width: 3px;
-        box-shadow: 0 0 8px rgba(250, 204, 21, 0.6), 0 0 15px rgba(236, 72, 153, 0.4), 0 0 25px rgba(139, 92, 246, 0.3);
-        z-index: 10;
+        box-shadow: 0 0 3px rgba(250, 204, 21, 0.6), 0 0 6px rgba(236, 72, 153, 0.4), 0 0 9px rgba(139, 92, 246, 0.3);
+        z-index: 99 !important;
         animation: neonPulse 2s infinite alternate;
     }
 
-    .anime-thumb-swiper .swiper-slide-thumb-active img,
     .anime-thumb-swiper .custom-thumb-active img {
-        filter: brightness(1.2) contrast(1.1);
+        filter: brightness(1.0) contrast(1.05);
+        transform: scale(1.08) translateZ(0);
     }
 }
 

@@ -1,55 +1,142 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { CategoriesContext } from '../../../contexts/CategoryProvider';
 import Logo from '../../../assets/Icon.png';
 import './LoadingScreen.css';
 
+// Generate random particles once
+function generateParticles(count) {
+    return Array.from({ length: count }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * 3 + 1,
+        duration: Math.random() * 4 + 3,
+        delay: Math.random() * 5,
+        opacity: Math.random() * 0.5 + 0.2,
+    }));
+}
+
+// Film strip decorative elements
+function generateFilmStrips(count) {
+    return Array.from({ length: count }, (_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        rotation: Math.random() * 360,
+        size: Math.random() * 20 + 15,
+        duration: Math.random() * 8 + 8,
+        delay: Math.random() * 3,
+    }));
+}
+
 function LoadingScreen({ onFinished }) {
     const [fadeOut, setFadeOut] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [progress, setProgress] = useState(0);
+    const [logoReady, setLogoReady] = useState(false);
+    const [brandReady, setBrandReady] = useState(false);
+    const [burst, setBurst] = useState(false);
 
     const movies = useContext(MovieContext);
     const categories = useContext(CategoriesContext);
 
-    // Kiểm tra data đã load chưa
+    const particles = useMemo(() => generateParticles(35), []);
+    const filmStrips = useMemo(() => generateFilmStrips(6), []);
+
     const isDataReady = movies?.length > 0 && categories?.length > 0;
 
-    // Animate progress bar
+    // Entrance sequence
+    useEffect(() => {
+        const t1 = setTimeout(() => setLogoReady(true), 150);
+        const t2 = setTimeout(() => setBrandReady(true), 400);
+        return () => { clearTimeout(t1); clearTimeout(t2); };
+    }, []);
+
+    // Progress + fade-out logic
     useEffect(() => {
         if (isDataReady) {
-            // Data loaded → fill progress to 100% rồi fade out
             setProgress(100);
+            setBurst(true);
             const timer = setTimeout(() => {
                 setFadeOut(true);
-                // Sau khi fade out xong → ẩn hoàn toàn
                 const hideTimer = setTimeout(() => {
                     setHidden(true);
                     if (onFinished) onFinished();
-                }, 600);
+                }, 800);
                 return () => clearTimeout(hideTimer);
-            }, 400);
+            }, 1200);
             return () => clearTimeout(timer);
         } else {
-            // Chưa load xong → animate progress giả (max 85%)
             const interval = setInterval(() => {
                 setProgress(prev => {
                     if (prev >= 85) return 85;
-                    return prev + Math.random() * 12;
+                    return prev + Math.random() * 10;
                 });
-            }, 300);
+            }, 350);
             return () => clearInterval(interval);
         }
     }, [isDataReady]);
 
     if (hidden) return null;
 
+    const brandText = 'MFILM';
+    const tagline = 'Unlimited Entertainment';
+
     return (
-        <div className={`loading-screen ${fadeOut ? 'fade-out' : ''}`}>
-            {/* Logo with spinning rings */}
-            <div className="loading-logo-wrapper">
-                <div className="loading-ring"></div>
-                <div className="loading-ring-inner"></div>
+        <div className={`loading-screen ${fadeOut ? 'fade-out' : ''} ${burst ? 'burst-active' : ''}`}>
+
+            {/* Floating particles */}
+            <div className="loading-particles" aria-hidden="true">
+                {particles.map(p => (
+                    <div
+                        key={p.id}
+                        className="loading-particle"
+                        style={{
+                            left: `${p.x}%`,
+                            top: `${p.y}%`,
+                            width: `${p.size}px`,
+                            height: `${p.size}px`,
+                            animationDuration: `${p.duration}s`,
+                            animationDelay: `${p.delay}s`,
+                            opacity: p.opacity,
+                        }}
+                    />
+                ))}
+            </div>
+
+            {/* Film strip floating decorations */}
+            <div className="loading-film-strips" aria-hidden="true">
+                {filmStrips.map(f => (
+                    <div
+                        key={f.id}
+                        className="loading-film-icon"
+                        style={{
+                            left: `${f.x}%`,
+                            top: `${f.y}%`,
+                            fontSize: `${f.size}px`,
+                            transform: `rotate(${f.rotation}deg)`,
+                            animationDuration: `${f.duration}s`,
+                            animationDelay: `${f.delay}s`,
+                        }}
+                    >
+                        🎬
+                    </div>
+                ))}
+            </div>
+
+            {/* Central burst effect */}
+            <div className="loading-burst" aria-hidden="true"></div>
+
+            {/* Logo with orbital rings */}
+            <div className={`loading-logo-wrapper ${logoReady ? 'entered' : ''}`}>
+                <div className="loading-orbit loading-orbit-1"></div>
+                <div className="loading-orbit loading-orbit-2"></div>
+                <div className="loading-orbit loading-orbit-3"></div>
+
+                {/* Glow behind logo */}
+                <div className="loading-logo-glow"></div>
+
                 <img
                     src={Logo}
                     alt="MFilm Logo"
@@ -58,19 +145,51 @@ function LoadingScreen({ onFinished }) {
                 />
             </div>
 
-            {/* Brand text */}
-            <div className="loading-brand">MFILM</div>
-
-            {/* Progress bar */}
-            <div className="loading-progress-track">
-                <div
-                    className="loading-progress-bar"
-                    style={{ width: `${Math.min(progress, 100)}%` }}
-                ></div>
+            {/* Brand text - typewriter effect */}
+            <div className={`loading-brand ${brandReady ? 'revealed' : ''}`}>
+                {brandText.split('').map((char, i) => (
+                    <span
+                        key={i}
+                        className="loading-brand-char"
+                        style={{ animationDelay: `${i * 0.07}s` }}
+                    >
+                        {char}
+                    </span>
+                ))}
             </div>
 
-            {/* Animated dots */}
+            {/* Tagline - stagger fade */}
+            <div className={`loading-tagline ${brandReady ? 'revealed' : ''}`}>
+                {tagline.split('').map((char, i) => (
+                    <span
+                        key={i}
+                        className="loading-tagline-char"
+                        style={{ animationDelay: `${0.45 + i * 0.02}s` }}
+                    >
+                        {char === ' ' ? '\u00A0' : char}
+                    </span>
+                ))}
+            </div>
+
+            {/* Progress section */}
+            <div className="loading-progress-section">
+                <div className="loading-progress-track">
+                    <div
+                        className="loading-progress-bar"
+                        style={{ width: `${Math.min(progress, 100)}%` }}
+                    ></div>
+                    {/* Shimmer overlay */}
+                    <div className="loading-progress-shimmer"></div>
+                </div>
+                <div className="loading-progress-text">
+                    {Math.round(Math.min(progress, 100))}%
+                </div>
+            </div>
+
+            {/* Animated loading pulse dots */}
             <div className="loading-dots">
+                <div className="loading-dot"></div>
+                <div className="loading-dot"></div>
                 <div className="loading-dot"></div>
                 <div className="loading-dot"></div>
                 <div className="loading-dot"></div>

@@ -163,7 +163,6 @@ export default function Banner() {
                                     mainSwiper.slideToLoop(index);
                                 }
                             }}
-                            className={activeIndex === index ? 'custom-thumb-active' : ''}
                         >
                             <img src={e.bannerUrl} alt={e.name} draggable="false" />
                         </SwiperSlide>
