@@ -48,7 +48,6 @@ export default function TopFilm() {
                                     <div
                                         className="relative w-full aspect-[3/4] transition-all duration-300 group-hover:-translate-y-2 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_12px_15px_rgba(250,204,21,0.3)]"
                                     >
-                                        {/* TOP PART: Slanted top edge, rounded top corners */}
                                         <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-[3px] border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : '-skew-y-[8deg]'} origin-center z-10 transition-colors duration-300`}>
                                             <img
                                                 src={e.imgUrl}
@@ -60,7 +59,6 @@ export default function TopFilm() {
                                             <div className={`absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none transform ${index % 2 === 0 ? '-skew-y-[8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
                                         </div>
 
-                                        {/* BOTTOM PART: Straight bottom edge, rounded bottom corners, overlaps the slant */}
                                         <div className="absolute bottom-0 left-0 w-full h-[20%] rounded-b-xl overflow-hidden border-b-[3px] border-l-[3px] border-r-[3px] border-transparent group-hover:border-[#facc15] z-20 transition-colors duration-300">
                                             <img
                                                 src={e.imgUrl}
@@ -73,17 +71,17 @@ export default function TopFilm() {
                                         </div>
 
                                         <div className="absolute bottom-3 right-3 flex gap-1 z-30 transition-all duration-300">
-                                            {Number(e.episodeSub) > 0 && (
+                                            {e.episodeSub && (
                                                 <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
                                                     PĐ.{String(e.episodeSub).trim()}
                                                 </div>
                                             )}
-                                            {Number(e.episodeVoice) > 0 && (
+                                            {e.episodeVoice && (
                                                 <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
                                                     TM.{String(e.episodeVoice).trim()}
                                                 </div>
                                             )}
-                                            {Number(e.episodeDub) > 0 && (
+                                            {e.episodeDub && (
                                                 <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-pink-500/20 border border-pink-400/50 text-pink-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
                                                     LT.{String(e.episodeDub).trim()}
                                                 </div>
