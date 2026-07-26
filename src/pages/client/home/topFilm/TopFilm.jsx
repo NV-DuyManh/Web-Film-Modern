@@ -32,55 +32,90 @@ export default function TopFilm() {
                         prevEl: '.top-prev-btn',
                     }}
                     breakpoints={{
-                        0: { slidesPerView: 2, spaceBetween: 12 },
-                        640: { slidesPerView: 3, spaceBetween: 15 },
-                        1024: { slidesPerView: 4, spaceBetween: 20 },
-                        1280: { slidesPerView: 5, spaceBetween: 20 },
+                        0: { slidesPerView: 2.5, spaceBetween: 12 },
+                        640: { slidesPerView: 4, spaceBetween: 15 },
+                        1024: { slidesPerView: 5, spaceBetween: 20 },
+                        1280: { slidesPerView: 6, spaceBetween: 20 },
+                        1536: { slidesPerView: 7, spaceBetween: 24 },
                     }}
                     className="movie-swiper"
                 >
                     {topMovies.map((e, index) => (
                         <SwiperSlide key={e.id}>
                             <Link to={`/detaifilm/${e.id}`}>
-                            <div className="group cursor-pointer flex flex-col h-full">
+                                <div className="group cursor-pointer flex flex-col h-full">
 
-                                <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                    <img
-                                        src={e.imgUrl}
-                                        alt={e.name}
-                                        className="w-full h-full object-cover"
-                                        draggable="false"
-                                    />
-                                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-30"></div>
+                                    <div
+                                        className="relative w-full aspect-[3/4] transition-all duration-300 group-hover:-translate-y-2 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_12px_15px_rgba(250,204,21,0.3)]"
+                                    >
+                                        {/* TOP PART: Slanted top edge, rounded top corners */}
+                                        <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-[3px] border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : '-skew-y-[8deg]'} origin-center z-10 transition-colors duration-300`}>
+                                            <img
+                                                src={e.imgUrl}
+                                                className={`absolute left-0 w-full object-cover transition-transform duration-500 scale-[1.08] group-hover:scale-[1.12] transform ${index % 2 === 0 ? '-skew-y-[8deg]' : 'skew-y-[8deg]'} origin-center`}
+                                                style={{ height: 'calc(100% * 100 / 90)', top: '0' }}
+                                                draggable="false"
+                                            />
+                                            <div className={`absolute left-0 w-full bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40 pointer-events-none transform ${index % 2 === 0 ? '-skew-y-[8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
+                                            <div className={`absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none transform ${index % 2 === 0 ? '-skew-y-[8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
+                                        </div>
 
-                                    <div className="absolute bottom-2 right-2 flex gap-1 z-20">
-                                        <p className="bg-emerald-600/90 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-                                            {e.countriesID}
-                                        </p>
-                                    </div>
-                                </div>
+                                        {/* BOTTOM PART: Straight bottom edge, rounded bottom corners, overlaps the slant */}
+                                        <div className="absolute bottom-0 left-0 w-full h-[20%] rounded-b-xl overflow-hidden border-b-[3px] border-l-[3px] border-r-[3px] border-transparent group-hover:border-[#facc15] z-20 transition-colors duration-300">
+                                            <img
+                                                src={e.imgUrl}
+                                                className="absolute left-0 w-full object-cover transition-transform duration-500 scale-[1.08] group-hover:scale-[1.12] origin-center"
+                                                style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}
+                                                draggable="false"
+                                            />
+                                            <div className="absolute left-0 w-full bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
+                                            <div className="absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
+                                        </div>
 
-                                <div className="pt-3 flex items-start gap-2 md:gap-3 transition-transform duration-300 group-hover:-translate-y-1">
-                                    <p className="text-4xl md:text-5xl font-black italic text-red-600 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-                                        {index + 1}
-                                    </p>
-
-                                    <div className="flex flex-col min-w-0 mt-1">
-                                        <h3 className="text-white font-bold text-sm md:text-base truncate transition-colors group-hover:text-[#facc15]">
-                                            {e.name}
-                                        </h3>
-                                        <p className="text-slate-400 text-[10px] md:text-xs truncate mt-0.5">
-                                            {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}
-                                        </p>
-                                        <div className="flex items-center gap-1.5 mt-1 text-[9px] md:text-[11px] text-slate-500 font-medium">
-                                            <p className="text-yellow-300 font-semibold">{e.rent} VNĐ</p>
-                                            <p>•</p>
-                                            <p className="truncate">{e.endEpisode} Tập </p>
+                                        <div className="absolute bottom-3 right-3 flex gap-1 z-30 transition-all duration-300">
+                                            {Number(e.episodeSub) > 0 && (
+                                                <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                                    PĐ.{String(e.episodeSub).trim()}
+                                                </div>
+                                            )}
+                                            {Number(e.episodeVoice) > 0 && (
+                                                <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                                    TM.{String(e.episodeVoice).trim()}
+                                                </div>
+                                            )}
+                                            {Number(e.episodeDub) > 0 && (
+                                                <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-pink-500/20 border border-pink-400/50 text-pink-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                                    LT.{String(e.episodeDub).trim()}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
-                                </div>
 
-                            </div>
+                                    <div className="pt-3 flex items-start gap-2 md:gap-3 transition-transform duration-300 group-hover:-translate-y-1">
+                                        <p className={`text-3xl md:text-4xl font-black italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ${index === 0 ? 'text-red-600' :
+                                            index === 1 ? 'text-orange-500' :
+                                                index === 2 ? 'text-yellow-400' :
+                                                    'text-pink-500'
+                                            }`}>
+                                            {index + 1}
+                                        </p>
+
+                                        <div className="flex flex-col min-w-0 mt-1">
+                                            <h3 className="text-white font-bold text-xs md:text-sm truncate transition-colors group-hover:text-[#facc15]">
+                                                {e.otherName}
+                                            </h3>
+                                            <p className="text-slate-400 text-[9px] md:text-[11px] truncate mt-0.5">
+                                                {e.name}
+                                            </p>
+                                            <div className="flex items-center gap-1.5 mt-1 text-[9px] md:text-[10px] text-slate-500 font-medium">
+                                                <p className="text-yellow-300 font-semibold">{e.rent} VNĐ</p>
+                                                <p>•</p>
+                                                <p className="truncate">{e.endEpisode} Tập </p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </Link>
                         </SwiperSlide>
                     ))}
