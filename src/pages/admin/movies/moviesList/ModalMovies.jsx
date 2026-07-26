@@ -159,14 +159,14 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
             BackdropProps={{ className: "modal-backdrop-x" }}
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
-                <span className="glow-text-multi text-3xl md:text-4xl font-black tracking-tight" style={{ paddingBottom: '0.1em' }}>
+                <span className="glow-text-gold text-xl md:text-2xl font-black tracking-tight" style={{ paddingBottom: '0.1em' }}>
                     {movie.id ? "Update Movie" : "Add New Movie"}
                 </span>
                 <button
                     onClick={handleClose}
-                    className="w-10 h-10 shrink-0 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/30 flex items-center justify-center text-red-500 hover:text-white hover:border-red-500 hover:bg-red-500 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] transition-all duration-300 cursor-pointer"
+                    className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
-                    <FaTimes size={20} style={{ strokeWidth: '1.5', stroke: 'currentColor' }} />
+                    <FaTimes size={16} className="transition-transform duration-200 group-hover:rotate-180 group-hover:scale-125" style={{ strokeWidth: '1.5', stroke: 'currentColor' }} />
                 </button>
             </DialogTitle>
             <DialogContent className="modal-body-x grid grid-cols-12 gap-8 h-[75vh] overflow-y-auto custom-scrollbar p-8 pt-10">
@@ -174,7 +174,14 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                 <div className="col-span-12 lg:col-span-7 space-y-8 mt-5">
                     <div className="relative bg-white/[0.02] p-5 rounded-2xl border border-cyan-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(6,182,212,0.05)]">
                         <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-blue-500 rounded-l-full"></div>
-                        <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest pl-3">Task 1: General Info</p>
+                        <div className="flex justify-between items-center h-4 relative z-10 pr-2">
+                            <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest pl-3 m-0">Task 1: General Info</p>
+                            <FormControlLabel
+                                control={<Checkbox checked={movie.isHot || false} onChange={onCheckboxChange} name="isHot" sx={{ color: '#ef4444', '&.Mui-checked': { color: '#f87171' }, padding: '4px' }} />}
+                                label={<span className="text-gray-300 text-sm font-semibold ml-1 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] leading-none mt-[2px]">🔥 Hot Movie</span>}
+                                sx={{ margin: 0 }}
+                            />
+                        </div>
                         <div className="grid grid-cols-2 gap-4">
                             <TextField variant="outlined" className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Movie Name" value={movie.name} error={!!error?.name} helperText={error?.name} />
                             <TextField variant="outlined" className="modal-input-x" name="otherName" onChange={onChangeInput} fullWidth label="Other/Original Name" value={movie.otherName} error={!!error?.otherName} helperText={error?.otherName} />
@@ -428,7 +435,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                 </div>
             </DialogContent>
 
-            <DialogActions className="modal-actions-x p-6 w-full flex flex-col">
+            <DialogActions className="modal-actions-x w-full flex flex-col">
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
@@ -443,7 +450,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         </div>
                     </div>
                 ) : (
-                    <div className="w-full flex justify-end gap-3 pt-2">
+                    <div className="w-full flex justify-end gap-3">
                         <Button onClick={handleClose} className="btn-cancel-x">
                             Cancel
                         </Button>

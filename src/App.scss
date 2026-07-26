@@ -306,6 +306,91 @@ li {
     filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.6));
 }
 
+.glow-text-danger {
+    background: linear-gradient(90deg, #ef4444 0%, #fca5a5 15%, #ffffff 25%, #fca5a5 40%, #ef4444 65%, #ffffff 80%, #ef4444 100%);
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent !important;
+    text-transform: uppercase !important;
+    letter-spacing: 2px !important;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 8px rgba(239, 68, 68, 0.4)) !important;
+    animation: textShine 1.5s linear infinite !important;
+    text-shadow: none !important;
+}
+
+.glow-text-gold {
+    width: fit-content;
+    display: inline-block;
+    background: linear-gradient(180deg,
+            #ffd700 0%,
+            #ffb347 30%,
+            #ff8c00 50%,
+            #ffb347 70%,
+            #ffd700 100%);
+    background-size: auto 200%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: goldShine 2s ease-in-out infinite;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.8)) drop-shadow(0 0 6px rgba(255, 165, 0, 0.3));
+    font-style: italic;
+}
+
+@keyframes goldShine {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 0% 100%; }
+}
+
+.magic-fire-container {
+    position: absolute;
+    width: 24px;
+    height: 36px;
+    z-index: 30;
+    pointer-events: none;
+}
+
+.magic-fire {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    background-color: #ff5000;
+    border-radius: 50% 0 50% 50%;
+    transform: rotate(-45deg);
+    animation: magic-flame 0.4s ease-in-out infinite alternate;
+    box-shadow: 
+        0 0 15px 5px rgba(255, 80, 0, 0.6),
+        inset -3px 3px 8px 2px rgba(255, 153, 0, 0.9),
+        inset -8px 8px 12px 4px rgba(255, 230, 0, 0.9);
+}
+
+.magic-fire::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    background-color: #ffffff;
+    border-radius: 50% 0 50% 50%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    box-shadow: 0 0 8px 3px rgba(255, 255, 255, 0.8);
+    animation: magic-flame-inner 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes magic-flame {
+    0% { transform: rotate(-43deg) scale(0.95); border-radius: 50% 5px 50% 50%; }
+    100% { transform: rotate(-47deg) scale(1.05); border-radius: 50% 0 50% 50%; }
+}
+
+@keyframes magic-flame-inner {
+    0% { transform: translate(-50%, -50%) rotate(-5deg) scale(0.9); }
+    100% { transform: translate(-50%, -50%) rotate(5deg) scale(1.1); }
+}
+
 .glow-text-1 {
     width: fit-content;
     display: inline-block;
@@ -672,10 +757,11 @@ td:last-child {
 .modal-header-x {
     position: relative;
     z-index: 10;
-    background: rgba(34, 211, 238, 0.6) !important;
-    padding: 24px 28px 18px !important;
-    border-bottom: 1px solid rgba(6, 182, 212, 0.15);
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.95) 0%, rgba(37, 99, 235, 0.85) 50%, rgba(59, 130, 246, 0.8) 100%) !important;
+    padding: 16px 24px 14px !important;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.3);
     border-radius: 24px 24px 0 0 !important;
+    box-shadow: inset 0 -4px 20px rgba(0, 0, 0, 0.3);
 
     // Override MUI DialogTitle's internal h2
     &.MuiDialogTitle-root,
@@ -708,10 +794,19 @@ td:last-child {
 .modal-actions-danger {
     position: relative;
     z-index: 10;
-    padding: 16px 24px;
-    background: rgba(30, 10, 10, 0.6) !important;
-    border-top: 1px solid rgba(239, 68, 68, 0.1);
+    padding: 12px 24px !important;
+    background: rgba(30, 41, 59, 0.95) !important;
+    box-shadow: inset 0 -8px 30px rgba(239, 68, 68, 0.2), 0 -2px 15px rgba(0, 0, 0, 0.5) !important;
+    border-top: 1px solid rgba(239, 68, 68, 0.2);
     border-radius: 0 0 24px 24px !important;
+}
+
+.modal-body-danger {
+    position: relative;
+    z-index: 10;
+    padding: 18px 24px;
+    background: rgba(15, 23, 42, 0.85) !important;
+    box-shadow: inset 0 0 30px rgba(239, 68, 68, 0.05) !important;
 }
 
 // Phần chứa các ô nhập liệu trong popup
@@ -917,70 +1012,101 @@ td:last-child {
 .modal-actions-x {
     position: relative;
     z-index: 10;
-    padding: 16px 24px;
-    background: rgba(168, 85, 247, 0.45) !important;
-    border-top: 1px solid rgba(168, 85, 247, 0.15);
+    padding: 12px 24px !important;
+    background: rgba(51, 65, 85, 0.95) !important;
+    box-shadow: inset 0 -8px 30px rgba(168, 85, 247, 0.6), 0 -2px 15px rgba(0, 0, 0, 0.5) !important;
+    border-top: 1px solid rgba(168, 85, 247, 0.3);
     border-radius: 0 0 24px 24px !important;
 }
 
-// Nút Huỷ bỏ (Hủy trong Modal)
+// Nút Huỷ bỏ (Hủy trong Modal) - Đỏ Lấp Lánh
 .btn-cancel-x {
-    background: linear-gradient(90deg, #dc2626, #ef4444) !important;
+    background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%) !important;
     color: #ffffff !important;
-    border-radius: 12px !important;
+    border-radius: 8px !important;
     padding: 8px 24px !important;
     min-width: 110px !important;
-    border: none !important;
+    border: 1px solid #b91c1c !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
     font-weight: 700 !important;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     text-transform: uppercase !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.3) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s ease !important;
 
     &:hover {
-        box-shadow: 0 0 25px rgba(239, 68, 68, 0.6) !important;
-        transform: translateY(-2px);
-        background: linear-gradient(90deg, #ef4444, #f87171) !important;
+        background: linear-gradient(180deg, #ff1744 0%, #d50000 100%) !important;
+        border-color: #ff5252 !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px rgba(255, 23, 68, 0.6), 0 0 15px rgba(255, 23, 68, 0.4) !important;
+        transform: translateY(-3px) scale(1.05);
     }
 }
 
 .btn-cancel-slate {
-    background: linear-gradient(90deg, #475569, #64748b) !important;
+    background: linear-gradient(180deg, #94a3b8 0%, #64748b 100%) !important;
     color: #ffffff !important;
-    border-radius: 12px !important;
+    border-radius: 8px !important;
     padding: 8px 24px !important;
     min-width: 110px !important;
-    border: none !important;
+    border: 1px solid #475569 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3) !important;
     font-weight: 700 !important;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     text-transform: uppercase !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 0 10px rgba(100, 116, 139, 0.2) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6) !important;
+    transition: all 0.2s ease !important;
 
     &:hover {
-        box-shadow: 0 0 20px rgba(100, 116, 139, 0.5) !important;
-        transform: translateY(-2px);
-        background: linear-gradient(90deg, #64748b, #94a3b8) !important;
+        background: linear-gradient(180deg, #cbd5e1 0%, #94a3b8 100%) !important;
+        border-color: #cbd5e1 !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 8px 20px rgba(148, 163, 184, 0.7), 0 0 15px rgba(148, 163, 184, 0.5) !important;
+        transform: translateY(-3px) scale(1.05);
     }
 }
 
-// Nút Submit (Xác nhận/Lưu trong Modal)
-.btn-submit-x {
-    background: linear-gradient(90deg, #22c55e, #facc15) !important;
-    color: #0f172a !important;
-    border-radius: 12px !important;
+// Nút Submit Danger (Xoá trong Modal) - Đỏ Lấp Lánh Mạnh
+.btn-submit-danger {
+    background: linear-gradient(180deg, #f97316 0%, #ef4444 100%) !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
     padding: 8px 24px !important;
     min-width: 110px !important;
+    border: 1px solid #b91c1c !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
     font-weight: 800 !important;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     text-transform: uppercase !important;
-    border: none !important;
-    box-shadow: 0 0 20px rgba(34, 197, 94, 0.4) !important;
-    transition: all 0.3s ease !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s ease !important;
 
     &:hover {
-        box-shadow: 0 0 30px rgba(34, 197, 94, 0.7) !important;
-        transform: translateY(-2px);
+        background: linear-gradient(180deg, #fb923c 0%, #f87171 100%) !important;
+        border-color: #fca5a5 !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 8px 20px rgba(249, 115, 22, 0.7), 0 0 15px rgba(239, 68, 68, 0.5) !important;
+        transform: translateY(-3px) scale(1.05);
+    }
+}
+
+// Nút Submit (Xác nhận/Lưu trong Modal) - Xanh Lấp Lánh
+.btn-submit-x {
+    background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%) !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 8px 24px !important;
+    min-width: 110px !important;
+    border: 1px solid #15803d !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.5px;
+    text-transform: uppercase !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+    transition: all 0.2s ease !important;
+
+    &:hover {
+        background: linear-gradient(180deg, #00e676 0%, #00c853 100%) !important;
+        border-color: #69f0ae !important;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 8px 20px rgba(0, 230, 118, 0.6), 0 0 15px rgba(0, 230, 118, 0.4) !important;
+        transform: translateY(-3px) scale(1.05);
     }
 }
 

@@ -4,16 +4,16 @@ import { Link } from 'react-router-dom';
 import { CategoriesContext } from '../../../../contexts/CategoryProvider';
 
 function CategoriesFilm() {
-    const categories = useContext(CategoriesContext); 
+    const categories = useContext(CategoriesContext);
 
 
     const categoryStyles = [
-        "from-emerald-300 via-blue-500 to-purple-600 shadow-[0_14px_35px_rgba(59,130,246,0.25)] hover:shadow-[0_18px_45px_rgba(168,85,247,0.45)]",
-        "from-pink-500 via-red-500 to-yellow-500 shadow-[0_14px_35px_rgba(239,68,68,0.25)] hover:shadow-[0_18px_45px_rgba(249,115,22,0.45)]",
-        "from-yellow-200 via-green-200 to-green-500 shadow-[0_14px_35px_rgba(34,197,94,0.25)] hover:shadow-[0_18px_45px_rgba(34,197,94,0.45)]",
-        "from-purple-200 via-purple-400 to-purple-800 shadow-[0_14px_35px_rgba(147,51,234,0.25)] hover:shadow-[0_18px_45px_rgba(147,51,234,0.45)]",
-        "from-red-400 via-gray-300 to-blue-500 shadow-[0_14px_35px_rgba(96,165,250,0.25)] hover:shadow-[0_18px_45px_rgba(96,165,250,0.45)]",
-        "from-yellow-200 via-pink-200 to-pink-400 shadow-[0_14px_35px_rgba(244,114,182,0.25)] hover:shadow-[0_18px_45px_rgba(244,114,182,0.45)]"
+        "from-blue-600 via-indigo-500 to-purple-600 shadow-[0_8px_15px_rgba(79,70,229,0.25)] hover:shadow-[0_12px_25px_rgba(79,70,229,0.45)]",
+        "from-rose-500 via-red-500 to-orange-500 shadow-[0_8px_15px_rgba(239,68,68,0.25)] hover:shadow-[0_12px_25px_rgba(249,115,22,0.45)]",
+        "from-emerald-500 via-teal-500 to-cyan-600 shadow-[0_8px_15px_rgba(16,185,129,0.25)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.45)]",
+        "from-violet-500 via-purple-500 to-fuchsia-600 shadow-[0_8px_15px_rgba(139,92,246,0.25)] hover:shadow-[0_12px_25px_rgba(139,92,246,0.45)]",
+        "from-pink-600 via-rose-500 to-red-600 shadow-[0_8px_15px_rgba(225,29,72,0.25)] hover:shadow-[0_12px_25px_rgba(225,29,72,0.45)]",
+        "from-amber-500 via-orange-500 to-red-500 shadow-[0_8px_15px_rgba(245,158,11,0.25)] hover:shadow-[0_12px_25px_rgba(245,158,11,0.45)]"
     ];
 
     return (
@@ -30,8 +30,8 @@ function CategoriesFilm() {
                         className={`group flex h-20 sm:h-24 md:h-28 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl bg-linear-to-br px-3 sm:px-4 md:px-5 transition-all duration-300 hover:-translate-y-2 ${categoryStyles[index % categoryStyles.length]}`}
                     >
                         <div className='rounded-full bg-white/25 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
-                        <h2 className='text-lg md:text-xl font-black whitespace-nowrap truncate'>{e.name}</h2>
-                        <div className='mt-1.5 md:mt-2 flex items-center justify-center gap-1.5 text-xs md:text-sm font-semibold whitespace-nowrap'>
+                        <h2 className='text-lg md:text-xl font-black whitespace-nowrap truncate text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]'>{e.name}</h2>
+                        <div className='mt-1.5 md:mt-2 flex items-center justify-center gap-1.5 text-xs md:text-sm font-semibold whitespace-nowrap text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'>
                             <p>Xem chủ đề</p>
                             <FaChevronRight className='transition-all duration-300 group-hover:translate-x-1' />
                         </div>

@@ -162,13 +162,13 @@ BẠN PHẢI TUÂN THỦ NGHIÊM NGẶT CÁC QUY TẮC SAU:
 - Số lượng phần tử phải khớp nhau tuyệt đối (Số lượng diễn viên/đạo diễn = Số đoạn mô tả tương ứng).
 
 2. QUY TẮC MÔ TẢ CHI TIẾT (RẤT QUAN TRỌNG):
-- Độ dài: Các cột Movie Description, Cat Desc, Dir Desc, Actor Desc, Char Desc BẮT BUỘC phải chi tiết, MỖI ĐOẠN MÔ TẢ TỐI THIỂU 20 TỪ.
+- Độ dài: Các cột Movie Description, Cat Desc, Dir Desc, Actor Desc, Char Desc BẮT BUỘC phải chi tiết, MỖI ĐOẠN MÔ TẢ TỐI THIỂU 35 TỪ, TỐI ĐA 50 TỪ.
 - Liên kết phim (Actor/Director): Mô tả Đạo diễn (Dir Desc) và Diễn viên (Actor Desc) BẮT BUỘC phải nhắc đến phong cách nghệ thuật của họ và đề cập đến một số bộ phim tiêu biểu khác mà họ từng tham gia.
 - Xưng hô (Số ít): Khi mô tả Diễn viên, Đạo diễn, Nhân vật KHÔNG DÙNG từ chỉ số nhiều. Phải dùng danh xưng cá nhân (Ông, Bà, Anh, Cô, Cậu bé, Hắn...). Văn phong bách khoa toàn thư.
 
 3. ĐỊNH DẠNG TRƯỜNG CỤ THỂ:
 - Original Name: BẮT BUỘC phải là tên tiếng Việt chuẩn theo cách gọi phổ biến trên mạng tại Việt Nam (Ví dụ: Dragon Ball -> 7 Viên Ngọc Rồng, One Piece -> Đảo Hải Tặc). Tuyệt đối không để nguyên bản tiếng Anh, Romaji hay các ngôn ngữ khác ở cột này.
-- URL: Sử dụng link mẫu: https://player.phimapi.com/player/?url=https://s6.kkphimplayer6.com/20251229/qOcvuFyt/index.m3u8 (Có thể thay đổi phần hash để đảm bảo tính duy nhất nếu cần).
+- URL: Sử dụng link mẫu: https://player.phimapi.com/player/?url=https://s6.kkphimplayer6.com/20251229/qOcvuFyt/index.m3u8 (BẮT BUỘC PHẢI SỬ DỤNG LINK NÀY, KHÔNG ĐƯỢC THAY ĐỔI).
 - Type: "Phim Lẻ" hoặc "Phim Bộ".
 - Plan: BẮT BUỘC chọn một trong các giá trị sau (ghi đúng chính tả): ${plans.length > 0 ? plans.map(p => `"${p.name}"`).join(', ') : '"Free"'}.
 - Gender / Char Gender: Chỉ dùng "Male", "Female", hoặc "Other". (Nếu có nhiều Đạo diễn/Diễn viên, hãy ngăn cách giới tính bằng dấu gạch đứng tương ứng).

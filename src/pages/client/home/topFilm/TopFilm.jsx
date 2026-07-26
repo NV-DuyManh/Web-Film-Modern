@@ -32,11 +32,26 @@ export default function TopFilm() {
                         prevEl: '.top-prev-btn',
                     }}
                     breakpoints={{
-                        0: { slidesPerView: 2.5, spaceBetween: 12 },
-                        640: { slidesPerView: 4, spaceBetween: 15 },
-                        1024: { slidesPerView: 5, spaceBetween: 20 },
-                        1280: { slidesPerView: 6, spaceBetween: 20 },
-                        1536: { slidesPerView: 7, spaceBetween: 24 },
+                        0: {
+                            slidesPerView: 2,
+                            spaceBetween: 12,
+                        },
+                        520: {
+                            slidesPerView: 3,
+                            spaceBetween: 15,
+                        },
+                        728: {
+                            slidesPerView: 4,
+                            spaceBetween: 18,
+                        },
+                        1024: {
+                            slidesPerView: 5,
+                            spaceBetween: 20,
+                        },
+                        1280: {
+                            slidesPerView: 6,
+                            spaceBetween: 24,
+                        },
                     }}
                     className="movie-swiper"
                 >
@@ -70,12 +85,11 @@ export default function TopFilm() {
                                             <div className="absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
                                         </div>
 
-                                        <div className="absolute bottom-3 right-3 flex gap-1 z-30 transition-all duration-300">
-                                            {e.episodeSub && (
-                                                <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
-                                                    PĐ.{String(e.episodeSub).trim()}
-                                                </div>
-                                            )}
+                                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-30 transition-all duration-300">                                            {e.episodeSub && (
+                                            <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                                PĐ.{String(e.episodeSub).trim()}
+                                            </div>
+                                        )}
                                             {e.episodeVoice && (
                                                 <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
                                                     TM.{String(e.episodeVoice).trim()}

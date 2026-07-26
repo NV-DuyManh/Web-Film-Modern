@@ -1,4 +1,4 @@
-    import React, { useContext } from 'react';
+import React, { useContext } from 'react';
 import { Dialog, Slide } from '@mui/material';
 import { FaTimesCircle, FaStar, FaGlobe, FaClock, FaCalendarAlt, FaTv, FaCrown, FaFilm, FaUserTie, FaUsers, FaUserNinja, FaMoneyBillWave } from 'react-icons/fa';
 import { MdOutlineSubtitles, MdMic, MdOutlineVoiceChat } from 'react-icons/md';
@@ -74,13 +74,13 @@ const AvatarItem = ({ entity, fallback, color }) => {
     const g = glowMap[color];
 
     return (
-        <div 
+        <div
             className="relative cursor-default"
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
-            <img 
-                src={entity.imgUrl || fallback} 
+            <img
+                src={entity.imgUrl || fallback}
                 alt={entity.name}
                 className={`w-10 h-10 rounded-full object-cover border-2 ${g.base} transition-all duration-300 ${hovered ? g.active : ''}`}
             />
@@ -118,7 +118,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
     if (!movie) return null;
 
     const getStatusColor = (status) => {
-        switch(status) {
+        switch (status) {
             case "Sắp chiếu": return "orange";
             case "Đang chiếu": return "green";
             case "Hoàn thành": return "cyan";
@@ -139,12 +139,12 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
             fullWidth
             PaperProps={{ style: { background: 'transparent', boxShadow: 'none', overflow: 'visible', borderRadius: 24 } }}
         >
-            <div className="relative w-full rounded-3xl flex flex-col" style={{ 
-                background: 'linear-gradient(145deg, rgba(15,23,42,0.98), rgba(10,15,30,0.99))', 
-                maxHeight: '90vh' 
+            <div className="relative w-full rounded-3xl flex flex-col" style={{
+                background: 'linear-gradient(145deg, rgba(15,23,42,0.98), rgba(10,15,30,0.99))',
+                maxHeight: '90vh'
             }}>
                 {/* ═══ Animated border outer glow (Blurry Aura) ═══ */}
-                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[1]" style={{ 
+                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[1]" style={{
                     background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.6), transparent, rgba(236,72,153,0.6), transparent)',
                     backgroundSize: '200% 100%',
                     animation: 'borderGlow 4s linear infinite',
@@ -157,7 +157,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                     borderRadius: 24
                 }}></div>
                 {/* ═══ Animated border glow (Sharp Line) ═══ */}
-                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[2]" style={{ 
+                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[2]" style={{
                     background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.8), transparent, rgba(168,85,247,0.8), transparent)',
                     backgroundSize: '200% 100%',
                     animation: 'borderGlow 4s linear infinite',
@@ -172,140 +172,150 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                 {/* ═══ SCROLLABLE CONTENT ═══ */}
                 <div className="movie-view-modal w-full rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar relative z-10 flex-1 p-[2px]">
 
-                {/* ═══ HERO BANNER SECTION ═══ */}
-                <div className="relative w-full h-[220px] overflow-hidden rounded-t-[22px]">
-                    <img 
-                        src={movie.bannerUrl || movie.imgUrl || Logo5}
-                        alt="banner"
-                        className="w-full h-full object-cover"
-                        style={{ filter: 'brightness(0.4) saturate(1.3)' }}
-                    />
-                    {/* Gradient overlays */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] via-transparent to-transparent"></div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f1e]/60 via-transparent to-[#0a0f1e]/60"></div>
-                    
-
-                    {/* Close button */}
-                    <button 
-                        onClick={handleClose}
-                        className="absolute top-5 right-5 z-50 w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
-                    >
-                        <FaTimesCircle size={20} />
-                    </button>
-
-
-                </div>
-
-                {/* ═══ POSTER + TITLE OVERLAY ═══ */}
-                <div className="relative px-8 -mt-28 z-20 flex gap-7 items-end">
-                    {/* Poster with neon frame */}
-                    <div className="relative shrink-0 group cursor-pointer">
-                        <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-50 blur-md group-hover:opacity-100 group-hover:blur-xl transition-all duration-700"></div>
-                        <img 
-                            src={movie.imgUrl || Logo5}
-                            alt={movie.name}
-                            className="relative w-[170px] aspect-[2/3] object-cover rounded-2xl border-2 border-white/20 shadow-2xl z-10 group-hover:-translate-y-4 group-hover:scale-105 transition-all duration-500"
+                    {/* ═══ HERO BANNER SECTION ═══ */}
+                    <div className="relative w-full h-[220px] overflow-hidden rounded-t-[22px]">
+                        <img
+                            src={movie.bannerUrl || movie.imgUrl || Logo5}
+                            alt="banner"
+                            className="w-full h-full object-cover"
+                            style={{ filter: 'brightness(0.4) saturate(1.3)' }}
                         />
+                        {/* Gradient overlays */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] via-transparent to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f1e]/60 via-transparent to-[#0a0f1e]/60"></div>
+
+
+                        {/* Close button */}
+                        <button
+                            onClick={handleClose}
+                            className="absolute top-5 right-5 z-50 w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
+                        >
+                            <FaTimesCircle size={20} />
+                        </button>
+
+
                     </div>
 
-                    {/* Title area */}
-                    <div className="flex-1 pb-3">
-                        <h2 className="text-2xl md:text-4xl font-black glow-text tracking-tight mb-2" style={{ paddingBottom: '0.1em' }}>
-                            {movie.name}
-                        </h2>
-                        {movie.otherName && (
-                            <p className="text-gray-400 text-sm italic font-medium mb-3">{movie.otherName}</p>
-                        )}
-                        <div className="flex flex-wrap gap-2">
-                            <NeonBadge text={movie.status || "N/A"} color={getStatusColor(movie.status)} />
-                            <NeonBadge text={movie.ageRating || "N/A"} color="red" />
-                            <NeonBadge icon={FaCalendarAlt} text={movie.releaseYear || "N/A"} color="indigo" />
-                            <NeonBadge icon={FaClock} text={movie.duration ? `${movie.duration} min` : "N/A"} color="yellow" />
-                            <NeonBadge icon={FaTv} text={`${movie.endEpisode || "?"} Eps`} color="fuchsia" />
-                            {movie.countriesID && <NeonBadge icon={FaGlobe} text={movie.countriesID} color="emerald" />}
-                            {currentPlan && <NeonBadge icon={FaCrown} text={currentPlan.name} color="rose" />}
-                            {currentCategoryType && <NeonBadge icon={FaFilm} text={currentCategoryType.name} color="blue" />}
+                    {/* ═══ POSTER + TITLE OVERLAY ═══ */}
+                    <div className="relative px-8 -mt-28 z-20 flex gap-7 items-end">
+                        {/* Poster with neon frame */}
+                        <div className="relative shrink-0 group cursor-pointer">
+                            <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-50 blur-md group-hover:opacity-100 group-hover:blur-xl transition-all duration-700"></div>
+                            <div className="relative z-10 group-hover:-translate-y-4 group-hover:scale-105 transition-all duration-500">
+                                {movie.isHot && (
+                                    <div className="magic-fire-container absolute -top-8 -right-3 scale-[1.3] z-30">
+                                        <div className="magic-fire"></div>
+                                        <div className="magic-spark"></div>
+                                        <div className="magic-spark"></div>
+                                        <div className="magic-spark"></div>
+                                    </div>
+                                )}
+                                <img
+                                    src={movie.imgUrl || Logo5}
+                                    alt={movie.name}
+                                    className="w-[170px] aspect-[2/3] object-cover rounded-2xl border-2 border-white/20 shadow-2xl"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Title area */}
+                        <div className="flex-1 pb-3">
+                            <h2 className="text-2xl md:text-4xl font-black glow-text tracking-tight mb-2" style={{ paddingBottom: '0.1em' }}>
+                                {movie.name}
+                            </h2>
+                            {movie.otherName && (
+                                <p className="text-gray-400 text-sm italic font-medium mb-3">{movie.otherName}</p>
+                            )}
+                            <div className="flex flex-wrap gap-2">
+                                <NeonBadge text={movie.status || "N/A"} color={getStatusColor(movie.status)} />
+                                <NeonBadge text={movie.ageRating || "N/A"} color="red" />
+                                <NeonBadge icon={FaCalendarAlt} text={movie.releaseYear || "N/A"} color="indigo" />
+                                <NeonBadge icon={FaClock} text={movie.duration ? `${movie.duration} min` : "N/A"} color="yellow" />
+                                <NeonBadge icon={FaTv} text={`${movie.endEpisode || "?"} Eps`} color="fuchsia" />
+                                {movie.countriesID && <NeonBadge icon={FaGlobe} text={movie.countriesID} color="emerald" />}
+                                {currentPlan && <NeonBadge icon={FaCrown} text={currentPlan.name} color="rose" />}
+                                {currentCategoryType && <NeonBadge icon={FaFilm} text={currentCategoryType.name} color="blue" />}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* ═══ CONTENT BODY ═══ */}
+                    <div className="px-8 pt-6 pb-8 space-y-5">
+
+                        {/* Description */}
+                        <div className="relative bg-white/[0.02] rounded-2xl border border-white/5 p-5 overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-500 via-purple-500 to-pink-500 rounded-l-full"></div>
+                            <p className="text-gray-300/90 text-[14px] leading-relaxed pl-4 max-h-[90px] overflow-y-auto custom-scrollbar">
+                                {movie.description || "No description available."}
+                            </p>
+                        </div>
+
+                        {/* Grid: Categories + Availability */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <GlowCard title="Categories" icon={BiSolidCategoryAlt} color="purple">
+                                <div className="flex flex-wrap gap-2">
+                                    {movie.list_Category?.map((catId, idx) => {
+                                        const cat = categoriesList?.find(c => c.id === catId);
+                                        return cat ? (
+                                            <span key={idx} className="px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/25 rounded-lg text-[11px] font-bold tracking-wide uppercase hover:bg-purple-500/20 hover:border-purple-400/40 hover:-translate-y-1 hover:shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all duration-300 cursor-default">
+                                                {cat.name}
+                                            </span>
+                                        ) : null;
+                                    })}
+                                    {(!movie.list_Category || movie.list_Category.length === 0) && <span className="text-gray-600 text-xs italic">None</span>}
+                                </div>
+                            </GlowCard>
+
+                            <GlowCard title="Availability" icon={MdOutlineSubtitles} color="emerald">
+                                <div className="flex flex-wrap gap-2">
+                                    {movie.hasSub && (
+                                        <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(6,182,212,0.1)] hover:bg-cyan-500/20 hover:border-cyan-400/40 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(6,182,212,0.25)] transition-all duration-300 cursor-default">
+                                            <MdOutlineSubtitles className="text-sm" /> Sub: {movie.episodeSub}/{movie.endEpisode}
+                                        </div>
+                                    )}
+                                    {movie.hasDub && (
+                                        <div className="flex items-center gap-1.5 bg-pink-500/10 border border-pink-500/30 text-pink-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(236,72,153,0.1)] hover:bg-pink-500/20 hover:border-pink-400/40 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(236,72,153,0.25)] transition-all duration-300 cursor-default">
+                                            <MdMic className="text-sm" /> Dub: {movie.episodeDub}/{movie.endEpisode}
+                                        </div>
+                                    )}
+                                    {movie.hasVoice && (
+                                        <div className="flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/30 text-orange-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(249,115,22,0.1)] hover:bg-orange-500/20 hover:border-orange-400/40 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(249,115,22,0.25)] transition-all duration-300 cursor-default">
+                                            <MdOutlineVoiceChat className="text-sm" /> Voice: {movie.episodeVoice}/{movie.endEpisode}
+                                        </div>
+                                    )}
+                                    {(!movie.hasSub && !movie.hasDub && !movie.hasVoice) && <span className="text-gray-600 text-xs italic">No episodes</span>}
+                                </div>
+                            </GlowCard>
+                        </div>
+
+                        {/* Grid: Directors + Actors + Characters */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <GlowCard title="Directors" icon={FaUserTie} color="yellow">
+                                <AvatarRow items={movie.list_Author} list={authorsList} fallback={Logo5} color="yellow" />
+                            </GlowCard>
+                            <GlowCard title="Actors" icon={FaUsers} color="pink">
+                                <AvatarRow items={movie.list_Actor} list={actorsList} fallback={Logo5} color="pink" />
+                            </GlowCard>
+                            <GlowCard title="Characters" icon={FaUserNinja} color="green">
+                                <AvatarRow items={movie.list_Character} list={charactersList} fallback={Logo5} color="green" />
+                            </GlowCard>
+                        </div>
+
+                        {/* Rent Price Footer */}
+                        <div className="relative overflow-hidden bg-gradient-to-r from-slate-800/50 via-slate-800/30 to-slate-800/50 rounded-2xl border border-white/5 p-4 flex items-center justify-between">
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent animate-pulse pointer-events-none"></div>
+                            <div className="flex items-center gap-3 z-10">
+                                <div className="bg-yellow-500/10 p-2 rounded-xl">
+                                    <FaMoneyBillWave className="text-yellow-400 text-lg" />
+                                </div>
+                                <span className="text-gray-400 text-xs uppercase tracking-[0.15em] font-bold">Rent Price</span>
+                            </div>
+                            <span className="text-yellow-400 font-black text-xl z-10" style={{ textShadow: '0 0 15px rgba(234,179,8,0.4)' }}>
+                                {movie.rent > 0 ? `${Number(movie.rent).toLocaleString()} ₫` : 'Free'}
+                            </span>
                         </div>
                     </div>
                 </div>
-
-                {/* ═══ CONTENT BODY ═══ */}
-                <div className="px-8 pt-6 pb-8 space-y-5">
-
-                    {/* Description */}
-                    <div className="relative bg-white/[0.02] rounded-2xl border border-white/5 p-5 overflow-hidden">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-500 via-purple-500 to-pink-500 rounded-l-full"></div>
-                        <p className="text-gray-300/90 text-[14px] leading-relaxed pl-4 max-h-[90px] overflow-y-auto custom-scrollbar">
-                            {movie.description || "No description available."}
-                        </p>
-                    </div>
-
-                    {/* Grid: Categories + Availability */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <GlowCard title="Categories" icon={BiSolidCategoryAlt} color="purple">
-                            <div className="flex flex-wrap gap-2">
-                                {movie.list_Category?.map((catId, idx) => {
-                                    const cat = categoriesList?.find(c => c.id === catId);
-                                    return cat ? (
-                                        <span key={idx} className="px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/25 rounded-lg text-[11px] font-bold tracking-wide uppercase hover:bg-purple-500/20 hover:border-purple-400/40 hover:-translate-y-1 hover:shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all duration-300 cursor-default">
-                                            {cat.name}
-                                        </span>
-                                    ) : null;
-                                })}
-                                {(!movie.list_Category || movie.list_Category.length === 0) && <span className="text-gray-600 text-xs italic">None</span>}
-                            </div>
-                        </GlowCard>
-
-                        <GlowCard title="Availability" icon={MdOutlineSubtitles} color="emerald">
-                            <div className="flex flex-wrap gap-2">
-                                {movie.hasSub && (
-                                    <div className="flex items-center gap-1.5 bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(6,182,212,0.1)] hover:bg-cyan-500/20 hover:border-cyan-400/40 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(6,182,212,0.25)] transition-all duration-300 cursor-default">
-                                        <MdOutlineSubtitles className="text-sm" /> Sub: {movie.episodeSub}/{movie.endEpisode}
-                                    </div>
-                                )}
-                                {movie.hasDub && (
-                                    <div className="flex items-center gap-1.5 bg-pink-500/10 border border-pink-500/30 text-pink-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(236,72,153,0.1)] hover:bg-pink-500/20 hover:border-pink-400/40 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(236,72,153,0.25)] transition-all duration-300 cursor-default">
-                                        <MdMic className="text-sm" /> Dub: {movie.episodeDub}/{movie.endEpisode}
-                                    </div>
-                                )}
-                                {movie.hasVoice && (
-                                    <div className="flex items-center gap-1.5 bg-orange-500/10 border border-orange-500/30 text-orange-300 px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-[0_0_8px_rgba(249,115,22,0.1)] hover:bg-orange-500/20 hover:border-orange-400/40 hover:-translate-y-1 hover:shadow-[0_0_15px_rgba(249,115,22,0.25)] transition-all duration-300 cursor-default">
-                                        <MdOutlineVoiceChat className="text-sm" /> Voice: {movie.episodeVoice}/{movie.endEpisode}
-                                    </div>
-                                )}
-                                {(!movie.hasSub && !movie.hasDub && !movie.hasVoice) && <span className="text-gray-600 text-xs italic">No episodes</span>}
-                            </div>
-                        </GlowCard>
-                    </div>
-
-                    {/* Grid: Directors + Actors + Characters */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <GlowCard title="Directors" icon={FaUserTie} color="yellow">
-                            <AvatarRow items={movie.list_Author} list={authorsList} fallback={Logo5} color="yellow" />
-                        </GlowCard>
-                        <GlowCard title="Actors" icon={FaUsers} color="pink">
-                            <AvatarRow items={movie.list_Actor} list={actorsList} fallback={Logo5} color="pink" />
-                        </GlowCard>
-                        <GlowCard title="Characters" icon={FaUserNinja} color="green">
-                            <AvatarRow items={movie.list_Character} list={charactersList} fallback={Logo5} color="green" />
-                        </GlowCard>
-                    </div>
-
-                    {/* Rent Price Footer */}
-                    <div className="relative overflow-hidden bg-gradient-to-r from-slate-800/50 via-slate-800/30 to-slate-800/50 rounded-2xl border border-white/5 p-4 flex items-center justify-between">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent animate-pulse pointer-events-none"></div>
-                        <div className="flex items-center gap-3 z-10">
-                            <div className="bg-yellow-500/10 p-2 rounded-xl">
-                                <FaMoneyBillWave className="text-yellow-400 text-lg" />
-                            </div>
-                            <span className="text-gray-400 text-xs uppercase tracking-[0.15em] font-bold">Rent Price</span>
-                        </div>
-                        <span className="text-yellow-400 font-black text-xl z-10" style={{ textShadow: '0 0 15px rgba(234,179,8,0.4)' }}>
-                            {movie.rent > 0 ? `${Number(movie.rent).toLocaleString()} ₫` : 'Free'}
-                        </span>
-                    </div>
-                </div>
-            </div>
             </div>
         </Dialog>
     );

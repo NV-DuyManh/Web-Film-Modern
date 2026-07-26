@@ -37,9 +37,10 @@ export default function FilmHongKong() {
                     }}
                     breakpoints={{
                         0: { slidesPerView: 2, spaceBetween: 12 },
-                        640: { slidesPerView: 3, spaceBetween: 15 },
+                        520: { slidesPerView: 3, spaceBetween: 15 },
+                        728: { slidesPerView: 4, spaceBetween: 18 },
                         1024: { slidesPerView: 5, spaceBetween: 20 },
-                        1280: { slidesPerView: 6, spaceBetween: 20 },
+                        1280: { slidesPerView: 6, spaceBetween: 24 },
                     }}
                     className="movie-swiper"
                 >
@@ -48,7 +49,7 @@ export default function FilmHongKong() {
                             <Link to={`/detaifilm/${e.id}`}>
                             <div className="group cursor-pointer flex flex-col h-full">
 
-                                <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                     <img
                                         src={e.imgUrl}
                                         alt={e.name}

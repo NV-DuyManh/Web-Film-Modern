@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
-import { FaCloudUploadAlt, FaLink, FaSpinner } from 'react-icons/fa';
+import { FaTimes,  FaCloudUploadAlt, FaLink, FaSpinner } from 'react-icons/fa';
 import LOGO from "../../../../assets/Logo.png";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -41,14 +41,14 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
             fullWidth
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
-                <span className="glow-text-multi text-2xl md:text-3xl font-black tracking-tight" style={{ paddingBottom: '0.1em' }}>
+                <span className="glow-text-gold text-xl md:text-2xl font-black tracking-tight" style={{ paddingBottom: '0.1em' }}>
                     {user.id  ? "Update User" : "Add New User"}
                 </span>
                 <button 
                     onClick={handleClose}
-                    className="w-10 h-10 shrink-0 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/30 flex items-center justify-center text-red-500 hover:text-white hover:border-red-500 hover:bg-red-500 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] transition-all duration-300 cursor-pointer"
+                    className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
-                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg>
+                    <FaTimes size={16} className="transition-transform duration-200 group-hover:rotate-180 group-hover:scale-125" style={{ strokeWidth: '1.5', stroke: 'currentColor' }} />
                 </button>
             </DialogTitle>
 

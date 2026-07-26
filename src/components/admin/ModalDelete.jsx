@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FaTimes } from 'react-icons/fa';
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { FiAlertTriangle } from 'react-icons/fi';
@@ -14,7 +15,7 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
     const onConfirmDelete = async () => {
         setIsDeleting(true);
         setProgress(65);
-        
+
         const interval = setInterval(() => {
             setProgress((prev) => (prev < 90 ? prev + 5 : prev));
         }, 150);
@@ -58,25 +59,25 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
                     <div className="p-2 bg-red-500/20 rounded-full border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
                         <FiAlertTriangle size={22} className="text-red-400" />
                     </div>
-                    <span className="text-red-400 font-black text-xl md:text-2xl tracking-widest drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] uppercase">
+                    <span className="glow-text-danger font-black text-xl md:text-2xl tracking-widest uppercase">
                         {titleDelete}
                     </span>
                 </div>
-                <button 
+                <button
                     onClick={!isDeleting ? handleClose : undefined}
-                    className="w-10 h-10 shrink-0 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/30 flex items-center justify-center text-red-500 hover:text-white hover:border-red-500 hover:bg-red-500 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] transition-all duration-300 cursor-pointer disabled:opacity-50"
+                    className="w-8 h-8 shrink-0 rounded-full bg-slate-800/80 border border-red-500/50 flex items-center justify-center text-red-400 hover:text-white hover:bg-red-600 hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer disabled:opacity-50"
                     disabled={isDeleting}
                 >
-                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg"><path d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm121.6 313.1c4.7 4.7 4.7 12.3 0 17L338 377.6c-4.7 4.7-12.3 4.7-17 0L256 312l-65.1 65.6c-4.7 4.7-12.3 4.7-17 0L134.4 338c-4.7-4.7-4.7-12.3 0-17l65.6-65-65.6-65.1c-4.7-4.7-4.7-12.3 0-17l39.6-39.6c4.7-4.7 12.3-4.7 17 0l65 65.7 65.1-65.6c4.7-4.7 12.3-4.7 17 0l39.6 39.6c4.7 4.7 4.7 12.3 0 17L312 256l65.6 65.1z"></path></svg>
+                    <FaTimes size={16} className="transition-transform duration-200 group-hover:rotate-180 group-hover:scale-125" style={{ strokeWidth: '1.5', stroke: 'currentColor' }} />
                 </button>
             </DialogTitle>
 
-            <DialogContent className="modal-body-x">
-                <DialogContentText style={{ color: '#e5e7eb', paddingTop: '10px', fontSize: '16px' }}>
+            <DialogContent className="modal-body-danger">
+                <DialogContentText style={{ color: '#ffffff', paddingTop: '10px', fontSize: '17px', fontWeight: '500', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
                     {contentDelete}
                 </DialogContentText>
-                <DialogContentText style={{ color: '#f87171', paddingTop: '8px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <FiAlertTriangle size={14} />
+                <DialogContentText style={{ color: '#fca5a5', paddingTop: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
+                    <FiAlertTriangle size={16} className="animate-pulse text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
                     This action cannot be undone. Are you sure you want to proceed?
                 </DialogContentText>
             </DialogContent>
@@ -89,7 +90,7 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
                             <span>{progress}%</span>
                         </div>
                         <div className="w-full bg-black/80 rounded-full h-3 overflow-hidden p-[2px] border border-red-500/20">
-                            <div 
+                            <div
                                 className="bg-linear-to-r from-red-600 via-rose-500 to-orange-500 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(239,68,68,1)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -97,16 +98,16 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button 
-                            onClick={handleClose} 
+                        <Button
+                            onClick={handleClose}
                             className="btn-cancel-slate"
                             disabled={isDeleting}
                         >
                             Cancel
                         </Button>
-                        <Button 
-                            onClick={onConfirmDelete} 
-                            className="btn-delete"
+                        <Button
+                            onClick={onConfirmDelete}
+                            className="btn-submit-danger"
                             disabled={isDeleting}
                         >
                             Delete Now

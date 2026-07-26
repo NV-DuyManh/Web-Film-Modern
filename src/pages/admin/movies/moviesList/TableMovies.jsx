@@ -17,7 +17,7 @@ import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 
 const getStatusStyle = (status) => {
-    switch(status) {
+    switch (status) {
         case "Sắp chiếu": return "bg-amber-500/10 text-amber-300 border-amber-400/50 shadow-[0_0_8px_rgba(251,191,36,0.4)]";
         case "Đang chiếu": return "bg-emerald-500/10 text-emerald-300 border-emerald-400/50 shadow-[0_0_8px_rgba(52,211,153,0.4)]";
         case "Hoàn thành": return "bg-purple-500/10 text-purple-300 border-purple-400/50 shadow-[0_0_8px_rgba(192,132,252,0.4)]";
@@ -26,7 +26,7 @@ const getStatusStyle = (status) => {
 };
 
 const getAgeRatingStyle = (ageRating) => {
-    switch(ageRating) {
+    switch (ageRating) {
         case "P": return "bg-green-500/20 text-green-400 border-green-500/30";
         case "K": return "bg-cyan-500/20 text-cyan-400 border-cyan-500/30";
         case "T13": return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
@@ -92,7 +92,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
         const renderItem = (item, type) => {
             const hoverRing = type === 'actor' ? 'group-hover:ring-green-400 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.6)]' : 'group-hover:ring-pink-400 group-hover:shadow-[0_0_15px_rgba(244,114,182,0.6)]';
             const hoverText = type === 'actor' ? 'group-hover:text-green-300 group-hover:drop-shadow-[0_0_5px_rgba(74,222,128,0.8)]' : 'group-hover:text-pink-300 group-hover:drop-shadow-[0_0_5px_rgba(244,114,182,0.8)]';
-            
+
             return (
                 <div key={item.id} className="group flex w-17 flex-col items-center cursor-pointer">
                     <div className="relative h-12 w-12">
@@ -192,7 +192,17 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
 
                                         <td className="table-cell">
                                             <div className="flex justify-center">
-                                                <img src={row.imgUrl || Logo5} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10" />
+                                                <div className="relative inline-block">
+                                                    {row.isHot && (
+                                                        <div className="magic-fire-container absolute -top-5 -right-1.5 scale-90 z-20">
+                                                            <div className="magic-fire"></div>
+                                                            <div className="magic-spark"></div>
+                                                            <div className="magic-spark"></div>
+                                                            <div className="magic-spark"></div>
+                                                        </div>
+                                                    )}
+                                                    <img src={row.imgUrl || Logo5} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10 relative z-10" />
+                                                </div>
                                             </div>
                                         </td>
 
@@ -213,17 +223,17 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                         </td>
 
                                         <td className="table-cell text-center text-yellow-300 font-bold">{row.releaseYear || "N/A"}</td>
-                                        
+
                                         <td className="table-cell text-center whitespace-normal min-w-32">
                                             <div className="flex flex-col gap-1.5 items-center justify-center">
                                                 <span className="text-[11px] font-bold text-gray-300">Total: {row.endEpisode || "?"}</span>
-                                                
+
                                                 {row.hasSub && (
                                                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 w-full text-center">
                                                         Sub: {row.episodeSub}/{row.endEpisode}
                                                     </span>
                                                 )}
-                                                
+
                                                 {row.hasDub && (
                                                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-500/10 text-pink-400 border border-pink-500/30 w-full text-center">
                                                         Dub: {row.episodeDub}/{row.endEpisode}
@@ -272,7 +282,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                     </div>
                 </div>
             </div>
-            
+
             <ModalDelete
                 handleClose={() => setOpenBulk(false)}
                 open={openBulk}
