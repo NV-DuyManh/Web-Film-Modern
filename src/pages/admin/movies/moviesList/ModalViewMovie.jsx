@@ -156,8 +156,9 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                     filter: 'blur(8px)',
                     borderRadius: 24
                 }}></div>
+
                 {/* ═══ Animated border glow (Sharp Line) ═══ */}
-                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[2]" style={{
+                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[21]" style={{
                     background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.8), transparent, rgba(168,85,247,0.8), transparent)',
                     backgroundSize: '200% 100%',
                     animation: 'borderGlow 4s linear infinite',
@@ -169,8 +170,16 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                     borderRadius: 24
                 }}></div>
 
+                {/* ═══ Close button - outside scroll area so always accessible ═══ */}
+                <button
+                    onClick={handleClose}
+                    className="absolute top-5 right-5 z-[30] w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
+                >
+                    <FaTimesCircle size={20} />
+                </button>
+
                 {/* ═══ SCROLLABLE CONTENT ═══ */}
-                <div className="movie-view-modal w-full rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar relative z-10 flex-1 p-[2px]">
+                <div className="movie-view-modal w-[calc(100%-12px)] mx-auto my-[6px] rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar relative z-[5] flex-1 p-[2px]">
 
                     {/* ═══ HERO BANNER SECTION ═══ */}
                     <div className="relative w-full h-[220px] overflow-hidden rounded-t-[22px]">
@@ -183,16 +192,6 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                         {/* Gradient overlays */}
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] via-transparent to-transparent"></div>
                         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f1e]/60 via-transparent to-[#0a0f1e]/60"></div>
-
-
-                        {/* Close button */}
-                        <button
-                            onClick={handleClose}
-                            className="absolute top-5 right-5 z-50 w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
-                        >
-                            <FaTimesCircle size={20} />
-                        </button>
-
 
                     </div>
 
