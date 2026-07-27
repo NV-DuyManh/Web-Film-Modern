@@ -14,9 +14,9 @@ function FooterClient() {
                 <div className='w-full min-[1150px]:justify-self-start'>
                     <div className='mb-8 flex justify-center md:justify-start'>
                         <div className='inline-flex items-center gap-2 rounded-full border border-red-400/20 bg-red-900/80 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_22px_rgba(127,29,29,0.28)]'>
-                            <span className='flex h-7 w-7 items-center justify-center rounded-full bg-red-600 text-yellow-300 shadow-[0_0_14px_rgba(220,38,38,0.45)]'>
+                            <p className='flex h-7 w-7 items-center justify-center rounded-full bg-red-600 text-yellow-300 shadow-[0_0_14px_rgba(220,38,38,0.45)]'>
                                 <FaStar className='text-sm' />
-                            </span>
+                            </p>
                             Hoàng Sa & Trường Sa là của Việt Nam!
                         </div>
                     </div>

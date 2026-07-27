@@ -28,9 +28,9 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
             {/* Range Pagination if many episodes */}
             {hasRanges && (
                 <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-3 border-b border-slate-700/60">
-                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0">
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0 inline">
                         Chọn phần:
-                    </span>
+                    </p>
                     {ranges.map((_, idx) => {
                         const start = idx * CHUNK_SIZE + 1;
                         const end = Math.min((idx + 1) * CHUNK_SIZE, episodeShow.length);
@@ -67,7 +67,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                             }`}
                         >
                             <FaPlay className={`text-[10px] shrink-0 transition-all duration-300 ${isActive ? "text-slate-950 drop-shadow-sm" : "text-amber-400 group-hover:text-cyan-400 group-hover:scale-110"}`} />
-                            <span className="relative">Tập {e.numberEpisode}</span>
+                            <p className="relative inline">Tập {e.numberEpisode}</p>
                         </button>
                     );
                 })}

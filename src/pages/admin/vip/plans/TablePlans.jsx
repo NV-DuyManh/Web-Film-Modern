@@ -113,9 +113,9 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                                         {row.name}
                                     </td>
                                     <td className="table-cell text-center">
-                                        <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold border border-yellow-500/30">
+                                        <p className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold border border-yellow-500/30 inline">
                                             Lvl {row.level}
-                                        </span>
+                                        </p>
                                     </td>
                                     <td className="table-cell text-center text-green-400 font-bold">
                                         {row.price} VND

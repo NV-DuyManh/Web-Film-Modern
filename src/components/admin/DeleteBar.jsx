@@ -44,9 +44,9 @@ export default function DeleteBar({ count, onDelete }) {
             border: '1px solid rgba(239,68,68,0.35)',
             borderRadius: '10px',
         }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#fca5a5' }}>
+            <p className="inline" style={{ fontSize: '13px', fontWeight: 600, color: '#fca5a5' }}>
                 {count} item{count > 1 ? 's' : ''} selected
-            </span>
+            </p>
             <button
                 onClick={onDelete}
                 style={{

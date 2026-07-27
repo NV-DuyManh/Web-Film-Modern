@@ -57,7 +57,7 @@ export default function FilmCountry({ title, countryName, titleClass }) {
                                         <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                             <img src={e.bannerUrl} alt="" draggable="false" className="w-full h-full object-cover" />
                                             <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5 z-20">
-                                                <span className="px-2 py-0.5 rounded-md text-xs font-bold border border-[#facc15] text-[#facc15] bg-slate-900/70 backdrop-blur-sm">{e.duration + " Phút"}</span>
+                                                <p className="px-2 py-0.5 rounded-md text-xs font-bold border border-[#facc15] text-[#facc15] bg-slate-900/70 backdrop-blur-sm inline">{e.duration + " Phút"}</p>
                                             </div>
                                         </div>
                                         <div className="pt-3 flex flex-col transition-transform duration-300 group-hover:-translate-y-1">

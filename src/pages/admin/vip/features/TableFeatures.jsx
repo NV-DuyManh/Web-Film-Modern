@@ -120,9 +120,9 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                                         </div>
                                     </td>
                                     <td className="table-cell  text-center">
-                                        <span className={`${row.available ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-red-500/20 text-red-400 border-red-500/30"} px-2 py-1 rounded text-xs font-bold border`}>
+                                        <p className={`${row.available ? "bg-green-500/20 text-green-400 border-green-500/30" : "bg-red-500/20 text-red-400 border-red-500/30"} px-2 py-1 rounded text-xs font-bold border inline`}>
                                             {row.available ? "True" : "False"}
-                                        </span>
+                                        </p>
                                     </td>
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">

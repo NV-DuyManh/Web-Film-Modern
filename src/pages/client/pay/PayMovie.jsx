@@ -29,7 +29,7 @@ function PayMovie(props) {
                     
                     <div className="bg-slate-900/60 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.4)]">
                         <h2 className="text-xl font-black text-white mb-8 tracking-wide flex items-center gap-2 uppercase">
-                            <span className="w-2 h-6 bg-rose-500 rounded-full inline-block"></span>
+                            <p className="w-2 h-6 bg-rose-500 rounded-full inline-block inline"></p>
                             Thông tin thanh toán
                         </h2>
                         
@@ -46,35 +46,35 @@ function PayMovie(props) {
                             
                             <div className="flex-1 space-y-4">
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
-                                    <span className="text-slate-300 font-medium">Tài khoản:</span>
-                                    <span className="text-white font-bold">{isLogin?.fullName || isLogin?.email || 'Khách'}</span>
+                                    <p className="text-slate-300 font-medium inline">Tài khoản:</p>
+                                    <p className="text-white font-bold inline">{isLogin?.fullName || isLogin?.email || 'Khách'}</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
-                                    <span className="text-slate-300 font-medium">Phim:</span>
-                                    <span className="text-rose-400 font-black">{movieData.name}</span>
+                                    <p className="text-slate-300 font-medium inline">Phim:</p>
+                                    <p className="text-rose-400 font-black inline">{movieData.name}</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
-                                    <span className="text-slate-300 font-medium">Độ phân giải:</span>
-                                    <span className="text-white font-bold bg-white/10 px-2 py-0.5 rounded">{movieData.resolution}</span>
+                                    <p className="text-slate-300 font-medium inline">Độ phân giải:</p>
+                                    <p className="text-white font-bold bg-white/10 px-2 py-0.5 rounded inline">{movieData.resolution}</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
-                                    <span className="text-slate-300 font-medium">Thời hạn:</span>
-                                    <span className="text-white font-bold">{movieData.duration}</span>
+                                    <p className="text-slate-300 font-medium inline">Thời hạn:</p>
+                                    <p className="text-white font-bold inline">{movieData.duration}</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
-                                    <span className="text-slate-300 font-medium">Đơn giá:</span>
-                                    <span className="text-white font-bold">{movieData.price}</span>
+                                    <p className="text-slate-300 font-medium inline">Đơn giá:</p>
+                                    <p className="text-white font-bold inline">{movieData.price}</p>
                                 </div>
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-slate-300 font-medium">Khuyến mãi:</span>
-                                    <span className="text-green-400 font-bold">-{movieData.discount}</span>
+                                    <p className="text-slate-300 font-medium inline">Khuyến mãi:</p>
+                                    <p className="text-green-400 font-bold inline">-{movieData.discount}</p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="border-t border-slate-700 pt-6 flex justify-between items-center mb-6">
-                            <span className="text-white font-black text-lg uppercase tracking-wide">Tổng cộng</span>
-                            <span className="text-rose-400 font-black text-2xl drop-shadow-[0_0_10px_rgba(244,63,94,0.3)]">{movieData.total}</span>
+                            <p className="text-white font-black text-lg uppercase tracking-wide inline">Tổng cộng</p>
+                            <p className="text-rose-400 font-black text-2xl drop-shadow-[0_0_10px_rgba(244,63,94,0.3)] inline">{movieData.total}</p>
                         </div>
 
                         <p className="text-slate-400 text-xs mb-6">
@@ -86,54 +86,54 @@ function PayMovie(props) {
 
                     <div className="bg-slate-900/60 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.4)]">
                         <h2 className="text-xl font-black text-white mb-6 tracking-wide flex items-center gap-2 uppercase">
-                            <span className="w-2 h-6 bg-yellow-400 rounded-full inline-block"></span>
+                            <p className="w-2 h-6 bg-yellow-400 rounded-full inline-block inline"></p>
                             Chọn phương thức
                         </h2>
                         
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
                             <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-yellow-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(250,204,21,0.2)] group">
-                                <span className="text-xs text-slate-300 group-hover:text-white font-medium">Thẻ tín dụng</span>
+                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Thẻ tín dụng</p>
                                 <div className="flex gap-1">
                                     <div className="w-8 h-5 bg-white rounded flex items-center justify-center text-[8px] text-blue-800 font-black italic">VISA</div>
                                     <div className="w-8 h-5 bg-white rounded flex items-center justify-center text-[8px] text-red-600 font-black italic">MC</div>
                                 </div>
                             </div>
                             <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-pink-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(244,114,182,0.2)] group">
-                                <span className="text-xs text-slate-300 group-hover:text-white font-medium">Ví MoMo</span>
+                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Ví MoMo</p>
                                 <div className="text-pink-400 font-black tracking-wide bg-white/10 px-2 py-0.5 rounded">MoMo</div>
                             </div>
                             <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-blue-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(96,165,250,0.2)] group">
-                                <span className="text-xs text-slate-300 group-hover:text-white font-medium">Ví ZaloPay</span>
-                                <div className="text-blue-400 font-black text-sm tracking-wide">Zalo<span className="text-green-400">Pay</span></div>
+                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Ví ZaloPay</p>
+                                <div className="text-blue-400 font-black text-sm tracking-wide">Zalo<p className="text-green-400 inline">Pay</p></div>
                             </div>
                             <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-orange-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(251,146,60,0.2)] group">
-                                <span className="text-xs text-slate-300 group-hover:text-white font-medium">Ví ShopeePay</span>
+                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Ví ShopeePay</p>
                                 <div className="w-6 h-6 bg-orange-500 rounded text-white flex items-center justify-center text-xs font-black shadow-md">S</div>
                             </div>
                             <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-red-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(248,113,113,0.2)] group">
-                                <span className="text-xs text-slate-300 group-hover:text-white font-medium">VNPAY</span>
-                                <div className="text-red-500 font-black text-sm tracking-widest">VN<span className="text-blue-500">PAY</span></div>
+                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">VNPAY</p>
+                                <div className="text-red-500 font-black text-sm tracking-widest">VN<p className="text-blue-500 inline">PAY</p></div>
                             </div>
                         </div>
 
                         <div className="space-y-4">
                             <button className="w-full h-14 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 rounded-xl flex items-center justify-center transition-all shadow-[0_4px_15px_rgba(251,191,36,0.3)] hover:-translate-y-1">
-                                <span className="text-[#003087] font-black italic text-2xl drop-shadow-sm">PayPal</span>
+                                <p className="text-[#003087] font-black italic text-2xl drop-shadow-sm inline">PayPal</p>
                             </button>
                             
                             <button className="w-full h-14 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl flex items-center justify-center gap-3 transition-colors">
                                 <FaCreditCard className="text-white text-xl" />
-                                <span className="text-white font-bold">Thẻ ghi nợ hoặc tín dụng</span>
+                                <p className="text-white font-bold inline">Thẻ ghi nợ hoặc tín dụng</p>
                             </button>
                             
                             <div className="text-center pt-2">
-                                <span className="text-slate-400 text-xs italic">Thanh toán an toàn được hỗ trợ bởi </span>
-                                <span className="text-blue-400 text-sm font-bold italic">PayPal</span>
+                                <p className="text-slate-400 text-xs italic inline">Thanh toán an toàn được hỗ trợ bởi </p>
+                                <p className="text-blue-400 text-sm font-bold italic inline">PayPal</p>
                             </div>
 
                             <div className="mt-8 pt-8 border-t border-slate-700/50">
                                 <button className="w-full h-14 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 rounded-xl flex items-center justify-center transition-all shadow-[0_4px_15px_rgba(225,29,72,0.4)] hover:-translate-y-1">
-                                    <span className="text-white font-black text-lg tracking-wide">THANH TOÁN NGAY</span>
+                                    <p className="text-white font-black text-lg tracking-wide inline">THANH TOÁN NGAY</p>
                                 </button>
                             </div>
                         </div>

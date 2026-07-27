@@ -11,6 +11,56 @@ $primary-red: #ef4444; // Màu đỏ (dùng cho lỗi/cảnh báo xoá)
 $table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
 
 // ============================================================================
+// VIP THEMES
+// ============================================================================
+
+.vip-theme-blue {
+    --vip-color: #60a5fa;
+    --vip-glow-shadow: 0 0 15px rgba(96, 165, 250, 0.15);
+    --vip-bg-glow: rgba(96, 165, 250, 0.1);
+}
+
+.vip-theme-cyan {
+    --vip-color: #22d3ee;
+    --vip-glow-shadow: 0 0 15px rgba(34, 211, 238, 0.15);
+    --vip-bg-glow: rgba(34, 211, 238, 0.1);
+}
+
+.vip-theme-yellow {
+    --vip-color: #facc15;
+    --vip-glow-shadow: 0 0 25px rgba(250, 204, 21, 0.25);
+    --vip-bg-glow: rgba(250, 204, 21, 0.1);
+}
+
+.vip-theme-rose {
+    --vip-color: #fb7185;
+    --vip-glow-shadow: 0 0 20px rgba(244, 63, 94, 0.2);
+    --vip-bg-glow: rgba(244, 63, 94, 0.1);
+}
+
+.vip-card {
+    &.selected {
+        border-color: var(--vip-color) !important;
+        box-shadow: var(--vip-glow-shadow) !important;
+    }
+
+    .vip-glow-bg {
+        background-color: var(--vip-bg-glow) !important;
+    }
+    
+    .vip-text {
+        &.selected { color: var(--vip-color) !important; }
+    }
+    
+    .vip-border-dot {
+        &.selected { border-color: var(--vip-color) !important; }
+    }
+    
+    .vip-dot-inner {
+        background-color: var(--vip-color) !important;
+    }
+}
+// ============================================================================
 // ANIMATIONS (HIỆU ỨNG CHUYỂN ĐỘNG)
 // Các định nghĩa chuyển động được dùng lại ở nhiều component
 // ============================================================================

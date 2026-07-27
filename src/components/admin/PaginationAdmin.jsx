@@ -46,7 +46,7 @@ export default function PaginationAdmin({
     return (
 <div className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-[rgba(15,23,42,0.1)] px-6 py-2 backdrop-blur-[2px]">            
             <div className="flex items-center gap-3">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Rows</span>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 inline">Rows</p>
                 <Select
                     labelId="rows-per-page-label"
                     id="rows-per-page-select"
@@ -99,21 +99,21 @@ export default function PaginationAdmin({
             </div>
 
             <div className="flex items-center gap-2">
-                <span 
+                <p 
                     aria-hidden="true" 
-                    className="w-6" 
+                    className="w-6 inline" 
                     style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(251, 191, 36, 0.5))' }}
                 />
                 <p className="text-xs font-medium tracking-tight text-gray-300">
-                    Showing <span className="font-bold text-amber-400">{from}</span> 
-                    <span className="mx-1 text-gray-500">to</span> 
-                    <span className="font-bold text-amber-400">{to}</span> 
-                    <span className="mx-1 text-gray-500">of</span> 
-                    <span className="font-bold text-white">{totalItems}</span>
+                    Showing <p className="font-bold text-amber-400 inline">{from}</p> 
+                    <p className="mx-1 text-gray-500 inline">to</p> 
+                    <p className="font-bold text-amber-400 inline">{to}</p> 
+                    <p className="mx-1 text-gray-500 inline">of</p> 
+                    <p className="font-bold text-white inline">{totalItems}</p>
                 </p>
-                <span 
+                <p 
                     aria-hidden="true" 
-                    className="w-6" 
+                    className="w-6 inline" 
                     style={{ height: '1px', background: 'linear-gradient(to left, transparent, rgba(251, 191, 36, 0.5))' }}
                 />
             </div>
@@ -168,7 +168,7 @@ export default function PaginationAdmin({
                 </Stack>
 
                 <div className="flex items-center gap-2 pl-4 border-l border-white/10 relative">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Page</span>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 inline">Page</p>
                     <div className="flex gap-1 relative">
                         
                         {errorMsg && (

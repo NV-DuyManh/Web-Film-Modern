@@ -159,9 +159,9 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
             BackdropProps={{ className: "modal-backdrop-x" }}
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
-                <span className="glow-text-gold text-xl md:text-2xl font-black tracking-tight" style={{ paddingBottom: '0.1em' }}>
+                <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
                     {movie.id ? "Update Movie" : "Add New Movie"}
-                </span>
+                </p>
                 <button
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
@@ -178,7 +178,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest pl-3 m-0">Task 1: General Info</p>
                             <FormControlLabel
                                 control={<Checkbox checked={movie.isHot || false} onChange={onCheckboxChange} name="isHot" sx={{ color: '#ef4444', '&.Mui-checked': { color: '#f87171' }, padding: '4px' }} />}
-                                label={<span className="text-gray-300 text-sm font-semibold ml-1 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] leading-none mt-[2px]">🔥 Hot Movie</span>}
+                                label={<p className="text-gray-300 text-sm font-semibold ml-1 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] leading-none mt-[2px] inline">🔥 Hot Movie</p>}
                                 sx={{ margin: 0 }}
                             />
                         </div>
@@ -227,21 +227,21 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasSub || false} onChange={onCheckboxChange} name="hasSub" sx={{ color: '#06b6d4', '&.Mui-checked': { color: '#22d3ee' }, padding: '4px' }} />}
-                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Subtitled</span>}
+                                        label={<p className="text-gray-300 text-sm font-semibold ml-1 inline">Subtitled</p>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasDub || false} onChange={onCheckboxChange} name="hasDub" sx={{ color: '#ec4899', '&.Mui-checked': { color: '#f472b6' }, padding: '4px' }} />}
-                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Dubbed</span>}
+                                        label={<p className="text-gray-300 text-sm font-semibold ml-1 inline">Dubbed</p>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasVoice || false} onChange={onCheckboxChange} name="hasVoice" sx={{ color: '#f97316', '&.Mui-checked': { color: '#fb923c' }, padding: '4px' }} />}
-                                        label={<span className="text-gray-300 text-sm font-semibold ml-1">Voiceover</span>}
+                                        label={<p className="text-gray-300 text-sm font-semibold ml-1 inline">Voiceover</p>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
@@ -281,14 +281,14 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         <div className='flex items-center text-white gap-2'>
                             <label className="font-medium">Categories</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("categories")} className='cursor-pointer text-2xl text-cyan-400 hover:scale-110 transition-transform' />
-                            {error?.list_Category && <span className="text-red-500 text-xs italic">{error.list_Category}</span>}
+                            {error?.list_Category && <p className="text-red-500 text-xs italic inline">{error.list_Category}</p>}
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
                             {movie.list_Category?.map((item) => {
                                 const category = categories?.find(e => e.id === item);
                                 return category ? (
                                     <div key={item} className="relative inline-block mt-2 mr-1 group">
-                                        <span className="px-3 py-1.5 bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 rounded-lg text-[11px] font-bold tracking-wide uppercase shadow-[0_0_10px_rgba(6,182,212,0.15)] group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-400 group-hover:scale-105 group-hover:-translate-y-0.5 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] transition-all duration-300 inline-block cursor-default">{category.name}</span>
+                                        <p className="px-3 py-1.5 bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 rounded-lg text-[11px] font-bold tracking-wide uppercase shadow-[0_0_10px_rgba(6,182,212,0.15)] group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-400 group-hover:scale-105 group-hover:-translate-y-0.5 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] transition-all duration-300 inline-block cursor-default inline">{category.name}</p>
                                         <FaTimesCircle onClick={() => handleRemoveItem("categories", item)} className="absolute -top-1.5 -right-1.5 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
                                     </div>
                                 ) : null;
@@ -298,7 +298,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         <div className='flex items-center text-white gap-2 mt-4'>
                             <label className="font-medium">Authors</label>
                             <FaUserTie onClick={() => handleClickOpenChoose("authors")} className='cursor-pointer text-2xl text-yellow-400 hover:scale-110 transition-transform' />
-                            {error?.list_Author && <span className="text-red-500 text-xs italic">{error.list_Author}</span>}
+                            {error?.list_Author && <p className="text-red-500 text-xs italic inline">{error.list_Author}</p>}
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
                             {movie.list_Author?.map((item) => {
@@ -374,7 +374,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                         <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
                                         <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                             <FaCloudUploadAlt className="text-3xl text-pink-400 mb-1" />
-                                            <span className="text-white text-xs font-bold">Upload</span>
+                                            <p className="text-white text-xs font-bold inline">Upload</p>
                                             <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
                                         </label>
                                     </div>
@@ -409,7 +409,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                         <img src={bannerPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Banner" />
                                         <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                             <FaCloudUploadAlt className="text-4xl text-yellow-400 mb-1" />
-                                            <span className="text-white text-xs font-bold">Upload</span>
+                                            <p className="text-white text-xs font-bold inline">Upload</p>
                                             <VisuallyHiddenInput type="file" onChange={handleBannerChange} accept="image/*" />
                                         </label>
                                     </div>
@@ -439,8 +439,8 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <span className="animate-pulse">Syncing to Cloud Database...</span>
-                            <span>{progress}%</span>
+                            <p className="animate-pulse inline">Syncing to Cloud Database...</p>
+                            <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
                             <div

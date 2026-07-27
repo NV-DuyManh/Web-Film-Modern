@@ -25,9 +25,9 @@ export default function ModalReview({ open, onChangeInput, handleClose, addRevie
             fullWidth
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
-                <span className="glow-text-gold text-xl md:text-2xl font-black tracking-tight" style={{ paddingBottom: '0.1em' }}>
+                <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
                     {review.id  ? "Update Review" : "Add New Review"}
-                </span>
+                </p>
                 <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
@@ -68,7 +68,7 @@ export default function ModalReview({ open, onChangeInput, handleClose, addRevie
                 />
 
                 <div className="flex flex-col gap-2 mt-2 px-1">
-                    <span className="text-gray-400 text-sm">Rating</span>
+                    <p className="text-gray-400 text-sm inline">Rating</p>
                     <Rating
                         name="rate"
                         value={Number(review.rate)}
@@ -83,7 +83,7 @@ export default function ModalReview({ open, onChangeInput, handleClose, addRevie
                             '& .MuiRating-iconEmpty': { color: '#4b5563' }
                         }}
                     />
-                    {error?.rate && <span className="text-red-500 text-xs">{error.rate}</span>}
+                    {error?.rate && <p className="text-red-500 text-xs inline">{error.rate}</p>}
                 </div>
 
                 <TextField
@@ -105,8 +105,8 @@ export default function ModalReview({ open, onChangeInput, handleClose, addRevie
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <span className="animate-pulse">Syncing to Database...</span>
-                            <span>{progress}%</span>
+                            <p className="animate-pulse inline">Syncing to Database...</p>
+                            <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
                             <div 

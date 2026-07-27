@@ -25,9 +25,9 @@ export default function ModalSubscriptions({ open, onChangeInput, handleClose, a
             fullWidth
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
-                <span className="glow-text-gold text-xl md:text-2xl font-black tracking-tight" style={{ paddingBottom: '0.1em' }}>
+                <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
                     {subscription.id  ? "Update Subscription" : "Add New Subscription"}
-                </span>
+                </p>
                 <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
@@ -106,7 +106,7 @@ export default function ModalSubscriptions({ open, onChangeInput, handleClose, a
                             <MenuItem value="Momo" className="neon-option">Momo</MenuItem>
                             <MenuItem value="ZaloPay" className="neon-option">ZaloPay</MenuItem>
                         </Select>
-                        {error?.paymentMethod && <span className="text-red-500 text-xs ml-4 mt-1">{error.paymentMethod}</span>}
+                        {error?.paymentMethod && <p className="text-red-500 text-xs ml-4 mt-1 inline">{error.paymentMethod}</p>}
                     </FormControl>
                 </div>
 
@@ -152,7 +152,7 @@ export default function ModalSubscriptions({ open, onChangeInput, handleClose, a
                         <MenuItem value="pending" className="neon-option">Pending</MenuItem>
                         <MenuItem value="cancel" className="neon-option">Cancel</MenuItem>
                     </Select>
-                        {error?.status && <span className="text-red-500 text-xs ml-4 mt-1">{error.status}</span>}
+                        {error?.status && <p className="text-red-500 text-xs ml-4 mt-1 inline">{error.status}</p>}
                 </FormControl>
             </DialogContent>
 
@@ -160,8 +160,8 @@ export default function ModalSubscriptions({ open, onChangeInput, handleClose, a
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <span className="animate-pulse">Syncing to Database...</span>
-                            <span>{progress}%</span>
+                            <p className="animate-pulse inline">Syncing to Database...</p>
+                            <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
                             <div 

@@ -40,9 +40,9 @@ export default function ModalChoose({ handleClickChoose, handleCloseChoose, open
             PaperProps={{ className: "!bg-slate-900 !border !border-cyan-500/30 !rounded-2xl !shadow-[0_0_40px_rgba(6,182,212,0.25)] overflow-hidden" }}
         >
             <DialogTitle className="!bg-slate-800 !bg-gradient-to-b !from-cyan-900/60 !to-cyan-900/10 !border-b !border-cyan-400/60 !shadow-[0_5px_20px_-5px_rgba(34,211,238,0.4)] flex flex-col sm:flex-row justify-between items-start sm:items-center px-6 py-4 gap-4 relative z-10">
-                <span className="font-black uppercase tracking-widest text-sm flex items-center">
-                    <span className="glow-text-multi">Choose {type}</span>
-                </span>
+                <p className="font-black uppercase tracking-widest text-sm flex items-center inline">
+                    <p className="glow-text-multi inline">Choose {type}</p>
+                </p>
                 
                 <div className="relative w-full sm:w-1/2 group">
                     <input 
@@ -69,7 +69,7 @@ export default function ModalChoose({ handleClickChoose, handleCloseChoose, open
                                         : "text-slate-200 bg-slate-800 border border-slate-600 hover:text-cyan-300 hover:border-cyan-500/50 hover:bg-cyan-500/10 hover:shadow-[0_0_15px_rgba(34,211,238,0.2)]"
                                     }`}
                             >
-                                {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,1)]"></span>}
+                                {isSelected && <p className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,1)] inline"></p>}
                                 {item.name}
                             </button>
                         ) : (
@@ -105,7 +105,7 @@ export default function ModalChoose({ handleClickChoose, handleCloseChoose, open
             
             <DialogActions className="!bg-slate-800 !bg-gradient-to-t !from-fuchsia-900/40 !to-fuchsia-900/10 !border-t !border-fuchsia-400/50 !shadow-[0_-5px_20px_-5px_rgba(217,70,239,0.3)] p-4 relative z-10">
                 <div className="text-xs text-slate-500 mr-auto font-medium ml-2 uppercase tracking-widest">
-                    Selected: <span className="text-fuchsia-400 font-black drop-shadow-[0_0_5px_rgba(217,70,239,0.5)] text-sm ml-1">{selectedItems.length}</span>
+                    Selected: <p className="text-fuchsia-400 font-black drop-shadow-[0_0_5px_rgba(217,70,239,0.5)] text-sm ml-1 inline">{selectedItems.length}</p>
                 </div>
                 <Button onClick={handleCloseChoose} className="!bg-gradient-to-r !from-fuchsia-600 !to-pink-500 !text-white !px-8 !py-2 !rounded-xl !text-xs !font-bold !tracking-widest hover:!scale-105 hover:!shadow-[0_0_20px_rgba(217,70,239,0.6)] !transition-all">
                     DONE

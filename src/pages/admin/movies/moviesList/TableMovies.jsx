@@ -108,23 +108,23 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                 <div className="px-4 py-2.5 border-b border-white/8 bg-white/5">
                     <div className="flex items-center justify-between gap-3">
                         <p className="text-[13px] font-bold text-white">Entity</p>
-                        <span className="text-[11px] text-gray-400">{totalItems} items</span>
+                        <p className="text-[11px] text-gray-400 inline">{totalItems} items</p>
                     </div>
                 </div>
                 <div className="max-h-85 overflow-y-auto px-2.5 py-2.5">
                     {actorItems.length > 0 && (
                         <div className="rounded-xl bg-white/2.5 px-2.5 py-2.5">
-                            <div className="mb-2.5 flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-green-400"></span><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Actors</p></div>
+                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-green-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Actors</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{actorItems.map(item => renderItem(item, 'actor'))}</div>
                         </div>
                     )}
                     {characterItems.length > 0 && (
                         <div className={`${actorItems.length > 0 ? "mt-2.5" : ""} rounded-xl bg-white/2.5 px-2.5 py-2.5`}>
-                            <div className="mb-2.5 flex items-center gap-2"><span className="h-1.5 w-1.5 rounded-full bg-pink-400"></span><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Characters</p></div>
+                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-pink-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Characters</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{characterItems.map(item => renderItem(item, 'character'))}</div>
                         </div>
                     )}
-                    {totalItems === 0 && <span className="text-[12px] text-gray-500">No entity</span>}
+                    {totalItems === 0 && <p className="text-[12px] text-gray-500 inline">No entity</p>}
                 </div>
             </div>
         );
@@ -135,12 +135,12 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
         return (
             <div className="w-fit min-w-52 max-w-95 overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/8 bg-white/5">
-                    <div className="flex items-center justify-between gap-4"><p className="text-[13px] font-bold text-white">Categories</p><span className="text-[11px] text-gray-400">{categoryItems.length} items</span></div>
+                    <div className="flex items-center justify-between gap-4"><p className="text-[13px] font-bold text-white">Categories</p><p className="text-[11px] text-gray-400 inline">{categoryItems.length} items</p></div>
                 </div>
                 <div className="flex w-fit max-w-95 flex-wrap gap-2 px-3 py-3 max-h-65 overflow-y-auto">
                     {categoryItems.length > 0 ? categoryItems.map((item) => (
-                        <span key={item.id} className="rounded-full bg-purple-500/12 px-3 py-1.5 text-[12px] font-semibold text-purple-100 ring-1 ring-purple-300/15 cursor-pointer transition-all duration-300 hover:bg-purple-500/40 hover:text-white hover:ring-purple-400 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(168,85,247,0.6)]">{item.name}</span>
-                    )) : <span className="text-[12px] text-gray-500">No categories</span>}
+                        <p key={item.id} className="rounded-full bg-purple-500/12 px-3 py-1.5 text-[12px] font-semibold text-purple-100 ring-1 ring-purple-300/15 cursor-pointer transition-all duration-300 hover:bg-purple-500/40 hover:text-white hover:ring-purple-400 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(168,85,247,0.6)] inline">{item.name}</p>
+                    )) : <p className="text-[12px] text-gray-500 inline">No categories</p>}
                 </div>
             </div>
         );
@@ -213,12 +213,12 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
 
                                         <td className="table-cell text-center whitespace-normal">
                                             <div className="flex flex-col gap-1 items-center justify-center">
-                                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getStatusStyle(row.status)}`}>
+                                                <p className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getStatusStyle(row.status)} inline`}>
                                                     {row.status || "N/A"}
-                                                </span>
-                                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getAgeRatingStyle(row.ageRating)}`}>
+                                                </p>
+                                                <p className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getAgeRatingStyle(row.ageRating)} inline`}>
                                                     {row.ageRating || "N/A"}
-                                                </span>
+                                                </p>
                                             </div>
                                         </td>
 
@@ -226,24 +226,24 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
 
                                         <td className="table-cell text-center whitespace-normal min-w-32">
                                             <div className="flex flex-col gap-1.5 items-center justify-center">
-                                                <span className="text-[11px] font-bold text-gray-300">Total: {row.endEpisode || "?"}</span>
+                                                <p className="text-[11px] font-bold text-gray-300 inline">Total: {row.endEpisode || "?"}</p>
 
                                                 {row.hasSub && (
-                                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 w-full text-center">
+                                                    <p className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 w-full text-center inline">
                                                         Sub: {row.episodeSub}/{row.endEpisode}
-                                                    </span>
+                                                    </p>
                                                 )}
 
                                                 {row.hasDub && (
-                                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-500/10 text-pink-400 border border-pink-500/30 w-full text-center">
+                                                    <p className="px-2 py-0.5 rounded text-[10px] font-bold bg-pink-500/10 text-pink-400 border border-pink-500/30 w-full text-center inline">
                                                         Dub: {row.episodeDub}/{row.endEpisode}
-                                                    </span>
+                                                    </p>
                                                 )}
 
                                                 {row.hasVoice && (
-                                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-500/10 text-orange-400 border border-orange-500/30 w-full text-center">
+                                                    <p className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-500/10 text-orange-400 border border-orange-500/30 w-full text-center inline">
                                                         Voice: {row.episodeVoice}/{row.endEpisode}
-                                                    </span>
+                                                    </p>
                                                 )}
                                             </div>
                                         </td>

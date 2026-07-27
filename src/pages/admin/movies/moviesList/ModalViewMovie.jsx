@@ -34,7 +34,7 @@ const NeonBadge = ({ icon: Icon, text, color = "cyan" }) => {
     };
     return (
         <div className={`flex items-center gap-2 bg-gradient-to-r ${colorMap[color]} px-3.5 py-2 rounded-xl border text-sm font-bold backdrop-blur-sm hover:-translate-y-1 transition-all duration-300 cursor-default`}>
-            {Icon && <Icon className="text-sm" />} <span>{text}</span>
+            {Icon && <Icon className="text-sm" />} <p className="inline">{text}</p>
         </div>
     );
 };
@@ -92,7 +92,7 @@ const AvatarItem = ({ entity, fallback, color }) => {
 };
 
 const AvatarRow = ({ items, list, fallback, color = "cyan" }) => {
-    if (!items || items.length === 0) return <span className="text-gray-600 text-xs italic">N/A</span>;
+    if (!items || items.length === 0) return <p className="text-gray-600 text-xs italic inline">N/A</p>;
 
     return (
         <div className="flex flex-wrap gap-2.5">
@@ -256,12 +256,12 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                                     {movie.list_Category?.map((catId, idx) => {
                                         const cat = categoriesList?.find(c => c.id === catId);
                                         return cat ? (
-                                            <span key={idx} className="px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/25 rounded-lg text-[11px] font-bold tracking-wide uppercase hover:bg-purple-500/20 hover:border-purple-400/40 hover:-translate-y-1 hover:shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all duration-300 cursor-default">
+                                            <p key={idx} className="px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/25 rounded-lg text-[11px] font-bold tracking-wide uppercase hover:bg-purple-500/20 hover:border-purple-400/40 hover:-translate-y-1 hover:shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all duration-300 cursor-default inline">
                                                 {cat.name}
-                                            </span>
+                                            </p>
                                         ) : null;
                                     })}
-                                    {(!movie.list_Category || movie.list_Category.length === 0) && <span className="text-gray-600 text-xs italic">None</span>}
+                                    {(!movie.list_Category || movie.list_Category.length === 0) && <p className="text-gray-600 text-xs italic inline">None</p>}
                                 </div>
                             </GlowCard>
 
@@ -282,7 +282,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                                             <MdOutlineVoiceChat className="text-sm" /> Voice: {movie.episodeVoice}/{movie.endEpisode}
                                         </div>
                                     )}
-                                    {(!movie.hasSub && !movie.hasDub && !movie.hasVoice) && <span className="text-gray-600 text-xs italic">No episodes</span>}
+                                    {(!movie.hasSub && !movie.hasDub && !movie.hasVoice) && <p className="text-gray-600 text-xs italic inline">No episodes</p>}
                                 </div>
                             </GlowCard>
                         </div>
@@ -307,11 +307,11 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                                 <div className="bg-yellow-500/10 p-2 rounded-xl">
                                     <FaMoneyBillWave className="text-yellow-400 text-lg" />
                                 </div>
-                                <span className="text-gray-400 text-xs uppercase tracking-[0.15em] font-bold">Rent Price</span>
+                                <p className="text-gray-400 text-xs uppercase tracking-[0.15em] font-bold inline">Rent Price</p>
                             </div>
-                            <span className="text-yellow-400 font-black text-xl z-10" style={{ textShadow: '0 0 15px rgba(234,179,8,0.4)' }}>
+                            <p className="text-yellow-400 font-black text-xl z-10 inline" style={{ textShadow: '0 0 15px rgba(234,179,8,0.4)' }}>
                                 {movie.rent > 0 ? `${Number(movie.rent).toLocaleString()} ₫` : 'Free'}
-                            </span>
+                            </p>
                         </div>
                     </div>
                 </div>

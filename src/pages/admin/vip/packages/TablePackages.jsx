@@ -108,9 +108,9 @@ function TablePackages({ handleClickOpen, setPackageItem, packageItem, search })
                                         {row.discount} %
                                     </td>
                                     <td className="table-cell text-center">
-                                        <span className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold border border-yellow-500/30">
+                                        <p className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold border border-yellow-500/30 inline">
                                             {row.time === 1 ? "1 Month" : `${row.time} Months`}
-                                        </span>
+                                        </p>
                                     </td>
                                     <td className="table-cell text-right">
                                         <div className="flex justify-end gap-2">

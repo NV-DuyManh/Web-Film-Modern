@@ -40,9 +40,9 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
             BackdropProps={{ className: "modal-backdrop-x" }}
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
-                <span className="glow-text-gold text-xl md:text-2xl font-black tracking-tight" style={{ paddingBottom: '0.1em' }}>
+                <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
                     {author.id  ? "Update Author" : "Add New Author"}
-                </span>
+                </p>
                 <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
@@ -97,7 +97,7 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                 
                 <FormControl className="gender-box-wrapper" error={!!error?.sexID}>
                     <div className={`gender-box ${!!error?.sexID ? 'error' : ''}`}>
-                        <span className="gender-label">Gender</span>
+                        <p className="gender-label inline">Gender</p>
                         
                         <RadioGroup
                             name="sexID"
@@ -110,11 +110,11 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                             <FormControlLabel value="Other" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Other" sx={{ color: '#e5e7eb', margin: 0 }} />
                         </RadioGroup>
                     </div>
-                    {error?.sexID && <span className="gender-error-text">{error.sexID}</span>}
+                    {error?.sexID && <p className="gender-error-text inline">{error.sexID}</p>}
                 </FormControl>
 
                 <div className="upload-container pb-2 flex flex-col items-center">
-                    <span className="upload-title mb-3">Author Photo</span>
+                    <p className="upload-title mb-3 inline">Author Photo</p>
                     
                     <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-4 w-full max-w-[200px] border border-white/10 mx-auto">
                         <button type="button" onClick={() => setUploadMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${uploadMode === 'file' ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-[0_0_12px_rgba(34,211,238,0.4)]' : 'text-gray-400 hover:text-white'}`}>
@@ -137,7 +137,7 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                                     <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
                                     <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-1" />
-                                        <span className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider">Upload</span>
+                                        <p className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider inline">Upload</p>
                                     </div>
                                 </Button>
                             </div>
@@ -165,8 +165,8 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <span className="animate-pulse">Syncing Data...</span>
-                            <span>{progress}%</span>
+                            <p className="animate-pulse inline">Syncing Data...</p>
+                            <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
                             <div 

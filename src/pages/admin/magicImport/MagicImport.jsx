@@ -455,14 +455,14 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         className="flex hover:scale-105 cursor-pointer items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
                     >
                         <FaEraser className="text-sm" />
-                        <span className="text-xs font-bold  uppercase tracking-wider hidden sm:block">Clear</span>
+                        <p className="text-xs font-bold  uppercase tracking-wider hidden sm:block inline">Clear</p>
                     </button>
 
                     {/* AI PROMPT GENERATOR */}
                     <div className='flex items-center gap-2 bg-slate-900/40 p-2 rounded-xl border border-pink-500/30 shadow-[0_0_15px_rgba(219,39,119,0.15)]'>
                         <div className='flex items-center gap-2 px-2 border-r border-white/10'>
                             <FaRobot className="text-pink-400 text-xl" />
-                            <span className="text-xs font-bold text-pink-300 uppercase tracking-wider hidden xl:block">AI Prompt</span>
+                            <p className="text-xs font-bold text-pink-300 uppercase tracking-wider hidden xl:block inline">AI Prompt</p>
                         </div>
                         <input
                             type="number"
@@ -559,11 +559,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         <div>
                             <h2 className={`font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between transition-colors
                                 ${mode === 'IMPORT' ? 'text-cyan-400' : 'text-fuchsia-400'}`}>
-                                <span>Preview Table ({mode === 'UPDATE' ? 'Update Mode' : 'Import Mode'})</span>
-                                <span className={`px-3 py-1 rounded-full text-xs border transition-colors
-                                    ${mode === 'IMPORT' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' : 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30'}`}>
+                                <p className="inline">Preview Table ({mode === 'UPDATE' ? 'Update Mode' : 'Import Mode'})</p>
+                                <p className={`px-3 py-1 rounded-full text-xs border transition-colors
+                                    ${mode === 'IMPORT' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' : 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30'} inline`}>
                                     {previewData.length} items
-                                </span>
+                                </p>
                             </h2>
                             
                             <div className='border border-white/10 rounded-xl bg-black/20 relative overflow-hidden h-105'>
@@ -624,7 +624,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                                             
                                                             <td className='p-3 text-center align-middle font-bold text-cyan-300 min-w-45'>
                                                                 <div className="flex flex-col gap-1">
-                                                                    <span>{row.name}</span>
+                                                                    <p className="inline">{row.name}</p>
                                                                     {mode === 'UPDATE' && (
                                                                         <select
                                                                             value={row.matchedMovieId || ""}
@@ -668,34 +668,34 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                                             <td className='p-3 text-center align-middle text-pink-300 truncate max-w-20' title={row.charGender}>{row.charGender}</td>
                                                             <td className='p-3 text-center align-middle'>
                                                                 <div className="flex flex-col gap-1 items-center">
-                                                                    <span className="text-yellow-400 font-bold">{row.releaseYear}</span>
-                                                                    <span className="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold">{row.ageRating}</span>
-                                                                    <span className="bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold">{row.rawPlan || "Free"}</span>
+                                                                    <p className="text-yellow-400 font-bold inline">{row.releaseYear}</p>
+                                                                    <p className="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.ageRating}</p>
+                                                                    <p className="bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.rawPlan || "Free"}</p>
                                                                 </div>
                                                             </td>
                                                             <td className='p-3 text-center align-middle font-mono'>{row.duration}m</td>
                                                             <td className='p-3 text-center align-middle font-mono text-green-400'>{row.rent.toLocaleString()}</td>
-                                                            <td className='p-3 text-center align-middle'><span className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-1 rounded text-[11px] font-bold">{row.countriesID}</span></td>
+                                                            <td className='p-3 text-center align-middle'><p className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-1 rounded text-[11px] font-bold inline">{row.countriesID}</p></td>
                                                             <td className='p-3 text-center align-middle'>
                                                                 <div className="flex flex-col gap-1 items-center bg-purple-500/10 border border-purple-500/20 p-1.5 rounded-lg">
-                                                                    <span className="text-purple-300 font-bold text-[13px]">Total: {row.endEpisode}</span>
-                                                                    <span className="text-[10px] text-purple-400">S:{row.episodeSub} | D:{row.episodeDub}</span>
+                                                                    <p className="text-purple-300 font-bold text-[13px] inline">Total: {row.endEpisode}</p>
+                                                                    <p className="text-[10px] text-purple-400 inline">S:{row.episodeSub} | D:{row.episodeDub}</p>
                                                                 </div>
                                                             </td>
                                                             <td className='p-3 text-center align-middle'>
                                                                 <div className="flex flex-col gap-1 items-center">
-                                                                    {row.epNumber ? <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold">Ep: {row.epNumber}</span> : <span className="text-gray-500 text-[10px]">-</span>}
-                                                                    {row.epUrl ? <span className="text-blue-400 text-[10px] truncate w-16" title={row.epUrl}>URL OK</span> : <span className="text-gray-500 text-[10px]">-</span>}
+                                                                    {row.epNumber ? <p className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">Ep: {row.epNumber}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                    {row.epUrl ? <p className="text-blue-400 text-[10px] truncate w-16 inline" title={row.epUrl}>URL OK</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
                                                                 </div>
                                                             </td>
                                                             <td className='p-3 text-center align-middle'>
                                                                 <div className="flex flex-col gap-1 items-center">
-                                                                    {row.roomName ? <span className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded text-[10px] font-bold">{row.roomName}</span> : <span className="text-gray-500 text-[10px]">-</span>}
-                                                                    {row.rawShowtimes ? <span className="text-cyan-200 text-[10px] truncate w-16" title={row.rawShowtimes}>{row.rawShowtimes}</span> : <span className="text-gray-500 text-[10px]">-</span>}
+                                                                    {row.roomName ? <p className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">{row.roomName}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                    {row.rawShowtimes ? <p className="text-cyan-200 text-[10px] truncate w-16 inline" title={row.rawShowtimes}>{row.rawShowtimes}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
                                                                 </div>
                                                             </td>
                                                             <td className='p-3 text-center align-middle'>
-                                                                <span className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)}`}>{row.status}</span>
+                                                                <p className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)} inline`}>{row.status}</p>
                                                             </td>
                                                     </tr>
                                                     );
@@ -716,8 +716,8 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             {loading && (
                                 <div className="mb-4">
                                     <div className="flex justify-between text-xs font-bold text-cyan-400 mb-1.5 uppercase tracking-wider">
-                                        <span className="animate-pulse">Syncing Cloud Database...</span>
-                                        <span>{visualProgress}%</span>
+                                        <p className="animate-pulse inline">Syncing Cloud Database...</p>
+                                        <p className="inline">{visualProgress}%</p>
                                     </div>
                                     <div className="w-full bg-black/40 rounded-full h-3.5 overflow-hidden p-0.5 border border-white/10 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
                                         <div 

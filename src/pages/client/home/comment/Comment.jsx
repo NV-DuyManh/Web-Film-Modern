@@ -21,7 +21,7 @@ function Comment() {
                         <div className="flex flex-col gap-5">
                             {movies.slice(0, 3).map((e, index) => (
                                 <div key={e.id || index} className="flex items-center gap-3 group cursor-pointer">
-                                    <span className="w-5 text-gray-500 font-bold text-sm shrink-0">{index + 1}</span>
+                                    <p className="w-5 text-gray-500 font-bold text-sm shrink-0 inline">{index + 1}</p>
                                     <FaArrowTrendUp className="w-4 text-green-500 text-sm shrink-0" />
                                     <img src={e.imgUrl} className="w-9 h-12 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
                                     <h4 className="text-[13px] text-gray-200 line-clamp-2 leading-snug group-hover:text-yellow-400 transition-colors">
@@ -43,7 +43,7 @@ function Comment() {
                         <div className="flex flex-col gap-5">
                             {movies.slice(0, 3).map((e, index) => (
                                 <div key={e.id || index} className="flex items-center gap-3 group cursor-pointer">
-                                    <span className="w-5 text-gray-500 font-bold text-sm shrink-0">{index + 1}</span>
+                                    <p className="w-5 text-gray-500 font-bold text-sm shrink-0 inline">{index + 1}</p>
                                     <FaMinus className="w-4 text-yellow-500 text-sm shrink-0" />                                    <img src={e.imgUrl} className="w-9 h-12 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
                                     <h4 className="text-[13px] text-gray-200 line-clamp-2 leading-snug group-hover:text-yellow-400 transition-colors">
                                         {e.name}
@@ -65,22 +65,22 @@ function Comment() {
                                 <img src={Coder} className="w-10 h-10 rounded-full shrink-0 border border-gray-700 object-cover" />
                                 <div className="flex flex-col gap-1 w-full">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[13px] font-bold text-gray-200 group-hover:text-yellow-400 transition-colors">Hoài Nam</span>
-                                        <span className="text-[11px] text-gray-500">1 giờ trước</span>
+                                        <p className="text-[13px] font-bold text-gray-200 group-hover:text-yellow-400 transition-colors inline">Hoài Nam</p>
+                                        <p className="text-[11px] text-gray-500 inline">1 giờ trước</p>
                                     </div>
                                     <p className="text-[13px] text-gray-400 line-clamp-2 leading-snug">Phim hay xuất sắc</p>
-                                    <span className="text-[11px] text-yellow-500/80 line-clamp-1 mt-0.5">» Demon Slayer: Kimetsu no Yaiba</span>
+                                    <p className="text-[11px] text-yellow-500/80 line-clamp-1 mt-0.5 inline">» Demon Slayer: Kimetsu no Yaiba</p>
                                 </div>
                             </div>
                             <div className="flex gap-3 group cursor-pointer">
                                 <img src={Coder} className="w-10 h-10 rounded-full shrink-0 border border-gray-700 object-cover" />
                                 <div className="flex flex-col gap-1 w-full">
                                     <div className="flex items-center justify-between">
-                                        <span className="text-[13px] font-bold text-gray-200 group-hover:text-yellow-400 transition-colors">Hoài Nam</span>
-                                        <span className="text-[11px] text-gray-500">1 giờ trước</span>
+                                        <p className="text-[13px] font-bold text-gray-200 group-hover:text-yellow-400 transition-colors inline">Hoài Nam</p>
+                                        <p className="text-[11px] text-gray-500 inline">1 giờ trước</p>
                                     </div>
                                     <p className="text-[13px] text-gray-400 line-clamp-2 leading-snug">Phim hay xuất sắc</p>
-                                    <span className="text-[11px] text-yellow-500/80 line-clamp-1 mt-0.5">» Demon Slayer: Kimetsu no Yaiba</span>
+                                    <p className="text-[11px] text-yellow-500/80 line-clamp-1 mt-0.5 inline">» Demon Slayer: Kimetsu no Yaiba</p>
                                 </div>
                             </div>
                             <button className="mt-6 text-[13px] text-white flex justify-start transition-colors font-medium">Xem thêm</button>

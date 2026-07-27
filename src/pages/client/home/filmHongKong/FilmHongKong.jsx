@@ -59,12 +59,12 @@ export default function FilmHongKong() {
                                         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
                                         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
-                                            <span className="bg-slate-700/80 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-l border-r border-white/20">
+                                            <p className="bg-slate-700/80 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-l border-r border-white/20 inline">
                                                 {e.countriesID}
-                                            </span>
-                                            <span className="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-r">
+                                            </p>
+                                            <p className="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-r inline">
                                                 LT. {e.endEpisode}
-                                            </span>
+                                            </p>
                                         </div>
                                     </div>
 

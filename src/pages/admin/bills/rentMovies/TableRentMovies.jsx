@@ -139,9 +139,9 @@ function TableRentMovies({ handleClickOpen, setRentMovie, rentMovie, search }) {
                                         ${row.price}
                                     </td>
                                     <td className="table-cell">
-                                        <span className={`px-2 py-1 rounded text-xs font-bold ${row.status === "success" ? "bg-emerald-500/20 text-emerald-400" : row.status === "pending" ? "bg-amber-500/20 text-amber-400" : "bg-rose-500/20 text-rose-400"}`}>
+                                        <p className={`px-2 py-1 rounded text-xs font-bold ${row.status === "success" ? "bg-emerald-500/20 text-emerald-400" : row.status === "pending" ? "bg-amber-500/20 text-amber-400" : "bg-rose-500/20 text-rose-400"} inline`}>
                                             {row.status?.toUpperCase()}
-                                        </span>
+                                        </p>
                                     </td>
                                     <td className="table-cell text-gray-400 text-xs">
                                         {row.createdAt ? new Date(row.createdAt).toLocaleDateString("vi-VN") : ""}

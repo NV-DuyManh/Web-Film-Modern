@@ -65,9 +65,9 @@ export default function NoelBackground() {
 
             {/* Tuyết rơi */}
             {snows.map(snow => (
-                <span
+                <p
                     key={snow.id}
-                    className="snow"
+                    className="snow inline"
                     style={{
                         left: `${snow.left}%`,
                         width: snow.size,
@@ -251,8 +251,8 @@ export default function NoelBackground() {
 //             ))}
 
 //             {snows.map(s => (
-//                 <span key={s.id}
-//                     className="snow"
+//                 <p key={s.id}
+//                     className="snow inline"
 //                     style={{
 //                         left: s.x,
 //                         top: s.y,
@@ -265,8 +265,8 @@ export default function NoelBackground() {
 
 
 //             {sparkles.map(sp => (
-//                 <span key={sp.id}
-//                     className="sparkle"
+//                 <p key={sp.id}
+//                     className="sparkle inline"
 //                     style={{
 //                         top: `${sp.top}%`,
 //                         left: `${sp.left}%`,

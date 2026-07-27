@@ -148,26 +148,26 @@ function LoadingScreen({ onFinished }) {
             {/* Brand text - typewriter effect */}
             <div className={`loading-brand ${brandReady ? 'revealed' : ''}`}>
                 {brandText.split('').map((char, i) => (
-                    <span
+                    <p
                         key={i}
-                        className="loading-brand-char"
+                        className="loading-brand-char inline"
                         style={{ animationDelay: `${i * 0.07}s` }}
                     >
                         {char}
-                    </span>
+                    </p>
                 ))}
             </div>
 
             {/* Tagline - stagger fade */}
             <div className={`loading-tagline ${brandReady ? 'revealed' : ''}`}>
                 {tagline.split('').map((char, i) => (
-                    <span
+                    <p
                         key={i}
-                        className="loading-tagline-char"
+                        className="loading-tagline-char inline"
                         style={{ animationDelay: `${0.45 + i * 0.02}s` }}
                     >
                         {char === ' ' ? '\u00A0' : char}
-                    </span>
+                    </p>
                 ))}
             </div>
 

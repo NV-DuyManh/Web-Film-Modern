@@ -119,20 +119,20 @@ export default function DetailFilm() {
                         </div>
 
                         <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 text-[10px] font-bold">
-                            <span className="px-1.5 py-0.5 border border-yellow-500 text-yellow-500 rounded">{getObjectById(plans, movie.planID)?.name}</span>
-                            <span className="px-1.5 py-0.5 bg-white text-black rounded">Vietsub</span>
-                            <span className="px-1.5 py-0.5 border border-slate-600 text-slate-300 rounded">{movie.year || '2024'}</span>
-                            <span className="px-1.5 py-0.5 border border-slate-600 text-slate-300 rounded">{movie.endEpisode || 0} Tập</span>
+                            <p className="px-1.5 py-0.5 border border-yellow-500 text-yellow-500 rounded inline">{getObjectById(plans, movie.planID)?.name}</p>
+                            <p className="px-1.5 py-0.5 bg-white text-black rounded inline">Vietsub</p>
+                            <p className="px-1.5 py-0.5 border border-slate-600 text-slate-300 rounded inline">{movie.year || '2024'}</p>
+                            <p className="px-1.5 py-0.5 border border-slate-600 text-slate-300 rounded inline">{movie.endEpisode || 0} Tập</p>
                         </div>
 
                         <div className="text-[13px] space-y-2 mt-2">
                             <p className="text-slate-400 leading-relaxed text-justify">
-                                <span className="font-bold text-white block mb-1">Giới thiệu:</span>
+                                <p className="font-bold text-white block mb-1 inline">Giới thiệu:</p>
                                 {movie.description || 'Đang cập nhật nội dung giới thiệu cho bộ phim này...'}
                             </p>
-                            <p className="text-slate-400"><span className="font-bold text-white">Thời lượng:</span> {movie.time || 'Đang cập nhật'}</p>
-                            <p className="text-slate-400"><span className="font-bold text-white">Quốc gia:</span> <span className="text-slate-300 hover:text-white cursor-pointer">{movie.countriesID}</span></p>
-                            <p className="text-slate-400"><span className="font-bold text-white">Đạo diễn:</span> <span className="text-slate-300 hover:text-white cursor-pointer">{movie.list_Author?.length > 0 ? movie.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</span></p>
+                            <p className="text-slate-400"><p className="font-bold text-white inline">Thời lượng:</p> {movie.time || 'Đang cập nhật'}</p>
+                            <p className="text-slate-400"><p className="font-bold text-white inline">Quốc gia:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</p></p>
+                            <p className="text-slate-400"><p className="font-bold text-white inline">Đạo diễn:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{movie.list_Author?.length > 0 ? movie.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</p></p>
                         </div>
 
                         <div className="mt-4">
@@ -213,15 +213,15 @@ export default function DetailFilm() {
 
                                     <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
                                         <FaHeart className="text-xl" />
-                                        <span className="text-[10px] font-bold uppercase">Yêu thích</span>
+                                        <p className="text-[10px] font-bold uppercase inline">Yêu thích</p>
                                     </button>
                                     <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
                                         <FaPlus className="text-xl" />
-                                        <span className="text-[10px] font-bold uppercase">Thêm vào</span>
+                                        <p className="text-[10px] font-bold uppercase inline">Thêm vào</p>
                                     </button>
                                     <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
                                         <FaShare className="text-xl" />
-                                        <span className="text-[10px] font-bold uppercase">Chia sẻ</span>
+                                        <p className="text-[10px] font-bold uppercase inline">Chia sẻ</p>
                                     </button>
                                 </div>
                                 <button className="flex items-center gap-2 px-5 py-2 bg-blue-600/30 text-blue-400 rounded-full text-[13px] font-bold transition-colors hover:bg-blue-600/50">
@@ -367,11 +367,11 @@ export default function DetailFilm() {
                                         <div className="bg-[#6366f1] rounded flex items-center justify-center p-1.5 shadow">
                                             <FaComment className="text-white text-[12px]" />
                                         </div>
-                                        <span className="font-bold text-white text-[15px]">Vietsub #1</span>
+                                        <p className="font-bold text-white text-[15px] inline">Vietsub #1</p>
                                     </div>
 
                                     <div className="mt-1 mb-1">
-                                        <span className="font-black text-white text-xl">1</span>
+                                        <p className="font-black text-white text-xl inline">1</p>
                                     </div>
 
                                     <button className="bg-white hover:bg-slate-100 text-black px-4 py-2 mt-1 rounded-md font-bold text-[13px] w-fit shadow-md transition-colors">

@@ -147,13 +147,13 @@ export default function PlayFilm({ handleOpenLogin }) {
                             <FaChevronLeft className="pr-0.5 text-sm" />
                         </button>
                         <h1 className="text-lg sm:text-xl font-bold text-white flex flex-wrap items-center gap-2">
-                            <span>Xem phim <span className="text-yellow-400">{movie?.name}</span></span>
+                            <p className="inline">Xem phim <p className="text-yellow-400 inline">{movie?.name}</p></p>
                             {playEpisodes?.numberEpisode && (
                                 <>
-                                    <span className="text-slate-500">•</span>
-                                    <span className="px-2.5 py-0.5 bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 rounded-lg text-xs sm:text-sm font-extrabold shadow-sm">
+                                    <p className="text-slate-500 inline">•</p>
+                                    <p className="px-2.5 py-0.5 bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 rounded-lg text-xs sm:text-sm font-extrabold shadow-sm inline">
                                         Tập {playEpisodes.numberEpisode}
-                                    </span>
+                                    </p>
                                 </>
                             )}
                         </h1>
@@ -163,7 +163,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                     {resumeData && (
                         <div className="flex items-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-lg shadow-[0_0_15px_rgba(245,158,11,0.4)]">
                             <FaHistory className="text-sm" />
-                            <span>Lần trước bạn xem đến tập {resumeData.latestEpisodeNumber} ({timeAgo(resumeData.updatedAt)})</span>
+                            <p className="inline">Lần trước bạn xem đến tập {resumeData.latestEpisodeNumber} ({timeAgo(resumeData.updatedAt)})</p>
                         </div>
                     )}
                 </div>
@@ -233,7 +233,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                         {/* Server & Audio Control Bar */}
                         <div className="mt-6 p-4 bg-[#14192b] rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1">Bản chiếu:</span>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 inline">Bản chiếu:</p>
                                 <button onClick={() => setActiveAudio('vietsub')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer border ${activeAudio === 'vietsub' ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46]'}`}>
                                     <FaClosedCaptioning className="text-sm" /> Vietsub
                                 </button>
@@ -242,7 +242,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                                 </button>
                             </div>
                             <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1">Server:</span>
+                                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 inline">Server:</p>
                                 <button className="px-4 py-1.5 rounded-lg bg-yellow-400 text-black text-xs font-extrabold shadow-sm hover:bg-yellow-500 transition-all cursor-pointer">SVR 1</button>
                                 <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition-all cursor-pointer">SVR 2</button>
                                 <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition-all cursor-pointer">SVR 3</button>
@@ -267,9 +267,9 @@ export default function PlayFilm({ handleOpenLogin }) {
                                         <h3 className="text-[15px] font-bold text-gray-200 line-clamp-2 group-hover:text-yellow-400 transition-colors leading-snug">{e.name}</h3>
                                         <p className="text-xs text-amber-300 line-clamp-1 mt-1">{getObjectById(plans, e.planID)?.name}</p>
                                         <div className="flex items-center gap-2 mt-2">
-                                            <span className="text-[11px] text-gray-400">{e.countriesID}</span>
-                                            <span className="w-1 h-1 rounded-full bg-gray-600"></span>
-                                            <span className="text-[11px] text-gray-400">{e.duration} phút</span>
+                                            <p className="text-[11px] text-gray-400 inline">{e.countriesID}</p>
+                                            <p className="w-1 h-1 rounded-full bg-gray-600 inline"></p>
+                                            <p className="text-[11px] text-gray-400 inline">{e.duration} phút</p>
                                         </div>
                                     </div>
                                 </div>

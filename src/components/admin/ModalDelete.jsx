@@ -59,9 +59,9 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
                     <div className="p-2 bg-red-500/20 rounded-full border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.4)]">
                         <FiAlertTriangle size={22} className="text-red-400" />
                     </div>
-                    <span className="glow-text-danger font-black text-xl md:text-2xl tracking-widest uppercase">
+                    <p className="glow-text-danger font-black text-xl md:text-2xl tracking-widest uppercase inline">
                         {titleDelete}
-                    </span>
+                    </p>
                 </div>
                 <button
                     onClick={!isDeleting ? handleClose : undefined}
@@ -86,8 +86,8 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
                 {isDeleting ? (
                     <div className="w-full bg-slate-900/80 p-4 rounded-xl border border-red-500/50 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] mt-2 mb-2">
                         <div className="flex justify-between text-xs font-bold text-red-400 mb-2 uppercase tracking-wider drop-shadow-[0_0_5px_rgba(239,68,68,0.8)]">
-                            <span className="animate-pulse">Deleting Data...</span>
-                            <span>{progress}%</span>
+                            <p className="animate-pulse inline">Deleting Data...</p>
+                            <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/80 rounded-full h-3 overflow-hidden p-[2px] border border-red-500/20">
                             <div
