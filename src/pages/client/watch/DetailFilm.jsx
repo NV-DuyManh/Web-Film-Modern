@@ -47,7 +47,7 @@ export default function DetailFilm() {
             const resolved = charList.map(c => typeof c === 'string' ? getObjectById(characters, c) : c).filter(Boolean);
             if (resolved.length > 0) return resolved;
         }
-        return characters?.slice(0, 8) || [];
+        return [];
     }, [movie, characters]);
 
     const recommendedMovies = useMemo(() => {
@@ -132,17 +132,25 @@ export default function DetailFilm() {
                         </div>
 
                         <div className="mt-4">
-                            <h3 className="text-base font-bold text-white mb-3">Diễn viên</h3>
+                            <h3 className="text-base font-bold text-white mb-3">Nhân vật</h3>
                             <div className="flex flex-wrap gap-4">
-                                {(movie.character || movie.characters || characters.slice(0, 3)).map((charIdOrObj, idx) => {
+                                {(movie.character || movie.characters || movie.list_character || movie.list_Character || []).map((charIdOrObj, idx) => {
                                     const character = typeof charIdOrObj === 'string' ? getObjectById(characters, charIdOrObj) : charIdOrObj;
                                     if (!character) return null;
                                     return (
-                                        <div key={idx} className="flex flex-col items-center gap-1.5 w-14 cursor-pointer group">
-                                            <div className="w-12 h-12 rounded-full overflow-hidden border border-slate-600 group-hover:border-white transition-colors">
-                                                <img src={character.imgUrl || character.img || 'https://via.placeholder.com/150'} alt={character.name} className="w-full h-full object-cover" />
+                                        <div key={idx} className="relative flex flex-col items-center gap-1.5 w-14 cursor-pointer group">
+                                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-600 group-hover:border-yellow-400 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.5)] transition-all duration-300 transform group-hover:scale-110 z-10">
+                                                <img src={character.imgUrl} alt={character.name} className="w-full h-full object-cover" />
                                             </div>
-                                            <p className="text-[10px] text-center text-slate-300 truncate w-full group-hover:text-white">{character.name}</p>
+                                            <p className="text-[10px] text-center text-slate-300 truncate w-full transition-opacity duration-300">{character.name}</p>
+                                            
+                                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-1 transition-all duration-300 z-50 pointer-events-none whitespace-nowrap">
+                                                <div className="bg-[#0f1322]/90 backdrop-blur-md text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
+                                                    {character.name}
+                                                </div>
+                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
+                                                <div className="absolute -bottom-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[4px] border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
+                                            </div>
                                         </div>
                                     );
                                 })}
@@ -157,13 +165,13 @@ export default function DetailFilm() {
                                 {topMovies.map((m, index) => (
                                     <div key={index} onClick={() => navigate(`/detaifilm/${m.id}`)} className="flex items-center gap-3 group cursor-pointer">
                                         <div
-                                            className={`text-3xl sm:text-4xl font-black italic w-10 shrink-0 text-center transition-colors ${index === 0
-                                                    ? "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.6)]"
+                                            className={`text-3xl sm:text-4xl font-black italic w-10 shrink-0 text-center transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ${index === 0
+                                                    ? "text-red-600"
                                                     : index === 1
-                                                        ? "text-slate-200 drop-shadow-[0_0_8px_rgba(226,232,240,0.5)]"
+                                                        ? "text-orange-500"
                                                         : index === 2
-                                                            ? "text-amber-500 drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]"
-                                                            : "text-slate-400 group-hover:text-cyan-400"
+                                                            ? "text-yellow-400"
+                                                            : "text-pink-500"
                                                 }`}
                                         >
                                             {index + 1}
@@ -171,9 +179,16 @@ export default function DetailFilm() {
                                         <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 border border-slate-700/60">
                                             <img src={m.imgUrl} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                         </div>
-                                        <div className="flex flex-col min-w-0">
+                                        <div className="flex flex-col min-w-0 relative">
                                             <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.name}</h4>
                                             <p className="text-[11px] text-slate-400 mt-0.5">{m.year || 2024} • {m.endEpisode} Tập</p>
+                                            
+                                            {/* Premium Tooltip */}
+                                            <div className="absolute top-0 left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-[110%] transition-all duration-300 z-50 pointer-events-none whitespace-nowrap">
+                                                <div className="bg-[#0f1322]/95 backdrop-blur-md text-yellow-400 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
+                                                    {m.name}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 ))}
@@ -288,7 +303,7 @@ export default function DetailFilm() {
                                                 {/* Vertical Portrait Card */}
                                                 <div className="relative w-full aspect-3/4 rounded-2xl overflow-hidden border border-slate-800 shadow-lg group-hover:border-yellow-400 group-hover:shadow-[0_8px_25px_rgba(250,204,21,0.25)] group-hover:-translate-y-1 transition-all duration-300">
                                                     <img
-                                                        src={char.imgUrl || char.img || 'https://via.placeholder.com/200x300'}
+                                                        src={char.imgUrl}
                                                         alt={char.name}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                                     />

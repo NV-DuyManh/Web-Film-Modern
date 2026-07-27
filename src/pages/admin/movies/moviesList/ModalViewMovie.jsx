@@ -184,7 +184,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                     {/* ═══ HERO BANNER SECTION ═══ */}
                     <div className="relative w-full h-[220px] overflow-hidden rounded-t-[22px]">
                         <img
-                            src={movie.bannerUrl || movie.imgUrl || Logo5}
+                            src={movie.bannerUrl || movie.imgUrl}
                             alt="banner"
                             className="w-full h-full object-cover"
                             style={{ filter: 'brightness(0.4) saturate(1.3)' }}
@@ -210,7 +210,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                                     </div>
                                 )}
                                 <img
-                                    src={movie.imgUrl || Logo5}
+                                    src={movie.imgUrl}
                                     alt={movie.name}
                                     className="w-[170px] aspect-[2/3] object-cover rounded-2xl border-2 border-white/20 shadow-2xl"
                                 />

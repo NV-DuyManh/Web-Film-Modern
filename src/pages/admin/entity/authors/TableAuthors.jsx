@@ -114,7 +114,7 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                                         <div className="flex justify-center items-center py-2">
                                             <div className="group relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-white/10 cursor-pointer">
                                                 <img 
-                                                    src={row.imgUrl || LOGO} 
+                                                    src={row.imgUrl} 
                                                     alt={row.name} 
                                                     className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110 group-hover:opacity-80" 
                                                 />

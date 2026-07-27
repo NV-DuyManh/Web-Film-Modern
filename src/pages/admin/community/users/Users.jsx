@@ -82,8 +82,8 @@ function Users() {
                 submitData.imgUrl = submitData.avatarUrl;
             }
 
-            if (submitData.imgUrl === LOGO || submitData.imgUrl?.includes("Logo.png")) {
-                submitData.imgUrl = await getBase64FromUrl(LOGO);
+            if (!submitData.imgUrl || submitData.imgUrl === LOGO || submitData.imgUrl?.includes("Logo.png")) {
+                submitData.imgUrl = "";
             }
 
             setProgress(75);

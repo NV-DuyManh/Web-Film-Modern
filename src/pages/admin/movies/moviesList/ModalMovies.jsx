@@ -305,7 +305,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 const author = authorsList?.find(e => e.id === item);
                                 return author ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.8)] transition-all duration-300' src={author.imgUrl || Logo5} alt={author.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.8)] transition-all duration-300' src={author.imgUrl} alt={author.name} />
                                         <FaTimesCircle onClick={() => handleRemoveItem("authors", item)} className="absolute top-0 right-0 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
                                         <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-yellow-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
                                             {author.name}
@@ -324,7 +324,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 const actor = actors?.find(e => e.id === item);
                                 return actor ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(236,72,153,0.8)] transition-all duration-300' src={actor.imgUrl || Logo5} alt={actor.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(236,72,153,0.8)] transition-all duration-300' src={actor.imgUrl} alt={actor.name} />
                                         <FaTimesCircle onClick={() => handleRemoveItem("actors", item)} className="absolute top-0 right-0 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
                                         <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-pink-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
                                             {actor.name}
@@ -343,7 +343,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 const character = characters?.find(e => e.id === item);
                                 return character ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.8)] transition-all duration-300' src={character.imgUrl || Logo5} alt={character.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.8)] transition-all duration-300' src={character.imgUrl} alt={character.name} />
                                         <FaTimesCircle onClick={() => handleRemoveItem("characters", item)} className="absolute top-0 right-0 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
                                         <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
                                             {character.name}
@@ -389,7 +389,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                             InputProps={{ style: { fontSize: 11 } }}
                                         />
                                         <div className="w-full aspect-2/3 rounded-xl overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
-                                            <img src={movie.imgUrl || Logo5} className="w-full h-full object-cover" alt="Poster Preview" onError={(e) => e.target.src = Logo5} />
+                                            <img src={movie.imgUrl} className="w-full h-full object-cover" alt="Poster Preview" onError={(e) => e.target.src = Logo5} />
                                         </div>
                                     </div>
                                 )}

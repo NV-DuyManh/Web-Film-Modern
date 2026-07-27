@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Home from '../pages/client/home/Home';
-import Topic from '../pages/client/topic/Topic';
-import Category from '../pages/client/category/Category';
-import SingleMovies from '../pages/client/singleMovies/SingleMovies';
-import Series from '../pages/client/series/Series';
-import Country from '../pages/client/country/Country';
-import Actors from '../pages/client/actors/Actors';
-import Showtimes from '../pages/client/showtimes/Showtimes';
-import PlayFilm from '../pages/client/watch/PlayFilm';
-import DetailFilm from '../pages/client/watch/DetailFilm';
+
+const Home = lazy(() => import('../pages/client/home/Home'));
+const Topic = lazy(() => import('../pages/client/topic/Topic'));
+const Category = lazy(() => import('../pages/client/category/Category'));
+const SingleMovies = lazy(() => import('../pages/client/singleMovies/SingleMovies'));
+const Series = lazy(() => import('../pages/client/series/Series'));
+const Country = lazy(() => import('../pages/client/country/Country'));
+const Actors = lazy(() => import('../pages/client/actors/Actors'));
+const Showtimes = lazy(() => import('../pages/client/showtimes/Showtimes'));
+const PlayFilm = lazy(() => import('../pages/client/watch/PlayFilm'));
+const DetailFilm = lazy(() => import('../pages/client/watch/DetailFilm'));
+
+const LoadingFallback = () => (
+    <div className="flex justify-center items-center h-[60vh] w-full bg-[#111827]">
+        <div className="relative w-16 h-16">
+            <div className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-[#facc15] border-r-[#facc15] rounded-full animate-spin drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
+            <div className="absolute top-2 left-2 w-12 h-12 border-4 border-transparent border-l-red-500 border-b-red-500 rounded-full animate-[spin_1.5s_linear_infinite_reverse] drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
+        </div>
+    </div>
+);
 function ClientRouters(props) {
     const clientRouter = [
         {
@@ -42,16 +52,18 @@ function ClientRouters(props) {
         },
         {
             path: "/detaifilm/:id",
-            element: <DetailFilm/>
+            element: <DetailFilm />
         },
     ]
     return (
         <div>
-            <Routes>
-                {clientRouter.map((p, index) => (
-                    <Route key={index} path={p.path} element={p.element} />
-                ))}
-            </Routes>
+            <Suspense fallback={<LoadingFallback />}>
+                <Routes>
+                    {clientRouter.map((p, index) => (
+                        <Route key={index} path={p.path} element={p.element} />
+                    ))}
+                </Routes>
+            </Suspense>
         </div>
     );
 }
