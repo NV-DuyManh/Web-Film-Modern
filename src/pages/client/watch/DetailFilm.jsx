@@ -19,6 +19,10 @@ export default function DetailFilm() {
     const episodes = useContext(EpisodeContext);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [id]);
+
     const movie = useMemo(() => {
         let found = getObjectById(movies, id);
         if (!found) {
@@ -143,7 +147,7 @@ export default function DetailFilm() {
                                                 <img src={character.imgUrl} alt={character.name} className="w-full h-full object-cover" />
                                             </div>
                                             <p className="text-[10px] text-center text-slate-300 truncate w-full transition-opacity duration-300">{character.name}</p>
-                                            
+
                                             <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-1 transition-all duration-300 z-50 pointer-events-none whitespace-nowrap">
                                                 <div className="bg-[#0f1322]/90 backdrop-blur-md text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
                                                     {character.name}
@@ -163,15 +167,15 @@ export default function DetailFilm() {
                             </h3>
                             <div className="flex flex-col gap-4">
                                 {topMovies.map((m, index) => (
-                                    <div key={index} onClick={() => navigate(`/detaifilm/${m.id}`)} className="flex items-center gap-3 group cursor-pointer">
+                                    <div key={index} onClick={() => navigate(`/detailFilm/${m.id}`)} className="flex items-center gap-3 group cursor-pointer">
                                         <div
                                             className={`text-3xl sm:text-4xl font-black italic w-10 shrink-0 text-center transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ${index === 0
-                                                    ? "text-red-600"
-                                                    : index === 1
-                                                        ? "text-orange-500"
-                                                        : index === 2
-                                                            ? "text-yellow-400"
-                                                            : "text-pink-500"
+                                                ? "text-red-600"
+                                                : index === 1
+                                                    ? "text-orange-500"
+                                                    : index === 2
+                                                        ? "text-yellow-400"
+                                                        : "text-pink-500"
                                                 }`}
                                         >
                                             {index + 1}
@@ -182,8 +186,7 @@ export default function DetailFilm() {
                                         <div className="flex flex-col min-w-0 relative">
                                             <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.name}</h4>
                                             <p className="text-[11px] text-slate-400 mt-0.5">{m.year || 2024} • {m.endEpisode} Tập</p>
-                                            
-                                            {/* Premium Tooltip */}
+
                                             <div className="absolute top-0 left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-[110%] transition-all duration-300 z-50 pointer-events-none whitespace-nowrap">
                                                 <div className="bg-[#0f1322]/95 backdrop-blur-md text-yellow-400 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
                                                     {m.name}
@@ -226,13 +229,12 @@ export default function DetailFilm() {
                                 </button>
                             </div>
 
-                            {/* Tabs Navigation */}
                             <div className="flex items-center gap-6 md:gap-8 border-b border-slate-700/60 pb-1">
                                 <button
                                     onClick={() => setActiveTab('episodes')}
                                     className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'episodes'
-                                            ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
-                                            : "text-slate-400 hover:text-white"
+                                        ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+                                        : "text-slate-400 hover:text-white"
                                         }`}
                                 >
                                     Tập phim
@@ -241,8 +243,8 @@ export default function DetailFilm() {
                                 <button
                                     onClick={() => setActiveTab('gallery')}
                                     className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'gallery'
-                                            ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
-                                            : "text-slate-400 hover:text-white"
+                                        ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+                                        : "text-slate-400 hover:text-white"
                                         }`}
                                 >
                                     Gallery
@@ -251,8 +253,8 @@ export default function DetailFilm() {
                                 <button
                                     onClick={() => setActiveTab('actors')}
                                     className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'actors'
-                                            ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
-                                            : "text-slate-400 hover:text-white"
+                                        ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+                                        : "text-slate-400 hover:text-white"
                                         }`}
                                 >
                                     Diễn viên
@@ -261,15 +263,14 @@ export default function DetailFilm() {
                                 <button
                                     onClick={() => setActiveTab('recommend')}
                                     className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'recommend'
-                                            ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
-                                            : "text-slate-400 hover:text-white"
+                                        ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
+                                        : "text-slate-400 hover:text-white"
                                         }`}
                                 >
                                     Đề xuất
                                 </button>
                             </div>
 
-                            {/* Tab Contents */}
                             {activeTab === 'episodes' && (
                                 <ListEpisodes handleClickEpisodes={handleClickEpisodes} episodeShow={episodeShow} />
                             )}
@@ -300,14 +301,12 @@ export default function DetailFilm() {
                                     {movieCharacters.length > 0 ? (
                                         movieCharacters.map((char, idx) => (
                                             <div key={idx} className="flex flex-col items-center group cursor-pointer">
-                                                {/* Vertical Portrait Card */}
                                                 <div className="relative w-full aspect-3/4 rounded-2xl overflow-hidden border border-slate-800 shadow-lg group-hover:border-yellow-400 group-hover:shadow-[0_8px_25px_rgba(250,204,21,0.25)] group-hover:-translate-y-1 transition-all duration-300">
                                                     <img
                                                         src={char.imgUrl}
                                                         alt={char.name}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                                     />
-                                                    {/* Bottom Dark Gradient Overlay */}
                                                     <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-3 text-center">
                                                         <h4 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors truncate">
                                                             {char.name}
@@ -315,7 +314,6 @@ export default function DetailFilm() {
                                                     </div>
                                                 </div>
 
-                                                {/* Subtitle / Role below card (only rendered if role exists) */}
                                                 {char.role && (
                                                     <p className="text-xs font-semibold text-rose-300 text-center mt-2 truncate w-full">
                                                         {char.role}
@@ -335,7 +333,7 @@ export default function DetailFilm() {
                                     {recommendedMovies.map((m, idx) => (
                                         <div
                                             key={idx}
-                                            onClick={() => navigate(`/detaifilm/${m.id}`)}
+                                            onClick={() => navigate(`/detailFilm/${m.id}`)}
                                             className="group flex flex-col rounded-2xl overflow-hidden bg-[#141a2e]/80 border border-slate-800/80 hover:border-yellow-400/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer shadow-md"
                                         >
                                             <div className="aspect-2/3 w-full overflow-hidden">

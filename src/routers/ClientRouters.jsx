@@ -11,6 +11,10 @@ const Actors = lazy(() => import('../pages/client/actors/Actors'));
 const Showtimes = lazy(() => import('../pages/client/showtimes/Showtimes'));
 const PlayFilm = lazy(() => import('../pages/client/watch/PlayFilm'));
 const DetailFilm = lazy(() => import('../pages/client/watch/DetailFilm'));
+const Pay = lazy(() => import('../pages/client/pay/Pay'));
+const UpgradeVIP = lazy(() => import('../pages/client/pay/UpgradeVIP'));
+const PayVIP = lazy(() => import('../pages/client/pay/PayVIP'));
+const PayMovie = lazy(() => import('../pages/client/pay/PayMovie'));
 
 const LoadingFallback = () => (
     <div className="flex justify-center items-center h-[60vh] w-full bg-[#111827]">
@@ -51,8 +55,24 @@ function ClientRouters(props) {
             element: <PlayFilm />
         },
         {
-            path: "/detaifilm/:id",
+            path: "/detailFilm/:id",
             element: <DetailFilm />
+        },
+        {
+            path: "/pay",
+            element: <Pay />
+        },
+        {
+            path: "/upgrade",
+            element: <UpgradeVIP />
+        },
+        {
+            path: "/payVip",
+            element: <PayVIP />
+        },
+        {
+            path: "/payMovie/:id",
+            element: <PayMovie />
         },
     ]
     return (

@@ -140,7 +140,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={() => navigate(`/detaifilm/${movieId}`)}
+                            onClick={() => navigate(`/detailFilm/${movieId}`)}
                             className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800/60 text-slate-300 hover:border-yellow-400 hover:text-yellow-400 hover:bg-yellow-400/10 transition-all cursor-pointer shadow-sm"
                             title="Quay lại chi tiết phim"
                         >
@@ -217,7 +217,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                             </div>
                             <div className="md:w-2/3 text-sm text-gray-400 leading-relaxed">
                                 <p>{movie.description || 'Đang cập nhật nội dung giới thiệu cho bộ phim này...'}</p>
-                                <button onClick={() => navigate(`/detaifilm/${movie.id}`)} className="text-yellow-500 mt-2 font-medium hover:underline">Thông tin phim &gt;</button>
+                                <button onClick={() => navigate(`/detailFilm/${movie.id}`)} className="text-yellow-500 mt-2 font-medium hover:underline">Thông tin phim &gt;</button>
                             </div>
                         </div>
 
@@ -259,7 +259,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                         <h2 className="text-xl font-bold text-white mb-6">Đề xuất cho bạn</h2>
                         <div className="flex flex-col gap-4">
                             {movies.slice(0, 5).map((e) => (
-                                <div key={e.id} onClick={() => navigate(`/detaifilm/${e.id}`)} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
+                                <div key={e.id} onClick={() => navigate(`/detailFilm/${e.id}`)} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
                                     <div className="w-18 h-26.25 shrink-0 overflow-hidden rounded-md border border-gray-800 group-hover:border-gray-600">
                                         <img src={e.imgUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                     </div>

@@ -30,7 +30,7 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
             setTimeout(() => {
                 setIsDeleting(false);
                 setProgress(0);
-            }, 600); // Give time for 100% animation to show
+            }, 600);
         }
     };
 

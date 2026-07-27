@@ -46,38 +46,38 @@ export default function FilmHongKong() {
                 >
                     {movies?.map((e) => (
                         <SwiperSlide key={e.id}>
-                            <Link to={`/detaifilm/${e.id}`}>
-                            <div className="group cursor-pointer flex flex-col h-full">
+                            <Link to={`/detailFilm/${e.id}`}>
+                                <div className="group cursor-pointer flex flex-col h-full">
 
-                                <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                    <img
-                                        src={e.imgUrl}
-                                        alt={e.name}
-                                        className="w-full h-full object-cover"
-                                        draggable="false"
-                                    />
-                                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
+                                    <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                        <img
+                                            src={e.imgUrl}
+                                            alt={e.name}
+                                            className="w-full h-full object-cover"
+                                            draggable="false"
+                                        />
+                                        <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
-                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
-                                        <span className="bg-slate-700/80 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-l border-r border-white/20">
-                                            {e.countriesID}
-                                        </span>
-                                        <span className="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-r">
-                                            LT. {e.endEpisode}
-                                        </span>
+                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
+                                            <span className="bg-slate-700/80 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-l border-r border-white/20">
+                                                {e.countriesID}
+                                            </span>
+                                            <span className="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-r">
+                                                LT. {e.endEpisode}
+                                            </span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="pt-3 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
-                                    <h3 className="text-white font-bold text-sm md:text-base truncate w-full transition-colors group-hover:text-[#facc15]">
-                                        {e.name}
-                                    </h3>
-                                    <p className="text-slate-400 text-[10px] md:text-xs truncate w-full mt-0.5">
-                                        {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}
-                                    </p>
-                                </div>
+                                    <div className="pt-3 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
+                                        <h3 className="text-white font-bold text-sm md:text-base truncate w-full transition-colors group-hover:text-[#facc15]">
+                                            {e.name}
+                                        </h3>
+                                        <p className="text-slate-400 text-[10px] md:text-xs truncate w-full mt-0.5">
+                                            {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}
+                                        </p>
+                                    </div>
 
-                            </div>
+                                </div>
                             </Link>
                         </SwiperSlide>
                     ))}

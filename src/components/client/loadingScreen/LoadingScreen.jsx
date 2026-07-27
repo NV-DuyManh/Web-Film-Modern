@@ -63,9 +63,9 @@ function LoadingScreen({ onFinished }) {
                 const hideTimer = setTimeout(() => {
                     setHidden(true);
                     if (onFinished) onFinished();
-                }, 500);
+                }, 400);
                 return () => clearTimeout(hideTimer);
-            }, 500);
+            }, 100);
             return () => clearTimeout(timer);
         } else {
             const interval = setInterval(() => {

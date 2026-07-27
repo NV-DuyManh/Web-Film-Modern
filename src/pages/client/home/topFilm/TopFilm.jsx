@@ -57,7 +57,7 @@ export default function TopFilm() {
                 >
                     {topMovies.map((e, index) => (
                         <SwiperSlide key={e.id}>
-                            <Link to={`/detaifilm/${e.id}`}>
+                            <Link to={`/detailFilm/${e.id}`}>
                                 <div className="group cursor-pointer flex flex-col h-full">
 
                                     <div

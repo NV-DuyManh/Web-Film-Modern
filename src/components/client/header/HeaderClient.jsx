@@ -79,8 +79,7 @@ function HeaderClient() {
 
                 <div className="relative min-w-0 flex-1 min-[1150px]:max-w-75 xl:max-w-95">
                     <input
-                        className="peer w-full min-w-0 rounded-full border-[1.5px] border-white/40 bg-black/20 backdrop-blur-xl shadow-[0_4px_15px_rgba(0,0,0,0.3)] px-5 py-2.5 pr-12 text-sm font-semibold text-white outline-none transition-all duration-300 placeholder:text-white/80 placeholder:font-medium hover:border-white/70 hover:bg-black/30 focus:border-cyan-400 focus:bg-[#0f172a]/90 focus:shadow-[0_0_20px_rgba(34,211,238,0.5)] sm:px-5 sm:py-2.5 sm:pr-12"
-                        style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+                        className="peer w-full min-w-0 rounded-full border border-white/20 bg-slate-800/40 backdrop-blur-md px-5 py-2.5 pr-12 text-sm font-medium text-white outline-none transition-all duration-300 placeholder:text-slate-300 hover:border-white/40 hover:bg-slate-800/60 focus:border-cyan-400 focus:bg-slate-900/80 focus:shadow-[0_0_15px_rgba(34,211,238,0.3)] sm:px-5 sm:py-2.5 sm:pr-12"
                         type="text" placeholder="Tìm kiếm phim..." onFocus={() => setIsSearching(true)} onBlur={() => setIsSearching(false)}
                     />
                     <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-cyan-400 peer-focus:drop-shadow-[0_0_12px_rgba(34,211,238,1)]" />
@@ -109,9 +108,9 @@ function HeaderClient() {
                                     setOpenCountry(false);
                                 }
                             }}
-                            className={` relative  cursor-pointer flex items-center rounded-full max-[1149px]:w-full max-[1149px]:justify-center px-3 py-2 text-sm font-semibold transition-all duration-300 xl:px-4 ${location.pathname === item.path
+                            className={` relative  cursor-pointer flex items-center rounded-full max-[1149px]:w-full max-[1149px]:justify-center px-3 py-2 text-sm font-bold transition-all duration-300 xl:px-4 ${location.pathname === item.path
                                 ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.5)]"
-                                : "text-gray-200 hover:bg-white/10 hover:text-yellow-400"
+                                : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:bg-white/10 hover:text-yellow-400"
                                 }`}>
                             {item.title} {item.path == "/category" || item.path == "/country" ? <IoMdArrowDropdown /> : ""}
 

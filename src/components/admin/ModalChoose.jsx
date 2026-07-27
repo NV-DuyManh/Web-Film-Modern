@@ -1,4 +1,3 @@
-// src/components/admin/ModalChoose.jsx
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -16,7 +15,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataChoose, type, selectedItems = [] }) {
     const [searchTerm, setSearchTerm] = React.useState('');
 
-    // Reset search term when modal opens
     React.useEffect(() => {
         if (openChoose) {
             setSearchTerm('');

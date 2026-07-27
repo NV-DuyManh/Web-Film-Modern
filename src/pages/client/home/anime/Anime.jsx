@@ -40,110 +40,110 @@ export default function Anime() {
             </div>
 
             <div className='anime-slide-outer'>
-            <div className='anime-slide-wrapper'>
-                <Swiper
-                    onSwiper={setMainSwiper}
-                    style={{
-                        '--swiper-navigation-color': '#fff',
-                        '--swiper-pagination-color': '#fff',
-                    }}
-                    spaceBetween={0}
-                    onSlideChange={(swiper) => {
-                        setActiveIndex(swiper.realIndex);
-                        if (thumbsSwiper && !thumbsSwiper.destroyed) {
-                            thumbsSwiper.slideToLoop(swiper.realIndex);
-                        }
-                    }}
-                    navigation={false}
-                    loop={movies?.length >= 7}
-                    loopedSlides={movies?.length || 10}
-                    effect={'fade'}
-                    fadeEffect={{ crossFade: true }}
-                    thumbs={{
-                        swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
-                    }}
-                    modules={[FreeMode, Navigation, Thumbs, EffectFade]}
-                    className="anime-main-swiper"
-                >
-                    {movies?.map((e) => (
-                        <SwiperSlide key={e.id}>
-                            <img
-                                className="anime-main-img"
-                                src={e.bannerUrl}
-                                alt={e.name}
-                                draggable="false"
-                            />
+                <div className='anime-slide-wrapper'>
+                    <Swiper
+                        onSwiper={setMainSwiper}
+                        style={{
+                            '--swiper-navigation-color': '#fff',
+                            '--swiper-pagination-color': '#fff',
+                        }}
+                        spaceBetween={0}
+                        onSlideChange={(swiper) => {
+                            setActiveIndex(swiper.realIndex);
+                            if (thumbsSwiper && !thumbsSwiper.destroyed) {
+                                thumbsSwiper.slideToLoop(swiper.realIndex);
+                            }
+                        }}
+                        navigation={false}
+                        loop={movies?.length >= 7}
+                        loopedSlides={movies?.length || 10}
+                        effect={'fade'}
+                        fadeEffect={{ crossFade: true }}
+                        thumbs={{
+                            swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
+                        }}
+                        modules={[FreeMode, Navigation, Thumbs, EffectFade]}
+                        className="anime-main-swiper"
+                    >
+                        {movies?.map((e) => (
+                            <SwiperSlide key={e.id}>
+                                <img
+                                    className="anime-main-img"
+                                    src={e.bannerUrl}
+                                    alt={e.name}
+                                    draggable="false"
+                                />
 
-                            <div className="anime-overlay"></div>
+                                <div className="anime-overlay"></div>
 
-                            <div className='anime-info-box'>
-                                <h1 className='text-center lg:text-left text-xl sm:text-2xl lg:text-3xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
-                                    {e.name}
-                                </h1>
+                                <div className='anime-info-box'>
+                                    <h1 className='text-center lg:text-left text-xl sm:text-2xl lg:text-3xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
+                                        {e.name}
+                                    </h1>
 
-                                <h2 className='mt-1 lg:mt-1.5 text-center lg:text-left text-xs sm:text-sm font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
-                                    {getObjectById(categoryTypes, e.category_Type_Id)?.name || "Series Movie"}
-                                </h2>
+                                    <h2 className='mt-1 lg:mt-1.5 text-center lg:text-left text-xs sm:text-sm font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
+                                        {getObjectById(categoryTypes, e.category_Type_Id)?.name || "Series Movie"}
+                                    </h2>
 
-                                <div className='mt-2 sm:mt-3 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
-                                    <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
-                                        {getObjectById(plans, e.planID)?.name || "Premium"}
-                                    </button>
-
-                                    <button className='rounded-md border cursor-pointer border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
-                                        {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, e.author)?.name || "Đang cập nhật")}
-                                    </button>
-
-                                    <button className='rounded-md border cursor-pointer border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
-                                        {e.endEpisode} Tập
-                                    </button>
-
-                                    <button className='rounded-md border cursor-pointer border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition-all duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
-                                        {e.duration} Phút
-                                    </button>
-                                </div>
-
-                                <div className='flex mt-1.5 lg:mt-2 flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
-                                    {e.list_Category?.map((categoryId) => {
-                                        const categoryName = getObjectById(categories, categoryId)?.name;
-                                        if (!categoryName) return null;
-                                        return (
-                                            <h5
-                                                key={categoryId}
-                                                className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-purple-500/60 bg-purple-600/50 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-purple-400 hover:bg-purple-500 hover:text-white hover:shadow-[0_0_16px_rgba(168,85,247,0.8)]'
-                                            >
-                                                {categoryName}
-                                            </h5>
-                                        );
-                                    })}
-                                </div>
-
-                                <p className='hidden lg:block mt-2 lg:mt-2 max-w-130 text-left text-xs lg:text-sm leading-5 lg:leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-2'>
-                                    {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
-                                </p>
-
-                                <div className='mt-3 sm:mt-4 lg:mt-3 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
-                                    <button onClick={() => navigate(`/play/${e.id}`)} className='group flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-[#f6d878] text-lg sm:text-xl text-black shadow-[0_0_24px_rgba(246,216,120,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[#ffe28a] hover:shadow-[0_0_32px_rgba(246,216,120,0.55)] active:scale-95'>
-                                        <FaPlay className='ml-1 transition-transform duration-300 group-hover:scale-110' />
-                                    </button>
-
-                                    <div className='flex h-9 sm:h-11 lg:h-12 overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-[inset_0_0_22px_rgba(255,255,255,0.04)]'>
-                                        <button className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
-                                            <FaHeart className='transition-all duration-300 group-hover:scale-110 group-hover:text-pink-300' />
+                                    <div className='mt-2 sm:mt-3 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
+                                        <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
+                                            {getObjectById(plans, e.planID)?.name || "Premium"}
                                         </button>
 
-                                        <div className='h-full w-px bg-white/10'></div>
+                                        <button className='rounded-md border cursor-pointer border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
+                                            {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, e.author)?.name || "Đang cập nhật")}
+                                        </button>
 
-                                        <button onClick={() => navigate(`/detaifilm/${e.id}`)} className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
-                                            <FaInfoCircle className='transition-all duration-300 group-hover:scale-110 group-hover:text-yellow-200' />
+                                        <button className='rounded-md border cursor-pointer border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
+                                            {e.endEpisode} Tập
+                                        </button>
+
+                                        <button className='rounded-md border cursor-pointer border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition-all duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
+                                            {e.duration} Phút
                                         </button>
                                     </div>
+
+                                    <div className='flex mt-1.5 lg:mt-2 flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
+                                        {e.list_Category?.map((categoryId) => {
+                                            const categoryName = getObjectById(categories, categoryId)?.name;
+                                            if (!categoryName) return null;
+                                            return (
+                                                <h5
+                                                    key={categoryId}
+                                                    className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-purple-500/60 bg-purple-600/50 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-purple-400 hover:bg-purple-500 hover:text-white hover:shadow-[0_0_16px_rgba(168,85,247,0.8)]'
+                                                >
+                                                    {categoryName}
+                                                </h5>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <p className='hidden lg:block mt-2 lg:mt-2 max-w-130 text-left text-xs lg:text-sm leading-5 lg:leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-2'>
+                                        {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
+                                    </p>
+
+                                    <div className='mt-3 sm:mt-4 lg:mt-3 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
+                                        <button onClick={() => navigate(`/play/${e.id}`)} className='group flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-[#f6d878] text-lg sm:text-xl text-black shadow-[0_0_24px_rgba(246,216,120,0.35)] transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:bg-[#ffe28a] hover:shadow-[0_0_32px_rgba(246,216,120,0.55)] active:scale-95'>
+                                            <FaPlay className='ml-1 transition-transform duration-300 group-hover:scale-110' />
+                                        </button>
+
+                                        <div className='flex h-9 sm:h-11 lg:h-12 overflow-hidden rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-[inset_0_0_22px_rgba(255,255,255,0.04)]'>
+                                            <button className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
+                                                <FaHeart className='transition-all duration-300 group-hover:scale-110 group-hover:text-pink-300' />
+                                            </button>
+
+                                            <div className='h-full w-px bg-white/10'></div>
+
+                                            <button onClick={() => navigate(`/detailFilm/${e.id}`)} className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-white transition-all duration-300 hover:bg-white/12 active:scale-95'>
+                                                <FaInfoCircle className='transition-all duration-300 group-hover:scale-110 group-hover:text-yellow-200' />
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
-            </div>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
 
                 <div className='anime-thumb-wrapper'>
                     <Swiper

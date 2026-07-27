@@ -11,6 +11,9 @@ import Anime from './anime/Anime';
 import Comment from './comment/Comment';
 import DetailFilm from '../watch/DetailFilm';
 import Pay from '../pay/Pay';
+import UpgradeVIP from '../pay/UpgradeVIP';
+import PayVIP from '../pay/PayVIP';
+import PayMovie from '../pay/PayMovie';
 function Home(props) {
     return (
         <div>
@@ -33,6 +36,9 @@ function Home(props) {
             <Anime />
             <FilmHongKong />
             <Pay />
+            <UpgradeVIP />
+            <PayVIP />
+            <PayMovie />
         </div>
     );
 }
