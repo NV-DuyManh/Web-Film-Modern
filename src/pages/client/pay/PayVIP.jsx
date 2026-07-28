@@ -3,10 +3,11 @@ import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { PackageContext } from '../../../contexts/PackageProvider';
 import { FaCreditCard } from 'react-icons/fa';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 function PayVIP(props) {
     const { isLogin } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const planId = searchParams.get('id');
     const plans = useContext(PlanContext) || [];
@@ -41,7 +42,7 @@ function PayVIP(props) {
     }, [durations, selectedDuration]);
 
     const calculatePrice = (months, discount) => {
-        const originalPrice = packageInfo.basePrice;
+        const originalPrice = packageInfo.basePrice * months;
         const discountedPrice = originalPrice * (1 - discount / 100);
         return {
             original: originalPrice.toLocaleString('vi-VN'),
@@ -85,6 +86,7 @@ function PayVIP(props) {
                                 return (
                                     <label 
                                         key={dur.id} 
+                                        onClick={() => setSelectedDuration(dur.id)}
                                         className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer border-2 transition-all duration-300 ${
                                             isSelected 
                                             ? 'border-cyan-400 bg-cyan-400/10 shadow-[0_0_15px_rgba(34,211,238,0.15)] scale-[1.02]' 
@@ -116,7 +118,7 @@ function PayVIP(props) {
 
                         <div className="flex justify-between items-end mb-6 border-b border-slate-700/50 pb-2">
                             <h2 className="text-lg font-black text-white tracking-wide">THÔNG TIN THANH TOÁN</h2>
-                            <button className="text-cyan-400 text-sm font-semibold hover:underline">Thay đổi gói</button>
+                            <button onClick={() => navigate('/upgrade')} className="text-cyan-400 text-sm font-semibold hover:underline">Thay đổi gói</button>
                         </div>
 
                         <div className="flex items-start gap-5 bg-slate-800/60 p-5 rounded-2xl border border-white/5">

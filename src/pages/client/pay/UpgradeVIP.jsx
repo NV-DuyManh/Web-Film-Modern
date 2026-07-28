@@ -19,9 +19,7 @@ function UpgradeVIP(props) {
     
     const displayPlans = sortedPlans.map((plan, index) => {
         const theme = themeNames[index] || themeNames[themeNames.length - 1];
-        const planFeatures = features
-            .filter(f => f.planID === plan.id && f.available)
-            .map(f => f.description);
+        const planFeatures = features.filter(f => f.planID === plan.id && f.available).map(f => f.description);
 
         return {
             ...plan,
@@ -53,7 +51,7 @@ function UpgradeVIP(props) {
                 <div className="flex flex-col items-center mb-12">
                     <div className="flex items-center gap-4 bg-slate-800/80 backdrop-blur-md py-3 px-6 rounded-full border border-slate-600 shadow-lg">
                         <img 
-                            src={isLogin?.imgUrl || Logo5} 
+                            src={isLogin?.imgUrl} 
                             alt="Avatar" 
                             className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-[0_0_10px_rgba(255,255,255,0.2)]"
                         />
@@ -63,9 +61,9 @@ function UpgradeVIP(props) {
                                 <FaCrown className="text-slate-400" />
                             </div>
                             <div className="flex items-center gap-4 text-xs mt-0.5">
-                                <p className="text-slate-400 inline">Gói hiện tại: <p className="text-white font-semibold inline">Miễn phí</p></p>
+                                <div className="text-slate-400 inline">Gói hiện tại: <p className="text-white font-semibold inline">Miễn phí</p></div>
                                 <div className="w-1 h-1 bg-slate-500 rounded-full"></div>
-                                <p className="text-slate-400 inline">Số dư: <p className="text-yellow-400 font-bold inline">0₫</p></p>
+                                <div className="text-slate-400 inline">Số dư: <p className="text-yellow-400 font-bold inline">0₫</p></div>
                             </div>
                         </div>
                     </div>
@@ -101,7 +99,7 @@ function UpgradeVIP(props) {
                                 )}
                                 
                                 {plan.best && (
-                                    <div className="absolute top-0 right-0 bg-yellow-500 text-black text-[10px] font-black px-3 py-1 rounded-bl-xl rounded-tr-2xl shadow-lg">
+                                    <div className="absolute top-0 right-0 bg-yellow-500 text-black text-[9px] font-black px-3 py-1 rounded-bl-xl rounded-tr-2xl shadow-lg">
                                         PHỔ BIẾN
                                     </div>
                                 )}
@@ -120,9 +118,9 @@ function UpgradeVIP(props) {
                                 </div>
                                 
                                 <div className="mb-6 relative z-10 border-b border-slate-700/50 pb-4">
-                                    <p className={`text-3xl font-black ${isSelected ? 'text-white' : 'text-slate-300'} inline`}>
+                                    <div className={`text-3xl font-black ${isSelected ? 'text-white' : 'text-slate-300'} inline`}>
                                         {plan.formattedPrice}<p className="text-xl underline underline-offset-2 ml-0.5 inline">đ</p>
-                                    </p>
+                                    </div>
                                     <p className="text-slate-400 text-xs ml-1 inline">/tháng</p>
                                 </div>
                                 

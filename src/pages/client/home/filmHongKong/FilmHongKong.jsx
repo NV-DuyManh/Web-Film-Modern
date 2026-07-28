@@ -70,10 +70,10 @@ export default function FilmHongKong() {
 
                                     <div className="pt-3 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
                                         <h3 className="text-white font-bold text-sm md:text-base truncate w-full transition-colors group-hover:text-[#facc15]">
-                                            {e.name}
+                                            {e.otherName}
                                         </h3>
                                         <p className="text-slate-400 text-[10px] md:text-xs truncate w-full mt-0.5">
-                                            {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}
+                                            {e.name}
                                         </p>
                                     </div>
 

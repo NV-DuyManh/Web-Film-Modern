@@ -8,7 +8,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, error, loading, progress, episode, setEpisode }) {
+export default function ModalEpisodes({ 
+    open, onChangeInput, handleClose, addEpisode, addBulkEpisodes, 
+    error, loading, progress, episode, setEpisode,
+    isBulkMode, setIsBulkMode, bulkText, setBulkText 
+}) {
     const movies = useContext(MovieContext);
 
     const handleNumberChange = (e) => {
@@ -28,10 +32,30 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
             maxWidth="sm"
             fullWidth
         >
-            <DialogTitle className="modal-header-x flex justify-between items-center">
-                <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
-                    {episode.id  ? "Update Episode" : "Add New Episode"}
-                </p>
+            <DialogTitle className="modal-header-x flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div className="flex items-center gap-4">
+                    <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
+                        {episode.id  ? "Update Episode" : "Add New Episode"}
+                    </p>
+                    
+                    {!episode.id && (
+                        <div className="flex bg-slate-800/50 p-1 rounded-lg border border-white/10">
+                            <button
+                                onClick={() => setIsBulkMode(false)}
+                                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${!isBulkMode ? 'bg-cyan-500 text-black shadow-[0_0_10px_rgba(34,211,238,0.5)]' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                Single
+                            </button>
+                            <button
+                                onClick={() => setIsBulkMode(true)}
+                                className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${isBulkMode ? 'bg-cyan-500 text-black shadow-[0_0_10px_rgba(34,211,238,0.5)]' : 'text-slate-400 hover:text-white'}`}
+                            >
+                                Bulk Add
+                            </button>
+                        </div>
+                    )}
+                </div>
+
                 <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
@@ -40,7 +64,7 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
                 </button>
             </DialogTitle>
 
-            <DialogContent className="modal-body-x">
+            <DialogContent className="modal-body-x space-y-4">
                 <Autocomplete
                     options={movies || []}
                     getOptionLabel={(opt) => opt?.name || ""}
@@ -57,29 +81,44 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
                         />
                     )}
                 />
-                <TextField
-                    className="modal-input-x"
-                    name="numberEpisode"
-                    onChange={handleNumberChange}
-                    fullWidth
-                    label="Episode Number"
-                    variant="outlined"
-                    value={episode.numberEpisode}
-                    helperText={error.numberEpisode}
-                    error={!!error.numberEpisode}
-                />
+                
+                {isBulkMode && !episode.id ? (
+                    <div className="space-y-2 mt-4">
+                        <label className="text-sm font-bold text-slate-300">Dán danh sách tập phim (Format: Tập 01|URL)</label>
+                        <textarea
+                            value={bulkText}
+                            onChange={(e) => setBulkText(e.target.value)}
+                            className="w-full h-40 bg-slate-900/50 border border-white/10 rounded-xl p-4 text-slate-300 text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-mono resize-none"
+                            placeholder={"Tập 01|https://player.phimapi.com/player/?url=https://s2.phim1280.tv/20240301/v7zHGDA1/index.m3u8\nTập 02|https://player.phimapi.com/player/?url=https://s2.phim1280.tv/20240301/6SHJeWr1/index.m3u8"}
+                        />
+                    </div>
+                ) : (
+                    <>
+                        <TextField
+                            className="modal-input-x mt-4"
+                            name="numberEpisode"
+                            onChange={handleNumberChange}
+                            fullWidth
+                            label="Episode Number"
+                            variant="outlined"
+                            value={episode.numberEpisode}
+                            helperText={error.numberEpisode}
+                            error={!!error.numberEpisode}
+                        />
 
-                <TextField
-                    className="modal-input-x"
-                    name="url"
-                    onChange={onChangeInput}
-                    fullWidth
-                    label="Url"
-                    variant="outlined"
-                    value={episode.url}
-                    helperText={error.url}
-                    error={!!error.url}
-                />
+                        <TextField
+                            className="modal-input-x mt-4"
+                            name="url"
+                            onChange={onChangeInput}
+                            fullWidth
+                            label="Url"
+                            variant="outlined"
+                            value={episode.url}
+                            helperText={error.url}
+                            error={!!error.url}
+                        />
+                    </>
+                )}
             </DialogContent>
 
             <DialogActions className="modal-actions-x p-6 w-full flex flex-col">
@@ -99,8 +138,8 @@ export default function ModalEpisodes({ open, onChangeInput, handleClose, addEpi
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
                         <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
-                        <Button disabled={loading} onClick={addEpisode} className="btn-submit-x">
-                            {episode.id ? "Save Changes" : "Add Episode"}
+                        <Button disabled={loading} onClick={isBulkMode && !episode.id ? addBulkEpisodes : addEpisode} className="btn-submit-x">
+                            {episode.id ? "Save Changes" : (isBulkMode ? "Add Bulk Episodes" : "Add Episode")}
                         </Button>
                     </div>
                 )}

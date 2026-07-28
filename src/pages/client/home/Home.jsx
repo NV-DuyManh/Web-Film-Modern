@@ -25,7 +25,7 @@ function Home(props) {
             <div className="rounded-xl bg-[#182233] py-2 overflow-hidden divide-y divide-white/5">
                 <FilmCountry title={<>Phim Nhật <br className="hidden md:block"/>Bản mới</>} countryName="Japan" titleClass="glow-text-1" />
                 <FilmCountry title={<>Phim Trung <br className="hidden md:block"/>Quốc mới</>} countryName="China" titleClass="glow-text-2" />
-                <FilmCountry title={<>Phim Hàn <br className="hidden md:block"/>Quốc mới</>} countryName="Korea" titleClass="glow-text-3" />
+                <FilmCountry title={<>Phim Hàn <br className="hidden md:block"/>Quốc mới</>} countryName="South Korea" titleClass="glow-text-3" />
             </div>
             </div>
             </div>
@@ -35,10 +35,6 @@ function Home(props) {
             <FilmComing />
             <Anime />
             <FilmHongKong />
-            <Pay />
-            <UpgradeVIP />
-            <PayVIP />
-            <PayMovie />
         </div>
     );
 }

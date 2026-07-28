@@ -1,18 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
+import { useParams } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
+import { MovieContext } from '../../../contexts/MovieProvider';
+import { getObjectById } from '../../../services/firebaseReponse';
 import { FaCreditCard } from 'react-icons/fa';
 
 function PayMovie(props) {
     const { isLogin } = useContext(AuthContext);
-    
-    const movieData = {
-        name: 'Gặp Lại Chị Bầu',
-        resolution: 'HD',
-        duration: '120 phút',
-        price: '20.000 VNĐ',
-        discount: '0đ',
-        total: '20.000 VNĐ',
-    };
+    const { id } = useParams();
+    const movies = useContext(MovieContext) || [];
+
+    const movie = useMemo(() => getObjectById(movies, id), [movies, id]);
+
+    const rentPrice = Number(movie?.rent) || 0;
+    const formattedPrice = rentPrice.toLocaleString('vi-VN');
 
     return (
         <div className="min-h-screen bg-[#0f1322] pt-28 pb-20 px-4">
@@ -35,13 +36,18 @@ function PayMovie(props) {
                         
                         <div className="flex flex-col sm:flex-row gap-6 mb-8">
                             <div className="w-full sm:w-1/3 aspect-[3/4] sm:aspect-[3/4] rounded-xl overflow-hidden shrink-0 border-2 border-slate-700 shadow-[0_0_20px_rgba(0,0,0,0.5)] relative group">
-                                <div className="absolute inset-0 bg-gradient-to-br from-rose-900 to-slate-900 group-hover:scale-105 transition-transform duration-500"></div>
-                                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-black/40">
-                                    <div className="font-black text-white text-xl uppercase text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-tight">
-                                        {movieData.name}
-                                    </div>
-                                    <div className="text-rose-400 text-xs font-bold mt-2 uppercase tracking-widest border border-rose-500/50 px-2 py-1 rounded bg-black/50 backdrop-blur-sm">Poster</div>
-                                </div>
+                                {movie?.imgUrl ? (
+                                    <img src={movie.imgUrl} alt={movie.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                ) : (
+                                    <>
+                                        <div className="absolute inset-0 bg-gradient-to-br from-rose-900 to-slate-900 group-hover:scale-105 transition-transform duration-500"></div>
+                                        <div className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-black/40">
+                                            <div className="font-black text-white text-xl uppercase text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-tight">
+                                                {movie?.name || 'Phim'}
+                                            </div>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                             
                             <div className="flex-1 space-y-4">
@@ -51,30 +57,30 @@ function PayMovie(props) {
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
                                     <p className="text-slate-300 font-medium inline">Phim:</p>
-                                    <p className="text-rose-400 font-black inline">{movieData.name}</p>
+                                    <p className="text-rose-400 font-black inline">{movie?.name || 'Đang tải...'}</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
-                                    <p className="text-slate-300 font-medium inline">Độ phân giải:</p>
-                                    <p className="text-white font-bold bg-white/10 px-2 py-0.5 rounded inline">{movieData.resolution}</p>
+                                    <p className="text-slate-300 font-medium inline">Thời lượng:</p>
+                                    <p className="text-white font-bold inline">{movie?.duration ? `${movie.duration} phút` : 'Đang cập nhật'}</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
-                                    <p className="text-slate-300 font-medium inline">Thời hạn:</p>
-                                    <p className="text-white font-bold inline">{movieData.duration}</p>
+                                    <p className="text-slate-300 font-medium inline">Số tập:</p>
+                                    <p className="text-white font-bold inline">{movie?.endEpisode || 0} tập</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
                                     <p className="text-slate-300 font-medium inline">Đơn giá:</p>
-                                    <p className="text-white font-bold inline">{movieData.price}</p>
+                                    <p className="text-white font-bold inline">{formattedPrice}đ</p>
                                 </div>
                                 <div className="flex justify-between text-sm">
-                                    <p className="text-slate-300 font-medium inline">Khuyến mãi:</p>
-                                    <p className="text-green-400 font-bold inline">-{movieData.discount}</p>
+                                    <p className="text-slate-300 font-medium inline">Thời hạn thuê:</p>
+                                    <p className="text-white font-bold inline">48 giờ</p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="border-t border-slate-700 pt-6 flex justify-between items-center mb-6">
                             <p className="text-white font-black text-lg uppercase tracking-wide inline">Tổng cộng</p>
-                            <p className="text-rose-400 font-black text-2xl drop-shadow-[0_0_10px_rgba(244,63,94,0.3)] inline">{movieData.total}</p>
+                            <p className="text-rose-400 font-black text-2xl drop-shadow-[0_0_10px_rgba(244,63,94,0.3)] inline">{formattedPrice}đ</p>
                         </div>
 
                         <p className="text-slate-400 text-xs mb-6">

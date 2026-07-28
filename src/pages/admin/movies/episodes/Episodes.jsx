@@ -3,15 +3,21 @@ import Search from '../../../../components/admin/search/Search';
 import ModalEpisodes from './ModalEpisodes';
 import TableEpisodes from './TableEpisodes';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
+import { EpisodeContext } from '../../../../contexts/EpisodeProvider';
+import { useContext } from 'react';
 
 const inner = { numberEpisode: "", movieID: "", url: "" };
 
 function Episodes() {
+    const episodes = useContext(EpisodeContext);
     const [open, setOpen] = useState(false);
     const [episode, setEpisode] = useState(inner);
     const [error, setError] = useState(inner);
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
+
+    const [isBulkMode, setIsBulkMode] = useState(false);
+    const [bulkText, setBulkText] = useState("");
 
     const [search, setSearch] = useState("");
 
@@ -27,6 +33,8 @@ function Episodes() {
 
     const handleClose = () => {
         setOpen(false);
+        setIsBulkMode(false);
+        setBulkText("");
     };
 
     const onChangeInput = (e) => {
@@ -59,8 +67,15 @@ function Episodes() {
             setProgress(50);
 
             if (!episode.id) {
-                submitData.createdAt = new Date().toISOString();
-                await addDocument("Episodes", submitData);
+                const existingEp = episodes?.find(e => e.movieID === submitData.movieID && Number(e.numberEpisode) === Number(submitData.numberEpisode));
+                if (existingEp) {
+                    submitData.id = existingEp.id;
+                    submitData.createdAt = existingEp.createdAt || new Date().toISOString();
+                    await updateDocument("Episodes", submitData);
+                } else {
+                    submitData.createdAt = new Date().toISOString();
+                    await addDocument("Episodes", submitData);
+                }
             } else {
                 await updateDocument("Episodes", submitData);
             }
@@ -79,6 +94,72 @@ function Episodes() {
         }
     }
 
+    const addBulkEpisodes = async () => {
+        if (!episode.movieID) {
+            setError({ ...inner, movieID: "Vui lòng chọn phim trước" });
+            return;
+        }
+        if (!bulkText.trim()) {
+            alert("Vui lòng nhập nội dung!");
+            return;
+        }
+
+        setLoading(true);
+        setProgress(5);
+        
+        try {
+            const lines = bulkText.split('\n').filter(line => line.trim() !== '');
+            const total = lines.length;
+            let count = 0;
+
+            for (let i = 0; i < total; i++) {
+                const line = lines[i];
+                const parts = line.split('|');
+                
+                if (parts.length >= 2) {
+                    const epName = parts[0].trim();
+                    const url = parts.slice(1).join('|').trim();
+                    
+                    const numMatch = epName.match(/\d+/);
+                    const numberEpisode = numMatch ? parseInt(numMatch[0]) : (i + 1);
+
+                    const existingEp = episodes?.find(e => e.movieID === episode.movieID && Number(e.numberEpisode) === Number(numberEpisode));
+
+                    const submitData = {
+                        movieID: episode.movieID,
+                        numberEpisode: numberEpisode,
+                        url: url,
+                        createdAt: existingEp?.createdAt || new Date().toISOString()
+                    };
+
+                    if (existingEp) {
+                        submitData.id = existingEp.id;
+                        await updateDocument("Episodes", submitData);
+                    } else {
+                        await addDocument("Episodes", submitData);
+                    }
+                }
+                
+                count++;
+                setProgress(Math.floor((count / total) * 100));
+            }
+
+            setProgress(100);
+            setTimeout(() => {
+                handleClose();
+                setLoading(false);
+                setProgress(0);
+                setBulkText("");
+            }, 1000);
+            
+        } catch (err) {
+            console.error(err);
+            alert("Có lỗi xảy ra trong quá trình thêm hàng loạt!");
+            setLoading(false);
+            setProgress(0);
+        }
+    }
+
     return (
         <div>
             <Search
@@ -89,6 +170,7 @@ function Episodes() {
             />
             <ModalEpisodes
                 addEpisode={addEpisode}
+                addBulkEpisodes={addBulkEpisodes}
                 onChangeInput={onChangeInput}
                 open={open}
                 handleClose={handleClose}
@@ -97,6 +179,10 @@ function Episodes() {
                 progress={progress}
                 episode={episode}
                 setEpisode={setEpisode}
+                isBulkMode={isBulkMode}
+                setIsBulkMode={setIsBulkMode}
+                bulkText={bulkText}
+                setBulkText={setBulkText}
             />
             <TableEpisodes
                 setEpisode={setEpisode}

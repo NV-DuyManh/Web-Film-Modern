@@ -1,4 +1,4 @@
-// ============================================================================
+﻿// ============================================================================
 // BIẾN (VARIABLES) - Lưu trữ các mã màu dùng chung trong toàn bộ app
 // Giúp thay đổi màu sắc nhanh chóng ở một nơi duy nhất.
 // ============================================================================
@@ -1725,4 +1725,4 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     pointer-events: none !important;
     z-index: -9999 !important;
     transform: scale(0) !important;
-}
+}.movie-nav-btn.swiper-button-lock, .movie-nav-btn.swiper-button-disabled { display: none !important; opacity: 0 !important; visibility: hidden !important; }

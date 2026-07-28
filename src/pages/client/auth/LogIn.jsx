@@ -146,7 +146,7 @@ export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister 
                         </button>
                     </p>
 
-                    <div className="space-y-5">
+                    <div className="space-y-5" onKeyDown={(e) => e.key === 'Enter' && handleLogin()}>
                         <TextField
                             className="modal-input-x" fullWidth variant="outlined" type="email"
                             label="Email" name="email"

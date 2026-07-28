@@ -4,7 +4,7 @@ import { FiSearch } from 'react-icons/fi';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { IoClose } from 'react-icons/io5';
 import { LISTCLIENT } from '../../../utils/Contants';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo2 from '../../../assets/Logo2.png';
 import LogIn from '../../../pages/client/auth/LogIn';
 import Register from '../../../pages/client/auth/Register';
@@ -25,6 +25,7 @@ function HeaderClient() {
     const { isLogin, handleLogout } = useContext(AuthContext);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const navigate = useNavigate();
     const dropdownRef = useRef(null);
     const cateRef = useRef(null);
     const countryRef = useRef(null);
@@ -137,24 +138,19 @@ function HeaderClient() {
                             <>
                                 <button
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className="flex items-center gap-2 cursor-pointer transition-all duration-300 hover:-translate-y-1 group"
+                                    className="flex items-center gap-2 p-1 pr-3 bg-white/5 hover:bg-white/15 border border-white/10 rounded-full cursor-pointer transition-all duration-300 group shadow-[0_4px_12px_rgba(0,0,0,0.5)] hover:shadow-[0_4px_15px_rgba(34,211,238,0.2)]"
                                 >
                                     <div className="relative">
-                                        {isLogin?.imgUrl ? (
-                                            <img
-                                                src={isLogin.imgUrl}
-                                                alt="avatar"
-                                                className="h-10 w-10 rounded-full object-cover ring-2 ring-transparent transition-all duration-300 group-hover:ring-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] shadow-[0_0_10px_rgba(0,0,0,0.5)]"
-                                            />
-                                        ) : (
-                                            <img
-                                                src={Coder}
-                                                alt="avatar"
-                                                className="h-10 w-10 rounded-full object-cover ring-2 ring-transparent transition-all duration-300 group-hover:ring-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] shadow-[0_0_10px_rgba(0,0,0,0.5)]"
-                                            />
-                                        )}
+                                        <img
+                                            src={isLogin?.imgUrl || Coder}
+                                            alt="avatar"
+                                            className="h-9 w-9 rounded-full object-cover ring-2 ring-transparent group-hover:ring-cyan-400/80 transition-all duration-300"
+                                        />
                                     </div>
-                                    <FaChevronDown className={`text-sm text-cyan-400 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`} />
+                                    <p className="text-sm font-bold text-slate-200 group-hover:text-white max-w-[120px] truncate hidden min-[1150px]:block transition-colors">
+                                        {isLogin?.displayName || isLogin?.fullName || 'Người dùng'}
+                                    </p>
+                                    <FaChevronDown className={`text-[10px] text-slate-400 group-hover:text-cyan-400 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`} />
                                 </button>
 
                                 <div className={`absolute right-0 top-full mt-4 w-80 rounded-2xl bg-black/80 border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(34,211,238,0.15)] overflow-hidden transition-all duration-300 origin-top-right ${isDropdownOpen ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
@@ -176,7 +172,7 @@ function HeaderClient() {
 
 
                                     <div className="px-4 py-4 border-b border-slate-700/80">
-                                        <button className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-[14px] font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition-all duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5">
+                                        <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-[14px] font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition-all duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5">
                                             <FaCrown className="text-lg" /> Nâng cấp gói
                                         </button>
 
@@ -217,7 +213,7 @@ function HeaderClient() {
                                             onClick={() => { handleLogout(); setIsDropdownOpen(false); }}
                                             className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/15 rounded-xl transition-all duration-300 hover:translate-x-1"
                                         >
-                                            <FaSignOutAlt className="text-lg drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]" /> Thoát
+                                            <FaSignOutAlt className="text-lg drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]" /> Đăng xuất
                                         </button>
                                     </div>
                                 </div>

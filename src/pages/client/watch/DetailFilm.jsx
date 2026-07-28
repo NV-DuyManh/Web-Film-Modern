@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane } from 'react-icons/fa';
+import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { AuthorContext } from '../../../contexts/AuthorProvider';
 import { CharacterContext } from '../../../contexts/CharacterProvider';
@@ -88,6 +88,12 @@ export default function DetailFilm() {
         <div className="bg-[#0f1322] min-h-screen text-slate-300 font-sans relative text-sm pb-20">
 
             <div className="w-full h-112.5 md:h-137.5 lg:h-162.5 relative z-0">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="absolute top-24 right-4 md:right-8 lg:right-12 z-50 flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-red-600/80 hover:bg-red-500 backdrop-blur-md rounded-xl text-white font-bold transition-all duration-300 shadow-[0_4px_15px_rgba(220,38,38,0.5)] group border border-red-500/50 hover:border-red-400 cursor-pointer"
+                >
+                    <FaArrowLeft className="text-sm md:text-base group-hover:-translate-x-1 transition-transform duration-300" />Back
+                </button>
                 <img
                     src={movie.bannerUrl || movie.imgUrl}
                     alt="Banner"
@@ -167,7 +173,10 @@ export default function DetailFilm() {
                             </h3>
                             <div className="flex flex-col gap-4">
                                 {topMovies.map((m, index) => (
-                                    <div key={index} onClick={() => navigate(`/detailFilm/${m.id}`)} className="flex items-center gap-3 group cursor-pointer">
+                                    <div key={index} onClick={() => {
+                                        navigate(`/detailFilm/${m.id}`);
+                                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }} className="flex items-center gap-3 group cursor-pointer">
                                         <div
                                             className={`text-3xl sm:text-4xl font-black italic w-10 shrink-0 text-center transition-colors drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ${index === 0
                                                 ? "text-red-600"
@@ -210,6 +219,17 @@ export default function DetailFilm() {
                                         <FaPlay className="text-sm" /> Xem Ngay
                                     </Link>
 
+                                    {(() => {
+                                        const moviePlan = getObjectById(plans, movie.planID);
+                                        if (moviePlan && Number(moviePlan.level) > 0) {
+                                            return (
+                                                <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5">
+                                                    <FaCrown className="text-sm" /> Mua phim
+                                                </button>
+                                            );
+                                        }
+                                        return null;
+                                    })()}
 
                                     <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
                                         <FaHeart className="text-xl" />
@@ -333,7 +353,10 @@ export default function DetailFilm() {
                                     {recommendedMovies.map((m, idx) => (
                                         <div
                                             key={idx}
-                                            onClick={() => navigate(`/detailFilm/${m.id}`)}
+                                            onClick={() => {
+                                                navigate(`/detailFilm/${m.id}`);
+                                                window.scrollTo({ top: 0, behavior: 'smooth' });
+                                            }}
                                             className="group flex flex-col rounded-2xl overflow-hidden bg-[#141a2e]/80 border border-slate-800/80 hover:border-yellow-400/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer shadow-md"
                                         >
                                             <div className="aspect-2/3 w-full overflow-hidden">

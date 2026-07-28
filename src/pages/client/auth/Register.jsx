@@ -92,7 +92,7 @@ export default function Register({ openRegister, handleCloseRegister, handleOpen
                         </button>
                     </p>
 
-                    <div className="space-y-4">
+                    <div className="space-y-4" onKeyDown={(e) => e.key === 'Enter' && addRegister()}>
                         <TextField
                             className="modal-input-x" fullWidth variant="outlined" type="text"
                             label="Tên hiển thị" name="displayName"

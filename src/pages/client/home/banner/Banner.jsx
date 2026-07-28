@@ -22,13 +22,14 @@ export default function Banner() {
     const [mainSwiper, setMainSwiper] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const movies = useContext(MovieContext);
+    const hotMovies = movies?.filter(m => m.isHot) || [];
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoriesContext);
     const authors = useContext(AuthorContext);
     const plans = useContext(PlanContext);
     const navigate = useNavigate();
 
-    if (!movies || movies.length === 0) return null;
+    if (!hotMovies || hotMovies.length === 0) return null;
 
     return (
         <div className='slide-banner'>
@@ -46,8 +47,8 @@ export default function Banner() {
                     }
                 }}
                 navigation={false}
-                loop={movies?.length >= 7}
-                loopedSlides={movies?.length || 10}
+                loop={hotMovies.length >= 7}
+                loopedSlides={hotMovies.length || 10}
                 effect={'fade'}
                 fadeEffect={{ crossFade: true }}
                 thumbs={{
@@ -56,7 +57,7 @@ export default function Banner() {
                 modules={[FreeMode, Navigation, Thumbs, EffectFade]}
                 className="mySwiper2"
             >
-                {movies?.map((e) => (
+                {hotMovies.map((e) => (
                     <SwiperSlide key={e.id}>
                         <img
                             className="banner-img"
@@ -149,13 +150,13 @@ export default function Banner() {
                     watchSlidesProgress={true}
                     grabCursor={true}
                     allowTouchMove={true}
-                    loop={movies?.length >= 7}
-                    loopedSlides={movies?.length || 10}
+                    loop={hotMovies.length >= 7}
+                    loopedSlides={hotMovies.length || 10}
                     slideToClickedSlide={true}
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="thumb-swiper"
                 >
-                    {movies?.map((e, index) => (
+                    {hotMovies.map((e, index) => (
                         <SwiperSlide
                             key={e.id}
                             onClick={() => {

@@ -59,7 +59,7 @@ function ClientRouters(props) {
             element: <DetailFilm />
         },
         {
-            path: "/pay",
+            path: "/pay/:id",
             element: <Pay />
         },
         {

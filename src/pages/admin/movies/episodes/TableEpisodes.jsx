@@ -9,7 +9,6 @@ import { EpisodeContext } from '../../../../contexts/EpisodeProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
-import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 
 function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
@@ -47,13 +46,13 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                 return movieNameMatch || episodeMatch;
             })
             .sort((a, b) => {
-                const getTime = (val) => {
-                    if (!val) return 0;
-                    if (val.toDate) return val.toDate().getTime();
-                    if (val.seconds) return val.seconds * 1000;
-                    return new Date(val).getTime() || 0;
-                };
-                return getTime(b.createdAt) - getTime(a.createdAt);
+                const movieA = getObjectById(movies, a.movieID)?.name || "";
+                const movieB = getObjectById(movies, b.movieID)?.name || "";
+
+                if (movieA === movieB) {
+                    return Number(b.numberEpisode) - Number(a.numberEpisode);
+                }
+                return movieA.localeCompare(movieB);
             });
     }, [search, episodes, movies]);
 
@@ -97,8 +96,8 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
     return (
         <div className="p-5">
             <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
-            
-            <div className="table-wrapper">
+
+            <div className="table-wrapper mt-4">
                 <div className="table-container">
                     <table className="w-full text-left">
                         <thead className="table-header">
@@ -124,43 +123,66 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                             {currentData.map((row, index) => {
                                 const matchedMovie = getObjectById(movies, row.movieID);
                                 const isSelected = selectedIds.includes(row.id);
-                                
+
+                                // Calculate rowSpan logic
+                                const previousRow = index > 0 ? currentData[index - 1] : null;
+                                const isFirstInGroup = !previousRow || previousRow.movieID !== row.movieID;
+
+                                let rowSpanCount = 1;
+                                if (isFirstInGroup) {
+                                    for (let j = index + 1; j < currentData.length; j++) {
+                                        if (currentData[j].movieID === row.movieID) {
+                                            rowSpanCount++;
+                                        } else {
+                                            break;
+                                        }
+                                    }
+                                }
+
                                 return (
-                                    <tr key={index} className="table-row" style={isSelected ? { background: 'rgba(34,211,238,0.07)' } : {}}>
-                                        <td className="table-cell" style={{ width: '40px' }}>
-                                            <input
-                                                type="checkbox"
-                                                checked={isSelected}
-                                                onChange={() => handleSelectRow(row.id)}
-                                                style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
-                                            />
-                                        </td>
-                                        <td className="table-cell">{start + index + 1}</td>
-                                        <td className="table-cell text-center font-bold text-cyan-400">
-                                            {matchedMovie ? matchedMovie.name : "N/A"}
-                                        </td>
-                                        <td className="table-cell text-center text-pink-400 font-bold">
-                                            Tập {row.numberEpisode}
-                                        </td>
-                                        <td className="table-cell text-center truncate max-w-50" title={row.url}>
-                                            <a href={row.url} target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline">
-                                                {row.url}
-                                            </a>
-                                        </td>
-                                        <td className="table-cell text-center text-gray-400 text-sm">
-                                            {formatDateTime(row.createdAt)}
-                                        </td>
-                                        <td className="table-cell text-right">
-                                            <div className="flex justify-end gap-2">
-                                                <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
-                                                    <CiEdit />
-                                                </button>
-                                                <button onClick={() => handleClickOpenDele(row)} className="action-btn btn-delete">
-                                                    <RiDeleteBin6Fill />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                    <React.Fragment key={index}>
+                                        <tr className="table-row hover:bg-white/5 transition-colors duration-200" style={isSelected ? { background: 'rgba(34,211,238,0.1)' } : {}}>
+                                            <td className="table-cell" style={{ width: '40px' }}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isSelected}
+                                                    onChange={() => handleSelectRow(row.id)}
+                                                    style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                                />
+                                            </td>
+                                            <td className="table-cell text-slate-400 font-bold">{start + index + 1}</td>
+                                            {isFirstInGroup && (
+                                                <td
+                                                    className="table-cell text-center font-bold text-cyan-400 align-middle border-r border-slate-700/50"
+                                                    rowSpan={rowSpanCount}
+                                                    style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)' }}
+                                                >
+                                                    {matchedMovie ? matchedMovie.name : "N/A"}
+                                                </td>
+                                            )}
+                                            <td className="table-cell text-center text-pink-400 font-bold">
+                                                Tập {row.numberEpisode}
+                                            </td>
+                                            <td className="table-cell text-center truncate max-w-50" title={row.url}>
+                                                <a href={row.url} target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline">
+                                                    {row.url}
+                                                </a>
+                                            </td>
+                                            <td className="table-cell text-center text-gray-400 text-sm">
+                                                {formatDateTime(row.createdAt)}
+                                            </td>
+                                            <td className="table-cell text-right">
+                                                <div className="flex justify-end gap-2">
+                                                    <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
+                                                        <CiEdit />
+                                                    </button>
+                                                    <button onClick={() => handleClickOpenDele(row)} className="action-btn btn-delete">
+                                                        <RiDeleteBin6Fill />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </React.Fragment>
                                 );
                             })}
                         </tbody>
@@ -185,7 +207,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                 titleDelete={"DELETE EPISODE"}
                 contentDelete={`Are you sure you want to delete Episode ${episode?.numberEpisode}?`}
             />
-            
+
             <ModalDelete
                 handleClose={() => setOpenBulk(false)}
                 open={openBulk}

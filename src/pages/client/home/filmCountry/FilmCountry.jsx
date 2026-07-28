@@ -17,8 +17,9 @@ export default function FilmCountry({ title, countryName, titleClass }) {
         ? movies.filter(m => m.countriesID?.toLowerCase() === countryName.toLowerCase())
         : movies;
 
-    const prevBtnClass = `filmcountry-${countryName}-prev`;
-    const nextBtnClass = `filmcountry-${countryName}-next`;
+    const safeCountryName = countryName ? countryName.replace(/\s+/g, '') : 'default';
+    const prevBtnClass = `filmcountry-${safeCountryName}-prev`;
+    const nextBtnClass = `filmcountry-${safeCountryName}-next`;
 
     if (countryName && filteredMovies.length === 0) return null;
 
@@ -61,8 +62,8 @@ export default function FilmCountry({ title, countryName, titleClass }) {
                                             </div>
                                         </div>
                                         <div className="pt-3 flex flex-col transition-transform duration-300 group-hover:-translate-y-1">
-                                            <h3 className="m-0 text-base font-bold text-white truncate transition-colors group-hover:text-[#facc15]">{e.name}</h3>
-                                            <p className="m-0 mt-1 text-[#8c909e] text-sm">{e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : getObjectById(authors, e.author)?.name}</p>
+                                            <h3 className="m-0 text-base font-bold text-white truncate transition-colors group-hover:text-[#facc15]">{e.otherName}</h3>
+                                            <p className="m-0 mt-1 text-[#8c909e] text-sm">{e.name}</p>
                                         </div>
                                     </div>
                                 </Link>
