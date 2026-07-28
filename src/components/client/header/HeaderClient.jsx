@@ -147,7 +147,7 @@ function HeaderClient() {
                                             className="h-9 w-9 rounded-full object-cover ring-2 ring-transparent group-hover:ring-cyan-400/80 transition-all duration-300"
                                         />
                                     </div>
-                                    <p className="text-sm font-bold text-slate-200 group-hover:text-white max-w-[120px] truncate hidden min-[1150px]:block transition-colors">
+                                    <p className="text-sm font-bold text-slate-200 group-hover:text-white max-w-30 truncate hidden min-[1150px]:block transition-colors">
                                         {isLogin?.displayName || isLogin?.fullName || 'Người dùng'}
                                     </p>
                                     <FaChevronDown className={`text-[10px] text-slate-400 group-hover:text-cyan-400 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`} />
@@ -163,7 +163,7 @@ function HeaderClient() {
                                         />
 
                                         <div className="flex items-center gap-2 mb-1">
-                                            <p className="text-[16px] font-bold text-white truncate tracking-wide">
+                                            <p className="text-4 font-bold text-white truncate tracking-wide">
                                                 {isLogin?.displayName || 'Nguyễn Văn A'}
                                             </p>
                                         </div>

@@ -6,10 +6,10 @@ function Category({ openCate }) {
     
     return (
         <div 
-            className={`absolute top-full mt-3 -left-4 z-50 w-[500px] rounded-2xl bg-black/80 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_0_0_1px_rgba(255,255,255,0.05)] transition-all duration-300 origin-top ${openCate ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible -translate-y-2 scale-95"}`}
+            className={`absolute top-full mt-3 -left-4 z-50 w-125 rounded-2xl bg-black/80 border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5),inset_0_0_0_1px_rgba(255,255,255,0.05)] transition-all duration-300 origin-top ${openCate ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible -translate-y-2 scale-95"}`}
             onClick={(e) => e.stopPropagation()}
         >
-            <div className="p-5 grid grid-cols-4 gap-x-2 gap-y-1.5 max-h-[450px] overflow-y-auto custom-scrollbar">
+            <div className="p-5 grid grid-cols-4 gap-x-2 gap-y-1.5 max-h-112.5 overflow-y-auto custom-scrollbar">
                 {categories.map((e, index) => (
                     <div 
                         key={index} 

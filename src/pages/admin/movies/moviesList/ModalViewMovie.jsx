@@ -33,7 +33,7 @@ const NeonBadge = ({ icon: Icon, text, color = "cyan" }) => {
         rose: "from-rose-500/10 to-transparent border-rose-500/30 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.15)] hover:from-rose-500/30 hover:to-rose-500/10 hover:border-rose-400 hover:text-rose-100 hover:shadow-[0_0_25px_rgba(244,63,94,0.4)]",
     };
     return (
-        <div className={`flex items-center gap-2 bg-gradient-to-r ${colorMap[color]} px-3.5 py-2 rounded-xl border text-sm font-bold backdrop-blur-sm hover:-translate-y-1 transition-all duration-300 cursor-default`}>
+        <div className={`flex items-center gap-2 bg-linear-to- ${colorMap[color]} px-3.5 py-2 rounded-xl border text-sm font-bold backdrop-blur-sm hover:-translate-y-1 transition-all duration-300 cursor-default`}>
             {Icon && <Icon className="text-sm" />} <p className="inline">{text}</p>
         </div>
     );
@@ -50,7 +50,7 @@ const GlowCard = ({ title, icon: Icon, color = "cyan", children }) => {
     };
     const c = colorMap[color];
     return (
-        <div className={`bg-white/[0.03] backdrop-blur-sm rounded-2xl border ${c.border} ${c.glow} p-4 transition-all duration-500`}>
+        <div className={`bg-white/3 backdrop-blur-sm rounded-2xl border ${c.border} ${c.glow} p-4 transition-all duration-500`}>
             <div className="flex items-center gap-2.5 mb-3">
                 <div className={`${c.iconBg} p-1.5 rounded-lg`}>
                     <Icon className={`${c.title} text-sm`} />
@@ -144,7 +144,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                 maxHeight: '90vh'
             }}>
                 {/* ═══ Animated border outer glow (Blurry Aura) ═══ */}
-                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[1]" style={{
+                <div className="absolute inset-0 rounded-3xl pointer-events-none z-1" style={{
                     background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.6), transparent, rgba(236,72,153,0.6), transparent)',
                     backgroundSize: '200% 100%',
                     animation: 'borderGlow 4s linear infinite',
@@ -158,7 +158,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                 }}></div>
 
                 {/* ═══ Animated border glow (Sharp Line) ═══ */}
-                <div className="absolute inset-0 rounded-3xl pointer-events-none z-[21]" style={{
+                <div className="absolute inset-0 rounded-3xl pointer-events-none z-21" style={{
                     background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.8), transparent, rgba(168,85,247,0.8), transparent)',
                     backgroundSize: '200% 100%',
                     animation: 'borderGlow 4s linear infinite',
@@ -173,16 +173,16 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                 {/* ═══ Close button - outside scroll area so always accessible ═══ */}
                 <button
                     onClick={handleClose}
-                    className="absolute top-5 right-5 z-[30] w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
+                    className="absolute top-5 right-5 z-30 w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
                 >
                     <FaTimesCircle size={20} />
                 </button>
 
                 {/* ═══ SCROLLABLE CONTENT ═══ */}
-                <div className="movie-view-modal w-[calc(100%-12px)] mx-auto my-[6px] rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar relative z-[5] flex-1 p-[2px]">
+                <div className="movie-view-modal w-[calc(100%-12px)] mx-auto my-1.5 rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar relative z-5 flex-1 p-0.5">
 
                     {/* ═══ HERO BANNER SECTION ═══ */}
-                    <div className="relative w-full h-[220px] overflow-hidden rounded-t-[22px]">
+                    <div className="relative w-full h-55 overflow-hidden rounded-t-[22px]">
                         <img
                             src={movie.bannerUrl || movie.imgUrl}
                             alt="banner"
@@ -190,8 +190,8 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                             style={{ filter: 'brightness(0.4) saturate(1.3)' }}
                         />
                         {/* Gradient overlays */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1e] via-transparent to-transparent"></div>
-                        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f1e]/60 via-transparent to-[#0a0f1e]/60"></div>
+                        <div className="absolute inset-0 bg-linear-to- from-[#0a0f1e] via-transparent to-transparent"></div>
+                        <div className="absolute inset-0 bg-linear-to- from-[#0a0f1e]/60 via-transparent to-[#0a0f1e]/60"></div>
 
                     </div>
 
@@ -199,7 +199,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                     <div className="relative px-8 -mt-28 z-20 flex gap-7 items-end">
                         {/* Poster with neon frame */}
                         <div className="relative shrink-0 group cursor-pointer">
-                            <div className="absolute -inset-1 bg-gradient-to-br from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-50 blur-md group-hover:opacity-100 group-hover:blur-xl transition-all duration-700"></div>
+                            <div className="absolute -inset-1 bg-linear-to- from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-50 blur-md group-hover:opacity-100 group-hover:blur-xl transition-all duration-700"></div>
                             <div className="relative z-10 group-hover:-translate-y-4 group-hover:scale-105 transition-all duration-500">
                                 {movie.isHot && (
                                     <div className="magic-fire-container absolute -top-8 -right-3 scale-[1.3] z-30">
@@ -212,7 +212,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                                 <img
                                     src={movie.imgUrl}
                                     alt={movie.name}
-                                    className="w-[170px] aspect-[2/3] object-cover rounded-2xl border-2 border-white/20 shadow-2xl"
+                                    className="w-42.5 aspect- object-cover rounded-2xl border-2 border-white/20 shadow-2xl"
                                 />
                             </div>
                         </div>
@@ -242,9 +242,9 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                     <div className="px-8 pt-6 pb-8 space-y-5">
 
                         {/* Description */}
-                        <div className="relative bg-white/[0.02] rounded-2xl border border-white/5 p-5 overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-500 via-purple-500 to-pink-500 rounded-l-full"></div>
-                            <p className="text-gray-300/90 text-[14px] leading-relaxed pl-4 max-h-[90px] overflow-y-auto custom-scrollbar">
+                        <div className="relative bg-white/2 rounded-2xl border border-white/5 p-5 overflow-hidden">
+                            <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-cyan-500 via-purple-500 to-pink-500 rounded-l-full"></div>
+                            <p className="text-gray-300/90 text-[14px] leading-relaxed pl-4 max-h-22.5 overflow-y-auto custom-scrollbar">
                                 {movie.description || "No description available."}
                             </p>
                         </div>
@@ -301,8 +301,8 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                         </div>
 
                         {/* Rent Price Footer */}
-                        <div className="relative overflow-hidden bg-gradient-to-r from-slate-800/50 via-slate-800/30 to-slate-800/50 rounded-2xl border border-white/5 p-4 flex items-center justify-between">
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/5 to-transparent animate-pulse pointer-events-none"></div>
+                        <div className="relative overflow-hidden bg-linear-to- from-slate-800/50 via-slate-800/30 to-slate-800/50 rounded-2xl border border-white/5 p-4 flex items-center justify-between">
+                            <div className="absolute inset-0 bg-linear-to- from-transparent via-cyan-500/5 to-transparent animate-pulse pointer-events-none"></div>
                             <div className="flex items-center gap-3 z-10">
                                 <div className="bg-yellow-500/10 p-2 rounded-xl">
                                     <FaMoneyBillWave className="text-yellow-400 text-lg" />

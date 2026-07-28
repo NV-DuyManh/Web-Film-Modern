@@ -100,8 +100,8 @@ function PayMovie(props) {
                             <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-yellow-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(250,204,21,0.2)] group">
                                 <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Thẻ tín dụng</p>
                                 <div className="flex gap-1">
-                                    <div className="w-8 h-5 bg-white rounded flex items-center justify-center text-[8px] text-blue-800 font-black italic">VISA</div>
-                                    <div className="w-8 h-5 bg-white rounded flex items-center justify-center text-[8px] text-red-600 font-black italic">MC</div>
+                                    <div className="w-8 h-5 bg-white rounded flex items-center justify-center text-2 text-blue-800 font-black italic">VISA</div>
+                                    <div className="w-8 h-5 bg-white rounded flex items-center justify-center text-2 text-red-600 font-black italic">MC</div>
                                 </div>
                             </div>
                             <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-pink-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(244,114,182,0.2)] group">

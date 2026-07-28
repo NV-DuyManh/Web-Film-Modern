@@ -161,7 +161,7 @@ export default function PlayFilm({ handleOpenLogin }) {
 
                     {/* Badge thời gian xem gần nhất */}
                     {resumeData && (
-                        <div className="flex items-center gap-2 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-lg shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+                        <div className="flex items-center gap-2 bg-linear-to- from-amber-500 via-orange-500 to-amber-600 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-lg shadow-[0_0_15px_rgba(245,158,11,0.4)]">
                             <FaHistory className="text-sm" />
                             <p className="inline">Lần trước bạn xem đến tập {resumeData.latestEpisodeNumber} ({timeAgo(resumeData.updatedAt)})</p>
                         </div>
@@ -180,7 +180,7 @@ export default function PlayFilm({ handleOpenLogin }) {
 
                     {/* ── RESUME MODAL ── */}
                     {showModal && resumeData && (
-                        <div className="absolute inset-0 z-[9999] bg-black flex items-center justify-center p-4">
+                        <div className="absolute inset-0 z-9999 bg-black flex items-center justify-center p-4">
                             <div className="resume-modal">
                                 <div className="resume-modal__icon">
                                     <FaPlay className="text-2xl ml-1" />
@@ -255,7 +255,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                     </div>
 
                     {/* Sidebar */}
-                    <div className="w-full lg:w-[320px] xl:w-90 shrink-0">
+                    <div className="w-full lg:w-80 xl:w-90 shrink-0">
                         <h2 className="text-xl font-bold text-white mb-6">Đề xuất cho bạn</h2>
                         <div className="flex flex-col gap-4">
                             {movies.slice(0, 5).map((e) => (

@@ -89,7 +89,7 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
                             <p className="animate-pulse inline">Deleting Data...</p>
                             <p className="inline">{progress}%</p>
                         </div>
-                        <div className="w-full bg-black/80 rounded-full h-3 overflow-hidden p-[2px] border border-red-500/20">
+                        <div className="w-full bg-black/80 rounded-full h-3 overflow-hidden p-0.5 border border-red-500/20">
                             <div
                                 className="bg-linear-to-r from-red-600 via-rose-500 to-orange-500 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(239,68,68,1)]"
                                 style={{ width: `${progress}%` }}

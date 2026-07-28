@@ -133,7 +133,7 @@ export default function DetailFilm() {
 
                         <div className="text-[13px] space-y-2 mt-2">
                             <p className="text-slate-400 leading-relaxed text-justify">
-                                <p className="font-bold text-white block mb-1 inline">Giới thiệu:</p>
+                                <p className="font-bold text-white block mb-1">Giới thiệu:</p>
                                 {movie.description || 'Đang cập nhật nội dung giới thiệu cho bộ phim này...'}
                             </p>
                             <p className="text-slate-400"><p className="font-bold text-white inline">Thời lượng:</p> {movie.time || 'Đang cập nhật'}</p>
@@ -223,7 +223,7 @@ export default function DetailFilm() {
                                         const moviePlan = getObjectById(plans, movie.planID);
                                         if (moviePlan && Number(moviePlan.level) > 0) {
                                             return (
-                                                <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5">
+                                                <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-linear-to- from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5">
                                                     <FaCrown className="text-sm" /> Mua phim
                                                 </button>
                                             );
@@ -327,7 +327,7 @@ export default function DetailFilm() {
                                                         alt={char.name}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                                     />
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent flex flex-col justify-end p-3 text-center">
+                                                    <div className="absolute inset-0 bg-linear-to- from-black/95 via-black/40 to-transparent flex flex-col justify-end p-3 text-center">
                                                         <h4 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors truncate">
                                                             {char.name}
                                                         </h4>
@@ -375,7 +375,7 @@ export default function DetailFilm() {
                         <div className="flex flex-col gap-5 animate-fade-in mt-2">
                             <h3 className="text-xl font-bold text-white">Các bản chiếu</h3>
 
-                            <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-[320px] shadow-lg">
+                            <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
                                 <div className="absolute top-0 right-0 w-[80%] h-full z-0">
                                     <img
                                         src={movie.imgUrl || movie.bannerUrl}
@@ -388,7 +388,7 @@ export default function DetailFilm() {
                                 <div className="relative z-10 p-5 flex flex-col gap-4">
                                     <div className="flex items-center gap-2.5">
                                         <div className="bg-[#6366f1] rounded flex items-center justify-center p-1.5 shadow">
-                                            <FaComment className="text-white text-[12px]" />
+                                            <FaComment className="text-white text-3" />
                                         </div>
                                         <p className="font-bold text-white text-[15px] inline">Vietsub #1</p>
                                     </div>

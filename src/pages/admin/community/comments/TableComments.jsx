@@ -134,7 +134,7 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
                                     <td className="table-cell font-bold text-fuchsia-400">
                                         {getMovieName(row.moviesId)}
                                     </td>
-                                    <td className="table-cell truncate max-w-[250px]" title={row.description}>
+                                    <td className="table-cell truncate max-w-62.5" title={row.description}>
                                         {row.description}
                                     </td>
                                     <td className="table-cell text-gray-400 text-xs">

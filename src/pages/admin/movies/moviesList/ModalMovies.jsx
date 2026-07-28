@@ -172,13 +172,13 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
             <DialogContent className="modal-body-x grid grid-cols-12 gap-8 h-[75vh] overflow-y-auto custom-scrollbar p-8 pt-10">
 
                 <div className="col-span-12 lg:col-span-7 space-y-8 mt-5">
-                    <div className="relative bg-white/[0.02] p-5 rounded-2xl border border-cyan-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(6,182,212,0.05)]">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-cyan-400 to-blue-500 rounded-l-full"></div>
+                    <div className="relative bg-white/2 p-5 rounded-2xl border border-cyan-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(6,182,212,0.05)]">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-cyan-400 to-blue-500 rounded-l-full"></div>
                         <div className="flex justify-between items-center h-4 relative z-10 pr-2">
                             <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest pl-3 m-0">Task 1: General Info</p>
                             <FormControlLabel
                                 control={<Checkbox checked={movie.isHot || false} onChange={onCheckboxChange} name="isHot" sx={{ color: '#ef4444', '&.Mui-checked': { color: '#f87171' }, padding: '4px' }} />}
-                                label={<p className="text-gray-300 text-sm font-semibold ml-1 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] leading-none mt-[2px] inline">🔥 Hot Movie</p>}
+                                label={<p className="text-gray-300 text-sm font-semibold ml-1 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] leading-none mt-0.5">🔥 Hot Movie</p>}
                                 sx={{ margin: 0 }}
                             />
                         </div>
@@ -198,8 +198,8 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         </div>
                     </div>
 
-                    <div className="relative bg-white/[0.02] p-5 rounded-2xl border border-purple-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.05)]">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-400 to-pink-500 rounded-l-full"></div>
+                    <div className="relative bg-white/2 p-5 rounded-2xl border border-purple-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.05)]">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-purple-400 to-pink-500 rounded-l-full"></div>
                         <p className="text-purple-400 text-xs font-bold uppercase tracking-widest pl-3">Task 2: Specification</p>
                         <div className="grid grid-cols-3 gap-4">
                             <Autocomplete
@@ -274,8 +274,8 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                 </div>
 
                 <div className="col-span-12 lg:col-span-5 space-y-6 mt-5">
-                    <div className="relative bg-white/[0.02] p-5 rounded-2xl border border-emerald-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(16,185,129,0.05)]">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-teal-500 rounded-l-full"></div>
+                    <div className="relative bg-white/2 p-5 rounded-2xl border border-emerald-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(16,185,129,0.05)]">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-emerald-400 to-teal-500 rounded-l-full"></div>
                         <p className="text-green-400 text-xs font-bold uppercase tracking-widest pl-3">Task 3: Classifications</p>
 
                         <div className='flex items-center text-white gap-2'>
@@ -288,7 +288,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                                 const category = categories?.find(e => e.id === item);
                                 return category ? (
                                     <div key={item} className="relative inline-block mt-2 mr-1 group">
-                                        <p className="px-3 py-1.5 bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 rounded-lg text-[11px] font-bold tracking-wide uppercase shadow-[0_0_10px_rgba(6,182,212,0.15)] group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-400 group-hover:scale-105 group-hover:-translate-y-0.5 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] transition-all duration-300 inline-block cursor-default inline">{category.name}</p>
+                                        <p className="px-3 py-1.5 bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 rounded-lg text-[11px] font-bold tracking-wide uppercase shadow-[0_0_10px_rgba(6,182,212,0.15)] group-hover:bg-cyan-500 group-hover:text-white group-hover:border-cyan-400 group-hover:scale-105 group-hover:-translate-y-0.5 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] transition-all duration-300 inline-block cursor-default">{category.name}</p>
                                         <FaTimesCircle onClick={() => handleRemoveItem("categories", item)} className="absolute -top-1.5 -right-1.5 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
                                     </div>
                                 ) : null;
@@ -354,18 +354,18 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         </div>
                     </div>
 
-                    <div className="relative bg-white/[0.02] p-5 rounded-2xl border border-pink-500/20 flex flex-col gap-5 overflow-hidden shadow-[0_0_15px_rgba(236,72,153,0.05)]">
-                        <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-pink-400 to-rose-500 rounded-l-full"></div>
+                    <div className="relative bg-white/2 p-5 rounded-2xl border border-pink-500/20 flex flex-col gap-5 overflow-hidden shadow-[0_0_15px_rgba(236,72,153,0.05)]">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-pink-400 to-rose-500 rounded-l-full"></div>
                         <p className="text-pink-400 text-xs font-bold uppercase tracking-widest text-center pl-3">Task 4: Media Uploads</p>
 
                         <div className="flex gap-4">
                             <div className="flex flex-col items-center w-1/3">
                                 <p className="text-white text-[11px] mb-1 font-bold opacity-70">Poster</p>
                                 <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-2 w-full border border-white/10">
-                                    <button type="button" onClick={() => setPosterMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'file' ? 'bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-[0_0_12px_rgba(236,72,153,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                    <button type="button" onClick={() => setPosterMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'file' ? 'bg-linear-to- from-pink-500 to-fuchsia-500 text-white shadow-[0_0_12px_rgba(236,72,153,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                                         <FaCloudUploadAlt className="text-xs" /> File
                                     </button>
-                                    <button type="button" onClick={() => setPosterMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'url' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                    <button type="button" onClick={() => setPosterMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'url' ? 'bg-linear-to- from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                                         <FaLink className="text-xs" /> URL
                                     </button>
                                 </div>
@@ -397,10 +397,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <div className="flex flex-col items-center w-2/3">
                                 <p className="text-white text-[11px] mb-1 font-bold opacity-70">Banner</p>
                                 <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-2 w-full border border-white/10">
-                                    <button type="button" onClick={() => setBannerMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'file' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-[0_0_12px_rgba(234,179,8,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                    <button type="button" onClick={() => setBannerMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'file' ? 'bg-linear-to- from-yellow-500 to-orange-500 text-white shadow-[0_0_12px_rgba(234,179,8,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                                         <FaCloudUploadAlt className="text-xs" /> File
                                     </button>
-                                    <button type="button" onClick={() => setBannerMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'url' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                    <button type="button" onClick={() => setBannerMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'url' ? 'bg-linear-to- from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                                         <FaLink className="text-xs" /> URL
                                     </button>
                                 </div>

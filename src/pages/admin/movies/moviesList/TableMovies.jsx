@@ -87,7 +87,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
         const characterItems = (row.list_Character || []).map(id => getObjectById(characters, id)).filter(Boolean);
         const totalItems = actorItems.length + characterItems.length;
 
-        const tooltipWidth = totalItems <= 1 ? "w-[145px]" : totalItems === 2 ? "w-[190px]" : totalItems <= 4 ? "w-[260px]" : "w-[380px]";
+        const tooltipWidth = totalItems <= 1 ? "w-[145px]" : totalItems === 2 ? "w-47.5" : totalItems <= 4 ? "w-65" : "w-95";
 
         const renderItem = (item, type) => {
             const hoverRing = type === 'actor' ? 'group-hover:ring-green-400 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.6)]' : 'group-hover:ring-pink-400 group-hover:shadow-[0_0_15px_rgba(244,114,182,0.6)]';
@@ -124,7 +124,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{characterItems.map(item => renderItem(item, 'character'))}</div>
                         </div>
                     )}
-                    {totalItems === 0 && <p className="text-[12px] text-gray-500 inline">No entity</p>}
+                    {totalItems === 0 && <p className="text-3 text-gray-500 inline">No entity</p>}
                 </div>
             </div>
         );
@@ -139,8 +139,8 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                 </div>
                 <div className="flex w-fit max-w-95 flex-wrap gap-2 px-3 py-3 max-h-65 overflow-y-auto">
                     {categoryItems.length > 0 ? categoryItems.map((item) => (
-                        <p key={item.id} className="rounded-full bg-purple-500/12 px-3 py-1.5 text-[12px] font-semibold text-purple-100 ring-1 ring-purple-300/15 cursor-pointer transition-all duration-300 hover:bg-purple-500/40 hover:text-white hover:ring-purple-400 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(168,85,247,0.6)] inline">{item.name}</p>
-                    )) : <p className="text-[12px] text-gray-500 inline">No categories</p>}
+                        <p key={item.id} className="rounded-full bg-purple-500/12 px-3 py-1.5 text-3 font-semibold text-purple-100 ring-1 ring-purple-300/15 cursor-pointer transition-all duration-300 hover:bg-purple-500/40 hover:text-white hover:ring-purple-400 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(168,85,247,0.6)] inline">{item.name}</p>
+                    )) : <p className="text-3 text-gray-500 inline">No categories</p>}
                 </div>
             </div>
         );

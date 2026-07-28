@@ -61,7 +61,7 @@ export default function TopFilm() {
                                 <div className="group cursor-pointer flex flex-col h-full">
 
                                     <div
-                                        className="relative w-full aspect-[3/4] transition-all duration-300 group-hover:-translate-y-2 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_12px_15px_rgba(250,204,21,0.3)]"
+                                        className="relative w-full aspect- transition-all duration-300 group-hover:-translate-y-2 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_12px_15px_rgba(250,204,21,0.3)]"
                                     >
                                         <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-[3px] border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : '-skew-y-[8deg]'} origin-center z-10 transition-colors duration-300`}>
                                             <img
@@ -86,17 +86,17 @@ export default function TopFilm() {
                                         </div>
 
                                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-30 transition-all duration-300">                                            {e.episodeSub && (
-                                            <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                            <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-2 font-bold rounded backdrop-blur-md shadow-sm">
                                                 PĐ.{String(e.episodeSub).trim()}
                                             </div>
                                         )}
                                             {e.episodeVoice && (
-                                                <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-2 font-bold rounded backdrop-blur-md shadow-sm">
                                                     TM.{String(e.episodeVoice).trim()}
                                                 </div>
                                             )}
                                             {e.episodeDub && (
-                                                <div className="w-[36px] h-[20px] shrink-0 flex items-center justify-center bg-pink-500/20 border border-pink-400/50 text-pink-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-pink-500/20 border border-pink-400/50 text-pink-300 text-2 font-bold rounded backdrop-blur-md shadow-sm">
                                                     LT.{String(e.episodeDub).trim()}
                                                 </div>
                                             )}

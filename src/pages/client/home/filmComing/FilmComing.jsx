@@ -50,7 +50,7 @@ export default function FilmComing() {
                                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
                                             <div className="absolute bottom-2 left-2 flex gap-1.5 z-20">
-                                                <p className="bg-yellow-300 text-black text-[12px] md:text-[15px] font-extrabold px-2 py-0.5 rounded-sm drop-shadow-md">
+                                                <p className="bg-yellow-300 text-black text-3 md:text-[15px] font-extrabold px-2 py-0.5 rounded-sm drop-shadow-md">
                                                     Sắp chiếu
                                                 </p>
                                             </div>

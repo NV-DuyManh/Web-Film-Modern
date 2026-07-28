@@ -132,7 +132,7 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                                     <td className="table-cell text-center text-cyan-400 font-bold">
                                         {row.countriesID}
                                     </td>
-                                    <td className="table-cell min-w-[350px] max-w-[600px] whitespace-normal text-[13px] text-gray-300">
+                                    <td className="table-cell min-w-87.5 max-w-150 whitespace-normal text-[13px] text-gray-300">
                                         <div className="leading-relaxed text-justify px-2 py-2">
                                             {row.description || "N/A"}
                                         </div>

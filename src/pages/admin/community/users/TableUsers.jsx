@@ -148,23 +148,13 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                                     </td>
                                     <td className="table-cell text-center">
                                         {row.sexId && (
-                                            <p className={`inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${
-                                                row.sexId === 'Male' 
-                                                    ? 'bg-sky-500/15 text-sky-400 border border-sky-500/30 shadow-[0_0_8px_rgba(14,165,233,0.2)]' 
-                                                    : row.sexId === 'Female' 
-                                                        ? 'bg-pink-500/15 text-pink-400 border border-pink-500/30 shadow-[0_0_8px_rgba(236,72,153,0.2)]' 
-                                                        : 'bg-violet-500/15 text-violet-400 border border-violet-500/30 shadow-[0_0_8px_rgba(139,92,246,0.2)]'
-                                            } inline`}>
+                                            <p className={`-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${ row.sexId === 'Male' ? 'bg-sky-500/15 text-sky-400 border border-sky-500/30 shadow-[0_0_8px_rgba(14,165,233,0.2)]' : row.sexId === 'Female' ? 'bg-pink-500/15 text-pink-400 border border-pink-500/30 shadow-[0_0_8px_rgba(236,72,153,0.2)]' : 'bg-violet-500/15 text-violet-400 border border-violet-500/30 shadow-[0_0_8px_rgba(139,92,246,0.2)]' }`}>
                                                 {row.sexId}
                                             </p>
                                         )}
                                     </td>
                                     <td className="table-cell text-center">
-                                        <p className={`inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${
-                                            row.role === 'admin' 
-                                                ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.25)]' 
-                                                : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.2)]'
-                                        } inline`}>
+                                        <p className={`-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${ row.role === 'admin' ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.25)]' : 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.2)]' }`}>
                                             {row.role === 'admin' ? '👑 Admin' : '👤 Client'}
                                         </p>
                                     </td>

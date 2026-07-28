@@ -142,7 +142,7 @@ function TableReviews({ handleClickOpen, setReview, review, search }) {
                                             '& .MuiRating-iconEmpty': { color: '#4b5563' }
                                         }} />
                                     </td>
-                                    <td className="table-cell truncate max-w-[200px]" title={row.content}>
+                                    <td className="table-cell truncate max-w-50" title={row.content}>
                                         {row.content}
                                     </td>
                                     <td className="table-cell text-gray-400 text-xs">

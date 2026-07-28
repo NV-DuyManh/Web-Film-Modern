@@ -455,14 +455,14 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         className="flex hover:scale-105 cursor-pointer items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
                     >
                         <FaEraser className="text-sm" />
-                        <p className="text-xs font-bold  uppercase tracking-wider hidden sm:block inline">Clear</p>
+                        <p className="text-xs font-bold  uppercase tracking-wider hidden sm:block">Clear</p>
                     </button>
 
                     {/* AI PROMPT GENERATOR */}
                     <div className='flex items-center gap-2 bg-slate-900/40 p-2 rounded-xl border border-pink-500/30 shadow-[0_0_15px_rgba(219,39,119,0.15)]'>
                         <div className='flex items-center gap-2 px-2 border-r border-white/10'>
                             <FaRobot className="text-pink-400 text-xl" />
-                            <p className="text-xs font-bold text-pink-300 uppercase tracking-wider hidden xl:block inline">AI Prompt</p>
+                            <p className="text-xs font-bold text-pink-300 uppercase tracking-wider hidden xl:block">AI Prompt</p>
                         </div>
                         <input
                             type="number"

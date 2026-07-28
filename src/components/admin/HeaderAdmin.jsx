@@ -36,7 +36,7 @@ function HeaderAdmin() {
                     <h1 className='text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold tracking-wide flex items-center gap-1.5 md:gap-3 flex-wrap'>
                         <p className="glow-text2 inline">{getGreeting()},</p>
                         <p className="glow-text inline">{isLogin?.name || 'Admin'}</p> 
-                        <p className="animate-wave ml-1 inline-block inline">👋</p>
+                        <p className="animate-wave ml-1 inline-block">👋</p>
                     </h1>
 
                     <div className="flex items-center gap-3 md:gap-5 lg:gap-8 text-xl lg:text-2xl shrink-0">
@@ -46,17 +46,17 @@ function HeaderAdmin() {
 
                         <button className="relative text-yellow-400 cursor-pointer drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-yellow-300 hover:drop-shadow-[0_0_15px_rgba(250,204,21,1)] group">
                             <IoIosNotifications className="animate-bell" />
-                            <p className="absolute top-0 right-0.5 flex h-2.5 w-2.5 -mt-0.5 -mr-0.5 inline">
-                                <p className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75 inline"></p>
-                                <p className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-slate-900 shadow-[0_0_5px_rgba(239,68,68,0.8)] inline"></p>
+                            <p className="absolute top-0 right-0.5 flex h-2.5 w-2.5 -mt-0.5 -mr-0.5">
+                                <p className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></p>
+                                <p className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-slate-900 shadow-[0_0_5px_rgba(239,68,68,0.8)]"></p>
                             </p>
                         </button>
 
                         <button className="relative text-purple-400 cursor-pointer drop-shadow-[0_0_4px_rgba(192,132,252,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-purple-300 hover:drop-shadow-[0_0_15px_rgba(192,132,252,1)] group">
                             <MdEmail className="animate-envelope" />
-                            <p className="absolute top-0 right-0 flex h-2.5 w-2.5 -mt-0.5 -mr-1 inline">
-                                <p className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75 inline" style={{ animationDuration: '2s' }}></p>
-                                <p className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500 border border-slate-900 shadow-[0_0_5px_rgba(6,182,212,0.8)] inline"></p>
+                            <p className="absolute top-0 right-0 flex h-2.5 w-2.5 -mt-0.5 -mr-1">
+                                <p className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" style={{ animationDuration: '2s' }}></p>
+                                <p className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500 border border-slate-900 shadow-[0_0_5px_rgba(6,182,212,0.8)]"></p>
                             </p>
                         </button>
 
@@ -70,10 +70,10 @@ function HeaderAdmin() {
                                 {isLogin?.imgUrl ? (
                                     <img src={isLogin.imgUrl} alt="avatar" className="relative z-10 w-9 h-9 rounded-full object-cover border-2 border-green-400 shadow-[0_0_10px_rgba(74,222,128,0.6)]" />
                                 ) : (
-                                    <FaUserCircle className="relative z-10 text-[32px] drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+                                    <FaUserCircle className="relative z-10 text-8 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
                                 )}
 
-                                <p className="absolute bottom-0 right-0 z-20 w-3 h-3 bg-[#22c55e] border-2 border-[#1e293b] rounded-full shadow-[0_0_5px_rgba(34,197,94,1)] inline"></p>
+                                <p className="absolute bottom-0 right-0 z-20 w-3 h-3 bg-[#22c55e] border-2 border-[#1e293b] rounded-full shadow-[0_0_5px_rgba(34,197,94,1)]"></p>
                             </button>
 
                             {isDropdownOpen && (
@@ -85,8 +85,8 @@ function HeaderAdmin() {
                                             <FaUserCircle className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
                                         )}
                                         <div className="flex flex-col min-w-0">
-                                            <p className="text-[15px] font-bold text-white truncate tracking-wide inline">{isLogin?.displayName || 'Admin'}</p>
-                                            <p className="text-[12px] text-cyan-400 truncate inline">{isLogin?.email || 'admin@mfilm.com'}</p>
+                                            <p className="text-[15px] font-bold text-white truncate tracking-wide">{isLogin?.displayName || 'Admin'}</p>
+                                            <p className="text-3 text-cyan-400 truncate">{isLogin?.email || 'admin@mfilm.com'}</p>
                                         </div>
                                     </div>
 
