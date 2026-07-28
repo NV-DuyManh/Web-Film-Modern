@@ -1220,39 +1220,94 @@ td:last-child {
     padding: 8px 29px !important;
 }
 
-// Nút Thêm Mới ở trang danh sách Admin (Màu Cyan Neon)
+// Nút Thêm Mới ở trang danh sách Admin (Màu Cyan Neon - Bản Premium)
+@keyframes animateGlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 .btn-add {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 6px 16px;
-    border-radius: 8px;
-    font-weight: 700;
+    gap: 8px;
+    padding: 8px 24px;
+    border-radius: 10px;
+    font-weight: 800;
     font-size: 13px;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #ffffff;
-    background: transparent;
-    border: 2px solid #00FFFF;
+    letter-spacing: 2px;
+    color: #fbcfe8; // Light pink
+    background: rgba(10, 15, 25, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: none;
     cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    z-index: 1;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.4), inset 0 0 5px rgba(0, 255, 255, 0.2);
-    text-shadow: 0 0 5px #00FFFF;
+    text-shadow: 0 0 8px rgba(244, 114, 182, 0.6);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        padding: 2px;
+        background: linear-gradient(135deg, #00f2fe, #4facfe, #8b5cf6, #ec4899, #00f2fe);
+        background-size: 300% 300%;
+        animation: animateGlow 4s linear infinite;
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        z-index: -1;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(0, 242, 254, 0) 0%, rgba(139, 92, 246, 0.2) 100%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -2;
+    }
 
     &:hover {
-        transform: translateY(-1px);
-        background: #00FFFF;
-        color: #111827;
-        text-shadow: none;
-        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8),
-            0 0 30px rgba(0, 255, 255, 0.6),
-            0 0 10px rgba(255, 255, 255, 0.8) inset;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(0, 242, 254, 0.3), 0 0 15px rgba(139, 92, 246, 0.3);
+        color: #ffffff;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(0, 242, 254, 1);
+
+        &::before {
+            animation: animateGlow 2s linear infinite;
+        }
+
+        &::after {
+            opacity: 1;
+        }
+        
+        svg {
+            transform: scale(1.15) rotate(180deg);
+            color: #00f2fe;
+            filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.8));
+        }
+    }
+
+    &:active {
+        transform: translateY(1px);
+        box-shadow: 0 2px 10px rgba(0, 242, 254, 0.2);
     }
 
     svg {
         font-size: 18px;
-        transition: transform 0.3s ease;
+        color: #f472b6; // Vibrant pink initially
+        filter: drop-shadow(0 0 6px rgba(244, 114, 182, 0.6));
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 }
 

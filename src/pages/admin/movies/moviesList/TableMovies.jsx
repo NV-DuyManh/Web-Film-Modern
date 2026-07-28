@@ -171,7 +171,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                 <th className="w-[12%] text-center">EPISODES</th>
                                 <th className="w-[12%] text-center">ENTITY</th>
                                 <th className="w-[12%] text-center">CATEGORIES</th>
-                                <th className="w-[12%] text-right">ACTIONS</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
 
@@ -264,8 +264,8 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                             </Tooltip>
                                         </td>
 
-                                        <td className="table-cell text-right">
-                                            <div className="flex justify-end gap-2">
+                                        <td className="table-cell text-center">
+                                            <div className="flex justify-center! gap-2">
                                                 <button onClick={() => handleView(row)} className="action-btn btn-view"><FaEye size={16} /></button>
                                                 <button onClick={() => handleEdit(row)} className="action-btn btn-edit"><CiEdit size={16} /></button>
                                                 <button onClick={() => handleDelete(row)} className="action-btn btn-delete"><RiDeleteBin6Fill size={16} /></button>
@@ -295,3 +295,6 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
 }
 
 export default TableMovies;
+
+
+

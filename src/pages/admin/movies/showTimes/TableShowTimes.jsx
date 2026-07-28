@@ -134,7 +134,7 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
                                 <th className="text-center">MOVIE</th>
                                 <th className="text-center">TIME</th>
                                 <th className="text-center">ROOM</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
 
@@ -169,8 +169,8 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
                                         {row.roomName}
                                     </td>
 
-                                    <td className="table-cell text-right">
-                                        <div className="flex justify-end gap-2">
+                                    <td className="table-cell text-center">
+                                        <div className="flex justify-center! gap-2">
                                             <button
                                                 onClick={() => handleEdit(row)}
                                                 className="action-btn btn-edit"
@@ -223,3 +223,6 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
 }
 
 export default TableShowTimes;
+
+
+

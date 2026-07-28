@@ -91,7 +91,7 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                                 <th className="text-center">GENDER</th>
                                 <th className="text-center">COUNTRY</th>
                                 <th className="text-center">DESCRIPTION</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -137,8 +137,8 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                                             {row.description || "N/A"}
                                         </div>
                                     </td>
-                                    <td className="table-cell text-right">
-                                        <div className="flex justify-end gap-2">
+                                    <td className="table-cell text-center">
+                                        <div className="flex justify-center! gap-2">
                                             <button
                                                 onClick={() => handleEdit(row)}
                                                 className="action-btn btn-edit"
@@ -190,3 +190,6 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
 }
 
 export default TableCharacters;
+
+
+

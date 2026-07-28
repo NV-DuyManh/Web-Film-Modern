@@ -89,7 +89,7 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                                 <th className='text-center'>NAME</th>
                                 <th className='text-center'>LEVEL</th>
                                 <th className='text-center'>PRICE</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
 
@@ -120,8 +120,8 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
                                     <td className="table-cell text-center text-green-400 font-bold">
                                         {row.price} VND
                                     </td>
-                                    <td className="table-cell text-right">
-                                        <div className="flex justify-end gap-2">
+                                    <td className="table-cell text-center">
+                                        <div className="flex justify-center! gap-2">
                                             <button
                                                 onClick={() => handleEdit(row)}
                                                 className="action-btn btn-edit"
@@ -171,3 +171,6 @@ function TablePlans({ handleClickOpen, setPlan, plan, search }) {
 }
 
 export default TablePlans;
+
+
+

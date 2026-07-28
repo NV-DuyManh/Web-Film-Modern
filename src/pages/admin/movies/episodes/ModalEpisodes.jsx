@@ -1,8 +1,6 @@
 import { FaTimes } from 'react-icons/fa';
 import * as React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
-import { useContext } from 'react';
-import { MovieContext } from '../../../../contexts/MovieProvider';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -11,9 +9,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function ModalEpisodes({ 
     open, onChangeInput, handleClose, addEpisode, addBulkEpisodes, 
     error, loading, progress, episode, setEpisode,
-    isBulkMode, setIsBulkMode, bulkText, setBulkText 
+    isBulkMode, setIsBulkMode, bulkText, setBulkText,
+    selectedMovie
 }) {
-    const movies = useContext(MovieContext);
 
     const handleNumberChange = (e) => {
         const onlyNums = e.target.value.replace(/[^0-9]/g, '');
@@ -64,27 +62,15 @@ export default function ModalEpisodes({
                 </button>
             </DialogTitle>
 
-            <DialogContent className="modal-body-x space-y-4">
-                <Autocomplete
-                    options={movies || []}
-                    getOptionLabel={(opt) => opt?.name || ""}
-                    value={movies?.find(m => m.id === episode.movieID) || null}
-                    onChange={(e, val) => onChangeInput({ target: { name: "movieID", value: val?.id || "" } })}
-                    classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
-                    renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Movie"
-                            error={!!error.movieID}
-                            helperText={error.movieID}
-                            className="modal-input-x"
-                        />
-                    )}
-                />
+            <DialogContent className="modal-body-x space-y-4 pt-4">
+                <div className="bg-cyan-900/20 border border-cyan-400/30 rounded-xl p-4 flex flex-col">
+                    <span className="text-xs text-cyan-400 font-bold uppercase tracking-wider mb-1">Target Movie</span>
+                    <span className="text-white font-medium">{selectedMovie?.name}</span>
+                </div>
                 
                 {isBulkMode && !episode.id ? (
                     <div className="space-y-2 mt-4">
-                        <label className="text-sm font-bold text-slate-300">Dán danh sách tập phim (Format: Tập 01|URL)</label>
+                        <label className="text-sm font-bold text-slate-300">Bulk Episode Format (Tập 01|URL)</label>
                         <textarea
                             value={bulkText}
                             onChange={(e) => setBulkText(e.target.value)}
@@ -111,7 +97,7 @@ export default function ModalEpisodes({
                             name="url"
                             onChange={onChangeInput}
                             fullWidth
-                            label="Url"
+                            label="Video URL"
                             variant="outlined"
                             value={episode.url}
                             helperText={error.url}
@@ -139,7 +125,7 @@ export default function ModalEpisodes({
                     <div className="w-full flex justify-end gap-3 pt-2">
                         <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
                         <Button disabled={loading} onClick={isBulkMode && !episode.id ? addBulkEpisodes : addEpisode} className="btn-submit-x">
-                            {episode.id ? "Save Changes" : (isBulkMode ? "Add Bulk Episodes" : "Add Episode")}
+                            {episode.id ? "Save Changes" : (isBulkMode ? "Bulk Import" : "Add Episode")}
                         </Button>
                     </div>
                 )}

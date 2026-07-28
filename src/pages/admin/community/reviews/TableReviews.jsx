@@ -110,7 +110,7 @@ function TableReviews({ handleClickOpen, setReview, review, search }) {
                                 <th className='text-center'>RATING</th>
                                 <th >CONTENT</th>
                                 <th >DATE</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
 
@@ -148,8 +148,8 @@ function TableReviews({ handleClickOpen, setReview, review, search }) {
                                     <td className="table-cell text-gray-400 text-xs">
                                         {row.createdAt ? new Date(row.createdAt).toLocaleDateString('vi-VN') : ""}
                                     </td>
-                                    <td className="table-cell text-right">
-                                        <div className="flex justify-end gap-2">
+                                    <td className="table-cell text-center">
+                                        <div className="flex justify-center! gap-2">
                                             <button
                                                 onClick={() => handleEdit(row)}
                                                 className="action-btn btn-edit"
@@ -199,3 +199,5 @@ function TableReviews({ handleClickOpen, setReview, review, search }) {
 }
 
 export default TableReviews;
+
+

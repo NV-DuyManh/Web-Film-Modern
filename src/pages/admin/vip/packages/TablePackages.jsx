@@ -84,7 +84,7 @@ function TablePackages({ handleClickOpen, setPackageItem, packageItem, search })
                                 <th className="text-center">PLAN</th>
                                 <th className="text-center">DISCOUNT</th>
                                 <th className="text-center">TIME</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -112,8 +112,8 @@ function TablePackages({ handleClickOpen, setPackageItem, packageItem, search })
                                             {row.time === 1 ? "1 Month" : `${row.time} Months`}
                                         </p>
                                     </td>
-                                    <td className="table-cell text-right">
-                                        <div className="flex justify-end gap-2">
+                                    <td className="table-cell text-center">
+                                        <div className="flex justify-center! gap-2">
                                             <button onClick={() => handleEdit(row)} className="action-btn btn-edit"><CiEdit size={16} /></button>
                                             <button onClick={() => handleClickOpenDele(row)} className="action-btn btn-delete"><RiDeleteBin6Fill size={16} /></button>
                                         </div>
@@ -152,3 +152,6 @@ function TablePackages({ handleClickOpen, setPackageItem, packageItem, search })
 }
 
 export default TablePackages;
+
+
+

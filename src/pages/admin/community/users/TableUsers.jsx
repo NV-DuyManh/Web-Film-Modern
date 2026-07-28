@@ -106,7 +106,7 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                                 <th className='text-center'>SEX</th>
                                 <th className='text-center'>ROLE</th>
                                 <th className='text-center'>PASSWORD</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
 
@@ -161,8 +161,8 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
                                     <td className="table-cell text-center text-gray-400 font-bold text-sm">
                                         {row.password}
                                     </td>
-                                    <td className="table-cell text-right">
-                                        <div className="flex justify-end gap-2">
+                                    <td className="table-cell text-center">
+                                        <div className="flex justify-center! gap-2">
                                             <button
                                                 onClick={() => handleEdit(row)}
                                                 className="action-btn btn-edit"
@@ -215,3 +215,6 @@ function TableUsers({ handleClickOpen, setUser, user, search }) {
 }
 
 export default TableUsers;
+
+
+

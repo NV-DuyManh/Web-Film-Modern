@@ -6,14 +6,10 @@ import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
 import { EpisodeContext } from '../../../../contexts/EpisodeProvider';
-import { MovieContext } from '../../../../contexts/MovieProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 
-
-function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
-    const episodes = useContext(EpisodeContext);
-    const movies = useContext(MovieContext);
+function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedMovie }) {
+    const episodes = useContext(EpisodeContext) || [];
     const [open, setOpen] = useState(false);
 
     const [page, setPage] = useState(1);
@@ -36,29 +32,48 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
     };
 
     const dataSearch = useMemo(() => {
+        if (!selectedMovie) return [];
+        
         const keyword = search.toLowerCase();
 
         return episodes
+            .filter(e => e.movieID === selectedMovie.id)
             .filter(e => {
-                const matchedMovie = getObjectById(movies, e.movieID);
-                const movieNameMatch = matchedMovie ? matchedMovie.name.toLowerCase().includes(keyword) : false;
-                const episodeMatch = e.numberEpisode.toString().includes(keyword);
-                return movieNameMatch || episodeMatch;
+                if (!keyword) return true;
+                
+                const keywordLower = keyword.trim().toLowerCase();
+                const epString = e.numberEpisode.toString();
+                
+                // Allow matching natural language searches
+                const fullStrings = [
+                    epString,
+                    `tập ${epString}`,
+                    `tap ${epString}`,
+                    `tập${epString}`,
+                    `tap${epString}`,
+                    `episode ${epString}`,
+                    `ep ${epString}`,
+                    `episode${epString}`,
+                    `ep${epString}`
+                ];
+                
+                const matchEp = fullStrings.some(str => str.startsWith(keywordLower));
+                
+                // If keyword is a short number (e.g. "22"), it's an episode search. Don't match against URLs
+                // because URLs have dates (20240301) and random hashes (22x...) that cause false positives.
+                const isShortNumber = /^\d+$/.test(keywordLower) && keywordLower.length < 5;
+                const matchUrl = !isShortNumber && e.url && e.url.toLowerCase().includes(keywordLower);
+                
+                return matchEp || matchUrl;
             })
             .sort((a, b) => {
-                const movieA = getObjectById(movies, a.movieID)?.name || "";
-                const movieB = getObjectById(movies, b.movieID)?.name || "";
-
-                if (movieA === movieB) {
-                    return Number(b.numberEpisode) - Number(a.numberEpisode);
-                }
-                return movieA.localeCompare(movieB);
+                return Number(a.numberEpisode) - Number(b.numberEpisode);
             });
-    }, [search, episodes, movies]);
+    }, [search, episodes, selectedMovie]);
 
     const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
-    useEffect(() => { setPage(1); }, [search]);
+    useEffect(() => { setPage(1); }, [search, selectedMovie]);
 
     const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
 
@@ -94,15 +109,15 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
     };
 
     return (
-        <div className="p-5">
+        <div className="p-5 relative">
             <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
 
-            <div className="table-wrapper mt-4">
-                <div className="table-container">
-                    <table className="w-full text-left">
+            <div className="table-wrapper">
+                <div className="table-container overflow-x-auto">
+                    <table className="w-full text-left whitespace-nowrap">
                         <thead className="table-header">
                             <tr>
-                                <th style={{ width: '40px', padding: '10px 12px' }}>
+                                <th style={{ width: '40px', padding: '12px' }}>
                                     <input
                                         type="checkbox"
                                         checked={isAllSelected}
@@ -111,38 +126,21 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th>ID</th>
-                                <th className="text-center">MOVIE NAME</th>
-                                <th className="text-center">EPISODE</th>
-                                <th className="text-center">URL</th>
-                                <th className="text-center">CREATED AT</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th className="w-[12%] text-center">EPISODE</th>
+                                <th className="w-[50%] text-center">URL</th>
+                                <th className="w-[15%] text-center">UPDATED</th>
+                                <th className="w-[15%] text-center">CREATED</th>
+                                <th className="w-[8%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {currentData.map((row, index) => {
-                                const matchedMovie = getObjectById(movies, row.movieID);
+                            {currentData.map((row) => {
                                 const isSelected = selectedIds.includes(row.id);
 
-                                // Calculate rowSpan logic
-                                const previousRow = index > 0 ? currentData[index - 1] : null;
-                                const isFirstInGroup = !previousRow || previousRow.movieID !== row.movieID;
-
-                                let rowSpanCount = 1;
-                                if (isFirstInGroup) {
-                                    for (let j = index + 1; j < currentData.length; j++) {
-                                        if (currentData[j].movieID === row.movieID) {
-                                            rowSpanCount++;
-                                        } else {
-                                            break;
-                                        }
-                                    }
-                                }
-
                                 return (
-                                    <React.Fragment key={index}>
-                                        <tr className="table-row hover:bg-white/5 transition-colors duration-200" style={isSelected ? { background: 'rgba(34,211,238,0.1)' } : {}}>
-                                            <td className="table-cell" style={{ width: '40px' }}>
+                                    <React.Fragment key={row.id}>
+                                        <tr className="table-row hover:bg-white/5 transition-colors duration-200 border-b border-white/5" style={isSelected ? { background: 'rgba(34,211,238,0.1)' } : {}}>
+                                            <td className="table-cell" style={{ width: '40px', padding: '12px' }}>
                                                 <input
                                                     type="checkbox"
                                                     checked={isSelected}
@@ -150,29 +148,24 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                                                     style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                                 />
                                             </td>
-                                            <td className="table-cell text-slate-400 font-bold">{start + index + 1}</td>
-                                            {isFirstInGroup && (
-                                                <td
-                                                    className="table-cell text-center font-bold text-cyan-400 align-middle border-r border-slate-700/50"
-                                                    rowSpan={rowSpanCount}
-                                                    style={{ backgroundColor: 'rgba(15, 23, 42, 0.4)' }}
-                                                >
-                                                    {matchedMovie ? matchedMovie.name : "N/A"}
-                                                </td>
-                                            )}
-                                            <td className="table-cell text-center text-pink-400 font-bold">
-                                                Tập {row.numberEpisode}
+                                            <td className="table-cell text-center font-black text-cyan-400 text-lg">
+                                                Episode {row.numberEpisode}
                                             </td>
-                                            <td className="table-cell text-center truncate max-w-50" title={row.url}>
-                                                <a href={row.url} target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline">
+                                            <td className="table-cell text-center">
+                                                <a href={row.url} target="_blank" rel="noopener noreferrer" 
+                                                   className="text-cyan-400 hover:text-cyan-300 hover:underline transition-colors block truncate max-w-[200px] sm:max-w-[350px] md:max-w-[500px] mx-auto"
+                                                   title={row.url}>
                                                     {row.url}
                                                 </a>
                                             </td>
-                                            <td className="table-cell text-center text-gray-400 text-sm">
+                                            <td className="table-cell text-center text-slate-300 text-sm">
                                                 {formatDateTime(row.createdAt)}
                                             </td>
-                                            <td className="table-cell text-right">
-                                                <div className="flex justify-end gap-2">
+                                            <td className="table-cell text-center text-slate-500 text-xs">
+                                                {formatDateTime(row.createdAt)}
+                                            </td>
+                                            <td className="table-cell text-center">
+                                                <div className="flex justify-center! gap-2">
                                                     <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
                                                         <CiEdit />
                                                     </button>
@@ -200,23 +193,20 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search }) {
                 </div>
             </div>
 
-            <ModalDelete
-                handleClose={handleClose}
+            <ModalDelete 
                 open={open}
+                handleClose={handleClose}
                 handleDeleted={handleDeleted}
-                titleDelete={"DELETE EPISODE"}
-                contentDelete={`Are you sure you want to delete Episode ${episode?.numberEpisode}?`}
             />
 
-            <ModalDelete
-                handleClose={() => setOpenBulk(false)}
+            <ModalDelete 
                 open={openBulk}
+                handleClose={() => setOpenBulk(false)}
                 handleDeleted={handleBulkDeleted}
-                titleDelete={"DELETE SELECTED"}
-                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected episode${selectedIds.length > 1 ? 's' : ''}?`}
             />
         </div>
     );
 }
 
 export default TableEpisodes;
+

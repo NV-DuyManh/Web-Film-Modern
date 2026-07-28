@@ -78,7 +78,7 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                                 <th>ID</th>
                                 <th className="text-center px-4 w-48">NAME</th>
                                 <th className="text-center px-4">DESCRIPTION</th>
-                                <th className="text-right">ACTIONS</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,8 +101,8 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                                         <td className="table-cell">{start + index + 1}</td>
                                         <td className="table-cell text-center whitespace-nowrap px-4">{row.name}</td>
                                         <td className="table-cell text-left px-4">{row.description}</td>
-                                        <td className="table-cell text-right">
-                                            <div className="flex justify-end gap-2">
+                                        <td className="table-cell text-center">
+                                            <div className="flex justify-center! gap-2">
                                                 <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
                                                     <CiEdit />
                                                 </button>
@@ -149,3 +149,6 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
 }
 
 export default TableCategoryType;
+
+
+
