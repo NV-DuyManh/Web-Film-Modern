@@ -57,11 +57,11 @@ export default function FilmComing() {
                                         </div>
                                     </div>
 
-                                    <div className="pt-2 px-1 flex flex-col transition-transform duration-300 group-hover:-translate-y-1">
-                                        <h3 className="text-white font-bold text-base md:text-lg truncate transition-colors group-hover:text-[#facc15]">
+                                    <div className="pt-2 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
+                                        <h3 className="text-white font-bold text-base md:text-lg truncate w-full transition-colors group-hover:text-[#facc15]">
                                             {e.otherName}
                                         </h3>
-                                        <p className="text-slate-400 text-xs md:text-sm truncate mt-0.5">
+                                        <p className="text-slate-400 text-xs md:text-sm truncate w-full mt-0.5">
                                             {e.name}
                                         </p>
                                     </div>

@@ -46,8 +46,8 @@ export default function FilmCountry({ title, countryName, titleClass }) {
                         breakpoints={{
                             0: { slidesPerView: 1, spaceBetween: 10 },
                             500: { slidesPerView: 2, spaceBetween: 12 },
-                            768: { slidesPerView: 3, spaceBetween: 15 },
-                            1024: { slidesPerView: 4, spaceBetween: 20 },
+                            1024: { slidesPerView: 3, spaceBetween: 15 },
+                            1280: { slidesPerView: 4, spaceBetween: 20 },
                         }}
                         className="movie-swiper"
                     >
@@ -61,9 +61,9 @@ export default function FilmCountry({ title, countryName, titleClass }) {
                                                 <p className="px-2 py-0.5 rounded-md text-xs font-bold border border-[#facc15] text-[#facc15] bg-slate-900/70 backdrop-blur-sm inline">{e.duration + " Phút"}</p>
                                             </div>
                                         </div>
-                                        <div className="pt-3 flex flex-col transition-transform duration-300 group-hover:-translate-y-1">
-                                            <h3 className="m-0 text-base font-bold text-white truncate transition-colors group-hover:text-[#facc15]">{e.otherName}</h3>
-                                            <p className="m-0 mt-1 text-[#8c909e] text-sm">{e.name}</p>
+                                        <div className="pt-3 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
+                                            <h3 className="m-0 text-base font-bold text-white truncate w-full transition-colors group-hover:text-[#facc15]">{e.otherName}</h3>
+                                            <p className="m-0 mt-1 text-[#8c909e] text-sm truncate w-full">{e.name}</p>
                                         </div>
                                     </div>
                                 </Link>

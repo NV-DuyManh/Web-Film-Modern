@@ -49,7 +49,7 @@ export default function FilmHongKong() {
                             <Link to={`/detailFilm/${e.id}`}>
                                 <div className="group cursor-pointer flex flex-col h-full">
 
-                                    <div className="relative w-full aspect- rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                    <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                         <img
                                             src={e.imgUrl}
                                             alt={e.name}

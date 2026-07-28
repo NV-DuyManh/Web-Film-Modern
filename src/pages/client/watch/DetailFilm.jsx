@@ -107,7 +107,7 @@ export default function DetailFilm() {
 
                     <div className="lg:col-span-3 flex flex-col gap-6">
 
-                        <div className="rounded-xl overflow-hidden shadow-2xl w-2/3 sm:w-1/2 lg:w-full mx-auto relative z-20 -mt-24 lg:-mt-48 border-4 border-[#0f1322]">
+                        <div className="rounded-xl overflow-hidden shadow-2xl w-2/3 sm:w-1/2 sm:h-3/4 lg:w-full mx-auto relative z-20 -mt-24 sm:-mt-70 lg:-mt-48 border-4 border-[#0f1322]">
                             <img
                                 src={movie.imgUrl}
                                 alt={movie.name}
@@ -117,10 +117,10 @@ export default function DetailFilm() {
 
                         <div className="text-center lg:text-left mt-1">
                             <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-1 leading-tight">
-                                {movie.name}
+                                {movie.otherName}
                             </h1>
                             <h2 className="text-sm text-yellow-500 font-medium">
-                                {movie.originName || movie.name}
+                                { movie.name}
                             </h2>
                         </div>
 
@@ -223,7 +223,7 @@ export default function DetailFilm() {
                                         const moviePlan = getObjectById(plans, movie.planID);
                                         if (moviePlan && Number(moviePlan.level) > 0) {
                                             return (
-                                                <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-linear-to- from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_0_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5">
+                                                <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:shadow-[0_6px_20px_rgba(244,63,94,0.4)] hover:-translate-y-0.5">
                                                     <FaCrown className="text-sm" /> Mua phim
                                                 </button>
                                             );

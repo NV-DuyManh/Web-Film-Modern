@@ -47,19 +47,24 @@ $table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
     .vip-glow-bg {
         background-color: var(--vip-bg-glow) !important;
     }
-    
+
     .vip-text {
-        &.selected { color: var(--vip-color) !important; }
+        &.selected {
+            color: var(--vip-color) !important;
+        }
     }
-    
+
     .vip-border-dot {
-        &.selected { border-color: var(--vip-color) !important; }
+        &.selected {
+            border-color: var(--vip-color) !important;
+        }
     }
-    
+
     .vip-dot-inner {
         background-color: var(--vip-color) !important;
     }
 }
+
 // ============================================================================
 // ANIMATIONS (HIỆU ỨNG CHUYỂN ĐỘNG)
 // Các định nghĩa chuyển động được dùng lại ở nhiều component
@@ -251,18 +256,23 @@ li {
 }
 
 @keyframes borderGlow {
-    0%, 100% {
+
+    0%,
+    100% {
         background-position: 0% 50%;
         filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.15));
     }
+
     25% {
         background-position: 50% 0%;
         filter: drop-shadow(0 0 20px rgba(244, 114, 182, 0.2));
     }
+
     50% {
         background-position: 100% 50%;
         filter: drop-shadow(0 0 25px rgba(96, 165, 250, 0.2));
     }
+
     75% {
         background-position: 50% 100%;
         filter: drop-shadow(0 0 20px rgba(234, 179, 8, 0.15));
@@ -273,15 +283,13 @@ li {
     position: relative;
     padding: 1px;
     border-radius: 0.75rem;
-    background: linear-gradient(
-        135deg,
-        rgba(139, 92, 246, 0.4) 0%,
-        rgba(244, 114, 182, 0.3) 25%,
-        rgba(255, 255, 255, 0.1) 40%,
-        rgba(96, 165, 250, 0.3) 60%,
-        rgba(234, 179, 8, 0.3) 80%,
-        rgba(139, 92, 246, 0.4) 100%
-    );
+    background: linear-gradient(135deg,
+            rgba(139, 92, 246, 0.4) 0%,
+            rgba(244, 114, 182, 0.3) 25%,
+            rgba(255, 255, 255, 0.1) 40%,
+            rgba(96, 165, 250, 0.3) 60%,
+            rgba(234, 179, 8, 0.3) 80%,
+            rgba(139, 92, 246, 0.4) 100%);
     background-size: 300% 300%;
     animation: borderGlow 6s ease-in-out infinite;
 
@@ -392,8 +400,15 @@ li {
 }
 
 @keyframes goldShine {
-    0%, 100% { background-position: 0% 0%; }
-    50% { background-position: 0% 100%; }
+
+    0%,
+    100% {
+        background-position: 0% 0%;
+    }
+
+    50% {
+        background-position: 0% 100%;
+    }
 }
 
 .magic-fire-container {
@@ -414,7 +429,7 @@ li {
     border-radius: 50% 0 50% 50%;
     transform: rotate(-45deg);
     animation: magic-flame 0.4s ease-in-out infinite alternate;
-    box-shadow: 
+    box-shadow:
         0 0 15px 5px rgba(255, 80, 0, 0.6),
         inset -3px 3px 8px 2px rgba(255, 153, 0, 0.9),
         inset -8px 8px 12px 4px rgba(255, 230, 0, 0.9);
@@ -435,13 +450,25 @@ li {
 }
 
 @keyframes magic-flame {
-    0% { transform: rotate(-43deg) scale(0.95); border-radius: 50% 5px 50% 50%; }
-    100% { transform: rotate(-47deg) scale(1.05); border-radius: 50% 0 50% 50%; }
+    0% {
+        transform: rotate(-43deg) scale(0.95);
+        border-radius: 50% 5px 50% 50%;
+    }
+
+    100% {
+        transform: rotate(-47deg) scale(1.05);
+        border-radius: 50% 0 50% 50%;
+    }
 }
 
 @keyframes magic-flame-inner {
-    0% { transform: translate(-50%, -50%) rotate(-5deg) scale(0.9); }
-    100% { transform: translate(-50%, -50%) rotate(5deg) scale(1.1); }
+    0% {
+        transform: translate(-50%, -50%) rotate(-5deg) scale(0.9);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(5deg) scale(1.1);
+    }
 }
 
 .glow-text-1 {
@@ -530,8 +557,15 @@ li {
 // Cường độ: 60-70% so với Search input
 // ============================================================================
 @keyframes neonPulse {
-    0%, 100% { box-shadow: 0 0 10px rgba(0, 242, 254, 0.35), 0 0 25px rgba(139, 92, 246, 0.15), inset 0 0 15px rgba(0, 242, 254, 0.04); }
-    50% { box-shadow: 0 0 14px rgba(0, 242, 254, 0.45), 0 0 30px rgba(139, 92, 246, 0.2), inset 0 0 20px rgba(0, 242, 254, 0.06); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 10px rgba(0, 242, 254, 0.35), 0 0 25px rgba(139, 92, 246, 0.15), inset 0 0 15px rgba(0, 242, 254, 0.04);
+    }
+
+    50% {
+        box-shadow: 0 0 14px rgba(0, 242, 254, 0.45), 0 0 30px rgba(139, 92, 246, 0.2), inset 0 0 20px rgba(0, 242, 254, 0.06);
+    }
 }
 
 .magic-header {
@@ -1222,9 +1256,17 @@ td:last-child {
 
 // Nút Thêm Mới ở trang danh sách Admin (Màu Cyan Neon - Bản Premium)
 @keyframes animateGlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 .btn-add {
@@ -1290,7 +1332,7 @@ td:last-child {
         &::after {
             opacity: 1;
         }
-        
+
         svg {
             transform: scale(1.15) rotate(180deg);
             color: #00f2fe;
@@ -1485,24 +1527,17 @@ td:last-child {
     }
 
     // Tự động thay đổi vị trí Nút Điều Hướng phụ thuộc vào Tỉ lệ hình ảnh của phim bên trong
-    // 1. Phim Tỉ lệ Màn hình ngang (aspect-video)
-    &:has(.aspect-video) .movie-nav-btn {
-        top: 38%;
-    }
-
-    // 2. Phim Rạp (tỉ lệ ngang + huy hiệu màu emerald)
-    &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn {
-        top: 34%;
-    }
-
-    // 3. Phim Tỉ lệ Dọc (aspect-2/3) - Poster thông thường
+    // Công thức: top = calc(50% - (padding-top + (text-height / 2)))
+    // Với padding 24px mỗi chiều, và chiều cao chữ trung bình ~60px
+    // 1. Phim thông thường (cả ngang và dọc)
+    &:has(.aspect-video) .movie-nav-btn,
     &:has(.aspect-2\/3) .movie-nav-btn {
-        top: 41%;
+        top: calc(50% - 30px);
     }
 
-    // 4. Phim TopFilm (tỉ lệ dọc + số hạng màu đỏ)
-    &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn {
-        top: 39%;
+    // 2. Phim Rạp (có nhiều thông tin text bên dưới hơn -> text height ~94px)
+    &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn {
+        top: calc(50% - 47px);
     }
 }
 
@@ -1589,24 +1624,6 @@ td:last-child {
         height: 36px;
         font-size: 13px;
     }
-
-    .movie-slider-wrapper {
-        &:has(.aspect-video) .movie-nav-btn {
-            top: 38%;
-        }
-
-        &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn {
-            top: 34%;
-        }
-
-        &:has(.aspect-2\/3) .movie-nav-btn {
-            top: 42%;
-        }
-
-        &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn {
-            top: 40%;
-        }
-    }
 }
 
 // Mobile (< 768px)
@@ -1615,24 +1632,6 @@ td:last-child {
         width: 30px;
         height: 30px;
         font-size: 11px;
-    }
-
-    .movie-slider-wrapper {
-        &:has(.aspect-video) .movie-nav-btn {
-            top: 37%;
-        }
-
-        &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn {
-            top: 32%;
-        }
-
-        &:has(.aspect-2\/3) .movie-nav-btn {
-            top: 48%;
-        }
-
-        &:has(.aspect-2\/3):has([class*="text-red-600"]) .movie-nav-btn {
-            top: 45%;
-        }
     }
 }
 
@@ -1729,8 +1728,15 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 /* ===== Resume Playback Modal ===== */
 @keyframes resume-scale-up {
-    0% { opacity: 0; transform: scale(0.85) translateY(10px); }
-    100% { opacity: 1; transform: scale(1) translateY(0); }
+    0% {
+        opacity: 0;
+        transform: scale(0.85) translateY(10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
 }
 
 .resume-modal {
@@ -1747,7 +1753,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     flex-direction: column;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 2rem; /* Đẩy nhẹ lên trên một chút để tránh che sub */
+    margin-bottom: 2rem;
+    /* Đẩy nhẹ lên trên một chút để tránh che sub */
     box-shadow:
         0 15px 35px rgba(0, 0, 0, 0.4),
         0 0 0 1px rgba(255, 255, 255, 0.05) inset;
@@ -1826,4 +1833,11 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     pointer-events: none !important;
     z-index: -9999 !important;
     transform: scale(0) !important;
-}.movie-nav-btn.swiper-button-lock, .movie-nav-btn.swiper-button-disabled { display: none !important; opacity: 0 !important; visibility: hidden !important; }
+}
+
+.movie-nav-btn.swiper-button-lock,
+.movie-nav-btn.swiper-button-disabled {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+}
