@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaCheckCircle, FaClock } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
@@ -67,14 +67,13 @@ export default function FilmHongKong() {
                                             let cls = "bg-slate-600/90 border-slate-500 text-white";
                                             let text = plan.name;
 
-                                            if (text.toLowerCase() === 'prenium') text = 'Premium';
 
                                             if (name.includes('vip')) {
-                                                cls = "bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
-                                            } else if (name.includes('premium') || name.includes('prenium')) {
-                                                cls = "bg-gradient-to-r from-fuchsia-600 to-rose-500 border-pink-400 text-white shadow-[0_0_12px_rgba(225,29,72,0.6)]";
+                                                cls = "bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
+                                            } else if (name.includes('prenium')) {
+                                                cls = "bg-linear-to-r from-fuchsia-600 to-rose-500 border-pink-400 text-white shadow-[0_0_12px_rgba(225,29,72,0.6)]";
                                             } else if (name.includes('basic')) {
-                                                cls = "bg-gradient-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
+                                                cls = "bg-linear-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
                                             }
 
                                             return (
@@ -86,11 +85,26 @@ export default function FilmHongKong() {
                                             );
                                         })()}
 
-                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-2">
-                                            <p className="bg-slate-700/80 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-l border-r border-white/20 inline">
-                                                {e.countriesID}
-                                            </p>
-                                            <p className="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded-r inline">
+                                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                                            {(() => {
+                                                const cId = (e.countriesID || '').toLowerCase();
+                                                let bgCls = "from-indigo-500 to-purple-600";
+                                                if (cId.includes('korea') || cId.includes('hàn')) bgCls = "from-cyan-500 to-blue-600";
+                                                else if (cId.includes('china') || cId.includes('trung')) bgCls = "from-red-500 to-rose-600";
+                                                else if (cId.includes('japan') || cId.includes('nhật')) bgCls = "from-pink-500 to-rose-500";
+                                                else if (cId.includes('thai') || cId.includes('thái')) bgCls = "from-emerald-500 to-teal-600";
+                                                else if (cId.includes('vietnam') || cId.includes('việt')) bgCls = "from-yellow-400 to-orange-500";
+                                                else if (cId.includes('us') || cId.includes('mỹ') || cId.includes('u.s') || cId.includes('america')) bgCls = "from-blue-600 to-indigo-700";
+                                                
+                                                const textCls = cId.includes('vietnam') || cId.includes('việt') ? 'text-black' : 'text-white';
+                                                
+                                                return (
+                                                    <p className={`bg-linear-to-r ${bgCls} ${textCls} text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded-l whitespace-nowrap uppercase tracking-wider`}>
+                                                        {e.countriesID}
+                                                    </p>
+                                                );
+                                            })()}
+                                            <p className="bg-blue-600/90 backdrop-blur-md text-white text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded-r whitespace-nowrap">
                                                 LT. {e.endEpisode}
                                             </p>
                                         </div>
@@ -100,9 +114,21 @@ export default function FilmHongKong() {
                                         <h3 className="text-white font-bold text-sm md:text-base truncate w-full transition-colors group-hover:text-[#facc15]">
                                             {e.otherName}
                                         </h3>
-                                        <p className="text-slate-400 text-[10px] md:text-xs truncate w-full mt-0.5">
+                                        <p className="text-slate-400 text-[10px] md:text-[11px] truncate w-full mt-0.5 transition-colors group-hover:text-slate-200">
                                             {e.name}
                                         </p>
+                                        <div className="flex items-center justify-center gap-2 mt-1.5 w-full font-bold">
+                                            {e.releaseYear && (
+                                                <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                    <FaCalendarAlt /> {e.releaseYear}
+                                                </div>
+                                            )}
+                                            {e.duration && (
+                                                <div className="flex items-center gap-1.5 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                    <FaClock /> {e.duration}p
+                                                </div>
+                                            )}
+                                        </div>
                                     </div>
 
                                 </div>

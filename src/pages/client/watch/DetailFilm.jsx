@@ -223,7 +223,7 @@ export default function DetailFilm() {
                                         const moviePlan = getObjectById(plans, movie.planID);
                                         if (moviePlan && Number(moviePlan.level) > 0) {
                                             return (
-                                                <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-gradient-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:shadow-[0_6px_20px_rgba(244,63,94,0.4)] hover:-translate-y-0.5">
+                                                <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:shadow-[0_6px_20px_rgba(244,63,94,0.4)] hover:-translate-y-0.5">
                                                     <FaCrown className="text-sm" /> Mua phim
                                                 </button>
                                             );

@@ -233,7 +233,7 @@ function HeaderClient() {
 
             <LogIn openLogin={openLogin} handleCloseLogin={handleCloseLogin} handleOpenRegister={handleOpenRegister} />
             <Register openRegister={openRegister} handleCloseRegister={handleCloseRegister} handleOpenLogin={handleOpenLogin} />
-            {/* <PlayFilm  handleOpenLogin={handleOpenLogin}/> */}
+            
         </div>
     );
 }

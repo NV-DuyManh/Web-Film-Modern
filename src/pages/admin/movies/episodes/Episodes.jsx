@@ -246,7 +246,7 @@ function Episodes() {
             {!selectedMovie ? (
                 <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh] mt-4 animate-[fadeIn_0.5s_ease-out]">
                     <div className="flex flex-col items-center justify-center text-center bg-slate-900/30 backdrop-blur-md p-10 rounded-2xl border border-white/5 shadow-2xl max-w-lg w-full mx-4 relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent"></div>
+                        <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-cyan-500/50 to-transparent"></div>
                         <div className="w-20 h-20 bg-slate-800/80 rounded-full flex items-center justify-center mb-6 shadow-inner border border-white/5">
                             <span className="text-4xl opacity-80">🎞️</span>
                         </div>

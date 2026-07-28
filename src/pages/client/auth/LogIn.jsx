@@ -76,7 +76,6 @@ export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister 
         }
     }
 
-    // Google sign-in
     const signInWithGoogle = async () => {
         try {
             const result = await signInWithPopup(auth, googleProvider);

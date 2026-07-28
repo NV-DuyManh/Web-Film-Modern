@@ -25,7 +25,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
 
     return (
         <div className="flex flex-col gap-4 py-1">
-            {/* Range Pagination if many episodes */}
+            
             {hasRanges && (
                 <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide pb-3 border-b border-slate-700/60">
                     <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 shrink-0 inline">
@@ -41,7 +41,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                                 onClick={() => setRangeIndex(idx)}
                                 className={`px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all duration-300 cursor-pointer whitespace-nowrap border ${
                                     isSelected
-                                        ? "bg-linear-to- from-amber-400 to-yellow-500 text-slate-950 border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.4)]"
+                                        ? "bg-linear-to-r from-amber-400 to-yellow-500 text-slate-950 border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.4)]"
                                         : "bg-[#0d121f] text-slate-300 hover:text-white hover:bg-[#161d30] border-slate-700/80"
                                 }`}
                             >
@@ -52,7 +52,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                 </div>
             )}
 
-            {/* High-Contrast Distinct Solid Episode Buttons */}
+            
             <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-3 sm:gap-4">
                 {currentEpisodes.map((e) => {
                     const isActive = playEpisodes?.id == e.id;

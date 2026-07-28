@@ -14,7 +14,6 @@ import Logo5 from "../../../../assets/Logo5.png";
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-// --- Sub-components ---
 
 const NeonBadge = ({ icon: Icon, text, color = "cyan" }) => {
     const colorMap = {
@@ -105,7 +104,6 @@ const AvatarRow = ({ items, list, fallback, color = "cyan" }) => {
     );
 };
 
-// --- Main Component ---
 
 export default function ModalViewMovie({ open, handleClose, movie }) {
     const categoryTypes = useContext(CategoryTypeContext);

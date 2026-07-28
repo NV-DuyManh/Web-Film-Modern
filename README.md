@@ -3,7 +3,7 @@
 
   <h1>🍿 ManhFilm Platform 🎬</h1>
   
-  <p><strong>A comprehensive, modern web application designed for managing and streaming movies with an ultra-premium UI.</strong></p>
+  <p><strong>A comprehensive, modern web application designed for managing and streaming movies with an ultra-prenium UI.</strong></p>
 
   <div>
     <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />

@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaFire, FaCalendarAlt, FaClock } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
@@ -58,14 +58,13 @@ export default function FilmComing() {
                                                 let cls = "bg-slate-600/90 border-slate-500 text-white";
                                                 let text = plan.name;
 
-                                                if (text.toLowerCase() === 'prenium') text = 'Premium';
 
                                                 if (name.includes('vip')) {
-                                                    cls = "bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
-                                                } else if (name.includes('premium') || name.includes('prenium')) {
-                                                    cls = "bg-gradient-to-r from-fuchsia-600 to-rose-500 border-pink-400 text-white shadow-[0_0_12px_rgba(225,29,72,0.6)]";
+                                                    cls = "bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
+                                                } else if (name.includes('prenium')) {
+                                                    cls = "bg-linear-to-r from-fuchsia-600 to-rose-500 border-pink-400 text-white shadow-[0_0_12px_rgba(225,29,72,0.6)]";
                                                 } else if (name.includes('basic')) {
-                                                    cls = "bg-gradient-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
+                                                    cls = "bg-linear-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
                                                 }
 
                                                 return (
@@ -78,8 +77,8 @@ export default function FilmComing() {
                                             })()}
 
                                             <div className="absolute bottom-2 left-2 flex gap-1.5 z-20">
-                                                <p className="bg-yellow-300 text-black text-[12px] md:text-[15px] font-extrabold px-2 py-0.5 rounded-sm drop-shadow-md">
-                                                    Sắp chiếu
+                                                <p className="flex items-center gap-1.5 bg-linear-to-r from-yellow-400 to-amber-500 text-black text-[10px] md:text-[11px] font-extrabold px-2.5 py-0.5 rounded-full shadow-[0_0_15px_rgba(250,204,21,0.8)] border border-yellow-300 uppercase tracking-widest transition-transform duration-300 group-hover:scale-105">
+                                                    <FaFire className="text-red-600 animate-pulse text-[12px]" /> Sắp chiếu
                                                 </p>
                                             </div>
                                         </div>
@@ -89,9 +88,23 @@ export default function FilmComing() {
                                         <h3 className="text-white font-bold text-base md:text-lg truncate w-full transition-colors group-hover:text-[#facc15]">
                                             {e.otherName}
                                         </h3>
-                                        <p className="text-slate-400 text-xs md:text-sm truncate w-full mt-0.5">
+                                        <p className="text-slate-400 text-[10px] md:text-[11px] truncate w-full mt-0.5 transition-colors group-hover:text-slate-200">
                                             {e.name}
                                         </p>
+                                        {(e.duration || e.releaseYear) && (
+                                            <div className="flex items-center justify-center gap-2 mt-1.5 w-full font-bold">
+                                                {e.releaseYear && (
+                                                    <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                        <FaCalendarAlt /> {e.releaseYear}
+                                                    </span>
+                                                )}
+                                                {e.duration && (
+                                                    <span className="flex items-center gap-1.5 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                        <FaClock /> {e.duration} Phút
+                                                    </span>
+                                                )}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </Link>

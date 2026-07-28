@@ -14,12 +14,10 @@ function AuthProvider({ children }) {
         }
     }, []);
 
-    // Đồng bộ hoá dữ liệu session nếu có thay đổi từ DB
     useEffect(() => {
         if (isLogin && users && users.length > 0) {
             const updatedUser = users.find(u => u.id === isLogin.id);
             if (updatedUser) {
-                // Kiểm tra xem có gì thay đổi không (so sánh stringify cho lẹ)
                 if (JSON.stringify(updatedUser) !== JSON.stringify(isLogin)) {
                     setIsLogin(updatedUser);
                     localStorage.setItem("isLogin", JSON.stringify(updatedUser));

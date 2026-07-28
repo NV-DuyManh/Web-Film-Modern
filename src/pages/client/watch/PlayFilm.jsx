@@ -20,12 +20,10 @@ export default function PlayFilm({ handleOpenLogin }) {
 
     /* ── Derived data ── */
     const currentEpisode = useMemo(() => episodes.find(e => e.id == id), [id, episodes]);
-    // Nếu id là episode → lấy movieID từ episode. Nếu id là movie → dùng luôn id.
     const isDirectMovieId = !currentEpisode && movies.some(m => m.id == id);
     const movieId = currentEpisode ? currentEpisode.movieID : id;
     const movie = useMemo(() => getObjectById(movies, movieId) || {}, [movies, movieId]);
 
-    // realMovieId: KEY duy nhất cho localStorage — luôn là movie ID thật
     const realMovieId = currentEpisode ? currentEpisode.movieID : (isDirectMovieId ? id : null);
 
     const [playEpisodes, setPlayEpisodes] = useState({});
@@ -47,13 +45,11 @@ export default function PlayFilm({ handleOpenLogin }) {
         }
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // Check saved resume — chỉ khi có realMovieId và đã xác định playEpisodes
         if (realMovieId && playEpisodes?.id) {
             const saved = getResume(realMovieId);
             const epSeconds = saved?.episodes?.[playEpisodes.id] || 0;
 
             if (epSeconds > 5) {
-                // Gắn thêm field seconds để modal lấy ra dùng
                 setResumeData({ ...saved, seconds: epSeconds });
                 setShowModal(true);
             } else {
@@ -92,7 +88,6 @@ export default function PlayFilm({ handleOpenLogin }) {
 
     /* ── Handlers ── */
     const handleClickEpisodes = (ep) => {
-        // Lưu progress trước khi chuyển tập
         const time = playerRef.current?.getTime?.() || 0;
         if (playEpisodes?.id && realMovieId && time > 0) {
             saveResume(realMovieId, {
@@ -104,11 +99,9 @@ export default function PlayFilm({ handleOpenLogin }) {
         window.location.href = `/play/${ep.id}`;
     };
 
-    // ▶ Xem tiếp: tua video đến đúng giây đã lưu
     const handleResume = () => {
         setShowModal(false);
         const seekTo = resumeData?.seconds || 0;
-        // Đợi video sẵn sàng rồi tua
         setTimeout(() => {
             if (playerRef.current) {
                 playerRef.current.seek(seekTo);
@@ -117,7 +110,6 @@ export default function PlayFilm({ handleOpenLogin }) {
         }, 500);
     };
 
-    // ⏮ Từ đầu: xoá lịch sử, phát từ 0
     const handleFromStart = () => {
         setShowModal(false);
         if (realMovieId && playEpisodes?.id) {

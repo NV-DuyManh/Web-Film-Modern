@@ -27,7 +27,6 @@ function MagicImport() {
     const [isCopied, setIsCopied] = useState(false);
     const [mode, setMode] = useState('IMPORT'); 
     
-    // PROGRESS STATES FOR ULTRA SMOOTH CRAWLING
     const [visualProgress, setVisualProgress] = useState(0);
     const [currentImportIdx, setCurrentImportIdx] = useState(-1);
     const [rowStatuses, setRowStatuses] = useState({});
@@ -45,7 +44,6 @@ function MagicImport() {
     const existingEpisodes = useContext(EpisodeContext) || [];
     const existingShowtimes = useContext(ShowTimeContext) || [];
 
-    // BACKGROUND SMOOTH CRAWLER EFFECT
     useEffect(() => {
         let timer;
         if (loading && previewData.length > 0) {
@@ -136,7 +134,6 @@ function MagicImport() {
         setPreviewData(prevData => prevData.filter((_, index) => index !== indexToRemove));
     };
 
-    // HÀM CLEAR TẤT CẢ DỮ LIỆU CỦA TOOL
     const handleClearAll = () => {
         setInputText("");
         setPreviewData([]);
@@ -191,7 +188,7 @@ Characters: Yuta Okkotsu, Rika Orimoto
 Char Desc: Cậu là một học sinh trung học mang trong mình nguồn chú lực khổng lồ nhưng lại luôn tự ti và sợ hãi sức mạnh của chính bản thân mình | Cô bé đáng thương này đã qua đời trong tai nạn giao thông và biến thành một oán linh đặc cấp luôn bảo vệ Yuta một cách thái quá.
 Gender: Female | Female
 Char Gender: Male | Female
-Plan: Premium
+Plan: Prenium
 Country: Japan
 Year: 2021
 Episodes: 1

@@ -27,7 +27,7 @@ function Pay(props) {
 
     const themeList = [
         { textColor: 'text-yellow-400', borderColor: 'border-yellow-400', shadowColor: 'shadow-[0_0_25px_rgba(250,204,21,0.15)]', glowColor: 'bg-yellow-400/10', dotShadow: 'shadow-[0_0_8px_rgba(250,204,21,0.8)]', dotBg: 'bg-yellow-400', badgeBg: 'bg-yellow-500', icon: <FaStar />, badgeText: 'Lựa chọn tốt nhất' },
-        { textColor: 'text-rose-400', borderColor: 'border-rose-400', shadowColor: 'shadow-[0_0_25px_rgba(244,63,94,0.15)]', glowColor: 'bg-rose-400/10', dotShadow: 'shadow-[0_0_8px_rgba(244,63,94,0.8)]', dotBg: 'bg-rose-400', badgeBg: 'bg-rose-500', icon: <FaCrown />, badgeText: 'Premium VIP' },
+        { textColor: 'text-rose-400', borderColor: 'border-rose-400', shadowColor: 'shadow-[0_0_25px_rgba(244,63,94,0.15)]', glowColor: 'bg-rose-400/10', dotShadow: 'shadow-[0_0_8px_rgba(244,63,94,0.8)]', dotBg: 'bg-rose-400', badgeBg: 'bg-rose-500', icon: <FaCrown />, badgeText: 'Prenium VIP' },
         { textColor: 'text-cyan-400', borderColor: 'border-cyan-400', shadowColor: 'shadow-[0_0_25px_rgba(34,211,238,0.15)]', glowColor: 'bg-cyan-400/10', dotShadow: 'shadow-[0_0_8px_rgba(34,211,238,0.8)]', dotBg: 'bg-cyan-400', badgeBg: 'bg-cyan-500', icon: <FaStar />, badgeText: 'Cao cấp' },
     ];
 

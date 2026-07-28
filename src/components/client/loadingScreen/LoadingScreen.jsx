@@ -4,7 +4,6 @@ import { CategoriesContext } from '../../../contexts/CategoryProvider';
 import Logo from '../../../assets/Icon.png';
 import './LoadingScreen.css';
 
-// Generate random particles once
 function generateParticles(count) {
     return Array.from({ length: count }, (_, i) => ({
         id: i,
@@ -17,7 +16,6 @@ function generateParticles(count) {
     }));
 }
 
-// Film strip decorative elements
 function generateFilmStrips(count) {
     return Array.from({ length: count }, (_, i) => ({
         id: i,
@@ -46,14 +44,12 @@ function LoadingScreen({ onFinished }) {
 
     const isDataReady = movies?.length > 0 && categories?.length > 0;
 
-    // Entrance sequence
     useEffect(() => {
         const t1 = setTimeout(() => setLogoReady(true), 150);
         const t2 = setTimeout(() => setBrandReady(true), 400);
         return () => { clearTimeout(t1); clearTimeout(t2); };
     }, []);
 
-    // Progress + fade-out logic
     useEffect(() => {
         if (isDataReady) {
             setProgress(100);

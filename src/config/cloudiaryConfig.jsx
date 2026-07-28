@@ -7,7 +7,6 @@ export const uploadImageToCloudinary = async (imgFile, folderName) => {
     formData.append('upload_preset', 'WebFilm'); // Replace 'vamfilm' with your actual unsigned upload preset name
     formData.append('cloud_name', cloud_name); // Replace 'dymypfkt4' with your actual Cloudinary cloud name
 
-    // Set the folder parameter
     if (folderName) {
         formData.append('folder', folderName); // Specify folder name for organized storage
     }
@@ -25,14 +24,12 @@ export const uploadImageToCloudinary = async (imgFile, folderName) => {
     }
 };
 
-// Function to delete an image from Cloudinary
 export const deleteImageFromCloudinary = async (publicId) => {
     const timestamp = Math.round((new Date()).getTime() / 1000);
     const apiKey = '869215743412731';  // Replace with your actual API key
     const apiSecret = '59yAfl73ToBobKI4YbH4KxTJMjY';  // Replace with your actual API secret
     const cloudName = 'dlk5mfjtc'; // Replace with your actual Cloudinary cloud name
 
-    // Generate the signature for authentication
     const signature = CryptoJS.SHA1(`public_id=${publicId}&timestamp=${timestamp}${apiSecret}`).toString();
 
     const formData = new FormData();

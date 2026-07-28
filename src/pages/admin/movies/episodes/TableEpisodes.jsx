@@ -44,7 +44,6 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                 const keywordLower = keyword.trim().toLowerCase();
                 const epString = e.numberEpisode.toString();
                 
-                // Allow matching natural language searches
                 const fullStrings = [
                     epString,
                     `tập ${epString}`,
@@ -59,8 +58,6 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                 
                 const matchEp = fullStrings.some(str => str.startsWith(keywordLower));
                 
-                // If keyword is a short number (e.g. "22"), it's an episode search. Don't match against URLs
-                // because URLs have dates (20240301) and random hashes (22x...) that cause false positives.
                 const isShortNumber = /^\d+$/.test(keywordLower) && keywordLower.length < 5;
                 const matchUrl = !isShortNumber && e.url && e.url.toLowerCase().includes(keywordLower);
                 

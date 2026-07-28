@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaClock, FaCalendarAlt } from "react-icons/fa";
 import { MovieContext } from "../../../../contexts/MovieProvider";
 import { getObjectById } from "../../../../services/firebaseReponse";
 import { AuthorContext } from "../../../../contexts/AuthorProvider";
@@ -68,14 +68,13 @@ export default function FilmCountry({ title, countryName, titleClass }) {
                                                 let cls = "bg-slate-600/90 border-slate-500 text-white";
                                                 let text = plan.name;
 
-                                                if (text.toLowerCase() === 'prenium') text = 'Premium';
 
                                                 if (name.includes('vip')) {
-                                                    cls = "bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
-                                                } else if (name.includes('premium') || name.includes('prenium')) {
-                                                    cls = "bg-gradient-to-r from-fuchsia-600 to-rose-500 border-pink-400 text-white shadow-[0_0_12px_rgba(225,29,72,0.6)]";
+                                                    cls = "bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
+                                                } else if (name.includes('prenium')) {
+                                                    cls = "bg-linear-to-r from-fuchsia-600 to-rose-500 border-pink-400 text-white shadow-[0_0_12px_rgba(225,29,72,0.6)]";
                                                 } else if (name.includes('basic')) {
-                                                    cls = "bg-gradient-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
+                                                    cls = "bg-linear-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
                                                 }
 
                                                 return (
@@ -88,12 +87,50 @@ export default function FilmCountry({ title, countryName, titleClass }) {
                                             })()}
 
                                             <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5 z-20">
-                                                <p className="px-2 py-0.5 rounded-md text-xs font-bold border border-[#facc15] text-[#facc15] bg-slate-900/70 backdrop-blur-sm inline">{e.duration + " Phút"}</p>
+                                                {(() => {
+                                                    const cId = (e.countriesID || '').toLowerCase();
+                                                    let bgCls = "from-indigo-500 to-purple-600 border-indigo-400 shadow-[0_2px_4px_rgba(99,102,241,0.4)]";
+                                                    if (cId.includes('korea') || cId.includes('hàn')) {
+                                                        bgCls = "from-cyan-500 to-blue-600 border-cyan-400 shadow-[0_2px_4px_rgba(6,182,212,0.4)]";
+                                                    } else if (cId.includes('china') || cId.includes('trung')) {
+                                                        bgCls = "from-red-500 to-rose-600 border-red-400 shadow-[0_2px_4px_rgba(239,68,68,0.4)]";
+                                                    } else if (cId.includes('japan') || cId.includes('nhật')) {
+                                                        bgCls = "from-pink-500 to-rose-500 border-pink-400 shadow-[0_2px_4px_rgba(236,72,153,0.4)]";
+                                                    } else if (cId.includes('thai') || cId.includes('thái')) {
+                                                        bgCls = "from-emerald-500 to-teal-600 border-emerald-400 shadow-[0_2px_4px_rgba(16,185,129,0.4)]";
+                                                    } else if (cId.includes('vietnam') || cId.includes('việt')) {
+                                                        bgCls = "from-yellow-400 to-orange-500 border-yellow-300 text-black shadow-[0_2px_4px_rgba(250,204,21,0.4)]";
+                                                    } else if (cId.includes('us') || cId.includes('mỹ') || cId.includes('u.s') || cId.includes('america')) {
+                                                        bgCls = "from-blue-600 to-indigo-700 border-blue-400 shadow-[0_2px_4px_rgba(37,99,235,0.4)]";
+                                                    }
+                                                    
+                                                    const textCls = cId.includes('vietnam') || cId.includes('việt') ? 'text-black' : 'text-white';
+                                                    
+                                                    return (
+                                                        <p className={`bg-linear-to-r ${bgCls} ${textCls} border text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider`}>
+                                                            {e.countriesID}
+                                                        </p>
+                                                    );
+                                                })()}
                                             </div>
                                         </div>
                                         <div className="pt-3 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
                                             <h3 className="m-0 text-base font-bold text-white truncate w-full transition-colors group-hover:text-[#facc15]">{e.otherName}</h3>
-                                            <p className="m-0 mt-1 text-[#8c909e] text-sm truncate w-full">{e.name}</p>
+                                            <p className="m-0 mt-1 text-[#8c909e] text-[10px] md:text-[11px] truncate w-full transition-colors group-hover:text-slate-300">{e.name}</p>
+                                            {(e.duration || e.releaseYear) && (
+                                                <div className="flex items-center justify-center gap-2 mt-1.5 w-full font-bold">
+                                                    {e.releaseYear && (
+                                                        <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                            <FaCalendarAlt /> {e.releaseYear}
+                                                        </span>
+                                                    )}
+                                                    {e.duration && (
+                                                        <span className="flex items-center gap-1.5 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                            <FaClock /> {e.duration} Phút
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </Link>

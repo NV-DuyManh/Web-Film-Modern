@@ -1526,19 +1526,6 @@ td:last-child {
         -webkit-user-drag: none; // Không cho phép kéo hình ảnh ra ngoài
     }
 
-    // Tự động thay đổi vị trí Nút Điều Hướng phụ thuộc vào Tỉ lệ hình ảnh của phim bên trong
-    // Công thức: top = calc(50% - (padding-top + (text-height / 2)))
-    // Với padding 24px mỗi chiều, và chiều cao chữ trung bình ~60px
-    // 1. Phim thông thường (cả ngang và dọc)
-    &:has(.aspect-video) .movie-nav-btn,
-    &:has(.aspect-2\/3) .movie-nav-btn {
-        top: calc(50% - 30px);
-    }
-
-    // 2. Phim Rạp (có nhiều thông tin text bên dưới hơn -> text height ~94px)
-    &:has(.aspect-video):has([class*="bg-emerald-600"]) .movie-nav-btn {
-        top: calc(50% - 47px);
-    }
 }
 
 // Vùng đệm cho khung slider
@@ -1555,6 +1542,32 @@ td:last-child {
 .movie-nav-btn {
     position: absolute;
     top: 40%; // Mặc định nếu không tính được theo logic ở trên
+    
+    // 1. Phim Sắp Chiếu (Không có nhiều chữ bên dưới)
+    &.filmcoming-prev-btn,
+    &.filmcoming-next-btn {
+        top: calc(50% - 30px);
+    }
+
+    // 2. Phim Rạp (Nhiều thông tin chữ và badge)
+    &.cinema-prev-btn,
+    &.cinema-next-btn {
+        top: calc(50% - 65px);
+    }
+    
+    // 3. Phim Mới, Phim Quốc Gia, Phim Hồng Kông (Có icon, năm, thời lượng)
+    &.filmnew-prev-btn, &.filmnew-next-btn,
+    &.hk-prev-btn, &.hk-next-btn,
+    &[class*="filmcountry-"] {
+        top: calc(50% - 50px);
+    }
+    
+    // 4. Phim Top (Dọc)
+    &.top-prev-btn,
+    &.top-next-btn {
+        top: calc(50% - 35px);
+    }
+
     z-index: 40;
     background: rgba(17, 24, 39, 0.85);
     backdrop-filter: blur(8px);
