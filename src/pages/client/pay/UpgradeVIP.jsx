@@ -70,11 +70,11 @@ function UpgradeVIP(props) {
                 </div>
 
                 <div className="flex items-center justify-center mb-8">
-                    <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+                    <div className="h-px flex-1 bg-linear-to-r from-transparent via-slate-600 to-transparent"></div>
                     <p className="px-4 text-white font-bold text-lg uppercase tracking-widest drop-shadow-md inline">
                         Chọn gói phù hợp
                     </p>
-                    <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+                    <div className="h-px flex-1 bg-linear-to-r from-transparent via-slate-600 to-transparent"></div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
@@ -140,7 +140,7 @@ function UpgradeVIP(props) {
                 <div className="flex flex-col items-center space-y-4">
                     <button 
                         onClick={() => navigate(`/payVip?id=${selectedPlan}`)}
-                        className="w-full md:w-2/3 max-w-md bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(79,70,229,0.4)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.6)] hover:-translate-y-1 transition-all duration-300"
+                        className="w-full md:w-2/3 max-w-md bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(79,70,229,0.4)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.6)] hover:-translate-y-1 transition-all duration-300"
                     >
                         Tiếp tục thanh toán
                     </button>

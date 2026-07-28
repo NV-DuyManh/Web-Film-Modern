@@ -34,7 +34,7 @@ function MenuAdmin() {
                         <p className="text-cyan-300 text-[28px] inline">M</p>
                         <p className="text-cyan-500 text-[22px] inline">FILM</p>
                     </h1>
-                    <div className="h-6 w-1 bg-gradient-to-b from-cyan-400 via-pink-500 to-fuchsia-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(236,72,153,0.9)]"></div>
+                    <div className="h-6 w-1 bg-linear-to-b from-cyan-400 via-pink-500 to-fuchsia-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(236,72,153,0.9)]"></div>
                     <h1 className='glow-text-multi text-lg font-black tracking-widest uppercase'>
                         ADMIN
                     </h1>

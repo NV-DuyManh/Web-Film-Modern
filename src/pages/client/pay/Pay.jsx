@@ -43,11 +43,11 @@ function Pay(props) {
                 {rentPrice > 0 && (
                     <div className="mb-10">
                         <div className="flex items-center justify-center mb-6">
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+                            <div className="h-px flex-1 bg-linear-to-r from-transparent via-slate-600 to-transparent"></div>
                             <p className="px-4 text-cyan-400 font-semibold text-sm uppercase tracking-wider drop-shadow-[0_0_5px_rgba(34,211,238,0.4)] inline">
                                 Thuê phim lẻ
                             </p>
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+                            <div className="h-px flex-1 bg-linear-to-r from-transparent via-slate-600 to-transparent"></div>
                         </div>
 
                         <div 
@@ -78,11 +78,11 @@ function Pay(props) {
                 {comboPlans.length > 0 && (
                     <div className="mb-10">
                         <div className="flex items-center justify-center mb-6">
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+                            <div className="h-px flex-1 bg-linear-to-r from-transparent via-slate-600 to-transparent"></div>
                             <p className="px-4 text-yellow-400 font-semibold text-sm uppercase tracking-wider drop-shadow-[0_0_5px_rgba(250,204,21,0.4)] inline">
                                 {rentPrice > 0 ? 'Tiết kiệm hơn với Combo' : 'Mua trọn gói'}
                             </p>
-                            <div className="h-[1px] flex-1 bg-gradient-to-r from-transparent via-slate-600 to-transparent"></div>
+                            <div className="h-px flex-1 bg-linear-to-r from-transparent via-slate-600 to-transparent"></div>
                         </div>
 
                         <div className={`grid grid-cols-1 ${comboPlans.length >= 2 ? 'md:grid-cols-2' : ''} ${comboPlans.length >= 3 ? 'lg:grid-cols-3' : ''} gap-6`}>
@@ -138,7 +138,7 @@ function Pay(props) {
                                 navigate(`/payVip?id=${selectedPlan}`);
                             }
                         }}
-                        className="w-full md:w-2/3 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(245,158,11,0.4)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.6)] hover:-translate-y-1 transition-all duration-300">
+                        className="w-full md:w-2/3 bg-linear-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(245,158,11,0.4)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.6)] hover:-translate-y-1 transition-all duration-300">
                         Tiếp tục thanh toán
                     </button>
                     <button 

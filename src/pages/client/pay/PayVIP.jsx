@@ -69,13 +69,13 @@ function PayVIP(props) {
                         Phương thức thanh toán
                     </h1>
                     <p className="text-slate-300 text-sm">Hủy bất cứ lúc nào</p>
-                    <div className="w-16 h-1 bg-gradient-to-r from-blue-500 to-cyan-400 mx-auto mt-3 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.5)]"></div>
+                    <div className="w-16 h-1 bg-linear-to-r from-blue-500 to-cyan-400 mx-auto mt-3 rounded-full shadow-[0_0_10px_rgba(34,211,238,0.5)]"></div>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
                     <div className="bg-slate-900/60 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.4)]">
                         <h2 className="text-xl font-black text-white mb-6 tracking-wide flex items-center gap-2">
-                            <p className="w-2 h-6 bg-cyan-400 rounded-full inline-block inline"></p>
+                            <p className="w-2 h-6 bg-cyan-400 rounded-full inline"></p>
                             THỜI HẠN GÓI CAO CẤP
                         </h2>
                         
@@ -101,7 +101,7 @@ function PayVIP(props) {
                                                 <div className="flex items-center gap-2">
                                                     <p className={`font-black text-lg ${isSelected ? 'text-cyan-400' : 'text-white'} inline`}>{dur.months} tháng</p>
                                                     {dur.tag && (
-                                                        <p className="bg-gradient-to-r from-blue-500 to-cyan-500 text-white text-[10px] px-2 py-0.5 rounded font-bold shadow-md inline">{dur.tag}</p>
+                                                        <p className="bg-linear-to-r from-blue-500 to-cyan-500 text-white text-[10px] px-2 py-0.5 rounded font-bold shadow-md inline">{dur.tag}</p>
                                                     )}
                                                 </div>
                                                 <p className="text-slate-300 text-sm inline">Tiết kiệm {dur.discount}%</p>
@@ -122,7 +122,7 @@ function PayVIP(props) {
                         </div>
 
                         <div className="flex items-start gap-5 bg-slate-800/60 p-5 rounded-2xl border border-white/5">
-                            <div className="w-16 h-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+                            <div className="w-16 h-20 bg-linear-to-br from-cyan-400 to-blue-600 rounded-xl flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(34,211,238,0.3)]">
                                 <FaCreditCard className="text-3xl text-white drop-shadow-md" />
                             </div>
                             <div className="flex-1 space-y-2.5">
@@ -171,7 +171,7 @@ function PayVIP(props) {
 
                     <div className="bg-slate-900/60 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.4)]">
                         <h2 className="text-xl font-black text-white mb-6 tracking-wide flex items-center gap-2">
-                            <p className="w-2 h-6 bg-yellow-400 rounded-full inline-block inline"></p>
+                            <p className="w-2 h-6 bg-yellow-400 rounded-full inline"></p>
                             CHỌN PHƯƠNG THỨC
                         </h2>
                         
@@ -202,7 +202,7 @@ function PayVIP(props) {
                         </div>
 
                         <div className="space-y-4">
-                            <button className="w-full h-14 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 rounded-xl flex items-center justify-center transition-all shadow-[0_4px_15px_rgba(251,191,36,0.3)] hover:-translate-y-1">
+                            <button className="w-full h-14 bg-linear-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 rounded-xl flex items-center justify-center transition-all shadow-[0_4px_15px_rgba(251,191,36,0.3)] hover:-translate-y-1">
                                 <p className="text-[#003087] font-black italic text-2xl drop-shadow-sm inline">PayPal</p>
                             </button>
                             
@@ -217,7 +217,7 @@ function PayVIP(props) {
                             </div>
 
                             <div className="mt-8 pt-8 border-t border-slate-700/50">
-                                <button className="w-full h-14 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 rounded-xl flex items-center justify-center transition-all shadow-[0_4px_15px_rgba(6,182,212,0.4)] hover:-translate-y-1">
+                                <button className="w-full h-14 bg-linear-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 rounded-xl flex items-center justify-center transition-all shadow-[0_4px_15px_rgba(6,182,212,0.4)] hover:-translate-y-1">
                                     <p className="text-white font-black text-lg tracking-wide inline">THANH TOÁN NGAY</p>
                                 </button>
                             </div>
