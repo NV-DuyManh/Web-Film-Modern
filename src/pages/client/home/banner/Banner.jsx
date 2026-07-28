@@ -78,19 +78,19 @@ export default function Banner() {
                             </h2>
 
                             <div className='mt-3 sm:mt-4 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
-                                <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-3 font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
+                                <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
                                     {getObjectById(plans, e.planID)?.name || "Premium"}
                                 </button>
 
-                                <button className='rounded-md cursor-pointer border border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-3 font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
+                                <button className='rounded-md cursor-pointer border border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
                                     {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, e.author)?.name || "Đang cập nhật")}
                                 </button>
 
-                                <button className='rounded-md cursor-pointer border border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-3 font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
+                                <button className='rounded-md cursor-pointer border border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
                                     {e.endEpisode} Tập
                                 </button>
 
-                                <button className='rounded-md cursor-pointer border border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-3 font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition-all duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
+                                <button className='rounded-md cursor-pointer border border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition-all duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
                                     {e.duration} Phút
                                 </button>
                             </div>

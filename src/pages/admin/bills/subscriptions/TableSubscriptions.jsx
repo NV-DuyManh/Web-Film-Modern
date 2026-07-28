@@ -139,7 +139,7 @@ function TableSubscriptions({ handleClickOpen, setSubscription, subscription, se
                                         ${row.price}
                                     </td>
                                     <td className="table-cell">
-                                        <p className={`px-2 py-1 rounded text-xs font-bold ${row.status === "success" ? "bg-emerald-500/20 text-emerald-400" : row.status === "pending" ? "bg-amber-500/20 text-amber-400" : "bg-rose-500/20 text-rose-400"} inline`}>
+                                        <p className={`px-2 py-1 rounded text-xs font-bold ${row.status?.toLowerCase() === "success" ? "bg-emerald-500/20 text-emerald-400" : row.status?.toLowerCase() === "pending" ? "bg-amber-500/20 text-amber-400" : "bg-rose-500/20 text-rose-400"} inline`}>
                                             {row.status?.toUpperCase()}
                                         </p>
                                     </td>

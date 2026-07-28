@@ -15,8 +15,7 @@ import { MovieContext } from '../../../contexts/MovieProvider';
 import { EpisodeContext } from '../../../contexts/EpisodeProvider';
 import { ShowTimeContext } from '../../../contexts/ShowTimeProvider';
 
-import LOGO from "../../../assets/Logo.png";
-import LOGO_POSTER from "../../../assets/Logo6.png";
+import LOGO from "../../../assets/Logo6.png";
 import LOGO_BANNER from "../../../assets/Logo5.png";
 
 function MagicImport() {
@@ -434,53 +433,78 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
 
     return (
         <div className='p-6 min-h-screen text-white'>
-            <div className='flex items-center justify-between gap-4 mb-8 bg-slate-900/20 backdrop-blur-lg p-5 rounded-2xl border border-purple-500/30 shadow-[0_0_20px_rgba(168,85,247,0.15)] transition-all'>
+            <div className='magic-header flex items-center justify-between gap-4 mb-6 py-3 px-5 rounded-2xl'>
                 <div className='flex items-center gap-4'>
-                    <div className='w-14 h-14 rounded-xl bg-linear-to-br from-cyan-400 to-purple-500 flex justify-center items-center shadow-[0_0_15px_rgba(34,211,238,0.5)]'>
-                        <FaMagic className='text-3xl text-white' />
+                    <div className='w-12 h-12 rounded-xl bg-linear-to-br from-cyan-400 to-purple-500 flex justify-center items-center shadow-[0_0_15px_rgba(34,211,238,0.5)]'>
+                        <FaMagic className='text-2xl text-white' />
                     </div>
                     <div>
-                        <h1 className='text-3xl font-black tracking-wide glow-text uppercase'>Magic Import</h1>
-                        <p className='text-gray-400 text-sm mt-1'>Copy table from Excel to automatically sync Movies, Episodes & Showtimes.</p>
+                        <h1 className='text-2xl font-black tracking-wide glow-text uppercase'>Magic Import</h1>
+                        <p className='text-gray-400 text-xs mt-0.5'>Copy table from Excel to automatically sync Movies, Episodes & Showtimes.</p>
                     </div>
                 </div>
 
-                {/* WRAPPER CHỨA NÚT CLEAR VÀ AI PROMPT ĐỂ NẰM CÙNG HÀNG */}
+                {/* CLEAR BUTTON */}
                 <div className='flex items-center gap-4'>
-                    
-                    {/* NÚT CLEAR DATA SIÊU NGẦU */}
                     <button 
                         onClick={handleClearAll}
                         title="Clear all inputs and tables"
                         className="flex hover:scale-105 cursor-pointer items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
                     >
                         <FaEraser className="text-sm" />
-                        <p className="text-xs font-bold  uppercase tracking-wider hidden sm:block">Clear</p>
+                        <p className="text-xs font-bold uppercase tracking-wider hidden sm:block">Clear</p>
                     </button>
 
-                    {/* AI PROMPT GENERATOR */}
-                    <div className='flex items-center gap-2 bg-slate-900/40 p-2 rounded-xl border border-pink-500/30 shadow-[0_0_15px_rgba(219,39,119,0.15)]'>
-                        <div className='flex items-center gap-2 px-2 border-r border-white/10'>
+                    {/* AI PROMPT CONTROL BAR */}
+                    <div className='flex items-stretch rounded-xl overflow-hidden'
+                        style={{
+                            background: 'rgba(10, 15, 25, 0.6)',
+                            backdropFilter: 'blur(10px)',
+                            WebkitBackdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(0, 242, 254, 0.2)',
+                            boxShadow: '0 0 8px rgba(0, 242, 254, 0.15), 0 0 20px rgba(139, 92, 246, 0.08), inset 0 0 12px rgba(0, 242, 254, 0.03)',
+                        }}
+                    >
+                        {/* AI PROMPT LABEL */}
+                        <div className='flex items-center gap-2 px-3'>
                             <FaRobot className="text-pink-400 text-xl" />
-                            <p className="text-xs font-bold text-pink-300 uppercase tracking-wider hidden xl:block">AI Prompt</p>
+                            <p className="text-xs font-bold text-pink-300 uppercase tracking-wider hidden xl:block whitespace-nowrap">AI Prompt</p>
                         </div>
-                        <input
-                            type="number"
-                            className="w-16 bg-black/30 border border-white/10 rounded-lg p-2 text-xs text-center text-gray-300 focus:outline-none focus:border-pink-400 transition-all"
-                            placeholder="Qty"
-                            value={promptCount}
-                            onChange={(e) => setPromptCount(e.target.value)}
-                        />
+
+                        {/* SEPARATOR */}
+                        <div className="w-px self-stretch my-1.5 bg-white/10"></div>
+
+                        {/* COUNT INPUT */}
+                        <div className='flex items-center gap-1.5 px-2'>
+                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">SL</p>
+                            <input
+                                type="number"
+                                className="w-12 bg-transparent border-none p-2.5 text-xs text-center text-gray-300 focus:outline-none focus:bg-white/5 transition-all"
+                                placeholder="Số lượng"
+                                value={promptCount}
+                                onChange={(e) => setPromptCount(e.target.value)}
+                            />
+                        </div>
+
+                        {/* SEPARATOR */}
+                        <div className="w-px self-stretch my-1.5 bg-white/10"></div>
+
+                        {/* THEME INPUT */}
                         <input
                             type="text"
-                            className="w-36 lg:w-48 bg-black/30 border border-white/10 rounded-lg p-2 text-xs text-gray-300 focus:outline-none focus:border-pink-400 transition-all"
-                            placeholder="Theme (e.g. Marvel)"
+                            className="w-44 lg:w-56 bg-transparent border-none p-2.5 text-xs text-gray-300 focus:outline-none focus:bg-white/5 transition-all"
+                            placeholder="Nhập thể loại (VD: Marvel, Anime...)"
                             value={promptTheme}
                             onChange={(e) => setPromptTheme(e.target.value)}
                         />
+
+                        {/* SEPARATOR */}
+                        <div className="w-px self-stretch my-1.5 bg-white/10"></div>
+
+                        {/* COPY BUTTON */}
                         <button 
                             onClick={handleCopyPrompt}
-                            className={`px-4 py-2 cursor-pointer hover:scale-105 rounded-lg text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 active:scale-95 ${isCopied ? 'bg-emerald-600 shadow-[0_0_15px_rgba(5,150,105,0.6)]' : 'bg-pink-600 hover:bg-pink-500 shadow-[0_0_10px_rgba(219,39,119,0.4)]'}`}
+                            className={`px-4 py-2.5 cursor-pointer hover:scale-105 text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 active:scale-95 ${isCopied ? 'bg-emerald-600/80' : 'bg-pink-600/80 hover:bg-pink-500/80'}`}
                         >
                             {isCopied ? (
                                 <>
@@ -498,7 +522,8 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
 
             <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
                 <div className='col-span-1 lg:col-span-4 flex flex-col gap-4'>
-                    <div className='bg-slate-900/20 backdrop-blur-lg border border-cyan-500/40 shadow-[0_0_20px_rgba(6,182,212,0.15)] rounded-2xl p-5 relative group transition-all'>
+                    <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(0, 255, 255, 0.25), rgba(139, 92, 246, 0.25))', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.08)' }}>
+                    <div className='table-container p-5 relative group transition-all' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
                         
                         <div className="flex bg-slate-800/50 rounded-xl p-1 mb-5 border border-white/10 relative">
                             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-yellow-600/60 p-2 flex justify-center items-center rounded-full z-10">
@@ -524,7 +549,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             <FaCloudUploadAlt className="text-xl" /> Data Input Area
                         </h2>
                         <textarea
-                            className='w-full h-80 bg-black/20 border border-white/10 rounded-xl p-4 text-sm text-gray-300 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.2)] custom-scrollbar'
+                            className='w-full h-56 bg-black/20 border border-white/10 rounded-xl p-4 text-sm text-gray-300 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.2)] custom-scrollbar'
                             placeholder='Paste data table here...'
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)} 
@@ -551,11 +576,12 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             </label>
                         </div>
                     </div>
+                    </div>
                 </div>
 
                 <div className='col-span-1 lg:col-span-8 flex flex-col gap-4'>
-                    <div className={`bg-slate-900/20 backdrop-blur-lg rounded-2xl p-5 h-full flex flex-col justify-between transition-all duration-300 border
-                        ${mode === 'IMPORT' ? 'border-cyan-500/40 shadow-[0_0_20px_rgba(6,182,212,0.15)]' : 'border-fuchsia-500/40 shadow-[0_0_20px_rgba(217,70,239,0.15)]'}`}>
+                    <div className='table-wrapper h-full' style={{ background: 'linear-gradient(120deg, rgba(0, 255, 255, 0.25), rgba(139, 92, 246, 0.25))', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.08)' }}>
+                    <div className='table-container p-5 h-full flex flex-col justify-between transition-all duration-300' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
                         <div>
                             <h2 className={`font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between transition-colors
                                 ${mode === 'IMPORT' ? 'text-cyan-400' : 'text-fuchsia-400'}`}>
@@ -566,11 +592,12 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 </p>
                             </h2>
                             
-                            <div className='border border-white/10 rounded-xl bg-black/20 relative overflow-hidden h-105'>
+                            <div className='border border-white/10 rounded-xl overflow-hidden mt-4'>
+                                <div className='h-72 flex flex-col relative'>
                                 {previewData.length > 0 ? (
-                                    <div className='overflow-auto h-full custom-scrollbar p-2'>
-                                        <table className='w-full whitespace-nowrap text-xs min-w-max'>
-                                            <thead className='text-gray-400 border-b border-white/10 bg-slate-800/40 sticky top-0 z-10'>
+                                    <div className='overflow-auto h-full custom-scrollbar'>
+                                        <table className='w-full whitespace-nowrap text-xs min-w-max text-left border-collapse'>
+                                            <thead className='table-header border-b border-white/20 sticky top-0 z-10'>
                                                 <tr>
                                                     <th className='p-3 text-center align-middle'>STT</th>
                                                     <th className='p-3 text-center align-middle'>ACTION</th>
@@ -632,11 +659,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                                                                 const val = e.target.value;
                                                                                 setPreviewData(prev => prev.map((item, i) => i === idx ? { ...item, matchedMovieId: val } : item));
                                                                             }}
-                                                                            className="bg-slate-900 border border-white/10 rounded px-2 py-1 text-[10px] text-fuchsia-400 focus:outline-none focus:border-fuchsia-500 w-full font-sans cursor-pointer mt-1"
+                                                                            className="bg-slate-800 border border-white/10 rounded px-2 py-1.5 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 w-full font-sans cursor-pointer mt-1"
                                                                         >
                                                                             <option value="">-- Manual Link Select --</option>
                                                                             {existingMovies.map(m => (
-                                                                                <option key={m.id} value={m.id}>{m.name}</option>
+                                                                                <option key={m.id} value={m.id} className="bg-slate-800 text-gray-200 py-1">{m.name}</option>
                                                                             ))}
                                                                         </select>
                                                                     )}
@@ -709,15 +736,16 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                         <p>Data will appear here after parsing</p>
                                     </div>
                                 )}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="mt-4 bg-slate-900/20 backdrop-blur-lg p-4 rounded-xl border border-white/10 shadow-inner">
+                        <div className="mt-4 p-4">
                             {loading && (
                                 <div className="mb-4">
                                     <div className="flex justify-between text-xs font-bold text-cyan-400 mb-1.5 uppercase tracking-wider">
                                         <p className="animate-pulse inline">Syncing Cloud Database...</p>
-                                        <p className="inline">{visualProgress}%</p>
+                                        <p className="inline">{parseFloat(Number(visualProgress).toFixed(2))}%</p>
                                     </div>
                                     <div className="w-full bg-black/40 rounded-full h-3.5 overflow-hidden p-0.5 border border-white/10 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
                                         <div 
@@ -748,6 +776,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             </button>
                         </div>
 
+                    </div>
                     </div>
                 </div>
             </div>

@@ -86,17 +86,17 @@ export default function TopFilm() {
                                         </div>
 
                                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-30 transition-all duration-300">                                            {e.episodeSub && (
-                                            <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-2 font-bold rounded backdrop-blur-md shadow-sm">
+                                            <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
                                                 PĐ.{String(e.episodeSub).trim()}
                                             </div>
                                         )}
                                             {e.episodeVoice && (
-                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-2 font-bold rounded backdrop-blur-md shadow-sm">
+                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
                                                     TM.{String(e.episodeVoice).trim()}
                                                 </div>
                                             )}
                                             {e.episodeDub && (
-                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-pink-500/20 border border-pink-400/50 text-pink-300 text-2 font-bold rounded backdrop-blur-md shadow-sm">
+                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-pink-500/20 border border-pink-400/50 text-pink-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
                                                     LT.{String(e.episodeDub).trim()}
                                                 </div>
                                             )}

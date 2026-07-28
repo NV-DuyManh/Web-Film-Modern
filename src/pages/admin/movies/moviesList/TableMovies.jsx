@@ -124,7 +124,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{characterItems.map(item => renderItem(item, 'character'))}</div>
                         </div>
                     )}
-                    {totalItems === 0 && <p className="text-3 text-gray-500 inline">No entity</p>}
+                    {totalItems === 0 && <p className="text-[12px] text-gray-500 inline">No entity</p>}
                 </div>
             </div>
         );
@@ -139,8 +139,8 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                 </div>
                 <div className="flex w-fit max-w-95 flex-wrap gap-2 px-3 py-3 max-h-65 overflow-y-auto">
                     {categoryItems.length > 0 ? categoryItems.map((item) => (
-                        <p key={item.id} className="rounded-full bg-purple-500/12 px-3 py-1.5 text-3 font-semibold text-purple-100 ring-1 ring-purple-300/15 cursor-pointer transition-all duration-300 hover:bg-purple-500/40 hover:text-white hover:ring-purple-400 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(168,85,247,0.6)] inline">{item.name}</p>
-                    )) : <p className="text-3 text-gray-500 inline">No categories</p>}
+                        <p key={item.id} className="rounded-full bg-purple-500/12 px-3 py-1.5 text-[12px] font-semibold text-purple-100 ring-1 ring-purple-300/15 cursor-pointer transition-all duration-300 hover:bg-purple-500/40 hover:text-white hover:ring-purple-400 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(168,85,247,0.6)] inline">{item.name}</p>
+                    )) : <p className="text-[12px] text-gray-500 inline">No categories</p>}
                 </div>
             </div>
         );

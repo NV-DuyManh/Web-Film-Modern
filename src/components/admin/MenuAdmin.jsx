@@ -30,8 +30,8 @@ function MenuAdmin() {
 
             <div className="flex justify-center items-center relative h-8 mb-4 mt-2 shrink-0">
                 <div className={`justify-center items-center gap-2.5 whitespace-nowrap overflow-hidden transition-all duration-300 w-full ${!Menu ? 'flex' : 'hidden max-sm:flex'}`}>
-                    <h1 className='flex items-baseline font-black tracking-tighter uppercase' style={{ textShadow: '0 0 15px rgba(34,211,238,0.8)' }}>
-                        <p className="text-cyan-300 text-7 inline">M</p>
+                    <h1 className='flex items-center font-black tracking-tighter uppercase' style={{ textShadow: '0 0 15px rgba(34,211,238,0.8)' }}>
+                        <p className="text-cyan-300 text-[28px] inline">M</p>
                         <p className="text-cyan-500 text-[22px] inline">FILM</p>
                     </h1>
                     <div className="h-6 w-1 bg-linear-to-b from-cyan-400 via-pink-500 to-fuchsia-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(236,72,153,0.9)]"></div>
@@ -42,7 +42,7 @@ function MenuAdmin() {
 
                 <div className={`justify-center items-center transition-all duration-300 w-full ${Menu ? 'hidden sm:flex' : 'hidden'}`}>
                     <h1 className='flex items-center justify-center font-black tracking-tighter uppercase' style={{ textShadow: '0 0 15px rgba(34,211,238,0.8)' }}>
-                        <p className="text-cyan-300 text-8 ml-1 inline">M</p>
+                        <p className="text-cyan-300 text-[32px] ml-1 inline">M</p>
                     </h1>
                 </div>
 

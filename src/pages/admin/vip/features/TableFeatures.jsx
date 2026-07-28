@@ -114,7 +114,7 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                                     <td className="table-cell text-center font-bold text-cyan-400">
                                         {getPlanName(row.planID)}
                                     </td>
-                                    <td className="table-cell text-center max-w-50 whitespace-normal text-3 text-gray-400" title={row.description}>
+                                    <td className="table-cell text-center max-w-50 whitespace-normal text-[12px] text-gray-400" title={row.description}>
                                         <div className="line-clamp-3 leading-relaxed text-center">
                                             {row.description || "N/A"}
                                         </div>

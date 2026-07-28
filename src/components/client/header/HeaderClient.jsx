@@ -163,7 +163,7 @@ function HeaderClient() {
                                         />
 
                                         <div className="flex items-center gap-2 mb-1">
-                                            <p className="text-4 font-bold text-white truncate tracking-wide">
+                                            <p className="text-[16px] font-bold text-white truncate tracking-wide">
                                                 {isLogin?.displayName || 'Nguyễn Văn A'}
                                             </p>
                                         </div>

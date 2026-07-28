@@ -1,4 +1,4 @@
-﻿// ============================================================================
+// ============================================================================
 // BIẾN (VARIABLES) - Lưu trữ các mã màu dùng chung trong toàn bộ app
 // Giúp thay đổi màu sắc nhanh chóng ở một nơi duy nhất.
 // ============================================================================
@@ -522,6 +522,52 @@ li {
     -webkit-text-fill-color: transparent;
     animation: textShine 1.5s linear infinite;
     filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.4));
+}
+
+// ============================================================================
+// COMPONENT: MAGIC IMPORT HEADER (NEON GLASS PANEL)
+// Áp dụng: Header trang Magic Import - cùng hệ thống neon với Search
+// Cường độ: 60-70% so với Search input
+// ============================================================================
+@keyframes neonPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 242, 254, 0.35), 0 0 25px rgba(139, 92, 246, 0.15), inset 0 0 15px rgba(0, 242, 254, 0.04); }
+    50% { box-shadow: 0 0 14px rgba(0, 242, 254, 0.45), 0 0 30px rgba(139, 92, 246, 0.2), inset 0 0 20px rgba(0, 242, 254, 0.06); }
+}
+
+.magic-header {
+    background: rgba(10, 15, 25, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid transparent;
+    border-image: linear-gradient(90deg, rgba(0, 242, 254, 0.4), rgba(99, 102, 241, 0.35), rgba(139, 92, 246, 0.35), rgba(236, 72, 153, 0.3)) 1;
+    border-radius: 16px;
+    // border-image doesn't support border-radius, so we use a clip workaround
+    border-image: none;
+    border-color: rgba(0, 242, 254, 0.3);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.35), 0 0 25px rgba(139, 92, 246, 0.15), inset 0 0 15px rgba(0, 242, 254, 0.04);
+    animation: neonPulse 5s ease-in-out infinite;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    // Gradient border overlay via pseudo-element (supports border-radius)
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: 16px;
+        padding: 1px;
+        background: linear-gradient(90deg, rgba(0, 242, 254, 0.4), rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.25));
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        -webkit-mask-composite: xor;
+        pointer-events: none;
+    }
+
+    &:hover {
+        box-shadow: 0 0 14px rgba(0, 242, 254, 0.45), 0 0 30px rgba(139, 92, 246, 0.2), inset 0 0 20px rgba(0, 242, 254, 0.06);
+    }
 }
 
 // ============================================================================

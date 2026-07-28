@@ -70,7 +70,7 @@ function HeaderAdmin() {
                                 {isLogin?.imgUrl ? (
                                     <img src={isLogin.imgUrl} alt="avatar" className="relative z-10 w-9 h-9 rounded-full object-cover border-2 border-green-400 shadow-[0_0_10px_rgba(74,222,128,0.6)]" />
                                 ) : (
-                                    <FaUserCircle className="relative z-10 text-8 drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
+                                    <FaUserCircle className="relative z-10 text-[32px] drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
                                 )}
 
                                 <p className="absolute bottom-0 right-0 z-20 w-3 h-3 bg-[#22c55e] border-2 border-[#1e293b] rounded-full shadow-[0_0_5px_rgba(34,197,94,1)]"></p>
@@ -86,7 +86,7 @@ function HeaderAdmin() {
                                         )}
                                         <div className="flex flex-col min-w-0">
                                             <p className="text-[15px] font-bold text-white truncate tracking-wide">{isLogin?.displayName || 'Admin'}</p>
-                                            <p className="text-3 text-cyan-400 truncate">{isLogin?.email || 'admin@mfilm.com'}</p>
+                                            <p className="text-[12px] text-cyan-400 truncate">{isLogin?.email || 'admin@mfilm.com'}</p>
                                         </div>
                                     </div>
 
