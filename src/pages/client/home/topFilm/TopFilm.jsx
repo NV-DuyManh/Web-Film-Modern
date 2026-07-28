@@ -7,12 +7,14 @@ import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
+import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
 export default function TopFilm() {
     const movies = useContext(MovieContext);
     const topMovies = movies?.slice(0, 10) || [];
     const authors = useContext(AuthorContext);
+    const plans = useContext(PlanContext);
 
     return (
         <div className='bg-[#111827] w-full text-white py-10 px-6 md:px-10 overflow-hidden'>
@@ -74,6 +76,7 @@ export default function TopFilm() {
                                             <div className={`absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none transform ${index % 2 === 0 ? '-skew-y-[8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
                                         </div>
 
+
                                         <div className="absolute bottom-0 left-0 w-full h-[20%] rounded-b-xl overflow-hidden border-b-[3px] border-l-[3px] border-r-[3px] border-transparent group-hover:border-[#facc15] z-20 transition-colors duration-300">
                                             <img
                                                 src={e.imgUrl}
@@ -83,6 +86,34 @@ export default function TopFilm() {
                                             />
                                             <div className="absolute left-0 w-full bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
                                             <div className="absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
+                                        </div>
+
+                                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex justify-center w-full z-30 transition-all duration-300">
+                                            {e.planID && (() => {
+                                                const plan = getObjectById(plans, e.planID);
+                                                if (!plan) return null;
+                                                const name = (plan.name || '').toLowerCase();
+                                                let cls = "bg-slate-500/30 border-slate-400/50 text-white shadow-sm";
+                                                let text = plan.name;
+
+                                                if (text.toLowerCase() === 'prenium') text = 'Premium';
+
+                                                if (name.includes('vip')) {
+                                                    cls = "bg-yellow-500/30 border-yellow-400/50 text-yellow-300 shadow-[0_0_10px_rgba(234,179,8,0.4)]";
+                                                } else if (name.includes('premium') || name.includes('prenium')) {
+                                                    cls = "bg-pink-500/30 border-pink-400/50 text-pink-300 shadow-[0_0_10px_rgba(236,72,153,0.4)]";
+                                                } else if (name.includes('basic')) {
+                                                    cls = "bg-cyan-500/30 border-cyan-400/50 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.4)]";
+                                                }
+
+                                                return (
+                                                    <div className="group-hover:scale-110 transition-transform duration-300 origin-center">
+                                                        <p className={`text-[10px] md:text-[11px] font-black px-3 py-0.5 rounded-full border ${cls} backdrop-blur-md uppercase tracking-widest`}>
+                                                            {text}
+                                                        </p>
+                                                    </div>
+                                                );
+                                            })()}
                                         </div>
 
                                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-30 transition-all duration-300">                                            {e.episodeSub && (
@@ -124,6 +155,7 @@ export default function TopFilm() {
                                                 <p>•</p>
                                                 <p className="truncate">{e.endEpisode} Tập </p>
                                             </div>
+
                                         </div>
                                     </div>
 

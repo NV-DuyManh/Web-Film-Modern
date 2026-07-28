@@ -53,26 +53,26 @@ export default function FilmNew() {
                                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
                                             {e.planID && (() => {
-                                                const planObj = getObjectById(plans, e.planID);
-                                                if (!planObj) return null;
-                                                const planNameLower = (planObj.name || '').toLowerCase();
-                                                let badgeClasses = "bg-slate-600/90 border-slate-500 text-white";
-                                                let badgeText = planObj.name;
+                                                const plan = getObjectById(plans, e.planID);
+                                                if (!plan) return null;
+                                                const name = (plan.name || '').toLowerCase();
+                                                let cls = "bg-slate-600/90 border-slate-500 text-white";
+                                                let text = plan.name;
 
-                                                if (badgeText.toLowerCase() === 'prenium') badgeText = 'Premium';
+                                                if (text.toLowerCase() === 'prenium') text = 'Premium';
 
-                                                if (planNameLower.includes('vip')) {
-                                                    badgeClasses = "bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
-                                                } else if (planNameLower.includes('premium') || planNameLower.includes('prenium')) {
-                                                    badgeClasses = "bg-gradient-to-r from-fuchsia-600 to-rose-500 border-pink-400 text-white shadow-[0_0_12px_rgba(225,29,72,0.6)]";
-                                                } else if (planNameLower.includes('basic')) {
-                                                    badgeClasses = "bg-gradient-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
+                                                if (name.includes('vip')) {
+                                                    cls = "bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
+                                                } else if (name.includes('premium') || name.includes('prenium')) {
+                                                    cls = "bg-gradient-to-r from-fuchsia-600 to-rose-500 border-pink-400 text-white shadow-[0_0_12px_rgba(225,29,72,0.6)]";
+                                                } else if (name.includes('basic')) {
+                                                    cls = "bg-gradient-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
                                                 }
 
                                                 return (
                                                     <div className="absolute top-2 right-2 flex gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">
-                                                        <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${badgeClasses} backdrop-blur-md uppercase tracking-wider`}>
-                                                            {badgeText}
+                                                        <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} backdrop-blur-md uppercase tracking-wider`}>
+                                                            {text}
                                                         </p>
                                                     </div>
                                                 );
