@@ -6,12 +6,14 @@ import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
+import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
 import { Link } from 'react-router-dom';
 
 export default function FilmNew() {
     const movies = useContext(MovieContext);
     const authors = useContext(AuthorContext);
+    const plans = useContext(PlanContext);
 
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
@@ -50,6 +52,13 @@ export default function FilmNew() {
                                             <img src={e.bannerUrl} className="w-full h-full object-cover" draggable="false" alt={e.name} />
                                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
+                                            {e.planID && (
+                                                <div className="absolute top-2 right-2 flex gap-1.5 z-10">
+                                                    <p className="bg-amber-500/90  text-white text-[10px] font-bold px-2 py-0.5 rounded border border-black">
+                                                        {getObjectById(plans, e.planID)?.name}
+                                                    </p>
+                                                </div>
+                                            )}
                                             <div className="absolute bottom-2 left-2 flex gap-1.5 ">
                                                 <p className="bg-red-500 backdrop-blur-md text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
                                                     {e.countriesID}

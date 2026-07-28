@@ -14,8 +14,6 @@ export const addDocument = async (collectionName, values) => {
         }
         
         values.createdAt = Date.now();
-        values.updatedAt = Date.now();
-        
         const docRef = await addDoc(collection(db, collectionName), values);
         const addedDoc = await getDoc(doc(db, collectionName, docRef.id));
         return { id: docRef.id, ...addedDoc.data() };

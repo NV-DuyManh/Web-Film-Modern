@@ -349,3 +349,9 @@ export const ROLES = {
     USER: 'user',
 };
 export const cloud_name = "duuujvsz7";
+
+export const initialOptions = {
+    "client-id": "Ae1gNvniG4xbGsr_e5joj0m5WGau5kisTS_4VWlz82K9c4FnKE-kE-OhXYyEbBk-8IM_k3BGrNisndJm",
+    currency: "USD",
+    intent: "capture"
+};

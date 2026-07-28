@@ -4,6 +4,9 @@ import { PlanContext } from '../../../contexts/PlanProvider';
 import { PackageContext } from '../../../contexts/PackageProvider';
 import { FaCreditCard } from 'react-icons/fa';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { initialOptions } from '../../../utils/Contants';
+import { addDocument } from '../../../services/firebaseService';
 
 function PayVIP(props) {
     const { isLogin } = useContext(AuthContext);
@@ -12,16 +15,16 @@ function PayVIP(props) {
     const planId = searchParams.get('id');
     const plans = useContext(PlanContext) || [];
     const packages = useContext(PackageContext) || [];
-    
-    const selectedPlanData = plans.find(p => p.id === planId) || plans[0] || {};
-    
+
+    const selectedPlanData = plans.find(p => p.id === planId) || plans[0];
+
     const packageInfo = {
-        name: selectedPlanData.name || 'Gói Cao cấp',
-        basePrice: selectedPlanData.price ? Number(selectedPlanData.price) : 79000
+        name: selectedPlanData?.name || 'Gói Cao cấp',
+        basePrice: selectedPlanData?.price ? Number(selectedPlanData?.price) : 79000
     };
 
     const planPackages = packages.filter(p => p.planID === selectedPlanData.id).sort((a, b) => Number(a.time) - Number(b.time));
-    
+
     const durations = planPackages.length > 0 ? planPackages.map((p, idx) => ({
         id: p.id,
         months: Number(p.time),
@@ -46,7 +49,8 @@ function PayVIP(props) {
         const discountedPrice = originalPrice * (1 - discount / 100);
         return {
             original: originalPrice.toLocaleString('vi-VN'),
-            final: discountedPrice.toLocaleString('vi-VN')
+            final: discountedPrice.toLocaleString('vi-VN'),
+            rawFinal: discountedPrice
         };
     };
 
@@ -61,6 +65,19 @@ function PayVIP(props) {
     }
     const renewDateStr = renewDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
+    const createSubscription = (transactionId) => {
+        console.log("thanh cong");
+        addDocument("Subscriptions", {
+            transactionID: transactionId,
+            userId: isLogin?.id,
+            planID: selectedPlanData.id,
+            paymentMethod: "PayPal",
+            price: (priceData.rawFinal/26000).toFixed(2),
+            startDate: new Date(),
+            expiryDate: renewDate,
+            status: "Success"
+        });
+    }
     return (
         <div className="min-h-screen bg-[#0f1322] pt-28 pb-20 px-4">
             <div className="max-w-6xl mx-auto">
@@ -78,20 +95,19 @@ function PayVIP(props) {
                             <p className="w-2 h-6 bg-cyan-400 rounded-full inline"></p>
                             THỜI HẠN GÓI CAO CẤP
                         </h2>
-                        
+
                         <div className="space-y-4 mb-8">
                             {durations.map(dur => {
                                 const price = calculatePrice(dur.months, dur.discount);
                                 const isSelected = selectedDuration === dur.id;
                                 return (
-                                    <label 
-                                        key={dur.id} 
+                                    <label
+                                        key={dur.id}
                                         onClick={() => setSelectedDuration(dur.id)}
-                                        className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer border-2 transition-all duration-300 ${
-                                            isSelected 
-                                            ? 'border-cyan-400 bg-cyan-400/10 shadow-[0_0_15px_rgba(34,211,238,0.15)] scale-[1.02]' 
+                                        className={`flex items-center justify-between p-4 rounded-2xl cursor-pointer border-2 transition-all duration-300 ${isSelected
+                                            ? 'border-cyan-400 bg-cyan-400/10 shadow-[0_0_15px_rgba(34,211,238,0.15)] scale-[1.02]'
                                             : 'border-white/5 bg-slate-800/40 hover:border-white/20'
-                                        }`}
+                                            }`}
                                     >
                                         <div className="flex items-center gap-4">
                                             <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${isSelected ? 'border-cyan-400' : 'border-slate-500'}`}>
@@ -146,7 +162,7 @@ function PayVIP(props) {
                                     <p className="text-slate-300 inline">Tự động gia hạn</p>
                                     <p className="text-white font-bold inline">{renewDateStr}</p>
                                 </div>
-                                
+
                                 <div className="flex justify-between text-sm pt-1">
                                     <p className="text-slate-300 inline">Đơn giá</p>
                                     <p className="text-white font-bold inline">{packageInfo.basePrice.toLocaleString('vi-VN')}đ</p>
@@ -155,7 +171,7 @@ function PayVIP(props) {
                                     <p className="text-slate-300 inline">Khuyến mãi</p>
                                     <p className="text-green-400 font-bold inline">-{currentDuration?.discount || 0}%</p>
                                 </div>
-                                
+
                                 <div className="border-t border-slate-600 pt-3 mt-3 flex justify-between items-center">
                                     <p className="text-white font-black text-lg inline">Tổng cộng</p>
                                     <p className="text-cyan-400 font-black text-xl inline">{priceData.final}đ</p>
@@ -174,7 +190,7 @@ function PayVIP(props) {
                             <p className="w-2 h-6 bg-yellow-400 rounded-full inline"></p>
                             CHỌN PHƯƠNG THỨC
                         </h2>
-                        
+
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
                             <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-yellow-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition-all hover:shadow-[0_0_15px_rgba(250,204,21,0.2)] group">
                                 <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Thẻ tín dụng</p>
@@ -202,15 +218,31 @@ function PayVIP(props) {
                         </div>
 
                         <div className="space-y-4">
-                            <button className="w-full h-14 bg-linear-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 rounded-xl flex items-center justify-center transition-all shadow-[0_4px_15px_rgba(251,191,36,0.3)] hover:-translate-y-1">
-                                <p className="text-[#003087] font-black italic text-2xl drop-shadow-sm inline">PayPal</p>
-                            </button>
-                            
-                            <button className="w-full h-14 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl flex items-center justify-center gap-3 transition-colors">
-                                <FaCreditCard className="text-white text-xl" />
-                                <p className="text-white font-bold inline">Thẻ ghi nợ hoặc tín dụng</p>
-                            </button>
-                            
+                            <PayPalScriptProvider options={initialOptions}>
+                                <PayPalButtons
+                                    style={{ layout: "vertical" }}
+                                    createOrder={(data, actions) => {
+
+                                        return actions.order.create({
+                                            purchase_units: [{
+                                                amount: {
+                                                    value: (priceData.rawFinal/26000).toFixed(2)
+                                                }
+                                            }]
+                                        });
+                                    }}
+                                    onApprove={(data, actions) => {
+                                        return actions.order.capture().then((details) => {
+                                            const transactionId = details.id; // Lấy ID giao dịch từ PayPal
+                                            createSubscription(transactionId);
+                                        });
+                                    }}
+                                    onError={(err) => {
+                                        console.error("PayPal error:", err);
+                                    }}
+                                />
+                            </PayPalScriptProvider  >
+
                             <div className="text-center pt-2">
                                 <p className="text-slate-400 text-xs italic inline">Thanh toán an toàn được hỗ trợ bởi </p>
                                 <p className="text-blue-400 text-sm font-bold italic inline">PayPal</p>
