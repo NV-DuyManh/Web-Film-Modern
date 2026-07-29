@@ -194,12 +194,16 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                 open={open}
                 handleClose={handleClose}
                 handleDeleted={handleDeleted}
+                titleDelete={"DELETE EPISODE"}
+                contentDelete={`Are you sure you want to delete episode ${episode?.numberEpisode}?`}
             />
 
             <ModalDelete 
                 open={openBulk}
                 handleClose={() => setOpenBulk(false)}
                 handleDeleted={handleBulkDeleted}
+                titleDelete={"DELETE SELECTED"}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected episode${selectedIds.length > 1 ? 's' : ''}?`}
             />
         </div>
     );

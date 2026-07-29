@@ -73,11 +73,11 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
             </DialogTitle>
 
             <DialogContent className="modal-body-danger">
-                <DialogContentText style={{ color: '#ffffff', paddingTop: '10px', fontSize: '17px', fontWeight: '500', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
+                <DialogContentText style={{ color: '#f8fafc', paddingTop: '8px', fontSize: '1.1rem', fontWeight: '500', textShadow: '0 2px 4px rgba(0,0,0,0.5)', lineHeight: '1.6' }}>
                     {contentDelete}
                 </DialogContentText>
-                <DialogContentText style={{ color: '#fca5a5', paddingTop: '12px', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 'bold' }}>
-                    <FiAlertTriangle size={16} className="animate-pulse text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]" />
+                <DialogContentText style={{ color: '#fca5a5', paddingTop: '24px', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: '600', letterSpacing: '0.5px' }}>
+                    <FiAlertTriangle size={20} className="animate-pulse text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]" />
                     This action cannot be undone. Are you sure you want to proceed?
                 </DialogContentText>
             </DialogContent>

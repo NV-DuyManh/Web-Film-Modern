@@ -36,7 +36,7 @@ export default function ModalSubscriptions({ open, onChangeInput, handleClose, a
                 </button>
             </DialogTitle>
 
-            <DialogContent className="modal-body-x grid grid-cols-1 gap-4 pt-4">
+            <DialogContent className="modal-body-x">
                 <TextField
                     className="modal-input-x"
                     name="transactionID"

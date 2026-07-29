@@ -36,7 +36,7 @@ export default function ModalComments({ open, onChangeInput, handleClose, addCom
                 </button>
             </DialogTitle>
 
-            <DialogContent className="modal-body-x grid grid-cols-1 gap-4 pt-4">
+            <DialogContent className="modal-body-x">
                 <Autocomplete
                     className="modal-input-x"
                     disablePortal

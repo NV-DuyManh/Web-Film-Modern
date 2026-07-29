@@ -19,3 +19,204 @@
         box-shadow: 0 0 12px rgba(250, 204, 21, 0.8), 0 0 20px rgba(236, 72, 153, 0.6), 0 0 35px rgba(0, 242, 254, 0.5) !important;
     }
 }
+
+/* --- Premium Plan Effects --- */
+
+.badge-shine {
+    background-size: 200% auto;
+    animation: shineBadge 2.5s linear infinite;
+}
+
+@keyframes shineBadge {
+    to {
+        background-position: 200% center;
+    }
+}
+
+@keyframes glow-blue {
+    0% { box-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6; border-color: #3b82f6; }
+    50% { box-shadow: 0 0 15px #3b82f6, 0 0 25px #60a5fa, 0 0 40px #93c5fd; border-color: #93c5fd; }
+    100% { box-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6; border-color: #3b82f6; }
+}
+
+@keyframes glow-cyan {
+    0% { box-shadow: 0 0 5px #06b6d4, 0 0 10px #06b6d4; border-color: #06b6d4; }
+    50% { box-shadow: 0 0 15px #06b6d4, 0 0 25px #22d3ee, 0 0 40px #67e8f9; border-color: #67e8f9; }
+    100% { box-shadow: 0 0 5px #06b6d4, 0 0 10px #06b6d4; border-color: #06b6d4; }
+}
+
+@keyframes glow-yellow {
+    0% { box-shadow: 0 0 5px #eab308, 0 0 10px #eab308; border-color: #eab308; }
+    50% { box-shadow: 0 0 20px #eab308, 0 0 35px #facc15, 0 0 50px #fef08a; border-color: #fef08a; }
+    100% { box-shadow: 0 0 5px #eab308, 0 0 10px #eab308; border-color: #eab308; }
+}
+
+@keyframes glow-rose {
+    0% { box-shadow: 0 0 5px #f43f5e, 0 0 10px #f43f5e; border-color: #f43f5e; }
+    50% { box-shadow: 0 0 15px #f43f5e, 0 0 25px #fb7185, 0 0 40px #fda4af; border-color: #fda4af; }
+    100% { box-shadow: 0 0 5px #f43f5e, 0 0 10px #f43f5e; border-color: #f43f5e; }
+}
+
+@keyframes glow-red {
+    0% { box-shadow: 0 0 5px #ef4444, 0 0 15px #ef4444; border-color: #ef4444; }
+    50% { box-shadow: 0 0 25px #ef4444, 0 0 40px #f87171, 0 0 60px #fca5a5; border-color: #fca5a5; }
+    100% { box-shadow: 0 0 5px #ef4444, 0 0 15px #ef4444; border-color: #ef4444; }
+}
+
+.avatar-frame {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+.avatar-frame img {
+    position: relative;
+    z-index: 10;
+}
+
+/* Animations */
+@keyframes spin-slow {
+    100% { transform: rotate(360deg); }
+}
+@keyframes spin-reverse {
+    100% { transform: rotate(-360deg); }
+}
+@keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.1); opacity: 1; }
+}
+
+/* --- Blue Frame (Level 1) --- */
+.avatar-frame-blue::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top: 2px solid #60a5fa;
+    border-bottom: 2px solid #60a5fa;
+    box-shadow: 0 0 10px rgba(59,130,246,0.6), inset 0 0 5px rgba(59,130,246,0.5);
+    animation: spin-slow 4s linear infinite;
+    z-index: 5;
+}
+.avatar-frame-blue::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-left: 2px solid #2563eb;
+    border-right: 2px solid #2563eb;
+    animation: spin-reverse 4s linear infinite;
+    z-index: 5;
+}
+
+/* --- Cyan Frame (Level 2) --- */
+.avatar-frame-cyan::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px dashed #06b6d4;
+    animation: spin-slow 6s linear infinite;
+    box-shadow: inset 0 0 8px #06b6d4, 0 0 8px #06b6d4;
+    z-index: 5;
+}
+.avatar-frame-cyan::after {
+    content: '';
+    position: absolute;
+    top: -2px; left: 50%; transform: translateX(-50%);
+    width: 6px; height: 6px; background: #22d3ee; border-radius: 50%;
+    box-shadow: 0 0 10px #22d3ee;
+    z-index: 11;
+}
+.avatar-frame-cyan-accent {
+    position: absolute;
+    bottom: -2px; left: 50%; transform: translateX(-50%);
+    width: 6px; height: 6px; background: #22d3ee; border-radius: 50%;
+    box-shadow: 0 0 10px #22d3ee;
+    z-index: 11;
+}
+
+/* --- Yellow Frame (Level 3 - VIP) --- */
+.avatar-frame-yellow::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #facc15, #854d0e, #fef08a, #facc15, #854d0e, #fef08a, #facc15);
+    mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #fff calc(100% - 3px));
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #fff calc(100% - 3px));
+    animation: spin-slow 5s linear infinite;
+    z-index: 5;
+}
+.avatar-frame-yellow::after {
+    content: '';
+    position: absolute;
+    top: -6px; left: 50%; transform: translateX(-50%) rotate(45deg);
+    width: 10px; height: 10px;
+    background: #fef08a;
+    border: 2px solid #ca8a04;
+    box-shadow: 0 0 15px #facc15;
+    z-index: 15;
+}
+.avatar-frame-yellow-accent {
+    position: absolute;
+    bottom: -6px; left: 50%; transform: translateX(-50%) rotate(45deg);
+    width: 10px; height: 10px;
+    background: #fef08a;
+    border: 2px solid #ca8a04;
+    box-shadow: 0 0 15px #facc15;
+    z-index: 15;
+}
+
+/* --- Rose Frame (Level 4 - Gia Đình) --- */
+.avatar-frame-rose::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    border: 3px solid #fda4af;
+    box-shadow: 0 0 15px #f43f5e, inset 0 0 10px #f43f5e;
+    animation: spin-slow 6s linear infinite alternate;
+    z-index: 5;
+}
+.avatar-frame-rose::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%;
+    border: 2px solid #e11d48;
+    box-shadow: 0 0 10px #be123c;
+    animation: spin-reverse 5s linear infinite alternate;
+    z-index: 5;
+}
+.avatar-frame-rose-accent {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border-left: 2px solid #fecdd3;
+    border-right: 2px solid #fecdd3;
+    animation: pulse-ring 2s ease-in-out infinite;
+    z-index: 6;
+}
+
+/* --- Admin Frame (Red) --- */
+.avatar-frame-red::before {
+    content: '';
+    position: absolute;
+    inset: -6px;
+    background: linear-gradient(45deg, #b91c1c, #ef4444, #7f1d1d, #ef4444);
+    clip-path: polygon(50% 0%, 90% 15%, 100% 60%, 75% 100%, 25% 100%, 0% 60%, 10% 15%);
+    animation: pulse-red-frame 1.5s infinite alternate;
+    z-index: 1;
+}
+.avatar-frame-red img {
+    clip-path: polygon(50% 2%, 88% 16%, 98% 60%, 73% 98%, 27% 98%, 2% 60%, 12% 16%);
+    border-radius: 0;
+}
+@keyframes pulse-red-frame {
+    0% { filter: drop-shadow(0 0 5px #ef4444); transform: scale(0.98); }
+    100% { filter: drop-shadow(0 0 15px #fca5a5); transform: scale(1.02); }
+}

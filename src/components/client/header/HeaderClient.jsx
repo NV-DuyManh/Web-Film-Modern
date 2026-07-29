@@ -9,11 +9,16 @@ import Logo2 from '../../../assets/Logo2.png';
 import LogIn from '../../../pages/client/auth/LogIn';
 import Register from '../../../pages/client/auth/Register';
 import { AuthContext } from '../../../contexts/AuthProvider';
+import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
+import { PlanContext } from '../../../contexts/PlanProvider';
+import { getObjectById } from '../../../services/firebaseReponse';
 import Coder from '../../../assets/Coder.png';
 import PlayFilm from '../../../pages/client/watch/PlayFilm';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import Category from '../../../pages/client/category/Category';
 import Country from '../../../pages/client/country/Country';
+import './HeaderClient.css';
+import { WingedFrame } from './AvatarFrames';
 
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
@@ -23,6 +28,53 @@ function HeaderClient() {
     const [openRegister, setOpenRegister] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
     const { isLogin, handleLogout } = useContext(AuthContext);
+    const subscriptions = useContext(SubscriptionContext) || [];
+    const plans = useContext(PlanContext) || [];
+
+    const getExpiryDate = (p) => {
+        if (!p || !p.expiryDate) return new Date(0);
+        if (typeof p.expiryDate.toDate === 'function') return p.expiryDate.toDate();
+        if (p.expiryDate.seconds) return new Date(p.expiryDate.seconds * 1000);
+        return new Date(p.expiryDate);
+    };
+
+    const currentPlanInfo = React.useMemo(() => {
+        if (!isLogin) return { name: 'FREE', level: 0, theme: 'blue' };
+        if (isLogin.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'red' };
+
+        const userSubs = subscriptions.filter(p => p.userId === isLogin.id && getExpiryDate(p) > new Date());
+        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
+
+        const highestSub = userSubs.reduce((max, item) => {
+            const currentPlan = getObjectById(plans, item.planID);
+            const maxPlan = getObjectById(plans, max.planID);
+            return (currentPlan?.level || 0) > (maxPlan?.level || 0) ? item : max;
+        }, userSubs[0]);
+
+        const highestPlan = getObjectById(plans, highestSub.planID);
+        if (!highestPlan) return { name: 'VIP', level: 1, theme: 'cyan' };
+
+        const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
+        const index = sortedPlans.findIndex(p => p.id === highestPlan.id);
+        const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
+        const theme = themeNames[index] || 'yellow';
+
+        return { name: highestPlan.name, level: highestPlan.level, theme: theme };
+    }, [isLogin, subscriptions, plans]);
+
+    const getBadgeStyle = (theme) => {
+        switch (theme) {
+            case 'slate': return 'text-slate-300 bg-slate-700/50 border border-slate-500/50 shadow-none';
+            case 'red': return 'text-white bg-gradient-to-r from-red-600 via-rose-500 to-red-600 badge-shine shadow-[0_0_15px_rgba(244,63,94,0.6)] border border-red-400';
+            case 'blue': return 'text-white bg-gradient-to-r from-blue-500 via-indigo-400 to-blue-500 badge-shine shadow-[0_0_15px_rgba(59,130,246,0.6)] border border-blue-400';
+            case 'cyan': return 'text-white bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 badge-shine shadow-[0_0_15px_rgba(34,211,238,0.6)] border border-cyan-400';
+            case 'yellow': return 'text-yellow-900 bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-300 badge-shine shadow-[0_0_20px_rgba(250,204,21,0.8)] border border-yellow-300';
+            case 'rose': return 'text-white bg-gradient-to-r from-rose-500 via-pink-400 to-rose-500 badge-shine shadow-[0_0_15px_rgba(251,113,133,0.6)] border border-rose-400';
+            default: return 'text-yellow-900 bg-gradient-to-r from-yellow-300 to-amber-500';
+        }
+    };
+
+
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const navigate = useNavigate();
@@ -86,7 +138,7 @@ function HeaderClient() {
                     <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-cyan-400 peer-focus:drop-shadow-[0_0_12px_rgba(34,211,238,1)]" />
                 </div>
 
-                <div className={`shrink-0 items-center gap-1 max-[1149px]:absolute max-[1149px]:flex-col flex max-[1149px]:bg-[#111827] max-[1149px]:w-full bottom-0 left-0 max-[1149px]:translate-y-full max-[1149px]:p-2 max-[1149px]:border-t max-[1149px]:border-white/10 ${openMenu ? "flex" : "max-[1149px]:hidden"} `}>
+                <div className={`shrink-0 items-center gap-1.5 max-[1149px]:absolute max-[1149px]:flex-col flex max-[1149px]:bg-[#0a192f]/98 max-[1149px]:backdrop-blur-2xl max-[1149px]:w-full bottom-0 left-0 max-[1149px]:translate-y-full max-[1149px]:p-5 max-[1149px]:border-t max-[1149px]:border-white/10 max-[1149px]:shadow-[0_15px_40px_rgba(0,0,0,0.8)] ${openMenu ? "flex" : "max-[1149px]:hidden"} `}>
 
                     {LISTCLIENT.map((item, index) => (
                         <Link to={item.path}
@@ -109,19 +161,56 @@ function HeaderClient() {
                                     setOpenCountry(false);
                                 }
                             }}
-                            className={` relative  cursor-pointer flex items-center rounded-full max-[1149px]:w-full max-[1149px]:justify-center px-3 py-2 text-sm font-bold transition-all duration-300 xl:px-4 ${location.pathname === item.path
-                                ? "bg-yellow-400 text-black shadow-[0_0_18px_rgba(250,204,21,0.5)]"
-                                : "text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] hover:bg-white/10 hover:text-yellow-400"
+                            className={` relative cursor-pointer flex items-center transition-all duration-300
+                                ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-[60]" : "z-10"}
+                                max-[1149px]:w-full max-[1149px]:justify-between max-[1149px]:px-4 max-[1149px]:py-2.5 max-[1149px]:rounded-lg max-[1149px]:text-[13px]
+                                min-[1150px]:justify-center min-[1150px]:rounded-full min-[1150px]:px-3 min-[1150px]:py-2 min-[1150px]:text-sm xl:px-4 font-bold 
+                                ${location.pathname === item.path
+                                ? "max-[1149px]:bg-cyan-600/10 max-[1149px]:text-cyan-400 max-[1149px]:shadow-[inset_4px_0_0_0_#22d3ee] min-[1150px]:bg-yellow-400 min-[1150px]:text-black min-[1150px]:shadow-[0_0_18px_rgba(250,204,21,0.5)]"
+                                : "text-slate-200 max-[1149px]:hover:bg-slate-700/80 max-[1149px]:hover:text-cyan-400 min-[1150px]:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] min-[1150px]:hover:text-yellow-400"
                                 }`}>
-                            {item.title} {item.path == "/category" || item.path == "/country" ? <IoMdArrowDropdown /> : ""}
+                            <div className="flex items-center gap-1.5">
+                                {item.title} 
+                                {(item.path === "/category" || item.path === "/country") && <IoMdArrowDropdown className="text-lg opacity-80" />}
+                            </div>
 
-                            {item.path == "/category" && <Category openCate={openCate} />}
-                            {item.path == "/country" && <Country openCountry={openCountry} />}
+                            {item.path === "/category" && <Category openCate={openCate} />}
+                            {item.path === "/country" && <Country openCountry={openCountry} />}
                         </Link>
                     ))}
                 </div>
 
                 <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
+
+                    <div className="hidden lg:flex items-center gap-4 mr-4 p-2 bg-slate-900/50 rounded-full border border-white/10">
+                        {(() => {
+                            const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
+                            const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
+
+                            const demoPlans = [
+                                ...sortedPlans.map((p, index) => ({
+                                    name: p.name,
+                                    theme: themeNames[index] || 'slate'
+                                }))
+                            ];
+
+                            return demoPlans.map((testPlan, idx) => (
+                                <div key={idx} className="flex flex-col items-center gap-1 group cursor-pointer relative">
+                                    <WingedFrame theme={testPlan.theme} size={36}>
+                                        <img src={Coder} alt="demo" className="w-full h-full object-cover" />
+                                    </WingedFrame>
+                                    {/* Tooltip on hover to show the badge style too */}
+                                    <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
+                                        <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md ${getBadgeStyle(testPlan.theme)}`}>
+                                            {testPlan.name}
+                                        </span>
+                                    </div>
+                                </div>
+                            ));
+                        })()}
+                    </div>
+                    {/* END DEMO BLOCK */}
+
                     <div className="relative z-50" ref={dropdownRef}>
                         {!isLogin ? (
                             <button
@@ -138,33 +227,33 @@ function HeaderClient() {
                             <>
                                 <button
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className="flex items-center gap-2 p-1 pr-3 bg-white/5 hover:bg-white/15 border border-white/10 rounded-full cursor-pointer transition-all duration-300 group shadow-[0_4px_12px_rgba(0,0,0,0.5)] hover:shadow-[0_4px_15px_rgba(34,211,238,0.2)]"
+                                    className="relative flex items-center justify-center p-1 cursor-pointer"
                                 >
-                                    <div className="relative">
-                                        <img
-                                            src={isLogin?.imgUrl || Coder}
-                                            alt="avatar"
-                                            className="h-9 w-9 rounded-full object-cover ring-2 ring-transparent group-hover:ring-cyan-400/80 transition-all duration-300"
-                                        />
-                                    </div>
-                                    <p className="text-sm font-bold text-slate-200 group-hover:text-white max-w-30 truncate hidden min-[1150px]:block transition-colors">
-                                        {isLogin?.displayName || isLogin?.fullName || 'Người dùng'}
-                                    </p>
-                                    <FaChevronDown className={`text-[10px] text-slate-400 group-hover:text-cyan-400 transition-transform duration-300 ${isDropdownOpen ? "rotate-180" : ""}`} />
+                                    <WingedFrame theme={currentPlanInfo.theme} size={42}>
+                                        <img src={isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
+                                    </WingedFrame>
                                 </button>
 
                                 <div className={`absolute right-0 top-full mt-4 w-80 rounded-2xl bg-black/80 border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(34,211,238,0.15)] overflow-hidden transition-all duration-300 origin-top-right ${isDropdownOpen ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
 
                                     <div className="flex items-center gap-4 p-5 border-b border-slate-700/80 bg-linear-to-r from-blue-900/10 to-transparent">
-                                        <img
-                                            src={isLogin?.imgUrl || Coder}
-                                            alt="avatar"
-                                            className="w-12 h-12 rounded-full object-cover ring-2 ring-cyan-500 shadow-[0_0_10px_rgba(34,211,238,0.4)] shrink-0"
-                                        />
+                                        <div className="shrink-0">
+                                            <WingedFrame theme={currentPlanInfo.theme} size={48}>
+                                                <img src={isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
+                                            </WingedFrame>
+                                        </div>
 
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <p className="text-[16px] font-bold text-white truncate tracking-wide">
-                                                {isLogin?.displayName || 'Nguyễn Văn A'}
+                                        <div className="flex flex-col overflow-hidden">
+                                            <div className="flex items-center gap-2 mb-0.5">
+                                                <p className="text-[16px] font-bold text-white truncate tracking-wide max-w-[120px]">
+                                                    {isLogin?.displayName || 'Nguyễn Văn A'}
+                                                </p>
+                                                <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0 ${getBadgeStyle(currentPlanInfo.theme)}`}>
+                                                    {currentPlanInfo.name}
+                                                </span>
+                                            </div>
+                                            <p className="text-[13px] text-slate-400 truncate w-full">
+                                                {isLogin?.email || 'user@example.com'}
                                             </p>
                                         </div>
 
@@ -233,7 +322,7 @@ function HeaderClient() {
 
             <LogIn openLogin={openLogin} handleCloseLogin={handleCloseLogin} handleOpenRegister={handleOpenRegister} />
             <Register openRegister={openRegister} handleCloseRegister={handleCloseRegister} handleOpenLogin={handleOpenLogin} />
-            
+
         </div>
     );
 }

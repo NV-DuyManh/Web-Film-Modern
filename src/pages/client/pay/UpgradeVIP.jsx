@@ -8,6 +8,8 @@ import Logo5 from '../../../assets/Logo5.png';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { getObjectById } from '../../../services/firebaseReponse';
 
+import { WingedFrame } from '../../../components/client/header/AvatarFrames';
+
 function UpgradeVIP(props) {
     const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
@@ -30,7 +32,8 @@ function UpgradeVIP(props) {
             formattedPrice: Number(plan.price).toLocaleString('vi-VN'),
             features: planFeatures,
             themeClass: `vip-theme-${theme}`,
-            best: index === 2
+            themeName: theme,
+            best: index === 3
         };
     });
 
@@ -87,20 +90,32 @@ function UpgradeVIP(props) {
                     <div className="h-px flex-1 bg-linear-to-r from-transparent via-slate-600 to-transparent"></div>
                 </div>
 
+
+
+
+
+
+
+
+
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                     {displayPlans.map((plan) => {
+                        const canBuy = plan.rawPrice > 0 && plan.level >= levelUser;
                         const isSelected = selectedPlan === plan.id;
+                        
                         return (
                             <div
                                 key={plan.id}
-                                onClick={() => plan.level >= levelUser && setSelectedPlan(plan.id)}
-                                className={`vip-card ${plan.themeClass} ${isSelected ? 'selected' : ''} relative rounded-3xl p-6 transition-all duration-300 overflow-hidden bg-slate-900/70 backdrop-blur-md flex flex-col group ${isSelected
-                                    ? `border-2 scale-105 z-10`
-                                    : 'border-2 border-white/10'
-                                    } ${plan.level >= levelUser
+                                onClick={() => canBuy && setSelectedPlan(plan.id)}
+                                className={`vip-card ${plan.themeClass} ${isSelected ? 'selected' : ''} relative rounded-3xl p-6 transition-all duration-300 overflow-hidden bg-slate-900/70 backdrop-blur-md flex flex-col group ${
+                                    isSelected
+                                        ? `border-2 scale-105 z-10`
+                                        : 'border-2 border-white/10'
+                                } ${
+                                    canBuy
                                         ? 'cursor-pointer hover:border-white/30 hover:bg-slate-800/70'
-                                        : 'cursor-default opacity-80 hover:bg-slate-900/70'
-                                    }`}
+                                        : 'cursor-not-allowed hover:bg-slate-900/70'
+                                }`}
                             >
                                 {isSelected && (
                                     <div className="vip-glow-bg absolute -top-10 -right-10 w-32 h-32 blur-3xl rounded-full"></div>
@@ -112,7 +127,7 @@ function UpgradeVIP(props) {
                                     </div>
                                 )}
 
-                                <div className="flex justify-between items-start mb-4 relative z-10">
+                                <div className="flex justify-between items-start mb-6 relative z-10">
                                     <h3 className={`vip-text text-xl font-black tracking-wide ${isSelected ? 'selected' : 'text-slate-200'}`}>{plan.name}</h3>
                                     {plan.rawPrice === 0 ? (
                                     <></>
@@ -123,11 +138,18 @@ function UpgradeVIP(props) {
                                     )}
                                 </div>
 
-                                <div className="mb-6 relative z-10 border-b border-slate-700/50 pb-4">
-                                    <div className={`text-3xl font-black ${isSelected ? 'text-white' : 'text-slate-300'} inline`}>
-                                        {plan.formattedPrice}<p className="text-xl underline underline-offset-2 ml-0.5 inline">đ</p>
+                                <div className="flex justify-center items-center mb-6 mt-2 relative z-10">
+                                    <WingedFrame theme={plan.themeName} size={56}>
+                                        <img src={isLogin?.imgUrl || Logo5} alt="avatar preview" className="w-full h-full object-cover" />
+                                    </WingedFrame>
+                                </div>
+
+                                <div className="mb-6 relative z-10 border-b border-slate-700/50 pb-4 flex justify-center items-baseline gap-1">
+                                    <div className={`text-2xl font-bold tracking-tight ${isSelected ? 'text-white' : 'text-slate-300'}`}>
+                                        {plan.formattedPrice}
+                                        <span className="text-lg font-semibold ml-0.5">đ</span>
                                     </div>
-                                    <p className="text-slate-400 text-xs ml-1 inline">/tháng</p>
+                                    <span className="text-slate-400 text-sm font-medium">/tháng</span>
                                 </div>
 
                                 <ul className="space-y-3.5 flex-1 relative z-10">

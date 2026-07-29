@@ -172,7 +172,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
             <DialogContent className="modal-body-x grid grid-cols-12 gap-8 h-[75vh] overflow-y-auto custom-scrollbar p-8 pt-10">
 
                 <div className="col-span-12 lg:col-span-7 space-y-8 mt-5">
-                    <div className="relative bg-white/2 p-5 rounded-2xl border border-cyan-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(6,182,212,0.05)]">
+                    <div className="relative bg-white/2 p-5 rounded-2xl border border-cyan-500/20 overflow-hidden shadow-[0_0_15px_rgba(6,182,212,0.05)]">
                         <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-cyan-400 to-blue-500 rounded-l-full"></div>
                         <div className="flex justify-between items-center h-4 relative z-10 pr-2">
                             <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest pl-3 m-0">Task 1: General Info</p>
@@ -198,7 +198,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         </div>
                     </div>
 
-                    <div className="relative bg-white/2 p-5 rounded-2xl border border-purple-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.05)]">
+                    <div className="relative bg-white/2 p-5 rounded-2xl border border-purple-500/20 overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.05)]">
                         <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-purple-400 to-pink-500 rounded-l-full"></div>
                         <p className="text-purple-400 text-xs font-bold uppercase tracking-widest pl-3">Task 2: Specification</p>
                         <div className="grid grid-cols-3 gap-4">
@@ -362,10 +362,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <div className="flex flex-col items-center w-1/3">
                                 <p className="text-white text-[11px] mb-1 font-bold opacity-70">Poster</p>
                                 <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-2 w-full border border-white/10">
-                                    <button type="button" onClick={() => setPosterMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'file' ? 'bg-linear-to- from-pink-500 to-fuchsia-500 text-white shadow-[0_0_12px_rgba(236,72,153,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                    <button type="button" onClick={() => setPosterMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'file' ? 'bg-gradient-to-r from-pink-500 to-fuchsia-500 text-white shadow-[0_0_12px_rgba(236,72,153,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                                         <FaCloudUploadAlt className="text-xs" /> File
                                     </button>
-                                    <button type="button" onClick={() => setPosterMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'url' ? 'bg-linear-to- from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                    <button type="button" onClick={() => setPosterMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${posterMode === 'url' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                                         <FaLink className="text-xs" /> URL
                                     </button>
                                 </div>
@@ -397,10 +397,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <div className="flex flex-col items-center w-2/3">
                                 <p className="text-white text-[11px] mb-1 font-bold opacity-70">Banner</p>
                                 <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-2 w-full border border-white/10">
-                                    <button type="button" onClick={() => setBannerMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'file' ? 'bg-linear-to- from-yellow-500 to-orange-500 text-white shadow-[0_0_12px_rgba(234,179,8,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                    <button type="button" onClick={() => setBannerMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'file' ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-[0_0_12px_rgba(234,179,8,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                                         <FaCloudUploadAlt className="text-xs" /> File
                                     </button>
-                                    <button type="button" onClick={() => setBannerMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'url' ? 'bg-linear-to- from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                                    <button type="button" onClick={() => setBannerMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${bannerMode === 'url' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                                         <FaLink className="text-xs" /> URL
                                     </button>
                                 </div>

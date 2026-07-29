@@ -7,6 +7,7 @@ import { useSearchParams, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { initialOptions } from '../../../utils/Contants';
 import { addDocument } from '../../../services/firebaseService';
+import Swal from 'sweetalert2';
 
 function PayVIP(props) {
     const { isLogin } = useContext(AuthContext);
@@ -23,7 +24,7 @@ function PayVIP(props) {
         basePrice: selectedPlanData?.price ? Number(selectedPlanData?.price) : 79000
     };
 
-    const planPackages = packages.filter(p => p.planID === selectedPlanData.id).sort((a, b) => Number(a.time) - Number(b.time));
+    const planPackages = packages.filter(p => p.planID === selectedPlanData?.id).sort((a, b) => Number(a.time) - Number(b.time));
 
     const durations = planPackages.length > 0 ? planPackages.map((p, idx) => ({
         id: p.id,
@@ -65,18 +66,46 @@ function PayVIP(props) {
     }
     const renewDateStr = renewDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
-    const createSubscription = (transactionId) => {
-        console.log("thanh cong");
-        addDocument("Subscriptions", {
-            transactionID: transactionId,
-            userId: isLogin?.id,
-            planID: selectedPlanData.id,
-            paymentMethod: "PayPal",
-            price: (priceData.rawFinal/26000).toFixed(2),
-            startDate: new Date(),
-            expiryDate: renewDate,
-            status: "Success"
-        });
+    const createSubscription = async (transactionId) => {
+        try {
+            await addDocument("Subscriptions", {
+                transactionID: transactionId,
+                userId: isLogin?.id,
+                planID: selectedPlanData?.id,
+                paymentMethod: "PayPal",
+                price: (priceData.rawFinal/26000).toFixed(2),
+                startDate: new Date(),
+                expiryDate: renewDate,
+                status: "Success"
+            });
+
+            Swal.fire({
+                title: 'Thanh toán thành công!',
+                html: `Chúc mừng bạn đã đăng ký <b>${packageInfo.name}</b>.<br/>Nhấn <b>Tuyệt vời</b> để quay về trang chủ.`,
+                icon: 'success',
+                background: '#0f1322',
+                color: '#fff',
+                confirmButtonColor: '#06b6d4',
+                showConfirmButton: true,
+                confirmButtonText: 'Tuyệt vời',
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate('/');
+                    window.location.reload(); 
+                }
+            });
+
+        } catch (error) {
+            console.error("Lỗi khi lưu giao dịch:", error);
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Đã có lỗi xảy ra trong quá trình lưu thông tin thanh toán.',
+                icon: 'error',
+                background: '#0f1322',
+                color: '#fff'
+            });
+        }
     }
     return (
         <div className="min-h-screen bg-[#0f1322] pt-28 pb-20 px-4">

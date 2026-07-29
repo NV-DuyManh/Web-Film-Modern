@@ -11,9 +11,9 @@ function CategoriesFilm() {
         "from-blue-600 via-indigo-500 to-purple-600 shadow-[0_8px_15px_rgba(79,70,229,0.25)] hover:shadow-[0_12px_25px_rgba(79,70,229,0.45)]",
         "from-rose-500 via-red-500 to-orange-500 shadow-[0_8px_15px_rgba(239,68,68,0.25)] hover:shadow-[0_12px_25px_rgba(249,115,22,0.45)]",
         "from-emerald-500 via-teal-500 to-cyan-600 shadow-[0_8px_15px_rgba(16,185,129,0.25)] hover:shadow-[0_12px_25px_rgba(16,185,129,0.45)]",
-        "from-violet-500 via-purple-500 to-fuchsia-600 shadow-[0_8px_15px_rgba(139,92,246,0.25)] hover:shadow-[0_12px_25px_rgba(139,92,246,0.45)]",
-        "from-pink-600 via-rose-500 to-red-600 shadow-[0_8px_15px_rgba(225,29,72,0.25)] hover:shadow-[0_12px_25px_rgba(225,29,72,0.45)]",
-        "from-amber-500 via-orange-500 to-red-500 shadow-[0_8px_15px_rgba(245,158,11,0.25)] hover:shadow-[0_12px_25px_rgba(245,158,11,0.45)]"
+        "from-fuchsia-600 via-pink-500 to-rose-500 shadow-[0_8px_15px_rgba(236,72,153,0.25)] hover:shadow-[0_12px_25px_rgba(236,72,153,0.45)]",
+        "from-yellow-400 via-yellow-500 to-amber-600 shadow-[0_8px_15px_rgba(234,179,8,0.25)] hover:shadow-[0_12px_25px_rgba(234,179,8,0.45)]",
+        "from-cyan-400 via-sky-500 to-blue-600 shadow-[0_8px_15px_rgba(14,165,233,0.25)] hover:shadow-[0_12px_25px_rgba(14,165,233,0.45)]"
     ];
 
     return (
