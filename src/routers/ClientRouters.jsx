@@ -16,14 +16,9 @@ const UpgradeVIP = lazy(() => import('../pages/client/pay/UpgradeVIP'));
 const PayVIP = lazy(() => import('../pages/client/pay/PayVIP'));
 const PayMovie = lazy(() => import('../pages/client/pay/PayMovie'));
 
-const LoadingFallback = () => (
-    <div className="flex justify-center items-center h-[60vh] w-full bg-[#111827]">
-        <div className="relative w-16 h-16">
-            <div className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-[#facc15] border-r-[#facc15] rounded-full animate-spin drop-shadow-[0_0_10px_rgba(250,204,21,0.5)]"></div>
-            <div className="absolute top-2 left-2 w-12 h-12 border-4 border-transparent border-l-red-500 border-b-red-500 rounded-full animate-[spin_1.5s_linear_infinite_reverse] drop-shadow-[0_0_10px_rgba(239,68,68,0.5)]"></div>
-        </div>
-    </div>
-);
+import LoadingScreen from '../components/client/loadingScreen/LoadingScreen';
+
+const LoadingFallback = () => <LoadingScreen />;
 function ClientRouters(props) {
     const clientRouter = [
         {
