@@ -33,7 +33,7 @@ function UpgradeVIP(props) {
             features: planFeatures,
             themeClass: `vip-theme-${theme}`,
             themeName: theme,
-            best: index === 3
+            best: index === 2
         };
     });
 
@@ -45,12 +45,29 @@ function UpgradeVIP(props) {
     }, [displayPlans, selectedPlan]);
 
     const levelUser = useMemo(() => {
-             const allPlan = subscriptions.filter(p => p.userId == isLogin.id && p.expiryDate < new Date );
-             const levelMax = allPlan.reduce((max,item) =>  getObjectById(plans,item.planID).level > max ?  getObjectById(plans,item.planID).level : max ,0);
+             if (!isLogin || !subscriptions || !plans) return 0;
+             const allPlan = subscriptions.filter(p => {
+                 if (p.userId != isLogin.id) return false;
+                 if (!p.expiryDate) return false;
+                 const expiry = typeof p.expiryDate.toDate === 'function' 
+                                ? p.expiryDate.toDate() 
+                                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
+                 return expiry > new Date();
+             });
+             const levelMax = allPlan.reduce((max,item) => {
+                 const plan = getObjectById(plans,item.planID);
+                 return plan && plan.level > max ? plan.level : max;
+             }, 0);
              return levelMax;
-    }, [subscriptions, isLogin]);
+    }, [subscriptions, isLogin, plans]);
   console.log(levelUser);
   
+    const currentPlanName = useMemo(() => {
+        if (!plans || plans.length === 0) return "Miễn phí";
+        const p = plans.find(plan => plan.level == levelUser);
+        return p ? p.name : "Miễn phí";
+    }, [levelUser, plans]);
+
     return (
         <div className="min-h-screen bg-[#0f1322] pt-24 pb-20 px-4">
             <div className="max-w-6xl mx-auto">
@@ -62,21 +79,41 @@ function UpgradeVIP(props) {
                 </div>
 
                 <div className="flex flex-col items-center mb-12">
-                    <div className="flex items-center gap-4 bg-slate-800/80 backdrop-blur-md py-3 px-6 rounded-full border border-slate-600 shadow-lg">
-                        <img
-                            src={isLogin?.imgUrl}
-                            alt="Avatar"
-                            className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-[0_0_10px_rgba(255,255,255,0.2)]"
-                        />
-                        <div>
-                            <div className="flex items-center gap-2">
-                                <h3 className="text-base font-bold text-white">{isLogin?.fullName || isLogin?.email || 'Khách'}</h3>
-                                <FaCrown className="text-slate-400" />
+                    <div className="relative flex items-center gap-4 bg-[#0a0f1d]/80 backdrop-blur-xl py-3 px-6 rounded-full border border-cyan-500/30 shadow-[0_0_25px_rgba(34,211,238,0.15)] hover:shadow-[0_0_35px_rgba(34,211,238,0.3)] hover:border-cyan-400/50 hover:-translate-y-1 transition-all duration-500 overflow-hidden group cursor-pointer">
+                        {/* Shimmer Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                        
+                        <div className="relative">
+                            <img
+                                src={isLogin?.imgUrl}
+                                alt="Avatar"
+                                className="w-14 h-14 rounded-full object-cover border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)] group-hover:scale-105 transition-transform duration-300"
+                            />
+                            {/* Ring glow around avatar */}
+                            <div className="absolute inset-0 rounded-full border border-cyan-300/30 animate-ping opacity-20" />
+                        </div>
+                        
+                        <div className="relative z-10 pr-2">
+                            <div className="flex items-center gap-2 mb-1">
+                                <h3 className="text-base font-black bg-linear-to-r from-white via-cyan-100 to-slate-300 bg-clip-text text-transparent drop-shadow-sm tracking-wide">
+                                    {isLogin?.fullName || isLogin?.email || 'Khách'}
+                                </h3>
+                                <FaCrown className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)] text-sm animate-pulse" />
                             </div>
-                            <div className="flex items-center gap-4 text-xs mt-0.5">
-                                <div className="text-slate-400 inline">Gói hiện tại: <p className="text-white font-semibold inline">Miễn phí</p></div>
-                                <div className="w-1 h-1 bg-slate-500 rounded-full"></div>
-                                <div className="text-slate-400 inline">Số dư: <p className="text-yellow-400 font-bold inline">0₫</p></div>
+                            <div className="flex items-center gap-3 text-[13px]">
+                                <div className="text-slate-400 flex items-center gap-1.5">
+                                    Gói hiện tại: 
+                                    <span className={`font-bold ${levelUser > 0 ? 'text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.6)]' : 'text-slate-300'}`}>
+                                        {currentPlanName}
+                                    </span>
+                                </div>
+                                <div className="w-1.5 h-1.5 bg-cyan-500/50 rounded-full shadow-[0_0_5px_rgba(34,211,238,0.5)]"></div>
+                                <div className="text-slate-400 flex items-center gap-1.5">
+                                    Số dư: 
+                                    <span className="text-yellow-400 font-black drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] tracking-wide">
+                                        {isLogin?.balance ? isLogin.balance.toLocaleString('vi-VN') : '0'}₫
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -162,9 +199,13 @@ function UpgradeVIP(props) {
 
                                 </ul>
                                 {
-                                    levelUser == plan.level && <button className="w-full mt-5 flex justify-center items-center  max-w-md bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-sm py-3 rounded-full shadow-[0_4px_15px_rgba(79,70,229,0.4)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.6)] hover:-translate-y-1 transition-all duration-300">
-                                    Gói hiện tại
-                                </button> }
+                                    levelUser == plan.level && (
+                                        <div className="w-full mt-5 flex justify-center items-center gap-2 bg-linear-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm py-3 rounded-full shadow-[0_4px_15px_rgba(16,185,129,0.4)] cursor-default ring-2 ring-emerald-400/50">
+                                            <FaCheckCircle className="text-white text-[16px]" />
+                                            <span>Gói hiện tại</span>
+                                        </div>
+                                    )
+                                }
                                 
                             </div>
                         )

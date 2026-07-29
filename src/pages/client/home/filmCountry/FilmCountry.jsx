@@ -103,9 +103,9 @@ export default function FilmCountry({ title, countryName, titleClass }) {
                                                     } else if (cId.includes('us') || cId.includes('mỹ') || cId.includes('u.s') || cId.includes('america')) {
                                                         bgCls = "from-blue-600 to-indigo-700 border-blue-400 shadow-[0_2px_4px_rgba(37,99,235,0.4)]";
                                                     }
-                                                    
+
                                                     const textCls = cId.includes('vietnam') || cId.includes('việt') ? 'text-black' : 'text-white';
-                                                    
+
                                                     return (
                                                         <p className={`bg-linear-to-r ${bgCls} ${textCls} border text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider`}>
                                                             {e.countriesID}

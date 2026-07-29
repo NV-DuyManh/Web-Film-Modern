@@ -162,15 +162,15 @@ function HeaderClient() {
                                 }
                             }}
                             className={` relative cursor-pointer flex items-center transition-all duration-300
-                                ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-[60]" : "z-10"}
+                                ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-60" : "z-10"}
                                 max-[1149px]:w-full max-[1149px]:justify-between max-[1149px]:px-4 max-[1149px]:py-2.5 max-[1149px]:rounded-lg max-[1149px]:text-[13px]
                                 min-[1150px]:justify-center min-[1150px]:rounded-full min-[1150px]:px-3 min-[1150px]:py-2 min-[1150px]:text-sm xl:px-4 font-bold 
                                 ${location.pathname === item.path
-                                ? "max-[1149px]:bg-cyan-600/10 max-[1149px]:text-cyan-400 max-[1149px]:shadow-[inset_4px_0_0_0_#22d3ee] min-[1150px]:bg-yellow-400 min-[1150px]:text-black min-[1150px]:shadow-[0_0_18px_rgba(250,204,21,0.5)]"
-                                : "text-slate-200 max-[1149px]:hover:bg-slate-700/80 max-[1149px]:hover:text-cyan-400 min-[1150px]:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] min-[1150px]:hover:text-yellow-400"
+                                    ? "max-[1149px]:bg-cyan-600/10 max-[1149px]:text-cyan-400 max-[1149px]:shadow-[inset_4px_0_0_0_#22d3ee] min-[1150px]:bg-yellow-400 min-[1150px]:text-black min-[1150px]:shadow-[0_0_18px_rgba(250,204,21,0.5)]"
+                                    : "text-slate-200 max-[1149px]:hover:bg-slate-700/80 max-[1149px]:hover:text-cyan-400 min-[1150px]:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] min-[1150px]:hover:text-yellow-400"
                                 }`}>
                             <div className="flex items-center gap-1.5">
-                                {item.title} 
+                                {item.title}
                                 {(item.path === "/category" || item.path === "/country") && <IoMdArrowDropdown className="text-lg opacity-80" />}
                             </div>
 
@@ -245,7 +245,7 @@ function HeaderClient() {
 
                                         <div className="flex flex-col overflow-hidden">
                                             <div className="flex items-center gap-2 mb-0.5">
-                                                <p className="text-[16px] font-bold text-white truncate tracking-wide max-w-[120px]">
+                                                <p className="text-[16px] font-bold text-white truncate tracking-wide max-w-30">
                                                     {isLogin?.displayName || 'Nguyễn Văn A'}
                                                 </p>
                                                 <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0 ${getBadgeStyle(currentPlanInfo.theme)}`}>

@@ -57,70 +57,57 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
                 <>
                     {/* Fiery Rose Gold breathing aura */}
                     <div className="absolute inset-[-4px] rounded-full z-0 pointer-events-none animate-pulse"
-                         style={{
-                             background: 'conic-gradient(from 0deg, #9f1239, #f43f5e, #f97316, #f59e0b, #9f1239)',
-                             filter: 'blur(15px)',
-                             WebkitMask: 'radial-gradient(closest-side, transparent 75%, black 85%)',
-                             mask: 'radial-gradient(closest-side, transparent 75%, black 85%)',
-                             opacity: 0.8
-                         }}></div>
+                        style={{
+                            background: 'conic-gradient(from 0deg, #9f1239, #f43f5e, #f97316, #f59e0b, #9f1239)',
+                            filter: 'blur(15px)',
+                            WebkitMask: 'radial-gradient(closest-side, transparent 75%, black 85%)',
+                            mask: 'radial-gradient(closest-side, transparent 75%, black 85%)',
+                            opacity: 0.8
+                        }}></div>
 
-                    {/* The 12-Point Starburst (Slow CW spin) */}
-                    <div className="absolute inset-[-20px] rounded-full z-0 pointer-events-none animate-[spin_30s_linear_infinite]"
-                         style={{
-                             WebkitMask: 'radial-gradient(closest-side, transparent 92%, black 96%)',
-                             mask: 'radial-gradient(closest-side, transparent 92%, black 96%)',
-                             opacity: 0.9
-                         }}>
-                         <div className="w-full h-full"
-                              style={{
-                                  background: 'conic-gradient(from 0deg, #f43f5e, #fcd34d, #f97316, #f43f5e)',
-                                  WebkitMask: 'repeating-conic-gradient(from 0deg, black 0deg 2deg, transparent 2deg 15deg, black 15deg 17deg, transparent 17deg 30deg)',
-                                  mask: 'repeating-conic-gradient(from 0deg, black 0deg 2deg, transparent 2deg 15deg, black 15deg 17deg, transparent 17deg 30deg)'
-                              }}></div>
-                    </div>
+
 
                     {/* Outer Plasma Ring (CCW spin) */}
                     <div className="absolute inset-[-14px] rounded-full z-0 pointer-events-none"
-                         style={{
-                             WebkitMask: 'radial-gradient(closest-side, transparent 92%, black 97%)',
-                             mask: 'radial-gradient(closest-side, transparent 92%, black 97%)',
-                             filter: 'drop-shadow(0 0 6px #f43f5e)'
-                         }}>
-                         <div className="w-full h-full animate-[spin_12s_linear_infinite_reverse]"
-                              style={{
-                                  background: 'conic-gradient(from 0deg, #f59e0b, #f43f5e, #9f1239, #f59e0b)',
-                                  WebkitMask: 'repeating-conic-gradient(from 0deg, black 0deg 10deg, transparent 10deg 20deg, black 20deg 22deg, transparent 22deg 40deg)',
-                                  mask: 'repeating-conic-gradient(from 0deg, black 0deg 10deg, transparent 10deg 20deg, black 20deg 22deg, transparent 22deg 40deg)'
-                              }}></div>
+                        style={{
+                            WebkitMask: 'radial-gradient(closest-side, transparent 92%, black 97%)',
+                            mask: 'radial-gradient(closest-side, transparent 92%, black 97%)',
+                            filter: 'drop-shadow(0 0 6px #f43f5e)'
+                        }}>
+                        <div className="w-full h-full animate-[spin_12s_linear_infinite_reverse]"
+                            style={{
+                                background: 'conic-gradient(from 0deg, #f59e0b, #f43f5e, #9f1239, #f59e0b)',
+                                WebkitMask: 'repeating-conic-gradient(from 0deg, black 0deg 10deg, transparent 10deg 20deg, black 20deg 22deg, transparent 22deg 40deg)',
+                                mask: 'repeating-conic-gradient(from 0deg, black 0deg 10deg, transparent 10deg 20deg, black 20deg 22deg, transparent 22deg 40deg)'
+                            }}></div>
                     </div>
 
                     {/* Middle Energy Sweep (Fast CW) */}
                     <div className="absolute inset-[-10px] rounded-full z-0 pointer-events-none"
-                         style={{
-                             WebkitMask: 'radial-gradient(closest-side, transparent 91%, black 95%)',
-                             mask: 'radial-gradient(closest-side, transparent 91%, black 95%)',
-                         }}>
-                         <div className="w-full h-full animate-[spin_2s_linear_infinite]"
-                              style={{
-                                  background: 'conic-gradient(from 0deg, transparent 0%, transparent 60%, #ffffff 95%, #ffffff 100%)',
-                                  filter: 'blur(1px)'
-                              }}></div>
+                        style={{
+                            WebkitMask: 'radial-gradient(closest-side, transparent 91%, black 95%)',
+                            mask: 'radial-gradient(closest-side, transparent 91%, black 95%)',
+                        }}>
+                        <div className="w-full h-full animate-[spin_2s_linear_infinite]"
+                            style={{
+                                background: 'repeating-conic-gradient(from 0deg, transparent 0deg, transparent 60deg, #ffffff 115deg, #ffffff 120deg)',
+                                filter: 'blur(1px)'
+                            }}></div>
                     </div>
 
                     {/* Inner Diamond Cuts (Sharp CW) */}
                     <div className="absolute inset-[-6px] rounded-full z-0 pointer-events-none"
-                         style={{
-                             WebkitMask: 'radial-gradient(closest-side, transparent 89%, black 94%)',
-                             mask: 'radial-gradient(closest-side, transparent 89%, black 94%)',
-                             filter: 'drop-shadow(0 0 6px #f97316)'
-                         }}>
-                         <div className="w-full h-full animate-[spin_6s_linear_infinite]"
-                              style={{
-                                  background: 'conic-gradient(from 0deg, #f97316, #f43f5e, #f97316)',
-                                  WebkitMask: 'repeating-conic-gradient(from 0deg, black 0deg 25deg, transparent 25deg 30deg)',
-                                  mask: 'repeating-conic-gradient(from 0deg, black 0deg 25deg, transparent 25deg 30deg)'
-                              }}></div>
+                        style={{
+                            WebkitMask: 'radial-gradient(closest-side, transparent 89%, black 94%)',
+                            mask: 'radial-gradient(closest-side, transparent 89%, black 94%)',
+                            filter: 'drop-shadow(0 0 6px #f97316)'
+                        }}>
+                        <div className="w-full h-full animate-[spin_6s_linear_infinite]"
+                            style={{
+                                background: 'conic-gradient(from 0deg, #f97316, #f43f5e, #f97316)',
+                                WebkitMask: 'repeating-conic-gradient(from 0deg, black 0deg 4deg, transparent 4deg 8deg)',
+                                mask: 'repeating-conic-gradient(from 0deg, black 0deg 4deg, transparent 4deg 8deg)'
+                            }}></div>
                     </div>
                 </>
             )}
@@ -196,9 +183,9 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
                     {isUltra && (
                         <>
 
-                            <div className="absolute z-20 pointer-events-none animate-bounce"
+                            <div className="absolute z-20 pointer-events-none"
                                 style={{
-                                    top: isTopTier ? '-38%' : '-32%',
+                                    top: isTopTier ? '-45%' : '-38%',
                                     color: accentColor,
                                     fontSize: isTopTier ? size * 0.7 : size * 0.6,
                                     filter: `drop-shadow(0 1px 1px rgba(0,0,0,0.8)) drop-shadow(0 0 8px ${primaryColor})`
@@ -211,7 +198,7 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
                     {isUltra && (
                         <div className="absolute z-20 pointer-events-none"
                             style={{
-                                bottom: isTopTier ? '-38%' : '-32%',
+                                bottom: isTopTier ? '-45%' : '-38%',
                                 color: gemColor,
                                 fontSize: isTopTier ? size * 0.6 : size * 0.5,
                                 filter: `drop-shadow(0 1px 1px rgba(0,0,0,0.8)) drop-shadow(0 0 8px ${glowColor})`

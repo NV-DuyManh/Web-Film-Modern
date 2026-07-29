@@ -95,9 +95,9 @@ export default function FilmHongKong() {
                                                 else if (cId.includes('thai') || cId.includes('thái')) bgCls = "from-emerald-500 to-teal-600";
                                                 else if (cId.includes('vietnam') || cId.includes('việt')) bgCls = "from-yellow-400 to-orange-500";
                                                 else if (cId.includes('us') || cId.includes('mỹ') || cId.includes('u.s') || cId.includes('america')) bgCls = "from-blue-600 to-indigo-700";
-                                                
+
                                                 const textCls = cId.includes('vietnam') || cId.includes('việt') ? 'text-black' : 'text-white';
-                                                
+
                                                 return (
                                                     <p className={`bg-linear-to-r ${bgCls} ${textCls} text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded-l whitespace-nowrap uppercase tracking-wider`}>
                                                         {e.countriesID}

@@ -5,7 +5,6 @@ import { FaCaretSquareDown, FaCaretSquareUp } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import Logo3 from "../../assets/Logo3.png";
 import { LISTMENU } from '../../utils/Contants';
-import LogOut from '../LogOut';
 
 function MenuAdmin() {
     const [show, setShow] = useState(null);
