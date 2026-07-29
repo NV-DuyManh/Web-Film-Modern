@@ -279,7 +279,7 @@ function HeaderClient() {
                                     </div>
 
                                     <div className="px-3 flex flex-col  ">
-                                        <button className="w-full mt-2 flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account'); setIsDropdownOpen(false); }} className="w-full mt-2 flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
                                             <FaUser className="text-purple-400 text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" /> Tài khoản
                                         </button>
 

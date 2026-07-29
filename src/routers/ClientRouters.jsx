@@ -16,6 +16,7 @@ const Pay = lazy(() => import('../pages/client/pay/Pay'));
 const UpgradeVIP = lazy(() => import('../pages/client/pay/UpgradeVIP'));
 const PayVIP = lazy(() => import('../pages/client/pay/PayVIP'));
 const PayMovie = lazy(() => import('../pages/client/pay/PayMovie'));
+const Account = lazy(() => import('../pages/client/account/Account'));
 
 const LoadingFallback = () => <LoadingScreen />;
 function ClientRouters(props) {
@@ -67,6 +68,10 @@ function ClientRouters(props) {
         {
             path: "/payMovie/:id",
             element: <PayMovie />
+        },
+        {
+            path: "/account",
+            element: <Account />
         },
     ]
     return (
