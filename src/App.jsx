@@ -5,11 +5,11 @@ import { BrowserRouter } from 'react-router-dom'
 import AdminRouters from './routers/AdminRouters'
 import NoelBackground from './components/admin/noelBackground/NoelBackground'
 import { AuthContext } from './contexts/AuthProvider'
+import LoadingScreen from './components/client/loadingScreen/LoadingScreen';
+
 
 const HomeAdmin = lazy(() => import('./pages/admin/homeAdmin/HomeAdmin'));
 const LayoutClient = lazy(() => import('./pages/client/LayoutClient'));
-
-import LoadingScreen from './components/client/loadingScreen/LoadingScreen';
 
 const LoadingFallback = () => <LoadingScreen />;
 

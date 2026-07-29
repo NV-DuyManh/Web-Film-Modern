@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import LoadingScreen from '../components/client/loadingScreen/LoadingScreen';
 
 const Home = lazy(() => import('../pages/client/home/Home'));
 const Topic = lazy(() => import('../pages/client/topic/Topic'));
@@ -15,8 +16,6 @@ const Pay = lazy(() => import('../pages/client/pay/Pay'));
 const UpgradeVIP = lazy(() => import('../pages/client/pay/UpgradeVIP'));
 const PayVIP = lazy(() => import('../pages/client/pay/PayVIP'));
 const PayMovie = lazy(() => import('../pages/client/pay/PayMovie'));
-
-import LoadingScreen from '../components/client/loadingScreen/LoadingScreen';
 
 const LoadingFallback = () => <LoadingScreen />;
 function ClientRouters(props) {
