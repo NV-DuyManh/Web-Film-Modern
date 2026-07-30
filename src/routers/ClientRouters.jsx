@@ -73,6 +73,10 @@ function ClientRouters(props) {
             path: "/account",
             element: <Account />
         },
+        {
+            path: "/account/:tab",
+            element: <Account />
+        },
     ]
     return (
         <div>

@@ -1,4 +1,4 @@
-import { FaUsers, FaUserSecret, FaMagic } from "react-icons/fa";
+import { FaUsers, FaUserSecret, FaMagic, FaUser, FaHeart, FaList, FaHistory, FaBell, FaVideo } from "react-icons/fa";
 import { MdCategory, MdDashboard, MdLocalMovies, MdOutlinePriceChange } from "react-icons/md";
 import { RiVipDiamondFill } from "react-icons/ri";
 
@@ -355,3 +355,36 @@ export const initialOptions = {
     currency: "USD",
     intent: "capture"
 };
+
+export const LISTACCOUNT = [
+    {
+        name: "Tài Khoản",
+        icon: <FaUser />,
+        path: "/account/account"
+    },
+    {
+        name: "Yêu Thích",
+        icon: <FaHeart />,
+        path: "/account/favorites"
+    },
+    {
+        name: "Danh Sách",
+        icon: <FaList />,
+        path: "/account/list"
+    },
+    {
+        name: "Xem Tiếp",
+        icon: <FaHistory />,
+        path: "/account/history"
+    },
+    {
+        name: "Thông Báo",
+        icon: <FaBell />,
+        path: "/account/notifications"
+    },
+    {
+        name: "Phim Đang Thuê",
+        icon: <FaVideo />,
+        path: "/account/rented"
+    }
+];
