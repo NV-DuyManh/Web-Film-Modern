@@ -5,4 +5,18 @@
     background-color: #111827;
     color: white;
   }
-}@keyframes avatar-shine { 0% { transform: translateX(-150%) skewX(-15deg); } 100% { transform: translateX(200%) skewX(-15deg); } } .animate-avatar-shine { animation: avatar-shine 3s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+}
+
+@keyframes avatar-shine {
+  0% {
+    transform: translateX(-150%) skewX(-15deg);
+  }
+
+  100% {
+    transform: translateX(200%) skewX(-15deg);
+  }
+}
+
+.animate-avatar-shine {
+  animation: avatar-shine 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}

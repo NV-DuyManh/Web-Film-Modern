@@ -18,7 +18,7 @@ export default function PlayFilm({ handleOpenLogin }) {
     const episodes = useContext(EpisodeContext);
     const playerRef = useRef(null);
 
-    /* ── Derived data ── */
+
     const currentEpisode = useMemo(() => episodes.find(e => e.id == id), [id, episodes]);
     const isDirectMovieId = !currentEpisode && movies.some(m => m.id == id);
     const movieId = currentEpisode ? currentEpisode.movieID : id;
@@ -32,11 +32,11 @@ export default function PlayFilm({ handleOpenLogin }) {
         return episodes.filter(e => e.movieID == mid).sort((a, b) => a.numberEpisode - b.numberEpisode);
     }, [id, episodes, currentEpisode]);
 
-    /* ── Resume state ── */
+
     const [showModal, setShowModal] = useState(false);
     const [resumeData, setResumeData] = useState(null);
 
-    /* ── 1. Set episode + check resume ── */
+
     useEffect(() => {
         if (currentEpisode) {
             setPlayEpisodes(currentEpisode);
@@ -59,7 +59,7 @@ export default function PlayFilm({ handleOpenLogin }) {
         }
     }, [id, currentEpisode, episodeShow, realMovieId, playEpisodes?.id]);
 
-    /* ── 2. timeupdate callback — lưu mỗi ~3 giây qua VideoPlayer ── */
+
     const handleTimeUpdate = useCallback((currentSeconds) => {
         if (playEpisodes?.id && realMovieId && currentSeconds > 0) {
             saveResume(realMovieId, {
@@ -70,7 +70,7 @@ export default function PlayFilm({ handleOpenLogin }) {
         }
     }, [playEpisodes?.id, realMovieId]);
 
-    /* ── 3. Lưu khi rời trang ── */
+
     useEffect(() => {
         const handleBeforeUnload = () => {
             const time = playerRef.current?.getTime?.() || 0;
@@ -86,7 +86,7 @@ export default function PlayFilm({ handleOpenLogin }) {
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
     }, [playEpisodes?.id, realMovieId]);
 
-    /* ── Handlers ── */
+
     const handleClickEpisodes = (ep) => {
         const time = playerRef.current?.getTime?.() || 0;
         if (playEpisodes?.id && realMovieId && time > 0) {
@@ -123,12 +123,12 @@ export default function PlayFilm({ handleOpenLogin }) {
         }, 300);
     };
 
-    /* ──────── RENDER ──────── */
+
     return (
         <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25">
             <div className="mx-auto px-4 sm:px-6 pt-4">
 
-                {/* Header */}
+
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-3">
                         <button
@@ -151,7 +151,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                         </h1>
                     </div>
 
-                    {/* Badge thời gian xem gần nhất */}
+
                     {resumeData && (
                         <div className="flex items-center gap-2 bg-linear-to- from-amber-500 via-orange-500 to-amber-600 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-lg shadow-[0_0_15px_rgba(245,158,11,0.4)]">
                             <FaHistory className="text-sm" />
@@ -160,7 +160,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                     )}
                 </div>
 
-                {/* ── Video Player + Resume Modal ── */}
+
                 <div className="relative w-full mb-8 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-black group">
                     <VideoPlayer
                         ref={playerRef}
@@ -170,7 +170,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                         hideControls={showModal}
                     />
 
-                    {/* ── RESUME MODAL ── */}
+
                     {showModal && resumeData && (
                         <div className="absolute inset-0 z-9999 bg-black flex items-center justify-center p-4">
                             <div className="resume-modal">
@@ -199,7 +199,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                     )}
                 </div>
 
-                {/* ── Content below player ── */}
+
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
                     <div className="flex-1 w-full">
                         <div className="flex flex-col md:flex-row gap-4 justify-between items-start border-b border-gray-800 pb-6">
@@ -222,7 +222,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                             </div>
                         </div>
 
-                        {/* Server & Audio Control Bar */}
+
                         <div className="mt-6 p-4 bg-[#14192b] rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-2">
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 inline">Bản chiếu:</p>
@@ -246,7 +246,7 @@ export default function PlayFilm({ handleOpenLogin }) {
                         </div>
                     </div>
 
-                    {/* Sidebar */}
+
                     <div className="w-full lg:w-80 xl:w-90 shrink-0">
                         <h2 className="text-xl font-bold text-white mb-6">Đề xuất cho bạn</h2>
                         <div className="flex flex-col gap-4">

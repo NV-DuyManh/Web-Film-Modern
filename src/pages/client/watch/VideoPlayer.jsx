@@ -8,7 +8,7 @@ function extractStreamUrl(embedUrl) {
         const urlObj = new URL(embedUrl);
         const streamUrl = urlObj.searchParams.get('url');
         if (streamUrl) return streamUrl;
-    } catch { /* ignore */ }
+    } catch { }
     if (embedUrl.includes('.m3u8') || embedUrl.includes('.mp4')) return embedUrl;
     return embedUrl;
 }
@@ -52,15 +52,15 @@ const VideoPlayer = forwardRef(({ src, onTimeUpdate, autoPlay = false, hideContr
             playbackRate: true,
             aspectRatio: true,
             fullscreen: true,
-            fullscreenWeb: false, // Tắt bớt 1 nút phóng to (chỉ giữ native fullscreen)
+            fullscreenWeb: false,
             subtitleOffset: false,
             miniProgressBar: false,
             mutex: true,
             backdrop: true,
             playsInline: true,
-            autoPlayback: false, // Tắt thông báo "Last Seen"
+            autoPlayback: false,
             airplay: true,
-            fastForward: true, // Bật tua nhanh mặc định của Artplayer cho đẹp
+            fastForward: true,
             theme: '#ff0000',
             lock: false,
             hotkey: true,
