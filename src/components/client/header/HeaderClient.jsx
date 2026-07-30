@@ -62,6 +62,8 @@ function HeaderClient() {
         return { name: highestPlan.name, level: highestPlan.level, theme: theme };
     }, [isLogin, subscriptions, plans]);
 
+    const displayTheme = isLogin?.selectedFrame || currentPlanInfo.theme;
+
     const getBadgeStyle = (theme) => {
         switch (theme) {
             case 'slate': return 'text-slate-300 bg-slate-700/50 border border-slate-500/50 shadow-none';
@@ -229,7 +231,7 @@ function HeaderClient() {
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                     className="relative flex items-center justify-center p-1 cursor-pointer"
                                 >
-                                    <WingedFrame theme={currentPlanInfo.theme} size={42}>
+                                    <WingedFrame theme={displayTheme} size={42}>
                                         <img src={isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
                                     </WingedFrame>
                                 </button>
@@ -238,7 +240,7 @@ function HeaderClient() {
 
                                     <div className="flex items-center gap-4 p-5 border-b border-slate-700/80 bg-linear-to-r from-blue-900/10 to-transparent">
                                         <div className="shrink-0">
-                                            <WingedFrame theme={currentPlanInfo.theme} size={48}>
+                                            <WingedFrame theme={displayTheme} size={48}>
                                                 <img src={isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
                                             </WingedFrame>
                                         </div>

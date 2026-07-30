@@ -14,6 +14,7 @@ import { uploadImageToCloudinary } from '../../../config/cloudiaryConfig';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseReponse';
+import { WingedFrame } from '../../../components/client/header/AvatarFrames';
 
 const Account = () => {
     const { isLogin } = useContext(AuthContext);
@@ -28,11 +29,11 @@ const Account = () => {
     };
 
     const currentPlanInfo = React.useMemo(() => {
-        if (!isLogin) return { name: 'FREE', level: 0, theme: 'slate' };
+        if (!isLogin) return { name: 'FREE', level: 0, theme: 'blue' };
         if (isLogin.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'red' };
 
         const userSubs = subscriptions.filter(p => p.userId === isLogin.id && getExpiryDate(p) > new Date());
-        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'slate' };
+        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
 
         const highestSub = userSubs.reduce((max, item) => {
             const currentPlan = getObjectById(plans, item.planID);
@@ -54,6 +55,21 @@ const Account = () => {
             theme: theme,
         };
     }, [isLogin, subscriptions, plans]);
+
+    const AVAILABLE_FRAMES = React.useMemo(() => {
+        const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
+        const themes = ['blue', 'cyan', 'yellow', 'rose', 'purple', 'emerald'];
+        
+        return sortedPlans.map((plan, index) => ({
+            id: themes[index] || 'slate',
+            label: plan.name,
+            minLevel: plan.level
+        }));
+    }, [plans]);
+
+    const currentSelectedTheme = isLogin?.selectedFrame || currentPlanInfo.theme;
+
+    const [showFrameModal, setShowFrameModal] = useState(false);
     const fileInputRef = useRef(null);
     const [showPassword, setShowPassword] = useState(false);
     const [avatarPreview, setAvatarPreview] = useState(null);
@@ -216,6 +232,26 @@ const Account = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handleSelectFrame = async (frameId) => {
+        if (!isLogin) return;
+        try {
+            await updateDocument("Users", {
+                id: isLogin.id,
+                selectedFrame: frameId
+            });
+            // Do not auto-close modal
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi',
+                text: 'Không thể đổi khung ảnh!',
+                background: '#0f172a',
+                color: '#fff',
+                confirmButtonColor: '#22d3ee'
+            });
+        }
+    };
+
     const handlePasswordChange = (e) => {
         setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
     };
@@ -259,92 +295,74 @@ const Account = () => {
                         })}
                     </div>
                 </div>
-                <div className="flex-1 flex flex-col h-full min-h-[calc(100vh-120px)] p-0 md:p-2">
+                <div className="flex-1 flex flex-col h-full min-h-[calc(100vh-120px)]">
 
                     {activeTab === 'Tài Khoản' ? (
                         <div className="flex flex-col gap-4 overflow-auto custom-scrollbar h-full pr-2">
-                            <div className="bg-[#1e293b]/60 rounded-2xl border border-yellow-500/50 p-6 flex flex-col xl:flex-row gap-4 items-center xl:items-start justify-between relative shadow-[0_0_15px_rgba(234,179,8,0.15)]">
+                            <div className="bg-[#1e293b]/60 rounded-2xl border border-yellow-500/50 p-6 flex flex-col xl:flex-row gap-4 items-center justify-between relative shadow-[0_0_15px_rgba(234,179,8,0.15)]">
 
-                                <div className="flex flex-col sm:flex-row gap-5 items-center sm:items-start shrink-0">
-                                    <div className="relative w-28 h-28 shrink-0 group">
-                                        <div className="w-full h-full rounded-full border-2 border-yellow-500 p-1 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
-                                            <img
-                                                src={avatarPreview || isLogin?.imgUrl || Coder}
-                                                alt="avatar"
-                                                className="w-full h-full rounded-full object-cover"
-                                            />
+                                <div className="flex flex-col sm:flex-row gap-6 sm:gap-8 items-center shrink-0">
+                                    <div className="relative shrink-0 group flex items-center justify-center my-4 sm:my-2">
+                                        <div className="cursor-pointer" onClick={() => setShowFrameModal(true)}>
+                                            <WingedFrame theme={currentSelectedTheme} size={96}>
+                                                <img
+                                                    src={avatarPreview || isLogin?.imgUrl || Coder}
+                                                    alt="avatar"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            </WingedFrame>
                                         </div>
+
                                         <input
                                             type="file"
-                                            accept="image/*"
+                                            accept=".png, .jpg, .jpeg, .webp, .gif"
                                             ref={fileInputRef}
                                             className="hidden"
                                             onChange={handleAvatarChange}
                                         />
                                         <button
-                                            onClick={() => fileInputRef.current?.click()}
-                                            className="absolute bottom-0 right-0 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-[#0f172a] border-2 border-[#161821] hover:scale-110 hover:shadow-[0_0_10px_rgba(234,179,8,0.5)] transition-all duration-300 cursor-pointer"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                fileInputRef.current?.click();
+                                            }}
+                                            className="absolute -bottom-1 -right-1 w-[34px] h-[34px] bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-slate-900 border-2 border-[#1e293b] shadow-[0_4px_10px_rgba(0,0,0,0.4)] hover:scale-110 hover:rotate-12 hover:shadow-[0_0_15px_rgba(245,158,11,0.7)] active:scale-95 transition-all duration-300 cursor-pointer z-50"
                                         >
-                                            <FaCamera className="text-sm" />
+                                            <FaCamera className="text-[14px]" />
                                         </button>
                                     </div>
 
-                                    <div className="flex flex-col items-center sm:items-start mt-2">
-                                        <h1 className="text-2xl font-black text-white mb-1 tracking-wider drop-shadow-md">{isLogin?.displayName || 'Thành viên'}</h1>
-                                        <p className="flex items-center gap-2 text-yellow-500/80 text-sm mb-3 font-medium">
-                                            <FaEnvelope />
+                                    <div className="flex flex-col items-center sm:items-start mt-1">
+                                        <h1 className="text-3xl font-serif font-bold text-white mb-1 tracking-wide drop-shadow-md">
+                                            {isLogin?.displayName || 'Thành viên'}
+                                        </h1>
+                                        <div className="text-yellow-400 text-[14px] font-medium tracking-wide mb-3 opacity-90">
                                             {isLogin?.email || 'Chưa cập nhật email'}
-                                        </p>
-
-                                        <div className="flex items-center gap-3">
-                                            <span className={`px-4 py-1.5 bg-${currentPlanInfo.theme}-500/10 text-${currentPlanInfo.theme}-400 text-xs font-bold rounded-full border border-${currentPlanInfo.theme}-500/50 uppercase tracking-wider shadow-[0_0_10px_rgba(0,0,0,0.5)] flex items-center gap-1.5`}>
-                                                <FaCrown className="text-[14px]" />
-                                                {currentPlanInfo.name === 'PRENIUM' ? 'PREMIUM' : currentPlanInfo.name}
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-4 xl:mt-0 self-center">
-                                    {!isEditing ? (
-                                        <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-yellow-500/10 border border-yellow-500/60 text-yellow-500 text-sm font-bold shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-yellow-500 hover:text-[#0f172a] hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] hover:scale-105 transition-all duration-300 cursor-pointer">
-                                            <FaEdit className="text-lg" /> Chỉnh sửa
-                                        </button>
-                                    ) : (
-                                        <div className="flex items-center gap-2">
-                                            <button onClick={() => {
-                                                setIsEditing(false);
-                                                setFormData({
-                                                    displayName: isLogin?.displayName || '',
-                                                    email: isLogin?.email || '',
-                                                    phoneNumber: isLogin?.phoneNumber || '',
-                                                    address: isLogin?.address || '',
-                                                    dateOfBirth: isLogin?.dateOfBirth || ''
-                                                });
-                                            }} className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] transition-all duration-300 cursor-pointer">
-                                                <FaTimes /> Hủy
-                                            </button>
-                                            <button onClick={handleSaveProfile} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-yellow-500 border border-yellow-500 text-[#0f172a] text-sm font-bold shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:bg-yellow-400 hover:scale-105 transition-all duration-300 cursor-pointer">
-                                                <FaSave className="text-lg" /> Lưu
-                                            </button>
-                                        </div>
-                                    )}
+
+                                <div className="mt-4 xl:mt-0 self-center shrink-0">
+                                    <div className={`px-6 py-2.5 bg-${currentPlanInfo.theme}-500/10 text-${currentPlanInfo.theme}-400 text-[15px] font-bold rounded-full border border-${currentPlanInfo.theme}-500/50 uppercase tracking-wider shadow-[0_0_15px_rgba(0,0,0,0.5)] flex items-center gap-2.5`}>
+                                        <FaCrown className="text-lg" />
+                                        Hạng hiện tại: {currentPlanInfo.name === 'PRENIUM' ? 'PREMIUM' : currentPlanInfo.name}
+                                    </div>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
-                                <div className="bg-[#1e293b]/60 border border-cyan-500/70 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-                                    <p className="text-4xl font-black text-cyan-400">1</p>
+                                <div className="bg-[#1e293b]/60 border border-cyan-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                                    <p className="text-3xl font-black text-cyan-400">1</p>
                                     <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">ĐÃ XEM</p>
                                 </div>
-                                <div className="bg-[#1e293b]/60 border border-emerald-500/70 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                                    <p className="text-4xl font-black text-emerald-400">2</p>
+                                <div className="bg-[#1e293b]/60 border border-emerald-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                                    <p className="text-3xl font-black text-emerald-400">2</p>
                                     <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">ĐÁNH GIÁ</p>
                                 </div>
-                                <div className="bg-[#1e293b]/60 border border-purple-500/70 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
-                                    <p className="text-4xl font-black text-purple-400">3</p>
+                                <div className="bg-[#1e293b]/60 border border-purple-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                                    <p className="text-3xl font-black text-purple-400">3</p>
                                     <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">WATCHLIST</p>
                                 </div>
-                                <div className="bg-[#1e293b]/60 border border-rose-500/70 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 shadow-[0_0_10px_rgba(244,63,94,0.2)]">
-                                    <p className="text-4xl font-black text-rose-400">4</p>
+                                <div className="bg-[#1e293b]/60 border border-rose-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(244,63,94,0.2)]">
+                                    <p className="text-3xl font-black text-rose-400">4</p>
                                     <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">THEO DÕI</p>
                                 </div>
                             </div>
@@ -354,6 +372,31 @@ const Account = () => {
                                         <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 shadow-[0_0_5px_#22d3ee]"></span>
                                         Thông tin cá nhân
                                     </h3>
+                                    <div>
+                                        {!isEditing ? (
+                                            <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/60 text-yellow-500 text-xs font-bold shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-yellow-500 hover:text-[#0f172a] hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] hover:scale-105 transition-all duration-300 cursor-pointer">
+                                                <FaEdit className="text-sm" /> Chỉnh sửa
+                                            </button>
+                                        ) : (
+                                            <div className="flex items-center gap-2">
+                                                <button onClick={() => {
+                                                    setIsEditing(false);
+                                                    setFormData({
+                                                        displayName: isLogin?.displayName || '',
+                                                        email: isLogin?.email || '',
+                                                        phoneNumber: isLogin?.phoneNumber || '',
+                                                        address: isLogin?.address || '',
+                                                        dateOfBirth: isLogin?.dateOfBirth || ''
+                                                    });
+                                                }} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold hover:bg-red-500 hover:text-white hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] transition-all duration-300 cursor-pointer">
+                                                    <FaTimes /> Hủy
+                                                </button>
+                                                <button onClick={handleSaveProfile} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500 border border-yellow-500 text-[#0f172a] text-xs font-bold shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:bg-yellow-400 hover:scale-105 transition-all duration-300 cursor-pointer">
+                                                    <FaSave className="text-sm" /> Lưu
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
@@ -436,7 +479,7 @@ const Account = () => {
                                                     type={showPassword ? "text" : "password"}
                                                     value={isLogin?.password || ''}
                                                     disabled
-                                                    className="w-full bg-black/20 backdrop-blur-md cursor-not-allowed border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-1.5 text-white text-xl font-bold tracking-[0.2em] focus:outline-none transition-all"
+                                                    className="w-full bg-black/20 backdrop-blur-md cursor-not-allowed border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-1.5 text-white text-base font-bold tracking-widest focus:outline-none transition-all"
                                                 />
                                                 <button
                                                     onClick={() => setShowPassword(!showPassword)}
@@ -537,6 +580,82 @@ const Account = () => {
                     )}
                 </div>
             </div>
+
+            {/* Modal Chọn Khung */}
+            {showFrameModal && (
+                <div 
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                    onClick={() => setShowFrameModal(false)}
+                >
+                    <div 
+                        className="bg-[#1e293b] border border-cyan-500/30 rounded-2xl p-6 w-full max-w-2xl relative shadow-[0_0_30px_rgba(34,211,238,0.2)]"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button 
+                            onClick={() => setShowFrameModal(false)}
+                            className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-slate-700/50 text-slate-400 hover:text-white hover:bg-rose-500 hover:rotate-90 hover:scale-110 hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all duration-300"
+                        >
+                            <FaTimes className="text-lg" />
+                        </button>
+                        
+                        <h2 className="text-2xl font-black text-white mb-6 text-center uppercase tracking-wider flex items-center justify-center gap-3">
+                            <FaCrown className="text-yellow-500" />
+                            Bộ sưu tập khung ảnh
+                        </h2>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 max-h-[60vh] overflow-y-auto custom-scrollbar p-2">
+                            {AVAILABLE_FRAMES.map(frame => {
+                                const isUnlocked = currentPlanInfo.level >= frame.minLevel;
+                                const isSelected = currentSelectedTheme === frame.id;
+                                
+                                return (
+                                    <div 
+                                        key={frame.id}
+                                        onClick={() => isUnlocked && handleSelectFrame(frame.id)}
+                                        className={`flex flex-col items-center gap-3 p-4 rounded-xl transition-all duration-300 relative ${
+                                            isUnlocked 
+                                                ? 'cursor-pointer hover:bg-white/5 border ' + (isSelected ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_15px_rgba(34,211,238,0.2)]' : 'border-slate-700 hover:border-slate-500') 
+                                                : 'opacity-50 grayscale cursor-not-allowed border border-slate-800 bg-black/20'
+                                        }`}
+                                    >
+                                        {!isUnlocked && (
+                                            <div className="absolute inset-0 flex items-center justify-center z-30 overflow-hidden rounded-xl pointer-events-none">
+                                                <div className="absolute w-[150%] h-[14px] rotate-45" style={{ 
+                                                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='26' height='14' viewBox='0 0 26 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23cbd5e1'/%3E%3Cstop offset='100%25' stop-color='%23475569'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f1f5f9'/%3E%3Cstop offset='100%25' stop-color='%2394a3b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='18' height='12' rx='6' fill='transparent' stroke='url(%23g)' stroke-width='2.5'/%3E%3Crect x='16' y='3' width='9' height='8' rx='4' fill='url(%23g2)' stroke='%230f172a' stroke-width='1.5'/%3E%3C/svg%3E")`, 
+                                                    backgroundRepeat: 'repeat-x', 
+                                                    backgroundPosition: 'center',
+                                                    filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.9))' 
+                                                }}></div>
+                                                
+                                                <div className="absolute w-[150%] h-[14px] -rotate-45" style={{ 
+                                                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='26' height='14' viewBox='0 0 26 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23cbd5e1'/%3E%3Cstop offset='100%25' stop-color='%23475569'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f1f5f9'/%3E%3Cstop offset='100%25' stop-color='%2394a3b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='18' height='12' rx='6' fill='transparent' stroke='url(%23g)' stroke-width='2.5'/%3E%3Crect x='16' y='3' width='9' height='8' rx='4' fill='url(%23g2)' stroke='%230f172a' stroke-width='1.5'/%3E%3C/svg%3E")`, 
+                                                    backgroundRepeat: 'repeat-x', 
+                                                    backgroundPosition: 'center',
+                                                    filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.9))' 
+                                                }}></div>
+                                                
+                                                <div className="z-10 bg-gradient-to-b from-slate-700 to-slate-900 w-[42px] h-[42px] flex items-center justify-center rounded-full border-[3px] border-slate-400 shadow-[0_5px_15px_rgba(0,0,0,1),inset_0_2px_4px_rgba(255,255,255,0.4)] relative">
+                                                    <div className="absolute top-[2px] w-[26px] h-3 rounded-full border-t-2 border-slate-300 opacity-60"></div>
+                                                    <FaLock className="text-lg text-slate-300 drop-shadow-[0_2px_2px_black]" />
+                                                </div>
+                                            </div>
+                                        )}
+                                        
+                                        <div className="relative flex items-center justify-center pb-2">
+                                            <WingedFrame theme={frame.id} size={64}>
+                                                <img src={isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
+                                            </WingedFrame>
+                                        </div>
+                                        <p className={`text-xs font-bold text-center ${isSelected ? 'text-cyan-400' : 'text-slate-300'}`}>
+                                            {frame.label}
+                                        </p>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
