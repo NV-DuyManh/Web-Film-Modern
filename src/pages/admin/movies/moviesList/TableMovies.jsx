@@ -14,6 +14,7 @@ import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
 import Logo5 from '../../../../assets/Logo5.png';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 
 const getStatusStyle = (status) => {
@@ -96,7 +97,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
             return (
                 <div key={item.id} className="group flex w-17 flex-col items-center cursor-pointer">
                     <div className="relative h-12 w-12">
-                        <img src={item.imgUrl} alt={item.name} className={`h-12 w-12 rounded-full object-cover ring-2 ring-white/10 transition-all duration-300 group-hover:scale-110 ${hoverRing}`} />
+                        <img src={getOptimizedUrl(item.imgUrl, 200, 200)} alt={item.name} className={`h-12 w-12 rounded-full object-cover ring-2 ring-white/10 transition-all duration-300 group-hover:scale-110 ${hoverRing}`} />
                     </div>
                     <p className={`mt-1.5 max-w-16.5 truncate text-center text-[11px] font-semibold text-gray-200 transition-all duration-300 ${hoverText}`}>{item.name}</p>
                 </div>
@@ -201,7 +202,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                                             <div className="magic-spark"></div>
                                                         </div>
                                                     )}
-                                                    <img src={row.imgUrl} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10 relative z-10" />
+                                                    <img src={getOptimizedUrl(row.imgUrl, 300, 400)} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10 relative z-10" />
                                                 </div>
                                             </div>
                                         </td>

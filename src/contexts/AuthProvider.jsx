@@ -36,8 +36,10 @@ function AuthProvider({ children }) {
         setIsLogin(null);
         navigate("/");
     }
+    const [globalAvatarPreview, setGlobalAvatarPreview] = useState(null);
+
     return (
-        <AuthContext.Provider value={{ isLogin , loginByUser  , handleLogout }}>
+        <AuthContext.Provider value={{ isLogin , loginByUser  , handleLogout, globalAvatarPreview, setGlobalAvatarPreview }}>
             {children}
         </AuthContext.Provider>
     );

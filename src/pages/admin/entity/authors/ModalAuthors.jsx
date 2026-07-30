@@ -105,8 +105,8 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                             value={author.sexID}
                             onChange={onChangeInput}
                         >
-                            <FormControlLabel value="Female" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
                             <FormControlLabel value="Male" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Male" sx={{ color: '#e5e7eb', margin: 0 }} />
+                            <FormControlLabel value="Female" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
                             <FormControlLabel value="Other" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Other" sx={{ color: '#e5e7eb', margin: 0 }} />
                         </RadioGroup>
                     </div>
@@ -131,7 +131,7 @@ export default function ModalAuthors({ open, onChangeInput, handleClose, addauth
                                 <img 
                                     src={author.imgFile ? URL.createObjectURL(author.imgFile) : (author.imgUrl || LOGO)} 
                                     alt="Author Avatar" 
-                                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-30" 
+                                    className="w-full h-full object-cover transition-all duration-500 group-hover:opacity-30" 
                                 />
                                 <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! !p-0! rounded-full! cursor-pointer">
                                     <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />

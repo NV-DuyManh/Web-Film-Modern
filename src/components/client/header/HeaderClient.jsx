@@ -27,7 +27,7 @@ function HeaderClient() {
     const [openLogin, setOpenLogin] = useState(false);
     const [openRegister, setOpenRegister] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
-    const { isLogin, handleLogout } = useContext(AuthContext);
+    const { isLogin, handleLogout, globalAvatarPreview } = useContext(AuthContext);
     const subscriptions = useContext(SubscriptionContext) || [];
     const plans = useContext(PlanContext) || [];
 
@@ -75,7 +75,6 @@ function HeaderClient() {
             default: return 'text-yellow-900 bg-gradient-to-r from-yellow-300 to-amber-500';
         }
     };
-
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -232,7 +231,7 @@ function HeaderClient() {
                                     className="relative flex items-center justify-center p-1 cursor-pointer"
                                 >
                                     <WingedFrame theme={displayTheme} size={42}>
-                                        <img src={isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
+                                        <img src={globalAvatarPreview || isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
                                     </WingedFrame>
                                 </button>
 
@@ -241,7 +240,7 @@ function HeaderClient() {
                                     <div className="flex items-center gap-4 p-5 border-b border-slate-700/80 bg-linear-to-r from-blue-900/10 to-transparent">
                                         <div className="shrink-0">
                                             <WingedFrame theme={displayTheme} size={48}>
-                                                <img src={isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
+                                                <img src={globalAvatarPreview || isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
                                             </WingedFrame>
                                         </div>
 

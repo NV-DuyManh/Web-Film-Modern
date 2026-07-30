@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import Search from '../../../../components/admin/search/Search';
 import ModalUsers from './ModalUsers';
 import TableUsers from './TableUsers';
+import ModalViewUser from './ModalViewUser';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import LOGO from "../../../../assets/Logo.png";
 
-const inner = { displayName: "", email: "", password: "", phone: "", imgUrl: LOGO, sexId: "", role: "user" };
-const innerError = { displayName: "", email: "", password: "", phone: "", imgUrl: "", sexId: "", role: "" };
+const inner = { name: "", email: "", password: "", phone: "", avatarUrl: LOGO, sexId: "", role: "user" };
+const innerError = { name: "", email: "", password: "", phone: "", avatarUrl: "", sexId: "", role: "" };
 
 const getBase64FromUrl = (url) => {
     return new Promise((resolve) => {
@@ -29,6 +30,8 @@ const getBase64FromUrl = (url) => {
 
 function Users() {
     const [open, setOpen] = useState(false);
+    const [openView, setOpenView] = useState(false);
+    const [userView, setUserView] = useState(null);
     const [user, setUser] = useState(inner);
     const [error, setError] = useState(innerError);
     const [loading, setLoading] = useState(false);
@@ -45,6 +48,11 @@ function Users() {
         setError(innerError);
     };
 
+    const handleView = (item) => {
+        setUserView(item);
+        setOpenView(true);
+    };
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -56,7 +64,7 @@ function Users() {
 
     const validation = () => {
         const newError = {};
-        newError.displayName = user.displayName || user.name ? "" : "Please enter name";
+        newError.name = user.name ? "" : "Please enter name";
         newError.email = user.email ? "" : "Please enter email";
         newError.password = user.password ? "" : "Please enter password";
         newError.role = user.role ? "" : "Please select role";
@@ -78,12 +86,8 @@ function Users() {
 
             setProgress(50);
 
-            if (!submitData.imgUrl && submitData.avatarUrl) {
-                submitData.imgUrl = submitData.avatarUrl;
-            }
-
-            if (!submitData.imgUrl || submitData.imgUrl === LOGO || submitData.imgUrl?.includes("Logo.png")) {
-                submitData.imgUrl = "";
+            if (!submitData.avatarUrl || submitData.avatarUrl === LOGO || submitData.avatarUrl?.includes("Logo.png")) {
+                submitData.avatarUrl = "";
             }
 
             setProgress(75);
@@ -115,7 +119,7 @@ function Users() {
         if (file) {
             const reader = new FileReader();
             reader.onload = () => {
-                setUser(prev => ({ ...prev, imgUrl: reader.result }));
+                setUser(prev => ({ ...prev, avatarUrl: reader.result }));
             };
             reader.readAsDataURL(file);
         }
@@ -143,9 +147,11 @@ function Users() {
             <TableUsers
                 setUser={setUser}
                 handleClickOpen={handleClickOpen}
+                handleView={handleView}
                 user={user}
                 search={search}
             />
+            <ModalViewUser open={openView} handleClose={() => setOpenView(false)} user={userView} />
         </div>
     );
 }

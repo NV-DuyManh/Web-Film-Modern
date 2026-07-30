@@ -1,26 +1,24 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { LISTACCOUNT } from '../../../utils/Contants';
-import { AuthContext } from '../../../contexts/AuthProvider';
-import { updateDocument } from '../../../services/firebaseService';
+import { LISTACCOUNT } from '../../../../utils/Contants';
+import { AuthContext } from '../../../../contexts/AuthProvider';
+import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
-import { uploadImageToCloudinary } from '../../../config/cloudiaryConfig';
-import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
-import { PlanContext } from '../../../contexts/PlanProvider';
-import { getObjectById } from '../../../services/firebaseReponse';
-import NoelBackground from '../../../components/admin/noelBackground/NoelBackground';
-import MenuAccount from '../../../components/client/menuAccount/MenuAccount';
+import { uploadImageToCloudinary } from '../../../../config/cloudiaryConfig';
+import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
+import { PlanContext } from '../../../../contexts/PlanProvider';
+import { getObjectById } from '../../../../services/firebaseReponse';
+import NoelBackground from '../../../../components/admin/noelBackground/NoelBackground';
+import MenuAccount from '../../../../components/client/menuAccount/MenuAccount';
 import ProfileHeader from './ProfileHeader';
 import ProfileForm from './ProfileForm';
-
 const Profile = () => {
-    const { isLogin } = useContext(AuthContext);
+    const { isLogin, setGlobalAvatarPreview } = useContext(AuthContext);
     const subscriptions = useContext(SubscriptionContext) || [];
     const plans = useContext(PlanContext) || [];
     const { tab } = useParams();
     const navigate = useNavigate();
 
-    const [avatarPreview, setAvatarPreview] = useState(null);
 
     const activeItem = LISTACCOUNT.find(item => item.path === `/account/${tab}`) || LISTACCOUNT[0];
     const activeTab = activeItem.name;
@@ -31,11 +29,7 @@ const Profile = () => {
         }
     }, [tab, navigate]);
 
-    useEffect(() => {
-        if (isLogin && avatarPreview && isLogin.imgUrl !== avatarPreview) {
-            setAvatarPreview(null);
-        }
-    }, [isLogin, avatarPreview]);
+
 
     const getExpiryDate = (p) => {
         if (!p || !p.expiryDate) return new Date(0);
@@ -89,9 +83,10 @@ const Profile = () => {
         if (!isLogin) return;
         const reader = new FileReader();
         reader.onload = async () => {
-            setAvatarPreview(reader.result);
+            setGlobalAvatarPreview(reader.result);
             const uploadedUrl = await uploadImageToCloudinary(file, "Users");
             await updateDocument("Users", { id: isLogin.id, imgUrl: uploadedUrl });
+            setGlobalAvatarPreview(null);
         };
         reader.readAsDataURL(file);
     };
@@ -150,7 +145,6 @@ const Profile = () => {
                                 isLogin={isLogin}
                                 currentPlanInfo={currentPlanInfo}
                                 currentSelectedTheme={currentSelectedTheme}
-                                avatarPreview={avatarPreview}
                                 AVAILABLE_FRAMES={AVAILABLE_FRAMES}
                                 onAvatarChange={handleAvatarChange}
                                 onSelectFrame={handleSelectFrame}

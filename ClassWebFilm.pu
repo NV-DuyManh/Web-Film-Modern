@@ -18,6 +18,9 @@ class Users {
     + email: text
     + password: text
     + phone: text
+    + address: text
+    + dateOfBirth: datetime
+    + role: text
     + avatarUrl: text
     + sexId: text
     + createdAt: datetime

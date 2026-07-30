@@ -3,6 +3,7 @@ import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
 import { ActorContext } from '../../../../contexts/ActorProvider';
@@ -114,9 +115,9 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                                         <div className="flex justify-center items-center py-2">
                                             <div className="group relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-white/10 cursor-pointer">
                                                 <img 
-                                                    src={row.imgUrl} 
+                                                    src={getOptimizedUrl(row.imgUrl)} 
                                                     alt={row.name} 
-                                                    className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110 group-hover:opacity-80" 
+                                                    className="w-full h-full object-cover transition-all duration-300" 
                                                 />
                                             </div>
                                         </div>

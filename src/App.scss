@@ -1874,3 +1874,102 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     opacity: 0 !important;
     visibility: hidden !important;
 }
+// ============================================================================
+// PROFILE HEADER & STATS
+// ============================================================================
+.vip-theme-slate {
+    --vip-color: #94a3b8;
+    --vip-bg-glow: rgba(148, 163, 184, 0.1);
+}
+
+.profile-rank-badge {
+    position: relative;
+    padding: 10px 24px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background-color: transparent;
+    color: var(--vip-color, #94a3b8);
+    font-size: 15px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px solid var(--vip-color);
+    opacity: 0.8;
+    transition: all 0.3s ease;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    .badge-bg-hover {
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        background-color: var(--vip-bg-glow);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    &:hover .badge-bg-hover {
+        opacity: 1;
+    }
+
+    .badge-icon {
+        font-size: 20px;
+        z-index: 10;
+        filter: drop-shadow(0 0 8px var(--vip-color, #94a3b8));
+    }
+
+    .badge-text {
+        z-index: 10;
+        filter: drop-shadow(0 0 5px var(--vip-color, #94a3b8));
+    }
+}
+
+.stat-box {
+    background-color: rgba(30, 41, 59, 0.6);
+    border-radius: 1rem;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    .stat-value {
+        font-size: 1.875rem;
+        font-weight: 900;
+    }
+
+    .stat-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: #e2e8f0;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        text-align: center;
+    }
+
+    &.stat-cyan {
+        border: 1px solid rgba(6, 182, 212, 0.7);
+        box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+        .stat-value { color: #22d3ee; }
+    }
+    &.stat-emerald {
+        border: 1px solid rgba(16, 185, 129, 0.7);
+        box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        .stat-value { color: #34d399; }
+    }
+    &.stat-purple {
+        border: 1px solid rgba(168, 85, 247, 0.7);
+        box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+        .stat-value { color: #c084fc; }
+    }
+    &.stat-rose {
+        border: 1px solid rgba(244, 63, 94, 0.7);
+        box-shadow: 0 0 10px rgba(244, 63, 94, 0.2);
+        .stat-value { color: #fb7185; }
+    }
+}

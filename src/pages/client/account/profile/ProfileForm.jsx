@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     FaEdit, FaEnvelope, FaMapMarkerAlt, FaBirthdayCake,
-    FaLock, FaEye, FaEyeSlash, FaPhoneAlt, FaSave, FaTimes, FaKey, FaCheck, FaShieldAlt, FaUser
+    FaLock, FaEye, FaEyeSlash, FaPhoneAlt, FaSave, FaTimes, FaKey, FaCheck, FaShieldAlt, FaUser, FaVenusMars
 } from 'react-icons/fa';
 
 const ProfileForm = ({
@@ -13,9 +13,10 @@ const ProfileForm = ({
     const [formData, setFormData] = useState({
         displayName: '',
         email: '',
-        phoneNumber: '',
+        phone: '',
         address: '',
-        dateOfBirth: ''
+        dateOfBirth: '',
+        sexId: ''
     });
 
     const [isChangingPassword, setIsChangingPassword] = useState(false);
@@ -32,9 +33,10 @@ const ProfileForm = ({
             setFormData({
                 displayName: isLogin.displayName || '',
                 email: isLogin.email || '',
-                phoneNumber: isLogin.phoneNumber || '',
+                phone: isLogin.phone || isLogin.phoneNumber || '',
                 address: isLogin.address || '',
-                dateOfBirth: isLogin.dateOfBirth || ''
+                dateOfBirth: isLogin.dateOfBirth || '',
+                sexId: isLogin.sexId || ''
             });
         }
     }, [isLogin]);
@@ -75,25 +77,6 @@ const ProfileForm = ({
 
     return (
         <>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
-                <div className="bg-[#1e293b]/60 border border-cyan-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-                    <p className="text-3xl font-black text-cyan-400">1</p>
-                    <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">ĐÃ XEM</p>
-                </div>
-                <div className="bg-[#1e293b]/60 border border-emerald-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                    <p className="text-3xl font-black text-emerald-400">2</p>
-                    <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">ĐÁNH GIÁ</p>
-                </div>
-                <div className="bg-[#1e293b]/60 border border-purple-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
-                    <p className="text-3xl font-black text-purple-400">3</p>
-                    <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">WATCHLIST</p>
-                </div>
-                <div className="bg-[#1e293b]/60 border border-rose-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(244,63,94,0.2)]">
-                    <p className="text-3xl font-black text-rose-400">4</p>
-                    <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">THEO DÕI</p>
-                </div>
-            </div>
-
             <div className="bg-[#1e293b]/60 rounded-2xl border border-yellow-500/50 p-6 shadow-[0_0_15px_rgba(234,179,8,0.15)]">
                 <div className="flex items-center justify-between mb-6 pb-4 border-b border-cyan-500/20">
                     <h3 className="text-white text-sm font-bold uppercase tracking-wider flex items-center gap-2">
@@ -152,8 +135,8 @@ const ProfileForm = ({
                         </label>
                         <input
                             type="text"
-                            name="phoneNumber"
-                            value={formData.phoneNumber}
+                            name="phone"
+                            value={formData.phone}
                             onChange={handleChange}
                             disabled={!isEditing}
                             placeholder={isEditing ? "Nhập số điện thoại" : "Chưa cập nhật..."}
@@ -187,6 +170,23 @@ const ProfileForm = ({
                             className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all css-color-scheme-dark`}
                             style={{ colorScheme: 'dark' }}
                         />
+                    </div>
+                    <div className="flex flex-col gap-2 group">
+                        <label className="text-xs font-bold text-slate-200 flex items-center gap-2 uppercase tracking-wide group-focus-within:text-yellow-400 transition-colors">
+                            <FaVenusMars className="text-yellow-500" /> Giới tính
+                        </label>
+                        <select
+                            name="sexId"
+                            value={formData.sexId}
+                            onChange={handleChange}
+                            disabled={!isEditing}
+                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all [&>option]:bg-slate-800 [&>option]:text-white cursor-pointer disabled:cursor-not-allowed`}
+                        >
+                            <option value="">Chưa cập nhật...</option>
+                            <option value="Male">Nam</option>
+                            <option value="Female">Nữ</option>
+                            <option value="Other">Khác</option>
+                        </select>
                     </div>
                     <div className="flex flex-col gap-2 w-full group">
                         <label className="text-xs font-bold text-slate-200 flex items-center gap-2 uppercase tracking-wide group-focus-within:text-yellow-400 transition-colors">

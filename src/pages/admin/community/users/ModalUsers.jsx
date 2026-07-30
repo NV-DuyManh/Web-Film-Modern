@@ -25,8 +25,8 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
 
     const handleUrlChange = (e) => {
         const url = e.target.value;
-        if (setUser) setUser(pre => ({ ...pre, imgUrl: url, avatarUrl: url, imgFile: null }));
-        else onChangeInput({ target: { name: 'imgUrl', value: url } });
+        if (setUser) setUser(pre => ({ ...pre, avatarUrl: url, imgFile: null }));
+        else onChangeInput({ target: { name: 'avatarUrl', value: url } });
     };
     return (
         <Dialog
@@ -57,14 +57,14 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
                 <div className="lg:col-span-2">
                     <TextField
                         className="modal-input-x"
-                        name="displayName"
+                        name="name"
                         onChange={onChangeInput}
                         fullWidth
-                        label="Name"
+                        label="Full Name"
                         variant="outlined"
-                        value={user.displayName || user.name || ''}
-                        helperText={error.displayName}
-                        error={!!error.displayName}
+                        value={user.name || ''}
+                        helperText={error.name}
+                        error={!!error.name}
                     />
                     
                     <TextField
@@ -104,6 +104,29 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
                         helperText={error.phone}
                         error={!!error.phone}
                     />
+
+                    <TextField
+                        className="modal-input-x"
+                        name="address"
+                        onChange={onChangeInput}
+                        fullWidth
+                        label="Address"
+                        variant="outlined"
+                        value={user.address || ''}
+                    />
+                    
+                    <TextField
+                        className="modal-input-x"
+                        name="dateOfBirth"
+                        type="date"
+                        onChange={onChangeInput}
+                        fullWidth
+                        label="Date of Birth"
+                        variant="outlined"
+                        value={user.dateOfBirth || ''}
+                        InputLabelProps={{ shrink: true }}
+                        inputProps={{ style: { colorScheme: 'dark' } }}
+                    />
                     
                     <FormControl className="gender-box-wrapper" error={!!error.sexId}>
                         <div className={`gender-box ${!!error.sexId ? 'error' : ''}`}>
@@ -114,8 +137,8 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
                                 value={user.sexId}
                                 onChange={onChangeInput}
                             >
-                                <FormControlLabel value="Female" control={<Radio sx={{ color: !!error.sexId ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
                                 <FormControlLabel value="Male" control={<Radio sx={{ color: !!error.sexId ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Male" sx={{ color: '#e5e7eb', margin: 0 }} />
+                                <FormControlLabel value="Female" control={<Radio sx={{ color: !!error.sexId ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
                                 <FormControlLabel value="Other" control={<Radio sx={{ color: !!error.sexId ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Other" sx={{ color: '#e5e7eb', margin: 0 }} />
                             </RadioGroup>
                         </div>
@@ -156,9 +179,9 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
                             {uploadMode === 'file' ? (
                                 <div className="relative w-44 h-44 rounded-full border-2 border-dashed border-slate-600 hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.6)] bg-slate-900/50 flex items-center justify-center">
                                     <img 
-                                        src={user.imgFile ? URL.createObjectURL(user.imgFile) : (user.imgUrl || user.avatarUrl || LOGO)} 
+                                        src={user.imgFile ? URL.createObjectURL(user.imgFile) : (user.avatarUrl || LOGO)} 
                                         alt="User Avatar" 
-                                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110 group-hover:opacity-30" 
+                                        className="w-full h-full object-cover transition-all duration-500 group-hover:opacity-30" 
                                     />
                                     <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! !p-0! rounded-full! cursor-pointer">
                                         <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
@@ -173,14 +196,14 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
                                     <TextField
                                         className="modal-input-x w-full"
                                         placeholder="https://example.com/avatar.jpg"
-                                        value={(user.imgUrl || user.avatarUrl)?.startsWith('http') ? (user.imgUrl || user.avatarUrl) : ''}
+                                        value={user.avatarUrl?.startsWith('http') ? user.avatarUrl : ''}
                                         onChange={handleUrlChange}
                                         fullWidth
                                         size="small"
                                         InputProps={{ style: { fontSize: 12 } }}
                                     />
                                     <div className="w-44 h-44 rounded-full overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
-                                        <img src={(user.imgUrl || user.avatarUrl || LOGO)} className="w-full h-full object-cover" alt="Preview" onError={(e) => e.target.src = LOGO} />
+                                        <img src={user.avatarUrl || LOGO} className="w-full h-full object-cover" alt="Preview" onError={(e) => e.target.src = LOGO} />
                                     </div>
                                 </div>
                             )}

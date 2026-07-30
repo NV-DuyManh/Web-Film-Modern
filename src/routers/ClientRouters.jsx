@@ -16,7 +16,7 @@ const Pay = lazy(() => import('../pages/client/pay/Pay'));
 const UpgradeVIP = lazy(() => import('../pages/client/pay/UpgradeVIP'));
 const PayVIP = lazy(() => import('../pages/client/pay/PayVIP'));
 const PayMovie = lazy(() => import('../pages/client/pay/PayMovie'));
-const Profile = lazy(() => import('../pages/client/profile/Profile'));
+const Profile = lazy(() => import('../pages/client/account/profile/Profile'));
 
 const LoadingFallback = () => <LoadingScreen />;
 function ClientRouters(props) {

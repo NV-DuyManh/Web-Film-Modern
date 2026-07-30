@@ -1,19 +1,20 @@
 import React, { useState, useRef } from 'react';
 import { FaCamera, FaCrown, FaTimes, FaLock } from 'react-icons/fa';
-import Coder from '../../../assets/Coder.png';
-import { WingedFrame } from '../../../components/client/header/AvatarFrames';
+import Coder from '../../../../assets/Coder.png';
+import { WingedFrame } from '../../../../components/client/header/AvatarFrames';
+import { AuthContext } from '../../../../contexts/AuthProvider';
 
 const ProfileHeader = ({
     isLogin,
     currentPlanInfo,
     currentSelectedTheme,
-    avatarPreview,
     AVAILABLE_FRAMES,
     onAvatarChange,
     onSelectFrame
 }) => {
     const [showFrameModal, setShowFrameModal] = useState(false);
     const fileInputRef = useRef(null);
+    const { globalAvatarPreview } = React.useContext(AuthContext);
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -31,7 +32,7 @@ const ProfileHeader = ({
                         <div className="cursor-pointer" onClick={() => setShowFrameModal(true)}>
                             <WingedFrame theme={currentSelectedTheme} size={96}>
                                 <img
-                                    src={avatarPreview || isLogin?.imgUrl || Coder}
+                                    src={globalAvatarPreview || isLogin?.imgUrl || Coder}
                                     alt="avatar"
                                     className="w-full h-full object-cover"
                                 />
@@ -66,30 +67,59 @@ const ProfileHeader = ({
                     </div>
                 </div>
 
-                <div className="mt-4 xl:mt-0 self-center shrink-0">
-                    <div className={`px-6 py-2.5 bg-${currentPlanInfo.theme}-500/10 text-${currentPlanInfo.theme}-400 text-[15px] font-bold rounded-full border border-${currentPlanInfo.theme}-500/50 uppercase tracking-wider shadow-[0_0_15px_rgba(0,0,0,0.5)] flex items-center gap-2.5`}>
-                        <FaCrown className="text-lg" />
-                        Hạng hiện tại: {currentPlanInfo.name === 'PRENIUM' ? 'PREMIUM' : currentPlanInfo.name}
+                <div className="mt-4 xl:mt-0 self-center shrink-0 group cursor-default">
+                    <div className={`
+                        relative px-6 py-2.5 rounded-full flex items-center gap-3 
+                        bg-transparent
+                        text-${currentPlanInfo.theme}-400 text-[15px] font-black uppercase tracking-widest
+                        border border-${currentPlanInfo.theme}-400/50 hover:border-${currentPlanInfo.theme}-400
+                        transition-colors duration-300
+                    `}>
+                        <div className={`absolute inset-0 rounded-full bg-${currentPlanInfo.theme}-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+
+                        <FaCrown className="text-xl drop-shadow-[0_0_8px_currentColor] z-10" />
+                        <span className="z-10 drop-shadow-[0_0_5px_currentColor]">
+                            Hạng hiện tại: {currentPlanInfo.name === 'PRENIUM' ? 'PREMIUM' : currentPlanInfo.name}
+                        </span>
                     </div>
                 </div>
             </div>
 
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+                <div className="bg-[#1e293b]/60 border border-cyan-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                    <p className="text-3xl font-black text-cyan-400">1</p>
+                    <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">ĐÃ XEM</p>
+                </div>
+                <div className="bg-[#1e293b]/60 border border-emerald-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
+                    <p className="text-3xl font-black text-emerald-400">2</p>
+                    <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">ĐÁNH GIÁ</p>
+                </div>
+                <div className="bg-[#1e293b]/60 border border-purple-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                    <p className="text-3xl font-black text-purple-400">3</p>
+                    <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">WATCHLIST</p>
+                </div>
+                <div className="bg-[#1e293b]/60 border border-rose-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(244,63,94,0.2)]">
+                    <p className="text-3xl font-black text-rose-400">4</p>
+                    <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">THEO DÕI</p>
+                </div>
+            </div>
+
             {showFrameModal && (
-                <div 
+                <div
                     className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
                     onClick={() => setShowFrameModal(false)}
                 >
-                    <div 
+                    <div
                         className="bg-[#1e293b] border border-cyan-500/30 rounded-2xl p-6 w-full max-w-2xl relative shadow-[0_0_30px_rgba(34,211,238,0.2)]"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <button 
+                        <button
                             onClick={() => setShowFrameModal(false)}
                             className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-slate-700/50 text-slate-400 hover:text-white hover:bg-rose-500 hover:rotate-90 hover:scale-110 hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all duration-300"
                         >
                             <FaTimes className="text-lg" />
                         </button>
-                        
+
                         <h2 className="text-2xl font-black text-white mb-6 text-center uppercase tracking-wider flex items-center justify-center gap-3">
                             <FaCrown className="text-yellow-500" />
                             Bộ sưu tập khung ảnh
@@ -99,9 +129,9 @@ const ProfileHeader = ({
                             {AVAILABLE_FRAMES.map(frame => {
                                 const isUnlocked = currentPlanInfo.level >= frame.minLevel;
                                 const isSelected = currentSelectedTheme === frame.id;
-                                
+
                                 return (
-                                    <div 
+                                    <div
                                         key={frame.id}
                                         onClick={() => {
                                             if (isUnlocked) {
@@ -109,35 +139,34 @@ const ProfileHeader = ({
                                                 setShowFrameModal(false);
                                             }
                                         }}
-                                        className={`flex flex-col items-center gap-3 p-4 rounded-xl transition-all duration-300 relative ${
-                                            isUnlocked 
-                                                ? 'cursor-pointer hover:bg-white/5 border ' + (isSelected ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_15px_rgba(34,211,238,0.2)]' : 'border-slate-700 hover:border-slate-500') 
+                                        className={`flex flex-col items-center gap-3 p-4 rounded-xl transition-all duration-300 relative ${isUnlocked
+                                                ? 'cursor-pointer hover:bg-white/5 border ' + (isSelected ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_15px_rgba(34,211,238,0.2)]' : 'border-slate-700 hover:border-slate-500')
                                                 : 'opacity-50 grayscale cursor-not-allowed border border-slate-800 bg-black/20'
-                                        }`}
+                                            }`}
                                     >
                                         {!isUnlocked && (
                                             <div className="absolute inset-0 flex items-center justify-center z-30 overflow-hidden rounded-xl pointer-events-none">
-                                                <div className="absolute w-[150%] h-[14px] rotate-45" style={{ 
-                                                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='26' height='14' viewBox='0 0 26 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23cbd5e1'/%3E%3Cstop offset='100%25' stop-color='%23475569'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f1f5f9'/%3E%3Cstop offset='100%25' stop-color='%2394a3b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='18' height='12' rx='6' fill='transparent' stroke='url(%23g)' stroke-width='2.5'/%3E%3Crect x='16' y='3' width='9' height='8' rx='4' fill='url(%23g2)' stroke='%230f172a' stroke-width='1.5'/%3E%3C/svg%3E")`, 
-                                                    backgroundRepeat: 'repeat-x', 
+                                                <div className="absolute w-[150%] h-[14px] rotate-45" style={{
+                                                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='26' height='14' viewBox='0 0 26 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23cbd5e1'/%3E%3Cstop offset='100%25' stop-color='%23475569'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f1f5f9'/%3E%3Cstop offset='100%25' stop-color='%2394a3b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='18' height='12' rx='6' fill='transparent' stroke='url(%23g)' stroke-width='2.5'/%3E%3Crect x='16' y='3' width='9' height='8' rx='4' fill='url(%23g2)' stroke='%230f172a' stroke-width='1.5'/%3E%3C/svg%3E")`,
+                                                    backgroundRepeat: 'repeat-x',
                                                     backgroundPosition: 'center',
-                                                    filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.9))' 
+                                                    filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.9))'
                                                 }}></div>
-                                                
-                                                <div className="absolute w-[150%] h-[14px] -rotate-45" style={{ 
-                                                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='26' height='14' viewBox='0 0 26 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23cbd5e1'/%3E%3Cstop offset='100%25' stop-color='%23475569'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f1f5f9'/%3E%3Cstop offset='100%25' stop-color='%2394a3b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='18' height='12' rx='6' fill='transparent' stroke='url(%23g)' stroke-width='2.5'/%3E%3Crect x='16' y='3' width='9' height='8' rx='4' fill='url(%23g2)' stroke='%230f172a' stroke-width='1.5'/%3E%3C/svg%3E")`, 
-                                                    backgroundRepeat: 'repeat-x', 
+
+                                                <div className="absolute w-[150%] h-[14px] -rotate-45" style={{
+                                                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='26' height='14' viewBox='0 0 26 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23cbd5e1'/%3E%3Cstop offset='100%25' stop-color='%23475569'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f1f5f9'/%3E%3Cstop offset='100%25' stop-color='%2394a3b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='18' height='12' rx='6' fill='transparent' stroke='url(%23g)' stroke-width='2.5'/%3E%3Crect x='16' y='3' width='9' height='8' rx='4' fill='url(%23g2)' stroke='%230f172a' stroke-width='1.5'/%3E%3C/svg%3E")`,
+                                                    backgroundRepeat: 'repeat-x',
                                                     backgroundPosition: 'center',
-                                                    filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.9))' 
+                                                    filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.9))'
                                                 }}></div>
-                                                
+
                                                 <div className="z-10 bg-gradient-to-b from-slate-700 to-slate-900 w-[42px] h-[42px] flex items-center justify-center rounded-full border-[3px] border-slate-400 shadow-[0_5px_15px_rgba(0,0,0,1),inset_0_2px_4px_rgba(255,255,255,0.4)] relative">
                                                     <div className="absolute top-[2px] w-[26px] h-3 rounded-full border-t-2 border-slate-300 opacity-60"></div>
                                                     <FaLock className="text-lg text-slate-300 drop-shadow-[0_2px_2px_black]" />
                                                 </div>
                                             </div>
                                         )}
-                                        
+
                                         <div className="relative flex items-center justify-center pb-2">
                                             <WingedFrame theme={frame.id} size={64}>
                                                 <img src={isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />

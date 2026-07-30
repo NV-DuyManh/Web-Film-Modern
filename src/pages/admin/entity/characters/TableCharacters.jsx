@@ -9,6 +9,7 @@ import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import LOGO from "../../../../assets/Logo.png";
 import { searchTV } from '../../../../components/admin/search/SearchTV';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 
 const getSexStyle = (sex) => {
@@ -114,9 +115,9 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                                         <div className="flex justify-center items-center py-2">
                                             <div className="group relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-white/10 cursor-pointer">
                                                 <img 
-                                                    src={row.imgUrl} 
+                                                    src={getOptimizedUrl(row.imgUrl)} 
                                                     alt={row.name} 
-                                                    className="w-full h-full object-cover transition-all duration-300 group-hover:scale-110 group-hover:opacity-80" 
+                                                    className="w-full h-full object-cover transition-all duration-300" 
                                                 />
                                             </div>
                                         </div>
