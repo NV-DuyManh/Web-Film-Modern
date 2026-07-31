@@ -213,7 +213,7 @@ export default function DetailFilm() {
                                                     {character.name}
                                                 </div>
                                                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
-                                                <div className="absolute -bottom-[3px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-[4px] border-r-[4px] border-t-[4px] border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
+                                                <div className="absolute -bottom-0.75 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
                                             </div>
                                         </div>
                                     );
@@ -250,7 +250,7 @@ export default function DetailFilm() {
                                             <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.name}</h4>
                                             <p className="text-[11px] text-slate-400 mt-0.5">{m.year || 2024} • {m.endEpisode} Tập</p>
 
-                                            <div className="absolute top-0 left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-[110%] transition-all duration-300 z-50 pointer-events-none whitespace-nowrap">
+                                            <div className="absolute top-0 left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-[-110%] transition-all duration-300 z-50 pointer-events-none whitespace-nowrap">
                                                 <div className="bg-[#0f1322]/95 backdrop-blur-md text-yellow-400 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
                                                     {m.name}
                                                 </div>
@@ -384,7 +384,7 @@ export default function DetailFilm() {
                                         galleryImages.map((imgSrc, idx) => (
                                             <div
                                                 key={idx}
-                                                className="relative rounded-2xl overflow-hidden aspect-16/9 border border-slate-800 shadow-md hover:border-yellow-400/60 transition-colors cursor-pointer"
+                                                className="relative rounded-2xl overflow-hidden aspect-video border border-slate-800 shadow-md hover:border-yellow-400/60 transition-colors cursor-pointer"
                                             >
                                                 <img
                                                     src={imgSrc}

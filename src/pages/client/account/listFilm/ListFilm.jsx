@@ -291,9 +291,9 @@ function ListFilm(props) {
                     {activeListMovies.length > 0 ? activeListMovies.map(movie => (
                         viewMode === 'grid' ? (
                             <Link to={`/detailFilm/${movie.id}`} key={movie.id} className="group relative flex flex-col gap-3 cursor-pointer">
-                                <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-[#facc15] transition-all duration-300 hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] hover:-translate-y-2 aspect-[2/3] w-full">
+                                <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-[#facc15] transition-all duration-300 hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] hover:-translate-y-2 aspect-2/3 w-full">
                                     <img src={movie.imgUrl} alt={movie.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-90 group-hover:opacity-100" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
                                     <div className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md p-2 rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.8)] border border-cyan-500/50 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all duration-300">
                                         <FaStar size={14} className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.9)] group-hover:scale-110 transition-transform duration-300" />
                                     </div>
@@ -322,7 +322,7 @@ function ListFilm(props) {
                                 </div>
                                 
                                 <div className="flex items-center gap-4 shrink-0 sm:ml-auto w-full sm:w-auto justify-end">
-                                    <Link to={`/play/${movie.id}`} className="flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2.5 rounded-xl font-bold transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:scale-105 border border-cyan-400/50">
+                                    <Link to={`/play/${movie.id}`} className="flex items-center gap-2 bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white px-6 py-2.5 rounded-xl font-bold transition-all duration-300 hover:shadow-[0_0_20px_rgba(34,211,238,0.5)] hover:scale-105 border border-cyan-400/50">
                                         <FaPlay size={14} /> Xem
                                     </Link>
                                     <button onClick={() => handleRemoveMovie(movie.id, activeList.id)} className="p-3.5 rounded-xl bg-white/5 text-slate-400 hover:text-pink-500 hover:bg-pink-500/10 border border-transparent hover:border-pink-500/40 transition-all duration-300 hover:shadow-[0_0_15px_rgba(236,72,153,0.3)]">
@@ -411,10 +411,10 @@ function ListFilm(props) {
                     
                     return viewMode === 'grid' ? (
                         <div key={list.id} onClick={() => setSelectedListId(list.id)} className="group relative flex flex-col gap-3">
-                            <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-[#facc15] hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] aspect-[3/4] w-full flex items-center justify-center cursor-pointer">
+                            <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-[#facc15] hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] aspect-3/4 w-full flex items-center justify-center cursor-pointer">
                                 
                                 <img src={list.avatar || Logo6} alt={list.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-80 group-hover:opacity-100" />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
+                                <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
                                 
                                 <div className="absolute top-3 right-3 flex flex-col gap-2 z-10 opacity-0 group-hover:opacity-100 transition-all duration-300">
                                     <button 
@@ -503,16 +503,16 @@ function ListFilm(props) {
                             </button>
                         </div>
                         <div className="p-6 flex flex-col items-center gap-5">
-                            <div className="flex bg-slate-900/80 rounded-lg p-1 w-full max-w-[280px] border border-white/5 shadow-inner">
-                                <button onClick={() => setAvatarModalState(p => ({...p, uploadMode: 'file'}))} className={`flex-1 py-2 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${avatarModalState.uploadMode === 'file' ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(34,211,238,0.4)]' : 'text-slate-400 hover:text-white'}`}>
+                            <div className="flex bg-slate-900/80 rounded-lg p-1 w-full max-w-70 border border-white/5 shadow-inner">
+                                <button onClick={() => setAvatarModalState(p => ({...p, uploadMode: 'file'}))} className={`flex-1 py-2 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${avatarModalState.uploadMode === 'file' ? 'bg-linear-to-r from-cyan-500 to-blue-500 text-white shadow-[0_0_12px_rgba(34,211,238,0.4)]' : 'text-slate-400 hover:text-white'}`}>
                                     <FaCloudUploadAlt size={14} /> Tải ảnh lên
                                 </button>
-                                <button onClick={() => setAvatarModalState(p => ({...p, uploadMode: 'url'}))} className={`flex-1 py-2 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${avatarModalState.uploadMode === 'url' ? 'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white shadow-[0_0_12px_rgba(217,70,239,0.4)]' : 'text-slate-400 hover:text-white'}`}>
+                                <button onClick={() => setAvatarModalState(p => ({...p, uploadMode: 'url'}))} className={`flex-1 py-2 rounded-md text-xs font-bold transition-all flex items-center justify-center gap-1.5 ${avatarModalState.uploadMode === 'url' ? 'bg-linear-to-r from-fuchsia-500 to-purple-600 text-white shadow-[0_0_12px_rgba(217,70,239,0.4)]' : 'text-slate-400 hover:text-white'}`}>
                                     <FaLink size={12} /> Link URL
                                 </button>
                             </div>
 
-                            <div className="w-full h-[50px] flex items-center justify-center">
+                            <div className="w-full h-12.5 flex items-center justify-center">
                                 {avatarModalState.uploadMode === 'url' ? (
                                     <input 
                                         type="text" 

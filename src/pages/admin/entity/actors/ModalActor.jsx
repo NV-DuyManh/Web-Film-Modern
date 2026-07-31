@@ -118,10 +118,10 @@ export default function ModalActor({ open, onChangeInput, handleClose, addactor,
                     <p className="upload-title mb-3 inline">Actor Photo</p>
                     
                     <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-4 w-full max-w-50 border border-white/10 mx-auto">
-                        <button type="button" onClick={() => setUploadMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${uploadMode === 'file' ? 'bg-gradient-to-r from-cyan-400 to-blue-500 text-white shadow-[0_0_12px_rgba(34,211,238,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                        <button type="button" onClick={() => setUploadMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${uploadMode === 'file' ? 'bg-linear-to-r from-cyan-400 to-blue-500 text-white shadow-[0_0_12px_rgba(34,211,238,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                             <FaCloudUploadAlt className="text-xs" /> File
                         </button>
-                        <button type="button" onClick={() => setUploadMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${uploadMode === 'url' ? 'bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white shadow-[0_0_12px_rgba(217,70,239,0.4)]' : 'text-gray-400 hover:text-white'}`}>
+                        <button type="button" onClick={() => setUploadMode('url')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${uploadMode === 'url' ? 'bg-linear-to-r from-fuchsia-500 to-purple-600 text-white shadow-[0_0_12px_rgba(217,70,239,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                             <FaLink className="text-xs" /> URL
                         </button>
                     </div>

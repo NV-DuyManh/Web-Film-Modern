@@ -80,8 +80,7 @@ function UpgradeVIP(props) {
 
                 <div className="flex flex-col items-center mb-12">
                     <div className="relative flex items-center gap-4 bg-[#0a0f1d]/80 backdrop-blur-xl py-3 px-6 rounded-full border border-cyan-500/30 shadow-[0_0_25px_rgba(34,211,238,0.15)] hover:shadow-[0_0_35px_rgba(34,211,238,0.3)] hover:border-cyan-400/50 hover:-translate-y-1 transition-all duration-500 overflow-hidden group cursor-pointer">
-                        {/* Shimmer Effect */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
                         
                         <div className="relative">
                             <img
@@ -89,7 +88,6 @@ function UpgradeVIP(props) {
                                 alt="Avatar"
                                 className="w-14 h-14 rounded-full object-cover border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)] group-hover:scale-105 transition-transform duration-300"
                             />
-                            {/* Ring glow around avatar */}
                             <div className="absolute inset-0 rounded-full border border-cyan-300/30 animate-ping opacity-20" />
                         </div>
                         

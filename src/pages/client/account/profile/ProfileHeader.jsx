@@ -51,7 +51,7 @@ const ProfileHeader = ({
                                 e.stopPropagation();
                                 fileInputRef.current?.click();
                             }}
-                            className="absolute -bottom-1 -right-1 w-[34px] h-[34px] bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-slate-900 border-2 border-[#1e293b] shadow-[0_4px_10px_rgba(0,0,0,0.4)] hover:scale-110 hover:rotate-12 hover:shadow-[0_0_15px_rgba(245,158,11,0.7)] active:scale-95 transition-all duration-300 cursor-pointer z-50"
+                            className="absolute -bottom-1 -right-1 w-8.5 h-8.5 bg-linear-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-slate-900 border-2 border-[#1e293b] shadow-[0_4px_10px_rgba(0,0,0,0.4)] hover:scale-110 hover:rotate-12 hover:shadow-[0_0_15px_rgba(245,158,11,0.7)] active:scale-95 transition-all duration-300 cursor-pointer z-50"
                         >
                             <FaCamera className="text-[14px]" />
                         </button>
@@ -146,22 +146,22 @@ const ProfileHeader = ({
                                     >
                                         {!isUnlocked && (
                                             <div className="absolute inset-0 flex items-center justify-center z-30 overflow-hidden rounded-xl pointer-events-none">
-                                                <div className="absolute w-[150%] h-[14px] rotate-45" style={{
+                                                <div className="absolute w-[150%] h-3.5 rotate-45" style={{
                                                     backgroundImage: `url("data:image/svg+xml,%3Csvg width='26' height='14' viewBox='0 0 26 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23cbd5e1'/%3E%3Cstop offset='100%25' stop-color='%23475569'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f1f5f9'/%3E%3Cstop offset='100%25' stop-color='%2394a3b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='18' height='12' rx='6' fill='transparent' stroke='url(%23g)' stroke-width='2.5'/%3E%3Crect x='16' y='3' width='9' height='8' rx='4' fill='url(%23g2)' stroke='%230f172a' stroke-width='1.5'/%3E%3C/svg%3E")`,
                                                     backgroundRepeat: 'repeat-x',
                                                     backgroundPosition: 'center',
                                                     filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.9))'
                                                 }}></div>
 
-                                                <div className="absolute w-[150%] h-[14px] -rotate-45" style={{
+                                                <div className="absolute w-[150%] h-3.5 -rotate-45" style={{
                                                     backgroundImage: `url("data:image/svg+xml,%3Csvg width='26' height='14' viewBox='0 0 26 14' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23cbd5e1'/%3E%3Cstop offset='100%25' stop-color='%23475569'/%3E%3C/linearGradient%3E%3ClinearGradient id='g2' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0%25' stop-color='%23f1f5f9'/%3E%3Cstop offset='100%25' stop-color='%2394a3b8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='18' height='12' rx='6' fill='transparent' stroke='url(%23g)' stroke-width='2.5'/%3E%3Crect x='16' y='3' width='9' height='8' rx='4' fill='url(%23g2)' stroke='%230f172a' stroke-width='1.5'/%3E%3C/svg%3E")`,
                                                     backgroundRepeat: 'repeat-x',
                                                     backgroundPosition: 'center',
                                                     filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.9))'
                                                 }}></div>
 
-                                                <div className="z-10 bg-gradient-to-b from-slate-700 to-slate-900 w-[42px] h-[42px] flex items-center justify-center rounded-full border-[3px] border-slate-400 shadow-[0_5px_15px_rgba(0,0,0,1),inset_0_2px_4px_rgba(255,255,255,0.4)] relative">
-                                                    <div className="absolute top-[2px] w-[26px] h-3 rounded-full border-t-2 border-slate-300 opacity-60"></div>
+                                                <div className="z-10 bg-linear-to-b from-slate-700 to-slate-900 w-10.5 h-10.5 flex items-center justify-center rounded-full border-[3px] border-slate-400 shadow-[0_5px_15px_rgba(0,0,0,1),inset_0_2px_4px_rgba(255,255,255,0.4)] relative">
+                                                    <div className="absolute top-0.5 w-6.5 h-3 rounded-full border-t-2 border-slate-300 opacity-60"></div>
                                                     <FaLock className="text-lg text-slate-300 drop-shadow-[0_2px_2px_black]" />
                                                 </div>
                                             </div>

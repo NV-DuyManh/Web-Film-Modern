@@ -5,6 +5,7 @@ import LoadingScreen from '../components/client/loadingScreen/LoadingScreen';
 const Home = lazy(() => import('../pages/client/home/Home'));
 const Topic = lazy(() => import('../pages/client/topic/Topic'));
 const Category = lazy(() => import('../pages/client/category/Category'));
+const CategoryPage = lazy(() => import('../pages/client/category/CategoryPage'));
 const SingleMovies = lazy(() => import('../pages/client/singleMovies/SingleMovies'));
 const Series = lazy(() => import('../pages/client/series/Series'));
 const Country = lazy(() => import('../pages/client/country/Country'));
@@ -26,8 +27,12 @@ function ClientRouters(props) {
             element: <Home />
         },
         {
-            path: "/topic",
+            path: "/topic/:id",
             element: <Topic />
+        },
+        {
+            path: "/category/:id",
+            element: <CategoryPage />
         },
         {
             path: "/singleMovies",

@@ -133,8 +133,8 @@ function RentFilm(props) {
             )}
 
             {rentedMovies.length === 0 ? (
-                <div className="mt-6 w-full min-h-[400px] border border-dashed border-slate-700/60 rounded-3xl bg-slate-900/20 flex flex-col items-center justify-center p-10 text-center relative overflow-hidden group hover:border-slate-500 transition-colors duration-500">
-                    <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                <div className="mt-6 w-full min-h-100 border border-dashed border-slate-700/60 rounded-3xl bg-slate-900/20 flex flex-col items-center justify-center p-10 text-center relative overflow-hidden group hover:border-slate-500 transition-colors duration-500">
+                    <div className="absolute inset-0 bg-linear-to-br from-fuchsia-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
                     
                     <span className="text-6xl mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500">🎬</span>
                     <h3 className="text-slate-400 text-base md:text-lg mb-8">Bạn chưa thuê bộ phim nào</h3>
@@ -148,9 +148,9 @@ function RentFilm(props) {
                     {filteredMovies.length > 0 ? filteredMovies.map(movie => (
                         viewMode === 'grid' ? (
                             <Link to={`/detailFilm/${movie.id}`} key={movie.id} className="group relative flex flex-col gap-3 cursor-pointer">
-                                <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-fuchsia-400 transition-all duration-300 hover:shadow-[0_12px_25px_rgba(232,121,249,0.3)] hover:-translate-y-2 aspect-[2/3] w-full">
+                                <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-fuchsia-400 transition-all duration-300 hover:shadow-[0_12px_25px_rgba(232,121,249,0.3)] hover:-translate-y-2 aspect-2/3 w-full">
                                     <img src={movie.imgUrl} alt={movie.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-90 group-hover:opacity-100" />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
                                     <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-max max-w-[90%] bg-slate-900/80 backdrop-blur-md px-2.5 py-1.5 rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.8)] border border-fuchsia-500/50 group-hover:border-fuchsia-400 group-hover:shadow-[0_0_15px_rgba(232,121,249,0.5)] transition-all duration-300 flex items-center justify-center gap-1.5">
                                         <FaPlay size={10} className="text-fuchsia-400 drop-shadow-[0_0_8px_rgba(232,121,249,0.9)] shrink-0" />
                                         <span className="text-fuchsia-400 text-[10px] sm:text-[11px] font-bold truncate">Xem ngay</span>
@@ -187,7 +187,7 @@ function RentFilm(props) {
                                 </div>
                                 
                                 <div className="flex items-center gap-4 shrink-0 sm:ml-auto w-full sm:w-auto justify-end">
-                                    <Link to={`/play/${movie.id}`} className="flex items-center gap-2 bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white px-6 py-2.5 rounded-xl font-bold transition-all duration-300 hover:shadow-[0_0_20px_rgba(232,121,249,0.5)] hover:scale-105 border border-fuchsia-400/50">
+                                    <Link to={`/play/${movie.id}`} className="flex items-center gap-2 bg-linear-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white px-6 py-2.5 rounded-xl font-bold transition-all duration-300 hover:shadow-[0_0_20px_rgba(232,121,249,0.5)] hover:scale-105 border border-fuchsia-400/50">
                                         <FaPlay size={14} /> Xem ngay
                                     </Link>
                                 </div>

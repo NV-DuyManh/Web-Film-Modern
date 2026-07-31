@@ -246,11 +246,11 @@ function Episodes() {
             {!selectedMovie ? (
                 <div className="flex-1 flex flex-col items-center justify-center min-h-[60vh] mt-4 animate-[fadeIn_0.5s_ease-out]">
                     <div className="flex flex-col items-center justify-center text-center bg-slate-900/40 backdrop-blur-md p-10 rounded-2xl border border-cyan-500/20 shadow-[0_0_30px_rgba(6,182,212,0.1)] max-w-lg w-full mx-4 relative overflow-hidden group">
-                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
+                        <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-cyan-500 to-transparent"></div>
                         <div className="w-20 h-20 bg-cyan-900/30 rounded-full flex items-center justify-center mb-6 shadow-[0_0_20px_rgba(6,182,212,0.2)] border border-cyan-400/30 group-hover:scale-110 group-hover:shadow-[0_0_30px_rgba(6,182,212,0.4)] transition-all duration-500">
                             <MdMovie className="text-4xl text-cyan-400" />
                         </div>
-                        <h3 className="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 mb-3 uppercase tracking-wider">No Movie Selected</h3>
+                        <h3 className="text-xl font-black text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-blue-500 mb-3 uppercase tracking-wider">No Movie Selected</h3>
                         <p className="text-slate-400 text-sm leading-relaxed">
                             Search and choose a movie from the top bar to view and manage its episodes.
                         </p>

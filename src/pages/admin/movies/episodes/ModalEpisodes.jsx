@@ -30,7 +30,7 @@ export default function ModalEpisodes({
             maxWidth="sm"
             fullWidth
         >
-            <DialogTitle className="modal-header-x flex flex-col md:flex-row justify-between items-start md:items-center gap-4 !p-6">
+            <DialogTitle className="modal-header-x flex flex-col md:flex-row justify-between items-start md:items-center gap-4 p-6!">
                 <div className="flex items-center gap-4">
                     <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline m-0" style={{ paddingBottom: '0.1em' }}>
                         {episode.id  ? "Update Episode" : "Add New Episode"}
@@ -62,7 +62,7 @@ export default function ModalEpisodes({
                 </button>
             </DialogTitle>
 
-            <DialogContent className="modal-body-x !pt-6">
+            <DialogContent className="modal-body-x pt-6!">
                 <div className="bg-cyan-900/20 border border-cyan-400/30 rounded-xl p-4 flex flex-col">
                     <span className="text-xs text-cyan-400 font-bold uppercase tracking-wider mb-1">Target Movie</span>
                     <span className="text-white font-medium">{selectedMovie?.name}</span>

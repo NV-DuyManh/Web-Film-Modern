@@ -121,8 +121,7 @@ export default function ModalViewUser({ open, handleClose, user }) {
             fullWidth
         >
             <div className="relative">
-                {/* Header Banner */}
-                <div className="h-32 bg-gradient-to-r from-blue-900/40 via-purple-900/40 to-pink-900/40 relative">
+                <div className="h-32 bg-linear-to-r from-blue-900/40 via-purple-900/40 to-pink-900/40 relative">
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-overlay"></div>
                     <button 
                         onClick={handleClose}

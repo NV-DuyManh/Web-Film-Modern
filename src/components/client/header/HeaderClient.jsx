@@ -183,34 +183,7 @@ function HeaderClient() {
 
                 <div className="ml-auto flex shrink-0 items-center gap-2 sm:gap-3">
 
-                    <div className="hidden lg:flex items-center gap-4 mr-4 p-2 bg-slate-900/50 rounded-full border border-white/10">
-                        {(() => {
-                            const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
-                            const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
 
-                            const demoPlans = [
-                                ...sortedPlans.map((p, index) => ({
-                                    name: p.name,
-                                    theme: themeNames[index] || 'slate'
-                                }))
-                            ];
-
-                            return demoPlans.map((testPlan, idx) => (
-                                <div key={idx} className="flex flex-col items-center gap-1 group cursor-pointer relative">
-                                    <WingedFrame theme={testPlan.theme} size={36}>
-                                        <img src={Coder} alt="demo" className="w-full h-full object-cover" />
-                                    </WingedFrame>
-                                    {/* Tooltip on hover to show the badge style too */}
-                                    <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-50">
-                                        <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md ${getBadgeStyle(testPlan.theme)}`}>
-                                            {testPlan.name}
-                                        </span>
-                                    </div>
-                                </div>
-                            ));
-                        })()}
-                    </div>
-                    {/* END DEMO BLOCK */}
 
                     <div className="relative z-50" ref={dropdownRef}>
                         {!isLogin ? (

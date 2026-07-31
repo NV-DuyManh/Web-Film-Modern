@@ -150,7 +150,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                                             </td>
                                             <td className="table-cell text-center">
                                                 <a href={row.url} target="_blank" rel="noopener noreferrer" 
-                                                   className="text-cyan-400 hover:text-cyan-300 hover:underline transition-colors block truncate max-w-[200px] sm:max-w-[350px] md:max-w-[500px] mx-auto"
+                                                   className="text-cyan-400 hover:text-cyan-300 hover:underline transition-colors block truncate max-w-50 sm:max-w-87.5 md:max-w-125 mx-auto"
                                                    title={row.url}>
                                                     {row.url}
                                                 </a>

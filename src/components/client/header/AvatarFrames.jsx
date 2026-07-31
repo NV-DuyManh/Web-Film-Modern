@@ -55,8 +55,7 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
 
             {isTopTier && (
                 <>
-                    {/* Fiery Rose Gold breathing aura */}
-                    <div className="absolute inset-[-4px] rounded-full z-0 pointer-events-none animate-pulse"
+                    <div className="absolute -inset-1 rounded-full z-0 pointer-events-none animate-pulse"
                         style={{
                             background: 'conic-gradient(from 0deg, #9f1239, #f43f5e, #f97316, #f59e0b, #9f1239)',
                             filter: 'blur(15px)',
@@ -67,8 +66,7 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
 
 
 
-                    {/* Outer Plasma Ring (CCW spin) */}
-                    <div className="absolute inset-[-14px] rounded-full z-0 pointer-events-none"
+                    <div className="absolute -inset-3.5 rounded-full z-0 pointer-events-none"
                         style={{
                             WebkitMask: 'radial-gradient(closest-side, transparent 92%, black 97%)',
                             mask: 'radial-gradient(closest-side, transparent 92%, black 97%)',
@@ -82,8 +80,7 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
                             }}></div>
                     </div>
 
-                    {/* Middle Energy Sweep (Fast CW) */}
-                    <div className="absolute inset-[-10px] rounded-full z-0 pointer-events-none"
+                    <div className="absolute -inset-2.5 rounded-full z-0 pointer-events-none"
                         style={{
                             WebkitMask: 'radial-gradient(closest-side, transparent 91%, black 95%)',
                             mask: 'radial-gradient(closest-side, transparent 91%, black 95%)',
@@ -95,8 +92,7 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
                             }}></div>
                     </div>
 
-                    {/* Inner Diamond Cuts (Sharp CW) */}
-                    <div className="absolute inset-[-6px] rounded-full z-0 pointer-events-none"
+                    <div className="absolute -inset-1.5 rounded-full z-0 pointer-events-none"
                         style={{
                             WebkitMask: 'radial-gradient(closest-side, transparent 89%, black 94%)',
                             mask: 'radial-gradient(closest-side, transparent 89%, black 94%)',
@@ -113,7 +109,7 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
             )}
 
             {theme === 'yellow' && (
-                <div className="absolute inset-[-6px] rounded-full z-0 pointer-events-none animate-[spin_5s_linear_infinite_reverse]"
+                <div className="absolute -inset-1.5 rounded-full z-0 pointer-events-none animate-[spin_5s_linear_infinite_reverse]"
                     style={{
                         border: `2px solid ${accentColor}`,
                         borderTopColor: 'transparent',
@@ -127,7 +123,7 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
             {isPremium && !isUltra && (
                 <>
                     {theme === 'blue' && (
-                        <div className="absolute inset-[-4px] rounded-full z-0 pointer-events-none animate-[spin_5s_linear_infinite]"
+                        <div className="absolute -inset-1 rounded-full z-0 pointer-events-none animate-[spin_5s_linear_infinite]"
                             style={{
                                 border: `2px dashed ${primaryColor}`,
                                 boxShadow: `0 0 10px ${glowColor}, inset 0 0 10px ${glowColor}`
@@ -137,13 +133,13 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
                     {theme === 'cyan' && (
                         <>
 
-                            <div className="absolute inset-[-4px] rounded-full z-0 pointer-events-none animate-[spin_3s_linear_infinite]"
+                            <div className="absolute -inset-1 rounded-full z-0 pointer-events-none animate-[spin_3s_linear_infinite]"
                                 style={{
                                     border: `2px dotted ${primaryColor}`,
                                     boxShadow: `0 0 12px ${glowColor}`
                                 }}>
                             </div>
-                            <div className="absolute inset-[-8px] rounded-full z-0 pointer-events-none animate-[spin_4s_linear_infinite_reverse]"
+                            <div className="absolute -inset-2 rounded-full z-0 pointer-events-none animate-[spin_4s_linear_infinite_reverse]"
                                 style={{
                                     border: `1px dashed ${accentColor}`,
                                     opacity: 0.6
@@ -155,7 +151,7 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
             )}
 
             {isUltra && !isTopTier && (
-                <div className="absolute inset-[-4px] rounded-full z-0 pointer-events-none animate-[spin_4s_linear_infinite]"
+                <div className="absolute -inset-1 rounded-full z-0 pointer-events-none animate-[spin_4s_linear_infinite]"
                     style={{
                         border: `2px dashed ${primaryColor}`,
                         boxShadow: `0 0 10px ${glowColor}, inset 0 0 10px ${glowColor}`
@@ -172,7 +168,7 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
 
                 {isPremium && (
                     <div className="absolute inset-0 z-20 pointer-events-none rounded-full overflow-hidden">
-                        <div className="absolute top-0 bottom-0 w-[150%] bg-gradient-to-r from-transparent via-white/40 to-transparent animate-avatar-shine" />
+                        <div className="absolute top-0 bottom-0 w-[150%] bg-linear-to-r from-transparent via-white/40 to-transparent animate-avatar-shine" />
                     </div>
                 )}
             </div>
