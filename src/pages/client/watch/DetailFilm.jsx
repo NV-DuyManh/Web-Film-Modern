@@ -7,16 +7,21 @@ import { CharacterContext } from '../../../contexts/CharacterProvider';
 import { getObjectById } from '../../../services/firebaseReponse';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { EpisodeContext } from '../../../contexts/EpisodeProvider';
+import { AuthContext } from '../../../contexts/AuthProvider';
+import { updateDocument } from '../../../services/firebaseService';
+import Swal from 'sweetalert2';
 import ListEpisodes from './ListEpisodes';
 
 export default function DetailFilm() {
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState('episodes');
+    const [showListDropdown, setShowListDropdown] = useState(false);
     const movies = useContext(MovieContext);
     const authors = useContext(AuthorContext);
     const characters = useContext(CharacterContext);
     const plans = useContext(PlanContext);
     const episodes = useContext(EpisodeContext);
+    const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -73,6 +78,55 @@ export default function DetailFilm() {
     const handleClickEpisodes = (ep) => {
         navigate(`/play/${ep.id}`);
     }
+
+    const isFavorite = useMemo(() => {
+        if (!isLogin || !isLogin.list_Favorite || !realMovieId) return false;
+        return isLogin.list_Favorite.includes(realMovieId);
+    }, [isLogin, realMovieId]);
+
+    const handleFavorite = async () => {
+        if (!isLogin) {
+            Swal.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim vào yêu thích', 'warning');
+            return;
+        }
+        try {
+            const currentFavorites = isLogin.list_Favorite || [];
+            let newFavorites;
+            if (currentFavorites.includes(realMovieId)) {
+                newFavorites = currentFavorites.filter(id => id !== realMovieId);
+            } else {
+                newFavorites = [...currentFavorites, realMovieId];
+            }
+            await updateDocument("Users", { id: isLogin.id, list_Favorite: newFavorites });
+        } catch (error) {
+            console.error("Error updating favorites", error);
+        }
+    };
+
+    const handleToggleList = async (listId) => {
+        if (!isLogin) {
+            Swal.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim', 'warning');
+            return;
+        }
+        const currentLists = isLogin.list_Film || [];
+        const updatedLists = currentLists.map(list => {
+            if (list.id === listId) {
+                const currentMovies = list.movies || [];
+                if (currentMovies.includes(realMovieId)) {
+                    return { ...list, movies: currentMovies.filter(id => id !== realMovieId) };
+                } else {
+                    return { ...list, movies: [...currentMovies, realMovieId] };
+                }
+            }
+            return list;
+        });
+
+        try {
+            await updateDocument("Users", { id: isLogin.id, list_Film: updatedLists });
+        } catch (error) {
+            console.error("Error updating lists", error);
+        }
+    };
 
     if (!movie) {
         return (
@@ -231,14 +285,44 @@ export default function DetailFilm() {
                                         return null;
                                     })()}
 
-                                    <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
+                                    <button onClick={handleFavorite} className={`flex flex-col items-center gap-1.5 transition-colors ${isFavorite ? 'text-red-500 hover:text-red-400' : 'text-slate-400 hover:text-white'}`}>
                                         <FaHeart className="text-xl" />
                                         <p className="text-[10px] font-bold uppercase inline">Yêu thích</p>
                                     </button>
-                                    <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
-                                        <FaPlus className="text-xl" />
-                                        <p className="text-[10px] font-bold uppercase inline">Thêm vào</p>
-                                    </button>
+                                    <div className="relative">
+                                        <button onClick={() => setShowListDropdown(!showListDropdown)} className={`flex flex-col items-center gap-1.5 transition-colors ${showListDropdown ? 'text-cyan-400' : 'text-slate-400 hover:text-white'}`}>
+                                            <FaPlus className="text-xl" />
+                                            <p className="text-[10px] font-bold uppercase inline">Thêm vào</p>
+                                        </button>
+
+                                        {showListDropdown && (
+                                            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-56 bg-[#1a2035]/95 backdrop-blur-xl rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] border border-slate-700/60 overflow-hidden z-50">
+                                                <div className="bg-slate-800/80 px-4 py-2 border-b border-slate-700/60 flex justify-between items-center">
+                                                    <span className="text-xs font-bold text-white">Lưu vào danh sách</span>
+                                                    <button onClick={() => setShowListDropdown(false)} className="text-slate-400 hover:text-white text-lg">&times;</button>
+                                                </div>
+                                                {(!isLogin?.list_Film || isLogin.list_Film.length === 0) ? (
+                                                    <div className="p-4 text-xs text-slate-400 text-center">
+                                                        Chưa có danh sách nào.<br/>Vui lòng tạo tại trang Danh Sách.
+                                                    </div>
+                                                ) : (
+                                                    <div className="flex flex-col max-h-48 overflow-y-auto custom-scrollbar p-2 gap-1">
+                                                        {isLogin.list_Film.map(list => {
+                                                            const inList = list.movies?.includes(realMovieId);
+                                                            return (
+                                                                <button key={list.id} onClick={() => handleToggleList(list.id)} className="flex items-center gap-3 p-2 hover:bg-slate-700/50 rounded-xl transition-colors text-left text-sm text-slate-200 group">
+                                                                    <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${inList ? 'bg-cyan-500 border-cyan-500' : 'border-slate-500 group-hover:border-cyan-400'}`}>
+                                                                        {inList && <div className="w-1.5 h-1.5 bg-[#1a2035] rounded-full"></div>}
+                                                                    </div>
+                                                                    <span className="truncate flex-1 font-medium">{list.name}</span>
+                                                                </button>
+                                                            )
+                                                        })}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
                                     <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
                                         <FaShare className="text-xl" />
                                         <p className="text-[10px] font-bold uppercase inline">Chia sẻ</p>

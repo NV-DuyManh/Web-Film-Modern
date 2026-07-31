@@ -15,6 +15,9 @@ import { getObjectById } from '../../../../services/firebaseReponse';
 import { CategoriesContext } from '../../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
+import { AuthContext } from '../../../../contexts/AuthProvider';
+import { updateDocument } from '../../../../services/firebaseService';
+import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
 export default function Banner() {
@@ -27,7 +30,28 @@ export default function Banner() {
     const categories = useContext(CategoriesContext);
     const authors = useContext(AuthorContext);
     const plans = useContext(PlanContext);
+    const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
+
+    const handleFavorite = async (e, movieId) => {
+        e.stopPropagation();
+        if (!isLogin) {
+            Swal.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim vào yêu thích', 'warning');
+            return;
+        }
+        try {
+            const currentFavorites = isLogin.list_Favorite || [];
+            let newFavorites;
+            if (currentFavorites.includes(movieId)) {
+                newFavorites = currentFavorites.filter(id => id !== movieId);
+            } else {
+                newFavorites = [...currentFavorites, movieId];
+            }
+            await updateDocument("Users", { id: isLogin.id, list_Favorite: newFavorites });
+        } catch (error) {
+            console.error("Error updating favorites", error);
+        }
+    };
 
     if (!hotMovies || hotMovies.length === 0) return null;
 
@@ -122,7 +146,7 @@ export default function Banner() {
                                 </button>
 
                                 <div className='flex h-9 sm:h-11 lg:h-12 overflow-hidden rounded-full border border-white/20 bg-slate-900/80 backdrop-blur-xl shadow-lg'>
-                                    <button className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-pink-400 transition-all duration-300 hover:bg-pink-500 hover:text-white active:scale-95 cursor-pointer'>
+                                    <button onClick={(event) => handleFavorite(event, e.id)} className={`group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg transition-all duration-300 hover:bg-pink-500 hover:text-white active:scale-95 cursor-pointer ${(isLogin?.list_Favorite || []).includes(e.id) ? 'text-pink-500' : 'text-pink-400'}`}>
                                         <FaHeart className='transition-all duration-300 group-hover:scale-125 group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]' />
                                     </button>
 

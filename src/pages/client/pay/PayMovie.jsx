@@ -1,11 +1,16 @@
 import React, { useContext, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { getObjectById } from '../../../services/firebaseReponse';
+import { updateDocument, addDocument } from '../../../services/firebaseService';
 import { FaCreditCard } from 'react-icons/fa';
+import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
+import { initialOptions } from '../../../utils/Contants';
+import Swal from 'sweetalert2';
 
 function PayMovie(props) {
+    const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
     const { id } = useParams();
     const movies = useContext(MovieContext) || [];
@@ -14,6 +19,106 @@ function PayMovie(props) {
 
     const rentPrice = Number(movie?.rent) || 0;
     const formattedPrice = rentPrice.toLocaleString('vi-VN');
+
+    const createRent = async (transactionId) => {
+        try {
+            const rentDuration = 48 * 60 * 60 * 1000;
+            const now = Date.now();
+            let newExpireDate;
+            let updatedRents = [];
+
+            if (isLogin?.rentedMovies) {
+                const existingRentIndex = isLogin.rentedMovies.findIndex(rent => 
+                    (typeof rent === 'object' && rent.movieId === movie.id) || 
+                    rent === movie.id
+                );
+
+                if (existingRentIndex !== -1) {
+                    const existingRent = isLogin.rentedMovies[existingRentIndex];
+                    let currentExpireDate = now;
+                    
+                    if (typeof existingRent === 'object' && existingRent.expireDate) {
+                        const oldExpire = new Date(existingRent.expireDate).getTime();
+                        if (oldExpire > now) {
+                            currentExpireDate = oldExpire;
+                        }
+                    }
+                    
+                    newExpireDate = new Date(currentExpireDate + rentDuration).toISOString();
+                    
+                    updatedRents = [...isLogin.rentedMovies];
+                    updatedRents[existingRentIndex] = {
+                        movieId: movie.id,
+                        transactionId: transactionId,
+                        rentDate: new Date().toISOString(),
+                        expireDate: newExpireDate,
+                    };
+                } else {
+                    newExpireDate = new Date(now + rentDuration).toISOString();
+                    updatedRents = [
+                        ...isLogin.rentedMovies, 
+                        {
+                            movieId: movie.id,
+                            transactionId: transactionId,
+                            rentDate: new Date().toISOString(),
+                            expireDate: newExpireDate,
+                        }
+                    ];
+                }
+            } else {
+                newExpireDate = new Date(now + rentDuration).toISOString();
+                updatedRents = [{
+                    movieId: movie.id,
+                    transactionId: transactionId,
+                    rentDate: new Date().toISOString(),
+                    expireDate: newExpireDate,
+                }];
+            }
+
+            await updateDocument("Users", {
+                id: isLogin.id,
+                rentedMovies: updatedRents
+            });
+            
+            await addDocument("Subscriptions", {
+                transactionID: transactionId,
+                userId: isLogin?.id,
+                planID: 'rental',
+                movieId: movie.id,
+                paymentMethod: "PayPal",
+                price: (rentPrice/26000).toFixed(2),
+                startDate: new Date(),
+                expiryDate: new Date(newExpireDate),
+                status: "Success"
+            });
+
+            Swal.fire({
+                title: 'Thuê phim thành công!',
+                html: `Chúc mừng bạn đã thuê thành công bộ phim <b>${movie.name}</b>.<br/>Nhấn <b>Xem ngay</b> để bắt đầu thưởng thức.`,
+                icon: 'success',
+                background: '#0f1322',
+                color: '#fff',
+                confirmButtonColor: '#e11d48',
+                showConfirmButton: true,
+                confirmButtonText: 'Xem ngay',
+                allowOutsideClick: false
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    navigate(`/play/${movie.id}`);
+                }
+            });
+
+        } catch (error) {
+            console.error("Lỗi khi lưu giao dịch:", error);
+            Swal.fire({
+                title: 'Lỗi!',
+                text: 'Đã có lỗi xảy ra trong quá trình lưu thông tin thanh toán.',
+                icon: 'error',
+                background: '#0f1322',
+                color: '#fff'
+            });
+        }
+    };
 
     return (
         <div className="min-h-screen bg-[#0f1322] pt-28 pb-20 px-4">
@@ -123,9 +228,29 @@ function PayMovie(props) {
                         </div>
 
                         <div className="space-y-4">
-                            <button className="w-full h-14 bg-linear-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 rounded-xl flex items-center justify-center transition-all shadow-[0_4px_15px_rgba(251,191,36,0.3)] hover:-translate-y-1">
-                                <p className="text-[#003087] font-black italic text-2xl drop-shadow-sm inline">PayPal</p>
-                            </button>
+                            <PayPalScriptProvider options={initialOptions}>
+                                <PayPalButtons
+                                    style={{ layout: "vertical" }}
+                                    createOrder={(data, actions) => {
+                                        return actions.order.create({
+                                            purchase_units: [{
+                                                amount: {
+                                                    value: (rentPrice / 26000).toFixed(2)
+                                                }
+                                            }]
+                                        });
+                                    }}
+                                    onApprove={(data, actions) => {
+                                        return actions.order.capture().then((details) => {
+                                            const transactionId = details.id;
+                                            createRent(transactionId);
+                                        });
+                                    }}
+                                    onError={(err) => {
+                                        console.error("PayPal error:", err);
+                                    }}
+                                />
+                            </PayPalScriptProvider>
 
                             <button className="w-full h-14 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl flex items-center justify-center gap-3 transition-colors">
                                 <FaCreditCard className="text-white text-xl" />
