@@ -1,6 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { LISTACCOUNT } from '../../../../utils/Contants';
+import React, { useContext } from 'react';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
@@ -8,28 +6,13 @@ import { uploadImageToCloudinary } from '../../../../config/cloudiaryConfig';
 import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseReponse';
-import NoelBackground from '../../../../components/admin/noelBackground/NoelBackground';
-import MenuAccount from '../../../../components/client/menuAccount/MenuAccount';
 import ProfileHeader from './ProfileHeader';
 import ProfileForm from './ProfileForm';
+
 const Profile = () => {
     const { isLogin, setGlobalAvatarPreview } = useContext(AuthContext);
     const subscriptions = useContext(SubscriptionContext) || [];
     const plans = useContext(PlanContext) || [];
-    const { tab } = useParams();
-    const navigate = useNavigate();
-
-
-    const activeItem = LISTACCOUNT.find(item => item.path === `/account/${tab}`) || LISTACCOUNT[0];
-    const activeTab = activeItem.name;
-
-    useEffect(() => {
-        if (!tab) {
-            navigate('/account/account', { replace: true });
-        }
-    }, [tab, navigate]);
-
-
 
     const getExpiryDate = (p) => {
         if (!p || !p.expiryDate) return new Date(0);
@@ -127,44 +110,21 @@ const Profile = () => {
     };
 
     return (
-        <div className="min-h-screen bg-transparent pt-24 pb-10 px-4 md:px-6 relative overflow-hidden flex flex-col w-full">
-            <div className="fixed inset-0 z-0 pointer-events-none noel-wrapper">
-                <style>{`
-                    .noel-wrapper .noel-bg { z-index: 0 !important; }
-                `}</style>
-                <NoelBackground />
-            </div>
-
-            <div className="w-full flex flex-col md:flex-row gap-4 relative z-10 flex-1">
-                <MenuAccount activeTab={activeTab} />
-                <div className="flex-1 flex flex-col h-full min-h-[calc(100vh-120px)]">
-
-                    {activeTab === 'Tài Khoản' ? (
-                        <div className="flex flex-col gap-4 overflow-auto custom-scrollbar h-full pr-2">
-                            <ProfileHeader 
-                                isLogin={isLogin}
-                                currentPlanInfo={currentPlanInfo}
-                                currentSelectedTheme={currentSelectedTheme}
-                                AVAILABLE_FRAMES={AVAILABLE_FRAMES}
-                                onAvatarChange={handleAvatarChange}
-                                onSelectFrame={handleSelectFrame}
-                            />
-                            
-                            <ProfileForm 
-                                isLogin={isLogin}
-                                onSaveProfile={handleSaveProfile}
-                                onSavePassword={handleSavePassword}
-                            />
-                        </div>
-                    ) : (
-                        <div className="flex-1 flex items-center justify-center min-h-[500px]">
-                            <p className="text-slate-200 text-lg flex items-center gap-3">
-                                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-                            </p>
-                        </div>
-                    )}
-                </div>
-            </div>
+        <div className="flex flex-col gap-4 overflow-auto custom-scrollbar h-full pr-2">
+            <ProfileHeader 
+                isLogin={isLogin}
+                currentPlanInfo={currentPlanInfo}
+                currentSelectedTheme={currentSelectedTheme}
+                AVAILABLE_FRAMES={AVAILABLE_FRAMES}
+                onAvatarChange={handleAvatarChange}
+                onSelectFrame={handleSelectFrame}
+            />
+            
+            <ProfileForm 
+                isLogin={isLogin}
+                onSaveProfile={handleSaveProfile}
+                onSavePassword={handleSavePassword}
+            />
         </div>
     );
 };
