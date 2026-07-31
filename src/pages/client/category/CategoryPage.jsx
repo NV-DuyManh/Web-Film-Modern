@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { CategoriesContext } from '../../../contexts/CategoryProvider';
@@ -12,33 +12,40 @@ function CategoryPage() {
     const [page, setPage] = useState(1);
     const moviesPerPage = 14;
 
+    useEffect(() => {
+        setPage(1);
+        window.scrollTo(0, 0);
+    }, [id]);
+
     const currentCategory = useMemo(() => {
-        return categories.find(c => c.id === id) || { name: 'Đang cập nhật...' };
+        return categories.find(c => String(c.id) === String(id)) || { name: 'Đang cập nhật...' };
     }, [id, categories]);
 
     const categoryMovies = useMemo(() => {
+        if (movies.length === 0) return [];
         return movies.filter(m => {
             const list = m.list_Category || [];
-            return list.includes(id);
+            return list.some(catId => String(catId) === String(id));
         });
     }, [id, movies]);
 
     const totalPages = Math.ceil(categoryMovies.length / moviesPerPage) || 1;
-    const currentMovies = categoryMovies.slice((page - 1) * moviesPerPage, page * moviesPerPage);
+    const safePage = Math.min(page, totalPages);
+    const currentMovies = categoryMovies.slice((safePage - 1) * moviesPerPage, safePage * moviesPerPage);
 
     const handlePrev = () => {
-        if (page > 1) setPage(p => p - 1);
+        setPage(p => (p > 1 ? p - 1 : p));
     };
 
     const handleNext = () => {
-        if (page < totalPages) setPage(p => p + 1);
+        setPage(p => (p < totalPages ? p + 1 : p));
     };
 
     return (
         <div className="w-full min-h-screen bg-[#0f172a] px-4 sm:px-6 md:px-8" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
             <div className="max-w-350 mx-auto">
                 <div className="mb-8">
-                    <h1 className="text-4xl md:text-5xl font-black bg-linear-to-r from-pink-400 via-rose-400 to-red-400 bg-clip-text text-transparent mb-4 drop-shadow-[0_0_10px_rgba(236,72,153,0.3)]">
+                    <h1 className="text-4xl md:text-5xl leading-tight pb-2 font-black bg-linear-to-r from-pink-400 via-rose-400 to-red-400 bg-clip-text text-transparent mb-2 drop-shadow-[0_0_10px_rgba(236,72,153,0.3)]">
                         {currentCategory.name}
                     </h1>
                     <div className="flex items-center gap-2 text-slate-300 hover:text-white cursor-pointer transition-colors w-max">
@@ -47,11 +54,23 @@ function CategoryPage() {
                     </div>
                 </div>
 
-                {categoryMovies.length > 0 ? (
+                {movies.length === 0 ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 mb-10">
+                        {Array.from({ length: 14 }).map((_, i) => (
+                            <div key={i} className="flex flex-col gap-2 animate-pulse">
+                                <div className="rounded-xl aspect-2/3 bg-slate-700/50"></div>
+                                <div className="px-1 space-y-1.5">
+                                    <div className="h-3.5 bg-slate-700/50 rounded w-3/4 mx-auto"></div>
+                                    <div className="h-2.5 bg-slate-700/30 rounded w-1/2 mx-auto"></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                ) : categoryMovies.length > 0 ? (
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 mb-10">
                             {currentMovies.map(movie => (
-                                <Link to={`/detailFilm/${movie.id}`} key={movie.id} className="group flex flex-col gap-2">
+                                <Link to={`/detailFilm/${encodeURIComponent(movie.id)}`} key={movie.id} className="group flex flex-col gap-2">
                                     <div className="relative rounded-xl overflow-hidden aspect-2/3 border-[3px] border-transparent group-hover:border-[#facc15] transition-all duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                         <img src={movie.imgUrl} alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
@@ -85,17 +104,17 @@ function CategoryPage() {
                         <div className="flex justify-center items-center gap-4 mt-8">
                             <button 
                                 onClick={handlePrev} 
-                                disabled={page === 1}
+                                disabled={safePage === 1}
                                 className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition-all"
                             >
                                 <FaChevronLeft size={14} />
                             </button>
                             <div className="px-6 py-2 rounded-full bg-slate-800/80 text-slate-300 font-semibold text-sm shadow-inner">
-                                Trang <span className="text-white mx-1">{page}</span> / {totalPages}
+                                Trang <span className="text-white mx-1">{safePage}</span> / {totalPages}
                             </div>
                             <button 
                                 onClick={handleNext} 
-                                disabled={page === totalPages}
+                                disabled={safePage === totalPages}
                                 className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition-all"
                             >
                                 <FaChevronRight size={14} />

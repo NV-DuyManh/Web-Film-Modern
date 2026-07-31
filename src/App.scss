@@ -1,18 +1,11 @@
-// ============================================================================
-// BIẾN (VARIABLES) - Lưu trữ các mã màu dùng chung trong toàn bộ app
-// Giúp thay đổi màu sắc nhanh chóng ở một nơi duy nhất.
-// ============================================================================
-$primary-cyan: #00f2fe; // Màu xanh lơ (dùng cho hiệu ứng sáng)
-$primary-green: #4ade80; // Màu xanh lá (dùng cho success/focus)
-$primary-yellow: #facc15; // Màu vàng (dùng cho hover/cảnh báo nhẹ)
-$primary-purple: #8b5cf6; // Màu tím (dùng cho gradient)
-$primary-red: #ef4444; // Màu đỏ (dùng cho lỗi/cảnh báo xoá)
+$primary-cyan: #00f2fe;
+$primary-green: #4ade80;
+$primary-yellow: #facc15;
+$primary-purple: #8b5cf6;
+$primary-red: #ef4444;
 
-$table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
+$table-bg: rgba(15, 23, 42, 0.92);
 
-// ============================================================================
-// VIP THEMES
-// ============================================================================
 
 .vip-theme-blue {
     --vip-color: #60a5fa;
@@ -65,10 +58,6 @@ $table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
     }
 }
 
-// ============================================================================
-// ANIMATIONS (HIỆU ỨNG CHUYỂN ĐỘNG)
-// Các định nghĩa chuyển động được dùng lại ở nhiều component
-// ============================================================================
 
 
 @keyframes bell-ring {
@@ -193,9 +182,6 @@ $table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
     animation: fadeIn 0.3s ease-out forwards;
 }
 
-// ============================================================================
-// MODAL VIEW MOVIE - Hiệu ứng xem chi tiết phim
-// ============================================================================
 @keyframes borderGlow {
     0% {
         background-position: 0% 50%;
@@ -206,34 +192,28 @@ $table-bg: rgba(15, 23, 42, 0.92); // Nền của các dòng trong bảng
     }
 }
 
+.custom-scrollbar {
+    &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+    }
 
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
 
-.movie-view-modal {
-    &.custom-scrollbar {
-        &::-webkit-scrollbar {
-            width: 4px;
-        }
+    &::-webkit-scrollbar-thumb {
+        background: rgba(6, 182, 212, 0.3);
+        border-radius: 10px;
+    }
 
-        &::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        &::-webkit-scrollbar-thumb {
-            background: rgba(6, 182, 212, 0.3);
-            border-radius: 10px;
-        }
-
-        &::-webkit-scrollbar-thumb:hover {
-            background: rgba(6, 182, 212, 0.6);
-        }
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(6, 182, 212, 0.6);
     }
 }
 
-// ============================================================================
-// CÀI ĐẶT CHUNG (GLOBAL)
-// ============================================================================
 li {
-    list-style: none; // Xoá dấu chấm mặc định của danh sách
+    list-style: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -245,9 +225,6 @@ li {
     scrollbar-width: none;
 }
 
-// ============================================================================
-// HIỆU ỨNG GIAO DIỆN CHUNG
-// ============================================================================
 
 @keyframes textShine {
     to {
@@ -305,7 +282,6 @@ li {
     }
 }
 
-// Chữ lấp lánh (dùng cho các tiêu đề quan trọng, tên app, hoặc vip/premium)
 .glow-text {
     width: fit-content;
     display: inline-block;
@@ -350,10 +326,10 @@ li {
     background: linear-gradient(90deg,
             #ff00ff 0%,
             #ffea00 15%,
-            #ffffff 25%, // Vệt sáng lướt qua
+            #ffffff 25%,
             #ff0055 40%,
             #bf00ff 65%,
-            #ffffff 80%, // Vệt sáng lướt qua
+            #ffffff 80%,
             #ff00ff 100%);
     background-size: 200% auto;
     background-clip: text;
@@ -551,11 +527,6 @@ li {
     filter: drop-shadow(0 0 10px rgba(234, 179, 8, 0.4));
 }
 
-// ============================================================================
-// COMPONENT: MAGIC IMPORT HEADER (NEON GLASS PANEL)
-// Áp dụng: Header trang Magic Import - cùng hệ thống neon với Search
-// Cường độ: 60-70% so với Search input
-// ============================================================================
 @keyframes neonPulse {
 
     0%,
@@ -575,7 +546,6 @@ li {
     border: 1px solid transparent;
     border-image: linear-gradient(90deg, rgba(0, 242, 254, 0.4), rgba(99, 102, 241, 0.35), rgba(139, 92, 246, 0.35), rgba(236, 72, 153, 0.3)) 1;
     border-radius: 16px;
-    // border-image doesn't support border-radius, so we use a clip workaround
     border-image: none;
     border-color: rgba(0, 242, 254, 0.3);
     box-shadow: 0 0 10px rgba(0, 242, 254, 0.35), 0 0 25px rgba(139, 92, 246, 0.15), inset 0 0 15px rgba(0, 242, 254, 0.04);
@@ -584,7 +554,6 @@ li {
     position: relative;
     overflow: hidden;
 
-    // Gradient border overlay via pseudo-element (supports border-radius)
     &::before {
         content: '';
         position: absolute;
@@ -604,10 +573,6 @@ li {
     }
 }
 
-// ============================================================================
-// COMPONENT: KHUNG TÌM KIẾM (SEARCH)
-// Áp dụng: Header hoặc thanh công cụ Admin
-// ============================================================================
 .search {
     position: relative;
 
@@ -636,7 +601,6 @@ li {
             border-color: #ff00ff;
             box-shadow: 0 0 25px rgba(255, 0, 255, 0.9), inset 0 0 10px rgba(255, 0, 255, 0.4);
 
-            // Khi input đang focus, đổi màu icon tìm kiếm kế bên nó
             &+.search-icon {
                 color: #ff00ff !important;
                 filter: drop-shadow(0 0 8px #ff00ff);
@@ -664,10 +628,6 @@ li {
     }
 }
 
-// ============================================================================
-// COMPONENT: BẢNG DỮ LIỆU (TABLES)
-// Áp dụng: Trang quản trị Admin (Liệt kê phim, người dùng, thể loại...)
-// ============================================================================
 .table-wrapper {
     padding: 2px;
     border-radius: 16px;
@@ -723,7 +683,6 @@ li {
     border-bottom: 1px solid rgba(34, 211, 238, 0.35) !important;
 }
 
-// Căn đều lề 2 bên của bảng cho đẹp và cân đối
 th:first-child,
 td:first-child {
     padding-left: 24px !important;
@@ -739,7 +698,6 @@ td:last-child {
     }
 }
 
-// Chân bảng (Chứa phần phân trang - pagination)
 .table-footer {
     display: flex;
     justify-content: flex-end;
@@ -749,10 +707,6 @@ td:last-child {
     color: #cbd5f5;
 }
 
-// ============================================================================
-// COMPONENT: NÚT HÀNH ĐỘNG TRONG BẢNG (ACTION BUTTONS)
-// Áp dụng: Cột "Hành động" của bảng (Sửa / Xoá)
-// ============================================================================
 .action-btn {
     padding: 4px 8px;
     border-radius: 6px;
@@ -770,7 +724,6 @@ td:last-child {
     cursor: pointer;
 }
 
-// Nút Xem (Màu Tím/Hồng)
 .btn-view {
     background: linear-gradient(90deg, #a855f7, #ec4899) !important;
     color: white !important;
@@ -789,7 +742,6 @@ td:last-child {
     }
 }
 
-// Nút Sửa (Màu Xanh lơ)
 .btn-edit {
     background: linear-gradient(90deg, #22d3ee, #3b82f6) !important;
     color: white !important;
@@ -808,7 +760,6 @@ td:last-child {
     }
 }
 
-// Nút Xoá (Màu Đỏ/Cam)
 .btn-delete {
     background: linear-gradient(90deg, #f97316, #ef4444) !important;
     color: white !important;
@@ -828,18 +779,12 @@ td:last-child {
 }
 
 
-// ============================================================================
-// COMPONENT: MODALS (HỘP THOẠI POPUP)
-// Áp dụng: Popup thêm mới/chỉnh sửa trong trang Admin
-// ============================================================================
 
-// Nền đen mờ khi popup mở ra
 .modal-backdrop-x {
     background: rgba(0, 0, 0, 0.3) !important;
     backdrop-filter: blur(3px);
 }
 
-// Nội dung chính của popup (viền màu neon chạy quanh)
 .modal-inner {
     position: relative;
     border-radius: 24px !important;
@@ -848,7 +793,6 @@ td:last-child {
     border: none !important;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6) !important;
 
-    // Lớp viền sáng mờ ảo (Aura)
     &::before {
         content: '';
         position: absolute;
@@ -867,7 +811,6 @@ td:last-child {
         filter: blur(8px);
     }
 
-    // Lớp viền sáng sắc nét (Sharp Line)
     &::after {
         content: '';
         position: absolute;
@@ -886,7 +829,6 @@ td:last-child {
     }
 }
 
-// Tiêu đề của popup
 .modal-header-x {
     position: relative;
     z-index: 10;
@@ -897,7 +839,6 @@ td:last-child {
     border-radius: 24px 24px 0 0 !important;
     box-shadow: inset 0 -4px 20px rgba(0, 0, 0, 0.3);
 
-    // Override MUI DialogTitle's internal h2
     &.MuiDialogTitle-root,
     &.MuiTypography-root {
         font-size: unset !important;
@@ -907,7 +848,6 @@ td:last-child {
     }
 }
 
-// Đảm bảo body modal không đè lên header overflow (fix italic text bị che)
 .modal-inner .MuiDialogContent-root {
     position: relative;
     z-index: 1;
@@ -962,7 +902,6 @@ td:last-child {
     box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5) !important;
 }
 
-// Phần chứa các ô nhập liệu trong popup
 .modal-body-x {
     position: relative;
     z-index: 10;
@@ -970,10 +909,6 @@ td:last-child {
     background: rgba(15, 23, 42, 0.6) !important;
 }
 
-// ============================================================================
-// COMPONENT: INPUTS TRONG MODAL (MUI OVERRIDES)
-// Áp dụng: Các ô điền Text, Textarea, Select trong Form Admin
-// ============================================================================
 .modal-input-x {
     margin-top: 16px !important;
     width: 100%;
@@ -993,7 +928,6 @@ td:last-child {
     textarea {
         color: #ffffff !important;
 
-        // Fix lỗi trình duyệt tự điền tự động (autofill) làm nền input biến thành trắng
         &:-webkit-autofill,
         &:-webkit-autofill:hover,
         &:-webkit-autofill:focus {
@@ -1005,19 +939,16 @@ td:last-child {
         }
     }
 
-    // Viền lúc bình thường
     .MuiOutlinedInput-notchedOutline {
         border-color: rgba(255, 255, 255, 0.3);
         transition: all 0.3s ease;
     }
 
-    // Viền lúc di chuột vào (Hover)
     &:hover .MuiOutlinedInput-notchedOutline {
         border-color: #fde047 !important;
         box-shadow: 0 0 10px rgba(253, 224, 71, 0.4);
     }
 
-    // Viền lúc click chuột vào nhập liệu (Focus)
     .Mui-focused {
         .MuiOutlinedInput-notchedOutline {
             border-color: $primary-green !important;
@@ -1025,11 +956,10 @@ td:last-child {
         }
 
         &.MuiOutlinedInput-root {
-            transform: scale(1.02); // Phóng to nhẹ
+            transform: scale(1.02);
         }
     }
 
-    // Nhãn (Placeholder thu nhỏ ở trên viền)
     label {
         color: #d1d5db !important;
         transition: all 0.3s ease;
@@ -1043,7 +973,6 @@ td:last-child {
         }
     }
 
-    // Trạng thái nhập sai/lỗi (Error)
     .Mui-error {
         .MuiOutlinedInput-notchedOutline {
             border-color: $primary-red !important;
@@ -1051,7 +980,6 @@ td:last-child {
         }
     }
 
-    // Dòng text báo lỗi ở dưới input
     .MuiFormHelperText-root.Mui-error {
         color: $primary-red;
         margin-left: 12px;
@@ -1060,10 +988,6 @@ td:last-child {
     }
 }
 
-// ============================================================================
-// COMPONENT: GENDER BOX (KHUNG CHỌN GIỚI TÍNH BẰNG RADIO)
-// Áp dụng: Form Quản lý Người Dùng / Diễn Viên
-// ============================================================================
 .gender-box-wrapper {
     margin-top: 22px !important;
     width: 100%;
@@ -1128,10 +1052,6 @@ td:last-child {
     letter-spacing: 0.025em;
 }
 
-// ============================================================================
-// COMPONENT: UPLOAD FILE KÉO THẢ (DRAG & DROP AREA)
-// Áp dụng: Tải lên hình ảnh, poster, video phim
-// ============================================================================
 .upload-container {
     margin-top: 32px;
     padding: 16px;
@@ -1145,7 +1065,7 @@ td:last-child {
     transition: all 0.3s ease;
 
     &:hover {
-        border-color: #22d3ee; // Phát sáng viền màu cyan khi di chuột vào
+        border-color: #22d3ee;
     }
 }
 
@@ -1157,11 +1077,7 @@ td:last-child {
     font-size: 14px;
 }
 
-// ============================================================================
-// COMPONENT: CÁC NÚT BẤM (BUTTONS) KHÁC NHAU
-// ============================================================================
 
-// Khu vực chứa nút lưu/hủy dưới cùng của Modal
 .modal-actions-x {
     position: relative;
     z-index: 10;
@@ -1172,7 +1088,6 @@ td:last-child {
     border-radius: 0 0 24px 24px !important;
 }
 
-// Nút Huỷ bỏ (Hủy trong Modal) - Đỏ Lấp Lánh
 .btn-cancel-x {
     background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%) !important;
     color: #ffffff !important;
@@ -1218,7 +1133,6 @@ td:last-child {
     }
 }
 
-// Nút Submit Danger (Xoá trong Modal) - Đỏ Lấp Lánh Mạnh
 .btn-submit-danger {
     background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%) !important;
     color: #ffffff !important;
@@ -1241,7 +1155,6 @@ td:last-child {
     }
 }
 
-// Nút Submit (Xác nhận/Lưu trong Modal) - Xanh Lấp Lánh
 .btn-submit-x {
     background: linear-gradient(180deg, #22c55e 0%, #16a34a 100%) !important;
     color: #ffffff !important;
@@ -1268,7 +1181,6 @@ td:last-child {
     padding: 8px 29px !important;
 }
 
-// Nút Thêm Mới ở trang danh sách Admin (Màu Cyan Neon - Bản Premium)
 @keyframes animateGlow {
     0% {
         background-position: 0% 50%;
@@ -1295,7 +1207,7 @@ td:last-child {
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: 2px;
-    color: #fbcfe8; // Light pink
+    color: #fbcfe8;
     background: rgba(10, 15, 25, 0.4);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
@@ -1361,13 +1273,12 @@ td:last-child {
 
     svg {
         font-size: 18px;
-        color: #f472b6; // Vibrant pink initially
+        color: #f472b6;
         filter: drop-shadow(0 0 6px rgba(244, 114, 182, 0.6));
         transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 }
 
-// Nút Neutral (trung tính, không nổi bật, dùng cho các action phụ)
 .btn-neutral-x {
     background: rgba(255, 255, 255, 0.1) !important;
     color: #d1d5db !important;
@@ -1381,7 +1292,6 @@ td:last-child {
     }
 }
 
-// Nút Danger (hành động nguy hiểm như Reset/Delete ngoài bảng)
 .btn-danger-x {
     background: linear-gradient(90deg, #ef4444, #f97316) !important;
     color: white !important;
@@ -1393,12 +1303,7 @@ td:last-child {
     }
 }
 
-// ============================================================================
-// COMPONENT: NEON SELECT / DROPDOWN
-// Áp dụng: Các ô xổ xuống (Select) có phong cách màu Cyberpunk/Neon
-// ============================================================================
 
-// Nền popup của ô select
 .neon-paper {
     background-color: #0f172a !important;
     border: 1px solid #22d3ee !important;
@@ -1407,12 +1312,10 @@ td:last-child {
     margin-top: 4px !important;
 }
 
-// Vùng chứa danh sách các lựa chọn
 .neon-listbox {
     padding: 6px !important;
 }
 
-// Từng dòng lựa chọn
 .neon-option {
     font-size: 14px !important;
     font-weight: 500 !important;
@@ -1422,7 +1325,6 @@ td:last-child {
     transition: all 0.2s ease !important;
     color: #e2e8f0 !important;
 
-    // Khi option đang được chọn
     &[aria-selected="true"] {
         background-color: rgba(250, 204, 21, 0.15) !important;
         color: #facc15 !important;
@@ -1431,7 +1333,6 @@ td:last-child {
         text-shadow: 0 0 8px rgba(250, 204, 21, 0.4) !important;
     }
 
-    // Khi di chuột ngang qua option
     &:hover,
     &.Mui-focused {
         background-color: rgba(34, 211, 238, 0.15) !important;
@@ -1441,7 +1342,6 @@ td:last-child {
     }
 }
 
-// Override style của MUI Menu (Khung menu xổ xuống mặc định của MUI)
 .MuiMenu-paper {
     background-color: #111827 !important;
     color: #e5e7eb !important;
@@ -1454,7 +1354,6 @@ td:last-child {
     overflow-y: auto !important;
     overflow-x: hidden !important;
 
-    // Tuỳ chỉnh lại thanh cuộn scrollbar của menu
     &::-webkit-scrollbar {
         width: 6px;
 
@@ -1505,7 +1404,6 @@ td:last-child {
     }
 }
 
-// Sửa màu nút Xóa (Clear) và Xổ xuống (Popup Indicator) của MUI Autocomplete
 .MuiAutocomplete-clearIndicator,
 .MuiAutocomplete-popupIndicator {
     color: #ffffff !important;
@@ -1517,17 +1415,11 @@ td:last-child {
     }
 }
 
-// Báo chữ rỗng "Không có dữ liệu" của Autocomplete sang màu trắng
 .MuiAutocomplete-noOptions {
     color: #ffffff !important;
 }
 
-// ============================================================================
-// COMPONENT: SLIDER HIỂN THỊ PHIM (SWIPER)
-// Áp dụng: Danh sách phim cuộn ngang ở Trang chủ (Client)
-// ============================================================================
 
-// Vùng bọc ngoài Slider chống người dùng vô tình quét khối (select text) khi kéo thả
 .movie-slider-wrapper {
     position: relative;
     width: 100%;
@@ -1537,39 +1429,31 @@ td:last-child {
     * {
         user-select: none;
         -webkit-user-select: none;
-        -webkit-user-drag: none; // Không cho phép kéo hình ảnh ra ngoài
+        -webkit-user-drag: none;
     }
 
 }
 
-// Vùng đệm cho khung slider
 .movie-swiper {
     width: 100%;
     padding-top: 24px !important;
     padding-bottom: 24px !important;
 }
 
-// ============================================================================
-// COMPONENT: NÚT ĐIỀU HƯỚNG TRONG SLIDER PHIM (PREV / NEXT)
-// Áp dụng: Nút trái/phải trên Slider cuộn phim Trang chủ
-// ============================================================================
 .movie-nav-btn {
     position: absolute;
-    top: 40%; // Mặc định nếu không tính được theo logic ở trên
+    top: 40%;
 
-    // 1. Phim Sắp Chiếu (Không có nhiều chữ bên dưới)
     &.filmcoming-prev-btn,
     &.filmcoming-next-btn {
         top: calc(50% - 40px);
     }
 
-    // 2. Phim Rạp (Nhiều thông tin chữ và badge)
     &.cinema-prev-btn,
     &.cinema-next-btn {
         top: calc(50% - 65px);
     }
 
-    // 3. Phim Mới, Phim Quốc Gia, Phim Hồng Kông (Có icon, năm, thời lượng)
     &.filmnew-prev-btn,
     &.filmnew-next-btn,
     &.hk-prev-btn,
@@ -1578,7 +1462,6 @@ td:last-child {
         top: calc(50% - 40px);
     }
 
-    // 4. Phim Top (Dọc)
     &.top-prev-btn,
     &.top-next-btn {
         top: calc(50% - 35px);
@@ -1609,7 +1492,6 @@ td:last-child {
     -webkit-tap-highlight-color: transparent;
     transform: translateY(-50%);
 
-    // Nút lùi về trước (Trái)
     &--prev {
         left: 0;
         transform: translate(-50%, -50%);
@@ -1623,7 +1505,6 @@ td:last-child {
         }
     }
 
-    // Nút tiến lên (Phải)
     &--next {
         right: 0;
         transform: translate(50%, -50%);
@@ -1637,7 +1518,6 @@ td:last-child {
         }
     }
 
-    // Ẩn nút đi khi không thể cuộn được nữa (đầu/cuối danh sách)
     &.swiper-button-disabled {
         opacity: 0 !important;
         visibility: hidden !important;
@@ -1645,12 +1525,7 @@ td:last-child {
     }
 }
 
-// ============================================================================
-// RESPONSIVE CHO SLIDER PHIM (MOBILE & TABLET)
-// Căn lại kích thước nút ấn và toạ độ Top cho phù hợp trên màn nhỏ
-// ============================================================================
 
-// Tablet & Màn hình vừa (< 1024px)
 @media (max-width: 1024px) {
     .movie-nav-btn {
         width: 36px;
@@ -1659,7 +1534,6 @@ td:last-child {
     }
 }
 
-// Mobile (< 768px)
 @media (max-width: 768px) {
     .movie-nav-btn {
         width: 30px;
@@ -1668,11 +1542,7 @@ td:last-child {
     }
 }
 
-// ============================================================================
-// MISC (Tùy chỉnh linh tinh khác)
-// ============================================================================
 
-// Làm sáng/đổi màu icon chọn ngày giờ của Input dạng Date/Time mặc định trình duyệt
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
     opacity: 0.6;
@@ -1683,9 +1553,6 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     }
 }
 
-// ============================================================================
-// HEADER CLIENT CUSTOM EFFECTS
-// ============================================================================
 
 @keyframes sweepShine {
     0% {
@@ -1719,7 +1586,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     }
 }
 
-/* ===== Episode Button Animations ===== */
+
 @keyframes ep-pulse-glow {
 
     0%,
@@ -1759,7 +1626,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     }
 }
 
-/* ===== Resume Playback Modal ===== */
+
 @keyframes resume-scale-up {
     0% {
         opacity: 0;
@@ -1787,7 +1654,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 2rem;
-    /* Đẩy nhẹ lên trên một chút để tránh che sub */
+    
     box-shadow:
         0 15px 35px rgba(0, 0, 0, 0.4),
         0 0 0 1px rgba(255, 255, 255, 0.05) inset;
@@ -1854,7 +1721,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     }
 }
 
-/* Tắt vĩnh viễn các thông báo (Pause/Play) của Artplayer trên toàn hệ thống */
+
 .artplayer-app .art-notice,
 .artplayer-app .art-notice-inner {
     display: none !important;
@@ -1874,9 +1741,6 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     opacity: 0 !important;
     visibility: hidden !important;
 }
-// ============================================================================
-// PROFILE HEADER & STATS
-// ============================================================================
 .vip-theme-slate {
     --vip-color: #94a3b8;
     --vip-bg-glow: rgba(148, 163, 184, 0.1);

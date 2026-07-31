@@ -192,14 +192,13 @@ export default function DetailFilm() {
                             </p>
                             <p className="text-slate-400"><p className="font-bold text-white inline">Thời lượng:</p> {movie.time || 'Đang cập nhật'}</p>
                             <p className="text-slate-400"><p className="font-bold text-white inline">Quốc gia:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</p></p>
-                            <p className="text-slate-400"><p className="font-bold text-white inline">Đạo diễn:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{movie.list_Author?.length > 0 ? movie.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</p></p>
+                            <p className="text-slate-400"><p className="font-bold text-white inline">Đạo diễn:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{Array.isArray(movie.list_Author) && movie.list_Author.length > 0 ? movie.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</p></p>
                         </div>
 
                         <div className="mt-4">
                             <h3 className="text-base font-bold text-white mb-3">Nhân vật</h3>
                             <div className="flex flex-wrap gap-4">
-                                {(movie.character || movie.characters || movie.list_character || movie.list_Character || []).map((charIdOrObj, idx) => {
-                                    const character = typeof charIdOrObj === 'string' ? getObjectById(characters, charIdOrObj) : charIdOrObj;
+                                {movieCharacters.map((character, idx) => {
                                     if (!character) return null;
                                     return (
                                         <div key={idx} className="relative flex flex-col items-center gap-1.5 w-14 cursor-pointer group">

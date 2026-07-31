@@ -82,6 +82,8 @@ function HeaderClient() {
     const dropdownRef = useRef(null);
     const cateRef = useRef(null);
     const countryRef = useRef(null);
+    const menuRef = useRef(null);
+    const hamburgerRef = useRef(null);
 
     const handleOpenLogin = () => { handleCloseRegister(); setOpenLogin(true); }
     const handleOpenRegister = () => { handleCloseLogin(); setOpenRegister(true); };
@@ -99,6 +101,9 @@ function HeaderClient() {
             }
             if (countryRef.current && !countryRef.current.contains(event.target)) {
                 setOpenCountry(false);
+            }
+            if (menuRef.current && !menuRef.current.contains(event.target) && hamburgerRef.current && !hamburgerRef.current.contains(event.target)) {
+                setOpenMenu(false);
             }
         }
         document.addEventListener("mousedown", handleClickOutside, true);
@@ -125,13 +130,21 @@ function HeaderClient() {
             <div className={`absolute inset-0 -z-10 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${isScrolled ? "bg-[#0b1221]/60 backdrop-blur-2xl border-b border-white/10 shadow-lg" : "bg-linear-to-b from-black/80 via-black/20 to-transparent border-none shadow-none"}`}></div>
 
             <div
-                className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1150px]:gap-4 min-[1150px]:px-8 transition-all duration-500`}
+                className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1200px]:gap-4 min-[1200px]:px-8 transition-all duration-500`}
             >
-                <Link to="/" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex shrink-0 items-center">
+                <button
+                    ref={hamburgerRef}
+                    onClick={() => setOpenMenu(!openMenu)}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl text-white transition-all duration-300 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] sm:h-11 sm:w-11 min-[1200px]:hidden"
+                >
+                    {openMenu ? <IoClose /> : <HiMenuAlt3 />}
+                </button>
+
+                <Link to="/" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex shrink-0 items-center max-md:hidden">
                     <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
                 </Link>
 
-                <div className="relative min-w-0 flex-1 min-[1150px]:max-w-75 xl:max-w-95">
+                <div className="relative min-w-0 flex-1 md:max-w-[350px] md:focus-within:max-w-[450px] lg:max-w-[450px] lg:focus-within:max-w-[550px] min-[1200px]:max-w-[350px] min-[1200px]:focus-within:max-w-[450px] xl:max-w-[450px] xl:focus-within:max-w-[550px] transition-[max-width] duration-500 ease-out md:mx-auto group">
                     <input
                         className="peer w-full min-w-0 rounded-full border border-white/20 bg-slate-800/40 backdrop-blur-md px-5 py-2.5 pr-12 text-sm font-medium text-white outline-none transition-all duration-300 placeholder:text-slate-300 hover:border-white/40 hover:bg-slate-800/60 focus:border-cyan-400 focus:bg-slate-900/80 focus:shadow-[0_0_15px_rgba(34,211,238,0.3)] sm:px-5 sm:py-2.5 sm:pr-12"
                         type="text" placeholder="Tìm kiếm phim..." onFocus={() => setIsSearching(true)} onBlur={() => setIsSearching(false)}
@@ -139,7 +152,7 @@ function HeaderClient() {
                     <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-cyan-400 peer-focus:drop-shadow-[0_0_12px_rgba(34,211,238,1)]" />
                 </div>
 
-                <div className={`shrink-0 items-center gap-1.5 max-[1149px]:absolute max-[1149px]:flex-col flex max-[1149px]:bg-[#0a192f]/98 max-[1149px]:backdrop-blur-2xl max-[1149px]:w-full bottom-0 left-0 max-[1149px]:translate-y-full max-[1149px]:p-5 max-[1149px]:border-t max-[1149px]:border-white/10 max-[1149px]:shadow-[0_15px_40px_rgba(0,0,0,0.8)] ${openMenu ? "flex" : "max-[1149px]:hidden"} `}>
+                <div ref={menuRef} className={`shrink-0 items-center gap-1.5 max-[1199px]:absolute max-[1199px]:flex-col flex max-[1199px]:bg-[#0a192f]/98 max-[1199px]:backdrop-blur-2xl max-[1199px]:w-full bottom-0 left-0 max-[1199px]:translate-y-full max-[1199px]:p-5 max-[1199px]:border-t max-[1199px]:border-white/10 max-[1199px]:shadow-[0_15px_40px_rgba(0,0,0,0.8)] ${openMenu ? "flex" : "max-[1199px]:hidden"} `}>
 
                     {LISTCLIENT.map((item, index) => (
                         <Link to={item.path}
@@ -164,18 +177,18 @@ function HeaderClient() {
                             }}
                             className={` relative cursor-pointer flex items-center transition-all duration-300
                                 ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-60" : "z-10"}
-                                max-[1149px]:w-full max-[1149px]:justify-between max-[1149px]:px-4 max-[1149px]:py-2.5 max-[1149px]:rounded-lg max-[1149px]:text-[13px]
-                                min-[1150px]:justify-center min-[1150px]:rounded-full min-[1150px]:px-3 min-[1150px]:py-2 min-[1150px]:text-sm xl:px-4 font-bold 
+                                max-[1199px]:w-full max-[1199px]:justify-between max-[1199px]:px-4 max-[1199px]:py-2.5 max-[1199px]:rounded-lg max-[1199px]:text-[13px]
+                                min-[1200px]:justify-center min-[1200px]:rounded-full min-[1200px]:px-3 min-[1200px]:py-2 min-[1200px]:text-sm xl:px-4 font-bold 
                                 ${location.pathname === item.path
-                                    ? "max-[1149px]:bg-cyan-600/10 max-[1149px]:text-cyan-400 max-[1149px]:shadow-[inset_4px_0_0_0_#22d3ee] min-[1150px]:bg-yellow-400 min-[1150px]:text-black min-[1150px]:shadow-[0_0_18px_rgba(250,204,21,0.5)]"
-                                    : "text-slate-200 max-[1149px]:hover:bg-slate-700/80 max-[1149px]:hover:text-cyan-400 min-[1150px]:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] min-[1150px]:hover:text-yellow-400"
+                                    ? "max-[1199px]:bg-cyan-600/10 max-[1199px]:text-cyan-400 max-[1199px]:shadow-[inset_4px_0_0_0_#22d3ee] min-[1200px]:bg-yellow-400 min-[1200px]:text-black min-[1200px]:shadow-[0_0_18px_rgba(250,204,21,0.5)]"
+                                    : "text-slate-200 max-[1199px]:hover:bg-slate-700/80 max-[1199px]:hover:text-cyan-400 min-[1200px]:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] min-[1200px]:hover:text-yellow-400"
                                 }`}>
                             <div className="flex items-center gap-1.5">
                                 {item.title}
                                 {(item.path === "/category" || item.path === "/country") && <IoMdArrowDropdown className="text-lg opacity-80" />}
                             </div>
 
-                            {item.path === "/category" && <Category openCate={openCate} />}
+                            {item.path === "/category" && <Category openCate={openCate} setOpenCate={setOpenCate} />}
                             {item.path === "/country" && <Country openCountry={openCountry} />}
                         </Link>
                     ))}
@@ -189,7 +202,7 @@ function HeaderClient() {
                         {!isLogin ? (
                             <button
                                 onClick={handleOpenLogin}
-                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-2 rounded-full bg-linear-to-r from-yellow-400 via-yellow-300 to-amber-500 px-4 py-2.5 text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-size-[200%_auto] hover:bg-position-[right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] min-[1150px]:flex xl:px-5 ${isSearching
+                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-2 rounded-full bg-linear-to-r from-yellow-400 via-yellow-300 to-amber-500 px-4 py-2.5 text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-size-[200%_auto] hover:bg-position-[right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] min-[1200px]:flex xl:px-5 ${isSearching
                                     ? "max-md:hidden pointer-events-none"
                                     : ""
                                     }`}
@@ -284,12 +297,6 @@ function HeaderClient() {
                         )}
                     </div>
 
-                    <button
-                        onClick={() => setOpenMenu(!openMenu)}
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl text-white transition-all duration-300 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] sm:h-11 sm:w-11 min-[1150px]:hidden"
-                    >
-                        {openMenu ? <IoClose /> : <HiMenuAlt3 />}
-                    </button>
                 </div>
             </div>
 
