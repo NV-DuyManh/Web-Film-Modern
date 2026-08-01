@@ -146,10 +146,10 @@ function HeaderClient() {
 
                 <div className="relative min-w-0 flex-1 md:max-w-[350px] md:focus-within:max-w-[450px] lg:max-w-[450px] lg:focus-within:max-w-[550px] min-[1200px]:max-w-[350px] min-[1200px]:focus-within:max-w-[450px] xl:max-w-[450px] xl:focus-within:max-w-[550px] transition-[max-width] duration-500 ease-out md:mx-auto group">
                     <input
-                        className="peer w-full min-w-0 rounded-full border border-white/20 bg-slate-800/40 backdrop-blur-md px-5 py-2.5 pr-12 text-sm font-medium text-white outline-none transition-all duration-300 placeholder:text-slate-300 hover:border-white/40 hover:bg-slate-800/60 focus:border-cyan-400 focus:bg-slate-900/80 focus:shadow-[0_0_15px_rgba(34,211,238,0.3)] sm:px-5 sm:py-2.5 sm:pr-12"
+                        className="peer w-full min-w-0 rounded-full bg-transparent px-5 py-2.5 pr-12 text-sm font-medium text-white outline-none transition-all duration-300 placeholder:text-slate-300 border border-[#00f2fe]/50 shadow-[0_0_10px_rgba(0,242,254,0.3),inset_0_0_5px_rgba(0,242,254,0.1)] hover:border-green-500/70 hover:shadow-[0_0_15px_rgba(34,197,94,0.5),inset_0_0_5px_rgba(34,197,94,0.2)] focus:border-[#ff00ff]/80 focus:shadow-[0_0_20px_rgba(255,0,255,0.6),inset_0_0_8px_rgba(255,0,255,0.2)] sm:px-5 sm:py-2.5 sm:pr-12"
                         type="text" placeholder="Tìm kiếm phim..." onFocus={() => setIsSearching(true)} onBlur={() => setIsSearching(false)}
                     />
-                    <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-cyan-400 peer-focus:drop-shadow-[0_0_12px_rgba(34,211,238,1)]" />
+                    <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-[#ff00ff] peer-focus:drop-shadow-[0_0_12px_rgba(255,0,255,0.8)]" />
                 </div>
 
                 <div ref={menuRef} className={`shrink-0 items-center gap-1.5 max-[1199px]:absolute max-[1199px]:flex-col flex max-[1199px]:bg-[#0a192f]/98 max-[1199px]:backdrop-blur-2xl max-[1199px]:w-full bottom-0 left-0 max-[1199px]:translate-y-full max-[1199px]:p-5 max-[1199px]:border-t max-[1199px]:border-white/10 max-[1199px]:shadow-[0_15px_40px_rgba(0,0,0,0.8)] ${openMenu ? "flex" : "max-[1199px]:hidden"} `}>

@@ -37,31 +37,35 @@ function UpgradeVIP(props) {
         };
     });
 
-    useEffect(() => {
-        if (displayPlans.length > 0 && !selectedPlan) {
-            const bestPlan = displayPlans.find(p => p.best) || displayPlans[0];
-            setSelectedPlan(bestPlan.id);
-        }
-    }, [displayPlans, selectedPlan]);
+    const [autoSelectedForLevel, setAutoSelectedForLevel] = useState(null);
 
     const levelUser = useMemo(() => {
-             if (!isLogin || !subscriptions || !plans) return 0;
-             const allPlan = subscriptions.filter(p => {
-                 if (p.userId != isLogin.id) return false;
-                 if (!p.expiryDate) return false;
-                 const expiry = typeof p.expiryDate.toDate === 'function' 
-                                ? p.expiryDate.toDate() 
-                                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
-                 return expiry > new Date();
-             });
-             const levelMax = allPlan.reduce((max,item) => {
-                 const plan = getObjectById(plans,item.planID);
-                 return plan && plan.level > max ? plan.level : max;
-             }, 0);
-             return levelMax;
+        if (!isLogin || !subscriptions || !plans) return 0;
+        const allPlan = subscriptions.filter(p => {
+            if (p.userId != isLogin.id) return false;
+            if (!p.expiryDate) return false;
+            const expiry = typeof p.expiryDate.toDate === 'function'
+                ? p.expiryDate.toDate()
+                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
+            return expiry > new Date();
+        });
+        const levelMax = allPlan.reduce((max, item) => {
+            const plan = getObjectById(plans, item.planID);
+            return plan && plan.level > max ? plan.level : max;
+        }, 0);
+        return levelMax;
     }, [subscriptions, isLogin, plans]);
-  console.log(levelUser);
-  
+
+    useEffect(() => {
+        if (displayPlans.length > 0 && autoSelectedForLevel !== levelUser) {
+            const currentPlan = displayPlans.find(p => p.level == levelUser);
+            const defaultPlan = currentPlan || displayPlans.find(p => p.best) || displayPlans[0];
+            setSelectedPlan(defaultPlan.id);
+            setAutoSelectedForLevel(levelUser);
+        }
+    }, [displayPlans, levelUser, autoSelectedForLevel]);
+    console.log(levelUser);
+
     const currentPlanName = useMemo(() => {
         if (!plans || plans.length === 0) return "Miễn phí";
         const p = plans.find(plan => plan.level == levelUser);
@@ -81,7 +85,7 @@ function UpgradeVIP(props) {
                 <div className="flex flex-col items-center mb-12">
                     <div className="relative flex items-center gap-4 bg-[#0a0f1d]/80 backdrop-blur-xl py-3 px-6 rounded-full border border-cyan-500/30 shadow-[0_0_25px_rgba(34,211,238,0.15)] hover:shadow-[0_0_35px_rgba(34,211,238,0.3)] hover:border-cyan-400/50 hover:-translate-y-1 transition-all duration-500 overflow-hidden group cursor-pointer">
                         <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-                        
+
                         <div className="relative">
                             <img
                                 src={isLogin?.imgUrl}
@@ -90,7 +94,7 @@ function UpgradeVIP(props) {
                             />
                             <div className="absolute inset-0 rounded-full border border-cyan-300/30 animate-ping opacity-20" />
                         </div>
-                        
+
                         <div className="relative z-10 pr-2">
                             <div className="flex items-center gap-2 mb-1">
                                 <h3 className="text-base font-black bg-linear-to-r from-white via-cyan-100 to-slate-300 bg-clip-text text-transparent drop-shadow-sm tracking-wide">
@@ -100,14 +104,14 @@ function UpgradeVIP(props) {
                             </div>
                             <div className="flex items-center gap-3 text-[13px]">
                                 <div className="text-slate-400 flex items-center gap-1.5">
-                                    Gói hiện tại: 
+                                    Gói hiện tại:
                                     <span className={`font-bold ${levelUser > 0 ? 'text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.6)]' : 'text-slate-300'}`}>
                                         {currentPlanName}
                                     </span>
                                 </div>
                                 <div className="w-1.5 h-1.5 bg-cyan-500/50 rounded-full shadow-[0_0_5px_rgba(34,211,238,0.5)]"></div>
                                 <div className="text-slate-400 flex items-center gap-1.5">
-                                    Số dư: 
+                                    Số dư:
                                     <span className="text-yellow-400 font-black drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] tracking-wide">
                                         {isLogin?.balance ? isLogin.balance.toLocaleString('vi-VN') : '0'}₫
                                     </span>
@@ -137,20 +141,18 @@ function UpgradeVIP(props) {
                     {displayPlans.map((plan) => {
                         const canBuy = plan.rawPrice > 0 && plan.level >= levelUser;
                         const isSelected = selectedPlan === plan.id;
-                        
+
                         return (
                             <div
                                 key={plan.id}
                                 onClick={() => canBuy && setSelectedPlan(plan.id)}
-                                className={`vip-card ${plan.themeClass} ${isSelected ? 'selected' : ''} relative rounded-3xl p-6 transition-all duration-300 overflow-hidden bg-slate-900/70 backdrop-blur-md flex flex-col group ${
-                                    isSelected
+                                className={`vip-card ${plan.themeClass} ${isSelected ? 'selected' : ''} relative rounded-3xl p-6 transition-all duration-300 overflow-hidden bg-slate-900/70 backdrop-blur-md flex flex-col group ${isSelected
                                         ? `border-2 scale-105 z-10`
                                         : 'border-2 border-white/10'
-                                } ${
-                                    canBuy
+                                    } ${canBuy
                                         ? 'cursor-pointer hover:border-white/30 hover:bg-slate-800/70'
                                         : 'cursor-not-allowed hover:bg-slate-900/70'
-                                }`}
+                                    }`}
                             >
                                 {isSelected && (
                                     <div className="vip-glow-bg absolute -top-10 -right-10 w-32 h-32 blur-3xl rounded-full"></div>
@@ -165,7 +167,7 @@ function UpgradeVIP(props) {
                                 <div className="flex justify-between items-start mb-6 relative z-10">
                                     <h3 className={`vip-text text-xl font-black tracking-wide ${isSelected ? 'selected' : 'text-slate-200'}`}>{plan.name}</h3>
                                     {plan.rawPrice === 0 ? (
-                                    <></>
+                                        <></>
                                     ) : (
                                         <div className={`vip-border-dot w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${isSelected ? 'selected' : 'border-slate-500'}`}>
                                             {isSelected && <div className="vip-dot-inner w-2.5 h-2.5 rounded-full shadow-md"></div>}
@@ -204,7 +206,7 @@ function UpgradeVIP(props) {
                                         </div>
                                     )
                                 }
-                                
+
                             </div>
                         )
                     })}

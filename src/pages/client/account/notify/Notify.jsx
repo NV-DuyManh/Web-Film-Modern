@@ -110,7 +110,7 @@ function Notify(props) {
     };
 
     return (
-        <div className="w-full flex flex-col gap-6 p-1 sm:p-2">
+        <div className="w-full flex flex-col gap-6 p-6 bg-[#1e293b]/60 rounded-2xl border border-yellow-500/50 shadow-[0_0_15px_rgba(234,179,8,0.15)] min-h-full">
             <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                 <div className="flex flex-col gap-1 w-full relative z-10">
                     <h1 className="text-3xl md:text-4xl font-black text-white flex items-center gap-3 drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">

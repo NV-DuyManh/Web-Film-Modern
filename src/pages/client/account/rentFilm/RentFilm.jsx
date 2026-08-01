@@ -30,17 +30,17 @@ const CountdownTimer = ({ expireDate }) => {
 
             if (days > 0) {
                 setTimeLeft(
-                    <>
-                        <span className="flex items-center gap-1">⏳ Còn {days} ngày</span>
+                    <span className="flex items-center gap-1.5 whitespace-nowrap">
+                        <span>⏳ Còn {days} ngày</span>
                         <span className="text-[10px] md:text-xs font-mono">{hours}:{minutes}:{seconds}</span>
-                    </>
+                    </span>
                 );
             } else {
                 setTimeLeft(
-                    <>
-                        <span className="flex items-center gap-1">⏳ Còn</span>
+                    <span className="flex items-center gap-1.5 whitespace-nowrap">
+                        <span>⏳ Còn</span>
                         <span className="text-[10px] md:text-xs font-mono">{hours}:{minutes}:{seconds}</span>
-                    </>
+                    </span>
                 );
             }
         };
@@ -82,48 +82,46 @@ function RentFilm(props) {
     const filteredMovies = useMemo(() => {
         if (!searchQuery.trim()) return rentedMovies;
         const lowerQuery = searchQuery.toLowerCase();
-        return rentedMovies.filter(m => 
-            m.name?.toLowerCase().includes(lowerQuery) || 
+        return rentedMovies.filter(m =>
+            m.name?.toLowerCase().includes(lowerQuery) ||
             m.otherName?.toLowerCase().includes(lowerQuery)
         );
     }, [rentedMovies, searchQuery]);
 
     return (
-        <div className="w-full flex flex-col gap-6 p-1 sm:p-2">
-            <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-2">
-                <div>
-                    <p className="text-slate-400 font-medium mb-1">Kho phim của bạn</p>
-                    <h1 className="text-2xl md:text-3xl font-black flex items-center gap-3 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] m-0">
-                        <span className="text-3xl md:text-4xl text-fuchsia-400 drop-shadow-[0_0_15px_rgba(232,121,249,0.5)]">🎬</span>
-                        <span className="glow-text">Phim đã thuê</span>
-                    </h1>
-                </div>
-            </div> 
-            
+        <div className="w-full flex flex-col gap-6 p-6 bg-[#1e293b]/60 rounded-2xl border border-yellow-500/50 shadow-[0_0_15px_rgba(234,179,8,0.15)] min-h-full">
             {rentedMovies.length > 0 && (
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full mt-4">
-                    <div className="relative group w-full flex-1">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                            <FaSearch className="text-slate-500 group-hover:text-green-500 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.8)] group-focus-within:text-[#ff00ff] group-focus-within:drop-shadow-[0_0_8px_#ff00ff] group-focus-within:scale-[1.15] transition-all duration-300" />
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full mb-2">
+                    <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:flex-1">
+                        <div className="relative group w-full md:max-w-md lg:max-w-lg">
+                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                                <FaSearch className="text-slate-500 group-hover:text-green-500 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.8)] group-focus-within:text-[#ff00ff] group-focus-within:drop-shadow-[0_0_8px_#ff00ff] group-focus-within:scale-[1.15] transition-all duration-300" />
+                            </div>
+                            <input
+                                type="text"
+                                placeholder="Tìm kiếm phim đã thuê..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className="w-full bg-transparent text-white text-sm rounded-xl py-2.5 pl-10 pr-4 focus:outline-none placeholder:text-slate-600 relative border border-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.6),inset_0_0_5px_rgba(0,242,254,0.2)] hover:border-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.8),inset_0_0_5px_rgba(34,197,94,0.3)] focus:border-[#ff00ff] focus:shadow-[0_0_25px_rgba(255,0,255,0.9),inset_0_0_10px_rgba(255,0,255,0.4)] transition-all duration-300"
+                            />
                         </div>
-                        <input 
-                            type="text" 
-                            placeholder="Tìm kiếm phim đã thuê..." 
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full bg-slate-900/60 text-white text-sm rounded-xl py-2.5 pl-10 pr-4 focus:outline-none backdrop-blur-md placeholder:text-slate-600 relative border border-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.6),inset_0_0_5px_rgba(0,242,254,0.2)] hover:border-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.8),inset_0_0_5px_rgba(34,197,94,0.3)] focus:border-[#ff00ff] focus:shadow-[0_0_25px_rgba(255,0,255,0.9),inset_0_0_10px_rgba(255,0,255,0.4)] transition-all duration-300"
-                        />
+                        <div className="premium-border-box flex w-full sm:w-auto justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group">
+                            <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">Số lượng</span>
+                            <div className="flex items-center justify-center bg-fuchsia-500/10 border border-fuchsia-500/20 px-3 py-0.5 rounded-lg group-hover:bg-fuchsia-500/20 group-hover:border-fuchsia-500/40 group-hover:shadow-[0_0_15px_rgba(232,121,249,0.3)] transition-all duration-300">
+                                <span className="text-fuchsia-400 font-black text-sm">{rentedMovies.length}</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md self-start sm:self-auto">
-                        <button 
-                            onClick={() => setViewMode('grid')} 
+                    <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md w-full md:w-auto justify-center md:justify-start shrink-0">
+                        <button
+                            onClick={() => setViewMode('grid')}
                             className={`p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'grid' ? 'bg-fuchsia-400/20 text-fuchsia-400 border border-fuchsia-400 shadow-[0_0_15px_rgba(232,121,249,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
                         >
                             <FaTh size={20} />
                         </button>
-                        <button 
-                            onClick={() => setViewMode('list')} 
+                        <button
+                            onClick={() => setViewMode('list')}
                             className={`p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'list' ? 'bg-fuchsia-400/20 text-fuchsia-400 border border-fuchsia-400 shadow-[0_0_15px_rgba(232,121,249,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
                         >
                             <FaList size={20} />
@@ -135,19 +133,19 @@ function RentFilm(props) {
             {rentedMovies.length === 0 ? (
                 <div className="mt-6 w-full min-h-100 border border-dashed border-slate-700/60 rounded-3xl bg-slate-900/20 flex flex-col items-center justify-center p-10 text-center relative overflow-hidden group hover:border-slate-500 transition-colors duration-500">
                     <div className="absolute inset-0 bg-linear-to-br from-fuchsia-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
-                    
+
                     <span className="text-6xl mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500">🎬</span>
                     <h3 className="text-slate-400 text-base md:text-lg mb-8">Bạn chưa thuê bộ phim nào</h3>
-                    
+
                     <Link to="/singleMovies" className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 hover:shadow-[0_0_25px_rgba(234,179,8,0.4)] hover:-translate-y-1 z-10">
                         <FaFilm /> Khám phá kho phim thuê
                     </Link>
                 </div>
             ) : (
-                <div className={`mt-4 ${viewMode === 'grid' ? 'grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4' : 'flex flex-col gap-4'}`}>
+                <div className={`mt-4 ${viewMode === 'grid' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4' : 'flex flex-col gap-4'}`}>
                     {filteredMovies.length > 0 ? filteredMovies.map(movie => (
                         viewMode === 'grid' ? (
-                            <Link to={`/detailFilm/${movie.id}`} key={movie.id} className="group relative flex flex-col gap-3 cursor-pointer">
+                            <Link to={`/detailFilm/${movie.id}`} key={`grid-${movie.id}`} className="group relative flex flex-col gap-3 cursor-pointer">
                                 <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-fuchsia-400 transition-all duration-300 hover:shadow-[0_12px_25px_rgba(232,121,249,0.3)] hover:-translate-y-2 aspect-2/3 w-full">
                                     <img src={movie.imgUrl} alt={movie.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-90 group-hover:opacity-100" />
                                     <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
@@ -166,12 +164,12 @@ function RentFilm(props) {
                                 </div>
                             </Link>
                         ) : (
-                            <div key={movie.id} className="flex flex-col sm:flex-row items-center gap-4 p-3 rounded-2xl border border-white/10 bg-slate-800/50 backdrop-blur-md hover:border-fuchsia-500/40 hover:shadow-[0_0_25px_rgba(232,121,249,0.2)] transition-all duration-300 group">
-                                <Link to={`/detailFilm/${movie.id}`} className="w-20 h-32 sm:w-20 sm:h-28 md:w-24 md:h-36 rounded-xl overflow-hidden shrink-0 border-[3px] border-transparent group-hover:border-fuchsia-400 transition-all duration-300 relative block">
-                                    <img src={movie.imgUrl} alt={movie.name} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
+                            <div key={`list-${movie.id}`} className="flex flex-col sm:flex-row items-center gap-4 p-3 rounded-2xl border border-white/10 bg-slate-800/50 backdrop-blur-md hover:border-fuchsia-500/40 hover:shadow-[0_0_25px_rgba(232,121,249,0.2)] transition-all duration-300 group">
+                                <Link to={`/detailFilm/${movie.id}`} className="w-32 sm:w-40 md:w-48 h-auto aspect-video rounded-xl overflow-hidden shrink-0 border-[3px] border-transparent group-hover:border-fuchsia-400 transition-all duration-300 relative block">
+                                    <img src={movie.bannerUrl || movie.imgUrl} alt={movie.name} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
                                 </Link>
-                                
+
                                 <div className="flex-1 w-full flex flex-col justify-center py-2 gap-2">
                                     <Link to={`/detailFilm/${movie.id}`}>
                                         <h3 className="text-white font-bold text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-fuchsia-400 group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.5)] transition-all duration-300 line-clamp-2">
@@ -179,13 +177,12 @@ function RentFilm(props) {
                                         </h3>
                                     </Link>
                                     <div className="flex flex-wrap gap-2 mt-1">
-                                        <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded border border-yellow-500/30 uppercase tracking-wider">Phim Thuê</span>
                                         <span className="px-2 py-1 bg-fuchsia-500/20 text-fuchsia-400 text-[10px] font-bold rounded border border-fuchsia-500/30 tracking-wider">
                                             <CountdownTimer expireDate={movie.expireDate} />
                                         </span>
                                     </div>
                                 </div>
-                                
+
                                 <div className="flex items-center gap-4 shrink-0 sm:ml-auto w-full sm:w-auto justify-end">
                                     <Link to={`/play/${movie.id}`} className="flex items-center gap-2 bg-linear-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white px-6 py-2.5 rounded-xl font-bold transition-all duration-300 hover:shadow-[0_0_20px_rgba(232,121,249,0.5)] hover:scale-105 border border-fuchsia-400/50">
                                         <FaPlay size={14} /> Xem ngay
