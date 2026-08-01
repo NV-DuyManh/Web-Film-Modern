@@ -6,7 +6,7 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import 'swiper/css/effect-fade';
-import { FaPlay, FaHeart, FaInfoCircle, FaChevronRight } from 'react-icons/fa';
+import { FaPlay, FaHeart, FaRegHeart, FaInfoCircle, FaChevronRight } from 'react-icons/fa';
 import './Anime.css';
 
 import { MovieContext } from '../../../../contexts/MovieProvider';
@@ -154,8 +154,12 @@ export default function Anime() {
                                         </button>
 
                                         <div className='flex h-9 sm:h-11 lg:h-12 overflow-hidden rounded-full border border-white/20 bg-slate-900/80 backdrop-blur-xl shadow-lg'>
-                                            <button onClick={(event) => handleFavorite(event, e.id)} className={`group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg transition-all duration-300 hover:bg-pink-500 hover:text-white active:scale-95 cursor-pointer ${(isLogin?.list_Favorite || []).includes(e.id) ? 'text-pink-500' : 'text-pink-400'}`}>
-                                                <FaHeart className='transition-all duration-300 group-hover:scale-125 group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]' />
+                                            <button onClick={(event) => handleFavorite(event, e.id)} className={`group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg transition-all duration-300 hover:bg-pink-500 hover:text-white active:scale-95 cursor-pointer ${(isLogin?.list_Favorite || []).includes(e.id) ? 'bg-pink-600 text-white shadow-[inset_0_0_10px_rgba(0,0,0,0.2)]' : 'text-slate-400'}`}>
+                                                {(isLogin?.list_Favorite || []).includes(e.id) ? (
+                                                    <FaHeart className='transition-all duration-300' />
+                                                ) : (
+                                                    <FaRegHeart className='transition-all duration-300 group-hover:scale-110' />
+                                                )}
                                             </button>
 
                                             <div className='h-full w-px bg-white/20'></div>

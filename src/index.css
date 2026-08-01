@@ -20,3 +20,41 @@
 .animate-avatar-shine {
   animation: avatar-shine 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
+
+@keyframes laser-scan {
+  0% {
+    transform: translateX(-300%) skewX(-20deg);
+  }
+  20%, 100% {
+    transform: translateX(1000%) skewX(-20deg);
+  }
+}
+
+.premium-laser {
+  position: relative;
+  overflow: hidden;
+}
+
+.premium-laser::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 15%;
+  height: 100%;
+  background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,0.8), rgba(255,255,255,0));
+  animation: laser-scan 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  z-index: 10;
+  pointer-events: none;
+}
+
+@keyframes text-shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+.animate-text-shine {
+  background-size: 200% auto;
+  animation: text-shine 3s linear infinite;
+}

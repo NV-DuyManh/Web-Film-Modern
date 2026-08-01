@@ -126,8 +126,8 @@ function HeaderClient() {
     }, []);
 
     return (
-        <div className="fixed top-0 left-0 z-100 w-full text-white">
-            <div className={`absolute inset-0 -z-10 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${isScrolled ? "bg-[#0b1221]/60 backdrop-blur-2xl border-b border-white/10 shadow-lg" : "bg-linear-to-b from-black/80 via-black/20 to-transparent border-none shadow-none"}`}></div>
+        <div className="fixed top-0 left-0 z-[9999] w-full text-white">
+            <div className={`absolute inset-0 -z-10 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${isScrolled ? "bg-[#0b1221]/40 backdrop-blur-2xl border-b border-white/10 shadow-lg" : "bg-linear-to-b from-black/80 via-black/20 to-transparent border-none shadow-none"}`}></div>
 
             <div
                 className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1200px]:gap-4 min-[1200px]:px-8 transition-all duration-500`}
@@ -140,9 +140,9 @@ function HeaderClient() {
                     {openMenu ? <IoClose /> : <HiMenuAlt3 />}
                 </button>
 
-                <Link to="/" onClick={() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex shrink-0 items-center max-md:hidden">
+                <a href="/" className="flex shrink-0 items-center max-md:hidden cursor-pointer">
                     <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
-                </Link>
+                </a>
 
                 <div className="relative min-w-0 flex-1 md:max-w-[350px] md:focus-within:max-w-[450px] lg:max-w-[450px] lg:focus-within:max-w-[550px] min-[1200px]:max-w-[350px] min-[1200px]:focus-within:max-w-[450px] xl:max-w-[450px] xl:focus-within:max-w-[550px] transition-[max-width] duration-500 ease-out md:mx-auto group">
                     <input
@@ -176,7 +176,7 @@ function HeaderClient() {
                                 }
                             }}
                             className={` relative cursor-pointer flex items-center transition-all duration-300
-                                ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-60" : "z-10"}
+                                ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-[60]" : "z-10"}
                                 max-[1199px]:w-full max-[1199px]:justify-between max-[1199px]:px-4 max-[1199px]:py-2.5 max-[1199px]:rounded-lg max-[1199px]:text-[13px]
                                 min-[1200px]:justify-center min-[1200px]:rounded-full min-[1200px]:px-3 min-[1200px]:py-2 min-[1200px]:text-sm xl:px-4 font-bold 
                                 ${location.pathname === item.path
@@ -189,7 +189,7 @@ function HeaderClient() {
                             </div>
 
                             {item.path === "/category" && <Category openCate={openCate} setOpenCate={setOpenCate} />}
-                            {item.path === "/country" && <Country openCountry={openCountry} />}
+                            {item.path === "/country" && <Country openCountry={openCountry} setOpenCountry={setOpenCountry} />}
                         </Link>
                     ))}
                 </div>

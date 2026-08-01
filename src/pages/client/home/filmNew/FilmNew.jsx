@@ -55,16 +55,16 @@ export default function FilmNew() {
                                             {e.planID && (() => {
                                                 const plan = getObjectById(plans, e.planID);
                                                 if (!plan) return null;
-                                                const name = (plan.name || '').toLowerCase();
+                                                const level = Number(plan.level) || 0;
                                                 let cls = "bg-slate-600/90 border-slate-500 text-white";
                                                 let text = plan.name;
 
 
-                                                if (name.includes('vip')) {
+                                                if (level >= 3) {
+                                                    cls = "bg-linear-to-r from-fuchsia-600 via-pink-400 to-rose-500 border-pink-300 text-white shadow-[0_0_15px_rgba(236,72,153,0.8)] premium-laser";
+                                                } else if (level === 2) {
                                                     cls = "bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
-                                                } else if (name.includes('prenium')) {
-                                                    cls = "bg-linear-to-r from-fuchsia-600 to-rose-500 border-pink-400 text-white shadow-[0_0_12px_rgba(225,29,72,0.6)]";
-                                                } else if (name.includes('basic')) {
+                                                } else if (level === 1) {
                                                     cls = "bg-linear-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
                                                 }
 

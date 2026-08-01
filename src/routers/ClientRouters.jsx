@@ -9,6 +9,7 @@ import CategoryPage from '../pages/client/category/CategoryPage';
 const SingleMovies = lazy(() => import('../pages/client/singleMovies/SingleMovies'));
 const Series = lazy(() => import('../pages/client/series/Series'));
 const Country = lazy(() => import('../pages/client/country/Country'));
+import CountryPage from '../pages/client/country/CountryPage';
 const Actors = lazy(() => import('../pages/client/actors/Actors'));
 const Showtimes = lazy(() => import('../pages/client/showtimes/Showtimes'));
 const PlayFilm = lazy(() => import('../pages/client/watch/PlayFilm'));
@@ -19,7 +20,11 @@ const PayVIP = lazy(() => import('../pages/client/pay/PayVIP'));
 const PayMovie = lazy(() => import('../pages/client/pay/PayMovie'));
 const MenuAccount = lazy(() => import('../components/client/menuAccount/MenuAccount'));
 
-const LoadingFallback = () => <LoadingScreen />;
+const LoadingFallback = () => (
+    <div className="flex items-center justify-center min-h-[60vh] bg-transparent">
+        <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
+    </div>
+);
 function ClientRouters(props) {
     const clientRouter = [
         {
@@ -33,6 +38,10 @@ function ClientRouters(props) {
         {
             path: "/category/:id",
             element: <CategoryPage />
+        },
+        {
+            path: "/country/:name",
+            element: <CountryPage />
         },
         {
             path: "/singleMovies",

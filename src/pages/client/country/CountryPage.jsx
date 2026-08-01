@@ -1,13 +1,11 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MovieContext } from '../../../contexts/MovieProvider';
-import { CategoriesContext } from '../../../contexts/CategoryProvider';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-function CategoryPage() {
-    const { id } = useParams();
+function CountryPage() {
+    const { name } = useParams();
     const movies = useContext(MovieContext) || [];
-    const categories = useContext(CategoriesContext) || [];
 
     const [page, setPage] = useState(1);
     const moviesPerPage = 14;
@@ -15,23 +13,18 @@ function CategoryPage() {
     useEffect(() => {
         setPage(1);
         window.scrollTo(0, 0);
-    }, [id]);
+    }, [name]);
 
-    const currentCategory = useMemo(() => {
-        return categories.find(c => String(c.id) === String(id)) || { name: 'Đang cập nhật...' };
-    }, [id, categories]);
+    const decodedName = decodeURIComponent(name);
 
-    const categoryMovies = useMemo(() => {
+    const countryMovies = useMemo(() => {
         if (movies.length === 0) return [];
-        return movies.filter(m => {
-            const list = m.list_Category || [];
-            return list.some(catId => String(catId) === String(id));
-        });
-    }, [id, movies]);
+        return movies.filter(m => m.countriesID?.toLowerCase() === decodedName.toLowerCase());
+    }, [decodedName, movies]);
 
-    const totalPages = Math.ceil(categoryMovies.length / moviesPerPage) || 1;
+    const totalPages = Math.ceil(countryMovies.length / moviesPerPage) || 1;
     const safePage = Math.min(page, totalPages);
-    const currentMovies = categoryMovies.slice((safePage - 1) * moviesPerPage, safePage * moviesPerPage);
+    const currentMovies = countryMovies.slice((safePage - 1) * moviesPerPage, safePage * moviesPerPage);
 
     const handlePrev = () => {
         setPage(p => (p > 1 ? p - 1 : p));
@@ -46,7 +39,7 @@ function CategoryPage() {
             <div className="max-w-350 mx-auto">
                 <div className="mb-8">
                     <h1 className="text-3xl md:text-4xl font-black glow-text tracking-tight mb-2 cursor-default" style={{ paddingBottom: '0.1em' }}>
-                        {currentCategory.name}
+                        Phim {decodedName}
                     </h1>
 
                 </div>
@@ -63,7 +56,7 @@ function CategoryPage() {
                             </div>
                         ))}
                     </div>
-                ) : categoryMovies.length > 0 ? (
+                ) : countryMovies.length > 0 ? (
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 mb-10">
                             {currentMovies.map(movie => (
@@ -117,7 +110,7 @@ function CategoryPage() {
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="text-6xl mb-4">🎬</div>
-                        <h2 className="text-xl text-slate-400 font-semibold">Chưa có phim nào trong thể loại này</h2>
+                        <h2 className="text-xl text-slate-400 font-semibold">Chưa có phim nào của quốc gia này</h2>
                     </div>
                 )}
             </div>
@@ -125,4 +118,4 @@ function CategoryPage() {
     );
 }
 
-export default CategoryPage;
+export default CountryPage;

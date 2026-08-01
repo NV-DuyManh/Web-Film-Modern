@@ -11,7 +11,9 @@ import LoadingScreen from './components/client/loadingScreen/LoadingScreen';
 const HomeAdmin = lazy(() => import('./pages/admin/homeAdmin/HomeAdmin'));
 const LayoutClient = lazy(() => import('./pages/client/LayoutClient'));
 
-const LoadingFallback = () => <LoadingScreen />;
+const LoadingFallback = () => (
+    <div className="fixed inset-0 z-[99999] bg-[#06060e]"></div>
+);
 
 function App() {
   const { isLogin } = useContext(AuthContext);

@@ -153,9 +153,14 @@ export default function PlayFilm({ handleOpenLogin }) {
 
 
                     {resumeData && (
-                        <div className="flex items-center gap-2 bg-linear-to- from-amber-500 via-orange-500 to-amber-600 text-white text-xs font-extrabold px-3.5 py-1.5 rounded-lg shadow-[0_0_15px_rgba(245,158,11,0.4)]">
-                            <FaHistory className="text-sm" />
-                            <p className="inline">Lần trước bạn xem đến tập {resumeData.latestEpisodeNumber} ({timeAgo(resumeData.updatedAt)})</p>
+                        <div className="relative flex items-center gap-3 overflow-hidden rounded-xl border border-amber-500/20 bg-amber-900/20 backdrop-blur-md px-4 py-2 text-sm font-medium text-amber-100 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
+                            <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
+                                <FaHistory className="text-[12px]" />
+                            </div>
+                            <p className="relative tracking-wide">
+                                Lần trước xem đến <span className="mx-0.5 font-bold text-amber-400">Tập {resumeData.latestEpisodeNumber}</span> 
+                                <span className="ml-1 text-xs text-amber-200/60">({timeAgo(resumeData.updatedAt)})</span>
+                            </p>
                         </div>
                     )}
                 </div>
@@ -172,7 +177,7 @@ export default function PlayFilm({ handleOpenLogin }) {
 
 
                     {showModal && resumeData && (
-                        <div className="absolute inset-0 z-9999 bg-black flex items-center justify-center p-4">
+                        <div className="absolute inset-0 z-[999] bg-black flex items-center justify-center p-4">
                             <div className="resume-modal">
                                 <div className="resume-modal__icon">
                                     <FaPlay className="text-2xl ml-1" />

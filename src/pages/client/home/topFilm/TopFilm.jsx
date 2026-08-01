@@ -65,15 +65,15 @@ export default function TopFilm() {
                                     <div
                                         className="relative w-full aspect-2/3 transition-all duration-300 group-hover:-translate-y-2 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_12px_15px_rgba(250,204,21,0.3)]"
                                     >
-                                        <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-[3px] border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-8deg' : '-skew-y-8deg'} origin-center z-10 transition-colors duration-300`}>
+                                        <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-[3px] border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : '-skew-y-[8deg]'} origin-center z-10 transition-colors duration-300`}>
                                             <img
                                                 src={e.imgUrl}
-                                                className={`absolute left-0 w-full object-cover transition-transform duration-500 scale-[1.08] group-hover:scale-[1.12] transform ${index % 2 === 0 ? '-skew-y-8deg' : 'skew-y-8deg'} origin-center`}
+                                                className={`absolute left-0 w-full object-cover transition-transform duration-500 scale-[1.08] group-hover:scale-[1.12] transform ${index % 2 === 0 ? '-skew-y-[8deg]' : 'skew-y-[8deg]'} origin-center`}
                                                 style={{ height: 'calc(100% * 100 / 90)', top: '0' }}
                                                 draggable="false"
                                             />
-                                            <div className={`absolute left-0 w-full bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40 pointer-events-none transform ${index % 2 === 0 ? '-skew-y-8deg' : 'skew-y-8deg'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
-                                            <div className={`absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none transform ${index % 2 === 0 ? '-skew-y-8deg' : 'skew-y-8deg'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
+                                            <div className={`absolute left-0 w-full bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40 pointer-events-none transform ${index % 2 === 0 ? '-skew-y-[8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
+                                            <div className={`absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none transform ${index % 2 === 0 ? '-skew-y-[8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
                                         </div>
 
 
@@ -92,16 +92,16 @@ export default function TopFilm() {
                                             {e.planID && (() => {
                                                 const plan = getObjectById(plans, e.planID);
                                                 if (!plan) return null;
-                                                const name = (plan.name || '').toLowerCase();
+                                                const level = Number(plan.level) || 0;
                                                 let cls = "bg-slate-500/30 border-slate-400/50 text-white shadow-sm";
                                                 let text = plan.name;
 
 
-                                                if (name.includes('vip')) {
+                                                if (level >= 3) {
+                                                    cls = "bg-linear-to-r from-pink-500/50 via-fuchsia-300/70 to-pink-500/50 border-pink-300 text-white shadow-[0_0_15px_rgba(236,72,153,0.8)] premium-laser";
+                                                } else if (level === 2) {
                                                     cls = "bg-yellow-500/30 border-yellow-400/50 text-yellow-300 shadow-[0_0_10px_rgba(234,179,8,0.4)]";
-                                                } else if (name.includes('prenium')) {
-                                                    cls = "bg-pink-500/30 border-pink-400/50 text-pink-300 shadow-[0_0_10px_rgba(236,72,153,0.4)]";
-                                                } else if (name.includes('basic')) {
+                                                } else if (level === 1) {
                                                     cls = "bg-cyan-500/30 border-cyan-400/50 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.4)]";
                                                 }
 

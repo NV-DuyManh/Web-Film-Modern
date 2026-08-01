@@ -142,12 +142,7 @@ export default function DetailFilm() {
         <div className="bg-[#0f1322] min-h-screen text-slate-300 font-sans relative text-sm pb-20">
 
             <div className="w-full h-112.5 md:h-137.5 lg:h-162.5 relative z-0">
-                <button
-                    onClick={() => navigate(-1)}
-                    className="absolute top-24 right-4 md:right-8 lg:right-12 z-50 flex items-center gap-2 px-4 py-2 md:px-5 md:py-2.5 bg-red-600/80 hover:bg-red-500 backdrop-blur-md rounded-xl text-white font-bold transition-all duration-300 shadow-[0_4px_15px_rgba(220,38,38,0.5)] group border border-red-500/50 hover:border-red-400 cursor-pointer"
-                >
-                    <FaArrowLeft className="text-sm md:text-base group-hover:-translate-x-1 transition-transform duration-300" />Back
-                </button>
+
                 <img
                     src={movie.bannerUrl || movie.imgUrl}
                     alt="Banner"

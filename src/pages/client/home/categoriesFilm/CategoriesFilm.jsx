@@ -2,10 +2,15 @@ import React, { useContext } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { CategoriesContext } from '../../../../contexts/CategoryProvider';
+import { MovieContext } from '../../../../contexts/MovieProvider';
 
 function CategoriesFilm() {
     const categories = useContext(CategoriesContext) || [];
+    const movies = useContext(MovieContext) || [];
 
+    const validCategories = categories.filter(c => 
+        movies.some(m => (m.list_Category || []).some(catId => String(catId) === String(c.id)))
+    );
 
     const categoryStyles = [
         "from-blue-600 via-indigo-500 to-purple-600 shadow-[0_8px_15px_rgba(79,70,229,0.25)] hover:shadow-[0_12px_25px_rgba(79,70,229,0.45)]",
@@ -23,7 +28,7 @@ function CategoriesFilm() {
             </h1>
 
             <div className="grid grid-cols-2 gap-4 pb-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                {categories.slice(0, 6).map((e, index) => (
+                {validCategories.slice(0, 6).map((e, index) => (
                     <Link
                         key={e.id}
                         to={`/category/${e.id}`}
