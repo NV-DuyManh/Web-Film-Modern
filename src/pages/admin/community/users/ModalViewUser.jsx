@@ -4,7 +4,7 @@ import { FaTimesCircle, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayC
 
 import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
+import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -74,7 +74,7 @@ export default function ModalViewUser({ open, handleClose, user }) {
         if (!user) return { name: 'FREE', level: 0, theme: 'blue' };
         if (user.role === 'admin' || user.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'fuchsia' };
         
-        const userSubs = subscriptions.filter(p => p.userId === user.id && getExpiryDate(p) > new Date());
+        const userSubs = subscriptions.filter(p => p.userID === user.id && getExpiryDate(p) > new Date());
         if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
 
         const highestSub = userSubs.reduce((max, item) => {
@@ -173,7 +173,7 @@ export default function ModalViewUser({ open, handleClose, user }) {
                         
                         <GlowCard title="Gender" icon={FaVenusMars} color="yellow">
                             <p className="text-slate-200 font-medium">
-                                {user.sexId === 'Male' ? 'Male' : user.sexId === 'Female' ? 'Female' : user.sexId === 'Other' ? 'Other' : <EmptyText />}
+                                {user.sexID === 'Male' ? 'Male' : user.sexID === 'Female' ? 'Female' : user.sexID === 'Other' ? 'Other' : <EmptyText />}
                             </p>
                         </GlowCard>
 

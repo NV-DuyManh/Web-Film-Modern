@@ -2,11 +2,11 @@ import React, { useContext, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { MovieContext } from '../../../contexts/MovieProvider';
-import { getObjectById } from '../../../services/firebaseReponse';
+import { getObjectById } from '../../../services/firebaseResponse';
 import { updateDocument, addDocument } from '../../../services/firebaseService';
 import { FaCreditCard } from 'react-icons/fa';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { initialOptions } from '../../../utils/Contants';
+import { initialOptions } from '../../../utils/Constants';
 import Swal from 'sweetalert2';
 
 function PayMovie(props) {
@@ -29,7 +29,7 @@ function PayMovie(props) {
 
             if (isLogin?.rentedMovies) {
                 const existingRentIndex = isLogin.rentedMovies.findIndex(rent => 
-                    (typeof rent === 'object' && rent.movieId === movie.id) || 
+                    (typeof rent === 'object' && rent.movieID === movie.id) || 
                     rent === movie.id
                 );
 
@@ -48,7 +48,7 @@ function PayMovie(props) {
                     
                     updatedRents = [...isLogin.rentedMovies];
                     updatedRents[existingRentIndex] = {
-                        movieId: movie.id,
+                        movieID: movie.id,
                         transactionId: transactionId,
                         rentDate: new Date().toISOString(),
                         expireDate: newExpireDate,
@@ -58,7 +58,7 @@ function PayMovie(props) {
                     updatedRents = [
                         ...isLogin.rentedMovies, 
                         {
-                            movieId: movie.id,
+                            movieID: movie.id,
                             transactionId: transactionId,
                             rentDate: new Date().toISOString(),
                             expireDate: newExpireDate,
@@ -68,7 +68,7 @@ function PayMovie(props) {
             } else {
                 newExpireDate = new Date(now + rentDuration).toISOString();
                 updatedRents = [{
-                    movieId: movie.id,
+                    movieID: movie.id,
                     transactionId: transactionId,
                     rentDate: new Date().toISOString(),
                     expireDate: newExpireDate,
@@ -80,11 +80,10 @@ function PayMovie(props) {
                 rentedMovies: updatedRents
             });
             
-            await addDocument("Subscriptions", {
+            await addDocument("RentMovies", {
                 transactionID: transactionId,
-                userId: isLogin?.id,
-                planID: 'rental',
-                movieId: movie.id,
+                userID: isLogin?.id,
+                movieID: movie.id,
                 paymentMethod: "PayPal",
                 price: (rentPrice/26000).toFixed(2),
                 startDate: new Date(),

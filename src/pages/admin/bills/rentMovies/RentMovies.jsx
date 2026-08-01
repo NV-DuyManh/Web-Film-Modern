@@ -4,7 +4,7 @@ import ModalRentMovies from "./ModalRentMovies";
 import TableRentMovies from "./TableRentMovies";
 import { addDocument, updateDocument } from "../../../../services/firebaseService";
 
-const inner = { transactionID: "", userId: "", moviesId: "", paymentMethod: "", price: 0, startDate: "", expiryDate: "", status: "success" };
+const inner = { transactionID: "", userID: "", movieID: "", paymentMethod: "", price: 0, startDate: "", expiryDate: "", status: "success" };
 
 function RentMovies() {
     const [open, setOpen] = useState(false);
@@ -37,8 +37,8 @@ function RentMovies() {
     const validation = () => {
         const newError = {};
         newError.transactionID = rentMovie.transactionID ? "" : "Please enter a transaction ID";
-        newError.userId = rentMovie.userId ? "" : "Please select a user";
-        newError.moviesId = rentMovie.moviesId ? "" : "Please select a movie";
+        newError.userID = rentMovie.userID ? "" : "Please select a user";
+        newError.movieID = rentMovie.movieID ? "" : "Please select a movie";
         newError.paymentMethod = rentMovie.paymentMethod ? "" : "Please select a payment method";
         newError.price = rentMovie.price !== "" ? "" : "Please enter a price";
         newError.startDate = rentMovie.startDate ? "" : "Please enter a start date";

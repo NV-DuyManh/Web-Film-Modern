@@ -3,7 +3,7 @@ import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown,
 import { FiSearch } from 'react-icons/fi';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { IoClose } from 'react-icons/io5';
-import { LISTCLIENT } from '../../../utils/Contants';
+import { LISTCLIENT } from '../../../utils/Constants';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo2 from '../../../assets/Logo2.png';
 import LogIn from '../../../pages/client/auth/LogIn';
@@ -11,7 +11,7 @@ import Register from '../../../pages/client/auth/Register';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { getObjectById } from '../../../services/firebaseReponse';
+import { getObjectById } from '../../../services/firebaseResponse';
 import Coder from '../../../assets/Coder.png';
 import PlayFilm from '../../../pages/client/watch/PlayFilm';
 import { IoMdArrowDropdown } from 'react-icons/io';
@@ -42,7 +42,7 @@ function HeaderClient() {
         if (!isLogin) return { name: 'FREE', level: 0, theme: 'blue' };
         if (isLogin.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'red' };
 
-        const userSubs = subscriptions.filter(p => p.userId === isLogin.id && getExpiryDate(p) > new Date());
+        const userSubs = subscriptions.filter(p => p.userID === isLogin.id && getExpiryDate(p) > new Date());
         if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
 
         const highestSub = userSubs.reduce((max, item) => {
@@ -233,7 +233,7 @@ function HeaderClient() {
                                         <div className="flex flex-col overflow-hidden">
                                             <div className="flex items-center gap-2 mb-0.5">
                                                 <p className="text-[16px] font-bold text-white truncate tracking-wide max-w-30">
-                                                    {isLogin?.displayName || 'Nguyễn Văn A'}
+                                                    {isLogin?.name || 'Nguyễn Văn A'}
                                                 </p>
                                                 <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0 ${getBadgeStyle(currentPlanInfo.theme)}`}>
                                                     {currentPlanInfo.name}

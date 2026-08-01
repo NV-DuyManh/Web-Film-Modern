@@ -53,15 +53,15 @@ export default function ModalRentMovies({ open, onChangeInput, handleClose, addR
                     className="modal-input-x"
                     disablePortal
                     options={users || []}
-                    getOptionLabel={(option) => option.displayName || option.name || option.email || ""}
+                    getOptionLabel={(option) => option.name || option.name || option.email || ""}
                     fullWidth
                     classes={{ paper: "neon-paper", listbox: "neon-listbox", option: "neon-option" }}
-                    value={users?.find(u => u.id === rentMovie.userId) || null}
+                    value={users?.find(u => u.id === rentMovie.userID) || null}
                     onChange={(e, value) => {
-                        setRentMovie(prev => ({ ...prev, userId: value ? value.id : "" }));
-                        setError(prev => ({ ...prev, userId: "" }));
+                        setRentMovie(prev => ({ ...prev, userID: value ? value.id : "" }));
+                        setError(prev => ({ ...prev, userID: "" }));
                     }}
-                    renderInput={(params) => <TextField {...params} label="User" helperText={error?.userId} error={!!error?.userId} />}
+                    renderInput={(params) => <TextField {...params} label="User" helperText={error?.userID} error={!!error?.userID} />}
                 />
 
                 <Autocomplete
@@ -71,12 +71,12 @@ export default function ModalRentMovies({ open, onChangeInput, handleClose, addR
                     getOptionLabel={(option) => option.name || ""}
                     fullWidth
                     classes={{ paper: "neon-paper", listbox: "neon-listbox", option: "neon-option" }}
-                    value={movies?.find(m => m.id === rentMovie.moviesId) || null}
+                    value={movies?.find(m => m.id === rentMovie.movieID) || null}
                     onChange={(e, value) => {
-                        setRentMovie(prev => ({ ...prev, moviesId: value ? value.id : "" }));
-                        setError(prev => ({ ...prev, moviesId: "" }));
+                        setRentMovie(prev => ({ ...prev, movieID: value ? value.id : "" }));
+                        setError(prev => ({ ...prev, movieID: "" }));
                     }}
-                    renderInput={(params) => <TextField {...params} label="Movie" helperText={error?.moviesId} error={!!error?.moviesId} />}
+                    renderInput={(params) => <TextField {...params} label="Movie" helperText={error?.movieID} error={!!error?.movieID} />}
                 />
 
                 <div className="grid grid-cols-2 gap-4">

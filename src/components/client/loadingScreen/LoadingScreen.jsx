@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { MovieContext } from '../../../contexts/MovieProvider';
-import { CategoriesContext } from '../../../contexts/CategoryProvider';
+import { CategoryContext } from '../../../contexts/CategoryProvider';
 import Logo from '../../../assets/Icon.png';
 import './LoadingScreen.css';
 
@@ -37,7 +37,7 @@ function LoadingScreen({ onFinished }) {
     const [burst, setBurst] = useState(false);
 
     const movies = useContext(MovieContext);
-    const categories = useContext(CategoriesContext);
+    const categories = useContext(CategoryContext);
 
     const particles = useMemo(() => generateParticles(35), []);
     const filmStrips = useMemo(() => generateFilmStrips(6), []);

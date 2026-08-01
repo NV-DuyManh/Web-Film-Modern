@@ -5,7 +5,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaCheckCircle, FaClock } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
+import { getObjectById } from '../../../../services/firebaseResponse';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';

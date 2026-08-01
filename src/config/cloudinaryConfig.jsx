@@ -1,5 +1,5 @@
 import CryptoJS from "crypto-js";
-import { cloud_name } from "../utils/Contants";
+import { cloud_name } from "../utils/Constants";
 
 export const uploadImageToCloudinary = async (imgFile, folderName) => {
     const formData = new FormData();

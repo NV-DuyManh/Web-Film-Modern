@@ -5,7 +5,7 @@ import { PackageContext } from '../../../contexts/PackageProvider';
 import { FaCreditCard } from 'react-icons/fa';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { initialOptions } from '../../../utils/Contants';
+import { initialOptions } from '../../../utils/Constants';
 import { addDocument } from '../../../services/firebaseService';
 import Swal from 'sweetalert2';
 
@@ -70,7 +70,7 @@ function PayVIP(props) {
         try {
             await addDocument("Subscriptions", {
                 transactionID: transactionId,
-                userId: isLogin?.id,
+                userID: isLogin?.id,
                 planID: selectedPlanData?.id,
                 paymentMethod: "PayPal",
                 price: (priceData.rawFinal/26000).toFixed(2),

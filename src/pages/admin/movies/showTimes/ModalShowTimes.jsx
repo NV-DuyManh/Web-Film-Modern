@@ -57,20 +57,20 @@ export default function ModalShowTimes({ open, onChangeInput, handleClose, addSh
             <DialogContent className="modal-body-x">
                 <Autocomplete
                     options={movies || []}
-                    getOptionLabel={(option) => option.name}
+                    getOptionLabel={(option) => option.otherName || option.name}
                     classes={{
                         paper: 'neon-paper',
                         listbox: 'neon-listbox',
                         option: 'neon-option'
                     }}
-                    value={movies?.find(m => m.id === showTime.movieId) || null}
-                    onChange={(event, newValue) => onChangeInput({ target: { name: "movieId", value: newValue?.id || "" } })}
+                    value={movies?.find(m => m.id === showTime.movieID) || null}
+                    onChange={(event, newValue) => onChangeInput({ target: { name: "movieID", value: newValue?.id || "" } })}
                     renderInput={(params) => (
                         <TextField
                             {...params}
                             label="Movie"
-                            error={!!error.movieId}
-                            helperText={error.movieId}
+                            error={!!error.movieID}
+                            helperText={error.movieID}
                             className="modal-input-x"
                         />
                     )}

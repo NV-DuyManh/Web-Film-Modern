@@ -128,21 +128,21 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
                         inputProps={{ style: { colorScheme: 'dark' } }}
                     />
                     
-                    <FormControl className="gender-box-wrapper" error={!!error.sexId}>
-                        <div className={`gender-box ${!!error.sexId ? 'error' : ''}`}>
+                    <FormControl className="gender-box-wrapper" error={!!error.sexID}>
+                        <div className={`gender-box ${!!error.sexID ? 'error' : ''}`}>
                             <p className="gender-label inline">Gender</p>
                             <RadioGroup
-                                name="sexId"
+                                name="sexID"
                                 sx={{ flexDirection: "row", width: '100%', justifyContent: 'space-around' }}
-                                value={user.sexId}
+                                value={user.sexID}
                                 onChange={onChangeInput}
                             >
-                                <FormControlLabel value="Male" control={<Radio sx={{ color: !!error.sexId ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Male" sx={{ color: '#e5e7eb', margin: 0 }} />
-                                <FormControlLabel value="Female" control={<Radio sx={{ color: !!error.sexId ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
-                                <FormControlLabel value="Other" control={<Radio sx={{ color: !!error.sexId ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Other" sx={{ color: '#e5e7eb', margin: 0 }} />
+                                <FormControlLabel value="Male" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Male" sx={{ color: '#e5e7eb', margin: 0 }} />
+                                <FormControlLabel value="Female" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
+                                <FormControlLabel value="Other" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Other" sx={{ color: '#e5e7eb', margin: 0 }} />
                             </RadioGroup>
                         </div>
-                        {error.sexId && <p className="gender-error-text inline">{error.sexId}</p>}
+                        {error.sexID && <p className="gender-error-text inline">{error.sexID}</p>}
                     </FormControl>
 
                     <FormControl className="gender-box-wrapper" error={!!error.role}>

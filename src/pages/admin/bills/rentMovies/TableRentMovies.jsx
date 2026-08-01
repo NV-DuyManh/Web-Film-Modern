@@ -76,14 +76,14 @@ function TableRentMovies({ handleClickOpen, setRentMovie, rentMovie, search }) {
         setOpenBulk(false);
     };
 
-    const getMovieName = (moviesId) => {
-        const m = movies?.find(x => x.id === moviesId);
+    const getMovieName = (movieID) => {
+        const m = movies?.find(x => x.id === movieID);
         return m ? m.name : "Unknown Movie";
     };
 
-    const getUserName = (userId) => {
-        const u = users?.find(x => x.id === userId);
-        return u ? (u.displayName || u.name || u.email || "Unknown User") : "Unknown User";
+    const getUserName = (userID) => {
+        const u = users?.find(x => x.id === userID);
+        return u ? (u.name || u.name || u.email || "Unknown User") : "Unknown User";
     };
 
     return (
@@ -103,12 +103,12 @@ function TableRentMovies({ handleClickOpen, setRentMovie, rentMovie, search }) {
                                         style={{ accentColor: "#22d3ee", width: "15px", height: "15px", cursor: "pointer" }}
                                     />
                                 </th>
-                                <th >TRANSACTION</th>
-                                <th >USER</th>
-                                <th >MOVIE</th>
-                                <th >PRICE</th>
-                                <th >STATUS</th>
-                                <th >DATE</th>
+                                <th className="text-center">TRANSACTION</th>
+                                <th className="text-center">USER</th>
+                                <th className="text-center">MOVIE</th>
+                                <th className="text-center">PRICE</th>
+                                <th className="text-center">STATUS</th>
+                                <th className="text-center">DATE</th>
                                 <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
@@ -126,24 +126,24 @@ function TableRentMovies({ handleClickOpen, setRentMovie, rentMovie, search }) {
                                             style={{ accentColor: "#22d3ee", width: "15px", height: "15px", cursor: "pointer" }}
                                         />
                                     </td>
-                                    <td className="table-cell font-bold text-amber-400">
+                                    <td className="table-cell text-center font-bold text-amber-400">
                                         {row.transactionID}
                                     </td>
-                                    <td className="table-cell font-bold text-cyan-400">
-                                        {getUserName(row.userId)}
+                                    <td className="table-cell text-center font-bold text-cyan-400">
+                                        {getUserName(row.userID)}
                                     </td>
-                                    <td className="table-cell font-bold text-fuchsia-400">
-                                        {getMovieName(row.moviesId)}
+                                    <td className="table-cell text-center font-bold text-fuchsia-400">
+                                        {getMovieName(row.movieID)}
                                     </td>
-                                    <td className="table-cell font-bold text-emerald-400">
+                                    <td className="table-cell text-center font-bold text-emerald-400">
                                         ${row.price}
                                     </td>
-                                    <td className="table-cell">
+                                    <td className="table-cell text-center">
                                         <p className={`px-2 py-1 rounded text-xs font-bold ${row.status === "success" ? "bg-emerald-500/20 text-emerald-400" : row.status === "pending" ? "bg-amber-500/20 text-amber-400" : "bg-rose-500/20 text-rose-400"} inline`}>
                                             {row.status?.toUpperCase()}
                                         </p>
                                     </td>
-                                    <td className="table-cell text-gray-400 text-xs">
+                                    <td className="table-cell text-center text-gray-400 text-xs">
                                         {row.createdAt ? new Date(row.createdAt).toLocaleDateString("vi-VN") : ""}
                                     </td>
                                     <td className="table-cell text-center">

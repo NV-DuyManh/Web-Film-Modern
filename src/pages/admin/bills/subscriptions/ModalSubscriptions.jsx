@@ -53,15 +53,15 @@ export default function ModalSubscriptions({ open, onChangeInput, handleClose, a
                     className="modal-input-x"
                     disablePortal
                     options={users || []}
-                    getOptionLabel={(option) => option.displayName || option.name || option.email || ""}
+                    getOptionLabel={(option) => option.name || option.name || option.email || ""}
                     fullWidth
                     classes={{ paper: "neon-paper", listbox: "neon-listbox", option: "neon-option" }}
-                    value={users?.find(u => u.id === subscription.userId) || null}
+                    value={users?.find(u => u.id === subscription.userID) || null}
                     onChange={(e, value) => {
-                        setSubscription(prev => ({ ...prev, userId: value ? value.id : "" }));
-                        setError(prev => ({ ...prev, userId: "" }));
+                        setSubscription(prev => ({ ...prev, userID: value ? value.id : "" }));
+                        setError(prev => ({ ...prev, userID: "" }));
                     }}
-                    renderInput={(params) => <TextField {...params} label="User" helperText={error?.userId} error={!!error?.userId} />}
+                    renderInput={(params) => <TextField {...params} label="User" helperText={error?.userID} error={!!error?.userID} />}
                 />
 
                 <Autocomplete

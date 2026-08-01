@@ -32,8 +32,8 @@ function Favorites(props) {
 
         if (result.isConfirmed) {
             try {
-                const updatedList = (isLogin.list_Favorite || []).filter(id => id !== movieId);
-                await updateDocument("Users", { id: isLogin.id, list_Favorite: updatedList });
+                const updatedList = (isLogin.listFavorite || []).filter(id => id !== movieId);
+                await updateDocument("Users", { id: isLogin.id, listFavorite: updatedList });
                 Swal.fire({
                     title: 'Đã xóa!',
                     text: 'Đã xóa khỏi danh sách yêu thích.',
@@ -50,7 +50,7 @@ function Favorites(props) {
     };
 
     const favorites = useMemo(() => {
-        const favoriteIds = isLogin?.list_Favorite || [];
+        const favoriteIds = isLogin?.listFavorite || [];
         return moviesData.filter(m => favoriteIds.includes(m.id));
     }, [moviesData, isLogin]);
 

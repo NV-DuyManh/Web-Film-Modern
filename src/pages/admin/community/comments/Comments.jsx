@@ -4,7 +4,7 @@ import ModalComments from './ModalComments';
 import TableComments from './TableComments';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 
-const inner = { moviesId: "", userId: "", description: "" };
+const inner = { movieID: "", userID: "", description: "" };
 
 function Comments() {
     const [open, setOpen] = useState(false);
@@ -36,8 +36,8 @@ function Comments() {
 
     const validation = () => {
         const newError = {};
-        newError.moviesId = comment.moviesId ? "" : "Please select a movie";
-        newError.userId = comment.userId ? "" : "Please select a user";
+        newError.movieID = comment.movieID ? "" : "Please select a movie";
+        newError.userID = comment.userID ? "" : "Please select a user";
         newError.description = comment.description ? "" : "Please enter comment description";
 
         setError(newError);

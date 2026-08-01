@@ -44,27 +44,27 @@ export default function ModalComments({ open, onChangeInput, handleClose, addCom
                     getOptionLabel={(option) => option.name || ""}
                     fullWidth
                     classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
-                    value={movies?.find(m => m.id === comment.moviesId) || null}
+                    value={movies?.find(m => m.id === comment.movieID) || null}
                     onChange={(e, value) => {
-                        setComment(prev => ({ ...prev, moviesId: value ? value.id : "" }));
-                        setError(prev => ({ ...prev, moviesId: "" }));
+                        setComment(prev => ({ ...prev, movieID: value ? value.id : "" }));
+                        setError(prev => ({ ...prev, movieID: "" }));
                     }}
-                    renderInput={(params) => <TextField {...params} label="Movie" helperText={error?.moviesId} error={!!error?.moviesId} />}
+                    renderInput={(params) => <TextField {...params} label="Movie" helperText={error?.movieID} error={!!error?.movieID} />}
                 />
 
                 <Autocomplete
                     className="modal-input-x"
                     disablePortal
                     options={users || []}
-                    getOptionLabel={(option) => option.displayName || option.name || option.email || ""}
+                    getOptionLabel={(option) => option.name || option.name || option.email || ""}
                     fullWidth
                     classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
-                    value={users?.find(u => u.id === comment.userId) || null}
+                    value={users?.find(u => u.id === comment.userID) || null}
                     onChange={(e, value) => {
-                        setComment(prev => ({ ...prev, userId: value ? value.id : "" }));
-                        setError(prev => ({ ...prev, userId: "" }));
+                        setComment(prev => ({ ...prev, userID: value ? value.id : "" }));
+                        setError(prev => ({ ...prev, userID: "" }));
                     }}
-                    renderInput={(params) => <TextField {...params} label="User" helperText={error?.userId} error={!!error?.userId} />}
+                    renderInput={(params) => <TextField {...params} label="User" helperText={error?.userID} error={!!error?.userID} />}
                 />
 
                 <TextField

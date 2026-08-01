@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { CategoriesContext } from '../../../../contexts/CategoryProvider';
+import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
@@ -10,7 +10,7 @@ import "../../../../App.scss";
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 function TableCategory({ handleClickOpen, setCategory, category, search }) {
-    const categories = useContext(CategoriesContext);
+    const categories = useContext(CategoryContext);
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);

@@ -3,6 +3,8 @@ import { FaFilm, FaSearch, FaTh, FaList, FaPlay, FaStar, FaInfoCircle } from 're
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
+import { RentMovieContext } from '../../../../contexts/RentMovieProvider';
+import { getObjectById } from '../../../../services/firebaseResponse';
 
 const CountdownTimer = ({ expireDate }) => {
     const [timeLeft, setTimeLeft] = useState(null);
@@ -55,29 +57,19 @@ const CountdownTimer = ({ expireDate }) => {
 
 function RentFilm(props) {
     const { isLogin } = useContext(AuthContext);
-    const moviesData = useContext(MovieContext) || [];
+    const moviesData = useContext(RentMovieContext) || [];
     const [viewMode, setViewMode] = useState('grid');
     const [searchQuery, setSearchQuery] = useState('');
-
-    const rentedMovieIds = useMemo(() => {
-        if (!isLogin) return [];
-        return isLogin.rentedMovies || isLogin.list_rent || isLogin.list_Rent || [];
-    }, [isLogin]);
-
-    const rentedMovies = useMemo(() => {
-        return moviesData.filter(m => {
-            return rentedMovieIds.some(rent => {
-                if (typeof rent === 'string') return rent === m.id;
-                return rent.movieId === m.id;
-            });
-        }).map(m => {
-            const rentInfo = rentedMovieIds.find(rent => typeof rent === 'object' && rent.movieId === m.id);
-            return {
-                ...m,
-                expireDate: rentInfo?.expireDate || null
-            };
-        });
-    }, [moviesData, rentedMovieIds]);
+    const movies = useContext(MovieContext);
+  
+    const rentedMovies = useMemo(() => {    
+       const rentByUser =  moviesData.filter(p => {
+             const expiry = typeof p.expiryDate.toDate === 'function'
+                ? p.expiryDate.toDate()
+                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
+            return p.userID == isLogin.id && expiry > new Date() });
+            return rentByUser.map(c => getObjectById(movies, c.movieID))
+    }, [moviesData, isLogin]);
 
     const filteredMovies = useMemo(() => {
         if (!searchQuery.trim()) return rentedMovies;

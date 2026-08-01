@@ -6,7 +6,7 @@ import ModalViewMovie from './ModalViewMovie';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { addDocument, updateDocument, deleteDocument } from '../../../../services/firebaseService';
-import { uploadImageToCloudinary } from '../../../../config/cloudiaryConfig';
+import { uploadImageToCloudinary } from '../../../../config/cloudinaryConfig';
 import LOGO_POSTER from "../../../../assets/Logo6.png";
 import LOGO_BANNER from "../../../../assets/Logo5.png";
 
@@ -15,8 +15,8 @@ const innerMovie = {
     releaseYear: "", duration: "", endEpisode: "", ageRating: "", status: "", 
     hasSub: false, hasDub: false, hasVoice: false, 
     episodeSub: "", episodeDub: "", episodeVoice: "", 
-    list_Category: [], countriesID: "", list_Author: [], planID: "", rent: "", 
-    list_Actor: [], list_Character: [], category_Type_Id: "" 
+    listCategory: [], countriesID: "", listAuthor: [], planID: "", rent: "", 
+    listActor: [], listCharacter: [], categoryTypeID: "" 
 };
 
 function MoviesList() {
@@ -51,8 +51,8 @@ function MoviesList() {
 
     const handleEdit = (row) => {
         const editRow = { ...row };
-        if ((!editRow.list_Author || editRow.list_Author.length === 0) && editRow.author) {
-            editRow.list_Author = [editRow.author];
+        if ((!editRow.listAuthor || editRow.listAuthor.length === 0) && editRow.author) {
+            editRow.listAuthor = [editRow.author];
         }
         setMovie(editRow);
         setError({});
@@ -84,9 +84,9 @@ function MoviesList() {
         if (movie.hasVoice && movie.episodeVoice === "") newError.episodeVoice = "Please enter Voice episode count";
         newError.planID = movie.planID ? "" : "Please select plan";
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
-        newError.list_Category = movie.list_Category?.length > 0 ? "" : "Please select category";
-        newError.list_Author = movie.list_Author?.length > 0 ? "" : "Please select director(s)";
-        newError.category_Type_Id = movie.category_Type_Id ? "" : "Please select category type";
+        newError.listCategory = movie.listCategory?.length > 0 ? "" : "Please select category";
+        newError.listAuthor = movie.listAuthor?.length > 0 ? "" : "Please select director(s)";
+        newError.categoryTypeID = movie.categoryTypeID ? "" : "Please select category type";
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     };

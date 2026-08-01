@@ -6,7 +6,7 @@ import { PlanContext } from '../../../contexts/PlanProvider';
 import { FeatureContext } from '../../../contexts/FeatureProvider';
 import Logo5 from '../../../assets/Logo5.png';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
-import { getObjectById } from '../../../services/firebaseReponse';
+import { getObjectById } from '../../../services/firebaseResponse';
 
 import { WingedFrame } from '../../../components/client/header/AvatarFrames';
 
@@ -42,7 +42,7 @@ function UpgradeVIP(props) {
     const levelUser = useMemo(() => {
         if (!isLogin || !subscriptions || !plans) return 0;
         const allPlan = subscriptions.filter(p => {
-            if (p.userId != isLogin.id) return false;
+            if (p.userID != isLogin.id) return false;
             if (!p.expiryDate) return false;
             const expiry = typeof p.expiryDate.toDate === 'function'
                 ? p.expiryDate.toDate()

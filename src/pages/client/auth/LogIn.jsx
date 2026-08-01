@@ -7,7 +7,7 @@ import { UserContext } from '../../../contexts/UserProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider } from '../../../config/firebaseConfig';
-import { ROLES } from '../../../utils/Contants';
+import { ROLES } from '../../../utils/Constants';
 import { addDocument } from '../../../services/firebaseService';
 
 export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
@@ -85,7 +85,7 @@ export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister 
 
             if (!existingCustomer) {
                 const newCustomer = {
-                    displayName: user.displayName,
+                    name: user.name,
                     imgUrl: user.photoURL,
                     role: ROLES.USER,
                     email: user.email

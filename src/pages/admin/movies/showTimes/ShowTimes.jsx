@@ -4,7 +4,7 @@ import ModalShowTimes from './ModalShowTimes';
 import TableShowTimes from './TableShowTimes';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 
-const inner = { time: "", movieId: "", roomName: "" };
+const inner = { time: "", movieID: "", roomName: "" };
 
 function ShowTimes() {
     const [open, setOpen] = useState(false);
@@ -37,7 +37,7 @@ function ShowTimes() {
     const validation = () => {
         const newError = {};
         newError.time = showTime.time ? "" : "Please select time";
-        newError.movieId = showTime.movieId ? "" : "Please select movie";
+        newError.movieID = showTime.movieID ? "" : "Please select movie";
         newError.roomName = showTime.roomName ? "" : "Please enter room name";
 
         setError(newError);

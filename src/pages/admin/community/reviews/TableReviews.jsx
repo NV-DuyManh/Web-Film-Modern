@@ -77,14 +77,14 @@ function TableReviews({ handleClickOpen, setReview, review, search }) {
         setOpenBulk(false);
     };
 
-    const getMovieName = (moviesId) => {
-        const m = movies?.find(x => x.id === moviesId);
+    const getMovieName = (movieID) => {
+        const m = movies?.find(x => x.id === movieID);
         return m ? m.name : "Unknown Movie";
     };
 
-    const getUserName = (userId) => {
-        const u = users?.find(x => x.id === userId);
-        return u ? (u.displayName || u.name || u.email || "Unknown User") : "Unknown User";
+    const getUserName = (userID) => {
+        const u = users?.find(x => x.id === userID);
+        return u ? (u.name || u.name || u.email || "Unknown User") : "Unknown User";
     };
 
     return (
@@ -131,10 +131,10 @@ function TableReviews({ handleClickOpen, setReview, review, search }) {
                                         {start + index + 1}
                                     </td>
                                     <td className="table-cell font-bold text-cyan-400">
-                                        {getUserName(row.userId)}
+                                        {getUserName(row.userID)}
                                     </td>
                                     <td className="table-cell font-bold text-fuchsia-400">
-                                        {getMovieName(row.moviesId)}
+                                        {getMovieName(row.movieID)}
                                     </td>
                                     <td className="table-cell text-center">
                                         <Rating value={Number(row.rate)} precision={0.5} readOnly size="small" sx={{

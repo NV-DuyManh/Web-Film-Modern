@@ -1,13 +1,13 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MovieContext } from '../../../contexts/MovieProvider';
-import { CategoriesContext } from '../../../contexts/CategoryProvider';
+import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 function CategoryPage() {
     const { id } = useParams();
     const movies = useContext(MovieContext) || [];
-    const categories = useContext(CategoriesContext) || [];
+    const categories = useContext(CategoryContext) || [];
 
     const [page, setPage] = useState(1);
     const moviesPerPage = 14;
@@ -24,7 +24,7 @@ function CategoryPage() {
     const categoryMovies = useMemo(() => {
         if (movies.length === 0) return [];
         return movies.filter(m => {
-            const list = m.list_Category || [];
+            const list = m.listCategory || [];
             return list.some(catId => String(catId) === String(id));
         });
     }, [id, movies]);

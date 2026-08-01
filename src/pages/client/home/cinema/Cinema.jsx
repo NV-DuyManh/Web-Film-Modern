@@ -6,7 +6,7 @@ import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaVideo, FaCalendarAlt, FaTicketAlt } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
+import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
@@ -114,7 +114,7 @@ export default function Cinema() {
                                         <div className="flex flex-col items-center gap-1.5 w-full">
                                             <p className="flex justify-center items-center gap-1.5 text-pink-200 text-[9px] md:text-[10px] truncate w-max max-w-full italic bg-pink-500/10 px-3 py-0.5 rounded-full border border-pink-500/30 transition-all duration-300 group-hover:bg-pink-500/20 group-hover:border-pink-400/60 group-hover:shadow-[0_0_12px_rgba(236,72,153,0.4)]">
                                                 <FaVideo className="text-pink-400 shrink-0 drop-shadow-[0_0_5px_rgba(236,72,153,0.8)]" /> 
-                                                <span>{e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, e.author)?.name || 'Đang cập nhật')}</span>
+                                                <span>{e.listAuthor?.length > 0 ? e.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, e.author)?.name || 'Đang cập nhật')}</span>
                                             </p>
                                             <div className="flex justify-center gap-2">
                                                 {e.releaseYear && <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-indigo-500 to-purple-500 rounded-full text-white text-[9px] md:text-[10px] w-max font-bold shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(99,102,241,0.6)]"><FaCalendarAlt /> {e.releaseYear}</p>}

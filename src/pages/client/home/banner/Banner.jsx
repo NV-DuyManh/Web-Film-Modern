@@ -11,8 +11,8 @@ import './Banner.css';
 
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
-import { CategoriesContext } from '../../../../contexts/CategoryProvider';
+import { getObjectById } from '../../../../services/firebaseResponse';
+import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
@@ -27,7 +27,7 @@ export default function Banner() {
     const movies = useContext(MovieContext);
     const hotMovies = movies?.filter(m => m.isHot) || [];
     const categoryTypes = useContext(CategoryTypeContext);
-    const categories = useContext(CategoriesContext);
+    const categories = useContext(CategoryContext);
     const authors = useContext(AuthorContext);
     const plans = useContext(PlanContext);
     const { isLogin } = useContext(AuthContext);
@@ -40,14 +40,14 @@ export default function Banner() {
             return;
         }
         try {
-            const currentFavorites = isLogin.list_Favorite || [];
+            const currentFavorites = isLogin.listFavorite || [];
             let newFavorites;
             if (currentFavorites.includes(movieId)) {
                 newFavorites = currentFavorites.filter(id => id !== movieId);
             } else {
                 newFavorites = [...currentFavorites, movieId];
             }
-            await updateDocument("Users", { id: isLogin.id, list_Favorite: newFavorites });
+            await updateDocument("Users", { id: isLogin.id, listFavorite: newFavorites });
         } catch (error) {
             console.error("Error updating favorites", error);
         }
@@ -103,11 +103,11 @@ export default function Banner() {
 
                             <div className='mt-3 sm:mt-4 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
                                 <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
-                                    {getObjectById(plans, e.planID)?.name || "Prenium"}
+                                    {getObjectById(plans, e.planID)?.name}
                                 </button>
 
                                 <button className='rounded-md cursor-pointer border border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
-                                    {e.list_Author?.length > 0 ? e.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, e.author)?.name || "Đang cập nhật")}
+                                    {e.listAuthor?.length > 0 ? e.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, e.author)?.name || "Đang cập nhật")}
                                 </button>
 
                                 <button className='rounded-md cursor-pointer border border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
@@ -120,7 +120,7 @@ export default function Banner() {
                             </div>
 
                             <div className='flex mt-1.5 lg:mt-2 flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
-                                {e.list_Category?.map((categoryId) => {
+                                {e.listCategory?.map((categoryId) => {
                                     const categoryName = getObjectById(categories, categoryId)?.name;
                                     if (!categoryName) return null;
                                     return (
@@ -146,8 +146,8 @@ export default function Banner() {
                                 </button>
 
                                 <div className='flex h-9 sm:h-11 lg:h-12 overflow-hidden rounded-full border border-white/20 bg-slate-900/80 backdrop-blur-xl shadow-lg'>
-                                    <button onClick={(event) => handleFavorite(event, e.id)} className={`group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg transition-all duration-300 hover:bg-pink-500 hover:text-white active:scale-95 cursor-pointer ${(isLogin?.list_Favorite || []).includes(e.id) ? 'bg-pink-600 text-white shadow-[inset_0_0_10px_rgba(0,0,0,0.2)]' : 'text-slate-400'}`}>
-                                        {(isLogin?.list_Favorite || []).includes(e.id) ? (
+                                    <button onClick={(event) => handleFavorite(event, e.id)} className={`group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg transition-all duration-300 hover:bg-pink-500 hover:text-white active:scale-95 cursor-pointer ${(isLogin?.listFavorite || []).includes(e.id) ? 'bg-pink-600 text-white shadow-[inset_0_0_10px_rgba(0,0,0,0.2)]' : 'text-slate-400'}`}>
+                                        {(isLogin?.listFavorite || []).includes(e.id) ? (
                                             <FaHeart className='transition-all duration-300' />
                                         ) : (
                                             <FaRegHeart className='transition-all duration-300 group-hover:scale-110' />

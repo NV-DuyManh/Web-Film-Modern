@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } 
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
-import { getObjectById } from '../../../services/firebaseReponse';
+import { getObjectById } from '../../../services/firebaseResponse';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
 import { EpisodeContext } from '../../../contexts/EpisodeProvider';

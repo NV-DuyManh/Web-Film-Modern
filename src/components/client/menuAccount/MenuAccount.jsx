@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { LISTACCOUNT } from '../../../utils/Contants';
+import { LISTACCOUNT } from '../../../utils/Constants';
 import { FaUser } from 'react-icons/fa';
 import NoelBackground from '../../admin/noelBackground/NoelBackground';
 import Profile from '../../../pages/client/account/profile/Profile';

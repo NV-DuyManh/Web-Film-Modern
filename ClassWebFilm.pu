@@ -22,35 +22,35 @@ class Users {
     + dateOfBirth: datetime
     + role: text
     + avatarUrl: text
-    + sexId: text
+    + sexID: text
     + createdAt: datetime
 }
 
 class Favorites {
     + id: text
-    + userId: text
-    + movieId: text
+    + userID: text
+    + movieID: text
     + createdAt: datetime
 }
 
 class Folders {
     + id: text
     + name: text
-    + userId: text
+    + userID: text
     + createdAt: datetime
 }
 
 class MoviesSave {
     + id: text
-    + movieId: text
+    + movieID: text
     + folderID: text
     + createdAt: datetime
 }
 
 class WatchHistory {
     + id: text
-    + episodesID: text
-    + userId: text
+    + episodeID: text
+    + userID: text
     + time: int
     + createdAt: datetime
 }
@@ -62,14 +62,15 @@ class Movies {
     + imgUrl: text
     + trailerUrl: text
     + duration: int
-    + views: int
+    + view: int
     + rating: float
     + endEpisode: int
-    + category_Type_Id: text
+    + categoryTypeID: text
     + productionYear: int
-    + list_Category: text
-    + list_Actor: text
-    + list_Character: text
+    + listCategory: text
+    + listActor: text
+    + listCharacter: text
+    + listAuthor: text
     + createdAt: datetime
     + planID: text
     + rent: int
@@ -92,13 +93,13 @@ class Episodes {
     + url: text
     + duration: int
     + createdAt: datetime
-    + moviesID: text
+    + movieID: text
 }
 
 class ShowTimes {
     + id: text
     + time: datetime
-    + movieId: text
+    + movieID: text
     + roomName: text
 }
 
@@ -108,7 +109,7 @@ class Categories {
     + description: text
 }
 
-class CategoryType {
+class CategoryTypes {
     + id: text
     + name: text
     + description: text
@@ -119,8 +120,8 @@ class Actors {
     + name: text
     + imgUrl: text
     + description: text
-    + sexID: text
     + countriesID: text
+    + sexID: text
 }
 
 class Authors {
@@ -135,15 +136,16 @@ class Authors {
 class Characters {
     + id: text
     + name: text
-    + description: text
     + imgUrl: text
-    + roleType: text
+    + description: text
+    + countriesID: text
+    + sexID: text
 }
 
 class Reviews {
     + id: text
-    + moviesId: text
-    + userId: text
+    + movieID: text
+    + userID: text
     + rate: float
     + content: text
     + createdAt: datetime
@@ -151,8 +153,8 @@ class Reviews {
 
 class Comments {
     + id: text
-    + userId: text
-    + moviesId: text
+    + userID: text
+    + movieID: text
     + description: text
     + createdAt: datetime
 }
@@ -160,8 +162,8 @@ class Comments {
 class RentMovies {
     + id: text
     + transactionID: text
-    + userId: text
-    + moviesId: text
+    + userID: text
+    + movieID: text
     + paymentMethod: text
     + price: float
     + startDate: datetime
@@ -172,7 +174,7 @@ class RentMovies {
 class Subcriptions {
     + id: text
     + transactionID: text
-    + userId: text
+    + userID: text
     + paymentMethod: text
     + planID: text
     + price: float
@@ -222,7 +224,7 @@ Movies "n" -down-> "n" Characters
 Movies "n" -up-> "n" Categories
 Movies "1" -left-> "n" Reviews
 Movies "1" -left-> "n" Comments
-Movies "1" -up-> "1" CategoryType
+Movies "1" -up-> "1" CategoryTypes
 Movies "1" -up-> "n" ShowTimes
 
 Actors "1" -right-> "1" Sex

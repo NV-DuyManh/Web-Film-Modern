@@ -4,11 +4,11 @@ import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja, FaUserTi
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
 import { ActorContext } from '../../../../contexts/ActorProvider';
-import { CategoriesContext } from '../../../../contexts/CategoryProvider';
+import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
-import { COUNTRIES } from '../../../../utils/Contants';
+import { COUNTRIES } from '../../../../utils/Constants';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import Logo5 from "../../../../assets/Logo5.png";
 
@@ -35,7 +35,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
     const categoryTypes = useContext(CategoryTypeContext);
     const actors = useContext(ActorContext);
-    const categories = useContext(CategoriesContext);
+    const categories = useContext(CategoryContext);
     const authorsList = useContext(AuthorContext);
     const characters = useContext(CharacterContext);
     const plansList = useContext(PlanContext);
@@ -115,12 +115,12 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
     const handleClickChoose = (id) => {
         switch (type) {
-            case "actors": setMovie(pre => ({ ...pre, list_Actor: toggleById(pre.list_Actor, id) })); break;
-            case "authors": setMovie(pre => ({ ...pre, list_Author: toggleById(pre.list_Author, id) })); break;
-            case "characters": setMovie(pre => ({ ...pre, list_Character: toggleById(pre.list_Character, id) })); break;
+            case "actors": setMovie(pre => ({ ...pre, listActor: toggleById(pre.listActor, id) })); break;
+            case "authors": setMovie(pre => ({ ...pre, listAuthor: toggleById(pre.listAuthor, id) })); break;
+            case "characters": setMovie(pre => ({ ...pre, listCharacter: toggleById(pre.listCharacter, id) })); break;
             case "categories":
-                setMovie(pre => ({ ...pre, list_Category: toggleById(pre.list_Category, id) }));
-                if (setError) setError(pre => ({ ...pre, list_Category: "" }));
+                setMovie(pre => ({ ...pre, listCategory: toggleById(pre.listCategory, id) }));
+                if (setError) setError(pre => ({ ...pre, listCategory: "" }));
                 break;
             default: break;
         }
@@ -133,20 +133,20 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
     const handleRemoveItem = (itemType, id) => {
         switch (itemType) {
-            case "actors": setMovie(pre => ({ ...pre, list_Actor: (pre.list_Actor || []).filter(e => e !== id) })); break;
-            case "authors": setMovie(pre => ({ ...pre, list_Author: (pre.list_Author || []).filter(e => e !== id) })); break;
-            case "characters": setMovie(pre => ({ ...pre, list_Character: (pre.list_Character || []).filter(e => e !== id) })); break;
-            case "categories": setMovie(pre => ({ ...pre, list_Category: (pre.list_Category || []).filter(e => e !== id) })); break;
+            case "actors": setMovie(pre => ({ ...pre, listActor: (pre.listActor || []).filter(e => e !== id) })); break;
+            case "authors": setMovie(pre => ({ ...pre, listAuthor: (pre.listAuthor || []).filter(e => e !== id) })); break;
+            case "characters": setMovie(pre => ({ ...pre, listCharacter: (pre.listCharacter || []).filter(e => e !== id) })); break;
+            case "categories": setMovie(pre => ({ ...pre, listCategory: (pre.listCategory || []).filter(e => e !== id) })); break;
             default: break;
         }
     };
 
     const getSelectedItems = () => {
         switch (type) {
-            case "actors": return movie.list_Actor || [];
-            case "authors": return movie.list_Author || [];
-            case "characters": return movie.list_Character || [];
-            case "categories": return movie.list_Category || [];
+            case "actors": return movie.listActor || [];
+            case "authors": return movie.listAuthor || [];
+            case "characters": return movie.listCharacter || [];
+            case "categories": return movie.listCategory || [];
             default: return [];
         }
     };
@@ -268,7 +268,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
 
                         <div className="grid grid-cols-2 gap-4 mt-2">
                             <Autocomplete options={plansList ? [...plansList].sort((a, b) => a.level - b.level) : []} getOptionLabel={(opt) => opt?.name || ""} value={plansList?.find(p => p.id === movie.planID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Plan" error={!!error?.planID} helperText={error?.planID} className="modal-input-x" />} />
-                            <Autocomplete options={categoryTypes || []} getOptionLabel={(opt) => opt?.name || ""} value={categoryTypes?.find(c => c.id === movie.category_Type_Id) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "category_Type_Id", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Category Type" error={!!error?.category_Type_Id} helperText={error?.category_Type_Id} className="modal-input-x" />} />
+                            <Autocomplete options={categoryTypes || []} getOptionLabel={(opt) => opt?.name || ""} value={categoryTypes?.find(c => c.id === movie.categoryTypeID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "categoryTypeID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Category Type" error={!!error?.categoryTypeID} helperText={error?.categoryTypeID} className="modal-input-x" />} />
                         </div>
                     </div>
                 </div>
@@ -281,10 +281,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         <div className='flex items-center text-white gap-2'>
                             <label className="font-medium">Categories</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("categories")} className='cursor-pointer text-2xl text-cyan-400 hover:scale-110 transition-transform' />
-                            {error?.list_Category && <p className="text-red-500 text-xs italic inline">{error.list_Category}</p>}
+                            {error?.listCategory && <p className="text-red-500 text-xs italic inline">{error.listCategory}</p>}
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
-                            {movie.list_Category?.map((item) => {
+                            {movie.listCategory?.map((item) => {
                                 const category = categories?.find(e => e.id === item);
                                 return category ? (
                                     <div key={item} className="relative inline-block mt-2 mr-1 group">
@@ -298,10 +298,10 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                         <div className='flex items-center text-white gap-2 mt-4'>
                             <label className="font-medium">Authors</label>
                             <FaUserTie onClick={() => handleClickOpenChoose("authors")} className='cursor-pointer text-2xl text-yellow-400 hover:scale-110 transition-transform' />
-                            {error?.list_Author && <p className="text-red-500 text-xs italic inline">{error.list_Author}</p>}
+                            {error?.listAuthor && <p className="text-red-500 text-xs italic inline">{error.listAuthor}</p>}
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
-                            {movie.list_Author?.map((item) => {
+                            {movie.listAuthor?.map((item) => {
                                 const author = authorsList?.find(e => e.id === item);
                                 return author ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
@@ -320,7 +320,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <FaUsers onClick={() => handleClickOpenChoose("actors")} className='cursor-pointer text-2xl text-pink-400 hover:scale-110 transition-transform' />
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
-                            {movie.list_Actor?.map((item) => {
+                            {movie.listActor?.map((item) => {
                                 const actor = actors?.find(e => e.id === item);
                                 return actor ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
@@ -339,7 +339,7 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
                             <FaUserNinja onClick={() => handleClickOpenChoose("characters")} className='cursor-pointer text-2xl text-green-400 hover:scale-110 transition-transform' />
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
-                            {movie.list_Character?.map((item) => {
+                            {movie.listCharacter?.map((item) => {
                                 const character = characters?.find(e => e.id === item);
                                 return character ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">

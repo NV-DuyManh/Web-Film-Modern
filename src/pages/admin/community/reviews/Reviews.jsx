@@ -4,7 +4,7 @@ import ModalReview from './ModalReview';
 import TableReviews from './TableReviews';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 
-const inner = { moviesId: "", userId: "", rate: 5, content: "" };
+const inner = { movieID: "", userID: "", rate: 5, content: "" };
 
 function Reviews() {
     const [open, setOpen] = useState(false);
@@ -36,8 +36,8 @@ function Reviews() {
 
     const validation = () => {
         const newError = {};
-        newError.moviesId = review.moviesId ? "" : "Please select a movie";
-        newError.userId = review.userId ? "" : "Please select a user";
+        newError.movieID = review.movieID ? "" : "Please select a movie";
+        newError.userID = review.userID ? "" : "Please select a user";
         newError.rate = review.rate !== "" ? "" : "Please provide a rating";
         newError.content = review.content ? "" : "Please enter review content";
 

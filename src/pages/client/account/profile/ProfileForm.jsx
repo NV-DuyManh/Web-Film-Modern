@@ -3,19 +3,19 @@ import { FaEdit, FaEnvelope, FaMapMarkerAlt, FaBirthdayCake, FaLock, FaEye, FaEy
 
 const ProfileForm = ({ isLogin, onSaveProfile, onSavePassword }) => {
     const [isEditing, setIsEditing] = useState(false);
-    const [formData, setFormData] = useState({ displayName: '', email: '', phone: '', address: '', dateOfBirth: '', sexId: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', phone: '', address: '', dateOfBirth: '', sexID: '' });
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
     const [showPassword, setShowPassword] = useState(false);
     useEffect(() => {
         if (isLogin) {
             setFormData({
-                displayName: isLogin.displayName,
+                name: isLogin.name,
                 email: isLogin.email,
                 phone: isLogin.phone || isLogin.phoneNumber,
                 address: isLogin.address,
                 dateOfBirth: isLogin.dateOfBirth,
-                sexId: isLogin.sexId
+                sexID: isLogin.sexID
             });
         }
     }, [isLogin]);
@@ -32,12 +32,12 @@ const ProfileForm = ({ isLogin, onSaveProfile, onSavePassword }) => {
         setIsEditing(false);
         if (isLogin) {
             setFormData({
-                displayName: isLogin.displayName,
+                name: isLogin.name,
                 email: isLogin.email,
                 phoneNumber: isLogin.phoneNumber || isLogin.phone,
                 address: isLogin.address,
                 dateOfBirth: isLogin.dateOfBirth,
-                sexId: isLogin.sexId
+                sexID: isLogin.sexID
             });
         }
     };
@@ -85,8 +85,8 @@ const ProfileForm = ({ isLogin, onSaveProfile, onSavePassword }) => {
                         </label>
                         <input
                             type="text"
-                            name="displayName"
-                            value={formData.displayName}
+                            name="name"
+                            value={formData.name}
                             onChange={handleChange}
                             disabled={!isEditing}
                             className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all`}
@@ -132,7 +132,7 @@ const ProfileForm = ({ isLogin, onSaveProfile, onSavePassword }) => {
                         <label className="text-xs font-bold text-slate-200 flex items-center gap-2 uppercase tracking-wide group-focus-within:text-yellow-400 transition-colors">
                             <FaVenusMars className="text-yellow-500" /> Giới tính
                         </label>
-                        <select name="sexId" value={formData.sexId} onChange={handleChange} disabled={!isEditing}
+                        <select name="sexID" value={formData.sexID} onChange={handleChange} disabled={!isEditing}
                             className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all [&>option]:bg-slate-800 [&>option]:text-white cursor-pointer disabled:cursor-not-allowed`}
                         >
                             <option value="">Chưa cập nhật...</option>

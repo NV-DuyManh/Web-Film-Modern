@@ -5,7 +5,7 @@ import { FcGoogle } from 'react-icons/fc';
 import Logo2 from '../../../assets/Logo2.png';
 import { addDocument } from '../../../services/firebaseService';
 import { UserContext } from '../../../contexts/UserProvider';
-import { ROLES } from '../../../utils/Contants';
+import { ROLES } from '../../../utils/Constants';
 
 export default function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
     const [showPassword, setShowPassword] = useState(false);
@@ -13,7 +13,7 @@ export default function Register({ openRegister, handleCloseRegister, handleOpen
     const users = useContext(UserContext);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
-        displayName: '', email: '', password: '', confirmPassword: '', role: ROLES.USER
+        name: '', email: '', password: '', confirmPassword: '', role: ROLES.USER
     });
 
     const [errors, setErrors] = useState({});
@@ -25,7 +25,7 @@ export default function Register({ openRegister, handleCloseRegister, handleOpen
     const validation = () => {
         let newErrors = {};
 
-        if (!formData.displayName.trim()) newErrors.displayName = 'Vui lòng nhập tên hiển thị';
+        if (!formData.name.trim()) newErrors.name = 'Vui lòng nhập tên hiển thị';
         if (!formData.email.trim()) newErrors.email = 'Vui lòng nhập email';
         if (users.some(e => e.email == formData.email)) newErrors.email = 'Email đã được sử dụng';
         if (!formData.password) newErrors.password = 'Vui lòng nhập mật khẩu';
@@ -95,9 +95,9 @@ export default function Register({ openRegister, handleCloseRegister, handleOpen
                     <div className="space-y-4" onKeyDown={(e) => e.key === 'Enter' && addRegister()}>
                         <TextField
                             className="modal-input-x" fullWidth variant="outlined" type="text"
-                            label="Tên hiển thị" name="displayName"
-                            value={formData.displayName} onChange={handleChange}
-                            error={!!errors.displayName} helperText={errors.displayName}
+                            label="Tên hiển thị" name="name"
+                            value={formData.name} onChange={handleChange}
+                            error={!!errors.name} helperText={errors.name}
                         />
 
                         <TextField

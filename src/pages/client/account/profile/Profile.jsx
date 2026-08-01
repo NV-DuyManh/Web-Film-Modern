@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
-import { uploadImageToCloudinary } from '../../../../config/cloudiaryConfig';
+import { uploadImageToCloudinary } from '../../../../config/cloudinaryConfig';
 import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
+import { getObjectById } from '../../../../services/firebaseResponse';
 import ProfileHeader from './ProfileHeader';
 import ProfileForm from './ProfileForm';
 
@@ -25,7 +25,7 @@ const Profile = () => {
         if (!isLogin) return { name: 'FREE', level: 0, theme: 'blue' };
         if (isLogin.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'red' };
 
-        const userSubs = subscriptions.filter(p => p.userId === isLogin.id && getExpiryDate(p) > new Date());
+        const userSubs = subscriptions.filter(p => p.userID === isLogin.id && getExpiryDate(p) > new Date());
         if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
 
         const highestSub = userSubs.reduce((max, item) => {

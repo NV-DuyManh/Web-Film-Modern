@@ -40,7 +40,7 @@ export const LISTCLIENT = [
 
 export const LISTMENU = [
     {
-        name: "Metadata",
+        name: "Meta Data",
         icon: <MdCategory />,
         subMenu: [
             {
@@ -49,7 +49,7 @@ export const LISTMENU = [
             },
             {
                 title: "Category Type",
-                path: "/categoriesType"
+                path: "/categoryTypes"
             }
         ]
     },
@@ -126,7 +126,7 @@ export const LISTMENU = [
         ]
     },
     {
-        name: "Bills",
+        name: "Bill",
         icon: <RiVipDiamondFill />,
         subMenu: [
             {
@@ -351,7 +351,7 @@ export const ROLES = {
 export const cloud_name = "duuujvsz7";
 
 export const initialOptions = {
-    "client-id": "Ae1gNvniG4xbGsr_e5joj0m5WGau5kisTS_4VWlz82K9c4FnKE-kE-OhXYyEbBk-8IM_k3BGrNisndJm",
+    "client-id": "ASp6S6y6wWcAw1YZuOjr5nCJpZT_y7eCM_ywJBfXiZ_OZKC3Q91DvvylF8Z2zeGa5r2UdqgILlHGgDgv",
     currency: "USD",
     intent: "capture"
 };

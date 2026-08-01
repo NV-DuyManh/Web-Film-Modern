@@ -85,7 +85,7 @@ function HeaderAdmin() {
                                             <FaUserCircle className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
                                         )}
                                         <div className="flex flex-col min-w-0">
-                                            <p className="text-[15px] font-bold text-white truncate tracking-wide">{isLogin?.displayName || 'Admin'}</p>
+                                            <p className="text-[15px] font-bold text-white truncate tracking-wide">{isLogin?.name || 'Admin'}</p>
                                             <p className="text-[12px] text-cyan-400 truncate">{isLogin?.email || 'admin@mfilm.com'}</p>
                                         </div>
                                     </div>

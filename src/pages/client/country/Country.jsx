@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { COUNTRIES } from '../../../utils/Contants';
+import { COUNTRIES } from '../../../utils/Constants';
 import { MovieContext } from '../../../contexts/MovieProvider';
 
 function Country({ openCountry, setOpenCountry }) {

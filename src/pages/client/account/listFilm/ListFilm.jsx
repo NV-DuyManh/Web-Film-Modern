@@ -27,7 +27,7 @@ function ListFilm(props) {
 
     const userLists = useMemo(() => {
         if (!isLogin) return [];
-        return isLogin.list_Film || [];
+        return isLogin.listFilm || [];
     }, [isLogin]);
 
     const filteredLists = useMemo(() => {
@@ -83,7 +83,7 @@ function ListFilm(props) {
                     createdAt: new Date().toISOString()
                 };
                 const updatedLists = [...userLists, newList];
-                await updateDocument("Users", { id: isLogin.id, list_Film: updatedLists });
+                await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
                 // Removed annoying success notification as requested
 
             } catch (error) {
@@ -128,7 +128,7 @@ function ListFilm(props) {
                 const updatedLists = userLists.map(list =>
                     list.id === listId ? { ...list, name: newName } : list
                 );
-                await updateDocument("Users", { id: isLogin.id, list_Film: updatedLists });
+                await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
                 Swal.fire({
                     title: 'Thành công',
                     text: 'Đã đổi tên danh sách',
@@ -170,7 +170,7 @@ function ListFilm(props) {
             const updatedLists = userLists.map(list =>
                 list.id === avatarModalState.listId ? { ...list, avatar: avatarModalState.imgUrl } : list
             );
-            await updateDocument("Users", { id: isLogin.id, list_Film: updatedLists });
+            await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
             Swal.fire({
                 title: 'Thành công',
                 text: 'Đã cập nhật ảnh bìa danh sách',
@@ -206,7 +206,7 @@ function ListFilm(props) {
         if (result.isConfirmed) {
             try {
                 const updatedLists = userLists.filter(list => list.id !== listId);
-                await updateDocument("Users", { id: isLogin.id, list_Film: updatedLists });
+                await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
                 Swal.fire({
                     title: 'Đã xóa!',
                     text: 'Danh sách của bạn đã được xóa.',
@@ -244,7 +244,7 @@ function ListFilm(props) {
                     }
                     return list;
                 });
-                await updateDocument("Users", { id: isLogin.id, list_Film: updatedLists });
+                await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
                 Swal.fire({ title: 'Thành công', text: 'Đã bỏ phim', icon: 'success', timer: 1000, showConfirmButton: false, background: '#1e293b', color: '#fff' });
             } catch (error) {
                 console.error("Error removing movie", error);

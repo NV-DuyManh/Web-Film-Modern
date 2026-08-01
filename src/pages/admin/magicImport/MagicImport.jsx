@@ -5,7 +5,7 @@ import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
 import { collection, doc, setDoc, updateDoc } from 'firebase/firestore'; 
 
-import { CategoriesContext } from '../../../contexts/CategoryProvider';
+import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
@@ -34,7 +34,7 @@ function MagicImport() {
     const [promptCount, setPromptCount] = useState(5);
     const [promptTheme, setPromptTheme] = useState("Anime Isekai");
 
-    const categories = useContext(CategoriesContext) || [];
+    const categories = useContext(CategoryContext) || [];
     const authors = useContext(AuthorContext) || [];
     const plans = useContext(PlanContext) || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
@@ -188,7 +188,7 @@ Characters: Yuta Okkotsu, Rika Orimoto
 Char Desc: Cậu là một học sinh trung học mang trong mình nguồn chú lực khổng lồ nhưng lại luôn tự ti và sợ hãi sức mạnh của chính bản thân mình | Cô bé đáng thương này đã qua đời trong tai nạn giao thông và biến thành một oán linh đặc cấp luôn bảo vệ Yuta một cách thái quá.
 Gender: Female | Female
 Char Gender: Male | Female
-Plan: Prenium
+Plan: Premium
 Country: Japan
 Year: 2021
 Episodes: 1
@@ -248,11 +248,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                 if (existingMovie && mode === 'IMPORT') {
                     currentMovieId = existingMovie.id; 
                 } else {
-                    let list_Category = [];
-                    let list_Actor = [];
-                    let list_Character = [];
-                    let list_Author = [];
-                    let category_Type_Id = "";
+                    let listCategory = [];
+                    let listActor = [];
+                    let listCharacter = [];
+                    let listAuthor = [];
+                    let categoryTypeID = "";
 
                     if (movie.rawCategories) {
                         const names = movie.rawCategories.split(',').map(n => n.trim());
@@ -262,12 +262,12 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             const exist = localCategories.find(c => c.name.toLowerCase() === name.toLowerCase());
                             const finalDesc = descs[i] || "Đang cập nhật..."; 
                             if (exist) {
-                                list_Category.push(exist.id);
+                                listCategory.push(exist.id);
                                 if (mode === 'UPDATE') await updateDoc(doc(db, "Categories", exist.id), { description: finalDesc });
                             } else {
                                 const newRef = doc(collection(db, "Categories"));
                                 await setDoc(newRef, { id: newRef.id, name, description: finalDesc });
-                                list_Category.push(newRef.id);
+                                listCategory.push(newRef.id);
                                 localCategories.push({ id: newRef.id, name });
                             }
                         }
@@ -275,11 +275,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
 
                     if (movie.rawCategoryType) {
                         const exist = localCategoryTypes.find(c => c.name.toLowerCase() === movie.rawCategoryType.toLowerCase());
-                        if (exist) category_Type_Id = exist.id;
+                        if (exist) categoryTypeID = exist.id;
                         else {
                             const newRef = doc(collection(db, "CategoryType"));
                             await setDoc(newRef, { id: newRef.id, name: movie.rawCategoryType, description: "Đang cập nhật..." });
-                            category_Type_Id = newRef.id;
+                            categoryTypeID = newRef.id;
                             localCategoryTypes.push({ id: newRef.id, name: movie.rawCategoryType });
                         }
                     }
@@ -295,12 +295,12 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             
                             const exist = localAuthors.find(a => a.name.toLowerCase() === name.toLowerCase());
                             if (exist) {
-                                list_Author.push(exist.id);
+                                listAuthor.push(exist.id);
                                 if (mode === 'UPDATE') await updateDoc(doc(db, "Authors", exist.id), { description: finalDesc, sexID: finalGender });
                             } else {
                                 const newRef = doc(collection(db, "Authors"));
                                 await setDoc(newRef, { id: newRef.id, name, imgUrl: LOGO, description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
-                                list_Author.push(newRef.id);
+                                listAuthor.push(newRef.id);
                                 localAuthors.push({ id: newRef.id, name });
                             }
                         }
@@ -317,12 +317,12 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             
                             const exist = localActors.find(a => a.name.toLowerCase() === name.toLowerCase());
                             if (exist) {
-                                list_Actor.push(exist.id);
+                                listActor.push(exist.id);
                                 if (mode === 'UPDATE') await updateDoc(doc(db, "Actors", exist.id), { description: finalDesc, sexID: finalGender });
                             } else {
                                 const newRef = doc(collection(db, "Actors"));
                                 await setDoc(newRef, { id: newRef.id, name, imgUrl: LOGO, description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
-                                list_Actor.push(newRef.id);
+                                listActor.push(newRef.id);
                                 localActors.push({ id: newRef.id, name });
                             }
                         }
@@ -339,12 +339,12 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             
                             const exist = localCharacters.find(c => c.name.toLowerCase() === name.toLowerCase());
                             if (exist) {
-                                list_Character.push(exist.id);
+                                listCharacter.push(exist.id);
                                 if (mode === 'UPDATE') await updateDoc(doc(db, "Characters", exist.id), { description: finalDesc, sexID: finalGender });
                             } else {
                                 const newRef = doc(collection(db, "Characters"));
                                 await setDoc(newRef, { id: newRef.id, name, imgUrl: LOGO, description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
-                                list_Character.push(newRef.id);
+                                listCharacter.push(newRef.id);
                                 localCharacters.push({ id: newRef.id, name });
                             }
                         }
@@ -364,12 +364,12 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         if (movie.duration > 0) updateData.duration = movie.duration;
                         if (movie.rent >= 0) updateData.rent = movie.rent;
                         if (movie.releaseYear) updateData.releaseYear = movie.releaseYear;
-                        if (category_Type_Id) updateData.category_Type_Id = category_Type_Id;
+                        if (categoryTypeID) updateData.categoryTypeID = categoryTypeID;
                         
-                        updateData.list_Category = Array.from(new Set([...(existingMovie.list_Category || []), ...list_Category]));
-                        updateData.list_Actor = Array.from(new Set([...(existingMovie.list_Actor || []), ...list_Actor]));
-                        updateData.list_Character = Array.from(new Set([...(existingMovie.list_Character || []), ...list_Character]));
-                        updateData.list_Author = Array.from(new Set([...(existingMovie.list_Author || []), ...list_Author]));
+                        updateData.listCategory = Array.from(new Set([...(existingMovie.listCategory || []), ...listCategory]));
+                        updateData.listActor = Array.from(new Set([...(existingMovie.listActor || []), ...listActor]));
+                        updateData.listCharacter = Array.from(new Set([...(existingMovie.listCharacter || []), ...listCharacter]));
+                        updateData.listAuthor = Array.from(new Set([...(existingMovie.listAuthor || []), ...listAuthor]));
 
                         await updateDoc(movieRef, updateData);
                         moviesUpdated++;
@@ -377,9 +377,14 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         const movieRef = doc(collection(db, "Movies"));
                         currentMovieId = movieRef.id;
                         const submitMovie = {
-                            ...movie, id: currentMovieId, imgUrl: LOGO_POSTER, bannerUrl: LOGO_BANNER, list_Category, list_Actor, list_Character, list_Author,
-                            category_Type_Id, planID: finalPlanID, createdAt: new Date().toISOString()
+                            ...movie, id: currentMovieId, imgUrl: LOGO_POSTER, bannerUrl: LOGO_BANNER, listCategory, listActor, listCharacter, listAuthor,
+                            categoryTypeID, planID: finalPlanID, createdAt: new Date().toISOString()
                         };
+                        Object.keys(submitMovie).forEach(key => {
+                            if (key.startsWith('raw') || ['gender', 'charGender', 'roomName', 'epNumber', 'epUrl'].includes(key)) {
+                                delete submitMovie[key];
+                            }
+                        });
                         await setDoc(movieRef, submitMovie);
                         localMovies.push({ id: currentMovieId, name: movie.name });
                         moviesAdded++;

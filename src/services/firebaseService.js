@@ -1,6 +1,6 @@
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, query, where } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
-import { uploadImageToCloudinary } from "../config/cloudiaryConfig";
+import { uploadImageToCloudinary } from "../config/cloudinaryConfig";
 
 export const addDocument = async (collectionName, values) => {
     try {
@@ -70,15 +70,15 @@ export const deleteDocument = async (collectionName, values) => {
         const epSnap = await getDocs(epQ);
         epSnap.forEach(async (docSnap) => await deleteDoc(doc(db, "Episodes", docSnap.id)));
 
-        const stQ = query(collection(db, "ShowTimes"), where("movieId", "==", id));
+        const stQ = query(collection(db, "ShowTimes"), where("movieID", "==", id));
         const stSnap = await getDocs(stQ);
         stSnap.forEach(async (docSnap) => await deleteDoc(doc(db, "ShowTimes", docSnap.id)));
 
-        const cmQ = query(collection(db, "Comments"), where("moviesId", "==", id));
+        const cmQ = query(collection(db, "Comments"), where("movieID", "==", id));
         const cmSnap = await getDocs(cmQ);
         cmSnap.forEach(async (docSnap) => await deleteDoc(doc(db, "Comments", docSnap.id)));
 
-        const rvQ = query(collection(db, "Reviews"), where("moviesId", "==", id));
+        const rvQ = query(collection(db, "Reviews"), where("movieID", "==", id));
         const rvSnap = await getDocs(rvQ);
         rvSnap.forEach(async (docSnap) => await deleteDoc(doc(db, "Reviews", docSnap.id)));
     } 
@@ -89,16 +89,16 @@ export const deleteDocument = async (collectionName, values) => {
             let needsUpdate = false;
             let updatedData = {};
 
-            if (collectionName === "Characters" && movieData.list_Character?.includes(id)) {
-                updatedData.list_Character = movieData.list_Character.filter(e => e !== id);
+            if (collectionName === "Characters" && movieData.listCharacter?.includes(id)) {
+                updatedData.listCharacter = movieData.listCharacter.filter(e => e !== id);
                 needsUpdate = true;
             }
-            if (collectionName === "Actors" && movieData.list_Actor?.includes(id)) {
-                updatedData.list_Actor = movieData.list_Actor.filter(e => e !== id);
+            if (collectionName === "Actors" && movieData.listActor?.includes(id)) {
+                updatedData.listActor = movieData.listActor.filter(e => e !== id);
                 needsUpdate = true;
             }
-            if (collectionName === "Categories" && movieData.list_Category?.includes(id)) {
-                updatedData.list_Category = movieData.list_Category.filter(e => e !== id);
+            if (collectionName === "Categories" && movieData.listCategory?.includes(id)) {
+                updatedData.listCategory = movieData.listCategory.filter(e => e !== id);
                 needsUpdate = true;
             }
             if (collectionName === "Authors") {
@@ -110,8 +110,8 @@ export const deleteDocument = async (collectionName, values) => {
                     updatedData.author_id = "";
                     needsUpdate = true;
                 }
-                if (movieData.list_Author?.includes(id)) {
-                    updatedData.list_Author = movieData.list_Author.filter(e => e !== id);
+                if (movieData.listAuthor?.includes(id)) {
+                    updatedData.listAuthor = movieData.listAuthor.filter(e => e !== id);
                     needsUpdate = true;
                 }
             }

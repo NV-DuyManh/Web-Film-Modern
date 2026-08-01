@@ -11,7 +11,7 @@ import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
+import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 
@@ -35,7 +35,7 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
     const getUserPlanInfo = (row) => {
         if (row.role === 'admin' || row.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'fuchsia' };
         
-        const userSubs = subscriptions.filter(p => p.userId === row.id && getExpiryDate(p) > new Date());
+        const userSubs = subscriptions.filter(p => p.userID === row.id && getExpiryDate(p) > new Date());
         if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
 
         const highestSub = userSubs.reduce((max, item) => {
@@ -103,7 +103,7 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
             password: row.password || "", 
             phone: row.phone || "", 
             avatarUrl: row.avatarUrl || "", 
-            sexId: row.sexId || "", 
+            sexID: row.sexID || "", 
             role: row.role || 'user'
         });
     };
@@ -195,9 +195,9 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                         {row.email}
                                     </td>
                                     <td className="table-cell text-center">
-                                        {row.sexId && (
-                                            <p className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${ row.sexId === 'Male' ? 'bg-sky-500/15 text-sky-400 border border-sky-500/30 shadow-[0_0_8px_rgba(14,165,233,0.2)]' : row.sexId === 'Female' ? 'bg-pink-500/15 text-pink-400 border border-pink-500/30 shadow-[0_0_8px_rgba(236,72,153,0.2)]' : 'bg-violet-500/15 text-violet-400 border border-violet-500/30 shadow-[0_0_8px_rgba(139,92,246,0.2)]' }`}>
-                                                {row.sexId}
+                                        {row.sexID && (
+                                            <p className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${ row.sexID === 'Male' ? 'bg-sky-500/15 text-sky-400 border border-sky-500/30 shadow-[0_0_8px_rgba(14,165,233,0.2)]' : row.sexID === 'Female' ? 'bg-pink-500/15 text-pink-400 border border-pink-500/30 shadow-[0_0_8px_rgba(236,72,153,0.2)]' : 'bg-violet-500/15 text-violet-400 border border-violet-500/30 shadow-[0_0_8px_rgba(139,92,246,0.2)]' }`}>
+                                                {row.sexID}
                                             </p>
                                         )}
                                     </td>

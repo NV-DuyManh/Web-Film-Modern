@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { fetchDocumentsRealtime } from '../services/firebaseService';
 
-export const CategoriesContext = createContext();
+export const CategoryContext = createContext();
 function CategoryProvider({children}) {
     const [categories, setCategories] = useState([]);
 
@@ -12,9 +12,9 @@ function CategoryProvider({children}) {
         return () => unsubcribe();
     }, []);
     return (
-        <CategoriesContext.Provider value={categories}>
+        <CategoryContext.Provider value={categories}>
             {children}
-        </CategoriesContext.Provider>
+        </CategoryContext.Provider>
     );
 }
 

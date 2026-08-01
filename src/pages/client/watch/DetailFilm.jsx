@@ -4,10 +4,12 @@ import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCr
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { AuthorContext } from '../../../contexts/AuthorProvider';
 import { CharacterContext } from '../../../contexts/CharacterProvider';
-import { getObjectById } from '../../../services/firebaseReponse';
+import { getObjectById } from '../../../services/firebaseResponse';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { EpisodeContext } from '../../../contexts/EpisodeProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
+import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
+import { RentMovieContext } from '../../../contexts/RentMovieProvider';
 import { updateDocument } from '../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ListEpisodes from './ListEpisodes';
@@ -23,6 +25,10 @@ export default function DetailFilm() {
     const episodes = useContext(EpisodeContext);
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
+    // goi subscriptions => gói đăng ký 
+    const subscriptions = useContext(SubscriptionContext) || [];
+    // all thue
+    const allRent = useContext(RentMovieContext) || [];
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -39,7 +45,37 @@ export default function DetailFilm() {
         return found;
     }, [movies, episodes, id]);
 
+    const levelUser = useMemo(() => {
+        if (!isLogin || !subscriptions || !plans) return 0;
+        const allPlan = subscriptions.filter(p => {
+            if (p.userID != isLogin.id) return false;
+            if (!p.expiryDate) return false;
+            const expiry = typeof p.expiryDate.toDate === 'function'
+                ? p.expiryDate.toDate()
+                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
+            return expiry > new Date();
+        }); 
+        const levelMax = allPlan.reduce((max, item) => {
+            const plan = getObjectById(plans, item.planID);
+            return plan && plan.level > max ? plan.level : max;
+        }, 0);
+        return levelMax >= getObjectById(plans, movie.planID)?.level;
+    }, [subscriptions, isLogin, plans, movie]);
 
+    const checkRent = useMemo(() => {
+        const check = allRent.find(p => {
+            const expiry = typeof p.expiryDate.toDate === 'function'
+                ? p.expiryDate.toDate()
+                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
+            return p.movieID == id && p.userID == isLogin.id && expiry > new Date();
+        });
+        return check;
+    }, [isLogin, allRent, id]);
+  console.log(allRent);
+  
+    const checkShow = useMemo(() => {
+        return levelUser || checkRent
+    }, [levelUser, checkRent])
 
     const topMovies = movies?.slice(0, 10) || [];
 
@@ -51,7 +87,7 @@ export default function DetailFilm() {
 
     const movieCharacters = useMemo(() => {
         if (!movie) return [];
-        let charList = movie.character || movie.characters || movie.list_character || movie.list_Character;
+        let charList = movie.character || movie.characters || movie.listCharacter || movie.listCharacter;
         if (Array.isArray(charList) && charList.length > 0) {
             const resolved = charList.map(c => typeof c === 'string' ? getObjectById(characters, c) : c).filter(Boolean);
             if (resolved.length > 0) return resolved;
@@ -80,8 +116,8 @@ export default function DetailFilm() {
     }
 
     const isFavorite = useMemo(() => {
-        if (!isLogin || !isLogin.list_Favorite || !realMovieId) return false;
-        return isLogin.list_Favorite.includes(realMovieId);
+        if (!isLogin || !isLogin.listFavorite || !realMovieId) return false;
+        return isLogin.listFavorite.includes(realMovieId);
     }, [isLogin, realMovieId]);
 
     const handleFavorite = async () => {
@@ -90,14 +126,14 @@ export default function DetailFilm() {
             return;
         }
         try {
-            const currentFavorites = isLogin.list_Favorite || [];
+            const currentFavorites = isLogin.listFavorite || [];
             let newFavorites;
             if (currentFavorites.includes(realMovieId)) {
                 newFavorites = currentFavorites.filter(id => id !== realMovieId);
             } else {
                 newFavorites = [...currentFavorites, realMovieId];
             }
-            await updateDocument("Users", { id: isLogin.id, list_Favorite: newFavorites });
+            await updateDocument("Users", { id: isLogin.id, listFavorite: newFavorites });
         } catch (error) {
             console.error("Error updating favorites", error);
         }
@@ -108,7 +144,7 @@ export default function DetailFilm() {
             Swal.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim', 'warning');
             return;
         }
-        const currentLists = isLogin.list_Film || [];
+        const currentLists = isLogin.listFilm || [];
         const updatedLists = currentLists.map(list => {
             if (list.id === listId) {
                 const currentMovies = list.movies || [];
@@ -122,7 +158,7 @@ export default function DetailFilm() {
         });
 
         try {
-            await updateDocument("Users", { id: isLogin.id, list_Film: updatedLists });
+            await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
         } catch (error) {
             console.error("Error updating lists", error);
         }
@@ -169,7 +205,7 @@ export default function DetailFilm() {
                                 {movie.otherName}
                             </h1>
                             <h2 className="text-sm text-yellow-500 font-medium">
-                                { movie.name}
+                                {movie.name}
                             </h2>
                         </div>
 
@@ -187,7 +223,7 @@ export default function DetailFilm() {
                             </p>
                             <p className="text-slate-400"><p className="font-bold text-white inline">Thời lượng:</p> {movie.time || 'Đang cập nhật'}</p>
                             <p className="text-slate-400"><p className="font-bold text-white inline">Quốc gia:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</p></p>
-                            <p className="text-slate-400"><p className="font-bold text-white inline">Đạo diễn:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{Array.isArray(movie.list_Author) && movie.list_Author.length > 0 ? movie.list_Author.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</p></p>
+                            <p className="text-slate-400"><p className="font-bold text-white inline">Đạo diễn:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{Array.isArray(movie.listAuthor) && movie.listAuthor.length > 0 ? movie.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</p></p>
                         </div>
 
                         <div className="mt-4">
@@ -263,22 +299,11 @@ export default function DetailFilm() {
 
                             <div className="flex flex-wrap items-center justify-between gap-4">
                                 <div className="flex flex-wrap items-center gap-8">
-                                    <Link to={`/play/${id}`} className="flex items-center gap-2 bg-[#facc15] hover:bg-yellow-500 text-black px-8 py-3 rounded-full font-bold transition-colors shadow-[0_0_15px_rgba(250,204,21,0.3)]">
+                                    {checkShow ? <Link to={`/play/${id}`} className="flex items-center gap-2 bg-[#facc15] hover:bg-yellow-500 text-black px-8 py-3 rounded-full font-bold transition-colors shadow-[0_0_15px_rgba(250,204,21,0.3)]">
                                         <FaPlay className="text-sm" /> Xem Ngay
-                                    </Link>
-
-                                    {(() => {
-                                        const moviePlan = getObjectById(plans, movie.planID);
-                                        if (moviePlan && Number(moviePlan.level) > 0) {
-                                            return (
-                                                <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:shadow-[0_6px_20px_rgba(244,63,94,0.4)] hover:-translate-y-0.5">
-                                                    <FaCrown className="text-sm" /> Mua phim
-                                                </button>
-                                            );
-                                        }
-                                        return null;
-                                    })()}
-
+                                    </Link> : <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5">
+                                        <FaCrown className="text-sm" /> Mua phim
+                                    </button>}
                                     <button onClick={handleFavorite} className={`flex flex-col items-center gap-1.5 transition-colors ${isFavorite ? 'text-red-500 hover:text-red-400' : 'text-slate-400 hover:text-white'}`}>
                                         <FaHeart className="text-xl" />
                                         <p className="text-[10px] font-bold uppercase inline">Yêu thích</p>
@@ -295,13 +320,13 @@ export default function DetailFilm() {
                                                     <span className="text-xs font-bold text-white">Lưu vào danh sách</span>
                                                     <button onClick={() => setShowListDropdown(false)} className="text-slate-400 hover:text-white text-lg">&times;</button>
                                                 </div>
-                                                {(!isLogin?.list_Film || isLogin.list_Film.length === 0) ? (
+                                                {(!isLogin?.listFilm || isLogin.listFilm.length === 0) ? (
                                                     <div className="p-4 text-xs text-slate-400 text-center">
-                                                        Chưa có danh sách nào.<br/>Vui lòng tạo tại trang Danh Sách.
+                                                        Chưa có danh sách nào.<br />Vui lòng tạo tại trang Danh Sách.
                                                     </div>
                                                 ) : (
                                                     <div className="flex flex-col max-h-48 overflow-y-auto custom-scrollbar p-2 gap-1">
-                                                        {isLogin.list_Film.map(list => {
+                                                        {isLogin.listFilm.map(list => {
                                                             const inList = list.movies?.includes(realMovieId);
                                                             return (
                                                                 <button key={list.id} onClick={() => handleToggleList(list.id)} className="flex items-center gap-3 p-2 hover:bg-slate-700/50 rounded-xl transition-colors text-left text-sm text-slate-200 group">

@@ -7,7 +7,7 @@ import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaShieldAlt, FaListUl } f
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
+import { getObjectById } from '../../../../services/firebaseResponse';
 import { Link } from 'react-router-dom';
 
 export default function FilmNew() {

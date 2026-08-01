@@ -5,7 +5,7 @@ import { MdOutlineSubtitles, MdMic, MdOutlineVoiceChat } from 'react-icons/md';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 
 import { ActorContext } from '../../../../contexts/ActorProvider';
-import { CategoriesContext } from '../../../../contexts/CategoryProvider';
+import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
@@ -108,7 +108,7 @@ const AvatarRow = ({ items, list, fallback, color = "cyan" }) => {
 export default function ModalViewMovie({ open, handleClose, movie }) {
     const categoryTypes = useContext(CategoryTypeContext);
     const actorsList = useContext(ActorContext);
-    const categoriesList = useContext(CategoriesContext);
+    const categoriesList = useContext(CategoryContext);
     const authorsList = useContext(AuthorContext);
     const charactersList = useContext(CharacterContext);
     const plansList = useContext(PlanContext);
@@ -125,7 +125,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
     };
 
     const currentPlan = plansList?.find(p => p.id === movie.planID);
-    const currentCategoryType = categoryTypes?.find(c => c.id === movie.category_Type_Id);
+    const currentCategoryType = categoryTypes?.find(c => c.id === movie.categoryTypeID);
 
     return (
         <Dialog
@@ -218,10 +218,10 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                         {/* Title area */}
                         <div className="flex-1 pb-3">
                             <h2 className="text-2xl md:text-4xl font-black glow-text tracking-tight mb-2" style={{ paddingBottom: '0.1em' }}>
-                                {movie.name}
+                                {movie.otherName || movie.name}
                             </h2>
                             {movie.otherName && (
-                                <p className="text-gray-400 text-sm italic font-medium mb-3">{movie.otherName}</p>
+                                <p className="text-gray-400 text-sm italic font-medium mb-3">{movie.name}</p>
                             )}
                             <div className="flex flex-wrap gap-2">
                                 <NeonBadge text={movie.status || "N/A"} color={getStatusColor(movie.status)} />
@@ -251,7 +251,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <GlowCard title="Categories" icon={BiSolidCategoryAlt} color="purple">
                                 <div className="flex flex-wrap gap-2">
-                                    {movie.list_Category?.map((catId, idx) => {
+                                    {movie.listCategory?.map((catId, idx) => {
                                         const cat = categoriesList?.find(c => c.id === catId);
                                         return cat ? (
                                             <p key={idx} className="px-3 py-1 bg-purple-500/10 text-purple-300 border border-purple-500/25 rounded-lg text-[11px] font-bold tracking-wide uppercase hover:bg-purple-500/20 hover:border-purple-400/40 hover:-translate-y-1 hover:shadow-[0_0_12px_rgba(168,85,247,0.2)] transition-all duration-300 cursor-default inline">
@@ -259,7 +259,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                                             </p>
                                         ) : null;
                                     })}
-                                    {(!movie.list_Category || movie.list_Category.length === 0) && <p className="text-gray-600 text-xs italic inline">None</p>}
+                                    {(!movie.listCategory || movie.listCategory.length === 0) && <p className="text-gray-600 text-xs italic inline">None</p>}
                                 </div>
                             </GlowCard>
 
@@ -288,13 +288,13 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                         {/* Grid: Directors + Actors + Characters */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <GlowCard title="Directors" icon={FaUserTie} color="yellow">
-                                <AvatarRow items={movie.list_Author} list={authorsList} fallback={Logo5} color="yellow" />
+                                <AvatarRow items={movie.listAuthor} list={authorsList} fallback={Logo5} color="yellow" />
                             </GlowCard>
                             <GlowCard title="Actors" icon={FaUsers} color="pink">
-                                <AvatarRow items={movie.list_Actor} list={actorsList} fallback={Logo5} color="pink" />
+                                <AvatarRow items={movie.listActor} list={actorsList} fallback={Logo5} color="pink" />
                             </GlowCard>
                             <GlowCard title="Characters" icon={FaUserNinja} color="green">
-                                <AvatarRow items={movie.list_Character} list={charactersList} fallback={Logo5} color="green" />
+                                <AvatarRow items={movie.listCharacter} list={charactersList} fallback={Logo5} color="green" />
                             </GlowCard>
                         </div>
 

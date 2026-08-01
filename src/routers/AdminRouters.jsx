@@ -1,7 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-const DashBoard = lazy(() => import('../pages/admin/dashBoard/DashBoard'));
+const DashBoard = lazy(() => import('../pages/admin/dashboard/DashBoard'));
 const Categories = lazy(() => import('../pages/admin/metaData/categories/Categories'));
 const CategoriesType = lazy(() => import('../pages/admin/metaData/categoryType/CategoriesType'));
 const MoviesList = lazy(() => import('../pages/admin/movies/moviesList/MoviesList'));
@@ -33,14 +33,14 @@ function AdminRouters(props) {
     const adminRouter = [
         {
             path: "/",
-            element: <DashBoard />
+            element: <dashboard />
         },
         {
             path: "/categories",
             element: <Categories />
         },
         {
-            path: "/categoriesType",
+            path: "/categoryTypes",
             element: <CategoriesType />
         },
         {

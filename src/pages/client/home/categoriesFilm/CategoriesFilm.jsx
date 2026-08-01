@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import { FaChevronRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import { CategoriesContext } from '../../../../contexts/CategoryProvider';
+import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 
 function CategoriesFilm() {
-    const categories = useContext(CategoriesContext) || [];
+    const categories = useContext(CategoryContext) || [];
     const movies = useContext(MovieContext) || [];
 
     const validCategories = categories.filter(c => 
-        movies.some(m => (m.list_Category || []).some(catId => String(catId) === String(c.id)))
+        movies.some(m => (m.listCategory || []).some(catId => String(catId) === String(c.id)))
     );
 
     const categoryStyles = [

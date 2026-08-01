@@ -178,7 +178,7 @@ function Episodes() {
 
     const filterOptions = createFilterOptions({
         matchFrom: 'any',
-        stringify: (option) => option.name + " " + (option.nameOrigin || "")
+        stringify: (option) => option.name + " " + (option.otherName || "")
     });
 
     return (
@@ -192,7 +192,7 @@ function Episodes() {
                     <Autocomplete
                         options={movies}
                         filterOptions={filterOptions}
-                        getOptionLabel={(opt) => opt?.name || ""}
+                        getOptionLabel={(opt) => opt?.otherName || opt?.name || ""}
                         value={selectedMovie}
                         onChange={(e, val) => setSelectedMovie(val)}
                         classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}

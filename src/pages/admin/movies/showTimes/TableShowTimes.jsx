@@ -21,8 +21,8 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
 
     const start = (page - 1) * rowsPerPage;
 
-    const getMovieName = (movieId) => {
-        return movies?.find(e => e.id === movieId)?.name || "N/A";
+    const getMovie = (movieID) => {
+        return movies?.find(e => e.id === movieID);
     }
 
     const formatDateTime = (value) => {
@@ -63,7 +63,7 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
 
         return showTimes
             ?.filter(e =>
-                getMovieName(e?.movieId)?.toLowerCase().includes(keyword) ||
+                (getMovie(e?.movieID)?.otherName || getMovie(e?.movieID)?.name || "N/A")?.toLowerCase().includes(keyword) ||
                 e?.roomName?.toLowerCase().includes(keyword) ||
                 formatDateTime(e?.time)?.toLowerCase().includes(keyword)
             )
@@ -155,8 +155,9 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
                                         {start + index + 1}
                                     </td>
 
-                                    <td className="table-cell text-center font-bold text-cyan-400">
-                                        {getMovieName(row.movieId)}
+                                    <td className="table-cell text-center">
+                                        <p className="font-bold text-white text-[13px] mb-1">{getMovie(row.movieID)?.otherName || getMovie(row.movieID)?.name || "N/A"}</p>
+                                        <p className="text-gray-400 text-[11px] italic">{getMovie(row.movieID)?.name}</p>
                                     </td>
 
                                     <td className="table-cell text-center">
@@ -208,7 +209,7 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
                 open={open}
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE SHOWTIME"}
-                contentDelete={`Are you sure you want to delete the showtime of "${getMovieName(showTime?.movieId)}"?`}
+                contentDelete={`Are you sure you want to delete the showtime of "${getMovie(showTime?.movieID)?.otherName || getMovie(showTime?.movieID)?.name || "N/A"}"?`}
             />
             
             <ModalDelete

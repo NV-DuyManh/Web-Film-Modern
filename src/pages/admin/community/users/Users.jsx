@@ -6,8 +6,8 @@ import ModalViewUser from './ModalViewUser';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import LOGO from "../../../../assets/Logo.png";
 
-const inner = { name: "", email: "", password: "", phone: "", avatarUrl: LOGO, sexId: "", role: "user" };
-const innerError = { name: "", email: "", password: "", phone: "", avatarUrl: "", sexId: "", role: "" };
+const inner = { name: "", email: "", password: "", phone: "", avatarUrl: LOGO, sexID: "", role: "user" };
+const innerError = { name: "", email: "", password: "", phone: "", avatarUrl: "", sexID: "", role: "" };
 
 const getBase64FromUrl = (url) => {
     return new Promise((resolve) => {

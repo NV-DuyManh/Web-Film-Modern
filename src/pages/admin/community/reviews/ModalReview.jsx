@@ -44,27 +44,27 @@ export default function ModalReview({ open, onChangeInput, handleClose, addRevie
                     getOptionLabel={(option) => option.name || ""}
                     fullWidth
                     classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
-                    value={movies?.find(m => m.id === review.moviesId) || null}
+                    value={movies?.find(m => m.id === review.movieID) || null}
                     onChange={(e, value) => {
-                        setReview(prev => ({ ...prev, moviesId: value ? value.id : "" }));
-                        setError(prev => ({ ...prev, moviesId: "" }));
+                        setReview(prev => ({ ...prev, movieID: value ? value.id : "" }));
+                        setError(prev => ({ ...prev, movieID: "" }));
                     }}
-                    renderInput={(params) => <TextField {...params} label="Movie" helperText={error?.moviesId} error={!!error?.moviesId} />}
+                    renderInput={(params) => <TextField {...params} label="Movie" helperText={error?.movieID} error={!!error?.movieID} />}
                 />
 
                 <Autocomplete
                     className="modal-input-x"
                     disablePortal
                     options={users || []}
-                    getOptionLabel={(option) => option.displayName || option.name || option.email || ""}
+                    getOptionLabel={(option) => option.name || option.name || option.email || ""}
                     fullWidth
                     classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
-                    value={users?.find(u => u.id === review.userId) || null}
+                    value={users?.find(u => u.id === review.userID) || null}
                     onChange={(e, value) => {
-                        setReview(prev => ({ ...prev, userId: value ? value.id : "" }));
-                        setError(prev => ({ ...prev, userId: "" }));
+                        setReview(prev => ({ ...prev, userID: value ? value.id : "" }));
+                        setError(prev => ({ ...prev, userID: "" }));
                     }}
-                    renderInput={(params) => <TextField {...params} label="User" helperText={error?.userId} error={!!error?.userId} />}
+                    renderInput={(params) => <TextField {...params} label="User" helperText={error?.userID} error={!!error?.userID} />}
                 />
 
                 <div className="flex flex-col gap-2 mt-2 px-1">

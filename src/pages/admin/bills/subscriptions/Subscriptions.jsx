@@ -4,7 +4,7 @@ import ModalSubscriptions from "./ModalSubscriptions";
 import TableSubscriptions from "./TableSubscriptions";
 import { addDocument, updateDocument } from "../../../../services/firebaseService";
 
-const inner = { transactionID: "", userId: "", planID: "", paymentMethod: "", price: 0, startDate: "", expiryDate: "", status: "success" };
+const inner = { transactionID: "", userID: "", planID: "", paymentMethod: "", price: 0, startDate: "", expiryDate: "", status: "success" };
 
 function Subscriptions() {
     const [open, setOpen] = useState(false);
@@ -37,7 +37,7 @@ function Subscriptions() {
     const validation = () => {
         const newError = {};
         newError.transactionID = subscription.transactionID ? "" : "Please enter a transaction ID";
-        newError.userId = subscription.userId ? "" : "Please select a user";
+        newError.userID = subscription.userID ? "" : "Please select a user";
         newError.planID = subscription.planID ? "" : "Please select a plan";
         newError.paymentMethod = subscription.paymentMethod ? "" : "Please select a payment method";
         newError.price = subscription.price !== "" ? "" : "Please enter a price";

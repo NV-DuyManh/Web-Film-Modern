@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { FaTimes,  FaCloudUploadAlt, FaExchangeAlt, FaLink } from 'react-icons/fa';
-import { COUNTRIES } from '../../../../utils/Contants';
+import { COUNTRIES } from '../../../../utils/Constants';
 import LOGO from "../../../../assets/Logo.png";
 
 const Transition = React.forwardRef(function Transition(props, ref) {

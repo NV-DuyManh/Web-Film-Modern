@@ -5,9 +5,9 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import { IconButton, Tooltip } from '@mui/material';
 import { FaUsers, FaEye } from 'react-icons/fa';
 import { ActorContext } from '../../../../contexts/ActorProvider';
-import { getObjectById } from '../../../../services/firebaseReponse';
+import { getObjectById } from '../../../../services/firebaseResponse';
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
-import { CategoriesContext } from '../../../../contexts/CategoryProvider';
+import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import ModalDelete from '../../../../components/admin/ModalDelete';
@@ -43,7 +43,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
 
     const actors = useContext(ActorContext);
     const characters = useContext(CharacterContext);
-    const categories = useContext(CategoriesContext);
+    const categories = useContext(CategoryContext);
 
     const dataSearch = useMemo(() =>
         movies?.filter(e => searchTV(e?.name).includes(searchTV(search)) || searchTV(e?.otherName).includes(searchTV(search))),
@@ -84,8 +84,8 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
     };
 
     const renderEntityTooltip = (row) => {
-        const actorItems = (row.list_Actor || []).map(id => getObjectById(actors, id)).filter(Boolean);
-        const characterItems = (row.list_Character || []).map(id => getObjectById(characters, id)).filter(Boolean);
+        const actorItems = (row.listActor || []).map(id => getObjectById(actors, id)).filter(Boolean);
+        const characterItems = (row.listCharacter || []).map(id => getObjectById(characters, id)).filter(Boolean);
         const totalItems = actorItems.length + characterItems.length;
 
         const tooltipWidth = totalItems <= 1 ? "w-[145px]" : totalItems === 2 ? "w-47.5" : totalItems <= 4 ? "w-65" : "w-95";
@@ -132,7 +132,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
     };
 
     const renderCategoryTooltip = (row) => {
-        const categoryItems = (row.list_Category || []).map(id => getObjectById(categories, id)).filter(Boolean);
+        const categoryItems = (row.listCategory || []).map(id => getObjectById(categories, id)).filter(Boolean);
         return (
             <div className="w-fit min-w-52 max-w-95 overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/8 bg-white/5">
@@ -208,8 +208,8 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                         </td>
 
                                         <td className="table-cell text-center min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed">
-                                            <p className="font-bold text-white text-[13px] mb-1">{row.name}</p>
-                                            <p className="text-gray-400 text-[11px] italic">{row.otherName || "N/A"}</p>
+                                            <p className="font-bold text-white text-[13px] mb-1">{row.otherName || "N/A"}</p>
+                                            <p className="text-gray-400 text-[11px] italic">{row.name}</p>
                                         </td>
 
                                         <td className="table-cell text-center whitespace-normal">
