@@ -7,6 +7,7 @@ import { FaUsers, FaEye } from 'react-icons/fa';
 import { ActorContext } from '../../../../contexts/ActorProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { CharacterContext } from '../../../../contexts/CharacterProvider';
+import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
@@ -43,6 +44,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
 
     const actors = useContext(ActorContext);
     const characters = useContext(CharacterContext);
+    const authors = useContext(AuthorContext);
     const categories = useContext(CategoryContext);
 
     const dataSearch = useMemo(() =>
@@ -85,14 +87,15 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
 
     const renderEntityTooltip = (row) => {
         const actorItems = (row.listActor || []).map(id => getObjectById(actors, id)).filter(Boolean);
+        const authorItems = (row.listAuthor || []).map(id => getObjectById(authors, id)).filter(Boolean);
         const characterItems = (row.listCharacter || []).map(id => getObjectById(characters, id)).filter(Boolean);
-        const totalItems = actorItems.length + characterItems.length;
+        const totalItems = actorItems.length + authorItems.length + characterItems.length;
 
         const tooltipWidth = totalItems <= 1 ? "w-[145px]" : totalItems === 2 ? "w-47.5" : totalItems <= 4 ? "w-65" : "w-95";
 
         const renderItem = (item, type) => {
-            const hoverRing = type === 'actor' ? 'group-hover:ring-green-400 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.6)]' : 'group-hover:ring-pink-400 group-hover:shadow-[0_0_15px_rgba(244,114,182,0.6)]';
-            const hoverText = type === 'actor' ? 'group-hover:text-green-300 group-hover:drop-shadow-[0_0_5px_rgba(74,222,128,0.8)]' : 'group-hover:text-pink-300 group-hover:drop-shadow-[0_0_5px_rgba(244,114,182,0.8)]';
+            const hoverRing = type === 'actor' ? 'group-hover:ring-green-400 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.6)]' : type === 'author' ? 'group-hover:ring-amber-400 group-hover:shadow-[0_0_15px_rgba(251,191,36,0.6)]' : 'group-hover:ring-pink-400 group-hover:shadow-[0_0_15px_rgba(244,114,182,0.6)]';
+            const hoverText = type === 'actor' ? 'group-hover:text-green-300 group-hover:drop-shadow-[0_0_5px_rgba(74,222,128,0.8)]' : type === 'author' ? 'group-hover:text-amber-300 group-hover:drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]' : 'group-hover:text-pink-300 group-hover:drop-shadow-[0_0_5px_rgba(244,114,182,0.8)]';
 
             return (
                 <div key={item.id} className="group flex w-17 flex-col items-center cursor-pointer">
@@ -113,14 +116,20 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                     </div>
                 </div>
                 <div className="max-h-85 overflow-y-auto px-2.5 py-2.5">
-                    {actorItems.length > 0 && (
+                    {authorItems.length > 0 && (
                         <div className="rounded-xl bg-white/2.5 px-2.5 py-2.5">
+                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-amber-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Authors</p></div>
+                            <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{authorItems.map(item => renderItem(item, 'author'))}</div>
+                        </div>
+                    )}
+                    {actorItems.length > 0 && (
+                        <div className={`${authorItems.length > 0 ? "mt-2.5" : ""} rounded-xl bg-white/2.5 px-2.5 py-2.5`}>
                             <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-green-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Actors</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{actorItems.map(item => renderItem(item, 'actor'))}</div>
                         </div>
                     )}
                     {characterItems.length > 0 && (
-                        <div className={`${actorItems.length > 0 ? "mt-2.5" : ""} rounded-xl bg-white/2.5 px-2.5 py-2.5`}>
+                        <div className={`${authorItems.length > 0 || actorItems.length > 0 ? "mt-2.5" : ""} rounded-xl bg-white/2.5 px-2.5 py-2.5`}>
                             <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-pink-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Characters</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{characterItems.map(item => renderItem(item, 'character'))}</div>
                         </div>

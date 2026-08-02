@@ -120,7 +120,7 @@ function Episodes() {
 
         setLoading(true);
         setProgress(5);
-        
+
         try {
             const lines = bulkText.split('\n').filter(line => line.trim() !== '');
             const total = lines.length;
@@ -129,11 +129,11 @@ function Episodes() {
             for (let i = 0; i < total; i++) {
                 const line = lines[i];
                 const parts = line.split('|');
-                
+
                 if (parts.length >= 2) {
                     const epName = parts[0].trim();
                     const url = parts.slice(1).join('|').trim();
-                    
+
                     const numMatch = epName.match(/\d+/);
                     const numberEpisode = numMatch ? parseInt(numMatch[0]) : (i + 1);
 
@@ -153,7 +153,7 @@ function Episodes() {
                         await addDocument("Episodes", submitData);
                     }
                 }
-                
+
                 count++;
                 setProgress(Math.floor((count / total) * 100));
             }
@@ -165,7 +165,7 @@ function Episodes() {
                 setProgress(0);
                 setBulkText("");
             }, 1000);
-            
+
         } catch (err) {
             console.error(err);
             alert("Có lỗi xảy ra trong quá trình thêm hàng loạt!");
@@ -183,12 +183,12 @@ function Episodes() {
 
     return (
         <div>
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 p-4 bg-black/20 relative z-10">
-                <h1 className="font-bold text-3xl glow-text tracking-wide whitespace-nowrap m-0 pt-1">
+            <div className="flex items-center justify-between gap-6 p-4 bg-black/20 relative z-10">
+                <h1 className="font-bold text-3xl glow-text tracking-wide whitespace-nowrap m-0">
                     Episode Manager
                 </h1>
-                
-                <div className="w-full lg:flex-1 lg:max-w-4xl">
+
+                <div className="w-full flex-1 max-w-4xl">
                     <Autocomplete
                         options={movies}
                         filterOptions={filterOptions}
@@ -269,7 +269,7 @@ function Episodes() {
                             />
                             <BsSearch className="search-icon" />
                         </div>
-                        
+
                         <div className="flex items-center justify-end gap-4 w-full sm:w-auto flex-1">
                             {selectedMovie && (
                                 <span className="text-sm font-bold text-cyan-400 bg-cyan-400/10 px-3 py-1.5 rounded-lg border border-cyan-400/20 whitespace-nowrap hidden sm:block">

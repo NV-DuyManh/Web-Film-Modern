@@ -7,7 +7,7 @@ function Search({ handleClickOpen, name, tuKhoa, onChangeSearch }) {
 
     return (
         <div className='grid lg:grid-cols-8 gap-3 p-4 bg-black/20 text-white items-center'>
-            <h1 className='font-bold text-3xl glow-text lg:col-span-2 leading-none flex items-center m-0'>{name}</h1>
+            <h1 className='font-bold text-3xl glow-text lg:col-span-2 m-0 flex items-center'>{name}</h1>
 
             <div className="search lg:col-span-4">
                 <input

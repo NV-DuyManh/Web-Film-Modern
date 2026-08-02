@@ -2,7 +2,8 @@ import React, { useContext, useState, useRef, useEffect } from 'react';
 import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown, FaChevronDown } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
 import { HiMenuAlt3 } from 'react-icons/hi';
-import { IoClose } from 'react-icons/io5';
+import { IoClose, IoCloseCircle } from 'react-icons/io5';
+import SearchHeader from './SearchHeader';
 import { LISTCLIENT } from '../../../utils/Constants';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo2 from '../../../assets/Logo2.png';
@@ -27,6 +28,8 @@ function HeaderClient() {
     const [openLogin, setOpenLogin] = useState(false);
     const [openRegister, setOpenRegister] = useState(false);
     const [isSearching, setIsSearching] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const searchContainerRef = useRef(null);
     const { isLogin, handleLogout, globalAvatarPreview } = useContext(AuthContext);
     const subscriptions = useContext(SubscriptionContext) || [];
     const plans = useContext(PlanContext) || [];
@@ -144,12 +147,32 @@ function HeaderClient() {
                     <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
                 </a>
 
-                <div className="relative min-w-0 flex-1 md:max-w-87.5 lg:max-w-112.5 min-[1200px]:max-w-87.5 xl:max-w-112.5 transition-[max-width] duration-500 ease-out md:mx-auto group">
+                <div ref={searchContainerRef} className="relative min-w-0 flex-1 md:max-w-87.5 lg:max-w-112.5 min-[1200px]:max-w-87.5 xl:max-w-112.5 transition-[max-width] duration-500 ease-out md:mx-auto group">
                     <input
                         className="peer w-full min-w-0 rounded-full bg-transparent px-5 py-2.5 pr-12 text-sm font-medium text-white outline-none transition-all duration-300 placeholder:text-slate-300 border border-[#00f2fe]/50 shadow-[0_0_10px_rgba(0,242,254,0.3),inset_0_0_5px_rgba(0,242,254,0.1)] hover:border-green-500/70 hover:shadow-[0_0_15px_rgba(34,197,94,0.5),inset_0_0_5px_rgba(34,197,94,0.2)] focus:border-[#ff00ff]/80 focus:shadow-[0_0_20px_rgba(255,0,255,0.6),inset_0_0_8px_rgba(255,0,255,0.2)] sm:px-5 sm:py-2.5 sm:pr-12"
-                        type="text" placeholder="Tìm kiếm phim..." onFocus={() => setIsSearching(true)} onBlur={() => setIsSearching(false)}
+                        type="text" placeholder="Tìm kiếm phim..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onFocus={() => setIsSearching(true)}
+                        onBlur={(e) => {
+                            if (searchContainerRef.current && !searchContainerRef.current.contains(e.relatedTarget)) {
+                                setIsSearching(false);
+                            }
+                        }}
+                        onKeyDown={(e) => { if (e.key === 'Escape') { setSearchQuery(''); setIsSearching(false); e.target.blur(); } }}
                     />
-                    <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-[#ff00ff] peer-focus:drop-shadow-[0_0_12px_rgba(255,0,255,0.8)]" />
+                    {searchQuery ? (
+                        <button onClick={() => { setSearchQuery(''); }} className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer z-10">
+                            <IoCloseCircle />
+                        </button>
+                    ) : (
+                        <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-[#ff00ff] peer-focus:drop-shadow-[0_0_12px_rgba(255,0,255,0.8)]" />
+                    )}
+                    <SearchHeader
+                        searchQuery={searchQuery}
+                        isOpen={isSearching}
+                        onClose={() => { setSearchQuery(''); setIsSearching(false); }}
+                    />
                 </div>
 
                 <div ref={menuRef} className={`shrink-0 items-center gap-1.5 max-[1199px]:absolute max-[1199px]:grid max-[1199px]:grid-cols-2 max-[1199px]:gap-1 min-[1200px]:flex max-[1199px]:bg-[#0a192f]/98 max-[1199px]:backdrop-blur-2xl max-[1199px]:w-[calc(100%-24px)] max-[1199px]:max-w-150 max-[1199px]:left-3 sm:max-[1199px]:left-6 md:max-[1199px]:left-12 lg:max-[1199px]:left-24 max-[1199px]:right-auto bottom-0 max-[1199px]:translate-y-full max-[1199px]:px-4 max-[1199px]:py-4 max-[1199px]:border max-[1199px]:border-white/10 max-[1199px]:rounded-2xl max-[1199px]:shadow-[0_15px_40px_rgba(0,0,0,0.8)] max-[1199px]:mt-2 max-[1199px]:overflow-visible ${openMenu ? "max-[1199px]:grid min-[1200px]:flex" : "max-[1199px]:hidden"} `}>
