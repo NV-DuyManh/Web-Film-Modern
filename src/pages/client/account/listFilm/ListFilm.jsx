@@ -6,6 +6,7 @@ import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import { Link, useSearchParams } from 'react-router-dom';
 import Logo6 from '../../../../assets/Logo6.png';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 function ListFilm(props) {
     const [viewMode, setViewMode] = useState('grid');
@@ -32,8 +33,8 @@ function ListFilm(props) {
 
     const filteredLists = useMemo(() => {
         if (!searchQuery.trim()) return userLists;
-        const lowerQuery = searchQuery.toLowerCase();
-        return userLists.filter(list => list.name?.toLowerCase().includes(lowerQuery));
+        const lowerQuery = searchTV(searchQuery);
+        return userLists.filter(list => searchTV(list.name || '').includes(lowerQuery));
     }, [userLists, searchQuery]);
 
     const handleAddList = async () => {
@@ -315,10 +316,15 @@ function ListFilm(props) {
                                         <FaTrash size={12} />
                                     </button>
                                 </div>
-                                <div className="px-1 mt-2 mb-1 flex justify-center">
-                                    <h3 className="text-white font-bold text-sm md:text-base text-center line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all duration-300">
-                                        {movie.otherName || movie.name}
+                                <div className="px-1 mt-2 mb-1 flex flex-col items-center">
+                                    <h3 className="text-white font-bold text-sm md:text-base text-center line-clamp-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all duration-300">
+                                        {movie.otherName}
                                     </h3>
+                                    {movie.otherName && movie.otherName !== movie.name && (
+                                        <p className="text-slate-400 text-[11px] sm:text-xs text-center line-clamp-1 mt-0.5 group-hover:text-slate-300 transition-all duration-300">
+                                            {movie.name}
+                                        </p>
+                                    )}
                                 </div>
                             </Link>
                         ) : (
@@ -330,7 +336,12 @@ function ListFilm(props) {
 
                                 <div className="flex-1 w-full flex flex-col justify-center py-2 gap-2">
                                     <Link to={`/detailFilm/${movie.id}`}>
-                                        <h3 className="text-white font-bold text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all duration-300 line-clamp-2">{movie.otherName || movie.name}</h3>
+                                        <h3 className="text-white font-bold text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] transition-all duration-300 line-clamp-1">{movie.otherName || movie.name}</h3>
+                                        {movie.otherName && movie.otherName !== movie.name && (
+                                            <p className="text-slate-400 text-sm mt-0.5 line-clamp-1 group-hover:text-slate-300 transition-all duration-300">
+                                                {movie.name}
+                                            </p>
+                                        )}
                                     </Link>
                                 </div>
 

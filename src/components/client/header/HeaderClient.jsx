@@ -155,42 +155,45 @@ function HeaderClient() {
                 <div ref={menuRef} className={`shrink-0 items-center gap-1.5 max-[1199px]:absolute max-[1199px]:flex-col flex max-[1199px]:bg-[#0a192f]/98 max-[1199px]:backdrop-blur-2xl max-[1199px]:w-full bottom-0 left-0 max-[1199px]:translate-y-full max-[1199px]:p-5 max-[1199px]:border-t max-[1199px]:border-white/10 max-[1199px]:shadow-[0_15px_40px_rgba(0,0,0,0.8)] ${openMenu ? "flex" : "max-[1199px]:hidden"} `}>
 
                     {LISTCLIENT.map((item, index) => (
-                        <Link to={item.path}
+                        <div 
                             key={index}
                             ref={(el) => {
                                 if (item.path === "/category") cateRef.current = el;
                                 if (item.path === "/country") countryRef.current = el;
                             }}
-                            onClick={(e) => {
-                                if (item.path === "/category") {
-                                    e.preventDefault();
-                                    setOpenCate(!openCate);
-                                    setOpenCountry(false);
-                                } else if (item.path === "/country") {
-                                    e.preventDefault();
-                                    setOpenCountry(!openCountry);
-                                    setOpenCate(false);
-                                } else {
-                                    setOpenCate(false);
-                                    setOpenCountry(false);
-                                }
-                            }}
-                            className={` relative cursor-pointer flex items-center transition-all duration-300
-                                ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-[60]" : "z-10"}
-                                max-[1199px]:w-full max-[1199px]:justify-between max-[1199px]:px-4 max-[1199px]:py-2.5 max-[1199px]:rounded-lg max-[1199px]:text-[13px]
-                                min-[1200px]:justify-center min-[1200px]:rounded-full min-[1200px]:px-3 min-[1200px]:py-2 min-[1200px]:text-sm xl:px-4 font-bold 
-                                ${location.pathname === item.path
-                                    ? "max-[1199px]:bg-cyan-600/10 max-[1199px]:text-cyan-400 max-[1199px]:shadow-[inset_4px_0_0_0_#22d3ee] min-[1200px]:bg-yellow-400 min-[1200px]:text-black min-[1200px]:shadow-[0_0_18px_rgba(250,204,21,0.5)]"
-                                    : "text-slate-200 max-[1199px]:hover:bg-slate-700/80 max-[1199px]:hover:text-cyan-400 min-[1200px]:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] min-[1200px]:hover:text-yellow-400"
-                                }`}>
-                            <div className="flex items-center gap-1.5">
-                                {item.title}
-                                {(item.path === "/category" || item.path === "/country") && <IoMdArrowDropdown className="text-lg opacity-80" />}
-                            </div>
+                            className={`relative flex flex-col min-[1200px]:block max-[1199px]:w-full transition-all duration-300 ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-[60]" : "z-10"}`}
+                        >
+                            <Link to={item.path}
+                                onClick={(e) => {
+                                    if (item.path === "/category") {
+                                        e.preventDefault();
+                                        setOpenCate(!openCate);
+                                        setOpenCountry(false);
+                                    } else if (item.path === "/country") {
+                                        e.preventDefault();
+                                        setOpenCountry(!openCountry);
+                                        setOpenCate(false);
+                                    } else {
+                                        setOpenCate(false);
+                                        setOpenCountry(false);
+                                    }
+                                }}
+                                className={`cursor-pointer flex items-center transition-all duration-300
+                                    max-[1199px]:w-full max-[1199px]:justify-between max-[1199px]:px-4 max-[1199px]:py-2.5 max-[1199px]:rounded-lg max-[1199px]:text-[13px]
+                                    min-[1200px]:justify-center min-[1200px]:rounded-full min-[1200px]:px-3 min-[1200px]:py-2 min-[1200px]:text-sm xl:px-4 font-bold outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1221]
+                                    ${location.pathname === item.path
+                                        ? "max-[1199px]:bg-cyan-600/10 max-[1199px]:text-cyan-400 max-[1199px]:shadow-[inset_4px_0_0_0_#22d3ee] min-[1200px]:bg-yellow-400 min-[1200px]:text-black min-[1200px]:shadow-[0_0_18px_rgba(250,204,21,0.5)]"
+                                        : "text-slate-200 max-[1199px]:hover:bg-slate-700/80 max-[1199px]:hover:text-cyan-400 min-[1200px]:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] min-[1200px]:hover:text-yellow-400"
+                                    }`}>
+                                <div className="flex items-center gap-1.5">
+                                    {item.title}
+                                    {(item.path === "/category" || item.path === "/country") && <IoMdArrowDropdown className="text-lg opacity-80" />}
+                                </div>
+                            </Link>
 
                             {item.path === "/category" && <Category openCate={openCate} setOpenCate={setOpenCate} />}
                             {item.path === "/country" && <Country openCountry={openCountry} setOpenCountry={setOpenCountry} />}
-                        </Link>
+                        </div>
                     ))}
                 </div>
 

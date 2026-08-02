@@ -5,6 +5,7 @@ import { AuthContext } from '../../../../contexts/AuthProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 function Favorites(props) {
     const { isLogin } = useContext(AuthContext);
@@ -56,10 +57,10 @@ function Favorites(props) {
 
     const filteredMovies = useMemo(() => {
         if (!searchQuery.trim()) return favorites;
-        const lowerQuery = searchQuery.toLowerCase();
+        const lowerQuery = searchTV(searchQuery);
         return favorites.filter(m =>
-            m.name?.toLowerCase().includes(lowerQuery) ||
-            m.otherName?.toLowerCase().includes(lowerQuery)
+            searchTV(m.name || '').includes(lowerQuery) ||
+            searchTV(m.otherName || '').includes(lowerQuery)
         );
     }, [favorites, searchQuery]);
 
@@ -144,10 +145,15 @@ function Favorites(props) {
                                         <FaTrash size={12} />
                                     </button>
                                 </div>
-                                <div className="px-1 mt-2 mb-1 flex justify-center">
-                                    <h3 className="text-white font-bold text-sm md:text-base text-center line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-yellow-400 group-hover:drop-shadow-[0_0_8px_rgba(250,204,21,0.5)] transition-all duration-300">
-                                        {movie.otherName || movie.name}
+                                <div className="px-1 mt-2 mb-1 flex flex-col items-center">
+                                    <h3 className="text-white font-bold text-sm md:text-base text-center line-clamp-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-yellow-400 group-hover:drop-shadow-[0_0_8px_rgba(250,204,21,0.5)] transition-all duration-300">
+                                        {movie.otherName}
                                     </h3>
+                                    {movie.otherName && movie.otherName !== movie.name && (
+                                        <p className="text-slate-400 text-[11px] sm:text-xs text-center line-clamp-1 mt-0.5 group-hover:text-slate-300 transition-all duration-300">
+                                            {movie.name}
+                                        </p>
+                                    )}
                                 </div>
                             </Link>
                         ) : (
@@ -162,6 +168,11 @@ function Favorites(props) {
                                         <h3 className="text-white font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-yellow-400 group-hover:drop-shadow-[0_0_8px_rgba(250,204,21,0.5)] transition-all duration-300 line-clamp-1">
                                             {movie.otherName || movie.name}
                                         </h3>
+                                        {movie.otherName && movie.otherName !== movie.name && (
+                                            <p className="text-slate-400 text-sm mt-0.5 line-clamp-1 group-hover:text-slate-300 transition-all duration-300">
+                                                {movie.name}
+                                            </p>
+                                        )}
                                     </Link>
                                     <div className="flex flex-wrap gap-2 mt-0.5">
                                         <span className="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-[10px] font-bold rounded border border-yellow-500/30 uppercase tracking-wider">

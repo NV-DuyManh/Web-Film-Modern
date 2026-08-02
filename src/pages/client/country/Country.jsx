@@ -20,7 +20,7 @@ function Country({ openCountry, setOpenCountry }) {
                 e.stopPropagation();
             }}
         >
-            <div className="px-3 py-4 grid grid-cols-2 sm:grid-cols-4 max-h-80 overflow-y-auto custom-scrollbar">
+            <div className="px-3 pb-4 pt-2 grid grid-cols-2 sm:grid-cols-4 max-h-80 overflow-y-auto custom-scrollbar">
                 {validCountries.map((e, index) => (
                     <div 
                         key={index} 

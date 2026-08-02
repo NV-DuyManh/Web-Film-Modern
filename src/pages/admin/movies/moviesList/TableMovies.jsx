@@ -208,26 +208,26 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                         </td>
 
                                         <td className="table-cell text-center min-w-50 max-w-62.5 whitespace-normal wrap-break-words text-xs leading-relaxed">
-                                            <p className="font-bold text-white text-[13px] mb-1">{row.otherName || "N/A"}</p>
+                                            <p className="font-bold text-white text-[13px] mb-1">{row.otherName}</p>
                                             <p className="text-gray-400 text-[11px] italic">{row.name}</p>
                                         </td>
 
                                         <td className="table-cell text-center whitespace-normal">
                                             <div className="flex flex-col gap-1 items-center justify-center">
                                                 <p className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getStatusStyle(row.status)} inline`}>
-                                                    {row.status || "N/A"}
+                                                    {row.status}
                                                 </p>
                                                 <p className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getAgeRatingStyle(row.ageRating)} inline`}>
-                                                    {row.ageRating || "N/A"}
+                                                    {row.ageRating}
                                                 </p>
                                             </div>
                                         </td>
 
-                                        <td className="table-cell text-center text-yellow-300 font-bold">{row.releaseYear || "N/A"}</td>
+                                        <td className="table-cell text-center text-yellow-300 font-bold">{row.releaseYear}</td>
 
                                         <td className="table-cell text-center whitespace-normal min-w-32">
                                             <div className="flex flex-col gap-1.5 items-center justify-center">
-                                                <p className="text-[11px] font-bold text-gray-300 inline">Total: {row.endEpisode || "?"}</p>
+                                                <p className="text-[11px] font-bold text-gray-300 inline">Total: {row.endEpisode}</p>
 
                                                 {row.hasSub && (
                                                     <p className="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 w-full text-center inline">

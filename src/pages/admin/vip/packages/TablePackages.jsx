@@ -22,7 +22,7 @@ function TablePackages({ handleClickOpen, setPackageItem, packageItem, search })
     const start = (page - 1) * rowsPerPage;
 
     const getPlanName = (planID) => {
-        return plans?.find(e => e.id === planID)?.name || "N/A";
+        return plans?.find(e => e.id === planID)?.name;
     }
 
     const dataSearch = useMemo(() => packages?.filter(e => searchTV(getPlanName(e?.planID)).includes(searchTV(search))), [search, packages, plans]);

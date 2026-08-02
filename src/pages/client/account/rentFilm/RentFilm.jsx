@@ -5,6 +5,7 @@ import { AuthContext } from '../../../../contexts/AuthProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { RentMovieContext } from '../../../../contexts/RentMovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 const CountdownTimer = ({ expireDate }) => {
     const [timeLeft, setTimeLeft] = useState(null);
@@ -73,10 +74,10 @@ function RentFilm(props) {
 
     const filteredMovies = useMemo(() => {
         if (!searchQuery.trim()) return rentedMovies;
-        const lowerQuery = searchQuery.toLowerCase();
+        const lowerQuery = searchTV(searchQuery);
         return rentedMovies.filter(m =>
-            m.name?.toLowerCase().includes(lowerQuery) ||
-            m.otherName?.toLowerCase().includes(lowerQuery)
+            searchTV(m.name || '').includes(lowerQuery) ||
+            searchTV(m.otherName || '').includes(lowerQuery)
         );
     }, [rentedMovies, searchQuery]);
 
@@ -149,10 +150,15 @@ function RentFilm(props) {
                                         <span className="text-fuchsia-400 text-[9px] sm:text-[10px] font-bold tracking-wider"><CountdownTimer expireDate={movie.expireDate} /></span>
                                     </div>
                                 </div>
-                                <div className="px-1 mt-2 mb-1 flex justify-center">
-                                    <h3 className="text-white font-bold text-sm md:text-base text-center line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-fuchsia-400 group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.5)] transition-all duration-300">
-                                        {movie.otherName || movie.name}
+                                <div className="px-1 mt-2 mb-1 flex flex-col items-center">
+                                    <h3 className="text-white font-bold text-sm md:text-base text-center line-clamp-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-fuchsia-400 group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.5)] transition-all duration-300">
+                                        {movie.otherName}
                                     </h3>
+                                    {movie.otherName && movie.otherName !== movie.name && (
+                                        <p className="text-slate-400 text-[11px] sm:text-xs text-center line-clamp-1 mt-0.5 group-hover:text-slate-300 transition-all duration-300">
+                                            {movie.name}
+                                        </p>
+                                    )}
                                 </div>
                             </Link>
                         ) : (
@@ -164,9 +170,14 @@ function RentFilm(props) {
 
                                 <div className="flex-1 w-full flex flex-col justify-center py-2 gap-2">
                                     <Link to={`/detailFilm/${movie.id}`}>
-                                        <h3 className="text-white font-bold text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-fuchsia-400 group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.5)] transition-all duration-300 line-clamp-2">
+                                        <h3 className="text-white font-bold text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-fuchsia-400 group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.5)] transition-all duration-300 line-clamp-1">
                                             {movie.otherName || movie.name}
                                         </h3>
+                                        {movie.otherName && movie.otherName !== movie.name && (
+                                            <p className="text-slate-400 text-sm mt-0.5 line-clamp-1 group-hover:text-slate-300 transition-all duration-300">
+                                                {movie.name}
+                                            </p>
+                                        )}
                                     </Link>
                                     <div className="flex flex-wrap gap-2 mt-1">
                                         <span className="px-2 py-1 bg-fuchsia-500/20 text-fuchsia-400 text-[10px] font-bold rounded border border-fuchsia-500/30 tracking-wider">

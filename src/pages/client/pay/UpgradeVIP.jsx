@@ -98,7 +98,7 @@ function UpgradeVIP(props) {
                         <div className="relative z-10 pr-2">
                             <div className="flex items-center gap-2 mb-1">
                                 <h3 className="text-base font-black bg-linear-to-r from-white via-cyan-100 to-slate-300 bg-clip-text text-transparent drop-shadow-sm tracking-wide">
-                                    {isLogin?.fullName || isLogin?.email || 'Khách'}
+                                    {isLogin?.fullName || isLogin?.email}
                                 </h3>
                                 <FaCrown className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)] text-sm animate-pulse" />
                             </div>

@@ -224,11 +224,11 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                                 <p className="text-gray-400 text-sm italic font-medium mb-3">{movie.name}</p>
                             )}
                             <div className="flex flex-wrap gap-2">
-                                <NeonBadge text={movie.status || "N/A"} color={getStatusColor(movie.status)} />
-                                <NeonBadge text={movie.ageRating || "N/A"} color="red" />
-                                <NeonBadge icon={FaCalendarAlt} text={movie.releaseYear || "N/A"} color="indigo" />
+                                <NeonBadge text={movie.status} color={getStatusColor(movie.status)} />
+                                <NeonBadge text={movie.ageRating} color="red" />
+                                <NeonBadge icon={FaCalendarAlt} text={movie.releaseYear} color="indigo" />
                                 <NeonBadge icon={FaClock} text={movie.duration ? `${movie.duration} min` : "N/A"} color="yellow" />
-                                <NeonBadge icon={FaTv} text={`${movie.endEpisode || "?"} Eps`} color="fuchsia" />
+                                <NeonBadge icon={FaTv} text={`${movie.endEpisode} Eps`} color="fuchsia" />
                                 {movie.countriesID && <NeonBadge icon={FaGlobe} text={movie.countriesID} color="emerald" />}
                                 {currentPlan && <NeonBadge icon={FaCrown} text={currentPlan.name} color="rose" />}
                                 {currentCategoryType && <NeonBadge icon={FaFilm} text={currentCategoryType.name} color="blue" />}
@@ -243,7 +243,7 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
                         <div className="relative bg-white/2 rounded-2xl border border-white/5 p-5 overflow-hidden">
                             <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-cyan-500 via-purple-500 to-pink-500 rounded-l-full"></div>
                             <p className="text-gray-300/90 text-[14px] leading-relaxed pl-4 max-h-22.5 overflow-y-auto custom-scrollbar">
-                                {movie.description || "No description available."}
+                                {movie.description}
                             </p>
                         </div>
 

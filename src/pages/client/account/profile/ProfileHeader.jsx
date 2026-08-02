@@ -59,10 +59,10 @@ const ProfileHeader = ({
 
                     <div className="flex flex-col items-center sm:items-start mt-1">
                         <h1 className="text-3xl font-serif font-bold text-white mb-1 tracking-wide drop-shadow-md">
-                            {isLogin?.name || 'Thành viên'}
+                            {isLogin?.name}
                         </h1>
                         <div className="text-yellow-400 text-[14px] font-medium tracking-wide mb-3 opacity-90">
-                            {isLogin?.email || 'Chưa cập nhật email'}
+                            {isLogin?.email}
                         </div>
                     </div>
                 </div>

@@ -59,7 +59,7 @@ function Pay(props) {
                             )}
                             <div className="flex flex-col sm:flex-row justify-between sm:items-center relative z-10 gap-4">
                                 <div>
-                                    <h3 className={`text-xl font-bold transition-colors ${selectedPlan === 'rental' ? 'text-cyan-400' : 'text-slate-200'}`}>{movie?.name || 'Phim'}</h3>
+                                    <h3 className={`text-xl font-bold transition-colors ${selectedPlan === 'rental' ? 'text-cyan-400' : 'text-slate-200'}`}>{movie?.name}</h3>
                                     <p className="text-slate-400 text-sm mt-1">Thuê phim lẻ trong 48 giờ.</p>
                                 </div>
                                 <div className="flex items-center justify-between sm:justify-end gap-4">

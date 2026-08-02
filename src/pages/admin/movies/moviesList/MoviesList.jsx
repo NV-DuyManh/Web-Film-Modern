@@ -125,13 +125,13 @@ function MoviesList() {
                 submitData.bannerUrl = LOGO_BANNER;
             }
 
-            submitData.releaseYear = Number(submitData.releaseYear) || new Date().getFullYear();
-            submitData.duration = Number(submitData.duration) || 0;
-            submitData.endEpisode = Number(submitData.endEpisode) || 0;
-            submitData.rent = Number(submitData.rent) || 0;
-            submitData.episodeSub = submitData.hasSub ? (Number(submitData.episodeSub) || 0) : 0;
-            submitData.episodeDub = submitData.hasDub ? (Number(submitData.episodeDub) || 0) : 0;
-            submitData.episodeVoice = submitData.hasVoice ? (Number(submitData.episodeVoice) || 0) : 0;
+            submitData.releaseYear = Number(submitData.releaseYear);
+            submitData.duration = Number(submitData.duration);
+            submitData.endEpisode = Number(submitData.endEpisode);
+            submitData.rent = Number(submitData.rent);
+            submitData.episodeSub = submitData.hasSub ? Number(submitData.episodeSub) : 0;
+            submitData.episodeDub = submitData.hasDub ? Number(submitData.episodeDub) : 0;
+            submitData.episodeVoice = submitData.hasVoice ? Number(submitData.episodeVoice) : 0;
 
             if (!movie.id) {
                 submitData.createdAt = new Date().toISOString();

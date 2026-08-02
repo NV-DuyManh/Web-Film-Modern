@@ -147,7 +147,7 @@ function PayMovie(props) {
                                         <div className="absolute inset-0 bg-linear-to-br from-rose-900 to-slate-900 group-hover:scale-105 transition-transform duration-500"></div>
                                         <div className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-black/40">
                                             <div className="font-black text-white text-xl uppercase text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-tight">
-                                                {movie?.name || 'Phim'}
+                                                {movie?.name}
                                             </div>
                                         </div>
                                     </>
@@ -157,11 +157,11 @@ function PayMovie(props) {
                             <div className="flex-1 space-y-4">
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
                                     <p className="text-slate-300 font-medium inline">Tài khoản:</p>
-                                    <p className="text-white font-bold inline">{isLogin?.fullName || isLogin?.email || 'Khách'}</p>
+                                    <p className="text-white font-bold inline">{isLogin?.fullName || isLogin?.email}</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
                                     <p className="text-slate-300 font-medium inline">Phim:</p>
-                                    <p className="text-rose-400 font-black inline">{movie?.name || 'Đang tải...'}</p>
+                                    <p className="text-rose-400 font-black inline">{movie?.name}</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
                                     <p className="text-slate-300 font-medium inline">Thời lượng:</p>

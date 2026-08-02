@@ -127,7 +127,7 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                                     </td>
                                     <td className="table-cell text-center">
                                         <p className={`px-2 py-1 rounded text-[11px] font-bold border ${getSexStyle(row.sexID)} inline`}>
-                                            {row.sexID || "N/A"}
+                                            {row.sexID}
                                         </p>
                                     </td>
                                     <td className="table-cell text-center text-cyan-400 font-bold">
@@ -135,7 +135,7 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                                     </td>
                                     <td className="table-cell min-w-87.5 max-w-150 whitespace-normal text-[13px] text-gray-300">
                                         <div className="leading-relaxed text-justify px-2 py-2">
-                                            {row.description || "N/A"}
+                                            {row.description}
                                         </div>
                                     </td>
                                     <td className="table-cell text-center">

@@ -22,7 +22,7 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
     const start = (page - 1) * rowsPerPage;
 
     const getPlanName = (planID) => {
-        return plans?.find(e => e.id === planID)?.name || "N/A";
+        return plans?.find(e => e.id === planID)?.name;
     }
 
     const dataSearch = useMemo(() => features?.filter(e => searchTV(e?.description).includes(searchTV(search))), [search, features]);
@@ -116,7 +116,7 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                                     </td>
                                     <td className="table-cell text-center max-w-50 whitespace-normal text-[12px] text-gray-400" title={row.description}>
                                         <div className="line-clamp-3 leading-relaxed text-center">
-                                            {row.description || "N/A"}
+                                            {row.description}
                                         </div>
                                     </td>
                                     <td className="table-cell  text-center">

@@ -20,7 +20,7 @@ function PayVIP(props) {
     const selectedPlanData = plans.find(p => p.id === planId) || plans[0];
 
     const packageInfo = {
-        name: selectedPlanData?.name || 'Gói Cao cấp',
+        name: selectedPlanData?.name,
         basePrice: selectedPlanData?.price ? Number(selectedPlanData?.price) : 79000
     };
 
@@ -173,7 +173,7 @@ function PayVIP(props) {
                             <div className="flex-1 space-y-2.5">
                                 <div className="flex justify-between text-sm">
                                     <p className="text-slate-300 inline">Tài khoản</p>
-                                    <p className="text-white font-bold inline">{isLogin?.fullName || isLogin?.email || 'Khách'}</p>
+                                    <p className="text-white font-bold inline">{isLogin?.fullName || isLogin?.email}</p>
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <p className="text-slate-300 inline">Tên gói</p>

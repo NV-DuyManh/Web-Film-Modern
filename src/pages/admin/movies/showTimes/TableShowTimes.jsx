@@ -63,7 +63,7 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
 
         return showTimes
             ?.filter(e =>
-                (getMovie(e?.movieID)?.otherName || getMovie(e?.movieID)?.name || "N/A")?.toLowerCase().includes(keyword) ||
+                (getMovie(e?.movieID)?.otherName || getMovie(e?.movieID)?.name)?.toLowerCase().includes(keyword) ||
                 e?.roomName?.toLowerCase().includes(keyword) ||
                 formatDateTime(e?.time)?.toLowerCase().includes(keyword)
             )
@@ -156,7 +156,7 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
                                     </td>
 
                                     <td className="table-cell text-center">
-                                        <p className="font-bold text-white text-[13px] mb-1">{getMovie(row.movieID)?.otherName || getMovie(row.movieID)?.name || "N/A"}</p>
+                                        <p className="font-bold text-white text-[13px] mb-1">{getMovie(row.movieID)?.otherName || getMovie(row.movieID)?.name}</p>
                                         <p className="text-gray-400 text-[11px] italic">{getMovie(row.movieID)?.name}</p>
                                     </td>
 
@@ -209,7 +209,7 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
                 open={open}
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE SHOWTIME"}
-                contentDelete={`Are you sure you want to delete the showtime of "${getMovie(showTime?.movieID)?.otherName || getMovie(showTime?.movieID)?.name || "N/A"}"?`}
+                contentDelete={`Are you sure you want to delete the showtime of "${getMovie(showTime?.movieID)?.otherName || getMovie(showTime?.movieID)?.name}"?`}
             />
             
             <ModalDelete
