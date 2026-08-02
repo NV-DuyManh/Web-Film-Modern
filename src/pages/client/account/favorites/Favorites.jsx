@@ -120,7 +120,7 @@ function Favorites(props) {
             )}
 
             {favorites.length === 0 ? (
-                <div className="mt-4 w-full min-h-87.5 border border-white/5 rounded-3xl bg-[#15171a]/40 backdrop-blur-md flex flex-col items-center justify-center p-8 text-center relative overflow-hidden shadow-inner animate-fade-in-favorites" style={{ animationDelay: '0.2s', opacity: 0 }}>
+                <div className="mt-4 w-full min-h-87.5 flex flex-col items-center justify-center p-8 text-center relative overflow-hidden animate-fade-in-favorites" style={{ animationDelay: '0.2s', opacity: 0 }}>
                     <div className="w-16 h-16 rounded-full border border-yellow-500/30 bg-yellow-500/10 flex items-center justify-center mb-6">
                         <FaHeart className="text-yellow-500/60 text-2xl" />
                     </div>

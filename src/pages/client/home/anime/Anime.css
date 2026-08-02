@@ -15,7 +15,13 @@
 
 .anime-slide-outer {
     position: relative;
-    margin-bottom: 60px;
+    margin-bottom: 24px;
+}
+
+@media (min-width: 1024px) {
+    .anime-slide-outer {
+        margin-bottom: 60px;
+    }
 }
 
 .anime-slide-wrapper {
@@ -41,7 +47,12 @@
     }
 }
 
-.anime-slide-wrapper * {
+.anime-slide-outer {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.anime-slide-outer * {
     user-select: none;
     -webkit-user-select: none;
 }

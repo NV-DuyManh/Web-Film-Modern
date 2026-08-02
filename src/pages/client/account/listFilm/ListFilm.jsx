@@ -208,15 +208,6 @@ function ListFilm(props) {
             try {
                 const updatedLists = userLists.filter(list => list.id !== listId);
                 await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
-                Swal.fire({
-                    title: 'Đã xóa!',
-                    text: 'Danh sách của bạn đã được xóa.',
-                    icon: 'success',
-                    background: '#1e293b',
-                    color: '#fff',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
             } catch (error) {
                 console.error("Error deleting list", error);
             }

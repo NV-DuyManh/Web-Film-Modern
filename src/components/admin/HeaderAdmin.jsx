@@ -7,7 +7,7 @@ import { AuthContext } from '../../contexts/AuthProvider';
 
 function HeaderAdmin() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const { isLogin, handleLogout } = useContext(AuthContext);
+    const { isLogin, handleLogout, globalAvatarPreview } = useContext(AuthContext);
     const dropdownRef = React.useRef(null);
 
     const getGreeting = () => {
@@ -67,11 +67,7 @@ function HeaderAdmin() {
                             >
                                 <div className="absolute inset-0 rounded-full bg-green-400 opacity-20 blur-sm group-hover:opacity-60 group-hover:animate-pulse transition-opacity duration-300"></div>
                                 
-                                {isLogin?.imgUrl ? (
-                                    <img src={isLogin.imgUrl} alt="avatar" className="relative z-10 w-9 h-9 rounded-full object-cover border-2 border-green-400 shadow-[0_0_10px_rgba(74,222,128,0.6)]" />
-                                ) : (
-                                    <FaUserCircle className="relative z-10 text-[32px] drop-shadow-[0_0_8px_rgba(74,222,128,0.8)]" />
-                                )}
+                                <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="relative z-10 w-9 h-9 rounded-full object-cover border-2 border-green-400 shadow-[0_0_10px_rgba(74,222,128,0.6)]" />
 
                                 <p className="absolute bottom-0 right-0 z-20 w-3 h-3 bg-[#22c55e] border-2 border-[#1e293b] rounded-full shadow-[0_0_5px_rgba(34,197,94,1)]"></p>
                             </button>
@@ -79,11 +75,7 @@ function HeaderAdmin() {
                             {isDropdownOpen && (
                                 <div className="absolute right-0 top-full mt-6 w-64 rounded-xl border border-slate-700 bg-[#0f172a] shadow-[0_15px_40px_rgba(0,0,0,0.6)] z-50 overflow-hidden transform opacity-100 scale-100 transition-all duration-300">
                                     <div className="flex items-center gap-3 p-4 border-b border-slate-700/50 bg-slate-800/30">
-                                        {isLogin?.imgUrl ? (
-                                            <img src={isLogin.imgUrl} alt="avatar" className="w-11 h-11 rounded-full border border-cyan-500 object-cover shadow-[0_0_10px_rgba(34,211,238,0.3)]" />
-                                        ) : (
-                                            <FaUserCircle className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)]" />
-                                        )}
+                                        <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="w-11 h-11 rounded-full border border-cyan-500 object-cover shadow-[0_0_10px_rgba(34,211,238,0.3)]" />
                                         <div className="flex flex-col min-w-0">
                                             <p className="text-[15px] font-bold text-white truncate tracking-wide">{isLogin?.name || 'Admin'}</p>
                                             <p className="text-[12px] text-cyan-400 truncate">{isLogin?.email || 'admin@mfilm.com'}</p>

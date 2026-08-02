@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../../contexts/CategoryProvider";
 import { MovieContext } from "../../../contexts/MovieProvider";
 
-function Category({ openCate, setOpenCate }) {
+function Category({ openCate, setOpenCate, isRightCol }) {
     const categories = useContext(CategoryContext) || [];
     const movies = useContext(MovieContext) || [];
     const navigate = useNavigate();
@@ -14,7 +14,7 @@ function Category({ openCate, setOpenCate }) {
 
     return (
         <div 
-            className={`absolute top-full mt-3 z-50 w-[90vw] sm:w-[600px] rounded-2xl bg-[#0f172a] border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-300 origin-top ${openCate ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible -translate-y-2 scale-95"} max-[1149px]:left-0 max-[1149px]:right-0 max-[1149px]:mx-auto min-[1150px]:-left-4`}
+            className={`absolute top-full mt-3 z-100 rounded-2xl bg-[#0f172a] border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-300 ${openCate ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible -translate-y-2 scale-95"} max-[1199px]:absolute max-[1199px]:w-[calc(200%+4px)] ${isRightCol ? 'max-[1199px]:right-0 max-[1199px]:origin-top-right' : 'max-[1199px]:left-0 max-[1199px]:origin-top-left'} min-[1200px]:-left-4 min-[1200px]:origin-top min-[1200px]:w-150`}
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

@@ -1,4 +1,4 @@
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+import React, { useState, useContext, useMemo, useEffect, useCallback } from 'react';
 import { FaFilm, FaSearch, FaTh, FaList, FaPlay, FaStar, FaInfoCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
@@ -7,22 +7,17 @@ import { RentMovieContext } from '../../../../contexts/RentMovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 
-const CountdownTimer = ({ expireDate }) => {
+const CountdownTimer = ({ expireDate, onExpire }) => {
     const [timeLeft, setTimeLeft] = useState(null);
 
     useEffect(() => {
-        if (!expireDate) {
-            setTimeLeft(<span>⏳ Vĩnh viễn</span>);
-            return;
-        }
-
         const updateTimer = () => {
             const now = new Date();
             const end = new Date(expireDate);
             const diff = end - now;
 
             if (diff <= 0) {
-                setTimeLeft(<span>⏳ Đã hết hạn</span>);
+                if (onExpire) onExpire();
                 return;
             }
 
@@ -62,15 +57,38 @@ function RentFilm(props) {
     const [viewMode, setViewMode] = useState('grid');
     const [searchQuery, setSearchQuery] = useState('');
     const movies = useContext(MovieContext);
+    const [expiredMovieIds, setExpiredMovieIds] = useState(new Set());
+
+    const handleExpire = useCallback((id) => {
+        setExpiredMovieIds(prev => {
+            const newSet = new Set(prev);
+            newSet.add(id);
+            return newSet;
+        });
+    }, []);
   
-    const rentedMovies = useMemo(() => {    
-       const rentByUser =  moviesData.filter(p => {
-             const expiry = typeof p.expiryDate.toDate === 'function'
+    const rawRentedMovies = useMemo(() => {
+        if (!isLogin || !moviesData) return [];
+        const rentByUser = moviesData.filter(p => {
+            if (!p.expiryDate) return false;
+            const expiry = typeof p.expiryDate.toDate === 'function'
                 ? p.expiryDate.toDate()
                 : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
-            return p.userID == isLogin.id && expiry > new Date() });
-            return rentByUser.map(c => getObjectById(movies, c.movieID))
-    }, [moviesData, isLogin]);
+            return p.userID == isLogin.id && expiry > new Date();
+        });
+        return rentByUser.map(c => {
+            const movie = getObjectById(movies, c.movieID);
+            if (!movie) return null;
+            const expiry = typeof c.expiryDate.toDate === 'function'
+                ? c.expiryDate.toDate()
+                : (c.expiryDate.seconds ? new Date(c.expiryDate.seconds * 1000) : new Date(c.expiryDate));
+            return { ...movie, expireDate: expiry };
+        }).filter(Boolean);
+    }, [moviesData, isLogin, movies]);
+
+    const rentedMovies = useMemo(() => {
+        return rawRentedMovies.filter(m => !expiredMovieIds.has(m.id));
+    }, [rawRentedMovies, expiredMovieIds]);
 
     const filteredMovies = useMemo(() => {
         if (!searchQuery.trim()) return rentedMovies;
@@ -147,7 +165,7 @@ function RentFilm(props) {
                                         <span className="text-fuchsia-400 text-[10px] sm:text-[11px] font-bold truncate">Xem ngay</span>
                                     </div>
                                     <div className="absolute top-2 left-1/2 -translate-x-1/2 w-max max-w-[90%] bg-slate-900/80 backdrop-blur-md px-2 py-1 rounded-lg border border-fuchsia-500/50 flex items-center justify-center shadow-[0_4px_10px_rgba(0,0,0,0.5)]">
-                                        <span className="text-fuchsia-400 text-[9px] sm:text-[10px] font-bold tracking-wider"><CountdownTimer expireDate={movie.expireDate} /></span>
+                                        <span className="text-fuchsia-400 text-[9px] sm:text-[10px] font-bold tracking-wider"><CountdownTimer expireDate={movie.expireDate} onExpire={() => handleExpire(movie.id)} /></span>
                                     </div>
                                 </div>
                                 <div className="px-1 mt-2 mb-1 flex flex-col items-center">
@@ -181,7 +199,7 @@ function RentFilm(props) {
                                     </Link>
                                     <div className="flex flex-wrap gap-2 mt-1">
                                         <span className="px-2 py-1 bg-fuchsia-500/20 text-fuchsia-400 text-[10px] font-bold rounded border border-fuchsia-500/30 tracking-wider">
-                                            <CountdownTimer expireDate={movie.expireDate} />
+                                            <CountdownTimer expireDate={movie.expireDate} onExpire={() => handleExpire(movie.id)} />
                                         </span>
                                     </div>
                                 </div>

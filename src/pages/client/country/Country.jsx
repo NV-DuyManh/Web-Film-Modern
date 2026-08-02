@@ -3,18 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { COUNTRIES } from '../../../utils/Constants';
 import { MovieContext } from '../../../contexts/MovieProvider';
 
-function Country({ openCountry, setOpenCountry }) {
+function Country({ openCountry, setOpenCountry, isRightCol }) {
     const movies = useContext(MovieContext) || [];
     const navigate = useNavigate();
 
-    // Filter to only include countries that have at least one movie
     const validCountries = COUNTRIES.filter(c => 
         movies.some(m => m.countriesID?.toLowerCase() === c.toLowerCase())
     );
 
     return (
         <div 
-            className={`absolute top-full mt-3 z-50 w-[90vw] sm:w-[600px] rounded-2xl bg-[#0f172a] border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-300 origin-top-right ${openCountry ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible -translate-y-2 scale-95"} max-[1149px]:left-0 max-[1149px]:right-0 max-[1149px]:mx-auto min-[1150px]:-right-10 min-[1150px]:left-auto`}
+            className={`absolute top-full mt-3 z-100 rounded-2xl bg-[#0f172a] border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.1)] transition-all duration-300 ${openCountry ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible -translate-y-2 scale-95"} max-[1199px]:absolute max-[1199px]:w-[calc(200%+4px)] ${isRightCol ? 'max-[1199px]:right-0 max-[1199px]:origin-top-right' : 'max-[1199px]:left-0 max-[1199px]:origin-top-left'} min-[1200px]:-right-10 min-[1200px]:origin-top-right min-[1200px]:left-auto min-[1200px]:w-150`}
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
