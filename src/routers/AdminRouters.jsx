@@ -33,7 +33,7 @@ function AdminRouters(props) {
     const adminRouter = [
         {
             path: "/",
-            element: <dashboard />
+            element: <DashBoard />
         },
         {
             path: "/categories",
