@@ -174,7 +174,7 @@ class RentMovies {
     + status: text
 }
 
-class Subcriptions {
+class Subscriptions {
     + id: text
     + transactionID: text
     + userID: text
@@ -252,8 +252,8 @@ Plans "1" -left-> "n" Movies
 RentMovies "n" -down-> "1" Users
 RentMovies "n" -up-> "1" Movies
 
-Subcriptions "n" -up-> "1" Users
-Subcriptions "n" -right-> "1" Plans
+Subscriptions "n" -up-> "1" Users
+Subscriptions "n" -right-> "1" Plans
 
 MoviesSave "n" -up-> "1" Movies
 

@@ -6,13 +6,13 @@ import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaCheckCircle, FaClock } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { AuthorContext } from '../../../../contexts/AuthorProvider';
+
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
 function FilmHongKong() {
     const movies = useContext(MovieContext);
-    const authors = useContext(AuthorContext);
+    
     const plans = useContext(PlanContext);
 
     return (

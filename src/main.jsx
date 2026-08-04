@@ -7,9 +7,6 @@ import App from './App.jsx';
 
 import CategoryProvider from './contexts/CategoryProvider.jsx';
 import CategoryTypeProvider from './contexts/CategoryTypeProvider.jsx';
-import ActorProvider from './contexts/ActorProvider.jsx';
-import AuthorProvider from './contexts/AuthorProvider.jsx';
-import CharacterProvider from './contexts/CharacterProvider.jsx';
 import MovieProvider from './contexts/MovieProvider.jsx';
 import PlanProvider from './contexts/PlanProvider.jsx';
 import PackageProvider from './contexts/PackageProvider.jsx';
@@ -25,9 +22,6 @@ import SubscriptionProvider from './contexts/SubscriptionProvider.jsx';
 const providers = [
   CategoryProvider,
   CategoryTypeProvider,
-  ActorProvider,
-  AuthorProvider,
-  CharacterProvider,
   MovieProvider,
   PlanProvider,
   FeatureProvider,

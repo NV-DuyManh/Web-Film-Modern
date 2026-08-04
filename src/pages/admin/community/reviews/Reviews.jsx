@@ -73,7 +73,6 @@ function Reviews() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            console.error(err);
             alert("Đã xảy ra lỗi, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);

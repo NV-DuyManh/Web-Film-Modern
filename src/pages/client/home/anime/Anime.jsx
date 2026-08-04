@@ -13,7 +13,7 @@ import { MovieContext } from '../../../../contexts/MovieProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
-import { AuthorContext } from '../../../../contexts/AuthorProvider';
+
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
@@ -27,7 +27,7 @@ function Anime() {
     const movies = useContext(MovieContext);
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoryContext);
-    const authors = useContext(AuthorContext);
+    
     const plans = useContext(PlanContext);
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -114,9 +114,7 @@ function Anime() {
                                             {getObjectById(plans, e.planID)?.name}
                                         </button>
 
-                                        <button className='rounded-md border cursor-pointer border-cyan-400 bg-cyan-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.25)] transition-all duration-300 hover:bg-cyan-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(34,211,238,0.7)]'>
-                                            {e.listAuthor?.length > 0 ? e.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, e.author)?.name || "Đang cập nhật")}
-                                        </button>
+                                        
 
                                         <button className='rounded-md border cursor-pointer border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
                                             {e.endEpisode} Tập

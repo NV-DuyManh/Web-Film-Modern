@@ -152,7 +152,6 @@ function MoviesList() {
 
         } catch (err) {
             clearInterval(progressInterval);
-            console.error(err);
             alert("Có lỗi xảy ra, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);

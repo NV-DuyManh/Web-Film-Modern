@@ -1,3 +1,4 @@
+import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -5,7 +6,7 @@ import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
-import { AuthorContext } from '../../../../contexts/AuthorProvider';
+
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import LOGO from "../../../../assets/Logo.png";
 import { searchTV } from '../../../../components/admin/search/SearchTV';
@@ -21,7 +22,14 @@ const getSexStyle = (sex) => {
 };
 
 function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
-    const authors = useContext(AuthorContext);
+    const [authors, setAuthors] = useState([]);
+    
+    useEffect(() => {
+        const unsubscribe = fetchDocumentsRealtime("Authors", (data) => {
+            setAuthors(data);
+        });
+        return () => unsubscribe();
+    }, []);
     const [open, setOpen] = useState(false);
 
     const [page, setPage] = useState(1);

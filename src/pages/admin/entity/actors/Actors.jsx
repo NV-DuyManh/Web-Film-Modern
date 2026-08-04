@@ -77,7 +77,6 @@ function Actors() {
             }, 500);
 
         } catch (err) {
-            console.error(err);
             alert("An error occurred, please try again!");
             setLoading(false);
             setProgress(0);

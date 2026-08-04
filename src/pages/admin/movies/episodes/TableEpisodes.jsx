@@ -1,30 +1,37 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
-import { deleteDocument, fetchDataById, fetchDocumentsRealtimePage } from '../../../../services/firebaseService';
+import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 
-function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedMovie }) {
-    const episodes =  [];
+function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedMovie, episodes }) {
     const [open, setOpen] = useState(false);
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-    const [currentData,setCurrentData] = useState([]);
+
     const start = (page - 1) * rowsPerPage;
 
-    useEffect(() => {
-        getData();
-    },[selectedMovie])
-  const getData = async () => {
-     const data = await fetchDataById("Episodes","movieID", selectedMovie.id );
-     console.log(data);
-  }
-
-
     useEffect(() => { setPage(1); }, [search, selectedMovie]);
+
+    const dataSearch = useMemo(() => {
+        if (!episodes || episodes.length === 0) return [];
+
+        return episodes
+            .filter(ep => {
+                if (!search) return true;
+                const keyword = search.toLowerCase();
+                return (
+                    String(ep.numberEpisode).toLowerCase().includes(keyword) ||
+                    ep.url?.toLowerCase().includes(keyword)
+                );
+            })
+            .sort((a, b) => Number(a.numberEpisode) - Number(b.numberEpisode));
+    }, [episodes, search]);
+
+    const currentData = dataSearch.slice(start, start + rowsPerPage);
 
     const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
 
@@ -100,7 +107,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                                             <td className="table-cell text-center font-black text-cyan-400 text-lg">
                                                 Episode {row.numberEpisode}
                                             </td>
-                                            <td className="table-cell text-center px-4">
+                                            <td className="table-cell text-center px-4 max-w-[200px] md:max-w-[400px] lg:max-w-[600px]">
                                                 <a href={row.url} target="_blank" rel="noopener noreferrer"
                                                     className="text-cyan-400 hover:text-cyan-300 hover:underline transition-colors block truncate w-full"
                                                     title={row.url}>
@@ -130,7 +137,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                             setPage={setPage}
                             rowsPerPage={rowsPerPage}
                             setRowsPerPage={setRowsPerPage}
-                            totalItems={currentData.length || 0}
+                            totalItems={dataSearch.length || 0}
                         />
                     </div>
                 </div>
@@ -156,4 +163,3 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
 }
 
 export default TableEpisodes;
-

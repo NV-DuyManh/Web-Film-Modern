@@ -1,3 +1,4 @@
+import { fetchDocumentsRealtime } from '../../../services/firebaseService';
 import React, { useState, useContext, useEffect } from 'react';
 import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
@@ -6,11 +7,11 @@ import { db } from '../../../config/firebaseConfig';
 import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import { CategoryContext } from '../../../contexts/CategoryProvider';
-import { AuthorContext } from '../../../contexts/AuthorProvider';
+
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
-import { ActorContext } from '../../../contexts/ActorProvider';
-import { CharacterContext } from '../../../contexts/CharacterProvider';
+
+
 import { MovieContext } from '../../../contexts/MovieProvider';
 
 import { ShowTimeContext } from '../../../contexts/ShowTimeProvider';
@@ -19,6 +20,13 @@ import LOGO from "../../../assets/Logo6.png";
 import LOGO_BANNER from "../../../assets/Logo5.png";
 
 function MagicImport() {
+    const [actors, setActors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
+    const [authors, setAuthors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
+    const [characters, setCharacters] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
+
     const [inputText, setInputText] = useState("");
     const [previewData, setPreviewData] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -35,13 +43,12 @@ function MagicImport() {
     const [promptTheme, setPromptTheme] = useState("Anime Isekai");
 
     const categories = useContext(CategoryContext) || [];
-    const authors = useContext(AuthorContext) || [];
+    
     const plans = useContext(PlanContext) || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
-    const actors = useContext(ActorContext) || [];
-    const characters = useContext(CharacterContext) || [];
+    
+    
     const existingMovies = useContext(MovieContext) || [];
-    const existingEpisodes = useContext(EpisodeContext) || [];
     const existingShowtimes = useContext(ShowTimeContext) || [];
 
     useEffect(() => {
@@ -423,7 +430,6 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
 
             setSuccessMsg(`Import successful! Created ${moviesAdded} Movies, Updated ${moviesUpdated} Movies/Entities.`);
         } catch (error) {
-            console.error(error);
             alert("An error occurred! Please check F12 Console for details.");
         } finally {
             setLoading(false);

@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import ModalEpisodes from './ModalEpisodes';
 import TableEpisodes from './TableEpisodes';
-import { addDocument, updateDocument } from '../../../../services/firebaseService';
+import { addDocument, updateDocument, fetchDataById } from '../../../../services/firebaseService';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 import { BsSearch } from 'react-icons/bs';
@@ -11,9 +11,20 @@ import { MdMovie } from 'react-icons/md';
 const inner = { numberEpisode: "", title: "", movieID: "", url: "" };
 
 function Episodes() {
-    const episodes =  [];
     const movies = useContext(MovieContext) || [];
-    const [selectedMovie, setSelectedMovie] = useState(null);   
+    const [selectedMovie, setSelectedMovie] = useState(null);
+    const [episodes, setEpisodes] = useState([]);
+
+    useEffect(() => {
+        if (!selectedMovie?.id) {
+            setEpisodes([]);
+            return;
+        }
+        const unsubscribe = fetchDataById("Episodes", "movieID", selectedMovie.id, (data) => {
+            setEpisodes(data);
+        });
+        return () => unsubscribe();
+    }, [selectedMovie?.id]);
 
     const [open, setOpen] = useState(false);
     const [episode, setEpisode] = useState(inner);
@@ -98,7 +109,7 @@ function Episodes() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            console.error(err);
+
             alert("Có lỗi xảy ra, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);
@@ -164,14 +175,14 @@ function Episodes() {
             }, 1000);
 
         } catch (err) {
-            console.error(err);
+
             alert("Có lỗi xảy ra trong quá trình thêm hàng loạt!");
             setLoading(false);
             setProgress(0);
         }
     };
 
-    const selectedMovieEpisodesCount = selectedMovie ? episodes.filter(ep => ep.movieID === selectedMovie.id).length : 0;
+    const selectedMovieEpisodesCount = episodes?.length || 0;
 
     const filterOptions = createFilterOptions({
         matchFrom: 'any',
@@ -285,6 +296,7 @@ function Episodes() {
                         episode={episode}
                         search={search}
                         selectedMovie={selectedMovie}
+                        episodes={episodes}
                     />
                 </div>
             )}

@@ -6,13 +6,13 @@ import "swiper/css/navigation";
 import { FaChevronLeft, FaChevronRight, FaClock, FaCalendarAlt } from "react-icons/fa";
 import { MovieContext } from "../../../../contexts/MovieProvider";
 import { getObjectById } from "../../../../services/firebaseResponse";
-import { AuthorContext } from "../../../../contexts/AuthorProvider";
+
 import { PlanContext } from "../../../../contexts/PlanProvider";
 import { Link } from 'react-router-dom';
 
 function FilmCountry({ title, countryName, titleClass }) {
     const movies = useContext(MovieContext);
-    const authors = useContext(AuthorContext);
+    
     const plans = useContext(PlanContext);
 
     const filteredMovies = countryName

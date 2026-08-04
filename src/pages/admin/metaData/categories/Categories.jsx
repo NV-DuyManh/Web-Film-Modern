@@ -52,7 +52,6 @@ function Categories(props) {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            console.error(err);
             setLoading(false);
             setProgress(0);
         }

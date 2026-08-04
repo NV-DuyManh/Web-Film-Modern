@@ -1,13 +1,11 @@
-import React, { useContext } from 'react';
+import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
+import React, { useContext, useEffect, useState } from 'react';
 import { Dialog, Slide } from '@mui/material';
 import { FaTimesCircle, FaStar, FaGlobe, FaClock, FaCalendarAlt, FaTv, FaCrown, FaFilm, FaUserTie, FaUsers, FaUserNinja, FaMoneyBillWave } from 'react-icons/fa';
 import { MdOutlineSubtitles, MdMic, MdOutlineVoiceChat } from 'react-icons/md';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 
-import { ActorContext } from '../../../../contexts/ActorProvider';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
-import { AuthorContext } from '../../../../contexts/AuthorProvider';
-import { CharacterContext } from '../../../../contexts/CharacterProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import Logo5 from "../../../../assets/Logo5.png";
@@ -107,10 +105,13 @@ function AvatarRow({ items, list, fallback, color = "cyan" }) {
 
 function ModalViewMovie({ open, handleClose, movie }) {
     const categoryTypes = useContext(CategoryTypeContext);
-    const actorsList = useContext(ActorContext);
+    const [actors, setActors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
     const categoriesList = useContext(CategoryContext);
-    const authorsList = useContext(AuthorContext);
-    const charactersList = useContext(CharacterContext);
+    const [authors, setAuthors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
+    const [characters, setCharacters] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
     const plansList = useContext(PlanContext);
 
     if (!movie) return null;
@@ -288,13 +289,13 @@ function ModalViewMovie({ open, handleClose, movie }) {
                         {/* Grid: Directors + Actors + Characters */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <GlowCard title="Directors" icon={FaUserTie} color="yellow">
-                                <AvatarRow items={movie.listAuthor} list={authorsList} fallback={Logo5} color="yellow" />
+                                <AvatarRow items={movie.listAuthor} list={authors} fallback={Logo5} color="yellow" />
                             </GlowCard>
                             <GlowCard title="Actors" icon={FaUsers} color="pink">
-                                <AvatarRow items={movie.listActor} list={actorsList} fallback={Logo5} color="pink" />
+                                <AvatarRow items={movie.listActor} list={actors} fallback={Logo5} color="pink" />
                             </GlowCard>
                             <GlowCard title="Characters" icon={FaUserNinja} color="green">
-                                <AvatarRow items={movie.listCharacter} list={charactersList} fallback={Logo5} color="green" />
+                                <AvatarRow items={movie.listCharacter} list={characters} fallback={Logo5} color="green" />
                             </GlowCard>
                         </div>
 

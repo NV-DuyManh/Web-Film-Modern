@@ -68,7 +68,6 @@ function Plans() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            console.error(err);
             alert("Có lỗi xảy ra, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);

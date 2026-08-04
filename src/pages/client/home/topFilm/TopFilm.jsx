@@ -6,14 +6,14 @@ import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaTicketAlt, FaListUl } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { AuthorContext } from '../../../../contexts/AuthorProvider';
+
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
 function TopFilm() {
     const movies = useContext(MovieContext);
     const topMovies = movies?.slice(0, 10) || [];
-    const authors = useContext(AuthorContext);
+    
     const plans = useContext(PlanContext);
 
     return (

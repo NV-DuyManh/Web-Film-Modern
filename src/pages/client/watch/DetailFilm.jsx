@@ -2,14 +2,12 @@ import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
-import { AuthorContext } from '../../../contexts/AuthorProvider';
-import { CharacterContext } from '../../../contexts/CharacterProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { RentMovieContext } from '../../../contexts/RentMovieProvider';
-import { updateDocument } from '../../../services/firebaseService';
+import { updateDocument, fetchDataById, getDocumentById } from '../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ListEpisodes from './ListEpisodes';
 
@@ -18,19 +16,29 @@ function DetailFilm() {
     const [activeTab, setActiveTab] = useState('episodes');
     const [showListDropdown, setShowListDropdown] = useState(false);
     const movies = useContext(MovieContext);
-    const authors = useContext(AuthorContext);
-    const characters = useContext(CharacterContext);
+    
+    const [authorsMap, setAuthorsMap] = useState({});
+    const [charactersMap, setCharactersMap] = useState({});
+    const authors = useMemo(() => Object.values(authorsMap), [authorsMap]);
+    const characters = useMemo(() => Object.values(charactersMap), [charactersMap]);
+    
     const plans = useContext(PlanContext);
-    const episodes = [];
+    const [episodes, setEpisodes] = useState([]);
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
-    // goi subscriptions => gói đăng ký 
     const subscriptions = useContext(SubscriptionContext) || [];
-    // all thue
     const allRent = useContext(RentMovieContext) || [];
 
     useEffect(() => {
         window.scrollTo(0, 0);
+    }, [id]);
+
+    useEffect(() => {
+        if (!id) return;
+        const unsubscribe = fetchDataById("Episodes", "movieID", id, (data) => {
+            setEpisodes(data);
+        });
+        return () => unsubscribe();
     }, [id]);
 
     const movie = useMemo(() => {
@@ -44,6 +52,32 @@ function DetailFilm() {
         return found;
     }, [movies, episodes, id]);
 
+
+    useEffect(() => {
+        if (!movie) return;
+        const authorIds = [...new Set([movie.author, ...(movie.listAuthor || [])])].filter(id => id && !authorsMap[id]);
+        
+        if (authorIds.length > 0) {
+            Promise.all(authorIds.map(id => getDocumentById("Authors", id).catch(() => null))).then(res => {
+                const valid = res.filter(Boolean);
+                if (valid.length) setAuthorsMap(prev => ({ ...prev, ...Object.fromEntries(valid.map(a => [a.id, a])) }));
+            });
+        }
+    }, [movie]);
+
+    useEffect(() => {
+        if (!movie) return;
+        const charList = movie.character || movie.characters || movie.listCharacter || [];
+        const charIds = [...new Set(charList)].filter(id => typeof id === 'string' && !charactersMap[id]);
+        
+        if (charIds.length > 0) {
+            Promise.all(charIds.map(id => getDocumentById("Characters", id).catch(() => null))).then(res => {
+                const valid = res.filter(Boolean);
+                if (valid.length) setCharactersMap(prev => ({ ...prev, ...Object.fromEntries(valid.map(c => [c.id, c])) }));
+            });
+        }
+    }, [movie]);
+
     const levelUser = useMemo(() => {
         if (!isLogin || !subscriptions || !plans) return 0;
         const allPlan = subscriptions.filter(p => {
@@ -53,7 +87,7 @@ function DetailFilm() {
                 ? p.expiryDate.toDate()
                 : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
             return expiry > new Date();
-        }); 
+        });
         const levelMax = allPlan.reduce((max, item) => {
             const plan = getObjectById(plans, item.planID);
             return plan && plan.level > max ? plan.level : max;
@@ -62,7 +96,9 @@ function DetailFilm() {
     }, [subscriptions, isLogin, plans, movie]);
 
     const checkRent = useMemo(() => {
+        if (!isLogin) return false;
         const check = allRent.find(p => {
+            if (!p.expiryDate) return false;
             const expiry = typeof p.expiryDate.toDate === 'function'
                 ? p.expiryDate.toDate()
                 : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
@@ -70,8 +106,7 @@ function DetailFilm() {
         });
         return check;
     }, [isLogin, allRent, id]);
-  console.log(allRent);
-  
+
     const checkShow = useMemo(() => {
         return levelUser || checkRent
     }, [levelUser, checkRent])

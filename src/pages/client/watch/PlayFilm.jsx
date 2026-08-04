@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
+import { fetchDataById, getDocumentById } from '../../../services/firebaseService';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
 import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../../utils/watchHistory';
@@ -14,22 +15,37 @@ function PlayFilm({ handleOpenLogin }) {
     const [activeAudio, setActiveAudio] = useState('vietsub');
     const movies = useContext(MovieContext);
     const plans = useContext(PlanContext);
-    const episodes = [];
+    const [episodes, setEpisodes] = useState([]);
+    const [currentEpisode, setCurrentEpisode] = useState(null);
     const playerRef = useRef(null);
 
+    useEffect(() => {
+        const fetchEp = async () => {
+            const ep = await getDocumentById("Episodes", id);
+            setCurrentEpisode(ep);
+        };
+        fetchEp();
+    }, [id]);
 
-    const currentEpisode = useMemo(() => episodes.find(e => e.id == id), [id, episodes]);
+    const movieId = currentEpisode ? currentEpisode.movieID : (movies.some(m => m.id == id) ? id : null);
+    
+    useEffect(() => {
+        if (!movieId) return;
+        const unsubscribe = fetchDataById("Episodes", "movieID", movieId, (data) => {
+            setEpisodes(data);
+        });
+        return () => unsubscribe();
+    }, [movieId]);
+
     const isDirectMovieId = !currentEpisode && movies.some(m => m.id == id);
-    const movieId = currentEpisode ? currentEpisode.movieID : id;
     const movie = useMemo(() => getObjectById(movies, movieId) || {}, [movies, movieId]);
-
     const realMovieId = currentEpisode ? currentEpisode.movieID : (isDirectMovieId ? id : null);
 
     const [playEpisodes, setPlayEpisodes] = useState({});
     const episodeShow = useMemo(() => {
-        const mid = currentEpisode ? currentEpisode.movieID : id;
-        return episodes.filter(e => e.movieID == mid).sort((a, b) => a.numberEpisode - b.numberEpisode);
-    }, [id, episodes, currentEpisode]);
+        if (!movieId) return [];
+        return episodes.filter(e => e.movieID == movieId).sort((a, b) => a.numberEpisode - b.numberEpisode);
+    }, [movieId, episodes]);
 
 
     const [showModal, setShowModal] = useState(false);
@@ -127,7 +143,6 @@ function PlayFilm({ handleOpenLogin }) {
         <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25">
             <div className="mx-auto px-4 sm:px-6 pt-4">
 
-
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-3">
                         <button
@@ -152,13 +167,13 @@ function PlayFilm({ handleOpenLogin }) {
 
 
                     {resumeData && (
-                        <div className="relative flex items-center gap-3 overflow-hidden rounded-xl border border-amber-500/20 bg-amber-900/20 backdrop-blur-md px-4 py-2 text-sm font-medium text-amber-100 shadow-[0_0_15px_rgba(245,158,11,0.1)]">
-                            <div className="relative flex h-7 w-7 items-center justify-center rounded-full bg-amber-500/20 text-amber-400">
-                                <FaHistory className="text-[12px]" />
-                            </div>
-                            <p className="relative tracking-wide">
-                                Lần trước xem đến <span className="mx-0.5 font-bold text-amber-400">Tập {resumeData.latestEpisodeNumber}</span> 
-                                <span className="ml-1 text-xs text-amber-200/60">({timeAgo(resumeData.updatedAt)})</span>
+                        <div 
+                            className="flex items-center gap-2 bg-[#f28123] px-3 py-1 text-white cursor-pointer hover:bg-[#d9701c] transition-colors"
+                            onClick={() => setShowModal(true)}
+                        >
+                            <FaHistory className="text-[13px]" />
+                            <p className="text-[13.5px] font-medium">
+                                Bạn vừa xem tập {resumeData.latestEpisodeNumber} lúc {timeAgo(resumeData.updatedAt)}
                             </p>
                         </div>
                     )}
@@ -208,8 +223,8 @@ function PlayFilm({ handleOpenLogin }) {
                     <div className="flex-1 w-full">
                         <div className="flex flex-col md:flex-row gap-4 justify-between items-start border-b border-gray-800 pb-6">
                             <div className="md:w-1/3">
-                                <h1 className="text-2xl font-bold text-white">{movie.name}</h1>
-                                <p className="text-yellow-500 text-sm mt-1">{movie.originName || movie.name} ({movie.year || 'Đang cập nhật'})</p>
+                                <h1 className="text-2xl font-bold text-white">{movie.otherName || movie.name}</h1>
+                                <p className="text-yellow-500 text-sm mt-1">{movie.name}</p>
                             </div>
                             <div className="md:w-2/3 text-sm text-gray-400 leading-relaxed">
                                 <p>{movie.description || 'Đang cập nhật nội dung giới thiệu cho bộ phim này...'}</p>

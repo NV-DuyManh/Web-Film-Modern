@@ -5,14 +5,14 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaShieldAlt, FaListUl } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
-import { AuthorContext } from '../../../../contexts/AuthorProvider';
+
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { Link } from 'react-router-dom';
 
 function FilmNew() {
     const movies = useContext(MovieContext);
-    const authors = useContext(AuthorContext);
+    
     const plans = useContext(PlanContext);
 
     return (

@@ -1,12 +1,13 @@
-import React, { useContext, useState } from 'react';
+import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
+import React, { useEffect,  useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel, IconButton } from '@mui/material';
 import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja, FaUserTie, FaTimes } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
-import { ActorContext } from '../../../../contexts/ActorProvider';
+
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
-import { AuthorContext } from '../../../../contexts/AuthorProvider';
-import { CharacterContext } from '../../../../contexts/CharacterProvider';
+
+
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { COUNTRIES } from '../../../../utils/Constants';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
@@ -30,14 +31,21 @@ const AGE_RATING_OPTIONS = [
 ];
 
 function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, progress, setMovie, error, setError }) {
+    const [actors, setActors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
+    const [authors, setAuthors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
+    const [characters, setCharacters] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
+
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);
 
     const categoryTypes = useContext(CategoryTypeContext);
-    const actors = useContext(ActorContext);
+    
     const categories = useContext(CategoryContext);
-    const authorsList = useContext(AuthorContext);
-    const characters = useContext(CharacterContext);
+    
+    
     const plansList = useContext(PlanContext);
     const [type, setType] = useState("");
     const [posterMode, setPosterMode] = useState("file");
@@ -48,7 +56,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
 
     const handleClickOpenChoose = (type) => {
         if (type === "actors") setDataChoose(actors);
-        else if (type === "authors") setDataChoose(authorsList);
+        else if (type === "authors") setDataChoose(authors);
         else if (type === "characters") setDataChoose(characters);
         else if (type === "categories") setDataChoose(categories);
 
@@ -302,7 +310,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
                             {movie.listAuthor?.map((item) => {
-                                const author = authorsList?.find(e => e.id === item);
+                                const author = authors?.find(e => e.id === item);
                                 return author ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
                                         <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.8)] transition-all duration-300' src={author.imgUrl} alt={author.name} />

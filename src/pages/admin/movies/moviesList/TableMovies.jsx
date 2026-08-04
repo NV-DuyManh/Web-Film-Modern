@@ -4,21 +4,22 @@ import { RiDeleteBin6Fill } from 'react-icons/ri';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import { IconButton, Tooltip } from '@mui/material';
 import { FaUsers, FaEye } from 'react-icons/fa';
-import { ActorContext } from '../../../../contexts/ActorProvider';
+
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { CharacterContext } from '../../../../contexts/CharacterProvider';
-import { AuthorContext } from '../../../../contexts/AuthorProvider';
+
+
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import ModalDelete from '../../../../components/admin/ModalDelete';
-import { deleteDocument } from '../../../../services/firebaseService';
+import { deleteDocument , fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import Logo5 from '../../../../assets/Logo5.png';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 
 const getStatusStyle = (status) => {
+
     switch (status) {
         case "Sắp chiếu": return "bg-amber-500/10 text-amber-300 border-amber-400/50 shadow-[0_0_8px_rgba(251,191,36,0.4)]";
         case "Đang chiếu": return "bg-emerald-500/10 text-emerald-300 border-emerald-400/50 shadow-[0_0_8px_rgba(52,211,153,0.4)]";
@@ -39,12 +40,19 @@ const getAgeRatingStyle = (ageRating) => {
 };
 
 function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
+    const [actors, setActors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
+    const [authors, setAuthors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
+    const [characters, setCharacters] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
+
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const actors = useContext(ActorContext);
-    const characters = useContext(CharacterContext);
-    const authors = useContext(AuthorContext);
+    
+    
+    
     const categories = useContext(CategoryContext);
 
     const dataSearch = useMemo(() =>
