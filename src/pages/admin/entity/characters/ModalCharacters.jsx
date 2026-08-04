@@ -21,7 +21,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-export default function ModalCharacters({ open, onChangeInput, handleClose, addcharacter, error, loading, progress, character, handleImageChange, setCharacter }) {
+function ModalCharacters({ open, onChangeInput, handleClose, addcharacter, error, loading, progress, character, handleImageChange, setCharacter }) {
     const [uploadMode, setUploadMode] = React.useState('file');
 
     const handleUrlChange = (e) => {
@@ -187,3 +187,5 @@ export default function ModalCharacters({ open, onChangeInput, handleClose, addc
         </Dialog>
     );
 }
+
+export default ModalCharacters;

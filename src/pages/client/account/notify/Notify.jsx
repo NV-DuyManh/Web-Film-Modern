@@ -86,7 +86,7 @@ function Notify(props) {
         return true;
     });
 
-    const FilterButton = ({ id, label, count }) => {
+    function FilterButton({ id, label, count }) {
         const isActive = filter === id;
         return (
             <button

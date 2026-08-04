@@ -7,7 +7,7 @@ import { RentMovieContext } from '../../../../contexts/RentMovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 
-const CountdownTimer = ({ expireDate, onExpire }) => {
+function CountdownTimer({ expireDate, onExpire }) {
     const [timeLeft, setTimeLeft] = useState(null);
 
     useEffect(() => {
@@ -53,7 +53,7 @@ const CountdownTimer = ({ expireDate, onExpire }) => {
 
 function RentFilm(props) {
     const { isLogin } = useContext(AuthContext);
-    const moviesData = useContext(RentMovieContext) || [];
+    const moviesData = useContext(RentMovieContext);
     const [viewMode, setViewMode] = useState('grid');
     const [searchQuery, setSearchQuery] = useState('');
     const movies = useContext(MovieContext);
@@ -66,7 +66,7 @@ function RentFilm(props) {
             return newSet;
         });
     }, []);
-  
+
     const rawRentedMovies = useMemo(() => {
         if (!isLogin || !moviesData) return [];
         const rentByUser = moviesData.filter(p => {

@@ -15,7 +15,7 @@ import Logo5 from "../../../../assets/Logo5.png";
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
 
-const NeonBadge = ({ icon: Icon, text, color = "cyan" }) => {
+function NeonBadge({ icon: Icon, text, color = "cyan" }) {
     const colorMap = {
         cyan: "from-cyan-500/10 to-transparent border-cyan-500/30 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:from-cyan-500/30 hover:to-cyan-500/10 hover:border-cyan-400 hover:text-cyan-100 hover:shadow-[0_0_25px_rgba(6,182,212,0.4)]",
         yellow: "from-yellow-500/10 to-transparent border-yellow-500/30 text-yellow-300 shadow-[0_0_15px_rgba(234,179,8,0.15)] hover:from-yellow-500/30 hover:to-yellow-500/10 hover:border-yellow-400 hover:text-yellow-100 hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]",
@@ -36,9 +36,9 @@ const NeonBadge = ({ icon: Icon, text, color = "cyan" }) => {
             {Icon && <Icon className="text-sm" />} <p className="inline">{text}</p>
         </div>
     );
-};
+}
 
-const GlowCard = ({ title, icon: Icon, color = "cyan", children }) => {
+function GlowCard({ title, icon: Icon, color = "cyan", children }) {
     const colorMap = {
         cyan: { border: "border-cyan-500/20 hover:border-cyan-500/50", title: "text-cyan-400", glow: "hover:shadow-[0_0_25px_rgba(6,182,212,0.12)]", iconBg: "bg-cyan-500/10" },
         purple: { border: "border-purple-500/20 hover:border-purple-500/50", title: "text-purple-400", glow: "hover:shadow-[0_0_25px_rgba(168,85,247,0.12)]", iconBg: "bg-purple-500/10" },
@@ -59,9 +59,9 @@ const GlowCard = ({ title, icon: Icon, color = "cyan", children }) => {
             {children}
         </div>
     );
-};
+}
 
-const AvatarItem = ({ entity, fallback, color }) => {
+function AvatarItem({ entity, fallback, color }) {
     const [hovered, setHovered] = React.useState(false);
     const glowMap = {
         cyan: { base: "shadow-[0_0_10px_rgba(6,182,212,0.4)] border-cyan-500/40", active: "shadow-[0_0_18px_rgba(6,182,212,0.7)] scale-110 -translate-y-1" },
@@ -88,9 +88,9 @@ const AvatarItem = ({ entity, fallback, color }) => {
             </div>
         </div>
     );
-};
+}
 
-const AvatarRow = ({ items, list, fallback, color = "cyan" }) => {
+function AvatarRow({ items, list, fallback, color = "cyan" }) {
     if (!items || items.length === 0) return <p className="text-gray-600 text-xs italic inline">N/A</p>;
 
     return (
@@ -102,10 +102,10 @@ const AvatarRow = ({ items, list, fallback, color = "cyan" }) => {
             })}
         </div>
     );
-};
+}
 
 
-export default function ModalViewMovie({ open, handleClose, movie }) {
+function ModalViewMovie({ open, handleClose, movie }) {
     const categoryTypes = useContext(CategoryTypeContext);
     const actorsList = useContext(ActorContext);
     const categoriesList = useContext(CategoryContext);
@@ -317,3 +317,5 @@ export default function ModalViewMovie({ open, handleClose, movie }) {
         </Dialog>
     );
 }
+
+export default ModalViewMovie;

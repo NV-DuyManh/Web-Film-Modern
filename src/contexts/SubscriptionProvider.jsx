@@ -3,7 +3,7 @@ import { fetchDocumentsRealtime } from '../services/firebaseService';
 
 export const SubscriptionContext = createContext();
 
-const SubscriptionProvider = ({ children }) => {
+function SubscriptionProvider({ children }) {
     const [subscriptions, setSubscriptions] = useState([]);
 
     useEffect(() => {
@@ -19,5 +19,5 @@ const SubscriptionProvider = ({ children }) => {
             {children}
         </SubscriptionContext.Provider>
     );
-};
+}
 export default SubscriptionProvider;

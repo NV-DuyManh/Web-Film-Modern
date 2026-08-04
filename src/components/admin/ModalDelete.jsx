@@ -8,7 +8,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalDelete({ handleClose, open, handleDeleted, titleDelete, contentDelete }) {
+function ModalDelete({ handleClose, open, handleDeleted, titleDelete, contentDelete }) {
     const [isDeleting, setIsDeleting] = React.useState(false);
     const [progress, setProgress] = React.useState(0);
 
@@ -118,3 +118,5 @@ export default function ModalDelete({ handleClose, open, handleDeleted, titleDel
         </Dialog>
     );
 }
+
+export default ModalDelete;

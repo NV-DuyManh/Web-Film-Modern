@@ -8,7 +8,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription, error, loading, progress, subscription, setSubscription, setError }) {
+function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription, error, loading, progress, subscription, setSubscription, setError }) {
     const plans = useContext(PlanContext);
     const users = useContext(UserContext);
 
@@ -182,3 +182,5 @@ export default function ModalSubscriptions({ open, onChangeInput, handleClose, a
         </Dialog>
     );
 }
+
+export default ModalSubscriptions;

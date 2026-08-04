@@ -30,7 +30,7 @@ export function useSelectRows(currentData, resetTrigger) {
     return { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected };
 }
 
-export default function DeleteBar({ count, onDelete }) {
+function DeleteBar({ count, onDelete }) {
     if (count === 0) return null;
 
     return (
@@ -71,3 +71,5 @@ export default function DeleteBar({ count, onDelete }) {
         </div>
     );
 }
+
+export default DeleteBar;

@@ -9,7 +9,7 @@ import { getObjectById } from '../../../../services/firebaseResponse';
 import ProfileHeader from './ProfileHeader';
 import ProfileForm from './ProfileForm';
 
-const Profile = () => {
+function Profile() {
     const { isLogin, setGlobalAvatarPreview } = useContext(AuthContext);
     const subscriptions = useContext(SubscriptionContext) || [];
     const plans = useContext(PlanContext) || [];
@@ -127,6 +127,6 @@ const Profile = () => {
             />
         </div>
     );
-};
+}
 
 export default Profile;

@@ -10,7 +10,7 @@ import { auth, googleProvider } from '../../../config/firebaseConfig';
 import { ROLES } from '../../../utils/Constants';
 import { addDocument } from '../../../services/firebaseService';
 
-export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
+function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
     const [showPassword, setShowPassword] = useState(false);
     const users = useContext(UserContext);
     const { loginByUser } = useContext(AuthContext);
@@ -195,3 +195,5 @@ export default function LogIn({ openLogin, handleCloseLogin, handleOpenRegister 
         </Dialog>
     );
 }
+
+export default LogIn;

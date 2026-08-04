@@ -14,7 +14,6 @@ import MovieProvider from './contexts/MovieProvider.jsx';
 import PlanProvider from './contexts/PlanProvider.jsx';
 import PackageProvider from './contexts/PackageProvider.jsx';
 import FeatureProvider from './contexts/FeatureProvider.jsx';
-import EpisodeProvider from './contexts/EpisodeProvider.jsx';
 import ShowTimeProvider from './contexts/ShowTimeProvider.jsx';
 import UserProvider from './contexts/UserProvider.jsx';
 import AuthProvider from './contexts/AuthProvider.jsx';
@@ -33,7 +32,6 @@ const providers = [
   PlanProvider,
   FeatureProvider,
   PackageProvider,
-  EpisodeProvider,
   ShowTimeProvider,
   UserProvider,
   ReviewProvider,

@@ -159,7 +159,7 @@ function HeaderClient() {
                                 setIsSearching(false);
                             }
                         }}
-                        onKeyDown={(e) => { if (e.key === 'Escape') { setSearchQuery(''); setIsSearching(false); e.target.blur(); } }}
+              
                     />
                     {searchQuery ? (
                         <button onClick={() => { setSearchQuery(''); }} className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer z-10">
@@ -178,9 +178,7 @@ function HeaderClient() {
                 <div ref={menuRef} className={`shrink-0 items-center gap-1.5 max-[1199px]:absolute max-[1199px]:grid max-[1199px]:grid-cols-2 max-[1199px]:gap-1 min-[1200px]:flex max-[1199px]:bg-[#0a192f]/98 max-[1199px]:backdrop-blur-2xl max-[1199px]:w-[calc(100%-24px)] max-[1199px]:max-w-150 max-[1199px]:left-3 sm:max-[1199px]:left-6 md:max-[1199px]:left-12 lg:max-[1199px]:left-24 max-[1199px]:right-auto bottom-0 max-[1199px]:translate-y-full max-[1199px]:px-4 max-[1199px]:py-4 max-[1199px]:border max-[1199px]:border-white/10 max-[1199px]:rounded-2xl max-[1199px]:shadow-[0_15px_40px_rgba(0,0,0,0.8)] max-[1199px]:mt-2 max-[1199px]:overflow-visible ${openMenu ? "max-[1199px]:grid min-[1200px]:flex" : "max-[1199px]:hidden"} `}>
 
                     {LISTCLIENT.map((item, index) => (
-                        <div
-                            key={index}
-                            ref={(el) => {
+                        <div key={index} ref={(el) => {
                                 if (item.path === "/category") cateRef.current = el;
                                 if (item.path === "/country") countryRef.current = el;
                             }}

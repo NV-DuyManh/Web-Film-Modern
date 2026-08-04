@@ -2,7 +2,7 @@ import React from 'react';
 import { GiCrown } from 'react-icons/gi';
 import { FaGem } from 'react-icons/fa';
 
-export const WingedFrame = ({ children, theme, size = 48 }) => {
+export function WingedFrame({ children, theme, size = 48 }) {
 
     let primaryColor, secondaryColor, accentColor, glowColor, gemColor;
 
@@ -206,5 +206,5 @@ export const WingedFrame = ({ children, theme, size = 48 }) => {
             )}
         </div>
     );
-};
+}
 

@@ -5,17 +5,16 @@ import { MovieContext } from '../../../contexts/MovieProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
-import { EpisodeContext } from '../../../contexts/EpisodeProvider';
 import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../../utils/watchHistory';
 import VideoPlayer from './VideoPlayer';
 
-export default function PlayFilm({ handleOpenLogin }) {
+function PlayFilm({ handleOpenLogin }) {
     const { id } = useParams();
     const navigate = useNavigate();
     const [activeAudio, setActiveAudio] = useState('vietsub');
     const movies = useContext(MovieContext);
     const plans = useContext(PlanContext);
-    const episodes = useContext(EpisodeContext);
+    const episodes = [];
     const playerRef = useRef(null);
 
 
@@ -177,7 +176,7 @@ export default function PlayFilm({ handleOpenLogin }) {
 
 
                     {showModal && resumeData && (
-                        <div className="absolute inset-0 z-[999] bg-black flex items-center justify-center p-4">
+                        <div className="absolute inset-0 z-999 bg-black flex items-center justify-center p-4">
                             <div className="resume-modal">
                                 <div className="resume-modal__icon">
                                     <FaPlay className="text-2xl ml-1" />
@@ -278,3 +277,5 @@ export default function PlayFilm({ handleOpenLogin }) {
         </div>
     );
 }
+
+export default PlayFilm;

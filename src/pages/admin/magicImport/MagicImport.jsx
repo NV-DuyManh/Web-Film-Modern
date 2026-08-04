@@ -3,7 +3,7 @@ import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExcha
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
-import { collection, doc, setDoc, updateDoc } from 'firebase/firestore'; 
+import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
 
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { AuthorContext } from '../../../contexts/AuthorProvider';
@@ -25,8 +25,8 @@ function MagicImport() {
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [isCopied, setIsCopied] = useState(false);
-    const [mode, setMode] = useState('IMPORT'); 
-    
+    const [mode, setMode] = useState('IMPORT');
+
     const [visualProgress, setVisualProgress] = useState(0);
     const [currentImportIdx, setCurrentImportIdx] = useState(-1);
     const [rowStatuses, setRowStatuses] = useState({});
@@ -40,7 +40,7 @@ function MagicImport() {
     const categoryTypes = useContext(CategoryTypeContext) || [];
     const actors = useContext(ActorContext) || [];
     const characters = useContext(CharacterContext) || [];
-    const existingMovies = useContext(MovieContext) || []; 
+    const existingMovies = useContext(MovieContext) || [];
     const existingEpisodes = useContext(EpisodeContext) || [];
     const existingShowtimes = useContext(ShowTimeContext) || [];
 
@@ -59,7 +59,7 @@ function MagicImport() {
                     }
                     return prev;
                 });
-            }, 25); 
+            }, 25);
         }
         return () => clearInterval(timer);
     }, [loading, currentImportIdx, previewData.length]);
@@ -222,7 +222,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         let localActors = [...actors];
         let localCharacters = [...characters];
         let localCategoryTypes = [...categoryTypes];
-        let localMovies = [...existingMovies]; 
+        let localMovies = [...existingMovies];
         let localEpisodes = [...existingEpisodes];
         let localShowtimes = [...existingShowtimes];
 
@@ -233,7 +233,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         try {
             for (let idx = 0; idx < totalRows; idx++) {
                 const movie = previewData[idx];
-                
+
                 setCurrentImportIdx(idx);
                 setRowStatuses(prev => ({ ...prev, [idx]: 'processing' }));
 
@@ -244,9 +244,9 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                 } else {
                     existingMovie = localMovies.find(m => m?.name && movie?.name && m.name.toLowerCase() === movie.name.toLowerCase());
                 }
-                
+
                 if (existingMovie && mode === 'IMPORT') {
-                    currentMovieId = existingMovie.id; 
+                    currentMovieId = existingMovie.id;
                 } else {
                     let listCategory = [];
                     let listActor = [];
@@ -260,7 +260,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         for (let i = 0; i < names.length; i++) {
                             const name = names[i];
                             const exist = localCategories.find(c => c.name.toLowerCase() === name.toLowerCase());
-                            const finalDesc = descs[i] || "Đang cập nhật..."; 
+                            const finalDesc = descs[i] || "Đang cập nhật...";
                             if (exist) {
                                 listCategory.push(exist.id);
                                 if (mode === 'UPDATE') await updateDoc(doc(db, "Categories", exist.id), { description: finalDesc });
@@ -292,7 +292,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             const name = names[i];
                             const finalDesc = descs[i] || "Đang cập nhật...";
                             const finalGender = genders[i] || "Male";
-                            
+
                             const exist = localAuthors.find(a => a.name.toLowerCase() === name.toLowerCase());
                             if (exist) {
                                 listAuthor.push(exist.id);
@@ -314,7 +314,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             const name = names[i];
                             const finalDesc = descs[i] || "Đang cập nhật...";
                             const finalGender = genders[i] || "Male";
-                            
+
                             const exist = localActors.find(a => a.name.toLowerCase() === name.toLowerCase());
                             if (exist) {
                                 listActor.push(exist.id);
@@ -336,7 +336,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             const name = names[i];
                             const finalDesc = descs[i] || "Đang cập nhật...";
                             const finalGender = genders[i] || "Male";
-                            
+
                             const exist = localCharacters.find(c => c.name.toLowerCase() === name.toLowerCase());
                             if (exist) {
                                 listCharacter.push(exist.id);
@@ -365,7 +365,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         if (movie.rent >= 0) updateData.rent = movie.rent;
                         if (movie.releaseYear) updateData.releaseYear = movie.releaseYear;
                         if (categoryTypeID) updateData.categoryTypeID = categoryTypeID;
-                        
+
                         updateData.listCategory = Array.from(new Set([...(existingMovie.listCategory || []), ...listCategory]));
                         updateData.listActor = Array.from(new Set([...(existingMovie.listActor || []), ...listActor]));
                         updateData.listCharacter = Array.from(new Set([...(existingMovie.listCharacter || []), ...listCharacter]));
@@ -377,11 +377,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         const movieRef = doc(collection(db, "Movies"));
                         currentMovieId = movieRef.id;
                         const submitMovie = {
-                            ...movie, id: currentMovieId, imgUrl: LOGO_POSTER, bannerUrl: LOGO_BANNER, listCategory, listActor, listCharacter, listAuthor,
+                            ...movie, id: currentMovieId, imgUrl: LOGO, bannerUrl: LOGO_BANNER, listCategory, listActor, listCharacter, listAuthor,
                             categoryTypeID, planID: finalPlanID, createdAt: new Date().toISOString()
                         };
                         Object.keys(submitMovie).forEach(key => {
-                            if (key.startsWith('raw') || ['gender', 'charGender', 'roomName', 'epNumber', 'epUrl'].includes(key)) {
+                            if (key.startsWith('raw') || ['gender', 'charGender', 'roomName', 'epNumber', 'epUrl', 'matchedMovieId'].includes(key)) {
                                 delete submitMovie[key];
                             }
                         });
@@ -395,7 +395,13 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     const epExists = localEpisodes.find(e => e.movieID === currentMovieId && e.numberEpisode === Number(movie.epNumber));
                     if (!epExists) {
                         const epRef = doc(collection(db, "Episodes"));
-                        await setDoc(epRef, { id: epRef.id, movieID: currentMovieId, numberEpisode: Number(movie.epNumber), url: movie.epUrl, createdAt: new Date().toISOString() });
+                        await setDoc(epRef, { 
+                            id: epRef.id, 
+                            movieID: currentMovieId, 
+                            title: movie.name,
+                            numberEpisode: Number(movie.epNumber), 
+                            url: movie.epUrl
+                        });
                         localEpisodes.push({ movieID: currentMovieId, numberEpisode: Number(movie.epNumber) });
                         epsAdded++;
                     }
@@ -404,7 +410,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                 if (movie.rawShowtimes && movie.roomName) {
                     const stExists = localShowtimes.find(s => s.movieId === currentMovieId && s.roomName === movie.roomName && s.time === movie.rawShowtimes);
                     if (!stExists) {
-                        const stRef = doc(collection(db, "ShowTimes")); 
+                        const stRef = doc(collection(db, "ShowTimes"));
                         await setDoc(stRef, { id: stRef.id, movieId: currentMovieId, time: movie.rawShowtimes, roomName: movie.roomName, createdAt: new Date().toISOString() });
                         localShowtimes.push({ movieId: currentMovieId, roomName: movie.roomName, time: movie.rawShowtimes });
                         showtimesAdded++;
@@ -422,7 +428,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         } finally {
             setLoading(false);
             setCurrentImportIdx(-1);
-            setVisualProgress(100); 
+            setVisualProgress(100);
         }
     };
 
@@ -448,7 +454,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
 
                 {/* CLEAR BUTTON */}
                 <div className='flex items-center gap-4'>
-                    <button 
+                    <button
                         onClick={handleClearAll}
                         title="Clear all inputs and tables"
                         className="flex hover:scale-105 cursor-pointer items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
@@ -504,7 +510,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         <div className="w-px self-stretch my-1.5 bg-white/10"></div>
 
                         {/* COPY BUTTON */}
-                        <button 
+                        <button
                             onClick={handleCopyPrompt}
                             className={`px-4 py-2.5 cursor-pointer hover:scale-105 text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 active:scale-95 ${isCopied ? 'bg-emerald-600/80' : 'bg-pink-600/80 hover:bg-pink-500/80'}`}
                         >
@@ -514,7 +520,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 </>
                             ) : (
                                 <>
-                                    <FaCopy className="text-sm"/> Copy
+                                    <FaCopy className="text-sm" /> Copy
                                 </>
                             )}
                         </button>
@@ -525,260 +531,260 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
             <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
                 <div className='col-span-1 lg:col-span-4 flex flex-col gap-4'>
                     <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(0, 255, 255, 0.25), rgba(139, 92, 246, 0.25))', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.08)' }}>
-                    <div className='table-container p-5 relative group transition-all' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                        
-                        <div className="flex bg-slate-800/50 rounded-xl p-1 mb-5 border border-white/10 relative">
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-yellow-600/60 p-2 flex justify-center items-center rounded-full z-10">
-                                <FaExchangeAlt className="text-yellow-300 text-xs " />
-                            </div>
-                            <button 
-                                onClick={() => setMode('IMPORT')}
-                                className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
-                                    ${mode === 'IMPORT' ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
-                            >
-                                Import Only
-                            </button>
-                            <button 
-                                onClick={() => setMode('UPDATE')}
-                                className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
-                                    ${mode === 'UPDATE' ? 'bg-fuchsia-500 text-white shadow-[0_0_15px_rgba(217,70,239,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
-                            >
-                                Smart Update
-                            </button>
-                        </div>
+                        <div className='table-container p-5 relative group transition-all' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
 
-                        <h2 className='text-cyan-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
-                            <FaCloudUploadAlt className="text-xl" /> Data Input Area
-                        </h2>
-                        <textarea
-                            className='w-full h-56 bg-black/20 border border-white/10 rounded-xl p-4 text-sm text-gray-300 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.2)] custom-scrollbar'
-                            placeholder='Paste data table here...'
-                            value={inputText}
-                            onChange={(e) => setInputText(e.target.value)} 
-                        />
-                        
-                        <div className="flex flex-col gap-3 mt-4">
-                            {errorMsg && (
-                                <div className="text-red-400 bg-red-500/10 border border-red-500/30 p-2.5 rounded-lg text-xs font-bold text-center shadow-[0_0_10px_rgba(239,68,68,0.1)]">
-                                    {errorMsg}
+                            <div className="flex bg-slate-800/50 rounded-xl p-1 mb-5 border border-white/10 relative">
+                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-yellow-600/60 p-2 flex justify-center items-center rounded-full z-10">
+                                    <FaExchangeAlt className="text-yellow-300 text-xs " />
                                 </div>
-                            )}
+                                <button
+                                    onClick={() => setMode('IMPORT')}
+                                    className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
+                                    ${mode === 'IMPORT' ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                                >
+                                    Import Only
+                                </button>
+                                <button
+                                    onClick={() => setMode('UPDATE')}
+                                    className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
+                                    ${mode === 'UPDATE' ? 'bg-fuchsia-500 text-white shadow-[0_0_15px_rgba(217,70,239,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                                >
+                                    Smart Update
+                                </button>
+                            </div>
 
-                            <button 
-                                onClick={handleParse}
-                                className={`w-full cursor-pointer hover:scale-105 py-3 rounded-xl text-white font-bold tracking-wider uppercase transition-all active:scale-95
+                            <h2 className='text-cyan-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
+                                <FaCloudUploadAlt className="text-xl" /> Data Input Area
+                            </h2>
+                            <textarea
+                                className='w-full h-56 bg-black/20 border border-white/10 rounded-xl p-4 text-sm text-gray-300 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.2)] custom-scrollbar'
+                                placeholder='Paste data table here...'
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                            />
+
+                            <div className="flex flex-col gap-3 mt-4">
+                                {errorMsg && (
+                                    <div className="text-red-400 bg-red-500/10 border border-red-500/30 p-2.5 rounded-lg text-xs font-bold text-center shadow-[0_0_10px_rgba(239,68,68,0.1)]">
+                                        {errorMsg}
+                                    </div>
+                                )}
+
+                                <button
+                                    onClick={handleParse}
+                                    className={`w-full cursor-pointer hover:scale-105 py-3 rounded-xl text-white font-bold tracking-wider uppercase transition-all active:scale-95
                                     ${mode === 'IMPORT' ? 'bg-cyan-600 hover:bg-cyan-500 shadow-[0_0_15px_rgba(8,145,178,0.4)]' : 'bg-fuchsia-600 hover:bg-fuchsia-500 shadow-[0_0_15px_rgba(192,38,211,0.4)]'}`}
-                            >
-                                Parse Data ({mode})
-                            </button>
-                            
-                            <label className='w-full  hover:scale-105 py-3 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold tracking-wider uppercase transition-all cursor-pointer shadow-[0_0_15px_rgba(5,150,105,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] active:scale-95'>
-                                <FaFileExcel className="text-xl" /> Upload Excel
-                                <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileUpload} className="hidden" />
-                            </label>
+                                >
+                                    Parse Data ({mode})
+                                </button>
+
+                                <label className='w-full  hover:scale-105 py-3 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold tracking-wider uppercase transition-all cursor-pointer shadow-[0_0_15px_rgba(5,150,105,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] active:scale-95'>
+                                    <FaFileExcel className="text-xl" /> Upload Excel
+                                    <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileUpload} className="hidden" />
+                                </label>
+                            </div>
                         </div>
-                    </div>
                     </div>
                 </div>
 
                 <div className='col-span-1 lg:col-span-8 flex flex-col gap-4'>
                     <div className='table-wrapper h-full' style={{ background: 'linear-gradient(120deg, rgba(0, 255, 255, 0.25), rgba(139, 92, 246, 0.25))', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.08)' }}>
-                    <div className='table-container p-5 h-full flex flex-col justify-between transition-all duration-300' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                        <div>
-                            <h2 className={`font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between transition-colors
+                        <div className='table-container p-5 h-full flex flex-col justify-between transition-all duration-300' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+                            <div>
+                                <h2 className={`font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between transition-colors
                                 ${mode === 'IMPORT' ? 'text-cyan-400' : 'text-fuchsia-400'}`}>
-                                <p className="inline">Preview Table ({mode === 'UPDATE' ? 'Update Mode' : 'Import Mode'})</p>
-                                <p className={`px-3 py-1 rounded-full text-xs border transition-colors
+                                    <p className="inline">Preview Table ({mode === 'UPDATE' ? 'Update Mode' : 'Import Mode'})</p>
+                                    <p className={`px-3 py-1 rounded-full text-xs border transition-colors
                                     ${mode === 'IMPORT' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' : 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30'} inline`}>
-                                    {previewData.length} items
-                                </p>
-                            </h2>
-                            
-                            <div className='border border-white/10 rounded-xl overflow-hidden mt-4'>
-                                <div className='h-72 flex flex-col relative'>
-                                {previewData.length > 0 ? (
-                                    <div className='overflow-auto h-full custom-scrollbar'>
-                                        <table className='w-full whitespace-nowrap text-xs min-w-max text-left border-collapse'>
-                                            <thead className='table-header border-b border-white/20 sticky top-0 z-10'>
-                                                <tr>
-                                                    <th className='p-3 text-center align-middle'>STT</th>
-                                                    <th className='p-3 text-center align-middle'>ACTION</th>
-                                                    <th className='p-3 text-center align-middle'>NAME (INTL / SELECT)</th>
-                                                    <th className='p-3 text-center align-middle'>NAME (VN)</th>
-                                                    <th className='p-3 text-center align-middle'>MOVIE DESC</th>
-                                                    <th className='p-3 text-center align-middle'>TYPE</th>
-                                                    <th className='p-3 text-center align-middle'>CATEGORIES</th>
-                                                    <th className='p-3 text-center align-middle'>CAT DESC</th>
-                                                    <th className='p-3 text-center align-middle'>DIRECTOR</th>
-                                                    <th className='p-3 text-center align-middle'>DIR DESC</th>
-                                                    <th className='p-3 text-center align-middle'>ACTORS</th>
-                                                    <th className='p-3 text-center align-middle'>ACTOR DESC</th>
-                                                    <th className='p-3 text-center align-middle'>CHARACTERS</th>
-                                                    <th className='p-3 text-center align-middle'>CHAR DESC</th>
-                                                    <th className='p-3 text-center align-middle'>GENDER</th>
-                                                    <th className='p-3 text-center align-middle'>CHAR GENDER</th>
-                                                    <th className='p-3 text-center align-middle'>INFO (YEAR/AGE/PLAN)</th>
-                                                    <th className='p-3 text-center align-middle'>DURATION</th>
-                                                    <th className='p-3 text-center align-middle'>RENT PRICE</th>
-                                                    <th className='p-3 text-center align-middle'>COUNTRY</th>
-                                                    <th className='p-3 text-center align-middle'>EPISODES</th>
-                                                    <th className='p-3 text-center align-middle'>EP DATA (NUM/URL)</th>
-                                                    <th className='p-3 text-center align-middle'>SHOWTIME (ROOM/TIME)</th>
-                                                    <th className='p-3 text-center align-middle'>STATUS</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {previewData.map((row, idx) => {
-                                                    const isDuplicated = existingMovies.some(m => m?.name && row?.name && m.name.toLowerCase() === row.name.toLowerCase());
-                                                    
-                                                    let rowClass = "border-b border-white/5 transition-all duration-300 text-gray-200 ";
-                                                    if (rowStatuses[idx] === 'processing') {
-                                                        rowClass += "bg-cyan-500/15 border-l-4 border-l-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)] animate-pulse text-cyan-300";
-                                                    } else if (rowStatuses[idx] === 'success') {
-                                                        rowClass += "bg-emerald-500/15 border-l-4 border-l-emerald-500 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]";
-                                                    } else if (isDuplicated) {
-                                                        rowClass += mode === 'UPDATE' ? 'bg-fuchsia-500/10 hover:bg-fuchsia-500/20' : 'bg-indigo-500/10 hover:bg-indigo-500/20';
-                                                    } else {
-                                                        rowClass += "hover:bg-white/5";
-                                                    }
+                                        {previewData.length} items
+                                    </p>
+                                </h2>
 
-                                                    return (
-                                                        <tr key={idx} className={rowClass}>
-                                                            <td className='p-3 text-center align-middle font-bold text-gray-400'>
-                                                                {idx + 1}
-                                                            </td>
-                                                            <td className='p-3 text-center align-middle'>
-                                                                <button onClick={() => handleRemoveRow(idx)} className="p-1.5 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-all" title="Remove row"><FaTrash size={14} /></button>
-                                                            </td>
-                                                            
-                                                            <td className='p-3 text-center align-middle font-bold text-cyan-300 min-w-45'>
-                                                                <div className="flex flex-col gap-1">
-                                                                    <p className="inline">{row.name}</p>
-                                                                    {mode === 'UPDATE' && (
-                                                                        <select
-                                                                            value={row.matchedMovieId || ""}
-                                                                            onChange={(e) => {
-                                                                                const val = e.target.value;
-                                                                                setPreviewData(prev => prev.map((item, i) => i === idx ? { ...item, matchedMovieId: val } : item));
-                                                                            }}
-                                                                            className="bg-slate-800 border border-white/10 rounded px-2 py-1.5 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 w-full font-sans cursor-pointer mt-1"
-                                                                        >
-                                                                            <option value="">-- Manual Link Select --</option>
-                                                                            {existingMovies.map(m => (
-                                                                                <option key={m.id} value={m.id} className="bg-slate-800 text-gray-200 py-1">{m.name}</option>
-                                                                            ))}
-                                                                        </select>
-                                                                    )}
-                                                                    {rowStatuses[idx] === 'processing' && <div className="text-[10px] text-cyan-400 font-normal mt-1">Syncing Data...</div>}
-                                                                    {rowStatuses[idx] === 'success' && <div className="text-[10px] text-emerald-400 font-bold mt-1">✓ Completed</div>}
-                                                                    {!rowStatuses[idx] && isDuplicated && (
-                                                                        mode === 'UPDATE' ? (
-                                                                            <div className="text-[9px] bg-fuchsia-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Will Update</div>
-                                                                        ) : (
-                                                                            <div className="text-[9px] bg-indigo-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Append Eps</div>
-                                                                        )
-                                                                    )}
-                                                                    {!rowStatuses[idx] && !isDuplicated && <div className="text-[9px] bg-emerald-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Create New</div>}
-                                                                </div>
-                                                            </td>
-                                                            
-                                                            <td className='p-3 text-center align-middle text-emerald-300 font-semibold'>{row.otherName}</td>
-                                                            <td className='p-3 text-center align-middle text-gray-300 truncate max-w-40' title={row.description}>{row.description}</td>
-                                                            <td className='p-3 text-center align-middle text-purple-300'>{row.rawCategoryType}</td>
-                                                            <td className='p-3 text-center align-middle text-pink-300'>{row.rawCategories}</td>
-                                                            <td className='p-3 text-center align-middle text-pink-200 truncate max-w-40' title={row.rawCategoryDesc}>{row.rawCategoryDesc}</td>
-                                                            <td className='p-3 text-center align-middle text-green-300'>{row.rawAuthor}</td>
-                                                            <td className='p-3 text-center align-middle text-green-200 truncate max-w-40' title={row.rawAuthorDesc}>{row.rawAuthorDesc}</td>
-                                                            <td className='p-3 text-center align-middle text-blue-300 truncate max-w-30' title={row.rawActors}>{row.rawActors}</td>
-                                                            <td className='p-3 text-center align-middle text-blue-200 truncate max-w-40' title={row.rawActorDesc}>{row.rawActorDesc}</td>
-                                                            <td className='p-3 text-center align-middle text-orange-300 truncate max-w-30' title={row.rawCharacters}>{row.rawCharacters}</td>
-                                                            <td className='p-3 text-center align-middle text-orange-200 truncate max-w-40' title={row.rawCharacterDesc}>{row.rawCharacterDesc}</td>
-                                                            <td className='p-3 text-center align-middle text-pink-300 truncate max-w-20' title={row.gender}>{row.gender}</td>
-                                                            <td className='p-3 text-center align-middle text-pink-300 truncate max-w-20' title={row.charGender}>{row.charGender}</td>
-                                                            <td className='p-3 text-center align-middle'>
-                                                                <div className="flex flex-col gap-1 items-center">
-                                                                    <p className="text-yellow-400 font-bold inline">{row.releaseYear}</p>
-                                                                    <p className="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.ageRating}</p>
-                                                                    <p className="bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.rawPlan || "Free"}</p>
-                                                                </div>
-                                                            </td>
-                                                            <td className='p-3 text-center align-middle font-mono'>{row.duration}m</td>
-                                                            <td className='p-3 text-center align-middle font-mono text-green-400'>{row.rent.toLocaleString()}</td>
-                                                            <td className='p-3 text-center align-middle'><p className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-1 rounded text-[11px] font-bold inline">{row.countriesID}</p></td>
-                                                            <td className='p-3 text-center align-middle'>
-                                                                <div className="flex flex-col gap-1 items-center bg-purple-500/10 border border-purple-500/20 p-1.5 rounded-lg">
-                                                                    <p className="text-purple-300 font-bold text-[13px] inline">Total: {row.endEpisode}</p>
-                                                                    <p className="text-[10px] text-purple-400 inline">S:{row.episodeSub} | D:{row.episodeDub}</p>
-                                                                </div>
-                                                            </td>
-                                                            <td className='p-3 text-center align-middle'>
-                                                                <div className="flex flex-col gap-1 items-center">
-                                                                    {row.epNumber ? <p className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">Ep: {row.epNumber}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
-                                                                    {row.epUrl ? <p className="text-blue-400 text-[10px] truncate w-16 inline" title={row.epUrl}>URL OK</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
-                                                                </div>
-                                                            </td>
-                                                            <td className='p-3 text-center align-middle'>
-                                                                <div className="flex flex-col gap-1 items-center">
-                                                                    {row.roomName ? <p className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">{row.roomName}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
-                                                                    {row.rawShowtimes ? <p className="text-cyan-200 text-[10px] truncate w-16 inline" title={row.rawShowtimes}>{row.rawShowtimes}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
-                                                                </div>
-                                                            </td>
-                                                            <td className='p-3 text-center align-middle'>
-                                                                <p className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)} inline`}>{row.status}</p>
-                                                            </td>
-                                                    </tr>
-                                                    );
-                                                })}
-                                            </tbody>
-                                        </table>
+                                <div className='border border-white/10 rounded-xl overflow-hidden mt-4'>
+                                    <div className='h-72 flex flex-col relative'>
+                                        {previewData.length > 0 ? (
+                                            <div className='overflow-auto h-full custom-scrollbar'>
+                                                <table className='w-full whitespace-nowrap text-xs min-w-max text-left border-collapse'>
+                                                    <thead className='table-header border-b border-white/20 sticky top-0 z-10'>
+                                                        <tr>
+                                                            <th className='p-3 text-center align-middle'>STT</th>
+                                                            <th className='p-3 text-center align-middle'>ACTION</th>
+                                                            <th className='p-3 text-center align-middle'>NAME (INTL / SELECT)</th>
+                                                            <th className='p-3 text-center align-middle'>NAME (VN)</th>
+                                                            <th className='p-3 text-center align-middle'>MOVIE DESC</th>
+                                                            <th className='p-3 text-center align-middle'>TYPE</th>
+                                                            <th className='p-3 text-center align-middle'>CATEGORIES</th>
+                                                            <th className='p-3 text-center align-middle'>CAT DESC</th>
+                                                            <th className='p-3 text-center align-middle'>DIRECTOR</th>
+                                                            <th className='p-3 text-center align-middle'>DIR DESC</th>
+                                                            <th className='p-3 text-center align-middle'>ACTORS</th>
+                                                            <th className='p-3 text-center align-middle'>ACTOR DESC</th>
+                                                            <th className='p-3 text-center align-middle'>CHARACTERS</th>
+                                                            <th className='p-3 text-center align-middle'>CHAR DESC</th>
+                                                            <th className='p-3 text-center align-middle'>GENDER</th>
+                                                            <th className='p-3 text-center align-middle'>CHAR GENDER</th>
+                                                            <th className='p-3 text-center align-middle'>INFO (YEAR/AGE/PLAN)</th>
+                                                            <th className='p-3 text-center align-middle'>DURATION</th>
+                                                            <th className='p-3 text-center align-middle'>RENT PRICE</th>
+                                                            <th className='p-3 text-center align-middle'>COUNTRY</th>
+                                                            <th className='p-3 text-center align-middle'>EPISODES</th>
+                                                            <th className='p-3 text-center align-middle'>EP DATA (NUM/URL)</th>
+                                                            <th className='p-3 text-center align-middle'>SHOWTIME (ROOM/TIME)</th>
+                                                            <th className='p-3 text-center align-middle'>STATUS</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {previewData.map((row, idx) => {
+                                                            const isDuplicated = existingMovies.some(m => m?.name && row?.name && m.name.toLowerCase() === row.name.toLowerCase());
+
+                                                            let rowClass = "border-b border-white/5 transition-all duration-300 text-gray-200 ";
+                                                            if (rowStatuses[idx] === 'processing') {
+                                                                rowClass += "bg-cyan-500/15 border-l-4 border-l-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)] animate-pulse text-cyan-300";
+                                                            } else if (rowStatuses[idx] === 'success') {
+                                                                rowClass += "bg-emerald-500/15 border-l-4 border-l-emerald-500 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]";
+                                                            } else if (isDuplicated) {
+                                                                rowClass += mode === 'UPDATE' ? 'bg-fuchsia-500/10 hover:bg-fuchsia-500/20' : 'bg-indigo-500/10 hover:bg-indigo-500/20';
+                                                            } else {
+                                                                rowClass += "hover:bg-white/5";
+                                                            }
+
+                                                            return (
+                                                                <tr key={idx} className={rowClass}>
+                                                                    <td className='p-3 text-center align-middle font-bold text-gray-400'>
+                                                                        {idx + 1}
+                                                                    </td>
+                                                                    <td className='p-3 text-center align-middle'>
+                                                                        <button onClick={() => handleRemoveRow(idx)} className="p-1.5 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-all" title="Remove row"><FaTrash size={14} /></button>
+                                                                    </td>
+
+                                                                    <td className='p-3 text-center align-middle font-bold text-cyan-300 min-w-45'>
+                                                                        <div className="flex flex-col gap-1">
+                                                                            <p className="inline">{row.name}</p>
+                                                                            {mode === 'UPDATE' && (
+                                                                                <select
+                                                                                    value={row.matchedMovieId || ""}
+                                                                                    onChange={(e) => {
+                                                                                        const val = e.target.value;
+                                                                                        setPreviewData(prev => prev.map((item, i) => i === idx ? { ...item, matchedMovieId: val } : item));
+                                                                                    }}
+                                                                                    className="bg-slate-800 border border-white/10 rounded px-2 py-1.5 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 w-full font-sans cursor-pointer mt-1"
+                                                                                >
+                                                                                    <option value="">-- Manual Link Select --</option>
+                                                                                    {existingMovies.map(m => (
+                                                                                        <option key={m.id} value={m.id} className="bg-slate-800 text-gray-200 py-1">{m.name}</option>
+                                                                                    ))}
+                                                                                </select>
+                                                                            )}
+                                                                            {rowStatuses[idx] === 'processing' && <div className="text-[10px] text-cyan-400 font-normal mt-1">Syncing Data...</div>}
+                                                                            {rowStatuses[idx] === 'success' && <div className="text-[10px] text-emerald-400 font-bold mt-1">✓ Completed</div>}
+                                                                            {!rowStatuses[idx] && isDuplicated && (
+                                                                                mode === 'UPDATE' ? (
+                                                                                    <div className="text-[9px] bg-fuchsia-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Will Update</div>
+                                                                                ) : (
+                                                                                    <div className="text-[9px] bg-indigo-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Append Eps</div>
+                                                                                )
+                                                                            )}
+                                                                            {!rowStatuses[idx] && !isDuplicated && <div className="text-[9px] bg-emerald-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Create New</div>}
+                                                                        </div>
+                                                                    </td>
+
+                                                                    <td className='p-3 text-center align-middle text-emerald-300 font-semibold'>{row.otherName}</td>
+                                                                    <td className='p-3 text-center align-middle text-gray-300 truncate max-w-40' title={row.description}>{row.description}</td>
+                                                                    <td className='p-3 text-center align-middle text-purple-300'>{row.rawCategoryType}</td>
+                                                                    <td className='p-3 text-center align-middle text-pink-300'>{row.rawCategories}</td>
+                                                                    <td className='p-3 text-center align-middle text-pink-200 truncate max-w-40' title={row.rawCategoryDesc}>{row.rawCategoryDesc}</td>
+                                                                    <td className='p-3 text-center align-middle text-green-300'>{row.rawAuthor}</td>
+                                                                    <td className='p-3 text-center align-middle text-green-200 truncate max-w-40' title={row.rawAuthorDesc}>{row.rawAuthorDesc}</td>
+                                                                    <td className='p-3 text-center align-middle text-blue-300 truncate max-w-30' title={row.rawActors}>{row.rawActors}</td>
+                                                                    <td className='p-3 text-center align-middle text-blue-200 truncate max-w-40' title={row.rawActorDesc}>{row.rawActorDesc}</td>
+                                                                    <td className='p-3 text-center align-middle text-orange-300 truncate max-w-30' title={row.rawCharacters}>{row.rawCharacters}</td>
+                                                                    <td className='p-3 text-center align-middle text-orange-200 truncate max-w-40' title={row.rawCharacterDesc}>{row.rawCharacterDesc}</td>
+                                                                    <td className='p-3 text-center align-middle text-pink-300 truncate max-w-20' title={row.gender}>{row.gender}</td>
+                                                                    <td className='p-3 text-center align-middle text-pink-300 truncate max-w-20' title={row.charGender}>{row.charGender}</td>
+                                                                    <td className='p-3 text-center align-middle'>
+                                                                        <div className="flex flex-col gap-1 items-center">
+                                                                            <p className="text-yellow-400 font-bold inline">{row.releaseYear}</p>
+                                                                            <p className="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.ageRating}</p>
+                                                                            <p className="bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.rawPlan || "Free"}</p>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className='p-3 text-center align-middle font-mono'>{row.duration}m</td>
+                                                                    <td className='p-3 text-center align-middle font-mono text-green-400'>{row.rent.toLocaleString()}</td>
+                                                                    <td className='p-3 text-center align-middle'><p className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-1 rounded text-[11px] font-bold inline">{row.countriesID}</p></td>
+                                                                    <td className='p-3 text-center align-middle'>
+                                                                        <div className="flex flex-col gap-1 items-center bg-purple-500/10 border border-purple-500/20 p-1.5 rounded-lg">
+                                                                            <p className="text-purple-300 font-bold text-[13px] inline">Total: {row.endEpisode}</p>
+                                                                            <p className="text-[10px] text-purple-400 inline">S:{row.episodeSub} | D:{row.episodeDub}</p>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className='p-3 text-center align-middle'>
+                                                                        <div className="flex flex-col gap-1 items-center">
+                                                                            {row.epNumber ? <p className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">Ep: {row.epNumber}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                            {row.epUrl ? <p className="text-blue-400 text-[10px] truncate w-16 inline" title={row.epUrl}>URL OK</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className='p-3 text-center align-middle'>
+                                                                        <div className="flex flex-col gap-1 items-center">
+                                                                            {row.roomName ? <p className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">{row.roomName}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                            {row.rawShowtimes ? <p className="text-cyan-200 text-[10px] truncate w-16 inline" title={row.rawShowtimes}>{row.rawShowtimes}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td className='p-3 text-center align-middle'>
+                                                                        <p className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)} inline`}>{row.status}</p>
+                                                                    </td>
+                                                                </tr>
+                                                            );
+                                                        })}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        ) : (
+                                            <div className='absolute inset-0 flex flex-col items-center justify-center text-gray-500 opacity-50'>
+                                                <FaMagic className='text-5xl mb-3' />
+                                                <p>Data will appear here after parsing</p>
+                                            </div>
+                                        )}
                                     </div>
-                                ) : (
-                                    <div className='absolute inset-0 flex flex-col items-center justify-center text-gray-500 opacity-50'>
-                                        <FaMagic className='text-5xl mb-3' />
-                                        <p>Data will appear here after parsing</p>
-                                    </div>
-                                )}
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="mt-4 p-4">
-                            {loading && (
-                                <div className="mb-4">
-                                    <div className="flex justify-between text-xs font-bold text-cyan-400 mb-1.5 uppercase tracking-wider">
-                                        <p className="animate-pulse inline">Syncing Cloud Database...</p>
-                                        <p className="inline">{parseFloat(Number(visualProgress).toFixed(2))}%</p>
+                            <div className="mt-4 p-4">
+                                {loading && (
+                                    <div className="mb-4">
+                                        <div className="flex justify-between text-xs font-bold text-cyan-400 mb-1.5 uppercase tracking-wider">
+                                            <p className="animate-pulse inline">Syncing Cloud Database...</p>
+                                            <p className="inline">{parseFloat(Number(visualProgress).toFixed(2))}%</p>
+                                        </div>
+                                        <div className="w-full bg-black/40 rounded-full h-3.5 overflow-hidden p-0.5 border border-white/10 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+                                            <div
+                                                className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-[width] duration-1500 ease-out shadow-[0_0_20px_rgba(217,70,239,0.7)]"
+                                                style={{ width: `${visualProgress}%` }}
+                                            />
+                                        </div>
                                     </div>
-                                    <div className="w-full bg-black/40 rounded-full h-3.5 overflow-hidden p-0.5 border border-white/10 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
-                                        <div 
-                                            className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-[width] duration-1500 ease-out shadow-[0_0_20px_rgba(217,70,239,0.7)]"
-                                            style={{ width: `${visualProgress}%` }}
-                                        />
+                                )}
+
+                                {successMsg && (
+                                    <div className="mb-3 p-2.5 border rounded-lg flex items-center justify-center gap-2 text-xs font-bold bg-green-500/10 border-green-500/20 text-green-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                                        <FaCheckCircle className="text-base" /> {successMsg}
                                     </div>
-                                </div>
-                            )}
+                                )}
 
-                            {successMsg && (
-                                <div className="mb-3 p-2.5 border rounded-lg flex items-center justify-center gap-2 text-xs font-bold bg-green-500/10 border-green-500/20 text-green-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-                                    <FaCheckCircle className="text-base" /> {successMsg}
-                                </div>
-                            )}
+                                <button
+                                    onClick={handleExecuteImport}
+                                    disabled={loading || previewData.length === 0}
+                                    className={`w-full py-3.5 rounded-xl font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 text-xs text-white
+                                    ${previewData.length > 0
+                                            ? (mode === 'IMPORT'
+                                                ? 'bg-linear-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer active:scale-[0.98]'
+                                                : 'bg-linear-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 shadow-[0_0_15px_rgba(217,70,239,0.4)] cursor-pointer active:scale-[0.98]')
+                                            : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/60'}`}
+                                >
+                                    <FaPlay className="text-xs" /> {loading ? "Syncing..." : `Confirm & Execute Magic (${mode})`}
+                                </button>
+                            </div>
 
-                            <button 
-                                onClick={handleExecuteImport}
-                                disabled={loading || previewData.length === 0}
-                                className={`w-full py-3.5 rounded-xl font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 text-xs text-white
-                                    ${previewData.length > 0 
-                                        ? (mode === 'IMPORT' 
-                                            ? 'bg-linear-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer active:scale-[0.98]'
-                                            : 'bg-linear-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 shadow-[0_0_15px_rgba(217,70,239,0.4)] cursor-pointer active:scale-[0.98]')
-                                        : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/60'}`}
-                            >
-                                <FaPlay className="text-xs" /> {loading ? "Syncing..." : `Confirm & Execute Magic (${mode})`}
-                            </button>
                         </div>
-
-                    </div>
                     </div>
                 </div>
             </div>

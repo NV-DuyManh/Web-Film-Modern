@@ -4,14 +4,7 @@ import Coder from '../../../../assets/Coder.png';
 import { WingedFrame } from '../../../../components/client/header/AvatarFrames';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 
-const ProfileHeader = ({
-    isLogin,
-    currentPlanInfo,
-    currentSelectedTheme,
-    AVAILABLE_FRAMES,
-    onAvatarChange,
-    onSelectFrame
-}) => {
+function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILABLE_FRAMES, onAvatarChange, onSelectFrame }) {
     const [showFrameModal, setShowFrameModal] = useState(false);
     const fileInputRef = useRef(null);
     const { globalAvatarPreview } = React.useContext(AuthContext);
@@ -184,6 +177,6 @@ const ProfileHeader = ({
             )}
         </>
     );
-};
+}
 
 export default ProfileHeader;

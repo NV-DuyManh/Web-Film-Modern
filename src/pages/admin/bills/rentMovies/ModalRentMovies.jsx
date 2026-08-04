@@ -8,7 +8,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalRentMovies({ open, onChangeInput, handleClose, addRentMovie, error, loading, progress, rentMovie, setRentMovie, setError }) {
+function ModalRentMovies({ open, onChangeInput, handleClose, addRentMovie, error, loading, progress, rentMovie, setRentMovie, setError }) {
     const movies = useContext(MovieContext);
     const users = useContext(UserContext);
 
@@ -182,3 +182,5 @@ export default function ModalRentMovies({ open, onChangeInput, handleClose, addR
         </Dialog>
     );
 }
+
+export default ModalRentMovies;

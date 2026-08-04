@@ -29,7 +29,7 @@ const AGE_RATING_OPTIONS = [
     { id: "T18", name: "T18" }
 ];
 
-export default function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, progress, setMovie, error, setError }) {
+function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, progress, setMovie, error, setError }) {
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);
 
@@ -468,3 +468,5 @@ export default function ModalMovies({ open, handleClose, movie, onChangeInput, o
         </Dialog>
     );
 }
+
+export default ModalMovies;

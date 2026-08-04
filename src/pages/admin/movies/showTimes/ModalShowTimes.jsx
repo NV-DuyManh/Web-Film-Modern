@@ -8,7 +8,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalShowTimes({ open, onChangeInput, handleClose, addShowTime, error, loading, progress, showTime }) {
+function ModalShowTimes({ open, onChangeInput, handleClose, addShowTime, error, loading, progress, showTime }) {
     const movies = useContext(MovieContext);
 
     const formatDateTimeValue = (value) => {
@@ -137,3 +137,5 @@ export default function ModalShowTimes({ open, onChangeInput, handleClose, addSh
         </Dialog>
     );
 }
+
+export default ModalShowTimes;

@@ -10,7 +10,7 @@ import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
-export default function FilmComing() {
+function FilmComing() {
     const movies = useContext(MovieContext);
     const authors = useContext(AuthorContext);
     const plans = useContext(PlanContext);
@@ -119,3 +119,5 @@ export default function FilmComing() {
         </div>
     );
 }
+
+export default FilmComing;

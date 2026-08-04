@@ -6,7 +6,6 @@ import { AuthorContext } from '../../../contexts/AuthorProvider';
 import { CharacterContext } from '../../../contexts/CharacterProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { EpisodeContext } from '../../../contexts/EpisodeProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { RentMovieContext } from '../../../contexts/RentMovieProvider';
@@ -14,7 +13,7 @@ import { updateDocument } from '../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ListEpisodes from './ListEpisodes';
 
-export default function DetailFilm() {
+function DetailFilm() {
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState('episodes');
     const [showListDropdown, setShowListDropdown] = useState(false);
@@ -22,7 +21,7 @@ export default function DetailFilm() {
     const authors = useContext(AuthorContext);
     const characters = useContext(CharacterContext);
     const plans = useContext(PlanContext);
-    const episodes = useContext(EpisodeContext);
+    const episodes = [];
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     // goi subscriptions => gói đăng ký 
@@ -513,3 +512,5 @@ export default function DetailFilm() {
         </div>
     );
 }
+
+export default DetailFilm;

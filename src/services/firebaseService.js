@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, query, where } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, query, where, limit, startAfter, getCountFromServer, orderBy } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { uploadImageToCloudinary } from "../config/cloudinaryConfig";
 
@@ -43,6 +43,32 @@ export const fetchDocumentsRealtime = (collectionName, callback) => {
 
     return unsubscribe;
 };
+
+export const fetchDocumentsRealtimePage = (
+    collectionName,
+    pageSize,
+    callback
+) => {
+    const collectionRef = collection(db, collectionName);
+
+    const q = query(
+        collectionRef,
+        orderBy("createdAt", "desc"),
+        limit(pageSize)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+        const documents = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+
+        callback(documents, snapshot.docs[snapshot.docs.length - 1]);
+    });
+
+    return unsubscribe;
+};
+
 
 export const updateDocument = async (collectionName, values) => {
     const { id, ...updatedValues } = values;
@@ -123,4 +149,56 @@ export const deleteDocument = async (collectionName, values) => {
     }
 
     await deleteDoc(doc(collection(db, collectionName), id));
+};
+
+
+export const fetchDataById = async (
+    collectionName,
+    fieldName,
+    id,
+    pageSize = 5,
+    lastVisible = null) => {
+    console.log(collectionName);
+    
+    const ref = collection(db, collectionName);
+
+    // Lấy tổng số record
+    const countQuery = query(
+        ref,
+        where(fieldName, "==", id)
+    );
+
+    const countSnapshot = await getCountFromServer(countQuery);
+
+    let dataQuery;
+
+    if (lastVisible) {
+        dataQuery = query(
+            ref,
+            where(fieldName, "==", id),
+            orderBy("createdAt", "desc"),
+            startAfter(lastVisible),
+            limit(pageSize)
+        );
+    } else {
+        dataQuery = query(
+            ref,
+            where(fieldName, "==", id),
+            orderBy("createdAt", "desc"),
+            limit(pageSize)
+        );
+    }
+
+    const snapshot = await getDocs(dataQuery);
+
+    return {
+        data: snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        })),
+        total: countSnapshot.data().count,
+        totalPages: Math.ceil(countSnapshot.data().count / pageSize),
+        lastVisible: snapshot.docs[snapshot.docs.length - 1] || null,
+        hasNext: snapshot.docs.length === pageSize,
+    };
 };

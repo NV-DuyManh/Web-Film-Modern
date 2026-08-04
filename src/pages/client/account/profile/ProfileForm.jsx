@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaEdit, FaEnvelope, FaMapMarkerAlt, FaBirthdayCake, FaLock, FaEye, FaEyeSlash, FaPhoneAlt, FaSave, FaTimes, FaKey, FaCheck, FaShieldAlt, FaUser, FaVenusMars } from 'react-icons/fa';
 
-const ProfileForm = ({ isLogin, onSaveProfile, onSavePassword }) => {
+function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({ name: '', email: '', phone: '', address: '', dateOfBirth: '', sexID: '' });
     const [isChangingPassword, setIsChangingPassword] = useState(false);

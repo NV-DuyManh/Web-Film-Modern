@@ -2,73 +2,27 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
-import { deleteDocument } from '../../../../services/firebaseService';
+import { deleteDocument, fetchDataById, fetchDocumentsRealtimePage } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
-import { EpisodeContext } from '../../../../contexts/EpisodeProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 
 function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedMovie }) {
-    const episodes = useContext(EpisodeContext) || [];
+    const episodes =  [];
     const [open, setOpen] = useState(false);
-
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
-
+    const [currentData,setCurrentData] = useState([]);
     const start = (page - 1) * rowsPerPage;
 
-    const formatDateTime = (value) => {
-        if (!value) return "N/A";
-        let date;
-        if (value?.toDate) {
-            date = value.toDate();
-        } else if (value?.seconds) {
-            date = new Date(value.seconds * 1000);
-        } else {
-            date = new Date(value);
-        }
-        if (isNaN(date.getTime())) return value;
-        return date.toLocaleString("vi-VN");
-    };
+    useEffect(() => {
+        getData();
+    },[selectedMovie])
+  const getData = async () => {
+     const data = await fetchDataById("Episodes","movieID", selectedMovie.id );
+     console.log(data);
+  }
 
-    const dataSearch = useMemo(() => {
-        if (!selectedMovie) return [];
-        
-        const keyword = search.toLowerCase();
-
-        return episodes
-            .filter(e => e.movieID === selectedMovie.id)
-            .filter(e => {
-                if (!keyword) return true;
-                
-                const keywordLower = keyword.trim().toLowerCase();
-                const epString = e.numberEpisode.toString();
-                
-                const fullStrings = [
-                    epString,
-                    `tập ${epString}`,
-                    `tap ${epString}`,
-                    `tập${epString}`,
-                    `tap${epString}`,
-                    `episode ${epString}`,
-                    `ep ${epString}`,
-                    `episode${epString}`,
-                    `ep${epString}`
-                ];
-                
-                const matchEp = fullStrings.some(str => str.startsWith(keywordLower));
-                
-                const isShortNumber = /^\d+$/.test(keywordLower) && keywordLower.length < 5;
-                const matchUrl = !isShortNumber && e.url && e.url.toLowerCase().includes(keywordLower);
-                
-                return matchEp || matchUrl;
-            })
-            .sort((a, b) => {
-                return Number(a.numberEpisode) - Number(b.numberEpisode);
-            });
-    }, [search, episodes, selectedMovie]);
-
-    const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
 
     useEffect(() => { setPage(1); }, [search, selectedMovie]);
 
@@ -124,9 +78,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                                     />
                                 </th>
                                 <th className="w-[12%] text-center">EPISODE</th>
-                                <th className="w-[50%] text-center">URL</th>
-                                <th className="w-[15%] text-center">UPDATED</th>
-                                <th className="w-[15%] text-center">CREATED</th>
+                                <th className="w-[80%] text-center">URL</th>
                                 <th className="w-[8%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
@@ -148,18 +100,12 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                                             <td className="table-cell text-center font-black text-cyan-400 text-lg">
                                                 Episode {row.numberEpisode}
                                             </td>
-                                            <td className="table-cell text-center">
-                                                <a href={row.url} target="_blank" rel="noopener noreferrer" 
-                                                   className="text-cyan-400 hover:text-cyan-300 hover:underline transition-colors block truncate max-w-50 sm:max-w-87.5 md:max-w-125 mx-auto"
-                                                   title={row.url}>
+                                            <td className="table-cell text-center px-4">
+                                                <a href={row.url} target="_blank" rel="noopener noreferrer"
+                                                    className="text-cyan-400 hover:text-cyan-300 hover:underline transition-colors block truncate w-full"
+                                                    title={row.url}>
                                                     {row.url}
                                                 </a>
-                                            </td>
-                                            <td className="table-cell text-center text-slate-300 text-sm">
-                                                {formatDateTime(row.createdAt)}
-                                            </td>
-                                            <td className="table-cell text-center text-slate-500 text-xs">
-                                                {formatDateTime(row.createdAt)}
                                             </td>
                                             <td className="table-cell text-center">
                                                 <div className="flex justify-center! gap-2">
@@ -184,13 +130,13 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                             setPage={setPage}
                             rowsPerPage={rowsPerPage}
                             setRowsPerPage={setRowsPerPage}
-                            totalItems={dataSearch?.length || 0}
+                            totalItems={currentData.length || 0}
                         />
                     </div>
                 </div>
             </div>
 
-            <ModalDelete 
+            <ModalDelete
                 open={open}
                 handleClose={handleClose}
                 handleDeleted={handleDeleted}
@@ -198,7 +144,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                 contentDelete={`Are you sure you want to delete episode ${episode?.numberEpisode}?`}
             />
 
-            <ModalDelete 
+            <ModalDelete
                 open={openBulk}
                 handleClose={() => setOpenBulk(false)}
                 handleDeleted={handleBulkDeleted}

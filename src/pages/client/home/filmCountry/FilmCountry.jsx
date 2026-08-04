@@ -10,7 +10,7 @@ import { AuthorContext } from "../../../../contexts/AuthorProvider";
 import { PlanContext } from "../../../../contexts/PlanProvider";
 import { Link } from 'react-router-dom';
 
-export default function FilmCountry({ title, countryName, titleClass }) {
+function FilmCountry({ title, countryName, titleClass }) {
     const movies = useContext(MovieContext);
     const authors = useContext(AuthorContext);
     const plans = useContext(PlanContext);
@@ -146,3 +146,5 @@ export default function FilmCountry({ title, countryName, titleClass }) {
         </div>
     );
 }
+
+export default FilmCountry;

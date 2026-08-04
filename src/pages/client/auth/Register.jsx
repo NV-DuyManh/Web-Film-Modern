@@ -7,7 +7,7 @@ import { addDocument } from '../../../services/firebaseService';
 import { UserContext } from '../../../contexts/UserProvider';
 import { ROLES } from '../../../utils/Constants';
 
-export default function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
+function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const users = useContext(UserContext);
@@ -160,3 +160,5 @@ export default function Register({ openRegister, handleCloseRegister, handleOpen
         </Dialog>
     );
 }
+
+export default Register;

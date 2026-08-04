@@ -7,7 +7,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalCategory({open, onChangeInput, handleClose, addCategory, error, loading, progress, category}) {
+function ModalCategory({open, onChangeInput, handleClose, addCategory, error, loading, progress, category}) {
     return (
         <Dialog
             open={open}
@@ -83,3 +83,5 @@ export default function ModalCategory({open, onChangeInput, handleClose, addCate
         </Dialog>
     );
 }
+
+export default ModalCategory;

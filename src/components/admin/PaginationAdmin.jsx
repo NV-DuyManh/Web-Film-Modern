@@ -4,13 +4,7 @@ import Stack from '@mui/material/Stack';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-export default function PaginationAdmin({
-    page,
-    setPage,
-    rowsPerPage,
-    setRowsPerPage,
-    totalItems
-}) {
+function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItems }) {
     const totalPages = Math.ceil(totalItems / rowsPerPage);
     const from = totalItems === 0 ? 0 : (page - 1) * rowsPerPage + 1;
     const to = Math.min(page * rowsPerPage, totalItems);
@@ -204,3 +198,5 @@ export default function PaginationAdmin({
         </div>
     );
 }
+
+export default PaginationAdmin;

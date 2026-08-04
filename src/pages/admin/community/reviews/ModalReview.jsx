@@ -8,7 +8,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalReview({ open, onChangeInput, handleClose, addReview, error, loading, progress, review, setReview, setError }) {
+function ModalReview({ open, onChangeInput, handleClose, addReview, error, loading, progress, review, setReview, setError }) {
     const movies = useContext(MovieContext);
     const users = useContext(UserContext);
 
@@ -127,3 +127,5 @@ export default function ModalReview({ open, onChangeInput, handleClose, addRevie
         </Dialog>
     );
 }
+
+export default ModalReview;

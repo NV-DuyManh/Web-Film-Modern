@@ -20,7 +20,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-export default function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading, progress, user, handleImageChange, setUser }) {
+function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading, progress, user, handleImageChange, setUser }) {
     const [uploadMode, setUploadMode] = React.useState('file');
 
     const handleUrlChange = (e) => {
@@ -241,3 +241,5 @@ export default function ModalUsers({ open, onChangeInput, handleClose, addUser, 
         </Dialog>
     );
 }
+
+export default ModalUsers;

@@ -9,7 +9,7 @@ import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-const NeonBadge = ({ icon: Icon, text, color = "cyan" }) => {
+function NeonBadge({ icon: Icon, text, color = "cyan" }) {
     const colorMap = {
         cyan: "from-cyan-500/10 to-transparent border-cyan-500/30 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:from-cyan-500/30 hover:to-cyan-500/10 hover:border-cyan-400 hover:text-cyan-100 hover:shadow-[0_0_25px_rgba(6,182,212,0.4)]",
         yellow: "from-yellow-500/10 to-transparent border-yellow-500/30 text-yellow-300 shadow-[0_0_15px_rgba(234,179,8,0.15)] hover:from-yellow-500/30 hover:to-yellow-500/10 hover:border-yellow-400 hover:text-yellow-100 hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]",
@@ -30,9 +30,9 @@ const NeonBadge = ({ icon: Icon, text, color = "cyan" }) => {
             {Icon && <Icon className="text-[11px]" />} <p className="inline tracking-wide">{text}</p>
         </div>
     );
-};
+}
 
-const GlowCard = ({ title, icon: Icon, color = "cyan", children }) => {
+function GlowCard({ title, icon: Icon, color = "cyan", children }) {
     const colorMap = {
         cyan: { border: "border-cyan-500/20 hover:border-cyan-500/50", title: "text-cyan-400", glow: "hover:shadow-[0_0_25px_rgba(6,182,212,0.12)]", iconBg: "bg-cyan-500/10" },
         purple: { border: "border-purple-500/20 hover:border-purple-500/50", title: "text-purple-400", glow: "hover:shadow-[0_0_25px_rgba(168,85,247,0.12)]", iconBg: "bg-purple-500/10" },
@@ -54,9 +54,9 @@ const GlowCard = ({ title, icon: Icon, color = "cyan", children }) => {
             {children}
         </div>
     );
-};
+}
 
-export default function ModalViewUser({ open, handleClose, user }) {
+function ModalViewUser({ open, handleClose, user }) {
     const subscriptions = useContext(SubscriptionContext) || [];
     const plans = useContext(PlanContext) || [];
     const [showPassword, setShowPassword] = useState(false);
@@ -201,3 +201,5 @@ export default function ModalViewUser({ open, handleClose, user }) {
         </Dialog>
     );
 }
+
+export default ModalViewUser;

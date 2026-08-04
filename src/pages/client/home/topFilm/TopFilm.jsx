@@ -10,7 +10,7 @@ import { AuthorContext } from '../../../../contexts/AuthorProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
-export default function TopFilm() {
+function TopFilm() {
     const movies = useContext(MovieContext);
     const topMovies = movies?.slice(0, 10) || [];
     const authors = useContext(AuthorContext);
@@ -182,3 +182,5 @@ export default function TopFilm() {
         </div>
     );
 }
+
+export default TopFilm;

@@ -383,6 +383,11 @@ export const LISTACCOUNT = [
         path: "/account/notifications"
     },
     {
+        name: "Gói đang có",
+        icon: <FaVideo />,
+        path: "/account/pakaged"
+    },
+    {
         name: "Phim Đang Thuê",
         icon: <FaVideo />,
         path: "/account/rented"

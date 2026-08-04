@@ -12,7 +12,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataChoose, type, selectedItems = [] }) {
+function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataChoose, type, selectedItems = [] }) {
     const [searchTerm, setSearchTerm] = React.useState('');
 
     React.useEffect(() => {
@@ -114,3 +114,5 @@ export default function ModalChoose({ handleClickChoose, handleCloseChoose, open
         </Dialog>
     );
 }
+
+export default ModalChoose;

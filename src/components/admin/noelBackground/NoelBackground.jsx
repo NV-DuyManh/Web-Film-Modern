@@ -23,7 +23,7 @@ const NOEL_IMAGES = [
     "https://cdn-icons-png.flaticon.com/512/3468/3468386.png",
 ];
 
-export default function NoelBackground() {
+function NoelBackground() {
     const [items, setItems] = useState([]);
     const [snows, setSnows] = useState([]);
 
@@ -118,3 +118,5 @@ export default function NoelBackground() {
 
 
 
+
+export default NoelBackground;

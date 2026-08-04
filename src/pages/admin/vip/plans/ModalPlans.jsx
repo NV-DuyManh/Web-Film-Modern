@@ -10,7 +10,7 @@ const menuProps = {
     PaperProps: { sx: { bgcolor: '#1e293b', color: 'white', border: '1px solid rgba(255,255,255,0.1)' } }
 };
 
-export default function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading, progress, plan }) {
+function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading, progress, plan }) {
     
     const handleNumberChange = (e, isFloat = false) => {
         const regex = isFloat ? /[^0-9.]/g : /[^0-9]/g;
@@ -109,3 +109,5 @@ export default function ModalPlans({ open, onChangeInput, handleClose, addPlan, 
         </Dialog>
     );
 }
+
+export default ModalPlans;

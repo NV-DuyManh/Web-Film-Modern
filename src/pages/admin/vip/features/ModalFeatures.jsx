@@ -13,7 +13,7 @@ const AVAILABLE_OPTIONS = [
     { id: false, label: "False" }
 ];
 
-export default function ModalFeatures({ open, onChangeInput, handleClose, addFeature, error, loading, progress, feature }) {
+function ModalFeatures({ open, onChangeInput, handleClose, addFeature, error, loading, progress, feature }) {
     const plans = useContext(PlanContext);
 
     return (
@@ -116,3 +116,5 @@ export default function ModalFeatures({ open, onChangeInput, handleClose, addFea
         </Dialog>
     );
 }
+
+export default ModalFeatures;

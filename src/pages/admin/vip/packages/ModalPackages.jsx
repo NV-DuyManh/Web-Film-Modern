@@ -15,7 +15,7 @@ const TIME_OPTIONS = [
     { id: 12, label: "12 Months" }
 ];
 
-export default function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, loading, progress, packageItem }) {
+function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, loading, progress, packageItem }) {
     const plans = useContext(PlanContext);
 
     const handleNumberChange = (e, isFloat = false) => {
@@ -124,3 +124,5 @@ export default function ModalPackages({ open, onChangeInput, handleClose, addPac
         </Dialog>
     );
 }
+
+export default ModalPackages;

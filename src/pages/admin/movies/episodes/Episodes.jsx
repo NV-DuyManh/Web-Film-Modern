@@ -2,19 +2,18 @@ import React, { useState, useContext, useEffect } from 'react';
 import ModalEpisodes from './ModalEpisodes';
 import TableEpisodes from './TableEpisodes';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
-import { EpisodeContext } from '../../../../contexts/EpisodeProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 import { BsSearch } from 'react-icons/bs';
 import { FaPlus } from 'react-icons/fa';
 import { MdMovie } from 'react-icons/md';
 
-const inner = { numberEpisode: "", movieID: "", url: "" };
+const inner = { numberEpisode: "", title: "", movieID: "", url: "" };
 
 function Episodes() {
-    const episodes = useContext(EpisodeContext) || [];
+    const episodes =  [];
     const movies = useContext(MovieContext) || [];
-    const [selectedMovie, setSelectedMovie] = useState(null);
+    const [selectedMovie, setSelectedMovie] = useState(null);   
 
     const [open, setOpen] = useState(false);
     const [episode, setEpisode] = useState(inner);
@@ -28,7 +27,7 @@ function Episodes() {
 
     useEffect(() => {
         if (selectedMovie) {
-            setEpisode(prev => ({ ...prev, movieID: selectedMovie.id }));
+            setEpisode(prev => ({ ...prev, movieID: selectedMovie.id, title: selectedMovie.name }));
         } else {
             setEpisode(inner);
         }
@@ -84,10 +83,8 @@ function Episodes() {
                 const existingEp = episodes?.find(e => e.movieID === submitData.movieID && Number(e.numberEpisode) === Number(submitData.numberEpisode));
                 if (existingEp) {
                     submitData.id = existingEp.id;
-                    submitData.createdAt = existingEp.createdAt || new Date().toISOString();
                     await updateDocument("Episodes", submitData);
                 } else {
-                    submitData.createdAt = new Date().toISOString();
                     await addDocument("Episodes", submitData);
                 }
             } else {
@@ -141,9 +138,9 @@ function Episodes() {
 
                     const submitData = {
                         movieID: episode.movieID,
+                        title: selectedMovie?.name || "",
                         numberEpisode: numberEpisode,
-                        url: url,
-                        createdAt: existingEp?.createdAt || new Date().toISOString()
+                        url: url
                     };
 
                     if (existingEp) {

@@ -3,7 +3,7 @@ import { fetchDocumentsRealtime } from '../services/firebaseService';
 
 export const RentMovieContext = createContext();
 
-const RentMovieProvider = ({ children }) => {
+function RentMovieProvider({ children }) {
     const [rentMovies, setRentMovies] = useState([]);
 
     useEffect(() => {
@@ -19,5 +19,5 @@ const RentMovieProvider = ({ children }) => {
             {children}
         </RentMovieContext.Provider>
     );
-};
+}
 export default RentMovieProvider;

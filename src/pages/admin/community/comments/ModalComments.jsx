@@ -8,7 +8,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalComments({ open, onChangeInput, handleClose, addComment, error, loading, progress, comment, setComment, setError }) {
+function ModalComments({ open, onChangeInput, handleClose, addComment, error, loading, progress, comment, setComment, setError }) {
     const movies = useContext(MovieContext);
     const users = useContext(UserContext);
 
@@ -108,3 +108,5 @@ export default function ModalComments({ open, onChangeInput, handleClose, addCom
         </Dialog>
     );
 }
+
+export default ModalComments;

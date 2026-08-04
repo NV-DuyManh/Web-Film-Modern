@@ -23,6 +23,8 @@ class Users {
     + role: text
     + avatarUrl: text
     + sexID: text
+    + gender: text
+    + planID: text
     + createdAt: datetime
 }
 
@@ -79,11 +81,14 @@ class Movies {
     + otherName: text
     + releaseYear: int
     + ageRating: text
+    + isHot: boolean
     + hasSub: boolean
     + hasDub: boolean
+    + hasVoice: boolean
     + episodeSub: int
     + episodeDub: int
     + episodeVoice: int
+    + countriesID: text
 }
 
 class Episodes {
@@ -91,8 +96,6 @@ class Episodes {
     + numberEpisode: int
     + title: text
     + url: text
-    + duration: int
-    + createdAt: datetime
     + movieID: text
 }
 

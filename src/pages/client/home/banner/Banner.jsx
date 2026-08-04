@@ -20,7 +20,7 @@ import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 
-export default function Banner() {
+function Banner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [mainSwiper, setMainSwiper] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
@@ -203,3 +203,5 @@ export default function Banner() {
         </div>
     );
 }
+
+export default Banner;

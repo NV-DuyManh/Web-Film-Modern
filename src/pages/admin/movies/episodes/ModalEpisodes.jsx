@@ -6,12 +6,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ModalEpisodes({ 
-    open, onChangeInput, handleClose, addEpisode, addBulkEpisodes, 
-    error, loading, progress, episode, setEpisode,
-    isBulkMode, setIsBulkMode, bulkText, setBulkText,
-    selectedMovie
-}) {
+function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEpisodes, error, loading, progress, episode, setEpisode, isBulkMode, setIsBulkMode, bulkText, setBulkText, selectedMovie }) {
 
     const handleNumberChange = (e) => {
         const onlyNums = e.target.value.replace(/[^0-9]/g, '');
@@ -133,3 +128,5 @@ export default function ModalEpisodes({
         </Dialog>
     );
 }
+
+export default ModalEpisodes;
