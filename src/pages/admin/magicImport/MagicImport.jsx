@@ -12,7 +12,7 @@ import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 import { ActorContext } from '../../../contexts/ActorProvider';
 import { CharacterContext } from '../../../contexts/CharacterProvider';
 import { MovieContext } from '../../../contexts/MovieProvider';
-import { EpisodeContext } from '../../../contexts/EpisodeProvider';
+
 import { ShowTimeContext } from '../../../contexts/ShowTimeProvider';
 
 import LOGO from "../../../assets/Logo6.png";
