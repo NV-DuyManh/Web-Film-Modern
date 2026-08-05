@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
+import { getDefaultAvatar } from '../../../utils/defaultAvatar';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -268,7 +269,7 @@ function DetailFilm() {
                                     return (
                                         <div key={idx} className="relative flex flex-col items-center gap-1.5 w-14 cursor-pointer group">
                                             <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-600 group-hover:border-yellow-400 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.5)] transition-all duration-300 transform group-hover:scale-110 z-10">
-                                                <img src={character.imgUrl} alt={character.name} className="w-full h-full object-cover" />
+                                                <img src={character.imgUrl || getDefaultAvatar(character.sexID)} alt={character.name} className="w-full h-full object-cover" onError={(e) => e.target.src = getDefaultAvatar(character.sexID)} />
                                             </div>
                                             <p className="text-[10px] text-center text-slate-300 truncate w-full transition-opacity duration-300">{character.name}</p>
 
@@ -460,9 +461,10 @@ function DetailFilm() {
                                             <div key={idx} className="flex flex-col items-center group cursor-pointer">
                                                 <div className="relative w-full aspect-3/4 rounded-2xl overflow-hidden border border-slate-800 shadow-lg group-hover:border-yellow-400 group-hover:shadow-[0_8px_25px_rgba(250,204,21,0.25)] group-hover:-translate-y-1 transition-all duration-300">
                                                     <img
-                                                        src={char.imgUrl}
+                                                        src={char.imgUrl || getDefaultAvatar(char.sexID)}
                                                         alt={char.name}
                                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                                        onError={(e) => e.target.src = getDefaultAvatar(char.sexID)}
                                                     />
                                                     <div className="absolute inset-0 bg-linear-to- from-black/95 via-black/40 to-transparent flex flex-col justify-end p-3 text-center">
                                                         <h4 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors truncate">

@@ -11,6 +11,7 @@ import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar
 import LOGO from "../../../../assets/Logo.png";
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
 
 
 const getSexStyle = (sex) => {
@@ -123,9 +124,10 @@ function TableAuthors({ handleClickOpen, setAuthor, author, search }) {
                                         <div className="flex justify-center items-center py-2">
                                             <div className="group relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-white/10 cursor-pointer">
                                                 <img 
-                                                    src={getOptimizedUrl(row.imgUrl)} 
+                                                    src={row.imgUrl ? getOptimizedUrl(row.imgUrl) : getDefaultAvatar(row.sexID)} 
                                                     alt={row.name} 
                                                     className="w-full h-full object-cover transition-all duration-300" 
+                                                    onError={(e) => e.target.src = getDefaultAvatar(row.sexID)}
                                                 />
                                             </div>
                                         </div>

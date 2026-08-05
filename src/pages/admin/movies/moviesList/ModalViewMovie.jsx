@@ -9,6 +9,7 @@ import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import Logo5 from "../../../../assets/Logo5.png";
+import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -77,9 +78,10 @@ function AvatarItem({ entity, fallback, color }) {
             onMouseLeave={() => setHovered(false)}
         >
             <img
-                src={entity.imgUrl || fallback}
+                src={entity.imgUrl || getDefaultAvatar(entity.sexID)}
                 alt={entity.name}
                 className={`w-10 h-10 rounded-full object-cover border-2 ${g.base} transition-all duration-300 ${hovered ? g.active : ''}`}
+                onError={(e) => e.target.src = getDefaultAvatar(entity.sexID)}
             />
             <div className={`absolute -bottom-7 left-1/2 -translate-x-1/2 ${tipBg[color]} text-white text-[9px] font-bold px-2 py-0.5 rounded-md whitespace-nowrap transition-all duration-200 pointer-events-none z-30 shadow-lg ${hovered ? 'opacity-100' : 'opacity-0'}`}>
                 {entity.name}

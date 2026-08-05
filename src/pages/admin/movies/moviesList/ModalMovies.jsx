@@ -12,6 +12,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { COUNTRIES } from '../../../../utils/Constants';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import Logo5 from "../../../../assets/Logo5.png";
+import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 const VisuallyHiddenInput = styled('input')({ clip: 'rect(0 0 0 0)', height: 1, position: 'absolute', width: 1 });
@@ -313,7 +314,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                 const author = authors?.find(e => e.id === item);
                                 return author ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.8)] transition-all duration-300' src={author.imgUrl} alt={author.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(250,204,21,0.5)] border border-yellow-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.8)] transition-all duration-300' src={author.imgUrl || getDefaultAvatar(author.sexID)} alt={author.name} onError={(e) => e.target.src = getDefaultAvatar(author.sexID)} />
                                         <FaTimesCircle onClick={() => handleRemoveItem("authors", item)} className="absolute top-0 right-0 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
                                         <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-yellow-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
                                             {author.name}
@@ -332,7 +333,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                 const actor = actors?.find(e => e.id === item);
                                 return actor ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(236,72,153,0.8)] transition-all duration-300' src={actor.imgUrl} alt={actor.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(236,72,153,0.5)] border border-pink-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(236,72,153,0.8)] transition-all duration-300' src={actor.imgUrl || getDefaultAvatar(actor.sexID)} alt={actor.name} onError={(e) => e.target.src = getDefaultAvatar(actor.sexID)} />
                                         <FaTimesCircle onClick={() => handleRemoveItem("actors", item)} className="absolute top-0 right-0 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
                                         <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-pink-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
                                             {actor.name}
@@ -351,7 +352,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                 const character = characters?.find(e => e.id === item);
                                 return character ? (
                                     <div key={item} className="relative inline-block mt-1 mr-1 group cursor-pointer mb-2">
-                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.8)] transition-all duration-300' src={character.imgUrl} alt={character.name} />
+                                        <img className='w-11 h-11 rounded-full object-cover shadow-[0_0_10px_rgba(74,222,128,0.5)] border border-green-500/30 group-hover:scale-110 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.8)] transition-all duration-300' src={character.imgUrl || getDefaultAvatar(character.sexID)} alt={character.name} onError={(e) => e.target.src = getDefaultAvatar(character.sexID)} />
                                         <FaTimesCircle onClick={() => handleRemoveItem("characters", item)} className="absolute top-0 right-0 text-rose-500 bg-white rounded-full text-[14px] cursor-pointer hover:text-white hover:bg-rose-500 hover:scale-125 hover:rotate-90 transition-all duration-300 z-10 shadow-sm" />
                                         <div className="absolute top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-green-600 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
                                             {character.name}
