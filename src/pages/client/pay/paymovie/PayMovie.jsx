@@ -1,19 +1,21 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../../contexts/AuthProvider';
-import { MovieContext } from '../../../contexts/MovieProvider';
-import { getObjectById } from '../../../services/firebaseResponse';
-import { updateDocument, addDocument } from '../../../services/firebaseService';
+import { AuthContext } from '../../../../contexts/AuthProvider';
+import { MovieContext } from '../../../../contexts/MovieProvider';
+import { getObjectById } from '../../../../services/firebaseResponse';
+import { updateDocument, addDocument } from '../../../../services/firebaseService';
 import { FaCreditCard } from 'react-icons/fa';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { initialOptions } from '../../../utils/Constants';
+import { initialOptions } from '../../../../utils/Constants';
 import Swal from 'sweetalert2';
+import ModalPayMovie from './ModalPayMovie';
 
 function PayMovie(props) {
     const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
     const { id } = useParams();
     const movies = useContext(MovieContext) || [];
+    const [showModal, setShowModal] = useState(false);
 
     const movie = useMemo(() => getObjectById(movies, id), [movies, id]);
 
@@ -91,22 +93,7 @@ function PayMovie(props) {
                 status: "Success"
             });
 
-            Swal.fire({
-                title: 'Thuê phim thành công!',
-                html: `Chúc mừng bạn đã thuê thành công bộ phim <b>${movie.name}</b>.<br/>Nhấn <b>Xem ngay</b> để bắt đầu thưởng thức.`,
-                icon: 'success',
-                background: '#0f1322',
-                color: '#fff',
-                confirmButtonColor: '#e11d48',
-                showConfirmButton: true,
-                confirmButtonText: 'Xem ngay',
-                allowOutsideClick: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    navigate(`/play/${movie.id}`);
-                }
-            });
-
+            setShowModal(true);
         } catch (error) {
             console.error("Lỗi khi lưu giao dịch:", error);
             Swal.fire({
@@ -271,6 +258,20 @@ function PayMovie(props) {
 
                 </div>
             </div>
+            <ModalPayMovie 
+                show={showModal} 
+                movieName={movie?.name} 
+                onClose={() => {
+                    setShowModal(false);
+                    window.scrollTo(0, 0);
+                    navigate(`/play/${movie.id}`);
+                }} 
+                onGoHome={() => {
+                    setShowModal(false);
+                    window.scrollTo(0, 0);
+                    navigate(`/detailFilm/${movie.id}`);
+                }}
+            />
         </div>
     );
 }

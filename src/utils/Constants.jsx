@@ -1,4 +1,4 @@
-import { FaUsers, FaUserSecret, FaMagic, FaUser, FaHeart, FaList, FaHistory, FaBell, FaVideo } from "react-icons/fa";
+import { FaUsers, FaUserSecret, FaMagic, FaUser, FaHeart, FaList, FaHistory, FaBell, FaVideo, FaCrown, FaFilm } from "react-icons/fa";
 import { MdCategory, MdDashboard, MdLocalMovies, MdOutlinePriceChange } from "react-icons/md";
 import { RiVipDiamondFill } from "react-icons/ri";
 
@@ -383,13 +383,13 @@ export const LISTACCOUNT = [
         path: "/account/notifications"
     },
     {
-        name: "Gói đang có",
-        icon: <FaVideo />,
-        path: "/account/pakaged"
+        name: "Gói Đăng Ký",
+        icon: <FaCrown />,
+        path: "/account/subscriptions"
     },
     {
         name: "Phim Đang Thuê",
-        icon: <FaVideo />,
-        path: "/account/rented"
+        icon: <FaFilm />,
+        path: "/account/rentMovies"
     }
 ];

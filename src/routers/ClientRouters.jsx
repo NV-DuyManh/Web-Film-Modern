@@ -16,8 +16,8 @@ const PlayFilm = lazy(() => import('../pages/client/watch/PlayFilm'));
 const DetailFilm = lazy(() => import('../pages/client/watch/detailFilm/DetailFilm'));
 const Pay = lazy(() => import('../pages/client/pay/Pay'));
 const UpgradeVIP = lazy(() => import('../pages/client/pay/UpgradeVIP'));
-const PayVIP = lazy(() => import('../pages/client/pay/PayVIP'));
-const PayMovie = lazy(() => import('../pages/client/pay/PayMovie'));
+const PayVIP = lazy(() => import('../pages/client/pay/payvip/PayVIP'));
+const PayMovie = lazy(() => import('../pages/client/pay/paymovie/PayMovie'));
 const MenuAccount = lazy(() => import('../components/client/menuAccount/MenuAccount'));
 
 const LoadingFallback = () => (

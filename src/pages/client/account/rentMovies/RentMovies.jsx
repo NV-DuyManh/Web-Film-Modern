@@ -51,7 +51,7 @@ function CountdownTimer({ expireDate, onExpire }) {
     return <span className="flex flex-col items-center justify-center leading-tight gap-0.5">{timeLeft}</span>;
 };
 
-function RentFilm(props) {
+function RentMovies(props) {
     const { isLogin } = useContext(AuthContext);
     const moviesData = useContext(RentMovieContext);
     const [viewMode, setViewMode] = useState('grid');
@@ -76,7 +76,7 @@ function RentFilm(props) {
                 : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
             return p.userID == isLogin.id && expiry > new Date();
         });
-        return rentByUser.map(c => {
+        const mappedMovies = rentByUser.map(c => {
             const movie = getObjectById(movies, c.movieID);
             if (!movie) return null;
             const expiry = typeof c.expiryDate.toDate === 'function'
@@ -84,6 +84,15 @@ function RentFilm(props) {
                 : (c.expiryDate.seconds ? new Date(c.expiryDate.seconds * 1000) : new Date(c.expiryDate));
             return { ...movie, expireDate: expiry };
         }).filter(Boolean);
+
+        const uniqueMovies = {};
+        mappedMovies.forEach(m => {
+            if (!uniqueMovies[m.id] || m.expireDate > uniqueMovies[m.id].expireDate) {
+                uniqueMovies[m.id] = m;
+            }
+        });
+
+        return Object.values(uniqueMovies).sort((a, b) => b.expireDate - a.expireDate);
     }, [moviesData, isLogin, movies]);
 
     const rentedMovies = useMemo(() => {
@@ -142,15 +151,9 @@ function RentFilm(props) {
             )}
 
             {rentedMovies.length === 0 ? (
-                <div className="mt-6 w-full min-h-100 border border-dashed border-slate-700/60 rounded-3xl bg-slate-900/20 flex flex-col items-center justify-center p-10 text-center relative overflow-hidden group hover:border-slate-500 transition-colors duration-500">
-                    <div className="absolute inset-0 bg-linear-to-br from-fuchsia-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
-
-                    <span className="text-6xl mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)] group-hover:scale-110 group-hover:-rotate-3 transition-transform duration-500">🎬</span>
+                <div className="mt-6 w-full min-h-100 border border-dashed border-slate-700/60 rounded-3xl bg-slate-900/20 flex flex-col items-center justify-center p-10 text-center relative overflow-hidden">
+                    <span className="text-6xl mb-4 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">🎬</span>
                     <h3 className="text-slate-400 text-base md:text-lg mb-8">Bạn chưa thuê bộ phim nào</h3>
-
-                    <Link to="/singleMovies" className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-black px-6 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 hover:shadow-[0_0_25px_rgba(234,179,8,0.4)] hover:-translate-y-1 z-10">
-                        <FaFilm /> Khám phá kho phim thuê
-                    </Link>
                 </div>
             ) : (
                 <div className={`mt-4 ${viewMode === 'grid' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4' : 'flex flex-col gap-4'}`}>
@@ -223,4 +226,4 @@ function RentFilm(props) {
     );
 }
 
-export default RentFilm;
+export default RentMovies;

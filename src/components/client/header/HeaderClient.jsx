@@ -232,7 +232,7 @@ function HeaderClient() {
                         {!isLogin ? (
                             <button
                                 onClick={handleOpenLogin}
-                                className={`btn-shine-effect cursor-pointer hidden shrink-0 items-center gap-2 rounded-full bg-linear-to-r from-yellow-400 via-yellow-300 to-amber-500 px-4 py-2.5 text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-size-[200%_auto] hover:bg-position-[right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] min-[1200px]:flex xl:px-5 ${isSearching
+                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-full bg-linear-to-r from-yellow-400 via-yellow-300 to-amber-500 px-3 py-2 sm:px-4 sm:py-2.5 text-[12px] sm:text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-size-[200%_auto] hover:bg-position-[right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] xl:px-5 ${isSearching
                                     ? "max-md:hidden pointer-events-none"
                                     : ""
                                     }`}

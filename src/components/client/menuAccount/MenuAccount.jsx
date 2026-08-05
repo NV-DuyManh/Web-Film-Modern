@@ -8,8 +8,8 @@ import Favorites from '../../../pages/client/account/favorites/Favorites';
 import ListFilm from '../../../pages/client/account/listFilm/ListFilm';
 import ContinueFilm from '../../../pages/client/account/continueFilm/ContinueFilm';
 import Notify from '../../../pages/client/account/notify/Notify';
-import RentFilm from '../../../pages/client/account/rentFilm/RentFilm';
-import Pakages from '../../../pages/client/account/pakages/Pakages';
+import RentMovies from '../../../pages/client/account/rentMovies/RentMovies';
+import Subscriptions from '../../../pages/client/account/subscriptions/Subscriptions';
 
 function MenuAccount() {
     const { tab } = useParams();
@@ -31,8 +31,8 @@ function MenuAccount() {
             case 'Danh Sách': return <ListFilm />;
             case 'Xem Tiếp': return <ContinueFilm />;
             case 'Thông Báo': return <Notify />;
-            case 'Gói đang có': return <Pakages />;
-            case 'Phim Đang Thuê': return <RentFilm />;
+            case 'Gói Đăng Ký': return <Subscriptions />;
+            case 'Phim Đang Thuê': return <RentMovies />;
             default:
                 return (
                     <div className="flex-1 flex items-center justify-center min-h-125">

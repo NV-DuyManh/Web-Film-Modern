@@ -1,13 +1,15 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { AuthContext } from '../../../contexts/AuthProvider';
-import { PlanContext } from '../../../contexts/PlanProvider';
-import { PackageContext } from '../../../contexts/PackageProvider';
+import React, { useState, useContext, useEffect, useRef } from 'react';
+import { AuthContext } from '../../../../contexts/AuthProvider';
+import { PlanContext } from '../../../../contexts/PlanProvider';
+import { PackageContext } from '../../../../contexts/PackageProvider';
+import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { FaCreditCard } from 'react-icons/fa';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { initialOptions } from '../../../utils/Constants';
-import { addDocument } from '../../../services/firebaseService';
+import { initialOptions } from '../../../../utils/Constants';
+import { addDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
+import ModalPayVIP from './ModalPayVIP';
 
 function PayVIP(props) {
     const { isLogin } = useContext(AuthContext);
@@ -16,6 +18,7 @@ function PayVIP(props) {
     const planId = searchParams.get('id');
     const plans = useContext(PlanContext) || [];
     const packages = useContext(PackageContext) || [];
+    const subscriptions = useContext(SubscriptionContext) || [];
 
     const selectedPlanData = plans.find(p => p.id === planId) || plans[0];
 
@@ -37,7 +40,33 @@ function PayVIP(props) {
         { id: '6', months: 6, discount: 25 },
     ];
 
+    const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
+    const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
+    const selectedPlanIndex = sortedPlans.findIndex(p => p.id === selectedPlanData?.id);
+    const theme = themeNames[selectedPlanIndex] || 'cyan';
+
+    const getBadgeStyle = (t) => {
+        switch (t) {
+            case 'blue': return 'text-blue-400 bg-blue-400/10 border-blue-400/30 shadow-[0_0_10px_rgba(96,165,250,0.3)]';
+            case 'cyan': return 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_10px_rgba(34,211,238,0.3)]';
+            case 'yellow': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30 shadow-[0_0_10px_rgba(250,204,21,0.3)]';
+            case 'rose': return 'text-rose-400 bg-rose-400/10 border-rose-400/30 shadow-[0_0_10px_rgba(251,113,133,0.3)]';
+            default: return 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_10px_rgba(34,211,238,0.3)]';
+        }
+    };
+
+    const getTextColor = (t) => {
+        switch (t) {
+            case 'blue': return 'text-blue-400';
+            case 'cyan': return 'text-cyan-400';
+            case 'yellow': return 'text-yellow-400';
+            case 'rose': return 'text-rose-400';
+            default: return 'text-cyan-400';
+        }
+    };
+
     const [selectedDuration, setSelectedDuration] = useState(durations[0]?.id || '1');
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     useEffect(() => {
         if (durations.length > 0 && !durations.find(d => d.id === selectedDuration)) {
@@ -60,7 +89,21 @@ function PayVIP(props) {
 
     const today = new Date();
     const effectiveDateStr = today.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
-    const renewDate = new Date();
+    
+    let baseExpiryDate = new Date();
+    if (isLogin && selectedPlanData) {
+        const userSubs = subscriptions.filter(s => s.userID === isLogin.id && s.planID === selectedPlanData.id);
+        
+        userSubs.forEach(s => {
+            if (!s.expiryDate) return;
+            const exp = typeof s.expiryDate.toDate === 'function' ? s.expiryDate.toDate() : (s.expiryDate.seconds ? new Date(s.expiryDate.seconds * 1000) : new Date(s.expiryDate));
+            if (exp > baseExpiryDate) {
+                baseExpiryDate = exp;
+            }
+        });
+    }
+
+    const renewDate = new Date(baseExpiryDate);
     if (currentDuration) {
         renewDate.setMonth(renewDate.getMonth() + currentDuration.months);
     }
@@ -78,23 +121,7 @@ function PayVIP(props) {
                 expiryDate: renewDate,
                 status: "Success"
             });
-
-            Swal.fire({
-                title: 'Thanh toán thành công!',
-                html: `Chúc mừng bạn đã đăng ký <b>${packageInfo.name}</b>.<br/>Nhấn <b>Tuyệt vời</b> để quay về trang chủ.`,
-                icon: 'success',
-                background: '#0f1322',
-                color: '#fff',
-                confirmButtonColor: '#06b6d4',
-                showConfirmButton: true,
-                confirmButtonText: 'Tuyệt vời',
-                allowOutsideClick: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    navigate('/');
-                    window.location.reload(); 
-                }
-            });
+            setShowSuccessModal(true);
 
         } catch (error) {
             console.error("Lỗi khi lưu giao dịch:", error);
@@ -109,6 +136,38 @@ function PayVIP(props) {
     }
     return (
         <div className="min-h-screen bg-[#0f1322] pt-28 pb-20 px-4">
+            <style>{`
+                @keyframes modalFadeIn {
+                    from { opacity: 0; backdrop-filter: blur(0px); }
+                    to { opacity: 1; backdrop-filter: blur(12px); }
+                }
+                @keyframes modalSlideUp {
+                    from { opacity: 0; transform: translateY(40px) scale(0.95); }
+                    to { opacity: 1; transform: translateY(0) scale(1); }
+                }
+                @keyframes checkmarkBounce {
+                    0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+                    60% { transform: scale(1.2) rotate(10deg); }
+                    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+                }
+                @keyframes pulseGlow {
+                    0% { box-shadow: 0 0 20px rgba(34,211,238,0.4); }
+                    50% { box-shadow: 0 0 40px rgba(34,211,238,0.8), 0 0 60px rgba(59,130,246,0.6); }
+                    100% { box-shadow: 0 0 20px rgba(34,211,238,0.4); }
+                }
+                @keyframes floatUp1 {
+                    0%, 100% { transform: translateY(0) scale(1); opacity: 0.4; }
+                    50% { transform: translateY(-25px) scale(1.2); opacity: 0.8; }
+                }
+                @keyframes floatUp2 {
+                    0%, 100% { transform: translateY(0) scale(1); opacity: 0.3; }
+                    50% { transform: translateY(20px) scale(1.5); opacity: 1; }
+                }
+                @keyframes spinGradient {
+                    100% { transform: rotate(360deg); }
+                }
+            `}</style>
+            
             <div className="max-w-6xl mx-auto">
                 <div className="text-center mb-12">
                     <h1 className="text-3xl md:text-4xl font-black text-white mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
@@ -177,7 +236,7 @@ function PayVIP(props) {
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <p className="text-slate-300 inline">Tên gói</p>
-                                    <p className="text-cyan-400 font-bold inline">{packageInfo.name}</p>
+                                    <p className={`${getTextColor(theme)} font-bold inline`}>{packageInfo.name}</p>
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <p className="text-slate-300 inline">Thời hạn *</p>
@@ -286,6 +345,16 @@ function PayVIP(props) {
                     </div>
                 </div>
             </div>
+            <ModalPayVIP 
+                show={showSuccessModal} 
+                packageInfo={packageInfo} 
+                theme={theme} 
+                getBadgeStyle={getBadgeStyle} 
+                onClose={() => {
+                    navigate('/');
+                    window.location.reload();
+                }} 
+            />
         </div>
     );
 }
