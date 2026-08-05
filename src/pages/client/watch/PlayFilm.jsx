@@ -8,6 +8,8 @@ import { PlanContext } from '../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
 import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../../utils/watchHistory';
 import VideoPlayer from './VideoPlayer';
+import { AuthContext } from '../../../contexts/AuthProvider';
+import Comment from './detailFilm/Comment';
 
 function PlayFilm({ handleOpenLogin }) {
     const { id } = useParams();
@@ -18,6 +20,7 @@ function PlayFilm({ handleOpenLogin }) {
     const [episodes, setEpisodes] = useState([]);
     const [currentEpisode, setCurrentEpisode] = useState(null);
     const playerRef = useRef(null);
+    const { isLogin } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchEp = async () => {
@@ -263,6 +266,13 @@ function PlayFilm({ handleOpenLogin }) {
                         <div className="mt-4">
                             <ListEpisodes handleClickEpisodes={handleClickEpisodes} episodeShow={episodeShow} playEpisodes={playEpisodes} />
                         </div>
+                        <Comment 
+                            isLogin={isLogin} 
+                            onOpenLogin={() => window.dispatchEvent(new CustomEvent('openLoginModal'))} 
+                            movieId={realMovieId} 
+                            episodeId={playEpisodes?.id} 
+                            episodeName={playEpisodes?.numberEpisode ? `Tập ${playEpisodes.numberEpisode}` : null} 
+                        />
                     </div>
 
 

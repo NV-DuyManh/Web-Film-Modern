@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { Link, useSearchParams } from 'react-router-dom';
 import Logo6 from '../../../../assets/Logo6.png';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
+import DeleteDialog from '../../../../components/client/DeleteDialog';
 
 function ListFilm(props) {
     const [viewMode, setViewMode] = useState('grid');
@@ -188,59 +189,52 @@ function ListFilm(props) {
         }
     };
 
-    const handleDeleteList = async (listId) => {
+    const [deleteDialog, setDeleteDialog] = useState({ isOpen: false, type: '', id: null, movieId: null, title: '', message: '' });
+
+    const handleDeleteList = (listId) => {
         if (!isLogin) return;
-
-        const result = await Swal.fire({
+        setDeleteDialog({
+            isOpen: true,
+            type: 'list',
+            id: listId,
             title: 'Xóa danh sách?',
-            text: "Bạn không thể hoàn tác hành động này!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#475569',
-            confirmButtonText: 'Xóa',
-            cancelButtonText: 'Hủy',
-            background: '#1e293b',
-            color: '#fff',
+            message: 'Bạn không thể hoàn tác hành động này!'
         });
-
-        if (result.isConfirmed) {
-            try {
-                const updatedLists = userLists.filter(list => list.id !== listId);
-                await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
-            } catch (error) {
-                console.error("Error deleting list", error);
-            }
-        }
     };
 
-    const handleRemoveMovie = async (movieId, listId) => {
+    const handleRemoveMovie = (movieId, listId) => {
         if (!isLogin) return;
-        const result = await Swal.fire({
+        setDeleteDialog({
+            isOpen: true,
+            type: 'movie',
+            id: listId,
+            movieId: movieId,
             title: 'Bỏ phim khỏi danh sách?',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#475569',
-            confirmButtonText: 'Bỏ phim',
-            cancelButtonText: 'Hủy',
-            background: '#1e293b',
-            color: '#fff',
+            message: 'Bạn muốn xóa phim này khỏi danh sách?'
         });
+    };
 
-        if (result.isConfirmed) {
-            try {
+    const confirmDeleteAction = async () => {
+        try {
+            if (deleteDialog.type === 'list') {
+                const updatedLists = userLists.filter(list => list.id !== deleteDialog.id);
+                await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
+                if (selectedListId === deleteDialog.id) {
+                    setSelectedListId(null);
+                }
+            } else if (deleteDialog.type === 'movie') {
                 const updatedLists = userLists.map(list => {
-                    if (list.id === listId) {
-                        return { ...list, movies: (list.movies || []).filter(id => id !== movieId) };
+                    if (list.id === deleteDialog.id) {
+                        return { ...list, movies: (list.movies || []).filter(id => id !== deleteDialog.movieId) };
                     }
                     return list;
                 });
                 await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
                 Swal.fire({ title: 'Thành công', text: 'Đã bỏ phim', icon: 'success', timer: 1000, showConfirmButton: false, background: '#1e293b', color: '#fff' });
-            } catch (error) {
-                console.error("Error removing movie", error);
             }
+            setDeleteDialog({ ...deleteDialog, isOpen: false });
+        } catch (error) {
+            console.error("Error confirming delete", error);
         }
     };
 
@@ -572,6 +566,14 @@ function ListFilm(props) {
                     </div>
                 </div>
             )}
+            
+            <DeleteDialog
+                isOpen={deleteDialog.isOpen}
+                onClose={() => setDeleteDialog({ ...deleteDialog, isOpen: false })}
+                onConfirm={confirmDeleteAction}
+                title={deleteDialog.title}
+                message={deleteDialog.message}
+            />
         </div>
     );
 }

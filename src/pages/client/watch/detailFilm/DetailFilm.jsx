@@ -12,6 +12,7 @@ import { RentMovieContext } from '../../../../contexts/RentMovieProvider';
 import { updateDocument, fetchDataById, getDocumentById } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ListEpisodes from '../ListEpisodes';
+import Comment from './Comment';
 
 
 function DetailFilm() {
@@ -601,6 +602,8 @@ function DetailFilm() {
                                 </div>
                             </div>
                         </div>
+
+                        <Comment isLogin={isLogin} onOpenLogin={() => window.dispatchEvent(new CustomEvent('openLoginModal'))} movieId={realMovieId} />
 
                     </div>
                 </div>

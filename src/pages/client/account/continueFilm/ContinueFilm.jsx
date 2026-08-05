@@ -5,6 +5,7 @@ import { AuthContext } from '../../../../contexts/AuthProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import Swal from 'sweetalert2';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
+import DeleteDialog from '../../../../components/client/DeleteDialog';
 
 function ContinueFilm(props) {
     const { isLogin } = useContext(AuthContext);
@@ -22,42 +23,38 @@ function ContinueFilm(props) {
         }
     }, []);
 
-    const handleRemoveContinue = async (movieId, e) => {
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
+
+    const handleRemoveContinue = (movieId, e) => {
         e.preventDefault();
         e.stopPropagation();
-        
-        const result = await Swal.fire({
-            title: 'Xóa lịch sử?',
-            text: "Bạn muốn xóa phim này khỏi lịch sử xem?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#475569',
-            confirmButtonText: 'Xóa',
-            cancelButtonText: 'Hủy',
-            background: '#1e293b',
-            color: '#fff',
-        });
+        setItemToDelete(movieId);
+        setIsDeleteDialogOpen(true);
+    };
 
-        if (result.isConfirmed) {
-            try {
-                const all = JSON.parse(localStorage.getItem('mfilm_resume') || '{}');
-                delete all[movieId];
-                localStorage.setItem('mfilm_resume', JSON.stringify(all));
-                setResumeData(all);
-                
-                Swal.fire({
-                    title: 'Đã xóa!',
-                    text: 'Đã xóa khỏi lịch sử xem.',
-                    icon: 'success',
-                    background: '#1e293b',
-                    color: '#fff',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            } catch (error) {
-                console.error("Error removing history", error);
-            }
+    const confirmDeleteContinue = () => {
+        if (!itemToDelete) return;
+        try {
+            const all = JSON.parse(localStorage.getItem('mfilm_resume') || '{}');
+            delete all[itemToDelete];
+            localStorage.setItem('mfilm_resume', JSON.stringify(all));
+            setResumeData(all);
+            
+            setIsDeleteDialogOpen(false);
+            setItemToDelete(null);
+            
+            Swal.fire({
+                title: 'Đã xóa!',
+                text: 'Đã xóa khỏi lịch sử xem.',
+                icon: 'success',
+                background: '#1e293b',
+                color: '#fff',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            console.error("Error removing history", error);
         }
     };
 
@@ -212,6 +209,14 @@ function ContinueFilm(props) {
                     )}
                 </div>
             )}
+            
+            <DeleteDialog
+                isOpen={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                onConfirm={confirmDeleteContinue}
+                title="Xóa lịch sử?"
+                message="Bạn muốn xóa phim này khỏi lịch sử xem?"
+            />
         </div>
     );
 }

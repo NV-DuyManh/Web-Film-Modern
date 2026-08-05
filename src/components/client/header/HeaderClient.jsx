@@ -1,5 +1,5 @@
 import React, { useContext, useState, useRef, useEffect } from 'react';
-import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown, FaChevronDown } from 'react-icons/fa';
+import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown, FaChevronDown, FaFilm } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { IoClose, IoCloseCircle } from 'react-icons/io5';
@@ -300,16 +300,16 @@ function HeaderClient() {
                                             <FaUser className="text-purple-400 text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" /> Tài khoản
                                         </button>
 
-                                        <button className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/favorites'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
                                             <FaRegHeart className="text-pink-400 text-lg drop-shadow-[0_0_5px_rgba(236,72,153,0.5)]" /> Yêu thích
                                         </button>
 
-                                        <button className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/list'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
                                             <FaList className="text-cyan-400 text-lg drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]" /> Danh sách
                                         </button>
 
-                                        <button className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
-                                            <FaHistory className="text-yellow-400 text-lg drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]" /> Xem tiếp
+                                        <button onClick={() => { navigate('/account/rentMovies'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                            <FaFilm className="text-yellow-400 text-lg drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]" /> Phim đang thuê
                                         </button>
 
 

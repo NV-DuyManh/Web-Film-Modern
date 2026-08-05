@@ -6,6 +6,7 @@ import { MovieContext } from '../../../../contexts/MovieProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
+import DeleteDialog from '../../../../components/client/DeleteDialog';
 
 function Favorites(props) {
     const { isLogin } = useContext(AuthContext);
@@ -13,40 +14,35 @@ function Favorites(props) {
     const [viewMode, setViewMode] = useState('grid');
     const [searchQuery, setSearchQuery] = useState('');
 
-    const handleRemoveFavorite = async (movieId, e) => {
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
+
+    const handleRemoveFavorite = (movieId, e) => {
         e.preventDefault();
         e.stopPropagation();
         if (!isLogin) return;
-        
-        const result = await Swal.fire({
-            title: 'Xóa yêu thích?',
-            text: "Bạn muốn xóa phim này khỏi danh sách yêu thích?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#ef4444',
-            cancelButtonColor: '#475569',
-            confirmButtonText: 'Xóa',
-            cancelButtonText: 'Hủy',
-            background: '#1e293b',
-            color: '#fff',
-        });
+        setItemToDelete(movieId);
+        setIsDeleteDialogOpen(true);
+    };
 
-        if (result.isConfirmed) {
-            try {
-                const updatedList = (isLogin.listFavorite || []).filter(id => id !== movieId);
-                await updateDocument("Users", { id: isLogin.id, listFavorite: updatedList });
-                Swal.fire({
-                    title: 'Đã xóa!',
-                    text: 'Đã xóa khỏi danh sách yêu thích.',
-                    icon: 'success',
-                    background: '#1e293b',
-                    color: '#fff',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            } catch (error) {
-                console.error("Error removing favorite", error);
-            }
+    const confirmDeleteFavorite = async () => {
+        if (!itemToDelete || !isLogin) return;
+        try {
+            const updatedList = (isLogin.listFavorite || []).filter(id => id !== itemToDelete);
+            await updateDocument("Users", { id: isLogin.id, listFavorite: updatedList });
+            setIsDeleteDialogOpen(false);
+            setItemToDelete(null);
+            Swal.fire({
+                title: 'Đã xóa!',
+                text: 'Đã xóa khỏi danh sách yêu thích.',
+                icon: 'success',
+                background: '#1e293b',
+                color: '#fff',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        } catch (error) {
+            console.error("Error removing favorite", error);
         }
     };
 
@@ -199,6 +195,14 @@ function Favorites(props) {
                     )}
                 </div>
             )}
+            
+            <DeleteDialog
+                isOpen={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                onConfirm={confirmDeleteFavorite}
+                title="Xóa yêu thích?"
+                message="Bạn muốn xóa phim này khỏi danh sách yêu thích?"
+            />
         </div>
     );
 }
