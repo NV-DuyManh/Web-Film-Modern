@@ -1,28 +1,33 @@
 import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
-import { getDefaultAvatar } from '../../../utils/defaultAvatar';
-import { MovieContext } from '../../../contexts/MovieProvider';
-import { getObjectById } from '../../../services/firebaseResponse';
-import { PlanContext } from '../../../contexts/PlanProvider';
-import { AuthContext } from '../../../contexts/AuthProvider';
-import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
-import { RentMovieContext } from '../../../contexts/RentMovieProvider';
-import { updateDocument, fetchDataById, getDocumentById } from '../../../services/firebaseService';
+import ModalDetail from './ModalDetail';
+import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
+import { MovieContext } from '../../../../contexts/MovieProvider';
+import { getObjectById } from '../../../../services/firebaseResponse';
+import { PlanContext } from '../../../../contexts/PlanProvider';
+import { AuthContext } from '../../../../contexts/AuthProvider';
+import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
+import { RentMovieContext } from '../../../../contexts/RentMovieProvider';
+import { updateDocument, fetchDataById, getDocumentById } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
-import ListEpisodes from './ListEpisodes';
+import ListEpisodes from '../ListEpisodes';
+
 
 function DetailFilm() {
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState('episodes');
     const [showListDropdown, setShowListDropdown] = useState(false);
+    const [openLoginDialog, setOpenLoginDialog] = useState(false);
     const movies = useContext(MovieContext);
-    
+
     const [authorsMap, setAuthorsMap] = useState({});
+    const [actorsMap, setActorsMap] = useState({});
     const [charactersMap, setCharactersMap] = useState({});
     const authors = useMemo(() => Object.values(authorsMap), [authorsMap]);
+    const actors = useMemo(() => Object.values(actorsMap), [actorsMap]);
     const characters = useMemo(() => Object.values(charactersMap), [charactersMap]);
-    
+
     const plans = useContext(PlanContext);
     const [episodes, setEpisodes] = useState([]);
     const { isLogin } = useContext(AuthContext);
@@ -57,7 +62,7 @@ function DetailFilm() {
     useEffect(() => {
         if (!movie) return;
         const authorIds = [...new Set([movie.author, ...(movie.listAuthor || [])])].filter(id => id && !authorsMap[id]);
-        
+
         if (authorIds.length > 0) {
             Promise.all(authorIds.map(id => getDocumentById("Authors", id).catch(() => null))).then(res => {
                 const valid = res.filter(Boolean);
@@ -68,9 +73,22 @@ function DetailFilm() {
 
     useEffect(() => {
         if (!movie) return;
+        const actorList = movie.actor || movie.actors || movie.listActor || [];
+        const actorIds = [...new Set(actorList)].filter(id => typeof id === 'string' && !actorsMap[id]);
+
+        if (actorIds.length > 0) {
+            Promise.all(actorIds.map(id => getDocumentById("Actors", id).catch(() => null))).then(res => {
+                const valid = res.filter(Boolean);
+                if (valid.length) setActorsMap(prev => ({ ...prev, ...Object.fromEntries(valid.map(c => [c.id, c])) }));
+            });
+        }
+    }, [movie]);
+
+    useEffect(() => {
+        if (!movie) return;
         const charList = movie.character || movie.characters || movie.listCharacter || [];
         const charIds = [...new Set(charList)].filter(id => typeof id === 'string' && !charactersMap[id]);
-        
+
         if (charIds.length > 0) {
             Promise.all(charIds.map(id => getDocumentById("Characters", id).catch(() => null))).then(res => {
                 const valid = res.filter(Boolean);
@@ -80,7 +98,14 @@ function DetailFilm() {
     }, [movie]);
 
     const levelUser = useMemo(() => {
-        if (!isLogin || !subscriptions || !plans) return 0;
+        if (!plans || !movie) return false;
+        const moviePlan = getObjectById(plans, movie.planID);
+        const movieLevel = moviePlan?.level || 0;
+
+        if (movieLevel === 0) return true;
+
+        if (!isLogin || !subscriptions) return false;
+
         const allPlan = subscriptions.filter(p => {
             if (p.userID != isLogin.id) return false;
             if (!p.expiryDate) return false;
@@ -93,7 +118,7 @@ function DetailFilm() {
             const plan = getObjectById(plans, item.planID);
             return plan && plan.level > max ? plan.level : max;
         }, 0);
-        return levelMax >= getObjectById(plans, movie.planID)?.level;
+        return levelMax >= movieLevel;
     }, [subscriptions, isLogin, plans, movie]);
 
     const checkRent = useMemo(() => {
@@ -120,9 +145,19 @@ function DetailFilm() {
         return episodes.filter(e => e.movieID == realMovieId).sort((a, b) => a.numberEpisode - b.numberEpisode)
     }, [realMovieId, episodes]);
 
+    const movieActors = useMemo(() => {
+        if (!movie) return [];
+        let actorList = movie.actor || movie.actors || movie.listActor || [];
+        if (Array.isArray(actorList) && actorList.length > 0) {
+            const resolved = actorList.map(c => typeof c === 'string' ? getObjectById(actors, c) : c).filter(Boolean);
+            if (resolved.length > 0) return resolved;
+        }
+        return [];
+    }, [movie, actors]);
+
     const movieCharacters = useMemo(() => {
         if (!movie) return [];
-        let charList = movie.character || movie.characters || movie.listCharacter || movie.listCharacter;
+        let charList = movie.character || movie.characters || movie.listCharacter || [];
         if (Array.isArray(charList) && charList.length > 0) {
             const resolved = charList.map(c => typeof c === 'string' ? getObjectById(characters, c) : c).filter(Boolean);
             if (resolved.length > 0) return resolved;
@@ -236,10 +271,10 @@ function DetailFilm() {
                         </div>
 
                         <div className="text-center lg:text-left mt-1">
-                            <h1 className="text-2xl md:text-3xl font-extrabold text-white mb-1 leading-tight">
+                            <h1 className="text-xl md:text-2xl font-extrabold text-white mb-1 leading-tight">
                                 {movie.otherName}
                             </h1>
-                            <h2 className="text-sm text-yellow-500 font-medium">
+                            <h2 className="text-xs md:text-sm text-yellow-500 font-medium">
                                 {movie.name}
                             </h2>
                         </div>
@@ -252,13 +287,13 @@ function DetailFilm() {
                         </div>
 
                         <div className="text-[13px] space-y-2 mt-2">
-                            <p className="text-slate-400 leading-relaxed text-justify">
-                                <p className="font-bold text-white block mb-1">Giới thiệu:</p>
+                            <div className="text-slate-400 leading-relaxed text-justify">
+                                <span className="font-bold text-white block mb-1">Giới thiệu:</span>
                                 {movie.description || 'Đang cập nhật nội dung giới thiệu cho bộ phim này...'}
-                            </p>
-                            <p className="text-slate-400"><p className="font-bold text-white inline">Thời lượng:</p> {movie.time || 'Đang cập nhật'}</p>
-                            <p className="text-slate-400"><p className="font-bold text-white inline">Quốc gia:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</p></p>
-                            <p className="text-slate-400"><p className="font-bold text-white inline">Đạo diễn:</p> <p className="text-slate-300 hover:text-white cursor-pointer inline">{Array.isArray(movie.listAuthor) && movie.listAuthor.length > 0 ? movie.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</p></p>
+                            </div>
+                            <div className="text-slate-400"><span className="font-bold text-white inline">Thời lượng:</span> {movie.duration ? movie.duration + ' phút' : (movie.time || 'Đang cập nhật')}</div>
+                            <div className="text-slate-400"><span className="font-bold text-white inline">Quốc gia:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</span></div>
+                            <div className="text-slate-400"><span className="font-bold text-white inline">Đạo diễn:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{Array.isArray(movie.listAuthor) && movie.listAuthor.length > 0 ? movie.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</span></div>
                         </div>
 
                         <div className="mt-4">
@@ -336,7 +371,13 @@ function DetailFilm() {
                                 <div className="flex flex-wrap items-center gap-8">
                                     {checkShow ? <Link to={`/play/${id}`} className="flex items-center gap-2 bg-[#facc15] hover:bg-yellow-500 text-black px-8 py-3 rounded-full font-bold transition-colors shadow-[0_0_15px_rgba(250,204,21,0.3)]">
                                         <FaPlay className="text-sm" /> Xem Ngay
-                                    </Link> : <button onClick={() => navigate(`/pay/${realMovieId}`)} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5">
+                                    </Link> : <button onClick={() => {
+                                        if (!isLogin) {
+                                            setOpenLoginDialog(true);
+                                            return;
+                                        }
+                                        navigate(`/pay/${realMovieId}`);
+                                    }} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5">
                                         <FaCrown className="text-sm" /> Mua phim
                                     </button>}
                                     <button onClick={handleFavorite} className={`flex flex-col items-center gap-1.5 transition-colors ${isFavorite ? 'text-red-500 hover:text-red-400' : 'text-slate-400 hover:text-white'}`}>
@@ -438,12 +479,12 @@ function DetailFilm() {
                                         galleryImages.map((imgSrc, idx) => (
                                             <div
                                                 key={idx}
-                                                className="relative rounded-2xl overflow-hidden aspect-video border border-slate-800 shadow-md hover:border-yellow-400/60 transition-colors cursor-pointer"
+                                                className="group relative rounded-2xl overflow-hidden aspect-video border-[3px] border-transparent shadow-md hover:border-[#facc15] hover:-translate-y-2 hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] transition-all duration-300 cursor-pointer"
                                             >
                                                 <img
                                                     src={imgSrc}
                                                     alt={`Gallery ${idx + 1}`}
-                                                    className="w-full h-full object-cover"
+                                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                                 />
                                             </div>
                                         ))
@@ -455,29 +496,32 @@ function DetailFilm() {
                                 </div>
                             )}
                             {activeTab === 'actors' && (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 py-2">
-                                    {movieCharacters.length > 0 ? (
-                                        movieCharacters.map((char, idx) => (
-                                            <div key={idx} className="flex flex-col items-center group cursor-pointer">
-                                                <div className="relative w-full aspect-3/4 rounded-2xl overflow-hidden border border-slate-800 shadow-lg group-hover:border-yellow-400 group-hover:shadow-[0_8px_25px_rgba(250,204,21,0.25)] group-hover:-translate-y-1 transition-all duration-300">
-                                                    <img
-                                                        src={char.imgUrl || getDefaultAvatar(char.sexID)}
-                                                        alt={char.name}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                                        onError={(e) => e.target.src = getDefaultAvatar(char.sexID)}
-                                                    />
-                                                    <div className="absolute inset-0 bg-linear-to- from-black/95 via-black/40 to-transparent flex flex-col justify-end p-3 text-center">
-                                                        <h4 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors truncate">
-                                                            {char.name}
-                                                        </h4>
-                                                    </div>
-                                                </div>
-
+                                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6 py-4">
+                                    {movieActors.length > 0 ? (
+                                        movieActors.map((char, idx) => (
+                                            <div key={idx} className="flex flex-col items-center gap-2 relative group cursor-pointer">
+                                                <img
+                                                    src={char.imgUrl || getDefaultAvatar(char.sexID)}
+                                                    alt={char.name}
+                                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-[3px] border-slate-700 group-hover:border-[#facc15] group-hover:shadow-[0_0_20px_rgba(250,204,21,0.5)] group-hover:-translate-y-2 transition-all duration-300"
+                                                    onError={(e) => e.target.src = getDefaultAvatar(char.sexID)}
+                                                />
+                                                <p className="text-xs sm:text-sm font-bold text-slate-200 group-hover:text-[#facc15] transition-colors w-full truncate text-center mt-1">
+                                                    {char.name}
+                                                </p>
                                                 {char.role && (
-                                                    <p className="text-xs font-semibold text-rose-300 text-center mt-2 truncate w-full">
+                                                    <p className="text-[10px] sm:text-xs text-slate-400 text-center truncate w-full">
                                                         {char.role}
                                                     </p>
                                                 )}
+
+                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 flex flex-col items-center">
+                                                    <div className="bg-[#0f1322]/90 backdrop-blur-md text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)] whitespace-nowrap">
+                                                        {char.name}
+                                                    </div>
+                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
+                                                    <div className="absolute -bottom-0.75 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
+                                                </div>
                                             </div>
                                         ))
                                     ) : (
@@ -488,7 +532,7 @@ function DetailFilm() {
                                 </div>
                             )}
                             {activeTab === 'recommend' && (
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 py-2">
+                                <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 py-2">
                                     {recommendedMovies.map((m, idx) => (
                                         <div
                                             key={idx}
@@ -496,14 +540,29 @@ function DetailFilm() {
                                                 navigate(`/detailFilm/${m.id}`);
                                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                                             }}
-                                            className="group flex flex-col rounded-2xl overflow-hidden bg-[#141a2e]/80 border border-slate-800/80 hover:border-yellow-400/60 hover:-translate-y-1 transition-all duration-300 cursor-pointer shadow-md"
+                                            className="group cursor-pointer flex flex-col h-full"
                                         >
-                                            <div className="aspect-2/3 w-full overflow-hidden">
-                                                <img src={m.imgUrl} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                                <img src={m.imgUrl} alt={m.name} className="w-full h-full object-cover" />
+                                                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
+                                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+                                                    <p className="bg-blue-600/90 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap">
+                                                       {m.endEpisode || 0} tập 
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div className="p-3 flex flex-col">
-                                                <h4 className="text-sm font-bold text-white group-hover:text-yellow-400 transition-colors truncate">{m.name}</h4>
-                                                <p className="text-xs text-slate-400 mt-1">{m.year || 2024} • {m.endEpisode || 0} Tập</p>
+                                            <div className="pt-2 pb-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
+                                                <h4 className="text-xs md:text-[13px] font-bold text-white group-hover:text-[#facc15] transition-colors truncate w-full">
+                                                    {m.otherName || m.name}
+                                                </h4>
+                                                <p className="text-[9px] md:text-[10px] text-slate-400 mt-0.5 group-hover:text-slate-200 transition-colors truncate w-full">
+                                                    {m.name}
+                                                </p>
+                                                <div className="flex items-center justify-center gap-2 mt-1 w-full font-bold">
+                                                    <div className="flex items-center text-white bg-linear-to-r from-blue-500 to-cyan-500 px-1.5 py-0.5 rounded-full shadow-md text-[8px] md:text-[9px] whitespace-nowrap">
+                                                        {m.year || 2024}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}
@@ -546,8 +605,10 @@ function DetailFilm() {
                     </div>
                 </div>
             </div>
+            <ModalDetail open={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
         </div>
     );
+
 }
 
 export default DetailFilm;

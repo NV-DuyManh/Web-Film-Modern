@@ -13,7 +13,7 @@ import CountryPage from '../pages/client/country/CountryPage';
 const Actors = lazy(() => import('../pages/client/actors/Actors'));
 const Showtimes = lazy(() => import('../pages/client/showtimes/Showtimes'));
 const PlayFilm = lazy(() => import('../pages/client/watch/PlayFilm'));
-const DetailFilm = lazy(() => import('../pages/client/watch/DetailFilm'));
+const DetailFilm = lazy(() => import('../pages/client/watch/detailFilm/DetailFilm'));
 const Pay = lazy(() => import('../pages/client/pay/Pay'));
 const UpgradeVIP = lazy(() => import('../pages/client/pay/UpgradeVIP'));
 const PayVIP = lazy(() => import('../pages/client/pay/PayVIP'));

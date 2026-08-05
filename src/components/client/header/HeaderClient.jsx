@@ -128,6 +128,12 @@ function HeaderClient() {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
+    useEffect(() => {
+        const openLoginHandler = () => handleOpenLogin();
+        window.addEventListener('openLoginModal', openLoginHandler);
+        return () => window.removeEventListener('openLoginModal', openLoginHandler);
+    }, []);
+
     return (
         <div className="fixed top-0 left-0 z-9999 w-full text-white">
             <div className={`absolute inset-0 -z-10 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${isScrolled ? "bg-[#0b1221]/40 backdrop-blur-2xl border-b border-white/10 shadow-lg" : "bg-linear-to-b from-black/80 via-black/20 to-transparent border-none shadow-none"}`}></div>

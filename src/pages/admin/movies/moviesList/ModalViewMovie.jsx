@@ -144,7 +144,6 @@ function ModalViewMovie({ open, handleClose, movie }) {
                 background: 'linear-gradient(145deg, rgba(15,23,42,0.98), rgba(10,15,30,0.99))',
                 maxHeight: '90vh'
             }}>
-                {/* ═══ Animated border outer glow (Blurry Aura) ═══ */}
                 <div className="absolute inset-0 rounded-3xl pointer-events-none z-1" style={{
                     background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.6), transparent, rgba(236,72,153,0.6), transparent)',
                     backgroundSize: '200% 100%',
@@ -171,7 +170,6 @@ function ModalViewMovie({ open, handleClose, movie }) {
                     borderRadius: 24
                 }}></div>
 
-                {/* ═══ Close button - outside scroll area so always accessible ═══ */}
                 <button
                     onClick={handleClose}
                     className="absolute top-5 right-5 z-30 w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
@@ -179,10 +177,8 @@ function ModalViewMovie({ open, handleClose, movie }) {
                     <FaTimesCircle size={20} />
                 </button>
 
-                {/* ═══ SCROLLABLE CONTENT ═══ */}
                 <div className="movie-view-modal w-[calc(100%-12px)] mx-auto my-1.5 rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar relative z-5 flex-1 p-0.5">
 
-                    {/* ═══ HERO BANNER SECTION ═══ */}
                     <div className="relative w-full h-55 overflow-hidden rounded-t-[22px]">
                         <img
                             src={movie.bannerUrl || movie.imgUrl}
@@ -190,15 +186,12 @@ function ModalViewMovie({ open, handleClose, movie }) {
                             className="w-full h-full object-cover"
                             style={{ filter: 'brightness(0.4) saturate(1.3)' }}
                         />
-                        {/* Gradient overlays */}
                         <div className="absolute inset-0 bg-linear-to- from-[#0a0f1e] via-transparent to-transparent"></div>
                         <div className="absolute inset-0 bg-linear-to- from-[#0a0f1e]/60 via-transparent to-[#0a0f1e]/60"></div>
 
                     </div>
 
-                    {/* ═══ POSTER + TITLE OVERLAY ═══ */}
                     <div className="relative px-8 -mt-28 z-20 flex gap-7 items-end">
-                        {/* Poster with neon frame */}
                         <div className="relative shrink-0 group cursor-pointer">
                             <div className="absolute -inset-1 bg-linear-to- from-cyan-500 via-purple-500 to-pink-500 rounded-2xl opacity-50 blur-md group-hover:opacity-100 group-hover:blur-xl transition-all duration-700"></div>
                             <div className="relative z-10 group-hover:-translate-y-4 group-hover:scale-105 transition-all duration-500">
@@ -218,7 +211,6 @@ function ModalViewMovie({ open, handleClose, movie }) {
                             </div>
                         </div>
 
-                        {/* Title area */}
                         <div className="flex-1 pb-3">
                             <h2 className="text-2xl md:text-4xl font-black glow-text tracking-tight mb-2" style={{ paddingBottom: '0.1em' }}>
                                 {movie.otherName || movie.name}
@@ -239,10 +231,7 @@ function ModalViewMovie({ open, handleClose, movie }) {
                         </div>
                     </div>
 
-                    {/* ═══ CONTENT BODY ═══ */}
                     <div className="px-8 pt-6 pb-8 space-y-5">
-
-                        {/* Description */}
                         <div className="relative bg-white/2 rounded-2xl border border-white/5 p-5 overflow-hidden">
                             <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-cyan-500 via-purple-500 to-pink-500 rounded-l-full"></div>
                             <p className="text-gray-300/90 text-[14px] leading-relaxed pl-4 max-h-22.5 overflow-y-auto custom-scrollbar">
@@ -250,7 +239,6 @@ function ModalViewMovie({ open, handleClose, movie }) {
                             </p>
                         </div>
 
-                        {/* Grid: Categories + Availability */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <GlowCard title="Categories" icon={BiSolidCategoryAlt} color="purple">
                                 <div className="flex flex-wrap gap-2">
@@ -288,7 +276,6 @@ function ModalViewMovie({ open, handleClose, movie }) {
                             </GlowCard>
                         </div>
 
-                        {/* Grid: Directors + Actors + Characters */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <GlowCard title="Directors" icon={FaUserTie} color="yellow">
                                 <AvatarRow items={movie.listAuthor} list={authors} fallback={Logo5} color="yellow" />
@@ -301,7 +288,6 @@ function ModalViewMovie({ open, handleClose, movie }) {
                             </GlowCard>
                         </div>
 
-                        {/* Rent Price Footer */}
                         <div className="relative overflow-hidden bg-linear-to- from-slate-800/50 via-slate-800/30 to-slate-800/50 rounded-2xl border border-white/5 p-4 flex items-center justify-between">
                             <div className="absolute inset-0 bg-linear-to- from-transparent via-cyan-500/5 to-transparent animate-pulse pointer-events-none"></div>
                             <div className="flex items-center gap-3 z-10">

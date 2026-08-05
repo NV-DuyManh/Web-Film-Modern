@@ -9,7 +9,7 @@ import FilmComing from './filmComing/FilmComing';
 import FilmHongKong from './filmHongKong/FilmHongKong';
 import Anime from './anime/Anime';
 import Comment from './comment/Comment';
-import DetailFilm from '../watch/DetailFilm';
+import DetailFilm from "../watch/detailFilm/DetailFilm";
 import Pay from '../pay/Pay';
 import UpgradeVIP from '../pay/UpgradeVIP';
 import PayVIP from '../pay/PayVIP';
