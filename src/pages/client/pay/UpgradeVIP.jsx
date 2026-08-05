@@ -88,7 +88,7 @@ function UpgradeVIP(props) {
 
                         <div className="relative">
                             <img
-                                src={isLogin?.imgUrl}
+                                src={isLogin?.avatarUrl || Logo5}
                                 alt="Avatar"
                                 className="w-14 h-14 rounded-full object-cover border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)] group-hover:scale-105 transition-transform duration-300"
                             />
@@ -177,7 +177,7 @@ function UpgradeVIP(props) {
 
                                 <div className="flex justify-center items-center mb-6 mt-2 relative z-10">
                                     <WingedFrame theme={plan.themeName} size={56}>
-                                        <img src={isLogin?.imgUrl || Logo5} alt="avatar preview" className="w-full h-full object-cover" />
+                                        <img src={isLogin?.avatarUrl || Logo5} alt="avatar preview" className="w-full h-full object-cover" />
                                     </WingedFrame>
                                 </div>
 

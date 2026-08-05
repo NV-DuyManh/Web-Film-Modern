@@ -25,7 +25,7 @@ function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILAB
                         <div className="cursor-pointer" onClick={() => setShowFrameModal(true)}>
                             <WingedFrame theme={currentSelectedTheme} size={96}>
                                 <img
-                                    src={globalAvatarPreview || isLogin?.imgUrl || Coder}
+                                    src={globalAvatarPreview || isLogin?.avatarUrl || Coder}
                                     alt="avatar"
                                     className="w-full h-full object-cover"
                                 />
@@ -162,7 +162,7 @@ function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILAB
 
                                         <div className="relative flex items-center justify-center pb-2">
                                             <WingedFrame theme={frame.id} size={64}>
-                                                <img src={isLogin?.imgUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
+                                                <img src={isLogin?.avatarUrl || Coder} alt="avatar" className="w-full h-full object-cover" />
                                             </WingedFrame>
                                         </div>
                                         <p className={`text-xs font-bold text-center ${isSelected ? 'text-cyan-400' : 'text-slate-300'}`}>
