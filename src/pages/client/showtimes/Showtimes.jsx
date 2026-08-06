@@ -11,7 +11,6 @@ function Showtimes() {
     const movies = useContext(MovieContext) || [];
     const navigate = useNavigate();
 
-    // Generate dates for the selector (Today + next 13 days)
     const dates = useMemo(() => {
         const result = [];
         const today = new Date();
@@ -29,7 +28,6 @@ function Showtimes() {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
 
-    // Mouse drag-to-scroll states
     const [isDragging, setIsDragging] = useState(false);
     const [hasDragged, setHasDragged] = useState(false);
     const [startX, setStartX] = useState(0);
@@ -71,14 +69,14 @@ function Showtimes() {
     };
 
     useEffect(() => {
-        handleScroll(); // Initial check
+        handleScroll(); 
         window.addEventListener('resize', handleScroll);
         return () => window.removeEventListener('resize', handleScroll);
     }, [dates]);
 
     const scrollByAmount = (direction) => {
         if (scrollContainerRef.current) {
-            // Scroll by exactly one item width
+            
             const firstChild = scrollContainerRef.current.children[0];
             const scrollAmount = firstChild ? firstChild.clientWidth : 120;
             scrollContainerRef.current.scrollBy({
@@ -88,7 +86,6 @@ function Showtimes() {
         }
     };
 
-    // Format dates to easily compare (YYYY-MM-DD)
     const formatDateKey = (date) => {
         return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     };
@@ -101,7 +98,6 @@ function Showtimes() {
         return isNaN(date.getTime()) ? 0 : date.getTime();
     };
 
-    // Filter and group showtimes
     const groupedShowtimes = useMemo(() => {
         const selectedKey = formatDateKey(selectedDate);
         const filtered = showTimes.filter(st => {
@@ -109,7 +105,6 @@ function Showtimes() {
             return formatDateKey(stDate) === selectedKey;
         });
 
-        // Group by movieID
         const grouped = {};
         filtered.forEach(st => {
             if (!grouped[st.movieID]) {
@@ -118,7 +113,6 @@ function Showtimes() {
             grouped[st.movieID].push(st);
         });
 
-        // Sort time slots
         Object.keys(grouped).forEach(key => {
             grouped[key].sort((a, b) => getDateValue(a.time) - getDateValue(b.time));
         });
@@ -126,13 +120,11 @@ function Showtimes() {
         return grouped;
     }, [showTimes, selectedDate]);
 
-    // Format time for button display (HH:MM)
     const formatTimeOnly = (value) => {
         const date = new Date(getDateValue(value));
         return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
     };
 
-    // Get day name for tabs
     const getDayName = (date, index) => {
         if (index === 0) return 'Hôm nay';
         if (index === 1) return 'Ngày mai';
@@ -207,7 +199,6 @@ function Showtimes() {
                     </button>
                 </div>
             </div>
-
 
             <div className="relative min-h-[400px]">
                 {Object.keys(groupedShowtimes).length === 0 ? (
