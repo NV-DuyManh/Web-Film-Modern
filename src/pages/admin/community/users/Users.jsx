@@ -3,6 +3,7 @@ import Search from '../../../../components/admin/search/Search';
 import ModalUsers from './ModalUsers';
 import TableUsers from './TableUsers';
 import ModalViewUser from './ModalViewUser';
+import { PlanContext } from '../../../../contexts/PlanProvider';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import LOGO from "../../../../assets/Logo.png";
 
@@ -29,6 +30,7 @@ const getBase64FromUrl = (url) => {
 };
 
 function Users() {
+    const plans = React.useContext(PlanContext) || [];
     const [open, setOpen] = useState(false);
     const [openView, setOpenView] = useState(false);
     const [userView, setUserView] = useState(null);
@@ -44,7 +46,8 @@ function Users() {
 
     const handleClickOpen = () => {
         setOpen(true);
-        setUser(inner);
+        const freePlan = plans.find(p => p.name.toLowerCase() === 'free');
+        setUser({ ...inner, planID: freePlan ? freePlan.id : "" });
         setError(innerError);
     };
 
@@ -142,6 +145,7 @@ function Users() {
                 loading={loading}
                 progress={progress}
                 user={user}
+                plans={plans}
             />
             <TableUsers
                 setUser={setUser}

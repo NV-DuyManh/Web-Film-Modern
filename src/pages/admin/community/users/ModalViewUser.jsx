@@ -97,7 +97,7 @@ function ModalViewUser({ open, handleClose, user }) {
             <div className="relative">
                 <div className="h-32 bg-linear-to-r from-blue-900/40 via-purple-900/40 to-pink-900/40 relative">
                     <div className="absolute inset-0 opacity-30 mix-blend-overlay"></div>
-                    <button 
+                    <button
                         onClick={handleClose}
                         className="absolute top-4 right-4 text-white/50 hover:text-red-400 hover:rotate-90 hover:scale-110 transition-all duration-300 z-10 bg-black/20 rounded-full p-1"
                     >
@@ -107,15 +107,23 @@ function ModalViewUser({ open, handleClose, user }) {
 
                 <div className="px-8 pb-8 -mt-16 relative z-10">
                     <div className="flex flex-col md:flex-row gap-6 items-end md:items-center mb-8">
-                        <div className={`w-32 h-32 rounded-full border-4 border-slate-950 overflow-hidden relative group bg-slate-900 shrink-0 ring-4 ring-offset-4 ring-offset-slate-950 ${avatarGlowMap[currentPlanInfo.theme] || avatarGlowMap.blue} transition-all duration-700`}>
-                            <img 
-                                src={getOptimizedUrl(user.avatarUrl, 400, 400)} 
-                                alt={user.name}
-                                className="w-full h-full object-cover transition-transform duration-700"
-                            />
-                            <div className="absolute inset-0 rounded-full ring-inset ring-1 ring-white/10 pointer-events-none"></div>
+                        <div className="relative shrink-0">
+                            {user.role === 'admin' && (
+                                <>
+                                    <div className="absolute -inset-2.5 rounded-full border-2 border-dashed border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.5)] animate-[spin_6s_linear_infinite] pointer-events-none z-0"></div>
+                                    <div className="absolute -inset-5 rounded-full border-4 border-dotted border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.6)] animate-[spin_4s_linear_infinite_reverse] pointer-events-none z-0"></div>
+                                </>
+                            )}
+                            <div className={`w-32 h-32 rounded-full border-4 border-slate-950 overflow-hidden relative group bg-slate-900 ring-4 ring-offset-4 ring-offset-slate-950 ${avatarGlowMap[currentPlanInfo.theme] || avatarGlowMap.blue} transition-all duration-700 z-10`}>
+                                <img
+                                    src={getOptimizedUrl(user.avatarUrl, 400, 400)}
+                                    alt={user.name}
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                />
+                                <div className="absolute inset-0 rounded-full ring-inset ring-1 ring-white/10 pointer-events-none"></div>
+                            </div>
                         </div>
-                        
+
                         <div className="flex-1 pb-2">
                             <h2 className="text-3xl font-black text-white tracking-tight mb-2 flex items-center gap-3">
                                 {user.name || "Unknown User"}
@@ -132,7 +140,7 @@ function ModalViewUser({ open, handleClose, user }) {
                         <GlowCard title="Email Address" icon={FaEnvelope} color="cyan">
                             <p className="text-slate-200 font-medium truncate">{user.email || <EmptyText />}</p>
                         </GlowCard>
-                        
+
                         <GlowCard title="Phone Number" icon={FaPhone} color="emerald">
                             <p className="text-slate-200 font-medium">{user.phone || <EmptyText />}</p>
                         </GlowCard>
@@ -140,11 +148,11 @@ function ModalViewUser({ open, handleClose, user }) {
                         <GlowCard title="Address" icon={FaMapMarkerAlt} color="purple">
                             <p className="text-slate-200 font-medium truncate">{user.address || <EmptyText />}</p>
                         </GlowCard>
-                        
+
                         <GlowCard title="Date of Birth" icon={FaBirthdayCake} color="pink">
                             <p className="text-slate-200 font-medium">{user.dateOfBirth || <EmptyText />}</p>
                         </GlowCard>
-                        
+
                         <GlowCard title="Gender" icon={FaVenusMars} color="yellow">
                             <p className="text-slate-200 font-medium">
                                 {user.sexID === 'Male' ? 'Male' : user.sexID === 'Female' ? 'Female' : user.sexID === 'Other' ? 'Other' : <EmptyText />}
@@ -160,7 +168,7 @@ function ModalViewUser({ open, handleClose, user }) {
                                     </span>
                                 </div>
                                 {user.password && (
-                                    <button 
+                                    <button
                                         onClick={() => setShowPassword(!showPassword)}
                                         className="text-slate-500 hover:text-white transition-colors cursor-pointer"
                                     >

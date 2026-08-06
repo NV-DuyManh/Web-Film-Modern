@@ -23,10 +23,10 @@ function CommentItem({ comment, users, subscriptions, plans }) {
             </div>
             <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <span className={`px-1.5 py-[1px] text-[10px] font-extrabold uppercase border rounded flex items-center ${badgeColor}`}>
+                    <span className={`px-1.5 py-1px text-[10px] font-extrabold uppercase border rounded flex items-center ${badgeColor}`}>
                         {planInfo.name}
                     </span>
-                    <span className="font-bold text-[14px] text-white truncate max-w-[150px] sm:max-w-[200px]">
+                    <span className="font-bold text-[14px] text-white truncate max-w-37.5 sm:max-w-50">
                         {user?.name}
                     </span>
 
@@ -34,7 +34,7 @@ function CommentItem({ comment, users, subscriptions, plans }) {
                         {comment.createdAt ? timeAgo(comment.createdAt.seconds ? comment.createdAt.seconds * 1000 : new Date(comment.createdAt).getTime()) : 'Vừa xong'}
                     </span>
                 </div>
-                <div className="text-slate-300 text-[14px] leading-relaxed break-words whitespace-pre-wrap">
+                <div className="text-slate-300 text-[14px] leading-relaxed wrap-break-word whitespace-pre-wrap">
                     {comment.description}
                 </div>
             </div>

@@ -9,18 +9,27 @@ export const getExpiryDate = (p) => {
 
 export const getUserPlanInfo = (user, subscriptions, plans) => {
     if (!user) return { name: 'FREE', level: 0, theme: 'blue' };
-    if (user.role === 'Admin') return { name: 'ADMIN', level: 999, theme: 'red' };
+    if (user.role === 'admin') return { name: 'ADMIN', level: 999, theme: 'red' };
 
-    const userSubs = subscriptions.filter(p => p.userID === user.id && getExpiryDate(p) > new Date());
-    if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
+    let highestPlan = null;
+    
+    if (user.planID) {
+        highestPlan = getObjectById(plans, user.planID);
+    }
 
-    const highestSub = userSubs.reduce((max, item) => {
-        const currentPlan = getObjectById(plans, item.planID);
-        const maxPlan = getObjectById(plans, max.planID);
-        return (currentPlan?.level || 0) > (maxPlan?.level || 0) ? item : max;
-    }, userSubs[0]);
+    if (!highestPlan) {
+        const userSubs = subscriptions.filter(p => p.userID === user.id && getExpiryDate(p) > new Date());
+        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
 
-    const highestPlan = getObjectById(plans, highestSub.planID);
+        const highestSub = userSubs.reduce((max, item) => {
+            const currentPlan = getObjectById(plans, item.planID);
+            const maxPlan = getObjectById(plans, max.planID);
+            return (currentPlan?.level || 0) > (maxPlan?.level || 0) ? item : max;
+        }, userSubs[0]);
+
+        highestPlan = getObjectById(plans, highestSub.planID);
+    }
+
     if (!highestPlan) return { name: 'VIP', level: 1, theme: 'cyan' };
 
     const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));

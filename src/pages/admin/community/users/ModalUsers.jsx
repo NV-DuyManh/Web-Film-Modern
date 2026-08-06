@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField, Select, MenuItem, InputLabel } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { FaTimes,  FaCloudUploadAlt, FaLink, FaSpinner } from 'react-icons/fa';
 import LOGO from "../../../../assets/Logo.png";
@@ -20,7 +20,7 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading, progress, user, handleImageChange, setUser }) {
+function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading, progress, user, handleImageChange, setUser, plans }) {
     const [uploadMode, setUploadMode] = React.useState('file');
 
     const handleUrlChange = (e) => {
@@ -159,6 +159,76 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                             </RadioGroup>
                         </div>
                         {error.role && <p className="gender-error-text inline">{error.role}</p>}
+                    </FormControl>
+
+                    <FormControl className="modal-input-x" fullWidth margin="normal" style={{ marginTop: '20px' }}>
+                        {user.role === 'admin' ? (
+                            <TextField
+                                value="ADMIN (Super VIP)"
+                                label="Package"
+                                disabled
+                                sx={{
+                                    '& .MuiInputBase-input.Mui-disabled': {
+                                        color: '#f87171',
+                                        WebkitTextFillColor: '#f87171',
+                                        fontWeight: 'bold',
+                                        textShadow: '0 0 8px rgba(248,113,113,0.4)',
+                                    },
+                                    '& .MuiOutlinedInput-root.Mui-disabled .MuiOutlinedInput-notchedOutline': {
+                                        borderColor: 'rgba(248,113,113,0.3)',
+                                    },
+                                    '& .MuiInputLabel-root.Mui-disabled': {
+                                        color: 'rgba(248,113,113,0.7)',
+                                    }
+                                }}
+                            />
+                        ) : (
+                            <>
+                                <InputLabel style={{color: 'rgba(255, 255, 255, 0.7)'}}>Package</InputLabel>
+                                <Select
+                                    name="planID"
+                                    value={user.planID || ""}
+                                    onChange={onChangeInput}
+                                    label="Package"
+                                    sx={{
+                                        color: 'white',
+                                        '.MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.23)' },
+                                        '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
+                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#22d3ee' },
+                                        '.MuiSvgIcon-root': { color: 'rgba(255, 255, 255, 0.7)' }
+                                    }}
+                                    MenuProps={{
+                                        PaperProps: {
+                                            sx: {
+                                                bgcolor: '#0f172a',
+                                                border: '1px solid rgba(255,255,255,0.1)',
+                                                boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+                                                borderRadius: '8px',
+                                                '& .MuiMenuItem-root': {
+                                                    color: '#e2e8f0',
+                                                    '&:hover': {
+                                                        bgcolor: 'rgba(34,211,238,0.15)',
+                                                        color: '#22d3ee'
+                                                    },
+                                                    '&.Mui-selected': {
+                                                        bgcolor: 'rgba(34,211,238,0.2)',
+                                                        color: '#22d3ee',
+                                                        fontWeight: 'bold',
+                                                        '&:hover': {
+                                                            bgcolor: 'rgba(34,211,238,0.3)'
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }}
+                                >
+                                    {plans?.map((plan) => (
+                                        <MenuItem key={plan.id} value={plan.id}>{plan.name}</MenuItem>
+                                    ))}
+                                </Select>
+                            </>
+                        )}
                     </FormControl>
                 </div>
 
