@@ -8,11 +8,11 @@ export const getExpiryDate = (p) => {
 };
 
 export const getUserPlanInfo = (user, subscriptions, plans) => {
-    if (!user) return { name: 'FREE', level: 0, theme: 'slate' };
+    if (!user) return { name: 'FREE', level: 0, theme: 'blue' };
     if (user.role === 'Admin') return { name: 'ADMIN', level: 999, theme: 'red' };
 
     const userSubs = subscriptions.filter(p => p.userID === user.id && getExpiryDate(p) > new Date());
-    if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'slate' };
+    if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
 
     const highestSub = userSubs.reduce((max, item) => {
         const currentPlan = getObjectById(plans, item.planID);
@@ -25,8 +25,8 @@ export const getUserPlanInfo = (user, subscriptions, plans) => {
 
     const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
     const index = sortedPlans.findIndex(p => p.id === highestPlan.id);
-    const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
-    const theme = themeNames[index] || 'yellow';
+    const themeNames = ['blue', 'cyan', 'yellow', 'rose', 'purple', 'emerald'];
+    const theme = themeNames[index] || 'blue';
 
     return { name: highestPlan.name, level: highestPlan.level, theme: theme };
 };
