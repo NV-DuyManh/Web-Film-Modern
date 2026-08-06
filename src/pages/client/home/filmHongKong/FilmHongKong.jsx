@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaCheckCircle, FaClock } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaCheckCircle, FaClock, FaEye } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 
@@ -117,7 +117,7 @@ function FilmHongKong() {
                                         <p className="text-slate-400 text-[10px] md:text-[11px] truncate w-full mt-0.5 transition-colors group-hover:text-slate-200">
                                             {e.name}
                                         </p>
-                                        <div className="flex items-center justify-center gap-2 mt-1.5 w-full font-bold">
+                                        <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5 w-full font-bold">
                                             {e.releaseYear && (
                                                 <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                                                     <FaCalendarAlt /> {e.releaseYear}
@@ -128,6 +128,9 @@ function FilmHongKong() {
                                                     <FaClock /> {e.duration}p
                                                 </div>
                                             )}
+                                            <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                <FaEye /> {e.views || 0}
+                                            </div>
                                         </div>
                                     </div>
 

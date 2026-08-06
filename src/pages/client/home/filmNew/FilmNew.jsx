@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaShieldAlt, FaListUl } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaShieldAlt, FaListUl, FaEye } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 
 import { PlanContext } from '../../../../contexts/PlanProvider';
@@ -113,7 +113,7 @@ function FilmNew() {
                                         <p className="text-slate-400 text-[10px] md:text-[11px] truncate w-full mt-0.5 transition-colors group-hover:text-slate-200">
                                             {e.name}
                                         </p>
-                                        <div className="flex justify-center items-center gap-2.5 mt-2 w-full text-[9px] md:text-[10px] font-bold">
+                                        <div className="flex flex-wrap justify-center items-center gap-2.5 mt-2 w-full text-[9px] md:text-[10px] font-bold">
                                             {e.releaseYear && (
                                                 <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)]">
                                                     <FaCalendarAlt /> {e.releaseYear}
@@ -129,6 +129,9 @@ function FilmNew() {
                                                     <FaListUl className="text-[9px]" />  {e.endEpisode} Tập
                                                 </span>
                                             )}
+                                            <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)]">
+                                                <FaEye className="text-[10px]" /> {e.views || 0}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

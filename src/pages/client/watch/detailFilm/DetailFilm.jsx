@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
 import ModalDetail from './ModalDetail';
-import ModalPayMovie from '../pay/paymovie/ModalPayMovie';
+import ModalPayMovie from '../../pay/paymovie/ModalPayMovie';
 import { getExpiryDate, getUserPlanInfo } from '../../../../utils/themeUtils';
 import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
 import { MovieContext } from '../../../../contexts/MovieProvider';
@@ -280,6 +280,7 @@ function DetailFilm() {
                                 {movie.description || 'Đang cập nhật nội dung giới thiệu cho bộ phim này...'}
                             </div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Thời lượng:</span> {movie.duration ? movie.duration + ' phút' : (movie.time || 'Đang cập nhật')}</div>
+                            <div className="text-slate-400"><span className="font-bold text-white inline">Lượt xem:</span> {movie.views || 0}</div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Quốc gia:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</span></div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Đạo diễn:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{Array.isArray(movie.listAuthor) && movie.listAuthor.length > 0 ? movie.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</span></div>
                         </div>

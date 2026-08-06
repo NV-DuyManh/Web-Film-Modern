@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { FaChevronRight, FaChevronLeft, FaTicketAlt, FaListUl } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaTicketAlt, FaListUl, FaEye } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 
@@ -150,7 +150,7 @@ function TopFilm() {
                                             <p className="text-slate-400 text-[9px] md:text-[11px] truncate mt-0.5 transition-colors group-hover:text-slate-200">
                                                 {e.name}
                                             </p>
-                                            <div className="flex items-center gap-2 mt-1.5 text-[9px] md:text-[10px] font-bold">
+                                            <div className="flex flex-wrap items-center gap-2 mt-1.5 text-[9px] md:text-[10px] font-bold">
                                                 {e.rent != null && (
                                                     <span className="flex items-center gap-1 text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)] transition-transform duration-300 group-hover:scale-105">
                                                         <FaTicketAlt /> {e.rent} VNĐ
@@ -164,6 +164,12 @@ function TopFilm() {
                                                         <FaListUl /> {e.endEpisode} Tập
                                                     </span>
                                                 )}
+                                                {e.endEpisode && (
+                                                    <span className="text-slate-500">•</span>
+                                                )}
+                                                <span className="flex items-center gap-1 text-purple-400 drop-shadow-[0_0_5px_rgba(192,38,211,0.5)] transition-transform duration-300 group-hover:scale-105">
+                                                    <FaEye /> {e.views || 0}
+                                                </span>
                                             </div>
 
                                         </div>

@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
-import { fetchDataById, getDocumentById } from '../../../services/firebaseService';
+import { fetchDataById, getDocumentById, updateDocument } from '../../../services/firebaseService';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
 import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../../utils/watchHistory';
@@ -43,8 +43,14 @@ function PlayFilm({ handleOpenLogin }) {
     const isDirectMovieId = !currentEpisode && movies.some(m => m.id == id);
     const movie = useMemo(() => getObjectById(movies, movieId) || {}, [movies, movieId]);
     const realMovieId = currentEpisode ? currentEpisode.movieID : (isDirectMovieId ? id : null);
-
     const [playEpisodes, setPlayEpisodes] = useState({});
+
+    useEffect(() => {
+        if (!realMovieId) return;
+        
+        const currentViews = movie?.views || 0;
+        updateDocument("Movies", { id: realMovieId, views: currentViews + 1 }).catch(e => console.error(e));
+    }, [realMovieId]);
     const episodeShow = useMemo(() => {
         if (!movieId) return [];
         return episodes.filter(e => e.movieID == movieId).sort((a, b) => a.numberEpisode - b.numberEpisode);

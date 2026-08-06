@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { FaChevronRight, FaChevronLeft, FaVideo, FaCalendarAlt, FaTicketAlt } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaVideo, FaCalendarAlt, FaTicketAlt, FaEye } from 'react-icons/fa';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 
 import { getObjectById } from '../../../../services/firebaseResponse';
@@ -117,6 +117,9 @@ function Cinema() {
                                                 {e.releaseYear && <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-indigo-500 to-purple-500 rounded-full text-white text-[9px] md:text-[10px] w-max font-bold shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(99,102,241,0.6)]"><FaCalendarAlt /> {e.releaseYear}</p>}
                                                 <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-yellow-400 to-amber-600 rounded-full text-white text-[9px] md:text-[10px] font-bold shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(251,191,36,0.6)]">
                                                     <FaTicketAlt /> {e.rent} VNĐ
+                                                </p>
+                                                <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-purple-500 to-fuchsia-600 rounded-full text-white text-[9px] md:text-[10px] font-bold shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)]">
+                                                    <FaEye /> {e.views || 0}
                                                 </p>
                                             </div>
                                         </div>
