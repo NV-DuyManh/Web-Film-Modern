@@ -2,6 +2,8 @@ import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
 import ModalDetail from './ModalDetail';
+import ModalPayMovie from '../pay/paymovie/ModalPayMovie';
+import { getExpiryDate, getUserPlanInfo } from '../../../../utils/themeUtils';
 import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
@@ -107,29 +109,14 @@ function DetailFilm() {
 
         if (!isLogin || !subscriptions) return false;
 
-        const allPlan = subscriptions.filter(p => {
-            if (p.userID != isLogin.id) return false;
-            if (!p.expiryDate) return false;
-            const expiry = typeof p.expiryDate.toDate === 'function'
-                ? p.expiryDate.toDate()
-                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
-            return expiry > new Date();
-        });
-        const levelMax = allPlan.reduce((max, item) => {
-            const plan = getObjectById(plans, item.planID);
-            return plan && plan.level > max ? plan.level : max;
-        }, 0);
-        return levelMax >= movieLevel;
+        const userPlanLevel = getUserPlanInfo(isLogin, subscriptions, plans).level;
+        return userPlanLevel >= movieLevel;
     }, [subscriptions, isLogin, plans, movie]);
 
     const checkRent = useMemo(() => {
         if (!isLogin) return false;
         const check = allRent.find(p => {
-            if (!p.expiryDate) return false;
-            const expiry = typeof p.expiryDate.toDate === 'function'
-                ? p.expiryDate.toDate()
-                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
-            return p.movieID == id && p.userID == isLogin.id && expiry > new Date();
+            return p.movieID == id && p.userID == isLogin.id && getExpiryDate(p) > new Date();
         });
         return check;
     }, [isLogin, allRent, id]);
@@ -543,7 +530,7 @@ function DetailFilm() {
                                             }}
                                             className="group cursor-pointer flex flex-col h-full"
                                         >
-                                            <div className="relative w-full aspect-[3/4] rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                            <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                                 <img src={m.imgUrl} alt={m.name} className="w-full h-full object-cover" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
                                                 <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">

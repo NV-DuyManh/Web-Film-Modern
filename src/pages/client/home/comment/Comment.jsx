@@ -119,7 +119,7 @@ function Comment() {
                                                 </p>
                                             </div>
                                             <p className="text-[13px] text-gray-400 line-clamp-2 leading-snug">
-                                                {comment.description || comment.content}
+                                                {comment.description}
                                             </p>
                                             <p className="text-[11px] text-yellow-500/80 line-clamp-1 mt-0.5 inline">
                                                 » {movie?.name || 'Phim đang cập nhật'}

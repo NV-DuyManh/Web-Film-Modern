@@ -20,7 +20,7 @@ import Category from '../../../pages/client/category/Category';
 import Country from '../../../pages/client/country/Country';
 import './HeaderClient.css';
 import { WingedFrame } from './AvatarFrames';
-
+import { getUserPlanInfo, getThemeBadgeStyle } from '../../../utils/themeUtils';
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
     const [openCate, setOpenCate] = useState(false);
@@ -34,50 +34,11 @@ function HeaderClient() {
     const subscriptions = useContext(SubscriptionContext) || [];
     const plans = useContext(PlanContext) || [];
 
-    const getExpiryDate = (p) => {
-        if (!p || !p.expiryDate) return new Date(0);
-        if (typeof p.expiryDate.toDate === 'function') return p.expiryDate.toDate();
-        if (p.expiryDate.seconds) return new Date(p.expiryDate.seconds * 1000);
-        return new Date(p.expiryDate);
-    };
-
     const currentPlanInfo = React.useMemo(() => {
-        if (!isLogin) return { name: 'FREE', level: 0, theme: 'blue' };
-        if (isLogin.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'red' };
-
-        const userSubs = subscriptions.filter(p => p.userID === isLogin.id && getExpiryDate(p) > new Date());
-        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
-
-        const highestSub = userSubs.reduce((max, item) => {
-            const currentPlan = getObjectById(plans, item.planID);
-            const maxPlan = getObjectById(plans, max.planID);
-            return (currentPlan?.level || 0) > (maxPlan?.level || 0) ? item : max;
-        }, userSubs[0]);
-
-        const highestPlan = getObjectById(plans, highestSub.planID);
-        if (!highestPlan) return { name: 'VIP', level: 1, theme: 'cyan' };
-
-        const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
-        const index = sortedPlans.findIndex(p => p.id === highestPlan.id);
-        const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
-        const theme = themeNames[index] || 'yellow';
-
-        return { name: highestPlan.name, level: highestPlan.level, theme: theme };
+        return getUserPlanInfo(isLogin, subscriptions, plans);
     }, [isLogin, subscriptions, plans]);
 
     const displayTheme = isLogin?.selectedFrame || currentPlanInfo.theme;
-
-    const getBadgeStyle = (theme) => {
-        switch (theme) {
-            case 'slate': return 'text-slate-300 bg-slate-700/50 border border-slate-500/50 shadow-none';
-            case 'red': return 'text-white bg-gradient-to-r from-red-600 via-rose-500 to-red-600 badge-shine shadow-[0_0_15px_rgba(244,63,94,0.6)] border border-red-400';
-            case 'blue': return 'text-white bg-gradient-to-r from-blue-500 via-indigo-400 to-blue-500 badge-shine shadow-[0_0_15px_rgba(59,130,246,0.6)] border border-blue-400';
-            case 'cyan': return 'text-white bg-gradient-to-r from-cyan-400 via-blue-400 to-cyan-400 badge-shine shadow-[0_0_15px_rgba(34,211,238,0.6)] border border-cyan-400';
-            case 'yellow': return 'text-yellow-900 bg-gradient-to-r from-yellow-300 via-amber-200 to-yellow-300 badge-shine shadow-[0_0_20px_rgba(250,204,21,0.8)] border border-yellow-300';
-            case 'rose': return 'text-white bg-gradient-to-r from-rose-500 via-pink-400 to-rose-500 badge-shine shadow-[0_0_15px_rgba(251,113,133,0.6)] border border-rose-400';
-            default: return 'text-yellow-900 bg-gradient-to-r from-yellow-300 to-amber-500';
-        }
-    };
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
@@ -265,7 +226,7 @@ function HeaderClient() {
                                                 <p className="text-[16px] font-bold text-white truncate tracking-wide max-w-30">
                                                     {isLogin?.name || 'Nguyễn Văn A'}
                                                 </p>
-                                                <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0 ${getBadgeStyle(currentPlanInfo.theme)}`}>
+                                                <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0 ${getThemeBadgeStyle(currentPlanInfo.theme)}`}>
                                                     {currentPlanInfo.name}
                                                 </span>
                                             </div>

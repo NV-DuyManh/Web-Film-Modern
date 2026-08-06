@@ -4,7 +4,7 @@ function ModalPayMovie({ show, movieName, onClose, onGoHome }) {
     if (!show) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             <div 
                 className="absolute inset-0 bg-black/80 backdrop-blur-sm cursor-pointer"
                 style={{ animation: 'modalFadeIn 0.4s ease-out forwards' }}
@@ -12,7 +12,7 @@ function ModalPayMovie({ show, movieName, onClose, onGoHome }) {
             ></div>
             
             <div 
-                className="relative w-full max-w-md p-[1px] rounded-[2.5rem] overflow-hidden shadow-[0_0_30px_rgba(244,63,94,0.15)]"
+                className="relative w-full max-w-md p-px rounded-[2.5rem] overflow-hidden shadow-[0_0_30px_rgba(244,63,94,0.15)]"
                 style={{ animation: 'modalSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
             >
                 <div className="absolute inset-0 opacity-40">
@@ -34,7 +34,7 @@ function ModalPayMovie({ show, movieName, onClose, onGoHome }) {
                     <div className="absolute bottom-32 right-12 w-2 h-2 bg-fuchsia-400 rounded-full opacity-40 shadow-[0_0_5px_#e879f9]" style={{ animation: 'floatUp2 5s ease-in-out infinite 1s' }}></div>
                     <div className="absolute top-24 right-16 w-1 h-1 bg-pink-300 rounded-full opacity-30 shadow-[0_0_5px_#f9a8d4]" style={{ animation: 'floatUp1 4.5s ease-in-out infinite 0.5s' }}></div>
 
-                    <div className="absolute inset-0 border-[1px] border-white/5 rounded-[2.5rem] pointer-events-none shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]"></div>
+                    <div className="absolute inset-0 border border-white/5 rounded-[2.5rem] pointer-events-none shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]"></div>
 
                     <div className="relative z-10 flex flex-col items-center text-center mt-2">
                         <div 
@@ -42,7 +42,7 @@ function ModalPayMovie({ show, movieName, onClose, onGoHome }) {
                             style={{ animation: 'checkmarkBounce 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both, pulseGlow 2s infinite 1s' }}
                         >
                             <div className="absolute inset-0 rounded-full border border-white/20"></div>
-                            <div className="absolute inset-[-10px] rounded-full border border-rose-400/20 animate-ping opacity-30"></div>
+                            <div className="absolute -inset-2.5 rounded-full border border-rose-400/20 animate-ping opacity-30"></div>
                             <svg className="w-12 h-12 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
                             </svg>

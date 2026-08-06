@@ -6,6 +6,7 @@ import { MovieContext } from '../../../../contexts/MovieProvider';
 import { RentMovieContext } from '../../../../contexts/RentMovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
+import { getExpiryDate } from '../../../../utils/themeUtils';
 
 function CountdownTimer({ expireDate, onExpire }) {
     const [timeLeft, setTimeLeft] = useState(null);
@@ -70,19 +71,12 @@ function RentMovies(props) {
     const rawRentedMovies = useMemo(() => {
         if (!isLogin || !moviesData) return [];
         const rentByUser = moviesData.filter(p => {
-            if (!p.expiryDate) return false;
-            const expiry = typeof p.expiryDate.toDate === 'function'
-                ? p.expiryDate.toDate()
-                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
-            return p.userID == isLogin.id && expiry > new Date();
+            return p.userID == isLogin.id && getExpiryDate(p) > new Date();
         });
         const mappedMovies = rentByUser.map(c => {
             const movie = getObjectById(movies, c.movieID);
             if (!movie) return null;
-            const expiry = typeof c.expiryDate.toDate === 'function'
-                ? c.expiryDate.toDate()
-                : (c.expiryDate.seconds ? new Date(c.expiryDate.seconds * 1000) : new Date(c.expiryDate));
-            return { ...movie, expireDate: expiry };
+            return { ...movie, expireDate: getExpiryDate(c) };
         }).filter(Boolean);
 
         const uniqueMovies = {};

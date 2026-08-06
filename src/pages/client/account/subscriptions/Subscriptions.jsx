@@ -4,7 +4,7 @@ import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { FaCrown, FaCalendarAlt, FaHistory, FaRegCreditCard } from 'react-icons/fa';
-
+import { getThemeNameByIndex, getThemeColorStyle } from '../../../../utils/themeUtils';
 function Subscriptions() {
     const { isLogin } = useContext(AuthContext);
     const subscriptions = useContext(SubscriptionContext);
@@ -44,22 +44,11 @@ function Subscriptions() {
         };
     }).sort((a, b) => b.expiryDate.getTime() - a.expiryDate.getTime());
 
-    const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
     const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
     
     const getThemeByPlan = (planData) => {
         const index = sortedPlans.findIndex(p => p.id === planData?.id);
-        return themeNames[index] || 'cyan';
-    };
-
-    const getBadgeStyle = (t) => {
-        switch (t) {
-            case 'blue': return 'text-blue-400 bg-blue-400/10 border-blue-400/30 shadow-[0_0_10px_rgba(96,165,250,0.3)]';
-            case 'cyan': return 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_10px_rgba(34,211,238,0.3)]';
-            case 'yellow': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30 shadow-[0_0_10px_rgba(250,204,21,0.3)]';
-            case 'rose': return 'text-rose-400 bg-rose-400/10 border-rose-400/30 shadow-[0_0_10px_rgba(251,113,133,0.3)]';
-            default: return 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_10px_rgba(34,211,238,0.3)]';
-        }
+        return getThemeNameByIndex(index);
     };
 
     const getCardStyle = () => {
@@ -92,8 +81,7 @@ function Subscriptions() {
 
                     return (
                         <div key={s.id} className={`rounded-2xl relative overflow-hidden flex flex-col ${getCardStyle()}`}>
-                            {/* Decorative top accent */}
-                            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent opacity-60"></div>
+                            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-cyan-400 to-transparent opacity-60"></div>
                             
                             <div className="p-6 flex flex-col items-center border-b border-white/5">
                                 <div className={`inline-flex font-black px-6 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-lg tracking-widest uppercase shadow-[0_0_15px_rgba(6,182,212,0.2)]`}>

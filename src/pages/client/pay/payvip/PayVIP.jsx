@@ -10,7 +10,7 @@ import { initialOptions } from '../../../../utils/Constants';
 import { addDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ModalPayVIP from './ModalPayVIP';
-
+import { getThemeNameByIndex, getThemeColorStyle } from '../../../../utils/themeUtils';
 function PayVIP(props) {
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -40,20 +40,9 @@ function PayVIP(props) {
         { id: '6', months: 6, discount: 25 },
     ];
 
-    const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
     const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
     const selectedPlanIndex = sortedPlans.findIndex(p => p.id === selectedPlanData?.id);
-    const theme = themeNames[selectedPlanIndex] || 'cyan';
-
-    const getBadgeStyle = (t) => {
-        switch (t) {
-            case 'blue': return 'text-blue-400 bg-blue-400/10 border-blue-400/30 shadow-[0_0_10px_rgba(96,165,250,0.3)]';
-            case 'cyan': return 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_10px_rgba(34,211,238,0.3)]';
-            case 'yellow': return 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30 shadow-[0_0_10px_rgba(250,204,21,0.3)]';
-            case 'rose': return 'text-rose-400 bg-rose-400/10 border-rose-400/30 shadow-[0_0_10px_rgba(251,113,133,0.3)]';
-            default: return 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30 shadow-[0_0_10px_rgba(34,211,238,0.3)]';
-        }
-    };
+    const theme = getThemeNameByIndex(selectedPlanIndex);
 
     const getTextColor = (t) => {
         switch (t) {
@@ -349,7 +338,7 @@ function PayVIP(props) {
                 show={showSuccessModal} 
                 packageInfo={packageInfo} 
                 theme={theme} 
-                getBadgeStyle={getBadgeStyle} 
+                getBadgeStyle={getThemeColorStyle} 
                 onClose={() => {
                     navigate('/');
                     window.location.reload();

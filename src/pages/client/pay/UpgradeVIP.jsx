@@ -7,7 +7,7 @@ import { FeatureContext } from '../../../contexts/FeatureProvider';
 import Logo5 from '../../../assets/Logo5.png';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
-
+import { getUserPlanInfo, getThemeNameByIndex } from '../../../utils/themeUtils';
 import { WingedFrame } from '../../../components/client/header/AvatarFrames';
 
 function UpgradeVIP(props) {
@@ -18,12 +18,10 @@ function UpgradeVIP(props) {
     const features = useContext(FeatureContext);
     const subscriptions = useContext(SubscriptionContext)
 
-    const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
-
     const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
 
     const displayPlans = sortedPlans.map((plan, index) => {
-        const theme = themeNames[index] || themeNames[themeNames.length - 1];
+        const theme = getThemeNameByIndex(index);
         const planFeatures = features.filter(f => f.planID === plan.id && f.available).map(f => f.description);
 
         return {
@@ -40,20 +38,7 @@ function UpgradeVIP(props) {
     const [autoSelectedForLevel, setAutoSelectedForLevel] = useState(null);
 
     const levelUser = useMemo(() => {
-        if (!isLogin || !subscriptions || !plans) return 0;
-        const allPlan = subscriptions.filter(p => {
-            if (p.userID != isLogin.id) return false;
-            if (!p.expiryDate) return false;
-            const expiry = typeof p.expiryDate.toDate === 'function'
-                ? p.expiryDate.toDate()
-                : (p.expiryDate.seconds ? new Date(p.expiryDate.seconds * 1000) : new Date(p.expiryDate));
-            return expiry > new Date();
-        });
-        const levelMax = allPlan.reduce((max, item) => {
-            const plan = getObjectById(plans, item.planID);
-            return plan && plan.level > max ? plan.level : max;
-        }, 0);
-        return levelMax;
+        return getUserPlanInfo(isLogin, subscriptions, plans).level;
     }, [subscriptions, isLogin, plans]);
 
     useEffect(() => {
@@ -64,7 +49,7 @@ function UpgradeVIP(props) {
             setAutoSelectedForLevel(levelUser);
         }
     }, [displayPlans, levelUser, autoSelectedForLevel]);
-    console.log(levelUser);
+
 
     const currentPlanName = useMemo(() => {
         if (!plans || plans.length === 0) return "Miễn phí";

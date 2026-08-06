@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { IoWarningOutline } from 'react-icons/io5';
 
-function DeleteDialog({ isOpen, onClose, onConfirm, title, message }) {
+function ModalDelete({ isOpen, onClose, onConfirm, title, message }) {
     const dialogRef = useRef(null);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ function DeleteDialog({ isOpen, onClose, onConfirm, title, message }) {
             className="bg-[#1e293b] rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.8)] backdrop:bg-black/70 p-0 border border-slate-700/60 m-auto backdrop-blur-sm"
             onCancel={onClose}
         >
-            <div className="p-8 w-[350px] md:w-[400px] flex flex-col items-center text-center">
+            <div className="p-8 w-87.5 md:w-100 flex flex-col items-center text-center">
                 <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
                     <IoWarningOutline className="text-red-500 text-4xl" />
                 </div>
@@ -44,4 +44,4 @@ function DeleteDialog({ isOpen, onClose, onConfirm, title, message }) {
     );
 }
 
-export default DeleteDialog;
+export default ModalDelete;

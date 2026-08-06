@@ -6,7 +6,7 @@ import { MovieContext } from '../../../../contexts/MovieProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
-import DeleteDialog from '../../../../components/client/DeleteDialog';
+import ModalDelete from '../ModalDelete';
 
 function Favorites(props) {
     const { isLogin } = useContext(AuthContext);
@@ -196,7 +196,7 @@ function Favorites(props) {
                 </div>
             )}
             
-            <DeleteDialog
+            <ModalDelete
                 isOpen={isDeleteDialogOpen}
                 onClose={() => setIsDeleteDialogOpen(false)}
                 onConfirm={confirmDeleteFavorite}

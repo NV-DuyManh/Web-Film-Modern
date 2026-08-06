@@ -270,8 +270,6 @@ function PlayFilm({ handleOpenLogin }) {
                             isLogin={isLogin} 
                             onOpenLogin={() => window.dispatchEvent(new CustomEvent('openLoginModal'))} 
                             movieId={realMovieId} 
-                            episodeId={playEpisodes?.id} 
-                            episodeName={playEpisodes?.numberEpisode ? `Tập ${playEpisodes.numberEpisode}` : null} 
                         />
                     </div>
 

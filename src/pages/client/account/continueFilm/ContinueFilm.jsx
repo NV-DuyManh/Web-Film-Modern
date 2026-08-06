@@ -5,7 +5,7 @@ import { AuthContext } from '../../../../contexts/AuthProvider';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import Swal from 'sweetalert2';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
-import DeleteDialog from '../../../../components/client/DeleteDialog';
+import ModalDelete from '../ModalDelete';
 
 function ContinueFilm(props) {
     const { isLogin } = useContext(AuthContext);
@@ -210,7 +210,7 @@ function ContinueFilm(props) {
                 </div>
             )}
             
-            <DeleteDialog
+            <ModalDelete
                 isOpen={isDeleteDialogOpen}
                 onClose={() => setIsDeleteDialogOpen(false)}
                 onConfirm={confirmDeleteContinue}

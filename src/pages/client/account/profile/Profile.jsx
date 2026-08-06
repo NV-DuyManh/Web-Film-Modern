@@ -8,45 +8,14 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import ProfileHeader from './ProfileHeader';
 import ProfileForm from './ProfileForm';
-
+import { getUserPlanInfo } from '../../../../utils/themeUtils';
 function Profile() {
     const { isLogin, setGlobalAvatarPreview } = useContext(AuthContext);
     const subscriptions = useContext(SubscriptionContext) || [];
     const plans = useContext(PlanContext) || [];
 
-    const getExpiryDate = (p) => {
-        if (!p || !p.expiryDate) return new Date(0);
-        if (typeof p.expiryDate.toDate === 'function') return p.expiryDate.toDate();
-        if (p.expiryDate.seconds) return new Date(p.expiryDate.seconds * 1000);
-        return new Date(p.expiryDate);
-    };
-
     const currentPlanInfo = React.useMemo(() => {
-        if (!isLogin) return { name: 'FREE', level: 0, theme: 'blue' };
-        if (isLogin.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'red' };
-
-        const userSubs = subscriptions.filter(p => p.userID === isLogin.id && getExpiryDate(p) > new Date());
-        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
-
-        const highestSub = userSubs.reduce((max, item) => {
-            const currentPlan = getObjectById(plans, item.planID);
-            const maxPlan = getObjectById(plans, max.planID);
-            return (currentPlan?.level || 0) > (maxPlan?.level || 0) ? item : max;
-        }, userSubs[0]);
-
-        const highestPlan = getObjectById(plans, highestSub.planID);
-        if (!highestPlan) return { name: 'VIP', level: 1, theme: 'cyan' };
-
-        const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
-        const index = sortedPlans.findIndex(p => p.id === highestPlan.id);
-        const themeNames = ['slate', 'cyan', 'yellow', 'rose'];
-        const theme = themeNames[index] || 'yellow';
-
-        return {
-            name: highestPlan.name,
-            level: highestPlan.level,
-            theme: theme,
-        };
+        return getUserPlanInfo(isLogin, subscriptions, plans);
     }, [isLogin, subscriptions, plans]);
 
     const AVAILABLE_FRAMES = React.useMemo(() => {

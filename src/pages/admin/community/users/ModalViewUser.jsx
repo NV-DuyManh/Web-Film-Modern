@@ -6,6 +6,7 @@ import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { getUserPlanInfo } from '../../../../utils/themeUtils';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -63,35 +64,8 @@ function ModalViewUser({ open, handleClose, user }) {
 
     const EmptyText = () => <span className="text-slate-500 italic text-[13px] font-normal tracking-wide">Not provided</span>;
 
-    const getExpiryDate = (p) => {
-        if (!p || !p.expiryDate) return new Date(0);
-        if (typeof p.expiryDate.toDate === 'function') return p.expiryDate.toDate();
-        if (p.expiryDate.seconds) return new Date(p.expiryDate.seconds * 1000);
-        return new Date(p.expiryDate);
-    };
-
     const currentPlanInfo = useMemo(() => {
-        if (!user) return { name: 'FREE', level: 0, theme: 'blue' };
-        if (user.role === 'admin' || user.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'fuchsia' };
-        
-        const userSubs = subscriptions.filter(p => p.userID === user.id && getExpiryDate(p) > new Date());
-        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
-
-        const highestSub = userSubs.reduce((max, item) => {
-            const currentPlan = getObjectById(plans, item.planID);
-            const maxPlan = getObjectById(plans, max.planID);
-            return (currentPlan?.level || 0) > (maxPlan?.level || 0) ? item : max;
-        }, userSubs[0]);
-
-        const highestPlan = getObjectById(plans, highestSub.planID);
-        if (!highestPlan) return { name: 'VIP', level: 1, theme: 'cyan' };
-        
-        const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
-        const index = sortedPlans.findIndex(p => p.id === highestPlan.id);
-        const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
-        const theme = themeNames[index] || 'yellow';
-        
-        return { name: highestPlan.name, level: highestPlan.level, theme: theme };
+        return getUserPlanInfo(user, subscriptions, plans);
     }, [user, subscriptions, plans]);
 
     const avatarGlowMap = {
@@ -122,7 +96,7 @@ function ModalViewUser({ open, handleClose, user }) {
         >
             <div className="relative">
                 <div className="h-32 bg-linear-to-r from-blue-900/40 via-purple-900/40 to-pink-900/40 relative">
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-30 mix-blend-overlay"></div>
+                    <div className="absolute inset-0 opacity-30 mix-blend-overlay"></div>
                     <button 
                         onClick={handleClose}
                         className="absolute top-4 right-4 text-white/50 hover:text-red-400 hover:rotate-90 hover:scale-110 transition-all duration-300 z-10 bg-black/20 rounded-full p-1"
@@ -135,7 +109,7 @@ function ModalViewUser({ open, handleClose, user }) {
                     <div className="flex flex-col md:flex-row gap-6 items-end md:items-center mb-8">
                         <div className={`w-32 h-32 rounded-full border-4 border-slate-950 overflow-hidden relative group bg-slate-900 shrink-0 ring-4 ring-offset-4 ring-offset-slate-950 ${avatarGlowMap[currentPlanInfo.theme] || avatarGlowMap.blue} transition-all duration-700`}>
                             <img 
-                                src={getOptimizedUrl(user.avatarUrl, 400, 400) || "https://i.ibb.co/6P9V6H4/Logo.png"} 
+                                src={getOptimizedUrl(user.avatarUrl, 400, 400)} 
                                 alt={user.name}
                                 className="w-full h-full object-cover transition-transform duration-700"
                             />

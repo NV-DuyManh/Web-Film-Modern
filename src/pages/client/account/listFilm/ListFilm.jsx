@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { Link, useSearchParams } from 'react-router-dom';
 import Logo6 from '../../../../assets/Logo6.png';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
-import DeleteDialog from '../../../../components/client/DeleteDialog';
+import ModalDelete from '../ModalDelete';
 
 function ListFilm(props) {
     const [viewMode, setViewMode] = useState('grid');
@@ -375,7 +375,7 @@ function ListFilm(props) {
                     </div>
                     <button
                         onClick={handleAddList}
-                        className="btn-add w-full sm:w-auto whitespace-nowrap !bg-transparent !backdrop-blur-none shadow-none"
+                        className="btn-add w-full sm:w-auto whitespace-nowrap bg-transparent! backdrop-blur-none! shadow-none"
                         style={{ padding: '0.625rem 1.25rem', fontSize: '0.875rem' }}
                     >
                         Thêm mới
@@ -567,7 +567,7 @@ function ListFilm(props) {
                 </div>
             )}
             
-            <DeleteDialog
+            <ModalDelete
                 isOpen={deleteDialog.isOpen}
                 onClose={() => setDeleteDialog({ ...deleteDialog, isOpen: false })}
                 onConfirm={confirmDeleteAction}

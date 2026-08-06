@@ -13,6 +13,7 @@ import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { getUserPlanInfo, getThemeColorStyle } from '../../../../utils/themeUtils';
 
 
 function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
@@ -25,46 +26,8 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
     const [page, setPage] = useState(1);
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
-    const getExpiryDate = (p) => {
-        if (!p || !p.expiryDate) return new Date(0);
-        if (typeof p.expiryDate.toDate === 'function') return p.expiryDate.toDate();
-        if (p.expiryDate.seconds) return new Date(p.expiryDate.seconds * 1000);
-        return new Date(p.expiryDate);
-    };
-
-    const getUserPlanInfo = (row) => {
-        if (row.role === 'admin' || row.role === 'Admin') return { name: 'ADMIN', level: 99, theme: 'fuchsia' };
-        
-        const userSubs = subscriptions.filter(p => p.userID === row.id && getExpiryDate(p) > new Date());
-        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
-
-        const highestSub = userSubs.reduce((max, item) => {
-            const currentPlan = getObjectById(plans, item.planID);
-            const maxPlan = getObjectById(plans, max.planID);
-            return (currentPlan?.level || 0) > (maxPlan?.level || 0) ? item : max;
-        }, userSubs[0]);
-
-        const highestPlan = getObjectById(plans, highestSub.planID);
-        if (!highestPlan) return { name: 'VIP', level: 1, theme: 'cyan' };
-        
-        const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
-        const index = sortedPlans.findIndex(p => p.id === highestPlan.id);
-        const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
-        const theme = themeNames[index] || 'yellow';
-        
-        return { name: highestPlan.name, level: highestPlan.level, theme: theme };
-    };
-
-    const getBadgeStyle = (theme) => {
-        switch(theme) {
-            case 'blue': return 'bg-blue-500/15 text-blue-400 border border-blue-500/30';
-            case 'cyan': return 'bg-cyan-500/15 text-cyan-400 border border-cyan-500/30 shadow-[0_0_8px_rgba(34,211,238,0.2)]';
-            case 'yellow': return 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30 shadow-[0_0_10px_rgba(234,179,8,0.25)]';
-            case 'rose': return 'bg-rose-500/15 text-rose-400 border border-rose-500/30 shadow-[0_0_12px_rgba(244,63,94,0.3)]';
-            case 'red': return 'bg-red-500/15 text-red-400 border border-red-500/30 shadow-[0_0_10px_rgba(239,68,68,0.25)]';
-            case 'fuchsia': return 'bg-fuchsia-500/15 text-fuchsia-400 border border-fuchsia-500/30 shadow-[0_0_10px_rgba(217,70,239,0.25)]';
-            default: return 'bg-slate-500/15 text-slate-400 border border-slate-500/30';
-        }
+    const getPlanInfo = (row) => {
+        return getUserPlanInfo(row, subscriptions, plans);
     };
 
     const start = (page - 1) * rowsPerPage;
@@ -208,9 +171,9 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                     </td>
                                     <td className="table-cell text-center">
                                         {(() => {
-                                            const pInfo = getUserPlanInfo(row);
+                                            const pInfo = getPlanInfo(row);
                                             return (
-                                                <p className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${getBadgeStyle(pInfo.theme)}`}>
+                                                <p className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${getThemeColorStyle(pInfo.theme)}`}>
                                                     {pInfo.name}
                                                 </p>
                                             );
