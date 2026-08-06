@@ -5,6 +5,13 @@
     background-color: #111827;
     color: white;
   }
+  
+  img {
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
 }
 
 @keyframes avatar-shine {

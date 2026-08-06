@@ -45,7 +45,7 @@ function CountryPage() {
                 </div>
 
                 {movies.length === 0 ? (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 mb-10">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
                         {Array.from({ length: 14 }).map((_, i) => (
                             <div key={i} className="flex flex-col gap-2 animate-pulse">
                                 <div className="rounded-xl aspect-2/3 bg-slate-700/50"></div>
@@ -58,7 +58,7 @@ function CountryPage() {
                     </div>
                 ) : countryMovies.length > 0 ? (
                     <>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 mb-10">
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
                             {currentMovies.map(movie => (
                                 <Link to={`/detailFilm/${encodeURIComponent(movie.id)}`} key={movie.id} className="group flex flex-col gap-2">
                                     <div className="relative rounded-xl overflow-hidden aspect-2/3 border-[3px] border-transparent group-hover:border-[#facc15] transition-all duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
