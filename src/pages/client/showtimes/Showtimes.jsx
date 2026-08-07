@@ -5,6 +5,7 @@ import { MovieContext } from '../../../contexts/MovieProvider';
 import { getOptimizedUrl } from '../../../utils/cloudinary';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaTicketAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { MdLocalMovies, MdAccessTime, MdRoom } from 'react-icons/md';
+import ParticleBackground from '../../../components/client/background/ParticleBackground';
 
 function Showtimes() {
     const showTimes = useContext(ShowTimeContext) || [];
@@ -132,11 +133,12 @@ function Showtimes() {
     };
 
     return (
-        <div className="min-h-screen bg-[#111827] pb-20 pt-24 px-6 md:px-10 lg:px-20 xl:px-28">
-            
+        <div className="min-h-screen bg-[#0a0a0f] pb-20 pt-24 px-6 md:px-10 lg:px-20 xl:px-28 relative overflow-hidden">
+            <ParticleBackground />
+            <div className="relative z-10">
             <div className="flex items-center gap-3 mb-8">
-                <FaCalendarAlt className="text-2xl md:text-3xl text-slate-200" />
-                <h1 className="text-2xl md:text-3xl font-bold text-white">
+                <FaCalendarAlt className="text-2xl md:text-3xl text-purple-400" />
+                <h1 className="text-3xl md:text-4xl font-black bg-linear-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.3)] tracking-tight mb-2 cursor-default pb-2">
                     Lịch chiếu
                 </h1>
             </div>
@@ -278,6 +280,7 @@ function Showtimes() {
                         })}
                     </div>
                 )}
+            </div>
             </div>
 
             <style jsx="true">{`

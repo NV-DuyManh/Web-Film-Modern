@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import ParticleBackground from '../../../components/client/background/ParticleBackground';
 
 function CategoryPage() {
     const { id } = useParams();
@@ -42,10 +43,11 @@ function CategoryPage() {
     };
 
     return (
-        <div className="w-full min-h-screen bg-[#0f172a] px-4 sm:px-6 md:px-8" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
-            <div className="max-w-350 mx-auto">
+        <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
+            <ParticleBackground />
+            <div className="max-w-350 mx-auto relative z-10">
                 <div className="mb-8">
-                    <h1 className="text-3xl md:text-4xl font-black glow-text tracking-tight mb-2 cursor-default" style={{ paddingBottom: '0.1em' }}>
+                    <h1 className="text-3xl md:text-4xl font-black bg-linear-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.3)] tracking-tight mb-2 cursor-default pb-2">
                         {currentCategory.name}
                     </h1>
 

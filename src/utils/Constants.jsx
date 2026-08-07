@@ -392,4 +392,4 @@ export const LISTACCOUNT = [
         icon: <FaFilm />,
         path: "/account/rentMovies"
     }
-];
+];

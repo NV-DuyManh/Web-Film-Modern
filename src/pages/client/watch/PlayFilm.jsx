@@ -1,6 +1,7 @@
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory, FaBolt } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { fetchDataById, getDocumentById, updateDocument } from '../../../services/firebaseService';
@@ -44,13 +45,13 @@ function PlayFilm({ handleOpenLogin }) {
     const movie = useMemo(() => getObjectById(movies, movieId) || {}, [movies, movieId]);
     const realMovieId = currentEpisode ? currentEpisode.movieID : (isDirectMovieId ? id : null);
     const [playEpisodes, setPlayEpisodes] = useState({});
-
+    
     useEffect(() => {
         if (!realMovieId) return;
         
         const currentViews = movie?.views || 0;
         updateDocument("Movies", { id: realMovieId, views: currentViews + 1 }).catch(e => console.error(e));
-    }, [realMovieId]);
+    }, [realMovieId, playEpisodes?.id]);
     const episodeShow = useMemo(() => {
         if (!movieId) return [];
         return episodes.filter(e => e.movieID == movieId).sort((a, b) => a.numberEpisode - b.numberEpisode);
@@ -149,8 +150,9 @@ function PlayFilm({ handleOpenLogin }) {
 
 
     return (
-        <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25">
-            <div className="mx-auto px-4 sm:px-6 pt-4">
+        <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25 relative overflow-hidden">
+
+            <div className="mx-auto px-4 sm:px-6 pt-4 relative z-10">
 
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-3">
