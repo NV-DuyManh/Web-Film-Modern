@@ -169,7 +169,7 @@ function HeaderClient() {
                                 className={`cursor-pointer flex items-center transition-all duration-300
                                     max-[1199px]:w-full max-[1199px]:justify-between max-[1199px]:px-4 max-[1199px]:py-2.5 max-[1199px]:rounded-lg max-[1199px]:text-[13px]
                                     min-[1200px]:justify-center min-[1200px]:rounded-full min-[1200px]:px-3 min-[1200px]:py-2 min-[1200px]:text-sm xl:px-4 font-bold outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1221]
-                                    ${location.pathname === item.path
+                                    ${(location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path + "/")))
                                         ? "max-[1199px]:bg-cyan-600/10 max-[1199px]:text-cyan-400 max-[1199px]:shadow-[inset_4px_0_0_0_#22d3ee] min-[1200px]:bg-yellow-400 min-[1200px]:text-black min-[1200px]:shadow-[0_0_18px_rgba(250,204,21,0.5)]"
                                         : "text-slate-200 max-[1199px]:hover:bg-slate-700/80 max-[1199px]:hover:text-cyan-400 min-[1200px]:text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] min-[1200px]:hover:text-yellow-400"
                                     }`}>
