@@ -80,7 +80,7 @@ function Comment() {
 
                         <div className="flex flex-col gap-5 flex-1">
                             {topLovedMovies.map((e, index) => (
-                                <div key={e.id || index} onClick={() => navigate(`/detailFilm/${e.id}`)} className="flex items-center gap-3 group cursor-pointer">
+                                <div key={e.id || index} onClick={() => navigate(`/phim/${e.slug || e.id}`)} className="flex items-center gap-3 group cursor-pointer">
                                     <p className="w-5 text-gray-500 font-bold text-sm shrink-0 inline">{index + 1}</p>
                                     <FaMinus className="w-4 text-yellow-500 text-sm shrink-0" />                                    
                                     <img src={e.imgUrl} className="w-11 h-16 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
@@ -107,7 +107,7 @@ function Comment() {
                                 const user = getObjectById(users, comment.userID);
                                 const movie = getObjectById(movies, comment.movieID);
                                 return (
-                                    <div key={comment.id || index} onClick={() => navigate(`/detailFilm/${comment.movieID}`)} className="flex gap-3 group cursor-pointer">
+                                    <div key={comment.id || index} onClick={() => navigate(`/phim/${comment.movieID}`)} className="flex gap-3 group cursor-pointer">
                                         <img src={user?.avatarUrl} className="w-10 h-10 rounded-full shrink-0 border border-gray-700 object-cover" />
                                         <div className="flex flex-col gap-1 w-full">
                                             <div className="flex items-center justify-between">

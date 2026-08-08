@@ -221,7 +221,7 @@ function Showtimes() {
                             return (
                                 <div 
                                     key={movieID} 
-                                    onClick={() => navigate(`/detailFilm/${movieID}`)}
+                                    onClick={() => navigate(`/phim/${movieID}`)}
                                     className="flex gap-4 bg-[#2b2f3a] hover:bg-[#383d4a] transition-colors duration-300 rounded-xl p-3 items-center group cursor-pointer border border-transparent hover:border-white/5"
                                 >
                                     
@@ -252,7 +252,7 @@ function Showtimes() {
                                             {slots.map((st, i) => (
                                                 <button 
                                                     key={i}
-                                                    onClick={(e) => { e.stopPropagation(); navigate(`/detailFilm/${movieID}`); }}
+                                                    onClick={(e) => { e.stopPropagation(); navigate(`/phim/${movieID}`); }}
                                                     className="flex items-center gap-1.5 hover:-translate-y-1 hover:scale-105 transition-all duration-300 group/time cursor-pointer"
                                                 >
                                                     

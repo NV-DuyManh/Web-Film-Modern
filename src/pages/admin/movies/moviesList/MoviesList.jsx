@@ -7,6 +7,7 @@ import ModalDelete from '../../../../components/admin/ModalDelete';
 import { MovieContext } from '../../../../contexts/MovieProvider';
 import { addDocument, updateDocument, deleteDocument } from '../../../../services/firebaseService';
 import { uploadImageToCloudinary } from '../../../../config/cloudinaryConfig';
+import { slugify } from '../../../../utils/slugify';
 import LOGO_POSTER from "../../../../assets/Logo6.png";
 import LOGO_BANNER from "../../../../assets/Logo5.png";
 
@@ -108,6 +109,8 @@ function MoviesList() {
         
         try {
             let submitData = { ...movie };
+            const sourceName = submitData.otherName || submitData.name;
+            submitData.slug = slugify(sourceName);
             
             const isLocalAsset = (url) => url && !url.startsWith("http") && !url.startsWith("data:");
 

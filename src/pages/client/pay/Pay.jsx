@@ -142,7 +142,7 @@ function Pay(props) {
                         Tiếp tục thanh toán
                     </button>
                     <button 
-                        onClick={() => navigate(`/detailFilm/${id}`)}
+                        onClick={() => navigate(`/phim/${slug || id}`)}
                         className="text-slate-400 hover:text-white text-sm font-medium transition-colors hover:underline underline-offset-4"
                     >
                         Quay lại chi tiết phim

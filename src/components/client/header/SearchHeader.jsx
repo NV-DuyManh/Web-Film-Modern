@@ -18,7 +18,7 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
 
     const handleSelect = (movieId) => {
         onClose();
-        navigate(`/detailFilm/${movieId}`);
+        navigate(`/phim/${movieId}`);
     };
 
     if (!isOpen || !searchQuery || searchQuery.trim() === "") return null;
@@ -33,7 +33,7 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
                     <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
                         {dataSearch.map((movie) => (
                             <button
-                                onMouseDown={(e) => { e.preventDefault(); handleSelect(movie.id); }}
+                                onMouseDown={(e) => { e.preventDefault(); handleSelect(movie.slug || movie.id); }}
                                 className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-white/5 transition-all duration-200 cursor-pointer group/movie text-left"
                             >
                                 <div className="w-13 h-18 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover/movie:border-cyan-500/50 transition-colors duration-300 bg-slate-800">

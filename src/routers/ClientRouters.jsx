@@ -60,11 +60,11 @@ function ClientRouters(props) {
             element: <Showtimes />
         },
         {
-            path: "/play/:id",
+            path: "/xem-phim/:slug",
             element: <PlayFilm />
         },
         {
-            path: "/detailFilm/:id",
+            path: "/phim/:slug",
             element: <DetailFilm />
         },
         {

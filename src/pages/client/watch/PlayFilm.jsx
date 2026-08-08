@@ -1,10 +1,10 @@
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory, FaBolt } from 'react-icons/fa';
 import { MovieContext } from '../../../contexts/MovieProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
-import { fetchDataById, getDocumentById, updateDocument } from '../../../services/firebaseService';
+import { fetchDataById, updateDocument } from '../../../services/firebaseService';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
 import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../../utils/watchHistory';
@@ -13,8 +13,11 @@ import { AuthContext } from '../../../contexts/AuthProvider';
 import Comment from './detailFilm/Comment';
 
 function PlayFilm({ handleOpenLogin }) {
-    const { id } = useParams();
+    const { slug } = useParams();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const tap = searchParams.get('tap');
+    
     const [activeAudio, setActiveAudio] = useState('vietsub');
     const movies = useContext(MovieContext);
     const plans = useContext(PlanContext);
@@ -23,39 +26,43 @@ function PlayFilm({ handleOpenLogin }) {
     const playerRef = useRef(null);
     const { isLogin } = useContext(AuthContext);
 
-    useEffect(() => {
-        const fetchEp = async () => {
-            const ep = await getDocumentById("Episodes", id);
-            setCurrentEpisode(ep);
-        };
-        fetchEp();
-    }, [id]);
+    const movie = useMemo(() => movies.find(m => m.slug === slug || m.id === slug) || {}, [movies, slug]);
+    const realMovieId = movie?.id;
 
-    const movieId = currentEpisode ? currentEpisode.movieID : (movies.some(m => m.id == id) ? id : null);
-    
     useEffect(() => {
-        if (!movieId) return;
-        const unsubscribe = fetchDataById("Episodes", "movieID", movieId, (data) => {
+        if (!realMovieId) return;
+        const unsubscribe = fetchDataById("Episodes", "movieID", realMovieId, (data) => {
             setEpisodes(data);
         });
         return () => unsubscribe();
-    }, [movieId]);
+    }, [realMovieId]);
 
-    const isDirectMovieId = !currentEpisode && movies.some(m => m.id == id);
-    const movie = useMemo(() => getObjectById(movies, movieId) || {}, [movies, movieId]);
-    const realMovieId = currentEpisode ? currentEpisode.movieID : (isDirectMovieId ? id : null);
+    const episodeShow = useMemo(() => {
+        if (!realMovieId) return [];
+        return episodes.filter(e => e.movieID == realMovieId).sort((a, b) => a.numberEpisode - b.numberEpisode);
+    }, [realMovieId, episodes]);
+
     const [playEpisodes, setPlayEpisodes] = useState({});
-    
+
+    useEffect(() => {
+        if (episodeShow.length > 0) {
+            let ep;
+            if (tap) {
+                ep = episodeShow.find(e => String(e.numberEpisode) === String(tap));
+            }
+            if (!ep) ep = episodeShow[0];
+            
+            setPlayEpisodes(ep);
+            setCurrentEpisode(ep);
+        }
+    }, [episodeShow, tap]);
+
     useEffect(() => {
         if (!realMovieId) return;
-        
+
         const currentViews = movie?.views || 0;
         updateDocument("Movies", { id: realMovieId, views: currentViews + 1 }).catch(e => console.error(e));
     }, [realMovieId, playEpisodes?.id]);
-    const episodeShow = useMemo(() => {
-        if (!movieId) return [];
-        return episodes.filter(e => e.movieID == movieId).sort((a, b) => a.numberEpisode - b.numberEpisode);
-    }, [movieId, episodes]);
 
 
     const [showModal, setShowModal] = useState(false);
@@ -63,11 +70,6 @@ function PlayFilm({ handleOpenLogin }) {
 
 
     useEffect(() => {
-        if (currentEpisode) {
-            setPlayEpisodes(currentEpisode);
-        } else if (episodeShow.length > 0) {
-            setPlayEpisodes(episodeShow[0]);
-        }
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         if (realMovieId && playEpisodes?.id) {
@@ -82,7 +84,7 @@ function PlayFilm({ handleOpenLogin }) {
                 setShowModal(false);
             }
         }
-    }, [id, currentEpisode, episodeShow, realMovieId, playEpisodes?.id]);
+    }, [slug, tap, realMovieId, playEpisodes?.id]);
 
 
     const handleTimeUpdate = useCallback((currentSeconds) => {
@@ -121,7 +123,7 @@ function PlayFilm({ handleOpenLogin }) {
                 seconds: Math.floor(time),
             });
         }
-        window.location.href = `/play/${ep.id}`;
+        window.location.href = `/xem-phim/${slug}?tap=${ep.numberEpisode}`;
     };
 
     const handleResume = () => {
@@ -157,14 +159,14 @@ function PlayFilm({ handleOpenLogin }) {
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={() => navigate(`/detailFilm/${movieId}`)}
+                            onClick={() => navigate(`/phim/${movie?.slug || realMovieId}`)}
                             className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800/60 text-slate-300 hover:border-yellow-400 hover:text-yellow-400 hover:bg-yellow-400/10 transition-all cursor-pointer shadow-sm"
                             title="Quay lại chi tiết phim"
                         >
                             <FaChevronLeft className="pr-0.5 text-sm" />
                         </button>
                         <h1 className="text-lg sm:text-xl font-bold text-white flex flex-wrap items-center gap-2">
-                            <p className="inline">Xem phim <p className="text-yellow-400 inline">{movie?.name}</p></p>
+                            <p className="inline">Xem phim <p className="text-yellow-400 inline">{movie?.otherName || movie?.name}</p></p>
                             {playEpisodes?.numberEpisode && (
                                 <>
                                     <p className="text-slate-500 inline">•</p>
@@ -178,7 +180,7 @@ function PlayFilm({ handleOpenLogin }) {
 
 
                     {resumeData && (
-                        <div 
+                        <div
                             className="flex items-center gap-2 bg-[#f28123] px-3 py-1 text-white cursor-pointer hover:bg-[#d9701c] transition-colors"
                             onClick={() => setShowModal(true)}
                         >
@@ -239,7 +241,7 @@ function PlayFilm({ handleOpenLogin }) {
                             </div>
                             <div className="md:w-2/3 text-sm text-gray-400 leading-relaxed">
                                 <p>{movie.description || 'Đang cập nhật nội dung giới thiệu cho bộ phim này...'}</p>
-                                <button onClick={() => navigate(`/detailFilm/${movie.id}`)} className="text-yellow-500 mt-2 font-medium hover:underline">Thông tin phim &gt;</button>
+                                <button onClick={() => navigate(`/phim/${movie.slug || movie.id}`)} className="text-yellow-500 mt-2 font-medium hover:underline">Thông tin phim &gt;</button>
                             </div>
                         </div>
 
@@ -274,10 +276,10 @@ function PlayFilm({ handleOpenLogin }) {
                         <div className="mt-4">
                             <ListEpisodes handleClickEpisodes={handleClickEpisodes} episodeShow={episodeShow} playEpisodes={playEpisodes} />
                         </div>
-                        <Comment 
-                            isLogin={isLogin} 
-                            onOpenLogin={() => window.dispatchEvent(new CustomEvent('openLoginModal'))} 
-                            movieId={realMovieId} 
+                        <Comment
+                            isLogin={isLogin}
+                            onOpenLogin={() => window.dispatchEvent(new CustomEvent('openLoginModal'))}
+                            movieId={realMovieId}
                         />
                     </div>
 
@@ -286,7 +288,7 @@ function PlayFilm({ handleOpenLogin }) {
                         <h2 className="text-xl font-bold text-white mb-6">Đề xuất cho bạn</h2>
                         <div className="flex flex-col gap-4">
                             {movies.slice(0, 5).map((e) => (
-                                <div key={e.id} onClick={() => navigate(`/detailFilm/${e.id}`)} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
+                                <div key={e.id} onClick={() => navigate(`/phim/${e.slug || e.id}`)} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
                                     <div className="w-18 h-26.25 shrink-0 overflow-hidden rounded-md border border-gray-800 group-hover:border-gray-600">
                                         <img src={e.imgUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                     </div>

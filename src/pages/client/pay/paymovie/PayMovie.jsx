@@ -264,12 +264,12 @@ function PayMovie(props) {
                 onClose={() => {
                     setShowModal(false);
                     window.scrollTo(0, 0);
-                    navigate(`/play/${movie.id}`);
+                    navigate(`/xem-phim/${movie.slug || movie.id}`);
                 }} 
                 onGoHome={() => {
                     setShowModal(false);
                     window.scrollTo(0, 0);
-                    navigate(`/detailFilm/${movie.id}`);
+                    navigate(`/phim/${movie.slug || movie.id}`);
                 }}
             />
         </div>

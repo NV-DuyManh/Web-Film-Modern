@@ -42,7 +42,7 @@ function Cinema() {
                 >
                     {movies?.map((e) => (
                         <SwiperSlide key={e.id}>
-                            <Link to={`/detailFilm/${e.id}`}>
+                            <Link to={`/phim/${e.slug || e.id}`}>
                                 <div className="group cursor-pointer flex flex-col">
                                     <div className="relative mb-2 w-full">
                                         <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
@@ -119,7 +119,7 @@ function Cinema() {
                                                     <FaTicketAlt /> {e.rent} VNĐ
                                                 </p>
                                                 <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-purple-500 to-fuchsia-600 rounded-full text-white text-[9px] md:text-[10px] font-bold shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)]">
-                                                    <FaEye /> {e.views || 0}
+                                                    <FaEye /> {(Number(e.views) || 0) + 100}
                                                 </p>
                                             </div>
                                         </div>

@@ -59,7 +59,7 @@ function TopFilm() {
                 >
                     {topMovies.map((e, index) => (
                         <SwiperSlide key={e.id}>
-                            <Link to={`/detailFilm/${e.id}`}>
+                            <Link to={`/phim/${e.slug || e.id}`}>
                                 <div className="group cursor-pointer flex flex-col h-full">
 
                                     <div
@@ -168,7 +168,7 @@ function TopFilm() {
                                                     <span className="text-slate-500">•</span>
                                                 )}
                                                 <span className="flex items-center gap-1 text-purple-400 drop-shadow-[0_0_5px_rgba(192,38,211,0.5)] transition-transform duration-300 group-hover:scale-105">
-                                                    <FaEye /> {e.views || 0}
+                                                    <FaEye /> {(Number(e.views) || 0) + 100}
                                                 </span>
                                             </div>
 

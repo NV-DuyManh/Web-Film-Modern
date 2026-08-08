@@ -17,8 +17,9 @@ import ListEpisodes from '../ListEpisodes';
 import Comment from './Comment';
 
 
+
 function DetailFilm() {
-    const { id } = useParams();
+    const { slug } = useParams();
     const [activeTab, setActiveTab] = useState('episodes');
     const [showListDropdown, setShowListDropdown] = useState(false);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
@@ -40,7 +41,13 @@ function DetailFilm() {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, [id]);
+    }, [slug]);
+
+    const movie = useMemo(() => {
+        return movies.find(m => m.slug === slug || m.id === slug);
+    }, [movies, slug]);
+
+    const id = movie?.id;
 
     useEffect(() => {
         if (!id) return;
@@ -49,17 +56,6 @@ function DetailFilm() {
         });
         return () => unsubscribe();
     }, [id]);
-
-    const movie = useMemo(() => {
-        let found = getObjectById(movies, id);
-        if (!found) {
-            const ep = episodes.find(e => e.id == id);
-            if (ep) {
-                found = getObjectById(movies, ep.movieID);
-            }
-        }
-        return found;
-    }, [movies, episodes, id]);
 
 
     useEffect(() => {
@@ -170,7 +166,7 @@ function DetailFilm() {
     }, [movie]);
 
     const handleClickEpisodes = (ep) => {
-        navigate(`/play/${ep.id}`);
+        navigate(`/xem-phim/${movie?.slug || id}?tap=${ep.numberEpisode}`);
     }
 
     const isFavorite = useMemo(() => {
@@ -280,7 +276,7 @@ function DetailFilm() {
                                 {movie.description || 'Đang cập nhật nội dung giới thiệu cho bộ phim này...'}
                             </div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Thời lượng:</span> {movie.duration ? movie.duration + ' phút' : (movie.time || 'Đang cập nhật')}</div>
-                            <div className="text-slate-400"><span className="font-bold text-white inline">Lượt xem:</span> {movie.views || 0}</div>
+                            <div className="text-slate-400"><span className="font-bold text-white inline">Lượt xem:</span> {(Number(movie.views) || 0) + 100}</div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Quốc gia:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</span></div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Đạo diễn:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{Array.isArray(movie.listAuthor) && movie.listAuthor.length > 0 ? movie.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</span></div>
                         </div>
@@ -317,7 +313,7 @@ function DetailFilm() {
                             <div className="flex flex-col gap-4">
                                 {topMovies.map((m, index) => (
                                     <div key={index} onClick={() => {
-                                        navigate(`/detailFilm/${m.id}`);
+                                        navigate(`/phim/${m.slug || m.id}`);
                                         window.scrollTo({ top: 0, behavior: 'smooth' });
                                     }} className="flex items-center gap-3 group cursor-pointer">
                                         <div
@@ -358,7 +354,7 @@ function DetailFilm() {
 
                             <div className="flex flex-wrap items-center justify-between gap-4">
                                 <div className="flex flex-wrap items-center gap-8">
-                                    {checkShow ? <Link to={`/play/${id}`} className="flex items-center gap-2 bg-[#facc15] hover:bg-yellow-500 text-black px-8 py-3 rounded-full font-bold transition-colors shadow-[0_0_15px_rgba(250,204,21,0.3)]">
+                                    {checkShow ? <Link to={`/xem-phim/${movie?.slug || id}`} className="flex items-center gap-2 bg-[#facc15] hover:bg-yellow-500 text-black px-8 py-3 rounded-full font-bold transition-colors shadow-[0_0_15px_rgba(250,204,21,0.3)]">
                                         <FaPlay className="text-sm" /> Xem Ngay
                                     </Link> : <button onClick={() => {
                                         if (!isLogin) {
@@ -526,7 +522,7 @@ function DetailFilm() {
                                         <div
                                             key={idx}
                                             onClick={() => {
-                                                navigate(`/detailFilm/${m.id}`);
+                                                navigate(`/phim/${m.slug || m.id}`);
                                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                                             }}
                                             className="group cursor-pointer flex flex-col h-full"
