@@ -14,9 +14,15 @@ import Pay from '../pay/Pay';
 import UpgradeVIP from '../pay/UpgradeVIP';
 import PayVIP from '../pay/payvip/PayVIP';
 import PayMovie from '../pay/paymovie/PayMovie';
+import SEO from '../../../components/SEO';
 function Home(props) {
     return (
         <div>
+            <SEO 
+                title="MFILM - Xem Phim Online Miễn Phí"
+                description="MFILM - Trang xem phim online chất lượng cao, cập nhật phim mới nhanh nhất 2026. Phim lẻ, phim bộ, phim chiếu rạp, anime, phim Hàn Quốc, Trung Quốc, Nhật Bản vietsub."
+                url="/"
+            />
             <Banner />
             <CategoriesFilm />
             <FilmNew />

@@ -4,6 +4,7 @@ import { MovieContext } from '../../../contexts/MovieProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
+import SEO from '../../../components/SEO';
 
 function SingleMovies() {
     const movies = useContext(MovieContext) || [];
@@ -36,6 +37,11 @@ function SingleMovies() {
 
     return (
         <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
+            <SEO 
+                title="Phim Lẻ - Xem Phim Lẻ Online"
+                description="Tổng hợp phim lẻ hay nhất, mới nhất. Xem phim lẻ vietsub, thuyết minh chất lượng cao miễn phí tại MFILM."
+                url="/singleMovies"
+            />
             <ParticleBackground />
             <div className="max-w-350 mx-auto relative z-10">
                 <div className="mb-8">

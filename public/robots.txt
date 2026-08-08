@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /account
+Disallow: /pay
+Disallow: /payVip
+Disallow: /payMovie
+Disallow: /upgrade
+
+Sitemap: https://mfilm.online/sitemap.xml

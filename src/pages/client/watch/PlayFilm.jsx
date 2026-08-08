@@ -11,6 +11,7 @@ import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../.
 import VideoPlayer from './VideoPlayer';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import Comment from './detailFilm/Comment';
+import SEO from '../../../components/SEO';
 
 function PlayFilm({ handleOpenLogin }) {
     const { slug } = useParams();
@@ -153,6 +154,13 @@ function PlayFilm({ handleOpenLogin }) {
 
     return (
         <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25 relative overflow-hidden">
+            <SEO 
+                title={`Xem ${movie?.otherName || movie?.name || 'Phim'}${playEpisodes?.numberEpisode ? ` - Tập ${playEpisodes.numberEpisode}` : ''}`}
+                description={`Xem phim ${movie?.otherName || movie?.name || ''} tập ${playEpisodes?.numberEpisode || 1} vietsub, thuyết minh chất lượng cao tại MFILM.`}
+                image={movie?.bannerUrl || movie?.imgUrl}
+                url={`/xem-phim/${slug}${tap ? `?tap=${tap}` : ''}`}
+                type="video.episode"
+            />
 
             <div className="mx-auto px-4 sm:px-6 pt-4 relative z-10">
 

@@ -15,6 +15,7 @@ import { updateDocument, fetchDataById, getDocumentById } from '../../../../serv
 import Swal from 'sweetalert2';
 import ListEpisodes from '../ListEpisodes';
 import Comment from './Comment';
+import SEO from '../../../../components/SEO';
 
 
 
@@ -230,7 +231,50 @@ function DetailFilm() {
 
     return (
         <div className="bg-[#0f1322] min-h-screen text-slate-300 font-sans relative text-sm pb-20">
+            <SEO 
+                title={movie.otherName || movie.name}
+                description={movie.description 
+                    ? `Xem phim ${movie.otherName || movie.name} (${movie.name}) vietsub, thuyết minh chất lượng cao tại MFILM. ${movie.description.substring(0, 150)}...`
+                    : `Xem phim ${movie.otherName || movie.name} (${movie.name}) vietsub, thuyết minh full HD tại MFILM.`
+                }
+                image={movie.bannerUrl || movie.imgUrl}
+                url={`/phim/${slug}`}
+                type="video.movie"
+                extra={{
+                    'video:release_date': movie.year || '',
+                    'video:duration': movie.time || '',
+                }}
+            />
 
+            {/* JSON-LD Structured Data for Google Rich Results */}
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "Movie",
+                "name": movie.otherName || movie.name,
+                "alternateName": movie.name,
+                "description": movie.description || `Xem phim ${movie.otherName || movie.name} tại MFILM`,
+                "image": movie.bannerUrl || movie.imgUrl,
+                "dateCreated": movie.year || undefined,
+                "url": `https://mfilm.online/phim/${slug}`,
+                ...(movie.time && { "duration": movie.time }),
+                ...(movie.totalEpisodes && { "numberOfEpisodes": movie.totalEpisodes }),
+                ...(movieActors.length > 0 && {
+                    "actor": movieActors.slice(0, 5).map(a => ({
+                        "@type": "Person",
+                        "name": a.name
+                    }))
+                }),
+                ...(authors.length > 0 && {
+                    "director": authors.slice(0, 3).map(a => ({
+                        "@type": "Person",
+                        "name": a.name
+                    }))
+                }),
+                "potentialAction": {
+                    "@type": "WatchAction",
+                    "target": `https://mfilm.online/xem-phim/${slug}`
+                }
+            }) }} />
             <div className="w-full h-112.5 md:h-137.5 lg:h-162.5 relative z-0">
 
                 <img

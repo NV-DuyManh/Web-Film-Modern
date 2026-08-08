@@ -4,6 +4,7 @@ import { MovieContext } from '../../../contexts/MovieProvider';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
+import SEO from '../../../components/SEO';
 
 function CategoryPage() {
     const { id } = useParams();
@@ -44,6 +45,11 @@ function CategoryPage() {
 
     return (
         <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
+            <SEO 
+                title={`Phim ${currentCategory.name} - Xem Phim Online`}
+                description={`Tổng hợp phim ${currentCategory.name} hay nhất, mới nhất. Xem phim ${currentCategory.name} vietsub, thuyết minh chất lượng cao tại MFILM.`}
+                url={`/category/${id}`}
+            />
             <ParticleBackground />
             <div className="max-w-350 mx-auto relative z-10">
                 <div className="mb-8">
