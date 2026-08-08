@@ -22,12 +22,22 @@ function Profile() {
         const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
         const themes = ['blue', 'cyan', 'yellow', 'rose', 'purple', 'emerald'];
         
-        return sortedPlans.map((plan, index) => ({
+        const frames = sortedPlans.map((plan, index) => ({
             id: themes[index] || 'slate',
             label: plan.name,
             minLevel: plan.level
         }));
-    }, [plans]);
+
+        if (isLogin?.role === 'admin') {
+            frames.push({
+                id: 'admin',
+                label: 'Admin',
+                minLevel: 999
+            });
+        }
+
+        return frames;
+    }, [plans, isLogin]);
 
     const currentSelectedTheme = isLogin?.selectedFrame || currentPlanInfo.theme;
 
@@ -37,7 +47,7 @@ function Profile() {
         reader.onload = async () => {
             setGlobalAvatarPreview(reader.result);
             const uploadedUrl = await uploadImageToCloudinary(file, "Users");
-            await updateDocument("Users", { id: isLogin.id, imgUrl: uploadedUrl });
+            await updateDocument("Users", { id: isLogin.id, avatarUrl: uploadedUrl });
             setGlobalAvatarPreview(null);
         };
         reader.readAsDataURL(file);

@@ -19,6 +19,7 @@ const Packages = lazy(() => import('../pages/admin/vip/packages/Packages'));
 const RentMovies = lazy(() => import('../pages/admin/bills/rentMovies/RentMovies'));
 const Subscriptions = lazy(() => import('../pages/admin/bills/subscriptions/Subscriptions'));
 const MagicImport = lazy(() => import('../pages/admin/magicImport/MagicImport'));
+const ProfileAdmin = lazy(() => import('../pages/admin/profile/ProfileAdmin'));
 
 const LoadingFallback = () => (
     <div className="flex justify-center items-center h-[80vh] w-full">
@@ -102,6 +103,10 @@ function AdminRouters(props) {
         {
             path: "/magicImport",
             element: <MagicImport />
+        },
+        {
+            path: "/profile",
+            element: <ProfileAdmin />
         }
     ]
     return (

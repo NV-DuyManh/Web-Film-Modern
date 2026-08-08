@@ -31,3 +31,7 @@ Avoid using arbitrary values with brackets `[]` when standard utility classes ex
   - `z-[100]` -> `z-100`
 
 Always prefer Tailwind's default design system scale (e.g., `w-10`, `w-50`, `p-px`) over arbitrary pixel values `[]` unless absolutely necessary.
+
+# Cleanup Rules
+
+- **Always Clean Up Junk Files:** Always delete temporary scripts, data files, or test outputs (e.g., .mjs or .js scripts used for codebase modifications) immediately after successfully completing a task. Do not leave clutter in the workspace.

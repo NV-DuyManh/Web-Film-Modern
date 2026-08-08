@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ModalEpisodes from './ModalEpisodes';
 import TableEpisodes from './TableEpisodes';
 import { addDocument, updateDocument, fetchDataById } from '../../../../services/firebaseService';
@@ -12,7 +13,16 @@ const inner = { numberEpisode: "", title: "", movieID: "", url: "" };
 
 function Episodes() {
     const movies = useContext(MovieContext) || [];
+    const [searchParams, setSearchParams] = useSearchParams();
     const [selectedMovie, setSelectedMovie] = useState(null);
+
+    useEffect(() => {
+        const movieId = searchParams.get("movie");
+        if (movieId && movies.length > 0) {
+            const mv = movies.find(m => m.slug === movieId || m.id === movieId || m.otherName === movieId);
+            if (mv) setSelectedMovie(mv);
+        }
+    }, [searchParams, movies]);
     const [episodes, setEpisodes] = useState([]);
 
     useEffect(() => {
@@ -202,7 +212,7 @@ function Episodes() {
                         filterOptions={filterOptions}
                         getOptionLabel={(opt) => opt?.otherName || opt?.name || ""}
                         value={selectedMovie}
-                        onChange={(e, val) => setSelectedMovie(val)}
+                        onChange={(e, val) => { setSelectedMovie(val); if(val) { setSearchParams({movie: val.slug || val.otherName || val.id}); } else { setSearchParams({}); } }}
                         classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                         className="w-full"
                         sx={{

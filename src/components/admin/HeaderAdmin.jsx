@@ -1,4 +1,6 @@
 import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { WingedFrame } from '../client/header/AvatarFrames';
 import { FaUserCircle, FaSignOutAlt, FaUser, FaCog, FaCrown } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
 import { IoIosNotifications } from 'react-icons/io';
@@ -63,11 +65,13 @@ function HeaderAdmin() {
                         <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="relative flex items-center justify-center text-green-400 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:scale-110 group"
+                                className="relative flex items-center justify-center text-green-400 cursor-pointer transition-all duration-300 group"
                             >
                                 <div className="absolute inset-0 rounded-full bg-green-400 opacity-20 blur-sm group-hover:opacity-60 group-hover:animate-pulse transition-opacity duration-300"></div>
                                 
-                                <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="relative z-10 w-9 h-9 rounded-full object-cover border-2 border-green-400 shadow-[0_0_10px_rgba(74,222,128,0.6)]" />
+                                <WingedFrame theme={isLogin?.selectedFrame || 'admin'} size={40}>
+                                    <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="w-full h-full rounded-full object-cover" />
+                                </WingedFrame>
 
                                 <p className="absolute bottom-0 right-0 z-20 w-3 h-3 bg-[#22c55e] border-2 border-[#1e293b] rounded-full shadow-[0_0_5px_rgba(34,197,94,1)]"></p>
                             </button>
@@ -75,7 +79,9 @@ function HeaderAdmin() {
                             {isDropdownOpen && (
                                 <div className="absolute right-0 top-full mt-6 w-64 rounded-xl border border-slate-700 bg-[#0f172a] shadow-[0_15px_40px_rgba(0,0,0,0.6)] z-50 overflow-hidden transform opacity-100 scale-100 transition-all duration-300">
                                     <div className="flex items-center gap-3 p-4 border-b border-slate-700/50 bg-slate-800/30">
-                                        <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="w-11 h-11 rounded-full border border-cyan-500 object-cover shadow-[0_0_10px_rgba(34,211,238,0.3)]" />
+                                        <WingedFrame theme={isLogin?.selectedFrame || 'admin'} size={48}>
+                                            <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="w-full h-full rounded-full object-cover" />
+                                        </WingedFrame>
                                         <div className="flex flex-col min-w-0">
                                             <p className="text-[15px] font-bold text-white truncate tracking-wide">{isLogin?.name || 'Admin'}</p>
                                             <p className="text-[12px] text-cyan-400 truncate">{isLogin?.email || 'admin@mfilm.com'}</p>
@@ -83,9 +89,9 @@ function HeaderAdmin() {
                                     </div>
 
                                     <div className="p-2">
-                                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-[14px] font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
+                                        <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-[14px] font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
                                             <FaUser className="text-cyan-400 text-lg" /> Hồ sơ của tôi
-                                        </button>
+                                        </Link>
                                         <button className="w-full flex items-center gap-3 px-3 py-2.5 text-[14px] font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
                                             <FaCog className="text-yellow-400 text-lg" /> Cài đặt
                                         </button>

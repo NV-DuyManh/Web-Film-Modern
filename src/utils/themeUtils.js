@@ -9,7 +9,7 @@ export const getExpiryDate = (p) => {
 
 export const getUserPlanInfo = (user, subscriptions, plans) => {
     if (!user) return { name: 'FREE', level: 0, theme: 'blue' };
-    if (user.role === 'admin') return { name: 'ADMIN', level: 999, theme: 'red' };
+    if (user.role === 'admin') return { name: 'ADMIN', level: 999, theme: 'admin' };
 
     let highestPlan = null;
     
@@ -42,6 +42,7 @@ export const getUserPlanInfo = (user, subscriptions, plans) => {
 
 export const getThemeBadgeStyle = (theme) => {
     switch (theme) {
+        case 'admin': return 'text-white bg-linear-to-r from-purple-600 via-fuchsia-500 to-purple-600 badge-shine shadow-[0_0_20px_rgba(168,85,247,0.8)] border border-purple-400 font-black tracking-widest';
         case 'slate': return 'text-slate-300 bg-slate-700/50 border border-slate-500/50 shadow-none';
         case 'red': return 'text-white bg-linear-to-r from-red-600 via-rose-500 to-red-600 badge-shine shadow-[0_0_15px_rgba(244,63,94,0.6)] border border-red-400';
         case 'blue': return 'text-white bg-linear-to-r from-blue-500 via-indigo-400 to-blue-500 badge-shine shadow-[0_0_15px_rgba(59,130,246,0.6)] border border-blue-400';
@@ -54,6 +55,7 @@ export const getThemeBadgeStyle = (theme) => {
 
 export const getThemeColorStyle = (theme) => {
     switch (theme) {
+        case 'admin': return 'border-purple-500 text-purple-400 bg-purple-500/20';
         case 'slate': return 'border-slate-500 text-slate-400 bg-slate-500/10';
         case 'red': return 'border-red-500 text-red-400 bg-red-500/10';
         case 'blue': return 'border-blue-500 text-blue-400 bg-blue-500/10';

@@ -1,7 +1,8 @@
 import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Dialog, Slide } from '@mui/material';
-import { FaTimesCircle, FaStar, FaGlobe, FaClock, FaCalendarAlt, FaTv, FaCrown, FaFilm, FaUserTie, FaUsers, FaUserNinja, FaMoneyBillWave } from 'react-icons/fa';
+import { FaTimesCircle, FaStar, FaGlobe, FaClock, FaCalendarAlt, FaTv, FaCrown, FaFilm, FaUserTie, FaUsers, FaUserNinja, FaMoneyBillWave, FaEdit } from 'react-icons/fa';
 import { MdOutlineSubtitles, MdMic, MdOutlineVoiceChat } from 'react-icons/md';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 
@@ -60,8 +61,9 @@ function GlowCard({ title, icon: Icon, color = "cyan", children }) {
     );
 }
 
-function AvatarItem({ entity, fallback, color }) {
+function AvatarItem({ entity, fallback, color, entityType, handleClose }) {
     const [hovered, setHovered] = React.useState(false);
+    const navigate = useNavigate();
     const glowMap = {
         cyan: { base: "shadow-[0_0_10px_rgba(6,182,212,0.4)] border-cyan-500/40", active: "shadow-[0_0_18px_rgba(6,182,212,0.7)] scale-110 -translate-y-1" },
         pink: { base: "shadow-[0_0_10px_rgba(236,72,153,0.4)] border-pink-500/40", active: "shadow-[0_0_18px_rgba(236,72,153,0.7)] scale-110 -translate-y-1" },
@@ -73,7 +75,8 @@ function AvatarItem({ entity, fallback, color }) {
 
     return (
         <div
-            className="relative cursor-default"
+            className="relative cursor-pointer"
+            onClick={() => { if (entityType) { navigate(`/${entityType}?search=${encodeURIComponent(entity.name)}`); } }}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
@@ -90,7 +93,7 @@ function AvatarItem({ entity, fallback, color }) {
     );
 }
 
-function AvatarRow({ items, list, fallback, color = "cyan" }) {
+function AvatarRow({ items, list, fallback, color = "cyan", entityType, handleClose }) {
     if (!items || items.length === 0) return <p className="text-gray-600 text-xs italic inline">N/A</p>;
 
     return (
@@ -98,14 +101,15 @@ function AvatarRow({ items, list, fallback, color = "cyan" }) {
             {items.map((id, idx) => {
                 const entity = list?.find(e => e.id === id);
                 if (!entity) return null;
-                return <AvatarItem key={idx} entity={entity} fallback={fallback} color={color} />;
+                return <AvatarItem key={idx} entity={entity} fallback={fallback} color={color} entityType={entityType} handleClose={handleClose} />;
             })}
         </div>
     );
 }
 
 
-function ModalViewMovie({ open, handleClose, movie }) {
+function ModalViewMovie({ open, handleClose, movie, onEdit }) {
+    const navigate = useNavigate();
     const categoryTypes = useContext(CategoryTypeContext);
     const [actors, setActors] = useState([]);
     useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
@@ -157,7 +161,7 @@ function ModalViewMovie({ open, handleClose, movie }) {
                     borderRadius: 24
                 }}></div>
 
-                {/* ═══ Animated border glow (Sharp Line) ═══ */}
+
                 <div className="absolute inset-0 rounded-3xl pointer-events-none z-21" style={{
                     background: 'linear-gradient(90deg, transparent, rgba(6,182,212,0.8), transparent, rgba(168,85,247,0.8), transparent)',
                     backgroundSize: '200% 100%',
@@ -170,12 +174,28 @@ function ModalViewMovie({ open, handleClose, movie }) {
                     borderRadius: 24
                 }}></div>
 
-                <button
-                    onClick={handleClose}
-                    className="absolute top-5 right-5 z-30 w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
-                >
-                    <FaTimesCircle size={20} />
-                </button>
+                <div className="absolute top-5 right-5 z-30 flex gap-3">
+                    <button
+                        onClick={() => navigate(`/episodes?movie=${movie.slug || movie.otherName || movie.id}`)}
+                        className="w-10 h-10 rounded-full bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 flex items-center justify-center text-emerald-400 hover:text-emerald-200 hover:border-emerald-400 hover:bg-emerald-500/30 hover:scale-110 hover:shadow-[0_0_20px_rgba(16,185,129,0.6)] transition-all duration-500 cursor-pointer"
+                    >
+                        <FaTv size={18} />
+                    </button>
+                    {onEdit && (
+                        <button
+                            onClick={onEdit}
+                            className="w-10 h-10 rounded-full bg-blue-500/10 backdrop-blur-md border border-blue-500/20 flex items-center justify-center text-blue-400 hover:text-blue-200 hover:border-blue-400 hover:bg-blue-500/30 hover:scale-110 hover:shadow-[0_0_20px_rgba(59,130,246,0.6)] transition-all duration-500 cursor-pointer"
+                        >
+                            <FaEdit size={18} />
+                        </button>
+                    )}
+                    <button
+                        onClick={handleClose}
+                        className="w-10 h-10 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 flex items-center justify-center text-red-400 hover:text-red-200 hover:border-red-400 hover:bg-red-500/30 hover:rotate-90 hover:shadow-[0_0_20px_rgba(239,68,68,0.6)] transition-all duration-500 cursor-pointer"
+                    >
+                        <FaTimesCircle size={20} />
+                    </button>
+                </div>
 
                 <div className="movie-view-modal w-[calc(100%-12px)] mx-auto my-1.5 rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar relative z-5 flex-1 p-0.5">
 
@@ -219,14 +239,14 @@ function ModalViewMovie({ open, handleClose, movie }) {
                                 <p className="text-gray-400 text-sm italic font-medium mb-3">{movie.name}</p>
                             )}
                             <div className="flex flex-wrap gap-2">
+                                {currentPlan && <NeonBadge icon={FaCrown} text={currentPlan.name} color="rose" />}
                                 <NeonBadge text={movie.status} color={getStatusColor(movie.status)} />
+                                {currentCategoryType && <NeonBadge icon={FaFilm} text={currentCategoryType.name} color="blue" />}
                                 <NeonBadge text={movie.ageRating} color="red" />
                                 <NeonBadge icon={FaCalendarAlt} text={movie.releaseYear} color="indigo" />
                                 <NeonBadge icon={FaClock} text={movie.duration ? `${movie.duration} min` : "N/A"} color="yellow" />
                                 <NeonBadge icon={FaTv} text={`${movie.endEpisode} Eps`} color="fuchsia" />
                                 {movie.countriesID && <NeonBadge icon={FaGlobe} text={movie.countriesID} color="emerald" />}
-                                {currentPlan && <NeonBadge icon={FaCrown} text={currentPlan.name} color="rose" />}
-                                {currentCategoryType && <NeonBadge icon={FaFilm} text={currentCategoryType.name} color="blue" />}
                             </div>
                         </div>
                     </div>
@@ -278,13 +298,13 @@ function ModalViewMovie({ open, handleClose, movie }) {
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                             <GlowCard title="Directors" icon={FaUserTie} color="yellow">
-                                <AvatarRow items={movie.listAuthor} list={authors} fallback={Logo5} color="yellow" />
+                                <AvatarRow items={movie.listAuthor} list={authors} fallback={Logo5} color="yellow" entityType="authors" handleClose={handleClose} />
                             </GlowCard>
                             <GlowCard title="Actors" icon={FaUsers} color="pink">
-                                <AvatarRow items={movie.listActor} list={actors} fallback={Logo5} color="pink" />
+                                <AvatarRow items={movie.listActor} list={actors} fallback={Logo5} color="pink" entityType="actors" handleClose={handleClose} />
                             </GlowCard>
                             <GlowCard title="Characters" icon={FaUserNinja} color="green">
-                                <AvatarRow items={movie.listCharacter} list={characters} fallback={Logo5} color="green" />
+                                <AvatarRow items={movie.listCharacter} list={characters} fallback={Logo5} color="green" entityType="characters" handleClose={handleClose} />
                             </GlowCard>
                         </div>
 

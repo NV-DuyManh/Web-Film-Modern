@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Search from '../../../../components/admin/search/Search';
 import ModalActor from './ModalActor';
 import TableActor from './TableActor';
@@ -12,7 +13,8 @@ function Actors() {
     const [error, setError] = useState({});
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [search, setSearch] = useState("");
+    const [searchParams] = useSearchParams();
+    const [search, setSearch] = useState(searchParams.get('search') || "");
 
     const onChangeSearch = (e) => {
         setSearch(e.target.value)

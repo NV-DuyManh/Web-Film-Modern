@@ -61,20 +61,35 @@ function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILAB
                 </div>
 
                 <div className="mt-4 xl:mt-0 self-center shrink-0 group cursor-default">
-                    <div className={`
-                        relative px-6 py-2.5 rounded-full flex items-center gap-3 
-                        bg-transparent
-                        text-${currentPlanInfo.theme}-400 text-[15px] font-black uppercase tracking-widest
-                        border border-${currentPlanInfo.theme}-400/50 hover:border-${currentPlanInfo.theme}-400
-                        transition-colors duration-300
-                    `}>
-                        <div className={`absolute inset-0 rounded-full bg-${currentPlanInfo.theme}-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
-
-                        <FaCrown className="text-xl drop-shadow-[0_0_8px_currentColor] z-10" />
-                        <span className="z-10 drop-shadow-[0_0_5px_currentColor]">
-                            Hạng hiện tại: {currentPlanInfo.name === 'PRENIUM' ? 'PREMIUM' : currentPlanInfo.name}
-                        </span>
-                    </div>
+                    {currentPlanInfo.name === 'ADMIN' ? (
+                        <div className="relative px-7 py-3 rounded-full flex items-center gap-3 overflow-hidden"
+                            style={{
+                                background: 'linear-gradient(135deg, #4c1d95, #7c3aed, #9333ea)',
+                                border: '2px solid #fbbf24',
+                                boxShadow: '0 0 20px rgba(147, 51, 234, 0.5), 0 0 40px rgba(147, 51, 234, 0.2), inset 0 1px 0 rgba(255,255,255,0.15)'
+                            }}>
+                            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent animate-avatar-shine"></div>
+                            <FaCrown className="text-xl text-yellow-400 z-10 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+                            <span className="z-10 text-[15px] font-black uppercase tracking-widest text-transparent bg-clip-text"
+                                style={{ backgroundImage: 'linear-gradient(to right, #fef08a, #fbbf24, #f59e0b)' }}>
+                                Hạng hiện tại: ADMIN
+                            </span>
+                        </div>
+                    ) : (
+                        <div className={`
+                            relative px-6 py-2.5 rounded-full flex items-center gap-3 
+                            bg-transparent
+                            text-${currentPlanInfo.theme}-400 text-[15px] font-black uppercase tracking-widest
+                            border border-${currentPlanInfo.theme}-400/50 hover:border-${currentPlanInfo.theme}-400
+                            transition-colors duration-300
+                        `}>
+                            <div className={`absolute inset-0 rounded-full bg-${currentPlanInfo.theme}-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+                            <FaCrown className="text-xl drop-shadow-[0_0_8px_currentColor] z-10" />
+                            <span className="z-10 drop-shadow-[0_0_5px_currentColor]">
+                                Hạng hiện tại: {currentPlanInfo.name === 'PRENIUM' ? 'PREMIUM' : currentPlanInfo.name}
+                            </span>
+                        </div>
+                    )}
                 </div>
             </div>
 

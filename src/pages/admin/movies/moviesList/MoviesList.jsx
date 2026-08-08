@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Search from '../../../../components/admin/search/Search';
 import TableMovies from './TableMovies';
 import ModalMovies from './ModalMovies';
@@ -31,6 +32,21 @@ function MoviesList() {
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [search, setSearch] = useState("");
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    useEffect(() => {
+        const viewMovieId = searchParams.get("viewMovie");
+        if (viewMovieId && movies.length > 0) {
+            const mv = movies.find(m => m.slug === viewMovieId || m.id === viewMovieId || m.otherName === viewMovieId);
+            if (mv) {
+                setMovieView(mv);
+                setOpenView(true);
+            }
+        } else {
+            setOpenView(false);
+        }
+    }, [searchParams, movies]);
+
 
     const onChangeSearch = (e) => setSearch(e.target.value);
 
@@ -61,8 +77,15 @@ function MoviesList() {
     };
 
     const handleViewMovie = (row) => {
-        setMovieView(row);
-        setOpenView(true);
+        const currentParams = new URLSearchParams(searchParams);
+        currentParams.set("viewMovie", row.slug || row.otherName || row.id);
+        setSearchParams(currentParams);
+    };
+
+    const handleCloseView = () => {
+        const currentParams = new URLSearchParams(searchParams);
+        currentParams.delete("viewMovie");
+        setSearchParams(currentParams);
     };
 
     const handleDeletePrompt = (row) => {
@@ -182,8 +205,12 @@ function MoviesList() {
 
             <ModalViewMovie 
                 open={openView} 
-                handleClose={() => setOpenView(false)} 
+                handleClose={handleCloseView} 
                 movie={movieView} 
+                onEdit={() => {
+                    handleCloseView();
+                    handleEdit(movieView);
+                }}
             />
 
             <ModalDelete 
