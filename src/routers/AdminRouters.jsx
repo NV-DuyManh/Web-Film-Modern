@@ -4,6 +4,7 @@ import { Route, Routes } from 'react-router-dom';
 const DashBoard = lazy(() => import('../pages/admin/dashBoard/DashBoard'));
 const Categories = lazy(() => import('../pages/admin/metaData/categories/Categories'));
 const CategoriesType = lazy(() => import('../pages/admin/metaData/categoryType/CategoriesType'));
+const Topics = lazy(() => import('../pages/admin/metaData/topics/Topics'));
 const MoviesList = lazy(() => import('../pages/admin/movies/moviesList/MoviesList'));
 const Episodes = lazy(() => import('../pages/admin/movies/episodes/Episodes'));
 const ShowTimes = lazy(() => import('../pages/admin/movies/showTimes/ShowTimes'));
@@ -43,6 +44,10 @@ function AdminRouters(props) {
         {
             path: "/categoryTypes",
             element: <CategoriesType />
+        },
+        {
+            path: "/topics",
+            element: <Topics />
         },
         {
             path: "/movies",

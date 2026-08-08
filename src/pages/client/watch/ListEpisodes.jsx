@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { FaPlay } from 'react-icons/fa';
+import { FaPlay, FaLock } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { getExpiryDate, getUserPlanInfo } from '../../../utils/themeUtils';
@@ -115,7 +115,11 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                                 : "bg-slate-800/80 text-slate-200 border-slate-600/50 hover:border-cyan-400 hover:bg-linear-to-r hover:from-cyan-900/40 hover:to-blue-900/40 hover:text-cyan-300 hover:-translate-y-1 hover:shadow-[0_6px_20px_rgba(34,211,238,0.25)] hover:scale-[1.04] active:scale-95"
                                 }`}
                         >
-                            <FaPlay className={`text-[10px] sm:text-xs shrink-0 transition-all duration-300 ${isActive ? "text-slate-950 drop-shadow-sm" : "text-amber-400/80 group-hover:text-cyan-400 group-hover:scale-110"}`} />
+                            {checkShow ? (
+                                <FaPlay className={`text-[10px] sm:text-xs shrink-0 transition-all duration-300 ${isActive ? "text-slate-950 drop-shadow-sm" : "text-amber-400/80 group-hover:text-cyan-400 group-hover:scale-110"}`} />
+                            ) : (
+                                <FaLock className="text-[10px] sm:text-xs shrink-0 transition-all duration-300 text-rose-500 group-hover:text-rose-400 group-hover:scale-110 drop-shadow-[0_0_5px_rgba(244,63,94,0.5)]" />
+                            )}
                             <p className="relative inline truncate">Tập {e.numberEpisode}</p>
                         </button>
                     );

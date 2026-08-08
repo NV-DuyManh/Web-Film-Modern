@@ -19,6 +19,7 @@ import ReviewProvider from './contexts/ReviewProvider.jsx';
 import CommentProvider from './contexts/CommentProvider.jsx';
 import RentMovieProvider from './contexts/RentMovieProvider.jsx';
 import SubscriptionProvider from './contexts/SubscriptionProvider.jsx';
+import TopicProvider from './contexts/TopicProvider.jsx';
 
 const providers = [
   CategoryProvider,
@@ -33,6 +34,7 @@ const providers = [
   CommentProvider,
   RentMovieProvider,
   SubscriptionProvider,
+  TopicProvider,
   AuthProvider
 ];
 

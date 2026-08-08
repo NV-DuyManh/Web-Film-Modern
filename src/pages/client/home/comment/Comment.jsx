@@ -44,6 +44,24 @@ function Comment() {
             return countB - countA;
         }).slice(0, 3);
     }, [movies, favoriteCounts]);
+
+    const commentCounts = useMemo(() => {
+        const counts = {};
+        comments.forEach(c => {
+            if (c.movieID) {
+                counts[c.movieID] = (counts[c.movieID] || 0) + 1;
+            }
+        });
+        return counts;
+    }, [comments]);
+
+    const topCommentedMovies = useMemo(() => {
+        return [...movies].sort((a, b) => {
+            const countA = commentCounts[a.id] || 0;
+            const countB = commentCounts[b.id] || 0;
+            return countB - countA;
+        }).slice(0, 3);
+    }, [movies, commentCounts]);
     return (
         <div className="w-full bg-[#0d0f14] py-8">
             <div className=" mx-auto px-4 sm:px-6">
@@ -57,14 +75,17 @@ function Comment() {
                         </div>
 
                         <div className="flex flex-col gap-5 flex-1">
-                            {movies.slice(0, 3).map((e, index) => (
-                                <div key={e.id || index} className="flex items-center gap-3 group cursor-pointer">
+                            {topCommentedMovies.map((e, index) => (
+                                <div key={e.id || index} onClick={() => navigate(`/phim/${e.slug || e.id}`)} className="flex items-center gap-3 group cursor-pointer">
                                     <p className="w-5 text-gray-500 font-bold text-sm shrink-0 inline">{index + 1}</p>
                                     <FaArrowTrendUp className="w-4 text-green-500 text-sm shrink-0" />
                                     <img src={e.imgUrl} className="w-11 h-16 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
-                                    <h4 className="text-[13px] text-gray-200 line-clamp-2 leading-snug group-hover:text-yellow-400 transition-colors">
-                                        {e.name}
-                                    </h4>
+                                    <div className="flex flex-col">
+                                        <h4 className="text-[13px] text-gray-200 line-clamp-2 leading-snug group-hover:text-yellow-400 transition-colors">
+                                            {e.otherName || e.name}
+                                        </h4>
+                                        <p className="text-[11px] text-gray-500 mt-1">{commentCounts[e.id] || 0} bình luận</p>
+                                    </div>
                                 </div>
                             ))}
 
@@ -86,7 +107,7 @@ function Comment() {
                                     <img src={e.imgUrl} className="w-11 h-16 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
                                     <div className="flex flex-col">
                                         <h4 className="text-[13px] text-gray-200 line-clamp-2 leading-snug group-hover:text-yellow-400 transition-colors">
-                                            {e.name}
+                                            {e.otherName || e.name}
                                         </h4>
                                         <p className="text-[11px] text-gray-500 mt-1">{favoriteCounts[e.id] || 0} lượt thích</p>
                                     </div>
@@ -122,7 +143,7 @@ function Comment() {
                                                 {comment.description}
                                             </p>
                                             <p className="text-[11px] text-yellow-500/80 line-clamp-1 mt-0.5 inline">
-                                                » {movie?.name || 'Phim đang cập nhật'}
+                                                » {movie?.otherName || movie?.name || 'Phim đang cập nhật'}
                                             </p>
                                         </div>
                                     </div>

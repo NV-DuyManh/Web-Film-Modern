@@ -68,7 +68,7 @@ function TopFilm() {
                                         <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-[3px] border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : 'skew-y-[-8deg]'} origin-center z-10 transition-colors duration-300`}>
                                             <img
                                                 src={e.imgUrl}
-                                                className={`absolute left-0 w-full object-cover transition-transform duration-500 scale-[1.08] group-hover:scale-[1.12] transform ${index % 2 === 0 ? 'skew-y-[-8deg]' : 'skew-y-[8deg]'} origin-center`}
+                                                className={`absolute left-0 w-full object-cover scale-[1.08] transform ${index % 2 === 0 ? 'skew-y-[-8deg]' : 'skew-y-[8deg]'} origin-center`}
                                                 style={{ height: 'calc(100% * 100 / 90)', top: '0' }}
                                                 draggable="false"
                                             />
@@ -80,7 +80,7 @@ function TopFilm() {
                                         <div className="absolute bottom-0 left-0 w-full h-[20%] rounded-b-xl overflow-hidden border-b-[3px] border-l-[3px] border-r-[3px] border-transparent group-hover:border-[#facc15] z-20 transition-colors duration-300">
                                             <img
                                                 src={e.imgUrl}
-                                                className="absolute left-0 w-full object-cover transition-transform duration-500 scale-[1.08] group-hover:scale-[1.12] origin-center"
+                                                className="absolute left-0 w-full object-cover scale-[1.08] origin-center"
                                                 style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}
                                                 draggable="false"
                                             />
@@ -93,21 +93,21 @@ function TopFilm() {
                                                 const plan = getObjectById(plans, e.planID);
                                                 if (!plan) return null;
                                                 const level = Number(plan.level) || 0;
-                                                let cls = "bg-slate-500/30 border-slate-400/50 text-white shadow-sm";
+                                                let cls = "bg-slate-600 border-slate-500 text-white";
                                                 let text = plan.name;
 
 
                                                 if (level >= 3) {
-                                                    cls = "bg-linear-to-r from-pink-500/50 via-fuchsia-300/70 to-pink-500/50 border-pink-300 text-white shadow-[0_0_15px_rgba(236,72,153,0.8)] premium-laser";
+                                                    cls = "bg-linear-to-r from-fuchsia-600 via-pink-400 to-rose-500 border-pink-300 text-white shadow-[0_0_15px_rgba(236,72,153,0.8)] premium-laser";
                                                 } else if (level === 2) {
-                                                    cls = "bg-yellow-500/30 border-yellow-400/50 text-yellow-300 shadow-[0_0_10px_rgba(234,179,8,0.4)]";
+                                                    cls = "bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
                                                 } else if (level === 1) {
-                                                    cls = "bg-cyan-500/30 border-cyan-400/50 text-cyan-300 shadow-[0_0_10px_rgba(6,182,212,0.4)]";
+                                                    cls = "bg-linear-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
                                                 }
 
                                                 return (
                                                     <div className="group-hover:scale-110 transition-transform duration-300 origin-center">
-                                                        <p className={`text-[10px] md:text-[11px] font-black px-3 py-0.5 rounded-full border ${cls} backdrop-blur-md uppercase tracking-widest`}>
+                                                        <p className={`text-[10px] md:text-[11px] font-black px-3 py-0.5 rounded-full border ${cls} uppercase tracking-widest`}>
                                                             {text}
                                                         </p>
                                                     </div>
@@ -117,24 +117,24 @@ function TopFilm() {
 
                                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-30 transition-all duration-300">
                                             {e.episodeSub && (
-                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-cyan-500/20 border border-cyan-400/50 text-cyan-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-linear-to-r from-cyan-500 to-blue-500 text-white text-[8px] font-bold rounded shadow-md">
                                                     PĐ.{String(e.episodeSub).trim()}
                                                 </div>
                                             )}
                                             {e.episodeVoice && (
-                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-linear-to-r from-emerald-500 to-teal-500 text-white text-[8px] font-bold rounded shadow-md">
                                                     TM.{String(e.episodeVoice).trim()}
                                                 </div>
                                             )}
                                             {e.episodeDub && (
-                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-pink-500/20 border border-pink-400/50 text-pink-300 text-[8px] font-bold rounded backdrop-blur-md shadow-sm">
+                                                <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-linear-to-r from-pink-500 to-rose-500 text-white text-[8px] font-bold rounded shadow-md">
                                                     LT.{String(e.episodeDub).trim()}
                                                 </div>
                                             )}
                                         </div>
                                     </div>
 
-                                    <div className="pt-3 flex items-start gap-2 md:gap-3 transition-transform duration-300 group-hover:-translate-y-1">
+                                    <div className="pt-2 flex items-start gap-2 md:gap-3 transition-transform duration-300 group-hover:-translate-y-1">
                                         <p className={`text-3xl md:text-4xl font-black italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ${index === 0 ? 'text-red-600' :
                                             index === 1 ? 'text-orange-500' :
                                                 index === 2 ? 'text-yellow-400' :

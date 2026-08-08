@@ -4,7 +4,7 @@ import { FaLock } from 'react-icons/fa';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
-function ModalDetail({ open, handleClose }) {
+function ModalDetail({ open, handleClose, title = "Yêu cầu đăng nhập", description = "Bạn cần đăng nhập tài khoản để mua hoặc thuê phim này" }) {
     return (
         <Dialog
             open={open}
@@ -34,8 +34,8 @@ function ModalDetail({ open, handleClose }) {
                     </div>
 
                     <div>
-                        <h2 className="text-xl font-bold text-white mb-2">Yêu cầu đăng nhập</h2>
-                        <p className="text-slate-400 text-sm leading-relaxed">Bạn cần đăng nhập tài khoản để mua hoặc thuê phim này</p>
+                        <h2 className="text-xl font-bold text-white mb-2">{title}</h2>
+                        <p className="text-slate-400 text-sm leading-relaxed">{description}</p>
                     </div>
 
                     <div className="flex gap-3 w-full mt-2">

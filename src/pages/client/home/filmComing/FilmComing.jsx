@@ -55,7 +55,7 @@ function FilmComing() {
                                                 const plan = getObjectById(plans, e.planID);
                                                 if (!plan) return null;
                                                 const level = Number(plan.level) || 0;
-                                                let cls = "bg-slate-600/90 border-slate-500 text-white";
+                                                let cls = "bg-slate-600 border-slate-500 text-white";
                                                 let text = plan.name;
 
 
@@ -69,7 +69,7 @@ function FilmComing() {
 
                                                 return (
                                                     <div className="absolute top-2 right-2 flex gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">
-                                                        <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} backdrop-blur-md uppercase tracking-wider`}>
+                                                        <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} uppercase tracking-wider`}>
                                                             {text}
                                                         </p>
                                                     </div>

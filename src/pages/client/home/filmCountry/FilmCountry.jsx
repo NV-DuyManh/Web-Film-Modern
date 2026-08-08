@@ -65,7 +65,7 @@ function FilmCountry({ title, countryName, titleClass }) {
                                                 const plan = getObjectById(plans, e.planID);
                                                 if (!plan) return null;
                                                 const level = Number(plan.level) || 0;
-                                                let cls = "bg-slate-600/90 border-slate-500 text-white";
+                                                let cls = "bg-slate-600 border-slate-500 text-white";
                                                 let text = plan.name;
 
 
@@ -79,14 +79,14 @@ function FilmCountry({ title, countryName, titleClass }) {
 
                                                 return (
                                                     <div className="absolute top-2 right-2 flex gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">
-                                                        <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} backdrop-blur-md uppercase tracking-wider`}>
+                                                        <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} uppercase tracking-wider`}>
                                                             {text}
                                                         </p>
                                                     </div>
                                                 );
                                             })()}
 
-                                            <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5 z-20">
+                                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20 w-max">
                                                 {(() => {
                                                     const cId = (e.countriesID || '').toLowerCase();
                                                     let bgCls = "from-indigo-500 to-purple-600 border-indigo-400 shadow-[0_2px_4px_rgba(99,102,241,0.4)]";
@@ -112,9 +112,14 @@ function FilmCountry({ title, countryName, titleClass }) {
                                                         </p>
                                                     );
                                                 })()}
+                                                {e.duration && (
+                                                    <span className="flex items-center gap-1 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-1.5 py-0.5 rounded shadow-md text-[8px] md:text-[9px] font-bold whitespace-nowrap">
+                                                        <FaClock /> {e.duration}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
-                                        <div className="pt-3 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
+                                        <div className="pt-2 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
                                             <h3 className="m-0 text-base font-bold text-white truncate w-full transition-colors group-hover:text-[#facc15]">{e.otherName}</h3>
                                             <p className="m-0 mt-1 text-[#8c909e] text-[10px] md:text-[11px] truncate w-full transition-colors group-hover:text-slate-300">{e.name}</p>
                                             <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5 w-full font-bold">
@@ -123,11 +128,7 @@ function FilmCountry({ title, countryName, titleClass }) {
                                                         <FaCalendarAlt /> {e.releaseYear}
                                                     </span>
                                                 )}
-                                                {e.duration && (
-                                                    <span className="flex items-center gap-1.5 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
-                                                        <FaClock /> {e.duration} Phút
-                                                    </span>
-                                                )}
+
                                                 <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                                                     <FaEye /> {(Number(e.views) || 0) + 100}
                                                 </span>

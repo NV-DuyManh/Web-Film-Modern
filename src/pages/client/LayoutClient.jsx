@@ -30,7 +30,7 @@ function LayoutClient(props) {
     }, [location.pathname]);
 
     return (
-        <div className="max-w-480 mx-auto w-full shadow-2xl bg-[#111827]">
+        <div className="max-w-480 mx-auto w-full shadow-2xl bg-[#0a0a0f]">
             <LoadingScreen />
             <HeaderClient />
             <ClientRouters />

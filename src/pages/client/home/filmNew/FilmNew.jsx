@@ -9,8 +9,9 @@ import { MovieContext } from '../../../../contexts/MovieProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { Link } from 'react-router-dom';
+import { getAgeRatingColorClass } from '../../../../utils/ageRatingColors';
 
-function FilmNew() {
+function FilmNew(props) {
     const movies = useContext(MovieContext);
     
     const plans = useContext(PlanContext);
@@ -56,7 +57,7 @@ function FilmNew() {
                                                 const plan = getObjectById(plans, e.planID);
                                                 if (!plan) return null;
                                                 const level = Number(plan.level) || 0;
-                                                let cls = "bg-slate-600/90 border-slate-500 text-white";
+                                                let cls = "bg-slate-600 border-slate-500 text-white";
                                                 let text = plan.name;
 
 
@@ -70,13 +71,13 @@ function FilmNew() {
 
                                                 return (
                                                     <div className="absolute top-2 right-2 flex gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">
-                                                        <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} backdrop-blur-md uppercase tracking-wider`}>
+                                                        <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} uppercase tracking-wider`}>
                                                             {text}
                                                         </p>
                                                     </div>
                                                 );
                                             })()}
-                                            <div className="absolute bottom-2 left-2 flex flex-wrap gap-1.5 z-20">
+                                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20 w-max">
                                                 {(() => {
                                                     const cId = (e.countriesID || '').toLowerCase();
                                                     let bgCls = "from-indigo-500 to-purple-600 border-indigo-400 shadow-[0_2px_4px_rgba(99,102,241,0.4)]";
@@ -102,6 +103,15 @@ function FilmNew() {
                                                         </p>
                                                     );
                                                 })()}
+                                                {e.ageRating && (() => {
+                                                    const rating = e.ageRating;
+                                                    const colorClass = getAgeRatingColorClass(rating);
+                                                    return (
+                                                        <span className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded shadow-md text-[8px] md:text-[9px] font-bold ${colorClass}`}>
+                                                            <FaShieldAlt /> {rating}
+                                                        </span>
+                                                    );
+                                                })()}
                                             </div>
                                         </div>
                                     </div>
@@ -119,11 +129,7 @@ function FilmNew() {
                                                     <FaCalendarAlt /> {e.releaseYear}
                                                 </span>
                                             )}
-                                            {e.ageRating && (
-                                                <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-orange-500 to-red-600 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(239,68,68,0.6)]">
-                                                    <FaShieldAlt /> {e.ageRating}
-                                                </span>
-                                            )}
+
                                             {e.endEpisode && (
                                                 <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-emerald-400 to-green-600 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(16,185,129,0.6)]">
                                                     <FaListUl className="text-[9px]" />  {e.endEpisode} Tập

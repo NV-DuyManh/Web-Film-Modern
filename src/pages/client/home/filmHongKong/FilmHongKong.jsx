@@ -64,7 +64,7 @@ function FilmHongKong() {
                                             const plan = getObjectById(plans, e.planID);
                                             if (!plan) return null;
                                             const level = Number(plan.level) || 0;
-                                            let cls = "bg-slate-600/90 border-slate-500 text-white";
+                                            let cls = "bg-slate-600 border-slate-500 text-white";
                                             let text = plan.name;
 
 
@@ -78,7 +78,7 @@ function FilmHongKong() {
 
                                             return (
                                                 <div className="absolute top-2 right-2 flex gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">
-                                                    <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} backdrop-blur-md uppercase tracking-wider`}>
+                                                    <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} uppercase tracking-wider`}>
                                                         {text}
                                                     </p>
                                                 </div>
@@ -99,18 +99,20 @@ function FilmHongKong() {
                                                 const textCls = cId.includes('vietnam') || cId.includes('việt') ? 'text-black' : 'text-white';
 
                                                 return (
-                                                    <p className={`bg-linear-to-r ${bgCls} ${textCls} text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded-l whitespace-nowrap uppercase tracking-wider`}>
+                                                    <p className={`bg-linear-to-r ${bgCls} ${textCls} text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded shadow-md whitespace-nowrap uppercase tracking-wider`}>
                                                         {e.countriesID}
                                                     </p>
                                                 );
                                             })()}
-                                            <p className="bg-blue-600/90 backdrop-blur-md text-white text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded-r whitespace-nowrap">
-                                                LT. {e.endEpisode}
-                                            </p>
+                                            {e.duration && (
+                                                <span className="flex items-center gap-1 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-1.5 py-0.5 rounded shadow-md text-[8px] md:text-[9px] font-bold whitespace-nowrap">
+                                                    <FaClock /> {e.duration}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
 
-                                    <div className="pt-3 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
+                                    <div className="pt-2 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
                                         <h3 className="text-white font-bold text-sm md:text-base truncate w-full transition-colors group-hover:text-[#facc15]">
                                             {e.otherName}
                                         </h3>
@@ -123,11 +125,7 @@ function FilmHongKong() {
                                                     <FaCalendarAlt /> {e.releaseYear}
                                                 </div>
                                             )}
-                                            {e.duration && (
-                                                <div className="flex items-center gap-1.5 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(250,204,21,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
-                                                    <FaClock /> {e.duration}p
-                                                </div>
-                                            )}
+
                                             <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                                                 <FaEye /> {(Number(e.views) || 0) + 100}
                                             </div>

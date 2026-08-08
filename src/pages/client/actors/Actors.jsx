@@ -21,8 +21,12 @@ function Actors() {
         setPage(1);
     }, [searchTerm]);
 
+    const removeDiacritics = (str) => {
+        return str ? str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : '';
+    };
+
     const filteredActors = actors.filter(actor => 
-        actor.name?.toLowerCase().includes(searchTerm.toLowerCase())
+        removeDiacritics(actor.name).includes(removeDiacritics(searchTerm))
     );
 
     const totalPages = Math.ceil(filteredActors.length / itemsPerPage) || 1;
@@ -48,15 +52,15 @@ function Actors() {
                         Diễn viên
                     </h1>
 
-                    <div className="relative w-full md:w-80">
+                    <div className="search w-full md:w-80">
                         <input 
                             type="text" 
                             placeholder="Tìm kiếm diễn viên..." 
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full bg-slate-800/50 border border-slate-700/50 text-slate-200 rounded-full px-5 py-2.5 pl-12 focus:outline-none focus:border-pink-500/50 focus:ring-1 focus:ring-pink-500/50 transition-all placeholder:text-slate-500"
+                            className="search-input"
                         />
-                        <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                        <FaSearch className="search-icon" />
                     </div>
                 </div>
 

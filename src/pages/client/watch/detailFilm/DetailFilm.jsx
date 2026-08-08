@@ -23,7 +23,7 @@ function DetailFilm() {
     const { slug } = useParams();
     const [activeTab, setActiveTab] = useState('episodes');
     const [showListDropdown, setShowListDropdown] = useState(false);
-    const [openLoginDialog, setOpenLoginDialog] = useState(false);
+    const [loginDialogState, setLoginDialogState] = useState({ open: false, title: "Yêu cầu đăng nhập", description: "Bạn cần đăng nhập tài khoản để mua hoặc thuê phim này" });
     const movies = useContext(MovieContext);
 
     const [authorsMap, setAuthorsMap] = useState({});
@@ -177,7 +177,11 @@ function DetailFilm() {
 
     const handleFavorite = async () => {
         if (!isLogin) {
-            Swal.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim vào yêu thích', 'warning');
+            setLoginDialogState({
+                open: true,
+                title: "Vui lòng đăng nhập",
+                description: "Bạn cần đăng nhập để thêm phim vào yêu thích"
+            });
             return;
         }
         try {
@@ -196,7 +200,11 @@ function DetailFilm() {
 
     const handleToggleList = async (listId) => {
         if (!isLogin) {
-            Swal.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim', 'warning');
+            setLoginDialogState({
+                open: true,
+                title: "Vui lòng đăng nhập",
+                description: "Bạn cần đăng nhập để thêm phim"
+            });
             return;
         }
         const currentLists = isLogin.listFilm || [];
@@ -402,19 +410,23 @@ function DetailFilm() {
                                         <FaPlay className="text-sm" /> Xem Ngay
                                     </Link> : <button onClick={() => {
                                         if (!isLogin) {
-                                            setOpenLoginDialog(true);
+                                            setLoginDialogState({
+                                                open: true,
+                                                title: "Yêu cầu đăng nhập",
+                                                description: "Bạn cần đăng nhập tài khoản để mua hoặc thuê phim này"
+                                            });
                                             return;
                                         }
                                         navigate(`/pay/${realMovieId}`);
-                                    }} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5">
+                                    }} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 cursor-pointer">
                                         <FaCrown className="text-sm" /> Mua phim
                                     </button>}
-                                    <button onClick={handleFavorite} className={`flex flex-col items-center gap-1.5 transition-colors ${isFavorite ? 'text-red-500 hover:text-red-400' : 'text-slate-400 hover:text-white'}`}>
+                                    <button onClick={handleFavorite} className={`flex flex-col items-center gap-1.5 transition-colors cursor-pointer ${isFavorite ? 'text-red-500 hover:text-red-400' : 'text-slate-400 hover:text-white'}`}>
                                         <FaHeart className="text-xl" />
                                         <p className="text-[10px] font-bold uppercase inline">Yêu thích</p>
                                     </button>
                                     <div className="relative">
-                                        <button onClick={() => setShowListDropdown(!showListDropdown)} className={`flex flex-col items-center gap-1.5 transition-colors ${showListDropdown ? 'text-cyan-400' : 'text-slate-400 hover:text-white'}`}>
+                                        <button onClick={() => setShowListDropdown(!showListDropdown)} className={`flex flex-col items-center gap-1.5 transition-colors cursor-pointer ${showListDropdown ? 'text-cyan-400' : 'text-slate-400 hover:text-white'}`}>
                                             <FaPlus className="text-xl" />
                                             <p className="text-[10px] font-bold uppercase inline">Thêm vào</p>
                                         </button>
@@ -447,12 +459,12 @@ function DetailFilm() {
                                             </div>
                                         )}
                                     </div>
-                                    <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors">
+                                    <button className="flex flex-col items-center gap-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer">
                                         <FaShare className="text-xl" />
                                         <p className="text-[10px] font-bold uppercase inline">Chia sẻ</p>
                                     </button>
                                 </div>
-                                <button className="flex items-center gap-2 px-5 py-2 bg-blue-600/30 text-blue-400 rounded-full text-[13px] font-bold transition-colors hover:bg-blue-600/50">
+                                <button className="flex items-center gap-2 px-5 py-2 bg-blue-600/30 text-blue-400 rounded-full text-[13px] font-bold transition-colors hover:bg-blue-600/50 cursor-pointer">
                                     <FaStar /> 0 Đánh giá
                                 </button>
                             </div>
@@ -636,7 +648,12 @@ function DetailFilm() {
                     </div>
                 </div>
             </div>
-            <ModalDetail open={openLoginDialog} handleClose={() => setOpenLoginDialog(false)} />
+            <ModalDetail 
+                open={loginDialogState.open} 
+                handleClose={() => setLoginDialogState(prev => ({ ...prev, open: false }))} 
+                title={loginDialogState.title}
+                description={loginDialogState.description}
+            />
         </div>
     );
 

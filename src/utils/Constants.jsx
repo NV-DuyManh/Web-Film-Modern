@@ -50,6 +50,10 @@ export const LISTMENU = [
             {
                 title: "Category Type",
                 path: "/categoryTypes"
+            },
+            {
+                title: "Topics",
+                path: "/topics"
             }
         ]
     },
