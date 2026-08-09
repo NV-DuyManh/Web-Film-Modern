@@ -6,6 +6,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaCheckCircle, FaClock, FaEye } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
@@ -53,10 +54,11 @@ function FilmHongKong() {
 
                                     <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                         <img
-                                            src={e.imgUrl}
+                                            src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')}
                                             alt={e.name}
                                             className="w-full h-full object-cover"
                                             draggable="false"
+                                            width={300} height={450} loading="lazy" decoding="async"
                                         />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 

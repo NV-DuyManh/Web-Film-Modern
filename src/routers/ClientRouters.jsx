@@ -1,4 +1,4 @@
-﻿import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import LoadingScreen from '../components/client/loadingScreen/LoadingScreen';
 
@@ -6,11 +6,11 @@ const Home = lazy(() => import('../pages/client/home/Home'));
 const Topic = lazy(() => import('../pages/client/topic/Topic'));
 const TopicDetail = lazy(() => import('../pages/client/topic/TopicDetail'));
 const Category = lazy(() => import('../pages/client/category/Category'));
-import CategoryPage from '../pages/client/category/CategoryPage';
+const CategoryPage = lazy(() => import('../pages/client/category/CategoryPage'));
 const SingleMovies = lazy(() => import('../pages/client/singleMovies/SingleMovies'));
 const Series = lazy(() => import('../pages/client/series/Series'));
 const Country = lazy(() => import('../pages/client/country/Country'));
-import CountryPage from '../pages/client/country/CountryPage';
+const CountryPage = lazy(() => import('../pages/client/country/CountryPage'));
 const Actors = lazy(() => import('../pages/client/actors/Actors'));
 const Showtimes = lazy(() => import('../pages/client/showtimes/Showtimes'));
 const PlayFilm = lazy(() => import('../pages/client/watch/playfilm/PlayFilm'));

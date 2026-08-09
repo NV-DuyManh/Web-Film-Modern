@@ -1,4 +1,4 @@
-﻿import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
@@ -18,6 +18,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { useNavigate } from 'react-router-dom';
 
 function Banner() {
@@ -82,12 +83,17 @@ function Banner() {
                 className="mySwiper2"
             >
                 {hotMovies.map((e) => (
-                    <SwiperSlide key={e.id}>
+                        <SwiperSlide key={e.id}>
                         <img
                             className="banner-img"
-                            src={e.bannerUrl}
+                            src={getOptimizedUrl(e.bannerUrl, 1280, 720, 'banner')}
                             alt={e.name}
                             draggable="false"
+                            width={1280}
+                            height={720}
+                            loading="eager"
+                            fetchPriority="high"
+                            decoding="async"
                         />
 
                         <div className="banner-overlay"></div>
@@ -193,7 +199,15 @@ function Banner() {
                                 }
                             }}
                         >
-                            <img src={e.bannerUrl} alt={e.name} draggable="false" />
+                            <img
+                                src={getOptimizedUrl(e.bannerUrl, 200, 113, 'thumb')}
+                                alt={e.name}
+                                draggable="false"
+                                width={200}
+                                height={113}
+                                loading="lazy"
+                                decoding="async"
+                            />
                         </SwiperSlide>
                     ))}
                 </Swiper>

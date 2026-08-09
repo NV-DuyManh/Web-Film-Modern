@@ -6,6 +6,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaTicketAlt, FaListUl, FaEye } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
@@ -67,11 +68,11 @@ function TopFilm() {
                                     >
                                         <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-[3px] border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : 'skew-y-[-8deg]'} origin-center z-10 transition-colors duration-300`}>
                                             <img
-                                                src={e.imgUrl}
+                                                src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')}
                                                 className={`absolute left-0 w-full object-cover scale-[1.08] transform ${index % 2 === 0 ? 'skew-y-[-8deg]' : 'skew-y-[8deg]'} origin-center`}
                                                 style={{ height: 'calc(100% * 100 / 90)', top: '0' }}
                                                 draggable="false"
-                                            />
+                                            loading="lazy" decoding="async"/>
                                             <div className={`absolute left-0 w-full bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40 pointer-events-none transform ${index % 2 === 0 ? 'skew-y-[-8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
                                             <div className={`absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none transform ${index % 2 === 0 ? 'skew-y-[-8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
                                         </div>
@@ -79,11 +80,11 @@ function TopFilm() {
 
                                         <div className="absolute bottom-0 left-0 w-full h-[20%] rounded-b-xl overflow-hidden border-b-[3px] border-l-[3px] border-r-[3px] border-transparent group-hover:border-[#facc15] z-20 transition-colors duration-300">
                                             <img
-                                                src={e.imgUrl}
+                                                src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')}
                                                 className="absolute left-0 w-full object-cover scale-[1.08] origin-center"
                                                 style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}
                                                 draggable="false"
-                                            />
+                                            loading="lazy" decoding="async"/>
                                             <div className="absolute left-0 w-full bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
                                             <div className="absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
                                         </div>

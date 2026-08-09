@@ -12,6 +12,7 @@ import './Anime.css';
 
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
 
 import { PlanContext } from '../../../../contexts/PlanProvider';
@@ -93,10 +94,10 @@ function Anime() {
                             <SwiperSlide key={e.id}>
                                 <img
                                     className="anime-main-img"
-                                    src={e.bannerUrl}
+                                    src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')}
                                     alt={e.name}
                                     draggable="false"
-                                />
+                                width={480} height={270} loading="lazy" decoding="async"/>
 
                                 <div className="anime-overlay"></div>
 

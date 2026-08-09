@@ -7,6 +7,7 @@ import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaVideo, FaCalendarAlt, FaTicketAlt, FaEye } from 'react-icons/fa';
 
 import { getObjectById } from '../../../../services/firebaseResponse';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
@@ -46,7 +47,7 @@ function Cinema() {
                                 <div className="group cursor-pointer flex flex-col">
                                     <div className="relative mb-2 w-full">
                                         <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                            <img src={e.bannerUrl} className="w-full h-full object-cover" draggable="false" alt="" />
+                                            <img src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')} className="w-full h-full object-cover" draggable="false" alt="" width={480} height={270} loading="lazy" decoding="async" />
                                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
                                             {e.planID && (() => {
