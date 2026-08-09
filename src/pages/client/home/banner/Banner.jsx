@@ -101,13 +101,13 @@ function Banner() {
                         <div className="banner-overlay"></div>
 
                         <div className='banner-info-box'>
-                            <h1 className='text-center lg:text-left text-2xl sm:text-3xl lg:text-4xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
+                            <h2 className='text-center lg:text-left text-2xl sm:text-3xl lg:text-4xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
                                 {e.otherName}
-                            </h1>
-
-                            <h2 className='mt-1.5 lg:mt-2 text-center lg:text-left text-sm sm:text-base font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
-                                {e.name}
                             </h2>
+
+                            <h3 className='mt-1.5 lg:mt-2 text-center lg:text-left text-sm sm:text-base font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
+                                {e.name}
+                            </h3>
 
                             <div className='mt-3 sm:mt-4 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
                                 <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-[12px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>

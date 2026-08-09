@@ -16,6 +16,7 @@ const FilmHongKong = lazy(() => import('./filmHongKong/FilmHongKong'));
 function Home(props) {
     return (
         <div>
+            <h1 className="sr-only">MFILM - Phim online chất lượng cao</h1>
             <SEO 
                 title="MFILM - Xem Phim Online Miễn Phí"
                 description="MFILM - Trang xem phim online chất lượng cao, cập nhật phim mới nhanh nhất 2026. Phim lẻ, phim bộ, phim chiếu rạp, anime, phim Hàn Quốc, Trung Quốc, Nhật Bản vietsub."

@@ -57,9 +57,9 @@ function Anime() {
         <div className='anime-container'>
             <div className='flex justify-between items-center mb-4 sm:mb-6'>
                 <div className='flex items-center gap-2 sm:gap-3'>
-                    <h1 className='font-bold text-xl sm:text-2xl md:text-3xl glow-text-multi'>
+                    <h2 className='font-bold text-xl sm:text-2xl md:text-3xl glow-text-multi'>
                         Kho Tàng Anime Mới Nhất
-                    </h1>
+                    </h2>
                     <FaChevronRight className='border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full' />
                 </div>
             </div>
@@ -102,13 +102,13 @@ function Anime() {
                                 <div className="anime-overlay"></div>
 
                                 <div className='anime-info-box'>
-                                    <h1 className='text-center lg:text-left text-xl sm:text-2xl lg:text-3xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
+                                    <h2 className='text-center lg:text-left text-xl sm:text-2xl lg:text-3xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
                                         {e.name}
-                                    </h1>
-
-                                    <h2 className='mt-1 lg:mt-1.5 text-center lg:text-left text-xs sm:text-sm font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
-                                        {getObjectById(categoryTypes, e.categoryTypeID)?.name || "Series Movie"}
                                     </h2>
+
+                                    <h3 className='mt-1 lg:mt-1.5 text-center lg:text-left text-xs sm:text-sm font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
+                                        {getObjectById(categoryTypes, e.categoryTypeID)?.name || "Series Movie"}
+                                    </h3>
 
                                     <div className='mt-2 sm:mt-3 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
                                         <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition-all duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>

@@ -21,9 +21,9 @@ function FilmNew(props) {
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
             <div className='flex justify-between items-center'>
                 <div className='flex items-center gap-3 '>
-                    <h1 className='font-bold text-2xl md:text-3xl glow-text-multi'>
+                    <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>
                         Phim Điện Ảnh Mới Coóng
-                    </h1>
+                    </h2>
                     <FaChevronRight className='border w-6 h-6 md:w-8 md:h-8 bg-transparent text-white border-white/30 p-1.5 rounded-full    ' />
                 </div>
             </div>

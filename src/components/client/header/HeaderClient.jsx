@@ -105,13 +105,14 @@ function HeaderClient() {
             >
                 <button
                     ref={hamburgerRef}
+                    aria-label={openMenu ? "Đóng menu" : "Mở menu"}
                     onClick={() => setOpenMenu(!openMenu)}
                     className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl text-white transition-all duration-300 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] sm:h-11 sm:w-11 min-[1200px]:hidden"
                 >
                     {openMenu ? <IoClose /> : <HiMenuAlt3 />}
                 </button>
 
-                <a href="/" className="flex shrink-0 items-center max-md:hidden cursor-pointer">
+                <a href="/" aria-label="Trang chủ MFILM" className="flex shrink-0 items-center max-md:hidden cursor-pointer">
                     <img src={Logo2} alt="MFILM" width="150" height="60" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
                 </a>
 
@@ -119,6 +120,7 @@ function HeaderClient() {
                     <input
                         className="peer w-full min-w-0 rounded-full bg-transparent px-5 py-2.5 pr-12 text-sm font-medium text-white outline-none transition-all duration-300 placeholder:text-slate-300 border border-[#00f2fe]/50 shadow-[0_0_10px_rgba(0,242,254,0.3),inset_0_0_5px_rgba(0,242,254,0.1)] hover:border-green-500/70 hover:shadow-[0_0_15px_rgba(34,197,94,0.5),inset_0_0_5px_rgba(34,197,94,0.2)] focus:border-[#ff00ff]/80 focus:shadow-[0_0_20px_rgba(255,0,255,0.6),inset_0_0_8px_rgba(255,0,255,0.2)] sm:px-5 sm:py-2.5 sm:pr-12"
                         type="text" placeholder="Tìm kiếm phim..."
+                        aria-label="Tìm kiếm phim"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onFocus={() => setIsSearching(true)}
@@ -130,11 +132,11 @@ function HeaderClient() {
               
                     />
                     {searchQuery ? (
-                        <button onClick={() => { setSearchQuery(''); }} className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer z-10">
+                        <button aria-label="Xóa tìm kiếm" onClick={() => { setSearchQuery(''); }} className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer z-10">
                             <IoCloseCircle />
                         </button>
                     ) : (
-                        <FiSearch className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-[#ff00ff] peer-focus:drop-shadow-[0_0_12px_rgba(255,0,255,0.8)]" />
+                        <FiSearch aria-hidden="true" className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-[#ff00ff] peer-focus:drop-shadow-[0_0_12px_rgba(255,0,255,0.8)]" />
                     )}
                     <SearchHeader
                         searchQuery={searchQuery}
@@ -205,6 +207,7 @@ function HeaderClient() {
                         ) : (
                             <>
                                 <button
+                                    aria-label="Tài khoản"
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                                     className="relative flex items-center justify-center p-1 cursor-pointer"
                                 >
