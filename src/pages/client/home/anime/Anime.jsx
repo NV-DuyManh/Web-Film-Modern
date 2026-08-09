@@ -207,7 +207,7 @@ function Anime() {
                                 }}
                                 className={activeIndex === index ? 'custom-thumb-active' : ''}
                             >
-                                <img src={e.imgUrl} alt={e.name} draggable="false" />
+                                <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt={e.name} draggable="false" />
                             </SwiperSlide>
                         ))}
                     </Swiper>

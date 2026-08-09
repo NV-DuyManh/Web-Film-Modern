@@ -1,4 +1,5 @@
-﻿import React, { useContext, useMemo } from 'react';
+﻿import { getOptimizedUrl } from '../../../../../../../utils/cloudinary';
+import React, { useContext, useMemo } from 'react';
 import { useComments, useMovies } from '../../../../hooks/useCollections';
 import { FaHeart, FaBolt, FaMinus } from 'react-icons/fa';
 import { FaArrowTrendUp } from 'react-icons/fa6';
@@ -78,7 +79,7 @@ function Comment() {
                                 <div key={e.id || index} onClick={() => navigate(`/phim/${e.slug || e.id}`)} className="flex items-center gap-3 group cursor-pointer">
                                     <p className="w-5 text-gray-500 font-bold text-sm shrink-0 inline">{index + 1}</p>
                                     <FaArrowTrendUp className="w-4 text-green-500 text-sm shrink-0" />
-                                    <img src={e.imgUrl} className="w-11 h-16 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
+                                    <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} className="w-11 h-16 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
                                     <div className="flex flex-col">
                                         <h4 className="text-[13px] text-gray-200 line-clamp-2 leading-snug group-hover:text-yellow-400 transition-colors">
                                             {e.otherName || e.name}
@@ -103,7 +104,7 @@ function Comment() {
                                 <div key={e.id || index} onClick={() => navigate(`/phim/${e.slug || e.id}`)} className="flex items-center gap-3 group cursor-pointer">
                                     <p className="w-5 text-gray-500 font-bold text-sm shrink-0 inline">{index + 1}</p>
                                     <FaMinus className="w-4 text-yellow-500 text-sm shrink-0" />                                    
-                                    <img src={e.imgUrl} className="w-11 h-16 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
+                                    <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} className="w-11 h-16 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
                                     <div className="flex flex-col">
                                         <h4 className="text-[13px] text-gray-200 line-clamp-2 leading-snug group-hover:text-yellow-400 transition-colors">
                                             {e.otherName || e.name}

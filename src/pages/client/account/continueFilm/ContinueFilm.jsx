@@ -1,4 +1,5 @@
-﻿import React, { useState, useContext, useMemo, useEffect } from 'react';
+﻿import { getOptimizedUrl } from '../../../../../../../utils/cloudinary';
+import React, { useState, useContext, useMemo, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { FaFilm, FaSearch, FaTh, FaList, FaPlay, FaHistory, FaTrash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -142,7 +143,7 @@ function ContinueFilm(props) {
                         viewMode === 'grid' ? (
                             <Link to={`/phim/${movie.slug || movie.id}`} key={`grid-${movie.id}`} className="group relative flex flex-col gap-3 cursor-pointer">
                                 <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-blue-400 transition-all duration-300 hover:shadow-[0_12px_25px_rgba(59,130,246,0.3)] hover:-translate-y-2 aspect-2/3 w-full">
-                                    <img src={movie.imgUrl} alt={movie.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-90 group-hover:opacity-100" />
+                                    <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-90 group-hover:opacity-100" />
                                     <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
                                     <div className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md px-3 py-1.5 rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.8)] border border-blue-500/50 group-hover:border-blue-400 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-300 flex items-center gap-1.5">
                                         <FaPlay size={10} className="text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.9)]" />
@@ -169,7 +170,7 @@ function ContinueFilm(props) {
                         ) : (
                             <div key={`list-${movie.id}`} className="flex flex-col sm:flex-row items-center gap-4 p-3 rounded-2xl border border-white/10 bg-slate-800/50 backdrop-blur-md hover:border-blue-500/40 hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition-all duration-300 group">
                                 <Link to={`/phim/${movie.slug || movie.id}`} className="w-32 sm:w-40 md:w-48 h-auto aspect-video rounded-xl overflow-hidden shrink-0 border-[3px] border-transparent group-hover:border-blue-400 transition-all duration-300 relative block">
-                                    <img src={movie.bannerUrl || movie.imgUrl} alt={movie.name} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
+                                    <img src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 480, 270, 'thumb')} alt={movie.name} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
                                 </Link>
 

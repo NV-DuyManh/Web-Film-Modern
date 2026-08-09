@@ -1,4 +1,5 @@
-﻿import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
+﻿import { getOptimizedUrl } from '../../../../../../../utils/cloudinary';
+import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -298,7 +299,7 @@ function PlayFilm({ handleOpenLogin }) {
                             {movies.slice(0, 5).map((e) => (
                                 <div key={e.id} onClick={() => navigate(`/phim/${e.slug || e.id}`)} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
                                     <div className="w-18 h-26.25 shrink-0 overflow-hidden rounded-md border border-gray-800 group-hover:border-gray-600">
-                                        <img src={e.imgUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                        <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                     </div>
                                     <div className="flex flex-col justify-center py-1">
                                         <h3 className="text-[15px] font-bold text-gray-200 line-clamp-2 group-hover:text-yellow-400 transition-colors leading-snug">{e.name}</h3>

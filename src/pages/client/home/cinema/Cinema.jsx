@@ -104,7 +104,7 @@ function Cinema() {
                                         </div>
 
                                         <div className="absolute -bottom-6 left-4 w-16 md:w-20 aspect-2/3 rounded-lg overflow-hidden border-2 border-[#111827] shadow-[0_4px_15px_rgba(0,0,0,0.8)] transition-all duration-300 group-hover:-translate-y-4 group-hover:scale-105 group-hover:rotate-[-4deg] group-hover:border-[#22d3ee] group-hover:shadow-[0_8px_20px_rgba(34,211,238,0.5)]">
-                                            <img src={e.imgUrl} alt="" className="w-full h-full object-cover" draggable="false" />
+                                            <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt="" className="w-full h-full object-cover" draggable="false" />
                                         </div>
                                     </div>
 

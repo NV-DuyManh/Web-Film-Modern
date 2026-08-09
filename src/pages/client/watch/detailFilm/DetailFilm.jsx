@@ -1,4 +1,5 @@
-﻿import React, { useContext, useMemo, useEffect, useState } from 'react';
+﻿import { getOptimizedUrl } from '../../../../../../../utils/cloudinary';
+import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
@@ -284,7 +285,7 @@ function DetailFilm() {
             <div className="w-full h-112.5 md:h-137.5 lg:h-162.5 relative z-0">
 
                 <img
-                    src={movie.bannerUrl || movie.imgUrl}
+                    src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 480, 270, 'thumb')}
                     alt="Banner"
                     className="w-full h-full object-cover object-top"
                 />
@@ -298,7 +299,7 @@ function DetailFilm() {
 
                         <div className="rounded-xl overflow-hidden shadow-2xl w-2/3 sm:w-1/2 sm:h-3/4 lg:w-full mx-auto relative z-20 -mt-24 sm:-mt-70 lg:-mt-48 border-4 border-[#0f1322]">
                             <img
-                                src={movie.imgUrl}
+                                src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')}
                                 alt={movie.name}
                                 className="w-full aspect-2/3 object-cover"
                             />
@@ -379,7 +380,7 @@ function DetailFilm() {
                                             {index + 1}
                                         </div>
                                         <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 border border-slate-700/60">
-                                            <img src={m.imgUrl} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                         </div>
                                         <div className="flex flex-col min-w-0 relative">
                                             <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.name}</h4>
@@ -582,7 +583,7 @@ function DetailFilm() {
                                             className="group cursor-pointer flex flex-col h-full"
                                         >
                                             <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                                <img src={m.imgUrl} alt={m.name} className="w-full h-full object-cover" />
+                                                <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.name} className="w-full h-full object-cover" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
                                                 <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
                                                     <p className="bg-blue-600/90 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap">

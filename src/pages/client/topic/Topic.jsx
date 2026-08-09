@@ -1,4 +1,5 @@
-﻿import React, { useContext, useMemo } from 'react';
+﻿import { getOptimizedUrl } from '../../../../../../utils/cloudinary';
+import React, { useContext, useMemo } from 'react';
 import { useTopics, useMovies } from '../../../hooks/useCollections';
 import { Link } from 'react-router-dom';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
@@ -46,7 +47,7 @@ function CollectionCard({ collection, movies, index }) {
                     {previewMovies.map((movie, i) => (
                         <div key={movie.id || i} className="overflow-hidden">
                             <img 
-                                src={movie.bannerUrl || movie.imgUrl} 
+                                src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 480, 270, 'thumb')} 
                                 alt=""
                                 className="w-full h-full object-cover"
                             />
@@ -186,7 +187,7 @@ function Topic() {
                                                     zIndex: 3 - i,
                                                 }}
                                             >
-                                                <img src={movie.imgUrl} alt="" className="w-full aspect-2/3 object-cover" />
+                                                <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt="" className="w-full aspect-2/3 object-cover" />
                                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/poster:opacity-100 transition-opacity flex items-center justify-center">
                                                     <FaPlay className="text-white text-xl" />
                                                 </div>
