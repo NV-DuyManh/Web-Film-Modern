@@ -1,4 +1,5 @@
-import { FaTimes } from 'react-icons/fa';
+﻿import { FaTimes } from 'react-icons/fa';
+import { useSubscriptions } from '../../../../hooks/useCollections';
 import React, { useContext } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import { PlanContext } from "../../../../contexts/PlanProvider";

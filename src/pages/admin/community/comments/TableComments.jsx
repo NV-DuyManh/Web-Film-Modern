@@ -1,20 +1,19 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+﻿import React, { useContext, useState, useEffect, useMemo } from 'react';
+import { useComments, useMovies } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
-import { CommentContext } from '../../../../contexts/CommentProvider';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 import { UserContext } from '../../../../contexts/UserProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 
 function TableComments({ handleClickOpen, setComment, comment, search }) {
-    const comments = useContext(CommentContext);
-    const movies = useContext(MovieContext);
+    const comments = useComments();
+    const movies = useMovies();
     const users = useContext(UserContext);
     const [open, setOpen] = useState(false);
 

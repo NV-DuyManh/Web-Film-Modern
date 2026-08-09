@@ -1,12 +1,11 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+﻿import React, { useContext, useState, useEffect, useMemo } from 'react';
+import { useReviews, useMovies } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
-import { ReviewContext } from '../../../../contexts/ReviewProvider';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 import { UserContext } from '../../../../contexts/UserProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { Rating } from '@mui/material';
@@ -14,8 +13,8 @@ import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 
 function TableReviews({ handleClickOpen, setReview, review, search }) {
-    const reviews = useContext(ReviewContext);
-    const movies = useContext(MovieContext);
+    const reviews = useReviews();
+    const movies = useMovies();
     const users = useContext(UserContext);
     const [open, setOpen] = useState(false);
 

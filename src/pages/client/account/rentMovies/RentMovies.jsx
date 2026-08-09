@@ -1,12 +1,11 @@
-import React, { useState, useContext, useMemo, useEffect, useCallback } from 'react';
+﻿import React, { useState, useContext, useMemo, useEffect, useCallback } from 'react';
+import { useRentMovies, useMovies } from '../../../../hooks/useCollections';
 import { FaFilm, FaSearch, FaTh, FaList, FaPlay, FaStar, FaInfoCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
-import { MovieContext } from '../../../../contexts/MovieProvider';
-import { RentMovieContext } from '../../../../contexts/RentMovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
-import { getExpiryDate } from '../../../../utils/themeUtils';
+import { getExpiryDate } from '../../../../utils/appUtils';
 
 function CountdownTimer({ expireDate, onExpire }) {
     const [timeLeft, setTimeLeft] = useState(null);
@@ -54,10 +53,10 @@ function CountdownTimer({ expireDate, onExpire }) {
 
 function RentMovies(props) {
     const { isLogin } = useContext(AuthContext);
-    const moviesData = useContext(RentMovieContext);
+    const moviesData = useRentMovies();
     const [viewMode, setViewMode] = useState('grid');
     const [searchQuery, setSearchQuery] = useState('');
-    const movies = useContext(MovieContext);
+    const movies = useMovies();
     const [expiredMovieIds, setExpiredMovieIds] = useState(new Set());
 
     const handleExpire = useCallback((id) => {

@@ -1,7 +1,7 @@
-import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, TextField, Select, MenuItem, FormControl, InputLabel, Chip } from '@mui/material';
+﻿import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, TextField, Select, MenuItem, FormControl, InputLabel, Chip } from '@mui/material';
+import { useMovies } from '../../../../hooks/useCollections';
 import React, { useContext } from 'react';
 import { FaTimes } from 'react-icons/fa';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -21,7 +21,7 @@ const GRADIENT_OPTIONS = [
 ];
 
 function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSelection, error, addTopic, loading, progress }) {
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
 
     const selectedMovies = topic.movieIds?.map(id => movies.find(m => m.id === id)).filter(Boolean) || [];
 

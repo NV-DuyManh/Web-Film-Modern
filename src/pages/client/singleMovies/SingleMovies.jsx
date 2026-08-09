@@ -1,16 +1,16 @@
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+﻿import React, { useContext, useMemo, useState, useEffect } from 'react';
+import { useMovies } from '../../../hooks/useCollections';
 import { Link } from 'react-router-dom';
-import { MovieContext } from '../../../contexts/MovieProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
-import { getAgeRatingColorClass } from '../../../utils/ageRatingColors';
+import { getAgeRatingColorClass } from '../../../utils/appUtils';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight, FaCalendarAlt, FaEye, FaShieldAlt } from 'react-icons/fa';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import SEO from '../../../components/SEO';
 
 function SingleMovies() {
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
     const plans = useContext(PlanContext) || [];
 

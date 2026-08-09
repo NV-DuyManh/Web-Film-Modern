@@ -1,19 +1,17 @@
-import React, { useContext, useMemo, useEffect, useState } from 'react';
+﻿import React, { useContext, useMemo, useEffect, useState } from 'react';
+import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
 import ModalDetail from './ModalDetail';
 import ModalPayMovie from '../../pay/paymovie/ModalPayMovie';
-import { getExpiryDate, getUserPlanInfo } from '../../../../utils/themeUtils';
-import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
-import { MovieContext } from '../../../../contexts/MovieProvider';
+import { getExpiryDate, getUserPlanInfo } from '../../../../utils/appUtils';
+import { getDefaultAvatar } from '../../../../utils/appUtils';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
-import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
-import { RentMovieContext } from '../../../../contexts/RentMovieProvider';
 import { updateDocument, fetchDataById, getDocumentById } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
-import ListEpisodes from '../ListEpisodes';
+import ListEpisodes from '../playfilm/ListEpisodes';
 import Comment from './Comment';
 import SEO from '../../../../components/SEO';
 
@@ -24,7 +22,7 @@ function DetailFilm() {
     const [activeTab, setActiveTab] = useState('episodes');
     const [showListDropdown, setShowListDropdown] = useState(false);
     const [loginDialogState, setLoginDialogState] = useState({ open: false, title: "Yêu cầu đăng nhập", description: "Bạn cần đăng nhập tài khoản để mua hoặc thuê phim này" });
-    const movies = useContext(MovieContext);
+    const movies = useMovies();
 
     const [authorsMap, setAuthorsMap] = useState({});
     const [actorsMap, setActorsMap] = useState({});
@@ -37,8 +35,8 @@ function DetailFilm() {
     const [episodes, setEpisodes] = useState([]);
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
-    const subscriptions = useContext(SubscriptionContext) || [];
-    const allRent = useContext(RentMovieContext) || [];
+    const subscriptions = useSubscriptions() || [];
+    const allRent = useRentMovies() || [];
 
     useEffect(() => {
         window.scrollTo(0, 0);

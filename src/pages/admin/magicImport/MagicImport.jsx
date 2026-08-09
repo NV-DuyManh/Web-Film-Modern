@@ -1,4 +1,5 @@
-import { fetchDocumentsRealtime } from '../../../services/firebaseService';
+﻿import { fetchDocumentsRealtime } from '../../../services/firebaseService';
+import { useShowTimes, useMovies } from '../../../hooks/useCollections';
 import React, { useState, useContext, useEffect } from 'react';
 import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
@@ -12,9 +13,7 @@ import { PlanContext } from '../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 
 
-import { MovieContext } from '../../../contexts/MovieProvider';
 
-import { ShowTimeContext } from '../../../contexts/ShowTimeProvider';
 
 import LOGO from "../../../assets/Logo6.png";
 import LOGO_BANNER from "../../../assets/Logo5.png";
@@ -48,8 +47,8 @@ function MagicImport() {
     const categoryTypes = useContext(CategoryTypeContext) || [];
     
     
-    const existingMovies = useContext(MovieContext) || [];
-    const existingShowtimes = useContext(ShowTimeContext) || [];
+    const existingMovies = useMovies() || [];
+    const existingShowtimes = useShowTimes() || [];
 
     useEffect(() => {
         let timer;

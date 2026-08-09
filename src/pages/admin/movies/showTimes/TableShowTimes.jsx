@@ -1,19 +1,18 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+﻿import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useShowTimes, useMovies } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
-import { ShowTimeContext } from '../../../../contexts/ShowTimeProvider';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 
 function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
-    const showTimes = useContext(ShowTimeContext);
-    const movies = useContext(MovieContext);
+    const showTimes = useShowTimes();
+    const movies = useMovies();
     const [open, setOpen] = useState(false);
 
     const [page, setPage] = useState(1);

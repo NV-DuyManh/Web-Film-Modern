@@ -1,15 +1,15 @@
-import React, { useState, useContext, useMemo, useEffect } from 'react';
+﻿import React, { useState, useContext, useMemo, useEffect } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { FaFilm, FaSearch, FaTh, FaList, FaPlay, FaHistory, FaTrash } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 import Swal from 'sweetalert2';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import ModalDelete from '../ModalDelete';
 
 function ContinueFilm(props) {
     const { isLogin } = useContext(AuthContext);
-    const moviesData = useContext(MovieContext) || [];
+    const moviesData = useMovies() || [];
     const [viewMode, setViewMode] = useState('grid');
     const [searchQuery, setSearchQuery] = useState('');
     const [resumeData, setResumeData] = useState({});

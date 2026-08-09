@@ -1,16 +1,16 @@
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+﻿import React, { useContext, useMemo, useState, useEffect } from 'react';
+import { useMovies } from '../../../hooks/useCollections';
 import { useParams, Link } from 'react-router-dom';
-import { MovieContext } from '../../../contexts/MovieProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
-import { getAgeRatingColorClass } from '../../../utils/ageRatingColors';
+import { getAgeRatingColorClass } from '../../../utils/appUtils';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight, FaCalendarAlt, FaEye, FaShieldAlt, FaClock } from 'react-icons/fa';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import SEO from '../../../components/SEO';
 
 function CountryPage() {
     const { name } = useParams();
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
     const plans = useContext(PlanContext) || [];
 
     const [page, setPage] = useState(1);

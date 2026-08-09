@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+﻿import React, { useContext, useState } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
 import 'swiper/css';
@@ -9,7 +10,6 @@ import 'swiper/css/effect-fade';
 import { FaPlay, FaHeart, FaRegHeart, FaInfoCircle, FaChevronRight } from 'react-icons/fa';
 import './Banner.css';
 
-import { MovieContext } from '../../../../contexts/MovieProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
@@ -24,7 +24,7 @@ function Banner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [mainSwiper, setMainSwiper] = useState(null);
     const [activeIndex, setActiveIndex] = useState(0);
-    const movies = useContext(MovieContext);
+    const movies = useMovies();
     const hotMovies = movies?.filter(m => m.isHot) || [];
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoryContext);

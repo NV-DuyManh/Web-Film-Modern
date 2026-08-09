@@ -1,20 +1,19 @@
-import React, { useContext, useState, useEffect, useMemo } from "react";
+﻿import React, { useContext, useState, useEffect, useMemo } from "react";
+import { useRentMovies, useMovies } from '../../../../hooks/useCollections';
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import ModalDelete from "../../../../components/admin/ModalDelete";
 import { deleteDocument } from "../../../../services/firebaseService";
 import PaginationAdmin from "../../../../components/admin/PaginationAdmin";
 import "../../../../App.scss";
-import { RentMovieContext } from "../../../../contexts/RentMovieProvider";
-import { MovieContext } from "../../../../contexts/MovieProvider";
 import { UserContext } from "../../../../contexts/UserProvider";
 import DeleteBar, { useSelectRows } from "../../../../components/admin/DeleteBar";
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 
 function TableRentMovies({ handleClickOpen, setRentMovie, rentMovie, search }) {
-    const rentMovies = useContext(RentMovieContext);
-    const movies = useContext(MovieContext);
+    const rentMovies = useRentMovies();
+    const movies = useMovies();
     const users = useContext(UserContext);
     const [open, setOpen] = useState(false);
 

@@ -1,4 +1,4 @@
-import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
+﻿import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import React, { useEffect,  useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel, IconButton } from '@mui/material';
 import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja, FaUserTie, FaTimes } from 'react-icons/fa';
@@ -12,7 +12,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { COUNTRIES } from '../../../../utils/Constants';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import Logo5 from "../../../../assets/Logo5.png";
-import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
+import { getDefaultAvatar } from '../../../../utils/appUtils';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 const VisuallyHiddenInput = styled('input')({ clip: 'rect(0 0 0 0)', height: 1, position: 'absolute', width: 1 });

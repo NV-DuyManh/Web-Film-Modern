@@ -1,17 +1,17 @@
-import React, { useContext } from 'react';
+﻿import React, { useContext } from 'react';
+import { useSubscriptions } from '../../../../hooks/useCollections';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import { uploadImageToCloudinary } from '../../../../config/cloudinaryConfig';
-import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import ProfileHeader from './ProfileHeader';
 import ProfileForm from './ProfileForm';
-import { getUserPlanInfo } from '../../../../utils/themeUtils';
+import { getUserPlanInfo } from '../../../../utils/appUtils';
 function Profile() {
     const { isLogin, setGlobalAvatarPreview } = useContext(AuthContext);
-    const subscriptions = useContext(SubscriptionContext) || [];
+    const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
 
     const currentPlanInfo = React.useMemo(() => {

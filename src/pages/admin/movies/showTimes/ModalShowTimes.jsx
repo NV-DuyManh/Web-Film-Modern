@@ -1,15 +1,14 @@
-import { FaTimes } from 'react-icons/fa';
+﻿import { FaTimes } from 'react-icons/fa';
 import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
 import { useContext } from 'react';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
 function ModalShowTimes({ open, onChangeInput, handleClose, addShowTime, error, loading, progress, showTime }) {
-    const movies = useContext(MovieContext);
+    const movies = useMovies();
 
     const formatDateTimeValue = (value) => {
         if (!value) return "";

@@ -1,4 +1,4 @@
-import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
+﻿import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -11,7 +11,7 @@ import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar
 import LOGO from "../../../../assets/Logo.png";
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
-import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
+import { getDefaultAvatar } from '../../../../utils/appUtils';
 
 
 const getSexStyle = (sex) => {

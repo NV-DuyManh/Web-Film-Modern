@@ -1,7 +1,7 @@
-import { FaTimes } from 'react-icons/fa';
+﻿import { FaTimes } from 'react-icons/fa';
+import { useMovies } from '../../../../hooks/useCollections';
 import React, { useContext } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
-import { MovieContext } from "../../../../contexts/MovieProvider";
 import { UserContext } from "../../../../contexts/UserProvider";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -9,7 +9,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 function ModalRentMovies({ open, onChangeInput, handleClose, addRentMovie, error, loading, progress, rentMovie, setRentMovie, setError }) {
-    const movies = useContext(MovieContext);
+    const movies = useMovies();
     const users = useContext(UserContext);
 
     return (

@@ -1,4 +1,27 @@
+﻿import MALE_AVATAR from '../assets/Male.png';
+import FEMALE_AVATAR from '../assets/Female.png';
 import { getObjectById } from '../services/firebaseResponse';
+
+export const getAgeRatingColorClass = (rating) => {
+    switch (rating) {
+        case 'P': 
+            return "bg-linear-to-r from-emerald-500 to-green-600 text-white";
+        case 'K': 
+            return "bg-linear-to-r from-orange-500 to-red-500 text-white";
+        case 'T13': 
+            return "bg-linear-to-r from-yellow-400 to-amber-500 text-black";
+        case 'T16': 
+            return "bg-linear-to-r from-orange-500 to-red-500 text-white";
+        case 'T18': 
+            return "bg-linear-to-r from-red-600 to-rose-700 text-white";
+        default: 
+            return "bg-linear-to-r from-blue-500 to-blue-600 text-white";
+    }
+};
+
+export const getDefaultAvatar = (sexID) => {
+    return sexID === 'Female' ? FEMALE_AVATAR : MALE_AVATAR;
+};
 
 export const getExpiryDate = (p) => {
     if (!p || !p.expiryDate) return new Date(0);
@@ -70,3 +93,55 @@ export const getThemeNameByIndex = (index) => {
     const themeNames = ['blue', 'cyan', 'yellow', 'rose'];
     return themeNames[index] || themeNames[themeNames.length - 1];
 };
+
+export const slugify = (str) => {
+    if (!str) return '';
+    str = str.toLowerCase();
+    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    str = str.replace(/đ/g, "d");
+    str = str.replace(/[^a-z0-9\s-]/g, '');
+    str = str.replace(/\s+/g, '-');
+    str = str.replace(/-+/g, '-');
+    str = str.replace(/^-+|-+$/g, '');
+    
+    return str;
+};
+
+const cache = {};
+
+export function subscribeToCollection(key, collectionName, callback, fetchFn, processData) {
+    if (!cache[key]) {
+        cache[key] = { data: null, listeners: new Set(), unsubscribe: null };
+        cache[key].unsubscribe = fetchFn(collectionName, (rawData) => {
+            const processed = processData ? processData(rawData) : rawData;
+            cache[key].data = processed;
+            cache[key].listeners.forEach(cb => cb(processed));
+        });
+    }
+    cache[key].listeners.add(callback);
+    if (cache[key].data !== null) callback(cache[key].data);
+    return () => {
+        if (!cache[key]) return;
+        cache[key].listeners.delete(callback);
+        if (cache[key].listeners.size === 0) {
+            cache[key].unsubscribe?.();
+            delete cache[key];
+        }
+    };
+}
+
+export function getCachedData(key) {
+    return cache[key]?.data ?? null;
+}
+
+export function invalidateCache(key) {
+    if (cache[key]) {
+        cache[key].unsubscribe?.();
+        delete cache[key];
+    }
+}

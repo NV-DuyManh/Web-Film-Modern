@@ -1,4 +1,4 @@
-import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
+﻿import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, Slide } from '@mui/material';
@@ -10,7 +10,7 @@ import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import Logo5 from "../../../../assets/Logo5.png";
-import { getDefaultAvatar } from '../../../../utils/defaultAvatar';
+import { getDefaultAvatar } from '../../../../utils/appUtils';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 

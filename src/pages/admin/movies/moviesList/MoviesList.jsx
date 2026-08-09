@@ -1,14 +1,14 @@
-import React, { useState, useContext, useEffect } from 'react';
+﻿import React, { useState, useContext, useEffect } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { useSearchParams } from 'react-router-dom';
 import Search from '../../../../components/admin/search/Search';
 import TableMovies from './TableMovies';
 import ModalMovies from './ModalMovies';
 import ModalViewMovie from './ModalViewMovie';
 import ModalDelete from '../../../../components/admin/ModalDelete';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 import { addDocument, updateDocument, deleteDocument } from '../../../../services/firebaseService';
 import { uploadImageToCloudinary } from '../../../../config/cloudinaryConfig';
-import { slugify } from '../../../../utils/slugify';
+import { slugify } from '../../../../utils/appUtils';
 import LOGO_POSTER from "../../../../assets/Logo6.png";
 import LOGO_BANNER from "../../../../assets/Logo5.png";
 
@@ -22,7 +22,7 @@ const innerMovie = {
 };
 
 function MoviesList() {
-    const movies = useContext(MovieContext);
+    const movies = useMovies();
     const [movie, setMovie] = useState(innerMovie);
     const [movieView, setMovieView] = useState(null);
     const [error, setError] = useState({});

@@ -1,4 +1,5 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+﻿import React, { useContext, useState, useRef, useEffect } from 'react';
+import { useSubscriptions } from '../../../hooks/useCollections';
 import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown, FaChevronDown, FaFilm } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
 import { HiMenuAlt3 } from 'react-icons/hi';
@@ -10,17 +11,16 @@ import Logo2 from '../../../assets/Logo2.png';
 import LogIn from '../../../pages/client/auth/LogIn';
 import Register from '../../../pages/client/auth/Register';
 import { AuthContext } from '../../../contexts/AuthProvider';
-import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import Coder from '../../../assets/Coder.png';
-import PlayFilm from '../../../pages/client/watch/PlayFilm';
+import PlayFilm from '../../../pages/client/watch/playfilm/PlayFilm';
 import { IoMdArrowDropdown } from 'react-icons/io';
 import Category from '../../../pages/client/category/Category';
 import Country from '../../../pages/client/country/Country';
 import './HeaderClient.css';
 import { WingedFrame } from './AvatarFrames';
-import { getUserPlanInfo, getThemeBadgeStyle } from '../../../utils/themeUtils';
+import { getUserPlanInfo, getThemeBadgeStyle } from '../../../utils/appUtils';
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
     const [openCate, setOpenCate] = useState(false);
@@ -31,7 +31,7 @@ function HeaderClient() {
     const [searchQuery, setSearchQuery] = useState('');
     const searchContainerRef = useRef(null);
     const { isLogin, handleLogout, globalAvatarPreview } = useContext(AuthContext);
-    const subscriptions = useContext(SubscriptionContext) || [];
+    const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
 
     const currentPlanInfo = React.useMemo(() => {

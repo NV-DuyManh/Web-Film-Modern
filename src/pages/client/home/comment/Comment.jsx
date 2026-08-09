@@ -1,17 +1,16 @@
-import React, { useContext, useMemo } from 'react';
+﻿import React, { useContext, useMemo } from 'react';
+import { useComments, useMovies } from '../../../../hooks/useCollections';
 import { FaHeart, FaBolt, FaMinus } from 'react-icons/fa';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 import { BiSolidMoviePlay } from 'react-icons/bi';
-import { MovieContext } from '../../../../contexts/MovieProvider';
-import { CommentContext } from '../../../../contexts/CommentProvider';
 import { UserContext } from '../../../../contexts/UserProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { timeAgo } from '../../../../utils/watchHistory';
 import { useNavigate } from 'react-router-dom';
 
 function Comment() {
-    const movies = useContext(MovieContext) || [];
-    const comments = useContext(CommentContext) || [];
+    const movies = useMovies() || [];
+    const comments = useComments() || [];
     const users = useContext(UserContext) || [];
     const navigate = useNavigate();
 

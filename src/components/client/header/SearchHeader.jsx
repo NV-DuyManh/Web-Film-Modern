@@ -1,6 +1,6 @@
-import React, { useContext, useMemo, useRef } from 'react';
+﻿import React, { useMemo, useRef } from 'react';
+import { useMovies } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
-import { MovieContext } from '../../../contexts/MovieProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { searchTV } from '../../../components/admin/search/SearchTV';
 import { getObjectById } from '../../../services/firebaseResponse';
@@ -8,8 +8,8 @@ import { FaFilm } from 'react-icons/fa';
 
 function SearchHeader({ searchQuery, isOpen, onClose }) {
     const navigate = useNavigate();
-    const movies = useContext(MovieContext);
-    const plans = useContext(PlanContext);
+    const movies = useMovies();
+    const plans = React.useContext(PlanContext);
     const searchRef = useRef(null);
 
     const dataSearch = useMemo(() => 

@@ -1,8 +1,7 @@
-import React, { useState, useContext, useEffect, useRef } from 'react';
+﻿import React, { useState, useContext, useEffect, useRef } from 'react';
+import { usePackages, useSubscriptions } from '../../../../hooks/useCollections';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
-import { PackageContext } from '../../../../contexts/PackageProvider';
-import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { FaCreditCard } from 'react-icons/fa';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
@@ -10,15 +9,15 @@ import { initialOptions } from '../../../../utils/Constants';
 import { addDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ModalPayVIP from './ModalPayVIP';
-import { getThemeNameByIndex, getThemeColorStyle } from '../../../../utils/themeUtils';
+import { getThemeNameByIndex, getThemeColorStyle } from '../../../../utils/appUtils';
 function PayVIP(props) {
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const planId = searchParams.get('id');
     const plans = useContext(PlanContext) || [];
-    const packages = useContext(PackageContext) || [];
-    const subscriptions = useContext(SubscriptionContext) || [];
+    const packages = usePackages() || [];
+    const subscriptions = useSubscriptions() || [];
 
     const selectedPlanData = plans.find(p => p.id === planId) || plans[0];
 

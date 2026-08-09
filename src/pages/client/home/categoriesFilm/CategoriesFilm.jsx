@@ -1,12 +1,12 @@
-import React, { useContext } from 'react';
+﻿import React, { useContext } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { FaChevronRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 
 function CategoriesFilm() {
     const categories = useContext(CategoryContext) || [];
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
 
     const validCategories = categories.filter(c => 
         movies.some(m => (m.listCategory || []).some(catId => String(catId) === String(c.id)))

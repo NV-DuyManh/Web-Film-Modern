@@ -1,12 +1,11 @@
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+﻿import React, { useContext, useMemo, useState, useEffect } from 'react';
+import { useTopics, useMovies } from '../../../hooks/useCollections';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { MovieContext } from '../../../contexts/MovieProvider';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
-import { TopicContext } from '../../../contexts/TopicProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
-import { getAgeRatingColorClass } from '../../../utils/ageRatingColors';
+import { getAgeRatingColorClass } from '../../../utils/appUtils';
 import { FaFire, FaStar, FaFilm, FaGlobeAsia, FaTv, FaTheaterMasks, FaPlay, FaChevronLeft, FaChevronRight, FaArrowLeft, FaCalendarAlt, FaEye, FaShieldAlt } from 'react-icons/fa';
 
 const ICON_MAP = {
@@ -28,10 +27,10 @@ const ITEMS_PER_PAGE = 24;
 function TopicDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
     const categories = useContext(CategoryContext) || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
-    const customTopics = useContext(TopicContext) || [];
+    const customTopics = useTopics() || [];
     const plans = useContext(PlanContext) || [];
 
     const [page, setPage] = useState(1);

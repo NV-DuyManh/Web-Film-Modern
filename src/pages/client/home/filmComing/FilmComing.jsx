@@ -1,17 +1,17 @@
-import React, { useContext } from 'react';
+﻿import React, { useContext } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaFire, FaCalendarAlt, FaClock, FaEye } from 'react-icons/fa';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
 function FilmComing() {
-    const movies = useContext(MovieContext);
+    const movies = useMovies();
     
     const plans = useContext(PlanContext);
 

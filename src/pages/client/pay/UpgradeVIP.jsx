@@ -1,13 +1,12 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+﻿import React, { useContext, useState, useEffect, useMemo } from 'react';
+import { useFeatures, useSubscriptions } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaCrown } from 'react-icons/fa';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { FeatureContext } from '../../../contexts/FeatureProvider';
 import Logo5 from '../../../assets/Logo5.png';
-import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
-import { getUserPlanInfo, getThemeNameByIndex } from '../../../utils/themeUtils';
+import { getUserPlanInfo, getThemeNameByIndex } from '../../../utils/appUtils';
 import { WingedFrame } from '../../../components/client/header/AvatarFrames';
 
 function UpgradeVIP(props) {
@@ -15,8 +14,8 @@ function UpgradeVIP(props) {
     const { isLogin } = useContext(AuthContext);
     const [selectedPlan, setSelectedPlan] = useState('');
     const plans = useContext(PlanContext);
-    const features = useContext(FeatureContext);
-    const subscriptions = useContext(SubscriptionContext)
+    const features = useFeatures();
+    const subscriptions = useSubscriptions()
 
     const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
 

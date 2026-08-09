@@ -1,7 +1,7 @@
-import React, { useState, useContext, useMemo } from 'react';
+﻿import React, { useState, useContext, useMemo } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { FaLayerGroup, FaSearch, FaTh, FaList, FaPlus, FaPen, FaPlay, FaTrash, FaStar, FaFilm, FaArrowLeft, FaImage, FaCloudUploadAlt, FaLink, FaTimes } from 'react-icons/fa';
 import { AuthContext } from '../../../../contexts/AuthProvider';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -25,7 +25,7 @@ function ListFilm(props) {
 
     const [avatarModalState, setAvatarModalState] = useState({ isOpen: false, listId: null, uploadMode: 'file', imgUrl: '' });
     const { isLogin } = useContext(AuthContext);
-    const moviesData = useContext(MovieContext) || [];
+    const moviesData = useMovies() || [];
 
     const userLists = useMemo(() => {
         if (!isLogin) return [];

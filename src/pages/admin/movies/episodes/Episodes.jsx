@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
+﻿import React, { useState, useContext, useEffect } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { useSearchParams } from 'react-router-dom';
 import ModalEpisodes from './ModalEpisodes';
 import TableEpisodes from './TableEpisodes';
 import { addDocument, updateDocument, fetchDataById } from '../../../../services/firebaseService';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 import { Autocomplete, TextField, createFilterOptions } from '@mui/material';
 import { BsSearch } from 'react-icons/bs';
 import { FaPlus } from 'react-icons/fa';
@@ -12,7 +12,7 @@ import { MdMovie } from 'react-icons/md';
 const inner = { numberEpisode: "", title: "", movieID: "", url: "" };
 
 function Episodes() {
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedMovie, setSelectedMovie] = useState(null);
 

@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { TopicContext } from '../../../../contexts/TopicProvider';
+﻿import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useTopics } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
@@ -10,7 +10,7 @@ import "../../../../App.scss";
 import "../../../../App.scss";
 
 function TableTopic({ search, onEdit }) {
-    const topics = useContext(TopicContext) || [];
+    const topics = useTopics() || [];
     const [open, setOpen] = useState(false);
     const [topicToDelete, setTopicToDelete] = useState(null);
     const [page, setPage] = useState(1);

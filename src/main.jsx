@@ -8,33 +8,15 @@ import App from './App.jsx';
 
 import CategoryProvider from './contexts/CategoryProvider.jsx';
 import CategoryTypeProvider from './contexts/CategoryTypeProvider.jsx';
-import MovieProvider from './contexts/MovieProvider.jsx';
 import PlanProvider from './contexts/PlanProvider.jsx';
-import PackageProvider from './contexts/PackageProvider.jsx';
-import FeatureProvider from './contexts/FeatureProvider.jsx';
-import ShowTimeProvider from './contexts/ShowTimeProvider.jsx';
 import UserProvider from './contexts/UserProvider.jsx';
 import AuthProvider from './contexts/AuthProvider.jsx';
-import ReviewProvider from './contexts/ReviewProvider.jsx';
-import CommentProvider from './contexts/CommentProvider.jsx';
-import RentMovieProvider from './contexts/RentMovieProvider.jsx';
-import SubscriptionProvider from './contexts/SubscriptionProvider.jsx';
-import TopicProvider from './contexts/TopicProvider.jsx';
 
 const providers = [
   CategoryProvider,
   CategoryTypeProvider,
-  MovieProvider,
   PlanProvider,
-  FeatureProvider,
-  PackageProvider,
-  ShowTimeProvider,
   UserProvider,
-  ReviewProvider,
-  CommentProvider,
-  RentMovieProvider,
-  SubscriptionProvider,
-  TopicProvider,
   AuthProvider
 ];
 

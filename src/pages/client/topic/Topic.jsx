@@ -1,9 +1,8 @@
-import React, { useContext, useMemo } from 'react';
+﻿import React, { useContext, useMemo } from 'react';
+import { useTopics, useMovies } from '../../../hooks/useCollections';
 import { Link } from 'react-router-dom';
-import { MovieContext } from '../../../contexts/MovieProvider';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
-import { TopicContext } from '../../../contexts/TopicProvider';
 import { FaFire, FaStar, FaFilm, FaGlobeAsia, FaTv, FaTheaterMasks, FaPlay, FaArrowRight } from 'react-icons/fa';
 
 
@@ -88,11 +87,11 @@ function CollectionCard({ collection, movies, index }) {
 }
 
 function Topic() {
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
     const categories = useContext(CategoryContext) || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
 
-    const customTopics = useContext(TopicContext) || [];
+    const customTopics = useTopics() || [];
 
     const collections = useMemo(() => {
         if (movies.length === 0) return [];

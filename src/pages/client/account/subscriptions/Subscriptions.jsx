@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+﻿import React, { useContext } from 'react';
+import { useSubscriptions } from '../../../../hooks/useCollections';
 import { AuthContext } from '../../../../contexts/AuthProvider';
-import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { FaCrown, FaCalendarAlt, FaHistory, FaRegCreditCard } from 'react-icons/fa';
-import { getThemeNameByIndex, getThemeColorStyle } from '../../../../utils/themeUtils';
+import { getThemeNameByIndex, getThemeColorStyle } from '../../../../utils/appUtils';
 function Subscriptions() {
     const { isLogin } = useContext(AuthContext);
-    const subscriptions = useContext(SubscriptionContext);
+    const subscriptions = useSubscriptions();
     const plans = useContext(PlanContext);
     const userSubs = subscriptions.filter(s => s.userID === isLogin?.id);
 

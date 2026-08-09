@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import { FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
-import { getDefaultAvatar } from '../../../utils/defaultAvatar';
+import { getDefaultAvatar } from '../../../utils/appUtils';
 
 function Actors() {
     const [searchTerm, setSearchTerm] = useState('');

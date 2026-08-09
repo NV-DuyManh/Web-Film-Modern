@@ -1,7 +1,7 @@
-import React, { useContext, useMemo, useState } from 'react';
+﻿import React, { useContext, useMemo, useState } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { updateDocument, addDocument } from '../../../../services/firebaseService';
 import { FaCreditCard } from 'react-icons/fa';
@@ -14,7 +14,7 @@ function PayMovie(props) {
     const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
     const { id } = useParams();
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
     const [showModal, setShowModal] = useState(false);
 
     const movie = useMemo(() => getObjectById(movies, id), [movies, id]);

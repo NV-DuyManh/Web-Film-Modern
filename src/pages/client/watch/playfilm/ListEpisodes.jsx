@@ -1,14 +1,12 @@
-import React, { useContext, useMemo, useState } from 'react';
+﻿import React, { useContext, useMemo, useState } from 'react';
+import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
 import { FaPlay, FaLock } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AuthContext } from '../../../contexts/AuthProvider';
-import { getExpiryDate, getUserPlanInfo } from '../../../utils/themeUtils';
-import { getObjectById } from '../../../services/firebaseResponse';
-import { MovieContext } from '../../../contexts/MovieProvider';
-import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
-import { PlanContext } from '../../../contexts/PlanProvider';
-import { RentMovieContext } from '../../../contexts/RentMovieProvider';
-import ModalDetail from './detailFilm/ModalDetail';
+import { AuthContext } from '../../../../contexts/AuthProvider';
+import { getExpiryDate, getUserPlanInfo } from '../../../../utils/appUtils';
+import { getObjectById } from '../../../../services/firebaseResponse';
+import { PlanContext } from '../../../../contexts/PlanProvider';
+import ModalDetail from '../detailFilm/ModalDetail';
 
 function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const { slug } = useParams();
@@ -17,10 +15,10 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const CHUNK_SIZE = 30;
     const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
-    const subscriptions = useContext(SubscriptionContext);
-    const movies = useContext(MovieContext);
+    const subscriptions = useSubscriptions();
+    const movies = useMovies();
     const plans = useContext(PlanContext);
-    const allRent = useContext(RentMovieContext);
+    const allRent = useRentMovies();
 
     const movie = useMemo(() => {
         let found = movies.find(m => m.slug === slug || m.id === slug);

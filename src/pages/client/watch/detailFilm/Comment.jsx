@@ -1,13 +1,12 @@
-import React, { useState, useContext, useMemo } from 'react';
+﻿import React, { useState, useContext, useMemo } from 'react';
+import { useComments, useSubscriptions } from '../../../../hooks/useCollections';
 import { FaComment, FaPaperPlane, FaRegCommentDots } from 'react-icons/fa';
 import { UserContext } from '../../../../contexts/UserProvider';
-import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
-import { CommentContext } from '../../../../contexts/CommentProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { addDocument } from '../../../../services/firebaseService';
 import { timeAgo } from '../../../../utils/watchHistory';
-import { getUserPlanInfo, getThemeColorStyle } from '../../../../utils/themeUtils';
+import { getUserPlanInfo, getThemeColorStyle } from '../../../../utils/appUtils';
 function CommentItem({ comment, users, subscriptions, plans }) {
     const user = getObjectById(users, comment.userID);
     const planInfo = useMemo(() => {
@@ -47,9 +46,9 @@ function Comment({ isLogin, onOpenLogin, movieId }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     
     const users = useContext(UserContext) || [];
-    const subscriptions = useContext(SubscriptionContext) || [];
+    const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
-    const allComments = useContext(CommentContext) || [];
+    const allComments = useComments() || [];
 
     const movieComments = useMemo(() => {
         if (!movieId) return [];

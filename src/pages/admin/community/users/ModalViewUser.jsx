@@ -1,12 +1,12 @@
-import React, { useContext, useMemo, useState } from 'react';
+﻿import React, { useContext, useMemo, useState } from 'react';
+import { useSubscriptions } from '../../../../hooks/useCollections';
 import { Dialog, Slide } from '@mui/material';
 import { FaTimesCircle, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake, FaVenusMars, FaCrown, FaKey, FaShieldAlt, FaEye, FaEyeSlash, FaIdBadge } from 'react-icons/fa';
 
-import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
-import { getUserPlanInfo } from '../../../../utils/themeUtils';
+import { getUserPlanInfo } from '../../../../utils/appUtils';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
 
@@ -58,7 +58,7 @@ function GlowCard({ title, icon: Icon, color = "cyan", children }) {
 }
 
 function ModalViewUser({ open, handleClose, user }) {
-    const subscriptions = useContext(SubscriptionContext) || [];
+    const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
     const [showPassword, setShowPassword] = useState(false);
 

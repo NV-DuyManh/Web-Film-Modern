@@ -1,17 +1,17 @@
-import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
+﻿import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory, FaBolt } from 'react-icons/fa';
-import { MovieContext } from '../../../contexts/MovieProvider';
-import { getObjectById } from '../../../services/firebaseResponse';
-import { fetchDataById, updateDocument } from '../../../services/firebaseService';
-import { PlanContext } from '../../../contexts/PlanProvider';
+import { getObjectById } from '../../../../services/firebaseResponse';
+import { fetchDataById, updateDocument } from '../../../../services/firebaseService';
+import { PlanContext } from '../../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
-import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../../utils/watchHistory';
+import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../../../utils/watchHistory';
 import VideoPlayer from './VideoPlayer';
-import { AuthContext } from '../../../contexts/AuthProvider';
-import Comment from './detailFilm/Comment';
-import SEO from '../../../components/SEO';
+import { AuthContext } from '../../../../contexts/AuthProvider';
+import Comment from '../detailFilm/Comment';
+import SEO from '../../../../components/SEO';
 
 function PlayFilm({ handleOpenLogin }) {
     const { slug } = useParams();
@@ -20,7 +20,7 @@ function PlayFilm({ handleOpenLogin }) {
     const tap = searchParams.get('tap');
     
     const [activeAudio, setActiveAudio] = useState('vietsub');
-    const movies = useContext(MovieContext);
+    const movies = useMovies();
     const plans = useContext(PlanContext);
     const [episodes, setEpisodes] = useState([]);
     const [currentEpisode, setCurrentEpisode] = useState(null);

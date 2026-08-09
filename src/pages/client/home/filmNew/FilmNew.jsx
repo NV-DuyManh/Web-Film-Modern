@@ -1,18 +1,18 @@
-import React, { useContext } from 'react';
+﻿import React, { useContext } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaShieldAlt, FaListUl, FaEye } from 'react-icons/fa';
-import { MovieContext } from '../../../../contexts/MovieProvider';
 
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { Link } from 'react-router-dom';
-import { getAgeRatingColorClass } from '../../../../utils/ageRatingColors';
+import { getAgeRatingColorClass } from '../../../../utils/appUtils';
 
 function FilmNew(props) {
-    const movies = useContext(MovieContext);
+    const movies = useMovies();
     
     const plans = useContext(PlanContext);
 

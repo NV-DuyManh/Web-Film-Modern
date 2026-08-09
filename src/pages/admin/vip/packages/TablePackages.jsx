@@ -1,18 +1,18 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+﻿import React, { useContext, useState, useEffect, useMemo } from 'react';
+import { usePackages } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
-import { PackageContext } from '../../../../contexts/PackageProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 
 function TablePackages({ handleClickOpen, setPackageItem, packageItem, search }) {
-    const packages = useContext(PackageContext);
+    const packages = usePackages();
     const plans = useContext(PlanContext);
     const [open, setOpen] = useState(false);
 

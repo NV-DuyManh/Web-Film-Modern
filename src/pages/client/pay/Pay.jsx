@@ -1,9 +1,8 @@
-import React, { useState, useContext, useMemo } from 'react';
+﻿import React, { useState, useContext, useMemo } from 'react';
+import { useFeatures, useMovies } from '../../../hooks/useCollections';
 import { FaCheckCircle, FaStar, FaCrown } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { FeatureContext } from '../../../contexts/FeatureProvider';
-import { MovieContext } from '../../../contexts/MovieProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 
 function Pay(props) {
@@ -11,8 +10,8 @@ function Pay(props) {
     const { id } = useParams();
     const [selectedPlan, setSelectedPlan] = useState('rental');
     const plans = useContext(PlanContext) || [];
-    const features = useContext(FeatureContext) || [];
-    const movies = useContext(MovieContext) || [];
+    const features = useFeatures() || [];
+    const movies = useMovies() || [];
 
     const movie = useMemo(() => getObjectById(movies, id), [movies, id]);
 

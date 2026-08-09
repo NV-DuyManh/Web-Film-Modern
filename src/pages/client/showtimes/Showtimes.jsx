@@ -1,15 +1,14 @@
-import React, { useContext, useState, useMemo, useRef, useEffect } from 'react';
+﻿import React, { useContext, useState, useMemo, useRef, useEffect } from 'react';
+import { useShowTimes, useMovies } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
-import { ShowTimeContext } from '../../../contexts/ShowTimeProvider';
-import { MovieContext } from '../../../contexts/MovieProvider';
 import { getOptimizedUrl } from '../../../utils/cloudinary';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaTicketAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { MdLocalMovies, MdAccessTime, MdRoom } from 'react-icons/md';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 
 function Showtimes() {
-    const showTimes = useContext(ShowTimeContext) || [];
-    const movies = useContext(MovieContext) || [];
+    const showTimes = useShowTimes() || [];
+    const movies = useMovies() || [];
     const navigate = useNavigate();
 
     const dates = useMemo(() => {

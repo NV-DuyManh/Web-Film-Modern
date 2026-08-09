@@ -1,10 +1,10 @@
-import React, { useContext } from 'react';
+﻿import React, { useContext } from 'react';
+import { useMovies } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
 import { COUNTRIES } from '../../../utils/Constants';
-import { MovieContext } from '../../../contexts/MovieProvider';
 
 function Country({ openCountry, setOpenCountry, isRightCol }) {
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
     const navigate = useNavigate();
 
     const validCountries = COUNTRIES.filter(c => 

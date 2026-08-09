@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+﻿import React, { useContext } from "react";
+import { useMovies } from '../../../hooks/useCollections';
 import { useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../../contexts/CategoryProvider";
-import { MovieContext } from "../../../contexts/MovieProvider";
 
 function Category({ openCate, setOpenCate, isRightCol }) {
     const categories = useContext(CategoryContext) || [];
-    const movies = useContext(MovieContext) || [];
+    const movies = useMovies() || [];
     const navigate = useNavigate();
     
     const validCategories = categories.filter(c => 

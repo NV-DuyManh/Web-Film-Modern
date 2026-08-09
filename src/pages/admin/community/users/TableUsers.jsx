@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+﻿import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { useSubscriptions } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import { FaEye } from 'react-icons/fa';
@@ -9,16 +10,15 @@ import "../../../../App.scss";
 import { UserContext } from '../../../../contexts/UserProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
-import { SubscriptionContext } from '../../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
-import { getUserPlanInfo, getThemeColorStyle, getExpiryDate } from '../../../../utils/themeUtils';
+import { getUserPlanInfo, getThemeColorStyle, getExpiryDate } from '../../../../utils/appUtils';
 
 
 function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
     const users = useContext(UserContext);
-    const subscriptions = useContext(SubscriptionContext) || [];
+    const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
     
     const avatarGlowMap = {

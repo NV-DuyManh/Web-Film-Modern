@@ -1,7 +1,6 @@
-import React, { useState, useContext } from 'react';
+﻿import React, { useState, useContext } from 'react';
+import { useTopics, useMovies } from '../../../../hooks/useCollections';
 import Search from '../../../../components/admin/search/Search';
-import { MovieContext } from '../../../../contexts/MovieProvider';
-import { TopicContext } from '../../../../contexts/TopicProvider';
 import { addDocument, updateDocument, deleteDocument } from '../../../../services/firebaseService';
 import TableTopic from './TableTopic';
 import ModalTopic from './ModalTopic';
@@ -10,8 +9,8 @@ import Swal from 'sweetalert2';
 const inner = { name: "", description: "", movieIds: [], icon: "FaFire", gradient: "from-purple-500 to-indigo-600" };
 
 function Topics(props) {
-    const movies = useContext(MovieContext) || [];
-    const topicsList = useContext(TopicContext) || [];
+    const movies = useMovies() || [];
+    const topicsList = useTopics() || [];
     const [open, setOpen] = useState(false);
     const [topic, setTopic] = useState(inner);
     const [error, setError] = useState(inner);
