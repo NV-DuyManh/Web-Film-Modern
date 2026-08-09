@@ -8,12 +8,15 @@ export default defineConfig({
         cssCodeSplit: true,
         rollupOptions: {
             output: {
-                manualChunks: {
-                    'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-                    'vendor-firebase': ['firebase/app', 'firebase/firestore', 'firebase/auth', 'firebase/storage'],
-                    'vendor-ui': ['framer-motion', 'swiper', 'sweetalert2'],
-                    'vendor-icons': ['react-icons/fa', 'react-icons/md', 'react-icons/io5'],
-                },
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) return 'vendor-react';
+                        if (id.includes('firebase')) return 'vendor-firebase';
+                        if (id.includes('framer-motion') || id.includes('swiper') || id.includes('sweetalert2')) return 'vendor-ui';
+                        if (id.includes('react-icons')) return 'vendor-icons';
+                        return 'vendor';
+                    }
+                }
             },
         },
         chunkSizeWarningLimit: 1000,
