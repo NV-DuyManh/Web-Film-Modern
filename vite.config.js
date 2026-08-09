@@ -7,7 +7,17 @@ export default defineConfig({
     build: {
         cssCodeSplit: true,
         rollupOptions: {
-            // Vercel/Rolldown compatibility: Let Vite handle chunks automatically
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('react')) return 'vendor-react';
+                        if (id.includes('firebase')) return 'vendor-firebase';
+                        if (id.includes('framer-motion')) return 'vendor-framer-motion';
+                        if (id.includes('swiper')) return 'vendor-swiper';
+                        return 'vendor';
+                    }
+                }
+            }
         },
         chunkSizeWarningLimit: 1000,
     },
