@@ -114,7 +114,7 @@ function FilmCountry({ title, countryName, titleClass }) {
                                                 })()}
                                                 {e.duration && (
                                                     <span className="flex items-center gap-1 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-1.5 py-0.5 rounded shadow-md text-[8px] md:text-[9px] font-bold whitespace-nowrap">
-                                                        <FaClock /> {e.duration}
+                                                        <FaClock /> {e.duration} phút
                                                     </span>
                                                 )}
                                             </div>
