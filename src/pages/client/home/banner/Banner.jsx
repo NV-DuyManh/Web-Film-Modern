@@ -1,4 +1,4 @@
-﻿import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
@@ -54,7 +54,9 @@ function Banner() {
         }
     };
 
-    if (!hotMovies || hotMovies.length === 0) return null;
+    if (!hotMovies || hotMovies.length === 0) return (
+        <div className='slide-banner bg-white/5 animate-pulse'></div>
+    );
 
     return (
         <div className='slide-banner'>

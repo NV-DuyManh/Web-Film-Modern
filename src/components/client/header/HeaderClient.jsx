@@ -1,4 +1,4 @@
-﻿import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { useSubscriptions } from '../../../hooks/useCollections';
 import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown, FaChevronDown, FaFilm } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
@@ -111,7 +111,7 @@ function HeaderClient() {
                 </button>
 
                 <a href="/" className="flex shrink-0 items-center max-md:hidden cursor-pointer">
-                    <img src={Logo2} alt="MFILM" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
+                    <img src={Logo2} alt="MFILM" width="150" height="60" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
                 </a>
 
                 <div ref={searchContainerRef} className="relative min-w-0 flex-1 md:max-w-87.5 lg:max-w-112.5 min-[1200px]:max-w-87.5 xl:max-w-112.5 transition-[max-width] duration-500 ease-out md:mx-auto group">
