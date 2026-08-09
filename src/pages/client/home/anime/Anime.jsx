@@ -134,12 +134,12 @@ function Anime() {
                                             const categoryName = getObjectById(categories, categoryId)?.name;
                                             if (!categoryName) return null;
                                             return (
-                                                <h5
+                                                <div
                                                     key={categoryId}
                                                     className='mt-1 lg:mt-2 w-fit cursor-pointer rounded-md border border-purple-500/60 bg-purple-600/50 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] font-bold text-white backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-purple-400 hover:bg-purple-500 hover:text-white hover:shadow-[0_0_16px_rgba(168,85,247,0.8)]'
                                                 >
                                                     {categoryName}
-                                                </h5>
+                                                </div>
                                             );
                                         })}
                                     </div>

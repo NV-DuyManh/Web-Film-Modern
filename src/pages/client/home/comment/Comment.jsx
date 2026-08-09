@@ -84,7 +84,7 @@ function Comment() {
                                         <h4 className="text-[13px] text-gray-200 line-clamp-2 leading-snug group-hover:text-yellow-400 transition-colors">
                                             {e.otherName || e.name}
                                         </h4>
-                                        <p className="text-[11px] text-gray-500 mt-1">{commentCounts[e.id] || 0} bình luận</p>
+                                        <p className="text-[11px] text-gray-400 mt-1">{commentCounts[e.id] || 0} bình luận</p>
                                     </div>
                                 </div>
                             ))}
@@ -109,7 +109,7 @@ function Comment() {
                                         <h4 className="text-[13px] text-gray-200 line-clamp-2 leading-snug group-hover:text-yellow-400 transition-colors">
                                             {e.otherName || e.name}
                                         </h4>
-                                        <p className="text-[11px] text-gray-500 mt-1">{favoriteCounts[e.id] || 0} lượt thích</p>
+                                        <p className="text-[11px] text-gray-400 mt-1">{favoriteCounts[e.id] || 0} lượt thích</p>
                                     </div>
                                 </div>
                             ))}
@@ -135,7 +135,7 @@ function Comment() {
                                                 <p className="text-[13px] font-bold text-gray-200 group-hover:text-yellow-400 transition-colors inline">
                                                     {user?.name || 'Ẩn danh'}
                                                 </p>
-                                                <p className="text-[11px] text-gray-500 inline">
+                                                <p className="text-[11px] text-gray-400 inline">
                                                     {comment.createdAt ? timeAgo(comment.createdAt.seconds ? comment.createdAt.seconds * 1000 : new Date(comment.createdAt).getTime()) : 'Vừa xong'}
                                                 </p>
                                             </div>

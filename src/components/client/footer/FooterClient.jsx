@@ -62,7 +62,7 @@ function FooterClient() {
                             Dịp Tết Việt Nam, RoPhim trở lại với loạt phim xuân hấp dẫn, hài Tết và siêu phẩm mới nhất, mang đến trải nghiệm giải trí trọn vẹn bên gia đình.
                         </p>
 
-                        <p className='mt-5 text-sm font-medium tracking-wide text-gray-500'>
+                        <p className='mt-5 text-sm font-medium tracking-wide text-gray-400'>
                             © 2026 MFILM
                         </p>
                     </div>
