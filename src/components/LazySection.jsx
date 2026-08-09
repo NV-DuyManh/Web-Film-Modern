@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 
 export default function LazySection({ children, minHeight = '400px', rootMargin = '300px' }) {
     const [isVisible, setIsVisible] = useState(false);
@@ -18,7 +18,11 @@ export default function LazySection({ children, minHeight = '400px', rootMargin 
 
     return (
         <div ref={ref} style={{ minHeight: isVisible ? 'auto' : minHeight }} className={!isVisible ? "w-full bg-[#111827]" : ""}>
-            {isVisible ? children : null}
+            {isVisible ? (
+                <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-slate-500">Đang tải...</div>}>
+                    {children}
+                </Suspense>
+            ) : null}
         </div>
     );
 }

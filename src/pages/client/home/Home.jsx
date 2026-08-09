@@ -1,19 +1,21 @@
-import React from 'react';
+import React, { lazy } from 'react';
 import CategoriesFilm from './categoriesFilm/CategoriesFilm';
-import Cinema from './cinema/Cinema';
 import Banner from './banner/Banner';
-import FilmCountry from './filmCountry/FilmCountry';
-import TopFilm from './topFilm/TopFilm';
 import FilmNew from './filmNew/FilmNew';
-import FilmComing from './filmComing/FilmComing';
-import FilmHongKong from './filmHongKong/FilmHongKong';
-import Anime from './anime/Anime';
-import Comment from './comment/Comment';
 import DetailFilm from "../watch/detailFilm/DetailFilm";
 import Pay from '../pay/Pay';
 import UpgradeVIP from '../pay/UpgradeVIP';
 import PayVIP from '../pay/payvip/PayVIP';
 import PayMovie from '../pay/paymovie/PayMovie';
+
+// Lazily load components that are not immediately visible
+const FilmCountry = lazy(() => import('./filmCountry/FilmCountry'));
+const TopFilm = lazy(() => import('./topFilm/TopFilm'));
+const Cinema = lazy(() => import('./cinema/Cinema'));
+const Comment = lazy(() => import('./comment/Comment'));
+const FilmComing = lazy(() => import('./filmComing/FilmComing'));
+const Anime = lazy(() => import('./anime/Anime'));
+const FilmHongKong = lazy(() => import('./filmHongKong/FilmHongKong'));
 import SEO from '../../../components/SEO';
 import LazySection from '../../../components/LazySection';
 
