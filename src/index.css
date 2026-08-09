@@ -65,3 +65,9 @@
   background-size: 200% auto;
   animation: text-shine 3s linear infinite;
 }
+
+@media (max-width: 768px) {
+  .animate-text-shine, .glow-text, .glow-text2, .glow-text-multi, .glow-text-danger, .glow-text-gold, .glow-text-1, .glow-text-2, .glow-text-3, .glow-text-4 {
+    animation: none !important;
+  }
+}
