@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -285,7 +285,7 @@ function DetailFilm() {
             <div className="w-full h-112.5 md:h-137.5 lg:h-162.5 relative z-0">
 
                 <img
-                    src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 480, 270, 'thumb')}
+                    src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 1280, 720, 'banner')}
                     alt="Banner"
                     className="w-full h-full object-cover object-top"
                 />
@@ -299,7 +299,7 @@ function DetailFilm() {
 
                         <div className="rounded-xl overflow-hidden shadow-2xl w-2/3 sm:w-1/2 sm:h-3/4 lg:w-full mx-auto relative z-20 -mt-24 sm:-mt-70 lg:-mt-48 border-4 border-[#0f1322]">
                             <img
-                                src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')}
+                                src={getOptimizedUrl(movie.imgUrl, 600, 900, 'poster')}
                                 alt={movie.name}
                                 className="w-full aspect-2/3 object-cover"
                             />
