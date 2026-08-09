@@ -6,6 +6,7 @@
     -webkit-user-select: none;
     position: relative;
     background-color: #111827;
+    contain: layout style;
 }
 
 @media (min-width: 480px) {
@@ -55,6 +56,8 @@
     object-fit: cover;
     pointer-events: none;
     -webkit-user-drag: none;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 .banner-overlay {
@@ -207,10 +210,9 @@
         opacity: 1;
         border-color: #facc15;
         border-width: 3px;
-        box-shadow: 0 0 4px rgba(250, 204, 21, 0.6), 0 0 8px rgba(236, 72, 153, 0.4), 0 0 12px rgba(139, 92, 246, 0.3);
+        box-shadow: 0 0 6px rgba(250, 204, 21, 0.7), 0 0 10px rgba(236, 72, 153, 0.5), 0 0 14px rgba(139, 92, 246, 0.4);
         transform: scale(1.08);
         z-index: 99 !important;
-        animation: neonPulse 2s infinite alternate;
     }
 
     .thumb-swiper .swiper-slide-thumb-active img,
@@ -282,9 +284,8 @@
         transform: scale(1.1);
         border-color: #facc15;
         border-width: 3px;
-        box-shadow: 0 0 3px rgba(250, 204, 21, 0.6), 0 0 6px rgba(236, 72, 153, 0.4), 0 0 9px rgba(139, 92, 246, 0.3);
+        box-shadow: 0 0 5px rgba(250, 204, 21, 0.7), 0 0 8px rgba(236, 72, 153, 0.5), 0 0 11px rgba(139, 92, 246, 0.4);
         z-index: 99 !important;
-        animation: neonPulse 2s infinite alternate;
     }
 
     .thumb-swiper .swiper-slide-thumb-active img,

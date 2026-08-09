@@ -1,4 +1,4 @@
-﻿import React, { useContext, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
@@ -18,7 +18,7 @@ import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
-import Swal from 'sweetalert2';
+
 import { useNavigate } from 'react-router-dom';
 
 function Anime() {
@@ -36,7 +36,7 @@ function Anime() {
     const handleFavorite = async (e, movieId) => {
         e.stopPropagation();
         if (!isLogin) {
-            Swal.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim vào yêu thích', 'warning');
+            import('sweetalert2').then(m => m.default.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim vào yêu thích', 'warning'));
             return;
         }
         try {
@@ -94,10 +94,10 @@ function Anime() {
                             <SwiperSlide key={e.id}>
                                 <img
                                     className="anime-main-img"
-                                    src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')}
+                                    src={getOptimizedUrl(e.bannerUrl, 1920, 1080, 'banner')}
                                     alt={e.name}
                                     draggable="false"
-                                width={480} height={270} loading="lazy" decoding="async"/>
+                                width={1920} height={1080} loading="lazy" decoding="async"/>
 
                                 <div className="anime-overlay"></div>
 

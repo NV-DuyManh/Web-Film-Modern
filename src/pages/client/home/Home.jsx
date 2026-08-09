@@ -1,14 +1,10 @@
 import React, { lazy } from 'react';
-import CategoriesFilm from './categoriesFilm/CategoriesFilm';
 import Banner from './banner/Banner';
-import FilmNew from './filmNew/FilmNew';
-import DetailFilm from "../watch/detailFilm/DetailFilm";
-import Pay from '../pay/Pay';
-import UpgradeVIP from '../pay/UpgradeVIP';
-import PayVIP from '../pay/payvip/PayVIP';
-import PayMovie from '../pay/paymovie/PayMovie';
+import SEO from '../../../components/SEO';
+import LazySection from '../../../components/LazySection';
 
-// Lazily load components that are not immediately visible
+const CategoriesFilm = lazy(() => import('./categoriesFilm/CategoriesFilm'));
+const FilmNew = lazy(() => import('./filmNew/FilmNew'));
 const FilmCountry = lazy(() => import('./filmCountry/FilmCountry'));
 const TopFilm = lazy(() => import('./topFilm/TopFilm'));
 const Cinema = lazy(() => import('./cinema/Cinema'));
@@ -16,8 +12,6 @@ const Comment = lazy(() => import('./comment/Comment'));
 const FilmComing = lazy(() => import('./filmComing/FilmComing'));
 const Anime = lazy(() => import('./anime/Anime'));
 const FilmHongKong = lazy(() => import('./filmHongKong/FilmHongKong'));
-import SEO from '../../../components/SEO';
-import LazySection from '../../../components/LazySection';
 
 function Home(props) {
     return (
@@ -28,8 +22,12 @@ function Home(props) {
                 url="/"
             />
             <Banner />
-            <CategoriesFilm />
-            <FilmNew />
+            <LazySection minHeight="120px" rootMargin="100px">
+                <CategoriesFilm />
+            </LazySection>
+            <LazySection minHeight="400px" rootMargin="200px">
+                <FilmNew />
+            </LazySection>
             <LazySection minHeight="900px">
                 <div className="bg-[#111827] px-6 md:px-10 py-3">
                     <div className="rounded-xl border border-white/10 shadow-[0_0_30px_rgba(96,165,250,0.06)]">

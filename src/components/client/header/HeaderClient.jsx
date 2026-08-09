@@ -13,8 +13,8 @@ import Register from '../../../pages/client/auth/Register';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
-import Coder from '../../../assets/Coder.png';
-import PlayFilm from '../../../pages/client/watch/playfilm/PlayFilm';
+
+
 import { IoMdArrowDropdown } from 'react-icons/io';
 import Category from '../../../pages/client/category/Category';
 import Country from '../../../pages/client/country/Country';

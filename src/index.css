@@ -67,7 +67,10 @@
 }
 
 @media (max-width: 768px) {
-  .animate-text-shine, .glow-text, .glow-text2, .glow-text-multi, .glow-text-danger, .glow-text-gold, .glow-text-1, .glow-text-2, .glow-text-3, .glow-text-4 {
+  .animate-text-shine, .glow-text, .glow-text2, .glow-text-multi, .glow-text-danger, .glow-text-gold, .glow-text-1, .glow-text-2, .glow-text-3, .glow-text-4, .animate-avatar-shine {
     animation: none !important;
+  }
+  .premium-laser::before {
+    display: none;
   }
 }

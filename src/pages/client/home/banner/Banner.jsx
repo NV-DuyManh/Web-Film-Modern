@@ -17,7 +17,7 @@ import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
-import Swal from 'sweetalert2';
+
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { useNavigate } from 'react-router-dom';
 
@@ -37,7 +37,7 @@ function Banner() {
     const handleFavorite = async (e, movieId) => {
         e.stopPropagation();
         if (!isLogin) {
-            Swal.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim vào yêu thích', 'warning');
+            import('sweetalert2').then(m => m.default.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim vào yêu thích', 'warning'));
             return;
         }
         try {
@@ -88,11 +88,11 @@ function Banner() {
                         <SwiperSlide key={e.id}>
                         <img
                             className="banner-img"
-                            src={getOptimizedUrl(e.bannerUrl, 1280, 720, 'banner')}
+                            src={getOptimizedUrl(e.bannerUrl, 1920, 1080, 'banner')}
                             alt={e.name}
                             draggable="false"
-                            width={1280}
-                            height={720}
+                            width={1920}
+                            height={1080}
                             loading="eager"
                             fetchPriority="high"
                             decoding="async"
