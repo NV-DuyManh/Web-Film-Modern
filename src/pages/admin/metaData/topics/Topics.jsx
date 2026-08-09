@@ -156,7 +156,7 @@ function Topics(props) {
                  <button 
                      onClick={handleSeedSmartTopics}
                      disabled={loading}
-                     className="px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg text-white text-sm font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-105 transition-transform cursor-pointer"
+                     className="px-4 py-2 bg-linear-to-r from-purple-500 to-indigo-600 rounded-lg text-white text-sm font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-105 transition-transform cursor-pointer"
                  >
                      {loading ? 'Đang tạo...' : '✨ Tạo Chủ Đề Tự Động (Auto)'}
                  </button>

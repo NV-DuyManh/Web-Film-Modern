@@ -76,7 +76,7 @@ function Actors() {
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-6 md:gap-x-6 md:gap-y-8 mb-10 min-h-[50vh]">
                             {currentActors.map((actor) => (
                                 <div key={actor.id} className="group flex flex-col cursor-pointer">
-                                    <div className="relative rounded-2xl overflow-hidden aspect-4/5 md:aspect-3/4 border-[2px] border-transparent group-hover:border-pink-500/80 transition-all duration-300 group-hover:shadow-[0_12px_30px_rgba(236,72,153,0.25)] group-hover:-translate-y-2">
+                                    <div className="relative rounded-2xl overflow-hidden aspect-4/5 md:aspect-3/4 border-2 border-transparent group-hover:border-pink-500/80 transition-all duration-300 group-hover:shadow-[0_12px_30px_rgba(236,72,153,0.25)] group-hover:-translate-y-2">
                                         <img 
                                             src={(!actor.imgUrl || actor.imgUrl.includes('Logo')) ? getDefaultAvatar(actor.sexID) : actor.imgUrl} 
                                             alt={actor.name} 

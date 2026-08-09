@@ -29,11 +29,11 @@ function FooterClient() {
                         <div className='hidden h-14 w-px bg-white/10 md:block'></div>
 
                         <div className='flex items-center justify-center gap-4 md:ml-2'>
-                            <a href="https://zalo.me/0779534325" target="_blank" aria-label="Liên hệ qua Zalo" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:text-blue-600 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]'><SiZalo className='text-3xl' /></a>
+                            <a href="https://zalo.me/0779534325" target="_blank" aria-label="Liên hệ qua Zalo" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:text-blue-600 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]'><SiZalo className='text-3xl' title='Zalo' /></a>
 
-                            <a href="https://www.facebook.com/duymanhdev" target="_blank" aria-label="Trang Facebook của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/60 hover:bg-blue-600 hover:text-white hover:shadow-[0_0_20px_rgba(37,99,235,0.45)]'><FaFacebookF /></a>
+                            <a href="https://www.facebook.com/duymanhdev" target="_blank" aria-label="Trang Facebook của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/60 hover:bg-blue-600 hover:text-white hover:shadow-[0_0_20px_rgba(37,99,235,0.45)]'><FaFacebookF title='Facebook' /></a>
 
-                            <a href="https://www.linkedin.com/in/duymanhdev/" target="_blank" aria-label="Trang LinkedIn của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/60 hover:bg-blue-700 hover:text-white hover:shadow-[0_0_20px_rgba(29,78,216,0.45)]'><FaLinkedinIn /></a>
+                            <a href="https://www.linkedin.com/in/duymanhdev/" target="_blank" aria-label="Trang LinkedIn của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/60 hover:bg-blue-700 hover:text-white hover:shadow-[0_0_20px_rgba(29,78,216,0.45)]'><FaLinkedinIn title='LinkedIn' /></a>
                         </div>
                     </div>
 

@@ -12,7 +12,7 @@ const HomeAdmin = lazy(() => import('./pages/admin/homeAdmin/HomeAdmin'));
 const LayoutClient = lazy(() => import('./pages/client/LayoutClient'));
 
 const LoadingFallback = () => (
-    <div className="fixed inset-0 z-[99999] bg-[#06060e]"></div>
+    <div className="fixed inset-0 z-99999 bg-[#06060e]"></div>
 );
 
 function App() {

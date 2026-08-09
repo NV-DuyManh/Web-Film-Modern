@@ -164,7 +164,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                                 <FaKey /> Đổi MK
                             </button>
                         </div>
-                        <div className={`transition-all duration-300 overflow-hidden ${isChangingPassword ? 'max-h-[500px] opacity-100 mt-6' : 'max-h-0 opacity-0 mt-0'}`}>
+                        <div className={`transition-all duration-300 overflow-hidden ${isChangingPassword ? 'max-h-125 opacity-100 mt-6' : 'max-h-0 opacity-0 mt-0'}`}>
                             <div className="bg-black/30 border border-yellow-500/30 rounded-2xl p-6 flex flex-col gap-5 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
                                 <div className="flex flex-col gap-2 group/old">
                                     <label className="text-xs font-bold text-slate-200 flex items-center gap-2 uppercase tracking-wide group-focus-within/old:text-yellow-400 transition-colors">

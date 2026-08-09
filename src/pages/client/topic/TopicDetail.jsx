@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../utils/cloudinary';
+import { getOptimizedUrl } from '../../../utils/cloudinary';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useTopics, useMovies } from '../../../hooks/useCollections';
 import { useParams, Link, useNavigate } from 'react-router-dom';
@@ -106,7 +106,7 @@ function TopicDetail() {
                 image={heroBanner}
             />
 
-            <div className="relative h-[40vh] md:h-[50vh] xl:h-[60vh] w-full mt-[70px] overflow-hidden">
+            <div className="relative h-[40vh] md:h-[50vh] xl:h-[60vh] w-full mt-17.5 overflow-hidden">
                 {heroBanner && (
                     <img 
                         src={heroBanner} 
@@ -114,8 +114,8 @@ function TopicDetail() {
                         className="absolute inset-0 w-full h-full object-cover object-top"
                     />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#111827] via-[#111827]/60 to-transparent"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-[#111827]/80 to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-t from-[#111827] via-[#111827]/60 to-transparent"></div>
+                <div className="absolute inset-0 bg-linear-to-r from-[#111827]/80 to-transparent"></div>
 
                 <div className="absolute top-6 left-6 z-40">
                     <button 
@@ -130,12 +130,12 @@ function TopicDetail() {
                 <div className="absolute inset-0 z-30 pointer-events-none p-6 md:p-12 xl:p-16 flex items-end">
                     <div className="max-w-3xl">
                         <div className="flex items-center gap-3 mb-3">
-                            <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${collectionData.gradient} flex items-center justify-center text-white text-lg shadow-lg`}>
+                            <div className={`w-10 h-10 rounded-xl bg-linear-to-br ${collectionData.gradient} flex items-center justify-center text-white text-lg shadow-lg`}>
                                 {collectionData.icon}
                             </div>
                             <span className="text-xs font-bold uppercase tracking-widest text-slate-400">Bộ sưu tập</span>
                         </div>
-                        <h1 className={`text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r ${collectionData.gradient} text-transparent bg-clip-text mb-2`}>
+                        <h1 className={`text-3xl md:text-4xl lg:text-5xl font-black bg-linear-to-r ${collectionData.gradient} text-transparent bg-clip-text mb-2`}>
                             {collectionData.title}
                         </h1>
                         <p className="text-slate-400 text-sm md:text-base max-w-xl">

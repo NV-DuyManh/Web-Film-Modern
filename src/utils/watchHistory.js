@@ -9,21 +9,6 @@ export function formatTime(totalSeconds) {
     return `${pad(h)}:${pad(m)}:${pad(sec)}`;
 }
 
-/**
- * Cấu trúc mới:
- * {
- *   [movieId]: {
- *     latestEpisodeId: "ep1",
- *     latestEpisodeNumber: 1,
- *     updatedAt: 123456,
- *     episodes: {
- *       "ep1": 180,  // số giây
- *       "ep2": 50
- *     }
- *   }
- * }
- */
-
 export function saveResume(movieId, { episodeId, episodeNumber, seconds }) {
     if (!movieId || !episodeId || seconds <= 0) return;
     try {

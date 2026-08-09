@@ -1,4 +1,4 @@
-﻿import React, { useContext, useState, useMemo, useRef, useEffect } from 'react';
+import React, { useContext, useState, useMemo, useRef, useEffect } from 'react';
 import { useShowTimes, useMovies } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
 import { getOptimizedUrl } from '../../../utils/cloudinary';
@@ -173,7 +173,7 @@ function Showtimes() {
                                     }
                                     setSelectedDate(date);
                                 }}
-                                className={`group flex-shrink-0 w-[calc(100%/3)] sm:w-[calc(100%/4)] md:w-[calc(100%/5)] lg:w-[calc(100%/7)] py-3 px-4 flex flex-col items-start justify-center border-t-2 border-r border-white/5 transition-all
+                                className={`group shrink-0 w-[calc(100%/3)] sm:w-[25%] md:w-[20%] lg:w-[calc(100%/7)] py-3 px-4 flex flex-col items-start justify-center border-t-2 border-r border-white/5 transition-all
                                     ${isSelected 
                                         ? 'border-t-amber-500 bg-[#2b2f3a] shadow-inner' 
                                         : 'border-t-transparent bg-[#1e232e] hover:bg-[#252a36]'
@@ -201,7 +201,7 @@ function Showtimes() {
                 </div>
             </div>
 
-            <div className="relative min-h-[400px]">
+            <div className="relative min-h-100">
                 {Object.keys(groupedShowtimes).length === 0 ? (
                     <div className="flex flex-col items-center justify-center pt-20 pb-32">
                         <div className="w-24 h-24 bg-slate-800/50 rounded-full flex items-center justify-center mb-4">
@@ -224,7 +224,7 @@ function Showtimes() {
                                     className="flex gap-4 bg-[#2b2f3a] hover:bg-[#383d4a] transition-colors duration-300 rounded-xl p-3 items-center group cursor-pointer border border-transparent hover:border-white/5"
                                 >
                                     
-                                    <div className="w-16 h-24 sm:w-16 sm:h-24 md:w-20 md:h-28 flex-shrink-0 rounded-lg overflow-hidden bg-[#1f222a] shadow-md">
+                                    <div className="w-16 h-24 sm:w-16 sm:h-24 md:w-20 md:h-28 shrink-0 rounded-lg overflow-hidden bg-[#1f222a] shadow-md">
                                         <img 
                                             src={movie.imgUrl || movie.posterUrl || movie.thumbUrl} 
                                             alt={movie.name}
@@ -257,7 +257,7 @@ function Showtimes() {
                                                     
                                                     <div className="flex items-center justify-center gap-1 px-2.5 py-1 bg-linear-to-r from-blue-500 to-cyan-400 rounded-full shadow-[0_2px_10px_rgba(6,182,212,0.3)] group-hover/time:shadow-[0_0_15px_rgba(6,182,212,0.6)] transition-shadow border border-white/10">
                                                         <MdAccessTime className="text-white text-[11px]" />
-                                                        <span className="text-[10px] leading-none font-bold text-white drop-shadow-sm whitespace-nowrap mt-[1px]">
+                                                        <span className="text-[10px] leading-none font-bold text-white drop-shadow-sm whitespace-nowrap mt-px">
                                                             {formatTimeOnly(st.time)}
                                                         </span>
                                                     </div>
@@ -265,7 +265,7 @@ function Showtimes() {
                                                     {st.roomName && (
                                                         <div className="flex items-center justify-center gap-1 px-2.5 py-1 bg-linear-to-r from-orange-500 to-red-500 rounded-full shadow-[0_2px_10px_rgba(245,158,11,0.3)] group-hover/time:shadow-[0_0_15px_rgba(245,158,11,0.6)] transition-shadow border border-white/10">
                                                             <MdRoom className="text-white text-[11px]" />
-                                                            <span className="text-[10px] leading-none font-bold text-white uppercase drop-shadow-sm whitespace-nowrap mt-[1px]">
+                                                            <span className="text-[10px] leading-none font-bold text-white uppercase drop-shadow-sm whitespace-nowrap mt-px">
                                                                 {st.roomName}
                                                             </span>
                                                         </div>
