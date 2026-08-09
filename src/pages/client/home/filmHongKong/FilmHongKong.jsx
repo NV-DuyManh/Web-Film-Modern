@@ -28,7 +28,7 @@ function FilmHongKong() {
             </div>
 
             <div className="movie-slider-wrapper relative group/slider">
-                <button className="movie-nav-btn movie-nav-btn--prev hk-prev-btn" draggable="false">
+                <button aria-label="Previous" className="movie-nav-btn movie-nav-btn--prev hk-prev-btn" draggable="false">
                     <FaChevronLeft />
                 </button>
 
@@ -140,7 +140,7 @@ function FilmHongKong() {
                     ))}
                 </Swiper>
 
-                <button className="movie-nav-btn movie-nav-btn--next hk-next-btn" draggable="false">
+                <button aria-label="Next" className="movie-nav-btn movie-nav-btn--next hk-next-btn" draggable="false">
                     <FaChevronRight />
                 </button>
             </div>

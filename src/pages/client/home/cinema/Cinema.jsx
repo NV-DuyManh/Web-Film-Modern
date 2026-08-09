@@ -26,7 +26,7 @@ function Cinema() {
             </div>
 
             <div className="movie-slider-wrapper relative group/slider">
-                <button className="movie-nav-btn movie-nav-btn--prev cinema-prev-btn" draggable="false">
+                <button aria-label="Previous" className="movie-nav-btn movie-nav-btn--prev cinema-prev-btn" draggable="false">
                     <FaChevronLeft />
                 </button>
 
@@ -131,7 +131,7 @@ function Cinema() {
                     ))}
                 </Swiper>
 
-                <button className="movie-nav-btn movie-nav-btn--next cinema-next-btn" draggable="false">
+                <button aria-label="Next" className="movie-nav-btn movie-nav-btn--next cinema-next-btn" draggable="false">
                     <FaChevronRight />
                 </button>
             </div>

@@ -29,7 +29,7 @@ function FilmNew(props) {
             </div>
 
             <div className="movie-slider-wrapper relative group/slider">
-                <button className="movie-nav-btn movie-nav-btn--prev filmnew-prev-btn" draggable="false">
+                <button aria-label="Previous" className="movie-nav-btn movie-nav-btn--prev filmnew-prev-btn" draggable="false">
                     <FaChevronLeft />
                 </button>
 
@@ -148,7 +148,7 @@ function FilmNew(props) {
                     ))}
                 </Swiper>
 
-                <button className="movie-nav-btn movie-nav-btn--next filmnew-next-btn" draggable="false">
+                <button aria-label="Next" className="movie-nav-btn movie-nav-btn--next filmnew-next-btn" draggable="false">
                     <FaChevronRight />
                 </button>
             </div>

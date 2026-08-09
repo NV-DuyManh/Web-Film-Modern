@@ -145,14 +145,14 @@ function Banner() {
                             </p>
 
                             <div className='mt-4 lg:mb-20 sm:mt-6 lg:-translate-y-2 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
-                                <button onClick={() => navigate(`/xem-phim/${e.slug || e.id}`)} className='group relative flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-300 to-yellow-500 text-lg sm:text-xl text-slate-900 shadow-[0_0_20px_rgba(251,191,36,0.4)] transition-all duration-500 hover:-translate-y-1 hover:scale-110 hover:shadow-[0_0_40px_rgba(251,191,36,0.6)] active:scale-95 cursor-pointer'>
+                                <button aria-label="Xem phim" onClick={() => navigate(`/xem-phim/${e.slug || e.id}`)} className='group relative flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-300 to-yellow-500 text-lg sm:text-xl text-slate-900 shadow-[0_0_20px_rgba(251,191,36,0.4)] transition-all duration-500 hover:-translate-y-1 hover:scale-110 hover:shadow-[0_0_40px_rgba(251,191,36,0.6)] active:scale-95 cursor-pointer'>
                                     <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                     <div className="absolute inset-0 rounded-full animate-ping opacity-0 group-hover:opacity-30 bg-amber-400"></div>
                                     <FaPlay className='ml-1 relative z-10 transition-transform duration-500 group-hover:scale-125 group-hover:drop-shadow-md' />
                                 </button>
 
                                 <div className='flex h-9 sm:h-11 lg:h-12 overflow-hidden rounded-full border border-white/20 bg-slate-900/80 backdrop-blur-xl shadow-lg'>
-                                    <button onClick={(event) => handleFavorite(event, e.id)} className={`group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg transition-all duration-300 hover:bg-pink-500 hover:text-white active:scale-95 cursor-pointer ${(isLogin?.listFavorite || []).includes(e.id) ? 'bg-pink-600 text-white shadow-[inset_0_0_10px_rgba(0,0,0,0.2)]' : 'text-slate-400'}`}>
+                                    <button aria-label={(isLogin?.listFavorite || []).includes(e.id) ? "Bỏ yêu thích" : "Yêu thích"} onClick={(event) => handleFavorite(event, e.id)} className={`group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg transition-all duration-300 hover:bg-pink-500 hover:text-white active:scale-95 cursor-pointer ${(isLogin?.listFavorite || []).includes(e.id) ? 'bg-pink-600 text-white shadow-[inset_0_0_10px_rgba(0,0,0,0.2)]' : 'text-slate-400'}`}>
                                         {(isLogin?.listFavorite || []).includes(e.id) ? (
                                             <FaHeart className='transition-all duration-300' />
                                         ) : (
@@ -162,7 +162,7 @@ function Banner() {
 
                                     <div className='h-full w-px bg-white/20'></div>
 
-                                    <button onClick={() => navigate(`/phim/${e.slug || e.id}`)} className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-cyan-400 transition-all duration-300 hover:bg-cyan-500 hover:text-white active:scale-95 cursor-pointer'>
+                                    <button aria-label="Thông tin chi tiết" onClick={() => navigate(`/phim/${e.slug || e.id}`)} className='group flex h-full w-10 sm:w-14 items-center justify-center text-base sm:text-lg text-cyan-400 transition-all duration-300 hover:bg-cyan-500 hover:text-white active:scale-95 cursor-pointer'>
                                         <FaInfoCircle className='transition-all duration-300 group-hover:scale-125 group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]' />
                                     </button>
                                 </div>

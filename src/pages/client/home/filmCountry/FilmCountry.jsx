@@ -1,4 +1,4 @@
-﻿import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
@@ -39,7 +39,7 @@ function FilmCountry({ title, countryName, titleClass }) {
 
             <div className="country-slider flex-1 min-w-0">
                 <div className="movie-slider-wrapper relative group/slider">
-                    <button className={`movie-nav-btn movie-nav-btn--prev ${prevBtnClass}`} draggable="false">
+                    <button aria-label="Previous" className={`movie-nav-btn movie-nav-btn--prev ${prevBtnClass}`} draggable="false">
                         <FaChevronLeft />
                     </button>
 
@@ -141,7 +141,7 @@ function FilmCountry({ title, countryName, titleClass }) {
                         ))}
                     </Swiper>
 
-                    <button className={`movie-nav-btn movie-nav-btn--next ${nextBtnClass}`} draggable="false">
+                    <button aria-label="Next" className={`movie-nav-btn movie-nav-btn--next ${nextBtnClass}`} draggable="false">
                         <FaChevronRight />
                     </button>
                 </div>
