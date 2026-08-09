@@ -1,4 +1,4 @@
-﻿import React, { useContext } from 'react';
+import React, { useContext } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { FaChevronRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -28,20 +28,26 @@ function CategoriesFilm() {
             </h1>
 
             <div className="grid grid-cols-2 gap-4 pb-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                {validCategories.slice(0, 6).map((e, index) => (
-                    <Link
-                        key={e.id}
-                        to={`/category/${e.id}`}
-                        className={`group flex h-20 sm:h-24 md:h-28 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl bg-linear-to-br px-3 sm:px-4 md:px-5 transition-all duration-300 hover:-translate-y-2 ${categoryStyles[index % categoryStyles.length]}`}
-                    >
-                        <div className='rounded-full bg-white/25 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
-                        <h2 className='text-lg md:text-xl font-black whitespace-nowrap truncate text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]'>{e.name}</h2>
-                        <div className='mt-1.5 md:mt-2 flex items-center justify-center gap-1.5 text-xs md:text-sm font-semibold whitespace-nowrap text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'>
-                            <p>Xem thể loại</p>
-                            <FaChevronRight className='transition-all duration-300 group-hover:translate-x-1' />
-                        </div>
-                    </Link>
-                ))}
+                {validCategories.length > 0 ? (
+                    validCategories.slice(0, 6).map((e, index) => (
+                        <Link
+                            key={e.id}
+                            to={`/category/${e.id}`}
+                            className={`group flex h-20 sm:h-24 md:h-28 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl bg-linear-to-br px-3 sm:px-4 md:px-5 transition-all duration-300 hover:-translate-y-2 ${categoryStyles[index % categoryStyles.length]}`}
+                        >
+                            <div className='rounded-full bg-white/25 blur-2xl transition-all duration-300 group-hover:scale-150'></div>
+                            <h2 className='text-lg md:text-xl font-black whitespace-nowrap truncate text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]'>{e.name}</h2>
+                            <div className='mt-1.5 md:mt-2 flex items-center justify-center gap-1.5 text-xs md:text-sm font-semibold whitespace-nowrap text-white/95 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)]'>
+                                <p>Xem thể loại</p>
+                                <FaChevronRight className='transition-all duration-300 group-hover:translate-x-1' />
+                            </div>
+                        </Link>
+                    ))
+                ) : (
+                    Array.from({ length: 6 }).map((_, i) => (
+                        <div key={i} className="h-20 sm:h-24 md:h-28 rounded-xl bg-white/5 animate-pulse"></div>
+                    ))
+                )}
             </div>
         </div>
     );
