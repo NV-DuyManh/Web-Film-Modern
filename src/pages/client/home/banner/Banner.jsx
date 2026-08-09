@@ -84,7 +84,7 @@ function Banner() {
                 modules={[FreeMode, Navigation, Thumbs, EffectFade]}
                 className="mySwiper2"
             >
-                {hotMovies.map((e) => (
+                {hotMovies.map((e, index) => (
                         <SwiperSlide key={e.id}>
                         <img
                             className="banner-img"
@@ -93,8 +93,8 @@ function Banner() {
                             draggable="false"
                             width={1920}
                             height={1080}
-                            loading="eager"
-                            fetchPriority="high"
+                            loading={index === 0 ? "eager" : "lazy"}
+                            fetchPriority={index === 0 ? "high" : "auto"}
                             decoding="async"
                         />
 
