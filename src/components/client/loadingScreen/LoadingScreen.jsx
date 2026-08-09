@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import Logo from '../../../assets/Icon.png';
@@ -39,8 +39,9 @@ function LoadingScreen({ onFinished }) {
     const movies = useMovies();
     const categories = useContext(CategoryContext);
 
-    const particles = useMemo(() => generateParticles(35), []);
-    const filmStrips = useMemo(() => generateFilmStrips(6), []);
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const particles = useMemo(() => generateParticles(isMobile ? 10 : 35), [isMobile]);
+    const filmStrips = useMemo(() => generateFilmStrips(isMobile ? 2 : 6), [isMobile]);
 
     const isDataReady = movies?.length > 0 && categories?.length > 0;
 
@@ -138,6 +139,8 @@ function LoadingScreen({ onFinished }) {
                     alt="MFilm Logo"
                     className="loading-logo"
                     draggable="false"
+                    loading="eager"
+                    fetchPriority="high"
                 />
             </div>
 

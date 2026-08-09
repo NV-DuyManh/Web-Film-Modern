@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef, useEffect } from 'react';
+import React, { useContext, useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { useSubscriptions } from '../../../hooks/useCollections';
 import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown, FaChevronDown, FaFilm } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
@@ -8,8 +8,9 @@ import SearchHeader from './SearchHeader';
 import { LISTCLIENT } from '../../../utils/Constants';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Logo2 from '../../../assets/Logo2.png';
-import LogIn from '../../../pages/client/auth/LogIn';
-import Register from '../../../pages/client/auth/Register';
+
+const LogIn = lazy(() => import('../../../pages/client/auth/LogIn'));
+const Register = lazy(() => import('../../../pages/client/auth/Register'));
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
@@ -292,9 +293,12 @@ function HeaderClient() {
             </div>
 
 
-            <LogIn openLogin={openLogin} handleCloseLogin={handleCloseLogin} handleOpenRegister={handleOpenRegister} />
-            <Register openRegister={openRegister} handleCloseRegister={handleCloseRegister} handleOpenLogin={handleOpenLogin} />
-
+            {(openLogin || openRegister) && (
+                <Suspense fallback={null}>
+                    {openLogin && <LogIn openLogin={openLogin} handleCloseLogin={handleCloseLogin} handleOpenRegister={handleOpenRegister} />}
+                    {openRegister && <Register openRegister={openRegister} handleCloseRegister={handleCloseRegister} handleOpenLogin={handleOpenLogin} />}
+                </Suspense>
+            )}
         </div>
     );
 }
