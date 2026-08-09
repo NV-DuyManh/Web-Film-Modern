@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../../../../../utils/cloudinary';
+﻿import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useState } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate } from 'react-router-dom';

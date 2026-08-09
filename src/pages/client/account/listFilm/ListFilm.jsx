@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../../../../../utils/cloudinary';
+﻿import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useState, useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { FaLayerGroup, FaSearch, FaTh, FaList, FaPlus, FaPen, FaPlay, FaTrash, FaStar, FaFilm, FaArrowLeft, FaImage, FaCloudUploadAlt, FaLink, FaTimes } from 'react-icons/fa';

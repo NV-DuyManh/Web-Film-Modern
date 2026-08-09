@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../../../../../utils/cloudinary';
+﻿import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo } from 'react';
 import { useComments, useMovies } from '../../../../hooks/useCollections';
 import { FaHeart, FaBolt, FaMinus } from 'react-icons/fa';
