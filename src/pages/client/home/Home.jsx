@@ -1,10 +1,10 @@
 import React, { lazy } from 'react';
 import Banner from './banner/Banner';
+import CategoriesFilm from './categoriesFilm/CategoriesFilm';
+import FilmNew from './filmNew/FilmNew';
 import SEO from '../../../components/SEO';
 import LazySection from '../../../components/LazySection';
 
-const CategoriesFilm = lazy(() => import('./categoriesFilm/CategoriesFilm'));
-const FilmNew = lazy(() => import('./filmNew/FilmNew'));
 const FilmCountry = lazy(() => import('./filmCountry/FilmCountry'));
 const TopFilm = lazy(() => import('./topFilm/TopFilm'));
 const Cinema = lazy(() => import('./cinema/Cinema'));
@@ -22,12 +22,8 @@ function Home(props) {
                 url="/"
             />
             <Banner />
-            <LazySection minHeight="120px" rootMargin="100px">
-                <CategoriesFilm />
-            </LazySection>
-            <LazySection minHeight="400px" rootMargin="200px">
-                <FilmNew />
-            </LazySection>
+            <CategoriesFilm />
+            <FilmNew />
             <LazySection minHeight="900px">
                 <div className="bg-[#111827] px-6 md:px-10 py-3">
                     <div className="rounded-xl border border-white/10 shadow-[0_0_30px_rgba(96,165,250,0.06)]">
