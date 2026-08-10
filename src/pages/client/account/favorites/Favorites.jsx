@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useState, useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { FaFilm, FaSearch, FaTh, FaList, FaPlay, FaHeart, FaTrash } from 'react-icons/fa';
@@ -78,40 +78,41 @@ function Favorites(props) {
 
             {favorites.length > 0 && (
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full mb-2">
-                    <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:flex-1">
-                        <div className="relative group w-full md:max-w-md lg:max-w-lg">
-                            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                                <FaSearch className="text-slate-400 group-hover:text-green-500 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.8)] group-focus-within:text-[#ff00ff] group-focus-within:drop-shadow-[0_0_8px_#ff00ff] group-focus-within:scale-[1.15] transition-all duration-300" />
-                            </div>
-                            <input
-                                type="text"
-                                placeholder="Tìm trong yêu thích..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-transparent text-white text-sm rounded-xl py-2.5 pl-10 pr-4 focus:outline-none placeholder:text-slate-500 relative border border-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.6),inset_0_0_5px_rgba(0,242,254,0.2)] hover:border-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.8),inset_0_0_5px_rgba(34,197,94,0.3)] focus:border-[#ff00ff] focus:shadow-[0_0_25px_rgba(255,0,255,0.9),inset_0_0_10px_rgba(255,0,255,0.4)] transition-all duration-300"
-                            />
+                    <div className="relative group w-full md:max-w-md lg:max-w-lg md:flex-1">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+                            <FaSearch className="text-slate-400 group-hover:text-green-500 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.8)] group-focus-within:text-[#ff00ff] group-focus-within:drop-shadow-[0_0_8px_#ff00ff] group-focus-within:scale-[1.15] transition-all duration-300" />
                         </div>
-                        <div className="premium-border-box flex w-full sm:w-auto justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group">
+                        <input
+                            type="text"
+                            placeholder="Tìm trong yêu thích..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full bg-transparent text-white text-sm rounded-xl py-2.5 pl-10 pr-4 focus:outline-none placeholder:text-slate-500 relative border border-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.6),inset_0_0_5px_rgba(0,242,254,0.2)] hover:border-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.8),inset_0_0_5px_rgba(34,197,94,0.3)] focus:border-[#ff00ff] focus:shadow-[0_0_25px_rgba(255,0,255,0.9),inset_0_0_10px_rgba(255,0,255,0.4)] transition-all duration-300"
+                        />
+                    </div>
+
+                    <div className="flex flex-row items-center justify-between sm:justify-end gap-3 w-full md:w-auto shrink-0">
+                        <div className="premium-border-box flex flex-1 sm:flex-none justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group h-[42px]">
                             <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">Số lượng</span>
                             <div className="flex items-center justify-center bg-yellow-500/10 border border-yellow-500/20 px-3 py-0.5 rounded-lg group-hover:bg-yellow-500/20 group-hover:border-yellow-500/40 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.3)] transition-all duration-300">
                                 <span className="text-yellow-400 font-black text-sm">{favorites.length}</span>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md w-full md:w-auto justify-center md:justify-start shrink-0">
-                        <button
-                            onClick={() => setViewMode('grid')}
-                            className={`p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'grid' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 shadow-[0_0_15px_rgba(250,204,21,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
-                        >
-                            <FaTh size={20} />
-                        </button>
-                        <button
-                            onClick={() => setViewMode('list')}
-                            className={`p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'list' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 shadow-[0_0_15px_rgba(250,204,21,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
-                        >
-                            <FaList size={20} />
-                        </button>
+                        <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md shrink-0 h-[42px]">
+                            <button
+                                onClick={() => setViewMode('grid')}
+                                className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'grid' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 shadow-[0_0_15px_rgba(250,204,21,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
+                            >
+                                <FaTh size={18} />
+                            </button>
+                            <button
+                                onClick={() => setViewMode('list')}
+                                className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'list' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 shadow-[0_0_15px_rgba(250,204,21,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
+                            >
+                                <FaList size={18} />
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

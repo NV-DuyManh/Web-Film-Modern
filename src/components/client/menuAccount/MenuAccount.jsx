@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { LISTACCOUNT } from '../../../utils/Constants';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaChevronDown } from 'react-icons/fa';
 import NoelBackground from '../../admin/noelBackground/NoelBackground';
 import Profile from '../../../pages/client/account/profile/Profile';
 import Favorites from '../../../pages/client/account/favorites/Favorites';
@@ -23,6 +23,21 @@ function MenuAccount() {
             navigate('/account/account', { replace: true });
         }
     }, [tab, navigate]);
+
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const mobileMenuRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+                setIsMobileMenuOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     const renderContent = () => {
         switch (activeTab) {
@@ -54,7 +69,43 @@ function MenuAccount() {
             </div>
 
             <div className="w-full flex flex-col md:flex-row gap-4 relative z-10 flex-1">
-                <div className="w-full md:w-64 shrink-0 flex flex-col gap-3 md:min-h-[calc(100vh-120px)]">
+                {/* --- MOBILE DROPDOWN MENU --- */}
+                <div ref={mobileMenuRef} className="md:hidden w-full relative mb-1 z-50">
+                    <button 
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        className="w-full px-5 py-3.5 bg-slate-800/90 backdrop-blur-md border border-slate-600 rounded-xl flex items-center justify-between text-white font-bold shadow-lg"
+                    >
+                        <div className="flex items-center gap-3 text-cyan-400">
+                            {activeItem.icon}
+                            <span className="text-white">{activeItem.name}</span>
+                        </div>
+                        <FaChevronDown className={`text-slate-400 transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    
+                    {isMobileMenuOpen && (
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-slate-800/95 backdrop-blur-xl border border-slate-600 rounded-xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 flex flex-col animate-fade-in">
+                            {LISTACCOUNT.map((item, index) => (
+                                <Link
+                                    key={index}
+                                    to={item.path}
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                    className={`flex items-center gap-4 w-full px-5 py-4 transition-all duration-300 border-b border-slate-700/50 last:border-b-0 ${activeTab === item.name
+                                            ? 'bg-cyan-500/20 text-cyan-400'
+                                            : 'text-slate-300 hover:bg-slate-700/50 hover:text-cyan-400'
+                                        }`}
+                                >
+                                    <div className="text-xl">
+                                        {item.icon}
+                                    </div>
+                                    <span className="font-semibold">{item.name}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </div>
+
+                {/* --- DESKTOP VERTICAL MENU --- */}
+                <div className="hidden md:flex w-64 shrink-0 flex-col gap-3 min-h-[calc(100vh-120px)]">
                     <div className="p-5 bg-linear-to-r from-yellow-500/20 via-[#1e293b]/80 to-[#1e293b]/50 backdrop-blur-md rounded-xl border-l-4 border-yellow/5 border-y border-r border-white/5 shadow-lg mb-4 flex items-center justify-center relative overflow-hidden">
                         <div className="absolute inset-0 bg-yellow-500/5 opacity-0 hover:opacity-100 transition-opacity duration-300"></div>
                         <h2 className="text-white text-lg font-black tracking-wide flex items-center gap-3 relative z-10">

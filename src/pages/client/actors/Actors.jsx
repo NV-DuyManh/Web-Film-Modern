@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import { FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
@@ -75,22 +75,23 @@ function Actors() {
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-6 md:gap-x-6 md:gap-y-8 mb-10 min-h-[50vh]">
                             {currentActors.map((actor) => (
-                                <div key={actor.id} className="group flex flex-col cursor-pointer">
-                                    <div className="relative rounded-2xl overflow-hidden aspect-4/5 md:aspect-3/4 border-2 border-transparent group-hover:border-pink-500/80 transition-all duration-300 group-hover:shadow-[0_12px_30px_rgba(236,72,153,0.25)] group-hover:-translate-y-2">
-                                        <img 
-                                            src={(!actor.imgUrl || actor.imgUrl.includes('Logo')) ? getDefaultAvatar(actor.sexID) : actor.imgUrl} 
-                                            alt={actor.name} 
-                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                                            loading="lazy"
-                                            onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(actor.sexID); }}
-                                        />
-                                        <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0f] via-[#0a0a0f]/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                        
-                                        <div className="absolute bottom-0 left-0 w-full p-4 flex flex-col items-center justify-end z-10 translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-                                            <h3 className="text-white font-bold text-sm md:text-lg text-center line-clamp-1 group-hover:text-pink-400 transition-colors drop-shadow-md">
-                                                {actor.name}
-                                            </h3>
+                                <div key={actor.id} className="group cursor-pointer flex flex-col">
+                                    <div className="relative mb-2 w-full">
+                                        <div className="relative w-full aspect-4/5 md:aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-pink-500 group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(236,72,153,0.4)]">
+                                            <img 
+                                                src={(!actor.imgUrl || actor.imgUrl.includes('Logo')) ? getDefaultAvatar(actor.sexID) : actor.imgUrl} 
+                                                alt={actor.name} 
+                                                className="w-full h-full object-cover" 
+                                                loading="lazy"
+                                                onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(actor.sexID); }}
+                                            />
+                                            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
                                         </div>
+                                    </div>
+                                    <div className="pt-2 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
+                                        <h3 className="text-white font-bold text-sm md:text-lg truncate w-full transition-colors group-hover:text-pink-400">
+                                            {actor.name}
+                                        </h3>
                                     </div>
                                 </div>
                             ))}

@@ -1,14 +1,14 @@
-﻿import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useState, useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { FaLayerGroup, FaSearch, FaTh, FaList, FaPlus, FaPen, FaPlay, FaTrash, FaStar, FaFilm, FaArrowLeft, FaImage, FaCloudUploadAlt, FaLink, FaTimes } from 'react-icons/fa';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
-import Swal from 'sweetalert2';
 import { Link, useSearchParams } from 'react-router-dom';
 import Logo6 from '../../../../assets/Logo6.png';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
-import ModalDelete from '../ModalDelete';
+import ModalDeleteListFilm from './ModalDeleteListFilm';
+import ModalListFilm from './ModalListFilm';
 
 function ListFilm(props) {
     const [viewMode, setViewMode] = useState('grid');
@@ -39,112 +39,43 @@ function ListFilm(props) {
         return userLists.filter(list => searchTV(list.name || '').includes(lowerQuery));
     }, [userLists, searchQuery]);
 
-    const handleAddList = async () => {
-        if (!isLogin) {
-            Swal.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để tạo danh sách', 'warning');
-            return;
-        }
+    const [inputModal, setInputModal] = useState({ isOpen: false, mode: 'create', listId: null, defaultValue: '' });
 
-        if (userLists.length >= 10) {
-            Swal.fire('Giới hạn danh sách', 'Bạn chỉ có thể tạo tối đa 10 danh sách. Vui lòng xóa bớt để tạo mới.', 'warning');
-            return;
-        }
+    const handleAddList = () => {
+        if (!isLogin) return;
+        if (userLists.length >= 10) return;
+        setInputModal({ isOpen: false, mode: 'create', listId: null, defaultValue: '' });
+        setTimeout(() => setInputModal({ isOpen: true, mode: 'create', listId: null, defaultValue: '' }), 10);
+    };
 
-        const { value: listName } = await Swal.fire({
-            title: 'Tạo danh sách mới',
-            input: 'text',
-            inputPlaceholder: 'Nhập tên danh sách (VD: Phim ma, Hành động...)',
-            showCancelButton: true,
-            confirmButtonText: 'Tạo ngay',
-            cancelButtonText: 'Hủy bỏ',
-            background: 'rgba(15, 23, 42, 0.9)',
-            color: '#fff',
-            backdrop: 'rgba(0,0,10,0.6) backdrop-blur-sm',
-            buttonsStyling: false,
-            scrollbarPadding: false,
-            customClass: {
-                popup: 'border border-cyan-500/30 shadow-[0_0_30px_rgba(0,242,254,0.3)] rounded-2xl !pb-6',
-                title: 'text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] !pt-6 !pb-2',
-                input: '!bg-slate-800/80 !border-slate-600 focus:!border-cyan-400 focus:!ring-1 focus:!ring-cyan-400 !text-white !rounded-xl !shadow-inner !px-4 !py-3 !mt-4 !w-[90%] !mx-auto',
-                actions: 'gap-4 mt-6',
-                confirmButton: 'bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-bold rounded-xl px-8 py-2.5 shadow-[0_0_15px_rgba(34,211,238,0.4)] hover:shadow-[0_0_25px_rgba(34,211,238,0.6)] transition-all duration-300',
-                cancelButton: 'bg-slate-700/80 hover:bg-red-500/80 text-white font-bold rounded-xl px-6 py-2.5 transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.5)]'
-            },
-            inputValidator: (value) => {
-                if (!value) {
-                    return 'Bạn cần nhập tên danh sách!';
-                }
-            }
-        });
-
-        if (listName) {
-            try {
+    const handleConfirmInput = async (value) => {
+        if (!isLogin) return;
+        try {
+            if (inputModal.mode === 'create') {
                 const newList = {
                     id: Date.now().toString(),
-                    name: listName,
+                    name: value,
                     movies: [],
                     createdAt: new Date().toISOString()
                 };
                 const updatedLists = [...userLists, newList];
                 await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
-                // Removed annoying success notification as requested
-
-            } catch (error) {
-                console.error("Error creating list", error);
-                Swal.fire('Lỗi', 'Không thể tạo danh sách', 'error');
+            } else if (inputModal.mode === 'edit') {
+                const updatedLists = userLists.map(list =>
+                    list.id === inputModal.listId ? { ...list, name: value } : list
+                );
+                await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
             }
+            setInputModal({ isOpen: false, mode: 'create', listId: null, defaultValue: '' });
+        } catch (error) {
+            console.error("Error saving list", error);
         }
     };
 
-    const handleEditList = async (listId, currentName) => {
+    const handleEditList = (listId, currentName) => {
         if (!isLogin) return;
-
-        const { value: newName } = await Swal.fire({
-            title: 'Đổi tên danh sách',
-            input: 'text',
-            inputValue: currentName,
-            showCancelButton: true,
-            confirmButtonText: 'Lưu thay đổi',
-            cancelButtonText: 'Hủy bỏ',
-            background: 'rgba(15, 23, 42, 0.9)',
-            color: '#fff',
-            backdrop: 'rgba(0,0,10,0.6) backdrop-blur-sm',
-            buttonsStyling: false,
-            scrollbarPadding: false,
-            customClass: {
-                popup: 'border border-cyan-500/30 shadow-[0_0_30px_rgba(0,242,254,0.3)] rounded-2xl !pb-6',
-                title: 'text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-blue-500 drop-shadow-[0_0_8px_rgba(34,211,238,0.5)] !pt-6 !pb-2',
-                input: '!bg-slate-800/80 !border-slate-600 focus:!border-cyan-400 focus:!ring-1 focus:!ring-cyan-400 !text-white !rounded-xl !shadow-inner !px-4 !py-3 !mt-4 !w-[90%] !mx-auto',
-                actions: 'gap-4 mt-6',
-                confirmButton: 'bg-linear-to-r from-cyan-500 to-blue-500 hover:from-cyan-400 hover:to-blue-400 text-white font-bold rounded-xl px-8 py-2.5 shadow-[0_0_15px_rgba(34,211,238,0.4)] hover:shadow-[0_0_25px_rgba(34,211,238,0.6)] transition-all duration-300',
-                cancelButton: 'bg-slate-700/80 hover:bg-red-500/80 text-white font-bold rounded-xl px-6 py-2.5 transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.5)]'
-            },
-            inputValidator: (value) => {
-                if (!value) {
-                    return 'Bạn cần nhập tên danh sách!';
-                }
-            }
-        });
-
-        if (newName && newName !== currentName) {
-            try {
-                const updatedLists = userLists.map(list =>
-                    list.id === listId ? { ...list, name: newName } : list
-                );
-                await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
-                Swal.fire({
-                    title: 'Thành công',
-                    text: 'Đã đổi tên danh sách',
-                    icon: 'success',
-                    background: '#1e293b',
-                    color: '#fff',
-                    timer: 1500,
-                    showConfirmButton: false
-                });
-            } catch (error) {
-                console.error("Error editing list", error);
-            }
-        }
+        setInputModal({ isOpen: false, mode: 'edit', listId, defaultValue: currentName });
+        setTimeout(() => setInputModal({ isOpen: true, mode: 'edit', listId, defaultValue: currentName }), 10);
     };
 
     const openAvatarModal = (listId, currentAvatar) => {
@@ -168,25 +99,14 @@ function ListFilm(props) {
 
     const handleSaveAvatar = async () => {
         if (!isLogin || !avatarModalState.listId) return;
-
         try {
             const updatedLists = userLists.map(list =>
                 list.id === avatarModalState.listId ? { ...list, avatar: avatarModalState.imgUrl } : list
             );
             await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
-            Swal.fire({
-                title: 'Thành công',
-                text: 'Đã cập nhật ảnh bìa danh sách',
-                icon: 'success',
-                background: '#1e293b',
-                color: '#fff',
-                timer: 1500,
-                showConfirmButton: false
-            });
             closeAvatarModal();
         } catch (error) {
             console.error("Error editing list avatar", error);
-            Swal.fire('Lỗi', 'Không thể lưu ảnh', 'error');
         }
     };
 
@@ -231,7 +151,6 @@ function ListFilm(props) {
                     return list;
                 });
                 await updateDocument("Users", { id: isLogin.id, listFilm: updatedLists });
-                Swal.fire({ title: 'Thành công', text: 'Đã bỏ phim', icon: 'success', timer: 1000, showConfirmButton: false, background: '#1e293b', color: '#fff' });
             }
             setDeleteDialog({ ...deleteDialog, isOpen: false });
         } catch (error) {
@@ -360,9 +279,9 @@ function ListFilm(props) {
                 }
             `}</style>
 
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 w-full mb-2">
-                <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:flex-1">
-                    <div className="relative group w-full md:max-w-md lg:max-w-lg">
+            <div className="flex flex-col lg:flex-row items-center justify-between gap-4 w-full mb-2">
+                <div className="flex flex-row items-center gap-3 w-full lg:flex-1 lg:max-w-2xl">
+                    <div className="relative group flex-1">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
                             <FaSearch className="text-slate-400 group-hover:text-green-500 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.8)] group-focus-within:text-[#ff00ff] group-focus-within:drop-shadow-[0_0_8px_#ff00ff] group-focus-within:scale-[1.15] transition-all duration-300" />
                         </div>
@@ -374,42 +293,48 @@ function ListFilm(props) {
                             className="w-full bg-transparent text-white text-sm rounded-xl py-2.5 pl-10 pr-4 focus:outline-none placeholder:text-slate-500 relative border border-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.6),inset_0_0_5px_rgba(0,242,254,0.2)] hover:border-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.8),inset_0_0_5px_rgba(34,197,94,0.3)] focus:border-[#ff00ff] focus:shadow-[0_0_25px_rgba(255,0,255,0.9),inset_0_0_10px_rgba(255,0,255,0.4)] transition-all duration-300"
                         />
                     </div>
+
                     <button
                         onClick={handleAddList}
-                        className="btn-add w-full sm:w-auto whitespace-nowrap bg-transparent! backdrop-blur-none! shadow-none"
-                        style={{ padding: '0.625rem 1.25rem', fontSize: '0.875rem' }}
+                        className="btn-add whitespace-nowrap bg-transparent! backdrop-blur-none! shadow-none shrink-0 justify-center h-[42px] flex items-center gap-1.5 sm:gap-2"
+                        style={{ padding: '0.625rem 1rem', fontSize: '0.875rem' }}
                     >
-                        Thêm mới
+                        <span className="hidden sm:inline">Thêm mới</span>
+                        <span className="sm:hidden">Thêm</span>
                         <FaPlus className="text-sm" />
                     </button>
-                    <div className="premium-border-box flex w-full sm:w-auto justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group">
-                        <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">Danh sách</span>
-                        <div className="flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-lg group-hover:bg-cyan-500/20 group-hover:border-cyan-500/40 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.3)] transition-all duration-300">
-                            <span className="text-cyan-400 font-black text-sm">{userLists.length} / 10</span>
-                        </div>
-                    </div>
                 </div>
 
+                <div className="flex flex-col sm:flex-row items-center justify-between sm:justify-end gap-3 w-full lg:w-auto shrink-0">
+                    <div className="flex flex-row items-center justify-between w-full sm:w-auto gap-3">
+                        <div className="premium-border-box flex flex-1 sm:flex-none justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group h-[42px]">
+                            <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">Danh sách</span>
+                            <div className="flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-lg group-hover:bg-cyan-500/20 group-hover:border-cyan-500/40 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.3)] transition-all duration-300">
+                                <span className="text-cyan-400 font-black text-sm">{userLists.length} / 10</span>
+                            </div>
+                        </div>
 
-                <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md w-full md:w-auto justify-center md:justify-start">
-                    <button
-                        onClick={() => setViewMode('grid')}
-                        className={`p-2.5 rounded-lg flex items-center justify-center transition-all ${viewMode === 'grid'
-                            ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.3)] scale-105'
-                            : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                            }`}
-                    >
-                        <FaTh size={20} />
-                    </button>
-                    <button
-                        onClick={() => setViewMode('list')}
-                        className={`p-2.5 rounded-lg flex items-center justify-center transition-all ${viewMode === 'list'
-                            ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.3)] scale-105'
-                            : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                            }`}
-                    >
-                        <FaList size={20} />
-                    </button>
+                        <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md shrink-0 h-[42px]">
+                            <button
+                                onClick={() => setViewMode('grid')}
+                                className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'grid'
+                                    ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.3)] scale-105'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <FaTh size={18} />
+                            </button>
+                            <button
+                                onClick={() => setViewMode('list')}
+                                className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'list'
+                                    ? 'bg-yellow-400/20 text-yellow-300 border border-yellow-400 shadow-[0_0_15px_rgba(250,204,21,0.3)] scale-105'
+                                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
+                                    }`}
+                            >
+                                <FaList size={18} />
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -420,7 +345,6 @@ function ListFilm(props) {
                     return viewMode === 'grid' ? (
                         <div key={`grid-${list.id}`} onClick={() => setSelectedListId(list.id)} className="group relative flex flex-col gap-3">
                             <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-[#facc15] hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] aspect-3/4 w-full flex items-center justify-center cursor-pointer">
-
                                 <img src={list.avatar || Logo6} alt={list.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-80 group-hover:opacity-100" />
                                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
 
@@ -567,13 +491,24 @@ function ListFilm(props) {
                     </div>
                 </div>
             )}
-            
-            <ModalDelete
+
+            <ModalDeleteListFilm
                 isOpen={deleteDialog.isOpen}
                 onClose={() => setDeleteDialog({ ...deleteDialog, isOpen: false })}
                 onConfirm={confirmDeleteAction}
                 title={deleteDialog.title}
                 message={deleteDialog.message}
+            />
+
+            <ModalListFilm
+                isOpen={inputModal.isOpen}
+                onClose={() => setInputModal({ ...inputModal, isOpen: false })}
+                onConfirm={handleConfirmInput}
+                title={inputModal.mode === 'create' ? 'Tạo danh sách mới' : 'Đổi tên danh sách'}
+                placeholder="Nhập tên danh sách (VD: Phim ma, Hành động...)"
+                defaultValue={inputModal.defaultValue}
+                confirmText={inputModal.mode === 'create' ? 'Tạo ngay' : 'Lưu thay đổi'}
+                confirmColor={inputModal.mode === 'create' ? 'cyan' : 'yellow'}
             />
         </div>
     );
