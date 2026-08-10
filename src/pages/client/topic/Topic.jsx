@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../utils/cloudinary';
+import { getOptimizedUrl } from '../../../utils/cloudinary';
 import React, { useContext, useMemo } from 'react';
 import { useTopics, useMovies } from '../../../hooks/useCollections';
 import { Link } from 'react-router-dom';
@@ -41,44 +41,73 @@ function CollectionCard({ collection, movies, index }) {
         >
             <Link 
                 to={`/topic/${collection.id}`}
-                className="group block relative rounded-2xl overflow-hidden aspect-4/3 border-[2px] border-white/10 hover:border-[#facc15] hover:shadow-[0_0_20px_rgba(250,204,21,0.3)] transition-all duration-500"
+                className="group block relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#0b0f19] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.6)]"
             >
-                <div className="absolute inset-0 grid grid-cols-2 grid-rows-2">
-                    {previewMovies.map((movie, i) => (
-                        <div key={movie.id || i} className="overflow-hidden">
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br ${collection.gradient} transition-opacity duration-500 z-0`}></div>
+                
+                <div className="absolute inset-[2px] bg-[#0f1523] rounded-[22px] overflow-hidden z-10 flex flex-col justify-end">
+                    
+                    <div className="absolute inset-0 flex items-start justify-center pt-5">
+                        {previewMovies[0] ? (
                             <img 
-                                src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 480, 270, 'thumb')} 
+                                src={getOptimizedUrl(previewMovies[0].bannerUrl || previewMovies[0].imgUrl, 480, 270, 'thumb')} 
                                 alt=""
-                                className="w-full h-full object-cover"
+                                className="absolute w-[90%] h-[70%] object-cover object-center rounded-2xl shadow-2xl transition-all duration-500 opacity-100 group-hover:opacity-0 group-hover:scale-95 group-hover:-translate-y-2 z-50 border border-white/10"
                             />
-                        </div>
-                    ))}
-                    {Array.from({ length: Math.max(0, 4 - previewMovies.length) }).map((_, i) => (
-                        <div key={`empty-${i}`} className="bg-slate-800/80"></div>
-                    ))}
-                </div>
+                        ) : (
+                            <div className="absolute w-[90%] h-[70%] bg-slate-800 rounded-2xl z-50 border border-white/10 transition-all duration-500 opacity-100 group-hover:opacity-0"></div>
+                        )}
+                    </div>
 
+                    <div className="absolute inset-0 flex items-start justify-center pt-5">
+                        {previewMovies[3] && (
+                            <img 
+                                src={getOptimizedUrl(previewMovies[3].imgUrl, 300, 450, 'poster')} 
+                                alt=""
+                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-lg transition-all duration-500 opacity-0 group-hover:opacity-80 group-hover:-translate-x-24 group-hover:-translate-y-1 group-hover:-rotate-[20deg] z-10 border border-white/10"
+                            />
+                        )}
+                        {previewMovies[2] && (
+                            <img 
+                                src={getOptimizedUrl(previewMovies[2].imgUrl, 300, 450, 'poster')} 
+                                alt=""
+                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-lg transition-all duration-500 opacity-0 group-hover:opacity-90 group-hover:-translate-x-10 group-hover:-translate-y-1 group-hover:-rotate-[5deg] group-hover:z-30 z-20 border border-white/10"
+                            />
+                        )}
+                        {previewMovies[1] && (
+                            <img 
+                                src={getOptimizedUrl(previewMovies[1].imgUrl, 300, 450, 'poster')} 
+                                alt=""
+                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-xl transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-10 group-hover:-translate-y-1 group-hover:rotate-[5deg] group-hover:z-40 z-30 border border-white/10"
+                            />
+                        )}
+                        {previewMovies[0] && (
+                            <img 
+                                src={getOptimizedUrl(previewMovies[0].imgUrl, 300, 450, 'poster')} 
+                                alt=""
+                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-2xl transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-24 group-hover:-translate-y-1 group-hover:rotate-[20deg] z-40 group-hover:z-50 border border-white/10 group-hover:border-white/30"
+                            />
+                        )}
+                    </div>
 
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
-
-                <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${collection.gradient} opacity-60 group-hover:opacity-100 transition-opacity`}></div>
-
-                <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-5">
-
-                    <h3 className={`font-black text-xl md:text-2xl mb-1 bg-gradient-to-r ${collection.gradient} text-transparent bg-clip-text drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)] py-1 leading-tight`}>
-                        {collection.title}
-                    </h3>
-                    <p className="text-slate-100 text-xs md:text-sm line-clamp-2 mb-3 min-h-[32px] md:min-h-[40px] drop-shadow-[0_1px_2px_rgba(0,0,0,0.9)] font-medium">
-                        {collection.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                        <span className="text-[#facc15] text-xs font-bold drop-shadow-md">
-                            {movies.length} phim
-                        </span>
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-[#22d3ee] group-hover:text-[#67e8f9] transition-colors drop-shadow-md">
-                            <span>Xem tất cả</span>
-                            <FaArrowRight className="text-[10px] group-hover:translate-x-1 transition-transform duration-300" />
+                    <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#070b14] via-[#070b14]/80 to-transparent z-40 pointer-events-none"></div>
+                    
+                    <div className="relative z-50 p-5 md:p-6 pb-4 md:pb-5 w-full flex flex-col">
+                        <h3 className={`font-black text-xl md:text-2xl mb-1 bg-gradient-to-r ${collection.gradient} text-transparent bg-clip-text drop-shadow-[0_2px_2px_rgba(0,0,0,1)] py-1 leading-tight group-hover:scale-105 origin-left transition-transform duration-500`}>
+                            {collection.title}
+                        </h3>
+                        <p className="text-slate-200 text-xs md:text-sm line-clamp-2 mb-3 min-h-[32px] md:min-h-[40px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] font-medium transition-colors group-hover:text-white">
+                            {collection.description}
+                        </p>
+                        
+                        <div className="flex items-center justify-between w-full border-t border-white/10 pt-3 group-hover:border-white/20 transition-colors">
+                            <span className="px-3 py-1 rounded-full bg-white/5 backdrop-blur-sm text-white/90 text-[11px] font-bold border border-white/10 group-hover:bg-white/10 group-hover:text-white transition-all">
+                                {movies.length} PHIM
+                            </span>
+                            <div className="flex items-center gap-1.5 text-xs font-bold text-white/50 group-hover:text-white transition-colors">
+                                <span>Khám phá</span>
+                                <FaArrowRight className="text-[10px] group-hover:translate-x-1 transition-transform duration-300" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -117,11 +146,6 @@ function Topic() {
         return customCols;
     }, [movies, categoryTypes, categories, customTopics]);
 
-    const heroCollection = collections[0];
-    const heroMovies = heroCollection?.movies || [];
-    const topHeroMovies = heroMovies.slice(0, 5);
-    const bannerMovie = heroMovies.find(m => m.bannerUrl) || topHeroMovies[0];
-
     return (
         <div className="w-full min-h-screen bg-transparent relative overflow-hidden" style={{ paddingTop: '90px', paddingBottom: '60px' }}>
             <SEO 
@@ -133,72 +157,6 @@ function Topic() {
 
             <div className="max-w-350 mx-auto px-4 sm:px-6 md:px-8 relative z-10">
 
-                {heroCollection && (
-                    <motion.div 
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="mt-4 md:mt-6 mb-10 md:mb-14"
-                    >
-                        <div className="group block relative rounded-3xl overflow-hidden border-[2px] border-white/10 hover:border-[#facc15] hover:shadow-[0_0_20px_rgba(250,204,21,0.3)] transition-all duration-500">
-                            <div className="relative h-52 sm:h-64 md:h-80 lg:h-96 overflow-hidden">
-                                <img 
-                                    src={bannerMovie?.bannerUrl || bannerMovie?.imgUrl} 
-                                    alt="" 
-                                    className="absolute inset-0 w-full h-full object-cover object-top"
-                                />
-                                
-                                <Link to={`/topic/${heroCollection.id}`} className="absolute inset-0 z-10">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/30 to-transparent pointer-events-none"></div>
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
-                                </Link>
-                                
-                                <div className="absolute inset-0 flex items-end p-6 md:p-10 z-20 pointer-events-none">
-                                    <div className="flex-1">
-                                        <div className="flex items-center gap-2 mb-3">
-
-                                            <span className="text-xs font-bold uppercase tracking-widest text-orange-400">Bộ sưu tập nổi bật</span>
-                                        </div>
-                                        <h2 className={`text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r ${heroCollection.gradient} text-transparent bg-clip-text mb-2 py-2 leading-tight`}>
-                                            {heroCollection.title}
-                                        </h2>
-                                        <p className="text-slate-400 text-sm md:text-base max-w-lg mb-4">
-                                            {heroCollection.description}
-                                        </p>
-                                        <div className="flex items-center gap-3 pointer-events-auto">
-                                            <Link to={`/topic/${heroCollection.id}`} className="px-4 py-2 rounded-full bg-white/10 backdrop-blur-sm text-white text-sm font-semibold border border-white/10 hover:bg-white/20 transition-colors">
-                                                {heroCollection.movies?.length || 0} phim
-                                            </Link>
-                                            <Link to={`/topic/${heroCollection.id}`} className="flex items-center gap-2 text-white/70 text-sm hover:text-white transition-colors group/btn">
-                                                Khám phá ngay <FaArrowRight className="group-hover/btn:translate-x-1 transition-transform" />
-                                            </Link>
-                                        </div>
-                                    </div>
-
-                                    <div className="hidden md:flex items-end gap-3 mr-4 pointer-events-auto">
-                                        {topHeroMovies.filter(m => m.id !== bannerMovie?.id).slice(0, 3).map((movie, i) => (
-                                            <Link 
-                                                to={`/phim/${movie.slug || movie.id}`}
-                                                key={movie.id}
-                                                className="group/poster rounded-xl overflow-hidden shadow-2xl border-2 border-white/10 transition-all duration-300 hover:-translate-y-4 hover:border-[#facc15] hover:shadow-[0_10px_20px_rgba(250,204,21,0.3)] relative"
-                                                style={{ 
-                                                    width: `${100 - i * 10}px`,
-                                                    transform: `translateY(${i * 8}px)`,
-                                                    zIndex: 3 - i,
-                                                }}
-                                            >
-                                                <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt="" className="w-full aspect-2/3 object-cover" />
-                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/poster:opacity-100 transition-opacity flex items-center justify-center">
-                                                    <FaPlay className="text-white text-xl" />
-                                                </div>
-                                            </Link>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
-                )}
 
                 <motion.div 
                     initial={{ opacity: 0 }}
