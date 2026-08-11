@@ -1,0 +1,15 @@
+{
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.mfilm.online"
+        }
+      ],
+      "destination": "https://mfilm.online/$1",
+      "permanent": true
+    }
+  ]
+}

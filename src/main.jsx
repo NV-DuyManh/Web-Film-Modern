@@ -11,11 +11,13 @@ import CategoryTypeProvider from './contexts/CategoryTypeProvider.jsx';
 import PlanProvider from './contexts/PlanProvider.jsx';
 import UserProvider from './contexts/UserProvider.jsx';
 import AuthProvider from './contexts/AuthProvider.jsx';
+import SubscriptionProvider from './contexts/SubscriptionProvider.jsx';
 
 const providers = [
   CategoryProvider,
   CategoryTypeProvider,
   PlanProvider,
+  SubscriptionProvider,
   UserProvider,
   AuthProvider
 ];

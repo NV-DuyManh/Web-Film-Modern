@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 function TopFilm() {
     const movies = useMovies();
-    const topMovies = movies?.slice(0, 10) || [];
+    const topMovies = movies?.slice(0, 10) ;
     
     const plans = useContext(PlanContext);
 

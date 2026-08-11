@@ -12,7 +12,7 @@ import SEO from '../../../components/SEO';
 
 function CategoryPage() {
     const { id } = useParams();
-    const movies = useMovies() || [];
+    const movies = useMovies() ;
     const categories = useContext(CategoryContext) || [];
     const plans = useContext(PlanContext) || [];
 

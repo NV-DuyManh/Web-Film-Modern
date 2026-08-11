@@ -91,3 +91,33 @@ export const getDocumentById = async (collectionName, docId) => {
     const docSnap = await getDoc(doc(db, collectionName, docId));
     return docSnap.exists() ? { id: docSnap.id, ...docSnap.data() } : null;
 };
+
+export const getTop5Films = async () => {
+    try {
+
+        const q = query(
+            collection(db, "Movies"),
+            orderBy("views", "desc"),
+            limit(5)
+        );
+
+        const snapshot = await getDocs(q);
+
+        const films = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        return films;
+
+    } catch (error) {
+
+        console.error(
+            "Error getting top 5 films:",
+            error
+        );
+
+        return [];
+
+    }
+};
