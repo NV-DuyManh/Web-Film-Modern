@@ -5,14 +5,16 @@ import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { useMovies } from '../../../hooks/useCollections';
-import { getTop5Films } from '../../../services/firebaseService';
+import { getTop5Films, getTop5RentedFilms } from '../../../services/firebaseService';
 import TopFilms from "./TopFilms";
+import TopRents from "./TopRents";
 
 function DashBoard() {
 
     const subscriptions = useContext(SubscriptionContext);
     const plans = useContext(PlanContext);
     const [topFilms, setTopFilms] = useState([]);
+    const [topRents, setTopRents] = useState([]);
 
     useEffect(() => {
 
@@ -24,16 +26,20 @@ function DashBoard() {
 
         };
 
+        const fetchTopRents = async () => {
+
+            const data = await getTop5RentedFilms();
+
+            setTopRents(data);
+
+        };
+
         fetchTopFilms();
+        fetchTopRents();
 
     }, []);
     console.log(topFilms);
 
-
-    // =========================================================
-    // BAR CHART DATA
-    // Thống kê số lượng subscription + tổng tiền theo plan
-    // =========================================================
 
     const total = useMemo(() => {
 
@@ -76,11 +82,6 @@ function DashBoard() {
     }, [subscriptions]);
 
 
-    // =========================================================
-    // LINE CHART DATA
-    // Thống kê doanh thu theo ngày
-    // =========================================================
-
     const chartData = useMemo(() => {
 
         if (!subscriptions || !Array.isArray(subscriptions)) {
@@ -96,10 +97,6 @@ function DashBoard() {
             }
 
 
-            // -------------------------------------------------
-            // FIRESTORE TIMESTAMP
-            // -------------------------------------------------
-
             let date;
 
             if (
@@ -111,19 +108,11 @@ function DashBoard() {
 
             }
 
-            // -------------------------------------------------
-            // JAVASCRIPT DATE
-            // -------------------------------------------------
-
             else if (element.startDate instanceof Date) {
 
                 date = element.startDate;
 
             }
-
-            // -------------------------------------------------
-            // STRING / NUMBER
-            // -------------------------------------------------
 
             else {
 
@@ -131,10 +120,6 @@ function DashBoard() {
 
             }
 
-
-            // -------------------------------------------------
-            // CHECK DATE
-            // -------------------------------------------------
 
             if (isNaN(date.getTime())) {
 
@@ -147,10 +132,6 @@ function DashBoard() {
 
             }
 
-
-            // -------------------------------------------------
-            // GET LOCAL DATE
-            // -------------------------------------------------
 
             const year = date.getFullYear();
 
@@ -167,17 +148,9 @@ function DashBoard() {
                 `${year}-${month}-${day}`;
 
 
-            // -------------------------------------------------
-            // GET PRICE
-            // -------------------------------------------------
-
             const price =
                 parseFloat(element.price) || 0;
 
-
-            // -------------------------------------------------
-            // CREATE DATA
-            // -------------------------------------------------
 
             if (!data[dateKey]) {
 
@@ -197,15 +170,20 @@ function DashBoard() {
         });
 
 
-        // -----------------------------------------------------
-        // SORT BY DATE
-        // -----------------------------------------------------
-
-        return Object.values(data).sort(
+        const sortedData = Object.values(data).sort(
             (a, b) =>
                 new Date(a.date) -
                 new Date(b.date)
         );
+
+        if (sortedData.length > 0) {
+            sortedData.unshift({ 
+                date: "", 
+                revenue: 0 
+            });
+        }
+
+        return sortedData;
 
     }, [subscriptions]);
 
@@ -219,10 +197,6 @@ function DashBoard() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
 
-            {/* =========================
-                BAR CHART
-            ========================== */}
-
             <div>
                 <BarChart
                     data={total}
@@ -230,17 +204,14 @@ function DashBoard() {
             </div>
 
 
-            {/* =========================
-                LINE CHART
-            ========================== */}
-
             <div>
                 <LineChart
                     data={chartData}
                 />
             </div>
-            <div className="md:col-span-2">
+            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
                 <TopFilms films={topFilms} />
+                <TopRents films={topRents} />
             </div>
 
         </div>

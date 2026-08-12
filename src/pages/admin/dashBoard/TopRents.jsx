@@ -37,10 +37,10 @@ const PROGRESS_COLORS = [
 ];
 
 
-function TopFilms({ films = [] }) {
+function TopRents({ films = [] }) {
 
-    const formatViews = (views) => {
-        const number = Number(views) || 0;
+    const formatCount = (count) => {
+        const number = Number(count) || 0;
 
         if (number >= 1000000) {
             return `${(number / 1000000).toFixed(1)}M`;
@@ -53,28 +53,26 @@ function TopFilms({ films = [] }) {
         return number.toLocaleString();
     };
 
-    const maxViews = films.length > 0
-        ? Math.max(...films.map(f => (Number(f.views) || 0) + 100))
+    const maxRents = films.length > 0
+        ? Math.max(...films.map(f => Number(f.rentCount) || 0))
         : 0;
 
 
     return (
         <div className="rounded-[14px] p-5 relative overflow-hidden h-full border border-white/5" style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
 
-
-
             <div className="mb-5 relative">
 
                 <div className="flex items-center gap-2">
-                    <span style={{ fontSize: '22px' }}>🏆</span>
+                    <span style={{ fontSize: '22px' }}>🎬</span>
 
                     <h2 className="text-xl font-semibold text-gray-100">
-                        Top 5 Films
+                        Top 5 Rented Films
                     </h2>
                 </div>
 
                 <p className="text-sm text-gray-400 mt-1">
-                    Most watched films
+                    Most rented films
                 </p>
 
             </div>
@@ -85,7 +83,7 @@ function TopFilms({ films = [] }) {
                 {films.length === 0 ? (
 
                     <div className="h-50 flex items-center justify-center text-gray-500">
-                        No film data available
+                        No rent data available
                     </div>
 
                 ) : (
@@ -93,8 +91,8 @@ function TopFilms({ films = [] }) {
                     films.map((film, index) => {
 
                         const rankStyle = RANK_STYLES[index] || RANK_STYLES[3];
-                        const viewPercent = maxViews > 0
-                            ? (((Number(film.views) || 0) + 100) / maxViews) * 100
+                        const rentPercent = maxRents > 0
+                            ? ((Number(film.rentCount) || 0) / maxRents) * 100
                             : 0;
 
                         return (
@@ -184,7 +182,7 @@ function TopFilms({ films = [] }) {
                                     >
                                         <div
                                             style={{
-                                                width: `${viewPercent}%`,
+                                                width: `${rentPercent}%`,
                                                 height: '100%',
                                                 background: PROGRESS_COLORS[index] || PROGRESS_COLORS[3],
                                                 borderRadius: '3px',
@@ -207,7 +205,7 @@ function TopFilms({ films = [] }) {
                                         flexShrink: 0,
                                     }}
                                 >
-                                    {formatViews((Number(film.views) || 0) + 100)}
+                                    {formatCount(film.rentCount)}
                                 </div>
 
                             </div>
@@ -222,4 +220,4 @@ function TopFilms({ films = [] }) {
     );
 }
 
-export default TopFilms;
+export default TopRents;

@@ -121,3 +121,54 @@ export const getTop5Films = async () => {
 
     }
 };
+
+
+export const getTop5RentedFilms = async () => {
+    try {
+
+        // 1. Get all rent records
+        const rentSnapshot = await getDocs(collection(db, "RentMovies"));
+
+        // 2. Count rentals per movieID
+        const rentCount = {};
+        rentSnapshot.docs.forEach((doc) => {
+            const data = doc.data();
+            const movieID = data.movieID;
+            if (movieID) {
+                rentCount[movieID] = (rentCount[movieID] || 0) + 1;
+            }
+        });
+
+        // 3. Sort by count and take top 5
+        const top5 = Object.entries(rentCount)
+            .sort((a, b) => b[1] - a[1])
+            .slice(0, 5);
+
+        // 4. Fetch movie details for each
+        const films = await Promise.all(
+            top5.map(async ([movieID, count]) => {
+                const movieDoc = await getDoc(doc(db, "Movies", movieID));
+                if (movieDoc.exists()) {
+                    return {
+                        id: movieDoc.id,
+                        ...movieDoc.data(),
+                        rentCount: count,
+                    };
+                }
+                return null;
+            })
+        );
+
+        return films.filter(Boolean);
+
+    } catch (error) {
+
+        console.error(
+            "Error getting top 5 rented films:",
+            error
+        );
+
+        return [];
+
+    }
+};
