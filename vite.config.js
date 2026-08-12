@@ -10,6 +10,9 @@ export default defineConfig({
         VitePWA({
             registerType: 'autoUpdate',
             includeAssets: ['favicon.svg', 'robots.txt', 'sitemap.xml'],
+            workbox: {
+                disableDevLogs: true,
+            },
             manifest: {
                 name: 'MFILM - Phim online chất lượng cao',
                 short_name: 'MFILM',
@@ -36,7 +39,7 @@ export default defineConfig({
                 ]
             },
             devOptions: {
-                enabled: true
+                enabled: false
             }
         })
     ],

@@ -63,14 +63,14 @@ const CustomTooltip = ({ active, payload, label }) => {
                         gap: '8px',
                     }}
                 >
-                    <div 
-                        style={{ 
-                            width: '8px', 
-                            height: '8px', 
-                            borderRadius: '50%', 
+                    <div
+                        style={{
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
                             background: entry.color || '#a5b4fc',
                             boxShadow: `0 0 8px ${entry.color || '#a5b4fc'}88`
-                        }} 
+                        }}
                     />
                     <span style={{ color: '#cbd5e1', fontSize: '14px', fontWeight: 500 }}>
                         {entry.name}:
@@ -88,7 +88,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 
 
-function BarChart({ data = [] }) {
+function PlanChart({ data = [] }) {
 
     return (
 
@@ -207,10 +207,7 @@ function BarChart({ data = [] }) {
 
                             <Tooltip
                                 content={<CustomTooltip />}
-                                cursor={{
-                                    fill: 'rgba(99, 102, 241, 0.08)',
-                                    radius: 8,
-                                }}
+                                cursor={{ fill: 'rgba(99, 102, 241, 0.08)', radius: 8 }}
                             />
 
 
@@ -221,7 +218,6 @@ function BarChart({ data = [] }) {
                                 name="Subscriptions"
                                 radius={[12, 12, 0, 0]}
                                 barSize={60}
-                                isAnimationActive={false}
                             >
                                 {data.map((entry, index) => (
                                     <Cell
@@ -249,4 +245,4 @@ function BarChart({ data = [] }) {
 }
 
 
-export default BarChart;
+export default PlanChart;

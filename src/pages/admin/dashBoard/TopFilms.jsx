@@ -100,21 +100,7 @@ function TopFilms({ films = [] }) {
                         return (
                             <div
                                 key={film.id}
-                                className="flex items-center gap-4 p-3 rounded-xl transition duration-300"
-                                style={{
-                                    cursor: 'pointer',
-                                    border: '1px solid transparent',
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.currentTarget.style.background = 'rgba(255,255,255,0.05)';
-                                    e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.1)';
-                                    e.currentTarget.style.transform = 'translateX(4px)';
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.currentTarget.style.background = 'transparent';
-                                    e.currentTarget.style.borderColor = 'transparent';
-                                    e.currentTarget.style.transform = 'translateX(0)';
-                                }}
+                                className="flex items-center gap-4 p-3 rounded-xl"
                             >
 
                                 <div

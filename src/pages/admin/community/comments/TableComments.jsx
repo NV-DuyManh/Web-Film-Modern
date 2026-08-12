@@ -1,4 +1,4 @@
-﻿import React, { useContext, useState, useEffect, useMemo } from 'react';
+import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { useComments, useMovies } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -102,11 +102,11 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th >ID</th>
-                                <th >USER</th>
-                                <th >MOVIE</th>
-                                <th >DESCRIPTION</th>
-                                <th >DATE</th>
+                                <th className="text-center">ID</th>
+                                <th className="text-center">USER</th>
+                                <th className="text-center">MOVIE</th>
+                                <th className="text-center">DESCRIPTION</th>
+                                <th className="text-center">DATE</th>
                                 <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
@@ -116,27 +116,29 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
                                 const isSelected = selectedIds.includes(row.id);
                                 return (
                                 <tr key={row.id || index} className="table-row" style={isSelected ? { background: 'rgba(34,211,238,0.07)' } : {}}>
-                                    <td className="table-cell" style={{ width: '40px' }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={isSelected}
-                                            onChange={() => handleSelectRow(row.id)}
-                                            style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
-                                        />
+                                    <td className="table-cell text-center" style={{ width: '40px' }}>
+                                        <div className="flex justify-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={isSelected}
+                                                onChange={() => handleSelectRow(row.id)}
+                                                style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                            />
+                                        </div>
                                     </td>
-                                    <td className="table-cell">
+                                    <td className="table-cell text-center">
                                         {start + index + 1}
                                     </td>
-                                    <td className="table-cell font-bold text-cyan-400">
+                                    <td className="table-cell text-center font-bold text-cyan-400">
                                         {getUserName(row.userID)}
                                     </td>
-                                    <td className="table-cell font-bold text-fuchsia-400">
+                                    <td className="table-cell text-center font-bold text-fuchsia-400">
                                         {getMovieName(row.movieID)}
                                     </td>
-                                    <td className="table-cell truncate max-w-62.5" title={row.description}>
+                                    <td className="table-cell text-center truncate max-w-62.5" title={row.description}>
                                         {row.description}
                                     </td>
-                                    <td className="table-cell text-gray-400 text-xs">
+                                    <td className="table-cell text-center text-gray-400 text-xs">
                                         {row.createdAt ? new Date(row.createdAt).toLocaleDateString('vi-VN') : ""}
                                     </td>
                                     <td className="table-cell text-center">

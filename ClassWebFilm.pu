@@ -89,6 +89,7 @@ class Movies {
     + episodeDub: int
     + episodeVoice: int
     + countriesID: text
+    + views: text
 }
 
 class Episodes {

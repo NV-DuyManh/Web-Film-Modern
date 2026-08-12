@@ -36,9 +36,9 @@ function HeaderAdmin() {
             <div className='p-4 bg-blue-400/20'>
                 <div className='flex justify-between items-center text-gray-200 ml-8 mr-4 md:ml-10 md:mr-6 lg:mx-4'>
                     <h1 className='text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold tracking-wide flex items-center gap-1.5 md:gap-3 flex-wrap'>
-                        <p className="glow-text2 inline">{getGreeting()},</p>
-                        <p className="glow-text inline">{isLogin?.name || 'Admin'}</p> 
-                        <p className="animate-wave ml-1 inline-block">👋</p>
+                        <span className="glow-text2 inline">{getGreeting()},</span>
+                        <span className="glow-text inline">{isLogin?.name || 'Admin'}</span> 
+                        <span className="animate-wave ml-1 inline-block">👋</span>
                     </h1>
 
                     <div className="flex items-center gap-3 md:gap-5 lg:gap-8 text-xl lg:text-2xl shrink-0">
@@ -48,18 +48,18 @@ function HeaderAdmin() {
 
                         <button className="relative text-yellow-400 cursor-pointer drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-yellow-300 hover:drop-shadow-[0_0_15px_rgba(250,204,21,1)] group">
                             <IoIosNotifications className="animate-bell" />
-                            <p className="absolute top-0 right-0.5 flex h-2.5 w-2.5 -mt-0.5 -mr-0.5">
-                                <p className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></p>
-                                <p className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-slate-900 shadow-[0_0_5px_rgba(239,68,68,0.8)]"></p>
-                            </p>
+                            <span className="absolute top-0 right-0.5 flex h-2.5 w-2.5 -mt-0.5 -mr-0.5">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500 border border-slate-900 shadow-[0_0_5px_rgba(239,68,68,0.8)]"></span>
+                            </span>
                         </button>
 
                         <button className="relative text-purple-400 cursor-pointer drop-shadow-[0_0_4px_rgba(192,132,252,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-purple-300 hover:drop-shadow-[0_0_15px_rgba(192,132,252,1)] group">
                             <MdEmail className="animate-envelope" />
-                            <p className="absolute top-0 right-0 flex h-2.5 w-2.5 -mt-0.5 -mr-1">
-                                <p className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" style={{ animationDuration: '2s' }}></p>
-                                <p className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500 border border-slate-900 shadow-[0_0_5px_rgba(6,182,212,0.8)]"></p>
-                            </p>
+                            <span className="absolute top-0 right-0 flex h-2.5 w-2.5 -mt-0.5 -mr-1">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" style={{ animationDuration: '2s' }}></span>
+                                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500 border border-slate-900 shadow-[0_0_5px_rgba(6,182,212,0.8)]"></span>
+                            </span>
                         </button>
 
                         <div className="relative" ref={dropdownRef}>
@@ -73,7 +73,7 @@ function HeaderAdmin() {
                                     <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="w-full h-full rounded-full object-cover" />
                                 </WingedFrame>
 
-                                <p className="absolute bottom-0 right-0 z-20 w-3 h-3 bg-[#22c55e] border-2 border-[#1e293b] rounded-full shadow-[0_0_5px_rgba(34,197,94,1)]"></p>
+                                <span className="absolute bottom-0 right-0 z-20 w-3 h-3 bg-[#22c55e] border-2 border-[#1e293b] rounded-full shadow-[0_0_5px_rgba(34,197,94,1)]"></span>
                             </button>
 
                             {isDropdownOpen && (

@@ -1,7 +1,8 @@
-﻿import { FaTimes } from 'react-icons/fa';
+import { FaTimes } from 'react-icons/fa';
 import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
 import { useContext } from 'react';
+import { useMovies } from '../../../../hooks/useCollections';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;

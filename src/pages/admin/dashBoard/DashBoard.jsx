@@ -1,18 +1,30 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import BarChart from './BarChart';
-import LineChart from './LineChart';
+import { motion } from 'framer-motion';
+import PlanChart from './PlanChart';
+import RevenueChart from './RevenueChart';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
-import { useMovies } from '../../../hooks/useCollections';
+import { useMovies, useRentMovies } from '../../../hooks/useCollections';
 import { getTop5Films, getTop5RentedFilms } from '../../../services/firebaseService';
 import TopFilms from "./TopFilms";
 import TopRents from "./TopRents";
+import { UserContext } from '../../../contexts/UserProvider';
+import DemographicChart from './DemographicChart';
+import RentalChart from './RentalChart';
+import CategoryChart from './CategoryChart';
+import { CategoryContext } from '../../../contexts/CategoryProvider';
 
 function DashBoard() {
 
     const subscriptions = useContext(SubscriptionContext);
     const plans = useContext(PlanContext);
+    const users = useContext(UserContext);
+    const categories = useContext(CategoryContext);
+    
+    const rentMovies = useRentMovies();
+    const movies = useMovies();
+
     const [topFilms, setTopFilms] = useState([]);
     const [topRents, setTopRents] = useState([]);
 
@@ -38,7 +50,6 @@ function DashBoard() {
         fetchTopRents();
 
     }, []);
-    console.log(topFilms);
 
 
     const total = useMemo(() => {
@@ -122,14 +133,7 @@ function DashBoard() {
 
 
             if (isNaN(date.getTime())) {
-
-                console.log(
-                    "Invalid startDate:",
-                    element.startDate
-                );
-
                 return;
-
             }
 
 
@@ -188,34 +192,73 @@ function DashBoard() {
     }, [subscriptions]);
 
 
-    console.log("Bar Chart Data:", total);
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15,
+                delayChildren: 0.1
+            }
+        }
+    };
 
-    console.log("Line Chart Data:", chartData);
-
+    const itemVariants = {
+        hidden: { opacity: 0, y: 30 },
+        visible: {
+            opacity: 1,
+            y: 0,
+            transition: {
+                type: "spring",
+                stiffness: 80,
+                damping: 15
+            }
+        }
+    };
 
     return (
+        <motion.div 
+            className="flex flex-col gap-4 p-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+        >
+            
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-
-            <div>
-                <BarChart
-                    data={total}
-                />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <motion.div variants={itemVariants}>
+                    <RevenueChart data={chartData} />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                    <RentalChart rentMovies={rentMovies} />
+                </motion.div>
             </div>
 
 
-            <div>
-                <LineChart
-                    data={chartData}
-                />
-            </div>
-            <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                <TopFilms films={topFilms} />
-                <TopRents films={topRents} />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <motion.div variants={itemVariants}>
+                    <CategoryChart movies={movies} categories={categories} />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                    <PlanChart data={total} />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                    <DemographicChart users={users} />
+                </motion.div>
             </div>
 
-        </div>
 
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <motion.div variants={itemVariants}>
+                    <TopFilms films={topFilms} />
+                </motion.div>
+                <motion.div variants={itemVariants}>
+                    <TopRents films={topRents} />
+                </motion.div>
+            </div>
+
+        </motion.div>
     );
 
 }

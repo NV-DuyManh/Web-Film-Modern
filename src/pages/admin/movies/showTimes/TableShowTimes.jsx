@@ -1,4 +1,4 @@
-﻿import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useShowTimes, useMovies } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -141,53 +141,54 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
                             {currentData.map((row, index) => {
                                 const isSelected = selectedIds.includes(row.id);
                                 return (
-                                <tr key={row.id || index} className="table-row" style={isSelected ? { background: 'rgba(34,211,238,0.07)' } : {}}>
-                                    <td className="table-cell" style={{ width: '40px' }}>
-                                        <input
-                                            type="checkbox"
-                                            checked={isSelected}
-                                            onChange={() => handleSelectRow(row.id)}
-                                            style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
-                                        />
-                                    </td>
-                                    <td className="table-cell">
-                                        {start + index + 1}
-                                    </td>
+                                    <tr key={row.id || index} className="table-row" style={isSelected ? { background: 'rgba(34,211,238,0.07)' } : {}}>
+                                        <td className="table-cell" style={{ width: '40px' }}>
+                                            <input
+                                                type="checkbox"
+                                                checked={isSelected}
+                                                onChange={() => handleSelectRow(row.id)}
+                                                style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
+                                            />
+                                        </td>
+                                        <td className="table-cell">
+                                            {start + index + 1}
+                                        </td>
 
-                                    <td className="table-cell text-center">
-                                        <p className="font-bold text-white text-[13px] mb-1">{getMovie(row.movieID)?.otherName || getMovie(row.movieID)?.name}</p>
-                                        <p className="text-gray-400 text-[11px] italic">{getMovie(row.movieID)?.name}</p>
-                                    </td>
+                                        <td className="table-cell text-center">
+                                            <p className="font-bold text-white text-[13px] mb-1">{getMovie(row.movieID)?.otherName || getMovie(row.movieID)?.name}</p>
+                                            <p className="text-gray-400 text-[11px] italic">{getMovie(row.movieID)?.name}</p>
+                                        </td>
 
-                                    <td className="table-cell text-center">
-                                        <p className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold border border-yellow-500/30 inline">
-                                            {formatDateTime(row.time)}
-                                        </p>
-                                    </td>
+                                        <td className="table-cell text-center">
+                                            <p className="bg-yellow-500/20 text-yellow-400 px-2 py-1 rounded text-xs font-bold border border-yellow-500/30 inline">
+                                                {formatDateTime(row.time)}
+                                            </p>
+                                        </td>
 
-                                    <td className="table-cell text-center text-green-400 font-bold">
-                                        {row.roomName}
-                                    </td>
+                                        <td className="table-cell text-center text-green-400 font-bold">
+                                            {row.roomName}
+                                        </td>
 
-                                    <td className="table-cell text-center">
-                                        <div className="flex justify-center! gap-2">
-                                            <button
-                                                onClick={() => handleEdit(row)}
-                                                className="action-btn btn-edit"
-                                            >
-                                                <CiEdit />
-                                            </button>
+                                        <td className="table-cell text-center">
+                                            <div className="flex justify-center! gap-2">
+                                                <button
+                                                    onClick={() => handleEdit(row)}
+                                                    className="action-btn btn-edit"
+                                                >
+                                                    <CiEdit />
+                                                </button>
 
-                                            <button
-                                                onClick={() => handleClickOpenDele(row)}
-                                                className="action-btn btn-delete"
-                                            >
-                                                <RiDeleteBin6Fill />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            )})}
+                                                <button
+                                                    onClick={() => handleClickOpenDele(row)}
+                                                    className="action-btn btn-delete"
+                                                >
+                                                    <RiDeleteBin6Fill />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )
+                            })}
                         </tbody>
                     </table>
 
@@ -210,7 +211,7 @@ function TableShowTimes({ handleClickOpen, setShowTime, showTime, search }) {
                 titleDelete={"DELETE SHOWTIME"}
                 contentDelete={`Are you sure you want to delete the showtime of "${getMovie(showTime?.movieID)?.otherName || getMovie(showTime?.movieID)?.name}"?`}
             />
-            
+
             <ModalDelete
                 handleClose={() => setOpenBulk(false)}
                 open={openBulk}

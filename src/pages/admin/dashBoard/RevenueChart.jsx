@@ -14,7 +14,7 @@ import {
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload || !payload.length) return null;
-    if (label === "") return null;
+    if (payload[0].payload.date === "") return null;
 
     return (
         <div
@@ -78,7 +78,9 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 
 const CustomDot = (props) => {
-    const { cx, cy, index } = props;
+    const { cx, cy, index, payload } = props;
+
+    if (index === 0 || (payload && payload.date === "")) return null;
 
     const colors = [
         '#FF6B6B', '#FECA57', '#48DBFB',
@@ -119,7 +121,7 @@ const CustomDot = (props) => {
 const CustomActiveDot = (props) => {
     const { cx, cy, index, payload } = props;
 
-    if (payload && payload.date === "") return null;
+    if (index === 0 || (payload && payload.date === "")) return null;
 
     const colors = [
         '#FF6B6B', '#FECA57', '#48DBFB',
@@ -176,7 +178,7 @@ const CustomCursor = (props) => {
 
 
 
-function LineChart({ data = [] }) {
+function RevenueChart({ data = [] }) {
 
     return (
 
@@ -323,7 +325,6 @@ function LineChart({ data = [] }) {
                                 dot={<CustomDot />}
 
                                 activeDot={<CustomActiveDot />}
-                                isAnimationActive={false}
                             />
 
                         </AreaChart>
@@ -341,4 +342,4 @@ function LineChart({ data = [] }) {
 }
 
 
-export default LineChart;
+export default RevenueChart;
