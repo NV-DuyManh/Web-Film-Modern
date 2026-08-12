@@ -84,15 +84,15 @@ function HeaderAdmin() {
                                         </WingedFrame>
                                         <div className="flex flex-col min-w-0">
                                             <p className="text-[15px] font-bold text-white truncate tracking-wide">{isLogin?.name || 'Admin'}</p>
-                                            <p className="text-[12px] text-cyan-400 truncate">{isLogin?.email || 'admin@mfilm.com'}</p>
+                                            <p className="text-xs text-cyan-400 truncate">{isLogin?.email || 'admin@mfilm.com'}</p>
                                         </div>
                                     </div>
 
                                     <div className="p-2">
-                                        <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-[14px] font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
+                                        <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
                                             <FaUser className="text-cyan-400 text-lg" /> Hồ sơ của tôi
                                         </Link>
-                                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-[14px] font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
+                                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
                                             <FaCog className="text-yellow-400 text-lg" /> Cài đặt
                                         </button>
 
@@ -104,7 +104,7 @@ function HeaderAdmin() {
                                                 handleLogout();
                                                 setIsDropdownOpen(false);
                                             }}
-                                            className="w-full flex items-center gap-3 px-3 py-2.5 text-[14px] font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-200"
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-200"
                                         >
                                             <FaSignOutAlt className="text-lg" /> Đăng xuất
                                         </button>

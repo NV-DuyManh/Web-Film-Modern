@@ -101,14 +101,14 @@ function ContinueFilm(props) {
                     </div>
 
                     <div className="flex flex-row items-center justify-between sm:justify-end gap-3 w-full md:w-auto shrink-0">
-                        <div className="premium-border-box flex flex-1 sm:flex-none justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group h-[42px]">
+                        <div className="premium-border-box flex flex-1 sm:flex-none justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group h-10.5">
                             <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">Số lượng</span>
                             <div className="flex items-center justify-center bg-blue-500/10 border border-blue-500/20 px-3 py-0.5 rounded-lg group-hover:bg-blue-500/20 group-hover:border-blue-500/40 group-hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300">
                                 <span className="text-blue-400 font-black text-sm">{continueMovies.length}</span>
                             </div>
                         </div>
 
-                        <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md shrink-0 h-[42px]">
+                        <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md shrink-0 h-10.5">
                             <button
                                 onClick={() => setViewMode('grid')}
                                 className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'grid' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}

@@ -133,7 +133,7 @@ function ModalAuthors({ open, onChangeInput, handleClose, addauthor, error, load
                                     alt="Author Avatar" 
                                     className="w-full h-full object-cover transition-all duration-500 group-hover:opacity-30" 
                                 />
-                                <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! !p-0! rounded-full! cursor-pointer">
+                                <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! p-0! rounded-full! cursor-pointer">
                                     <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
                                     <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-1" />

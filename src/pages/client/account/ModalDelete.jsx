@@ -23,7 +23,7 @@ function ModalDelete({ isOpen, onClose, onConfirm, title, message }) {
                     <IoWarningOutline className="text-red-500 text-4xl" />
                 </div>
                 <h3 className="text-white text-xl font-bold mb-2">{title || 'Xác nhận xóa?'}</h3>
-                <p className="text-slate-400 text-[14px] mb-8">{message || 'Bạn có chắc chắn muốn xóa không? Hành động này không thể hoàn tác.'}</p>
+                <p className="text-slate-400 text-sm mb-8">{message || 'Bạn có chắc chắn muốn xóa không? Hành động này không thể hoàn tác.'}</p>
                 
                 <div className="flex items-center gap-3 w-full">
                     <button

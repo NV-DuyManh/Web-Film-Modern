@@ -52,7 +52,7 @@ function Subscriptions() {
     };
 
     const getCardStyle = () => {
-        return 'bg-gradient-to-b from-[#0f172a]/90 to-[#020617]/90 backdrop-blur-xl border border-cyan-500/30 shadow-[0_8px_30px_rgba(6,182,212,0.08)]';
+        return 'bg-linear-to-b from-[#0f172a]/90 to-[#020617]/90 backdrop-blur-xl border border-cyan-500/30 shadow-[0_8px_30px_rgba(6,182,212,0.08)]';
     };
 
     const formatDate = (dateObj) => {

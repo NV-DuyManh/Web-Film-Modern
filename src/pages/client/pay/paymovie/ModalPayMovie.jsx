@@ -64,7 +64,7 @@ function ModalPayMovie({ show, movieName, onClose, onGoHome }) {
                             <button 
                                 type="button"
                                 onClick={onGoHome}
-                                className="w-full sm:w-1/2 py-3.5 rounded-2xl font-bold text-[14px] text-white/80 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 shadow-lg backdrop-blur-md transition-all duration-300 active:scale-[0.98] order-2 sm:order-1 cursor-pointer"
+                                className="w-full sm:w-1/2 py-3.5 rounded-2xl font-bold text-sm text-white/80 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 shadow-lg backdrop-blur-md transition-all duration-300 active:scale-[0.98] order-2 sm:order-1 cursor-pointer"
                             >
                                 VỀ TRANG CHI TIẾT
                             </button>

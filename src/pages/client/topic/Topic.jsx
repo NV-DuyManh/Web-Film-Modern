@@ -43,9 +43,9 @@ function CollectionCard({ collection, movies, index }) {
                 to={`/topic/${collection.id}`}
                 className="group block relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#0b0f19] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.6)]"
             >
-                <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br ${collection.gradient} transition-opacity duration-500 z-0`}></div>
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-br ${collection.gradient} transition-opacity duration-500 z-0`}></div>
                 
-                <div className="absolute inset-[2px] bg-[#0f1523] rounded-[22px] overflow-hidden z-10 flex flex-col justify-end">
+                <div className="absolute inset-0.5 bg-[#0f1523] rounded-[22px] overflow-hidden z-10 flex flex-col justify-end">
                     
                     <div className="absolute inset-0 flex items-start justify-center pt-5">
                         {previewMovies[0] ? (
@@ -90,13 +90,13 @@ function CollectionCard({ collection, movies, index }) {
                         )}
                     </div>
 
-                    <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#070b14] via-[#070b14]/80 to-transparent z-40 pointer-events-none"></div>
+                    <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#070b14] via-[#070b14]/80 to-transparent z-40 pointer-events-none"></div>
                     
                     <div className="relative z-50 p-5 md:p-6 pb-4 md:pb-5 w-full flex flex-col">
-                        <h3 className={`font-black text-xl md:text-2xl mb-1 bg-gradient-to-r ${collection.gradient} text-transparent bg-clip-text drop-shadow-[0_2px_2px_rgba(0,0,0,1)] py-1 leading-tight group-hover:scale-105 origin-left transition-transform duration-500`}>
+                        <h3 className={`font-black text-xl md:text-2xl mb-1 bg-linear-to-r ${collection.gradient} text-transparent bg-clip-text drop-shadow-[0_2px_2px_rgba(0,0,0,1)] py-1 leading-tight group-hover:scale-105 origin-left transition-transform duration-500`}>
                             {collection.title}
                         </h3>
-                        <p className="text-slate-200 text-xs md:text-sm line-clamp-2 mb-3 min-h-[32px] md:min-h-[40px] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] font-medium transition-colors group-hover:text-white">
+                        <p className="text-slate-200 text-xs md:text-sm line-clamp-2 mb-3 min-h-8 md:min-h-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] font-medium transition-colors group-hover:text-white">
                             {collection.description}
                         </p>
                         
@@ -164,7 +164,7 @@ function Topic() {
                     transition={{ delay: 0.3 }}
                     className="mb-8"
                 >
-                    <h1 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text tracking-tight pb-1">
+                    <h1 className="text-2xl md:text-3xl font-black bg-linear-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text tracking-tight pb-1">
                         Tất Cả Bộ Sưu Tập
                     </h1>
                     <p className="text-slate-500 text-sm mt-1">Khám phá phim theo chủ đề yêu thích của bạn</p>

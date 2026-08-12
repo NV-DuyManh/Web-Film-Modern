@@ -626,7 +626,7 @@ function DetailFilm() {
                                 <div className="relative z-10 p-5 flex flex-col gap-4">
                                     <div className="flex items-center gap-2.5">
                                         <div className="bg-[#6366f1] rounded flex items-center justify-center p-1.5 shadow">
-                                            <FaComment className="text-white text-[12px]" />
+                                            <FaComment className="text-white text-xs" />
                                         </div>
                                         <p className="font-bold text-white text-[15px] inline">Vietsub #1</p>
                                     </div>

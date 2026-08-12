@@ -296,7 +296,7 @@ function ListFilm(props) {
 
                     <button
                         onClick={handleAddList}
-                        className="btn-add whitespace-nowrap bg-transparent! backdrop-blur-none! shadow-none shrink-0 justify-center h-[42px] flex items-center gap-1.5 sm:gap-2"
+                        className="btn-add whitespace-nowrap bg-transparent! backdrop-blur-none! shadow-none shrink-0 justify-center h-10.5 flex items-center gap-1.5 sm:gap-2"
                         style={{ padding: '0.625rem 1rem', fontSize: '0.875rem' }}
                     >
                         <span className="hidden sm:inline">Thêm mới</span>
@@ -307,14 +307,14 @@ function ListFilm(props) {
 
                 <div className="flex flex-col sm:flex-row items-center justify-between sm:justify-end gap-3 w-full lg:w-auto shrink-0">
                     <div className="flex flex-row items-center justify-between w-full sm:w-auto gap-3">
-                        <div className="premium-border-box flex flex-1 sm:flex-none justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group h-[42px]">
+                        <div className="premium-border-box flex flex-1 sm:flex-none justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group h-10.5">
                             <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">Danh sách</span>
                             <div className="flex items-center justify-center bg-cyan-500/10 border border-cyan-500/20 px-2.5 py-0.5 rounded-lg group-hover:bg-cyan-500/20 group-hover:border-cyan-500/40 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.3)] transition-all duration-300">
                                 <span className="text-cyan-400 font-black text-sm">{userLists.length} / 10</span>
                             </div>
                         </div>
 
-                        <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md shrink-0 h-[42px]">
+                        <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md shrink-0 h-10.5">
                             <button
                                 onClick={() => setViewMode('grid')}
                                 className={`p-1.5 sm:p-2 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'grid'

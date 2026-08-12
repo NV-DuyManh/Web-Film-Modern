@@ -25,15 +25,15 @@ function CommentItem({ comment, users, subscriptions, plans }) {
                     <span className={`px-1.5 py-1px text-[10px] font-extrabold uppercase border rounded flex items-center ${badgeColor}`}>
                         {planInfo.name}
                     </span>
-                    <span className="font-bold text-[14px] text-white truncate max-w-37.5 sm:max-w-50">
+                    <span className="font-bold text-sm text-white truncate max-w-37.5 sm:max-w-50">
                         {user?.name}
                     </span>
 
-                    <span className="text-slate-500 text-[12px] ml-1">
+                    <span className="text-slate-500 text-xs ml-1">
                         {comment.createdAt ? timeAgo(comment.createdAt.seconds ? comment.createdAt.seconds * 1000 : new Date(comment.createdAt).getTime()) : 'Vừa xong'}
                     </span>
                 </div>
-                <div className="text-slate-300 text-[14px] leading-relaxed wrap-break-word whitespace-pre-wrap">
+                <div className="text-slate-300 text-sm leading-relaxed wrap-break-word whitespace-pre-wrap">
                     {comment.description}
                 </div>
             </div>
@@ -88,7 +88,7 @@ function Comment({ isLogin, onOpenLogin, movieId }) {
             </div>
 
             {!isLogin ? (
-                <p className="text-slate-400 text-[14px]">
+                <p className="text-slate-400 text-sm">
                     Vui lòng <button onClick={onOpenLogin} className="text-yellow-400 hover:text-yellow-300 font-bold hover:underline cursor-pointer">đăng nhập</button> để tham gia bình luận.
                 </p>
             ) : (
@@ -99,7 +99,7 @@ function Comment({ isLogin, onOpenLogin, movieId }) {
                             onChange={(e) => setCommentText(e.target.value)}
                             placeholder="Viết bình luận"
                             maxLength={1000}
-                            className="w-full h-32 bg-transparent text-slate-200 placeholder:text-slate-500 p-4 resize-none outline-none text-[14px] custom-scrollbar"
+                            className="w-full h-32 bg-transparent text-slate-200 placeholder:text-slate-500 p-4 resize-none outline-none text-sm custom-scrollbar"
                             disabled={isSubmitting}
                         ></textarea>
                         <div className="absolute top-4 right-4 text-[10px] text-slate-500 font-medium">
@@ -133,7 +133,7 @@ function Comment({ isLogin, onOpenLogin, movieId }) {
                 ) : (
                     <div className="flex flex-col items-center justify-center py-16 gap-3 bg-[#131828]/40 border border-slate-800/40 rounded-2xl">
                         <FaRegCommentDots className="text-5xl text-slate-600" />
-                        <p className="text-slate-500 text-[14px]">Chưa có bình luận nào</p>
+                        <p className="text-slate-500 text-sm">Chưa có bình luận nào</p>
                     </div>
                 )}
             </div>

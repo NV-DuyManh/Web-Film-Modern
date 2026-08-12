@@ -196,7 +196,7 @@ function HeaderClient() {
                         {!isLogin ? (
                             <button
                                 onClick={handleOpenLogin}
-                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-full bg-linear-to-r from-yellow-400 via-yellow-300 to-amber-500 px-3 py-2 sm:px-4 sm:py-2.5 text-[12px] sm:text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-size-[200%_auto] hover:bg-position-[right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] xl:px-5 ${isSearching
+                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-full bg-linear-to-r from-yellow-400 via-yellow-300 to-amber-500 px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-size-[200%_auto] hover:bg-position-[right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] xl:px-5 ${isSearching
                                     ? "max-md:hidden pointer-events-none"
                                     : ""
                                     }`}
@@ -227,7 +227,7 @@ function HeaderClient() {
 
                                         <div className="flex flex-col overflow-hidden">
                                             <div className="flex items-center gap-2 mb-0.5">
-                                                <p className="text-[16px] font-bold text-white truncate tracking-wide max-w-30">
+                                                <p className="text-base font-bold text-white truncate tracking-wide max-w-30">
                                                     {isLogin?.name || 'Nguyễn Văn A'}
                                                 </p>
                                                 <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0 ${getThemeBadgeStyle(currentPlanInfo.theme)}`}>
@@ -243,12 +243,12 @@ function HeaderClient() {
 
 
                                     <div className="px-4 py-4 border-b border-slate-700/80">
-                                        <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-[14px] font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition-all duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5">
+                                        <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-sm font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition-all duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5">
                                             <FaCrown className="text-lg" /> Nâng cấp gói
                                         </button>
  
                                         <div className="flex justify-between items-center px-1">
-                                            <div className="flex items-center gap-2 text-[14px] text-gray-300 font-medium">
+                                            <div className="flex items-center gap-2 text-sm text-gray-300 font-medium">
                                                 <FaWallet className="text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)] text-lg" /> Số dư
                                             </div>
                                             <div className="flex items-center gap-3">
@@ -261,19 +261,19 @@ function HeaderClient() {
                                     </div>
 
                                     <div className="px-3 flex flex-col  ">
-                                        <button onClick={() => { navigate('/account/account'); setIsDropdownOpen(false); }} className="w-full mt-2 flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/account'); setIsDropdownOpen(false); }} className="w-full mt-2 flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
                                             <FaUser className="text-purple-400 text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" /> Tài khoản
                                         </button>
 
-                                        <button onClick={() => { navigate('/account/favorites'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/favorites'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
                                             <FaRegHeart className="text-pink-400 text-lg drop-shadow-[0_0_5px_rgba(236,72,153,0.5)]" /> Yêu thích
                                         </button>
 
-                                        <button onClick={() => { navigate('/account/list'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/list'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
                                             <FaList className="text-cyan-400 text-lg drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]" /> Danh sách
                                         </button>
 
-                                        <button onClick={() => { navigate('/account/rentMovies'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/rentMovies'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
                                             <FaFilm className="text-yellow-400 text-lg drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]" /> Phim đang thuê
                                         </button>
 
@@ -282,7 +282,7 @@ function HeaderClient() {
 
                                         <button
                                             onClick={() => { handleLogout(); setIsDropdownOpen(false); }}
-                                            className="w-full flex items-center gap-4 px-4 py-3 text-[14px] font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/15 rounded-xl transition-all duration-300 hover:translate-x-1"
+                                            className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/15 rounded-xl transition-all duration-300 hover:translate-x-1"
                                         >
                                             <FaSignOutAlt className="text-lg drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]" /> Đăng xuất
                                         </button>

@@ -89,7 +89,7 @@ function ModalViewUser({ open, handleClose, user }) {
             keepMounted
             onClose={handleClose}
             className="modal-wrapper"
-            PaperProps={{ className: "modal-inner !bg-slate-950 !rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden" }}
+            PaperProps={{ className: "modal-inner bg-slate-950! rounded-3xl! border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] overflow-hidden" }}
             BackdropProps={{ className: "modal-backdrop-x backdrop-blur-md" }}
             maxWidth="md"
             fullWidth

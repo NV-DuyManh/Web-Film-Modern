@@ -37,7 +37,7 @@ function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataCho
             onClose={handleCloseChoose}
             maxWidth="sm"
             fullWidth
-            PaperProps={{ className: "!bg-slate-900 !border !border-cyan-500/30 !rounded-2xl !shadow-[0_0_40px_rgba(6,182,212,0.25)] overflow-hidden" }}
+            PaperProps={{ className: "bg-slate-900! !border border-cyan-500!/30 rounded-2xl! !shadow-[0_0_40px_rgba(6,182,212,0.25)] overflow-hidden" }}
         >
             <DialogTitle className="bg-slate-800! bg-linear-to-b! from-cyan-900/60! to-cyan-900/10! border-b! border-cyan-400/60! shadow-[0_5px_20px_-5px_rgba(34,211,238,0.4)]! flex flex-col sm:flex-row justify-between items-start sm:items-center px-6 py-4 gap-4 relative z-10">
                 <p className="font-black uppercase tracking-widest text-sm flex items-center">
@@ -107,7 +107,7 @@ function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataCho
                 <div className="text-xs text-slate-500 mr-auto font-medium ml-2 uppercase tracking-widest">
                     Selected: <p className="text-fuchsia-400 font-black drop-shadow-[0_0_5px_rgba(217,70,239,0.5)] text-sm ml-1 inline">{selectedItems.length}</p>
                 </div>
-                <Button onClick={handleCloseChoose} className="bg-linear-to-r! from-fuchsia-600! to-pink-500! text-white! px-8! py-2! rounded-xl! text-xs! font-bold! tracking-widest! hover:!scale-105! hover:shadow-[0_0_20px_rgba(217,70,239,0.6)]! transition-all!">
+                <Button onClick={handleCloseChoose} className="bg-linear-to-r! from-fuchsia-600! to-pink-500! text-white! px-8! py-2! rounded-xl! text-xs! font-bold! tracking-widest! hover:scale-105! hover:shadow-[0_0_20px_rgba(217,70,239,0.6)]! transition-all!">
                     DONE
                 </Button>
             </DialogActions>

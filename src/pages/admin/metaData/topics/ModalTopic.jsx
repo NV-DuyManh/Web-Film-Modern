@@ -88,7 +88,7 @@ function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSele
                         {GRADIENT_OPTIONS.map((opt) => (
                             <MenuItem key={opt.value} value={opt.value} style={{ color: 'white' }}>
                                 <div className="flex items-center gap-3">
-                                    <div className={`w-6 h-6 rounded bg-gradient-to-br ${opt.value}`}></div>
+                                    <div className={`w-6 h-6 rounded bg-linear-to-br ${opt.value}`}></div>
                                     {opt.label}
                                 </div>
                             </MenuItem>
@@ -123,7 +123,7 @@ function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSele
                                         variant="outlined" 
                                         label={option.name} 
                                         {...tagProps} 
-                                        className="!text-cyan-400 !border-cyan-400/30 !bg-cyan-500/10 !mr-1 !mt-1"
+                                        className="text-cyan-400! border-cyan-400!/30 bg-cyan-500!/10 mr-1! mt-1!"
                                         sx={{
                                             '& .MuiChip-deleteIcon': {
                                                 color: '#ef4444',

@@ -79,7 +79,7 @@ function FilmComing() {
 
                                             <div className="absolute bottom-2 left-2 flex gap-1.5 z-20">
                                                 <p className="flex items-center gap-1.5 bg-linear-to-r from-yellow-400 to-amber-500 text-black text-[10px] md:text-[11px] font-extrabold px-2.5 py-0.5 rounded-full shadow-[0_0_15px_rgba(250,204,21,0.8)] border border-yellow-300 uppercase tracking-widest transition-transform duration-300 group-hover:scale-105">
-                                                    <FaFire className="text-red-600 animate-pulse text-[12px]" /> Sắp chiếu
+                                                    <FaFire className="text-red-600 animate-pulse text-xs" /> Sắp chiếu
                                                 </p>
                                             </div>
                                         </div>

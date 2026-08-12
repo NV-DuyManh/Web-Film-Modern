@@ -254,7 +254,7 @@ function ModalViewMovie({ open, handleClose, movie, onEdit }) {
                     <div className="px-8 pt-6 pb-8 space-y-5">
                         <div className="relative bg-white/2 rounded-2xl border border-white/5 p-5 overflow-hidden">
                             <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-cyan-500 via-purple-500 to-pink-500 rounded-l-full"></div>
-                            <p className="text-gray-300/90 text-[14px] leading-relaxed pl-4 max-h-22.5 overflow-y-auto custom-scrollbar">
+                            <p className="text-gray-300/90 text-sm leading-relaxed pl-4 max-h-22.5 overflow-y-auto custom-scrollbar">
                                 {movie.description}
                             </p>
                         </div>

@@ -4,14 +4,14 @@ function ModalPayVIP({ show, packageInfo, theme, getBadgeStyle, onClose }) {
     if (!show) return null;
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             <div 
                 className="absolute inset-0 bg-black/70"
                 style={{ animation: 'modalFadeIn 0.4s ease-out forwards' }}
             ></div>
             
             <div 
-                className="relative w-full max-w-md p-[2px] rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.25)]"
+                className="relative w-full max-w-md p-0.5 rounded-[2.5rem] overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.25)]"
                 style={{ animation: 'modalSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards' }}
             >
                 <div 
@@ -31,7 +31,7 @@ function ModalPayVIP({ show, packageInfo, theme, getBadgeStyle, onClose }) {
                     <div className="absolute bottom-32 right-12 w-3 h-3 bg-purple-400 rounded-full shadow-[0_0_12px_#c084fc]" style={{ animation: 'floatUp2 4s ease-in-out infinite 1s' }}></div>
                     <div className="absolute top-24 right-16 w-1.5 h-1.5 bg-blue-300 rounded-full shadow-[0_0_8px_#93c5fd]" style={{ animation: 'floatUp1 3.5s ease-in-out infinite 0.5s' }}></div>
 
-                    <div className="absolute inset-0 border-[1px] border-white/5 rounded-[2.5rem] pointer-events-none shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]"></div>
+                    <div className="absolute inset-0 border border-white/5 rounded-[2.5rem] pointer-events-none shadow-[inset_0_1px_2px_rgba(255,255,255,0.1)]"></div>
 
                     <div className="relative z-10 flex flex-col items-center text-center mt-2">
                         <div 

@@ -185,7 +185,7 @@ function UpgradeVIP(props) {
                                 {
                                     levelUser == plan.level && (
                                         <div className="w-full mt-5 flex justify-center items-center gap-2 bg-linear-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm py-3 rounded-full shadow-[0_4px_15px_rgba(16,185,129,0.4)] cursor-default ring-2 ring-emerald-400/50">
-                                            <FaCheckCircle className="text-white text-[16px]" />
+                                            <FaCheckCircle className="text-white text-base" />
                                             <span>Gói hiện tại</span>
                                         </div>
                                     )
