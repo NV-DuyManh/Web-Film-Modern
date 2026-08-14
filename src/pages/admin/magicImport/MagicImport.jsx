@@ -1,4 +1,4 @@
-﻿import { fetchDocumentsRealtime } from '../../../services/firebaseService';
+import { fetchDocumentsRealtime } from '../../../services/firebaseService';
 import { useShowTimes, useMovies } from '../../../hooks/useCollections';
 import React, { useState, useContext, useEffect } from 'react';
 import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser } from 'react-icons/fa';
@@ -283,7 +283,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         const exist = localCategoryTypes.find(c => c.name.toLowerCase() === movie.rawCategoryType.toLowerCase());
                         if (exist) categoryTypeID = exist.id;
                         else {
-                            const newRef = doc(collection(db, "CategoryType"));
+                            const newRef = doc(collection(db, "CategoryTypes"));
                             await setDoc(newRef, { id: newRef.id, name: movie.rawCategoryType, description: "Đang cập nhật..." });
                             categoryTypeID = newRef.id;
                             localCategoryTypes.push({ id: newRef.id, name: movie.rawCategoryType });

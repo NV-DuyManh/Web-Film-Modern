@@ -1,4 +1,4 @@
-﻿import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTopics, useMovies } from '../../../../hooks/useCollections';
 import Search from '../../../../components/admin/search/Search';
 import { addDocument, updateDocument, deleteDocument } from '../../../../services/firebaseService';
@@ -6,7 +6,7 @@ import TableTopic from './TableTopic';
 import ModalTopic from './ModalTopic';
 import Swal from 'sweetalert2';
 
-const inner = { name: "", description: "", movieIds: [], icon: "FaFire", gradient: "from-purple-500 to-indigo-600" };
+const inner = { name: "", description: "", movieID: [], icon: "FaFire", gradient: "from-purple-500 to-indigo-600" };
 
 function Topics(props) {
     const movies = useMovies() || [];
@@ -73,7 +73,7 @@ function Topics(props) {
     }
 
     const onChangeMovieSelection = (selectedIds) => {
-        setTopic({ ...topic, movieIds: selectedIds });
+        setTopic({ ...topic, movieID: selectedIds });
     }
 
     const onEdit = (data) => {
@@ -113,14 +113,14 @@ function Topics(props) {
 
     const handleSeedSmartTopics = async () => {
         const SMART_COLLECTIONS = [
-            { id: 'phim-hot', name: 'Phim Hot Nhất', description: 'Những bộ phim đang được xem nhiều nhất tuần qua.', gradient: 'from-orange-500 via-red-500 to-rose-600', isSmart: true, smartId: 'phim-hot', movieIds: [] },
-            { id: 'phim-moi', name: 'Phim Mới Cập Nhật', description: 'Những bộ phim vừa được thêm vào hệ thống.', gradient: 'from-amber-400 via-yellow-500 to-orange-500', isSmart: true, smartId: 'phim-moi', movieIds: [] },
-            { id: 'anime-hay', name: 'Anime Đặc Sắc', description: 'Thế giới hoạt hình Nhật Bản phong phú.', gradient: 'from-pink-500 via-fuchsia-500 to-purple-600', isSmart: true, smartId: 'anime-hay', movieIds: [] },
-            { id: 'phim-bo-dai-tap', name: 'Phim Bộ Dài Tập', description: 'Cày xuyên màn đêm với những series hấp dẫn.', gradient: 'from-purple-500 to-indigo-600', isSmart: true, smartId: 'phim-bo-dai-tap', movieIds: [] },
-            { id: 'phim-le', name: 'Phim Lẻ (Điện Ảnh)', description: 'Những tác phẩm điện ảnh xuất sắc gói gọn trong vài giờ.', gradient: 'from-sky-400 via-blue-500 to-indigo-600', isSmart: true, smartId: 'phim-le', movieIds: [] },
-            { id: 'phim-han', name: 'Phim Hàn Quốc', description: 'Đậm chất ngôn tình và kịch tính từ màn ảnh xứ Kim Chi.', gradient: 'from-emerald-400 via-teal-500 to-cyan-600', isSmart: true, smartId: 'phim-han', movieIds: [] },
-            { id: 'phim-trung', name: 'Phim Trung Quốc', description: 'Cổ trang, tiên hiệp và hiện đại đình đám.', gradient: 'from-lime-400 via-green-500 to-emerald-600', isSmart: true, smartId: 'phim-trung', movieIds: [] },
-            { id: 'phim-viet', name: 'Phim Việt Nam', description: 'Phim điện ảnh và truyền hình đặc sắc của Việt Nam.', gradient: 'from-red-500 via-orange-500 to-yellow-500', isSmart: true, smartId: 'phim-viet', movieIds: [] }
+            { id: 'phim-hot', name: 'Phim Hot Nhất', description: 'Những bộ phim đang được xem nhiều nhất tuần qua.', gradient: 'from-orange-500 via-red-500 to-rose-600', isSmart: true, smartID: 'phim-hot', movieID: [] },
+            { id: 'phim-moi', name: 'Phim Mới Cập Nhật', description: 'Những bộ phim vừa được thêm vào hệ thống.', gradient: 'from-amber-400 via-yellow-500 to-orange-500', isSmart: true, smartID: 'phim-moi', movieID: [] },
+            { id: 'anime-hay', name: 'Anime Đặc Sắc', description: 'Thế giới hoạt hình Nhật Bản phong phú.', gradient: 'from-pink-500 via-fuchsia-500 to-purple-600', isSmart: true, smartID: 'anime-hay', movieID: [] },
+            { id: 'phim-bo-dai-tap', name: 'Phim Bộ Dài Tập', description: 'Cày xuyên màn đêm với những series hấp dẫn.', gradient: 'from-purple-500 to-indigo-600', isSmart: true, smartID: 'phim-bo-dai-tap', movieID: [] },
+            { id: 'phim-le', name: 'Phim Lẻ (Điện Ảnh)', description: 'Những tác phẩm điện ảnh xuất sắc gói gọn trong vài giờ.', gradient: 'from-sky-400 via-blue-500 to-indigo-600', isSmart: true, smartID: 'phim-le', movieID: [] },
+            { id: 'phim-han', name: 'Phim Hàn Quốc', description: 'Đậm chất ngôn tình và kịch tính từ màn ảnh xứ Kim Chi.', gradient: 'from-emerald-400 via-teal-500 to-cyan-600', isSmart: true, smartID: 'phim-han', movieID: [] },
+            { id: 'phim-trung', name: 'Phim Trung Quốc', description: 'Cổ trang, tiên hiệp và hiện đại đình đám.', gradient: 'from-lime-400 via-green-500 to-emerald-600', isSmart: true, smartID: 'phim-trung', movieID: [] },
+            { id: 'phim-viet', name: 'Phim Việt Nam', description: 'Phim điện ảnh và truyền hình đặc sắc của Việt Nam.', gradient: 'from-red-500 via-orange-500 to-yellow-500', isSmart: true, smartID: 'phim-viet', movieID: [] }
         ];
 
         setLoading(true);
@@ -128,7 +128,7 @@ function Topics(props) {
         
         try {
             for (const col of SMART_COLLECTIONS) {
-                const exists = topicsList.some(t => t.id === col.id || t.smartId === col.smartId);
+                const exists = topicsList.some(t => t.id === col.id || t.smartID === col.smartID);
                 if (!exists) {
                     await addDocument("Topics", { ...col, title: col.name });
                     addedCount++;

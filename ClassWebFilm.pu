@@ -25,6 +25,7 @@ class Users {
     + sexID: text
     + gender: text
     + planID: text
+    + listFavorite: text
     + createdAt: datetime
 }
 
@@ -90,6 +91,8 @@ class Movies {
     + episodeVoice: int
     + countriesID: text
     + views: text
+    + slug: text
+    + updatedAt: datetime
 }
 
 class Episodes {
@@ -220,6 +223,26 @@ class Sex {
     + name: text
 }
 
+class Topics {
+    + id: text
+    + name: text
+    + title: text
+    + description: text
+    + movieID: text
+    + icon: text
+    + gradient: text
+    + isSmart: boolean
+    + smartID: text
+}
+
+class Notifications {
+    + id: text
+    + type: text
+    + title: text
+    + description: text
+    + createdAt: datetime
+}
+
 Movies "1" -down-> "n" Favorites
 Movies "n" -down-> "n" Actors
 Movies "1" -down-> "1" Authors
@@ -236,6 +259,9 @@ Authors "1" -left-> "1" Sex
 Users "1" -up-> "1" Sex
 Actors "1" -up-> "1" Countries
 Authors "1" -up-> "1" Countries
+Characters "n" -up-> "1" Countries
+Characters "1" -right-> "1" Sex
+Movies "n" -down-> "1" Countries
 
 Users "1" -right-> "n" Favorites
 Users "1" -right-> "n" Comments
@@ -257,5 +283,7 @@ Subscriptions "n" -up-> "1" Users
 Subscriptions "n" -right-> "1" Plans
 
 MoviesSave "n" -up-> "1" Movies
+
+Topics "n" -right-> "n" Movies
 
 @enduml

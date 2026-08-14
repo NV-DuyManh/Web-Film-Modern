@@ -1,4 +1,4 @@
-﻿import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useTopics } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -108,7 +108,7 @@ function TableTopic({ search, onEdit }) {
                                         <td className="table-cell text-center whitespace-nowrap px-4">{row.title || row.name}</td>
                                         <td className="table-cell text-center px-4">{row.description}</td>
                                         <td className="table-cell text-center px-4">
-                                            {row.isSmart ? 'Auto' : (row.movieIds?.length || 0)}
+                                            {row.isSmart ? 'Auto' : (row.movieID?.length || 0)}
                                         </td>
                                         <td className="table-cell text-center">
                                             <div className="flex justify-center gap-2">

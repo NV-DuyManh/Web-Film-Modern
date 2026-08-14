@@ -46,10 +46,10 @@ function TopicDetail() {
         const customCol = customTopics.find(t => t.id === id);
         if (customCol) {
             let topicMovies = [];
-            if (customCol.isSmart && customCol.smartId && SMART_FILTERS[customCol.smartId]) {
-                topicMovies = SMART_FILTERS[customCol.smartId](movies, categoryTypes);
+            if (customCol.isSmart && customCol.smartID && SMART_FILTERS[customCol.smartID]) {
+                topicMovies = SMART_FILTERS[customCol.smartID](movies, categoryTypes);
             } else {
-                topicMovies = (customCol.movieIds || []).map(mId => movies.find(m => m.id === mId)).filter(Boolean);
+                topicMovies = (customCol.movieID || []).map(mId => movies.find(m => m.id === mId)).filter(Boolean);
             }
             
             return {

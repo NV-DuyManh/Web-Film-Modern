@@ -128,10 +128,10 @@ function Topic() {
         
         const customCols = customTopics.map(topic => {
             let topicMovies = [];
-            if (topic.isSmart && topic.smartId && SMART_FILTERS[topic.smartId]) {
-                topicMovies = SMART_FILTERS[topic.smartId](movies, categoryTypes, categories);
+            if (topic.isSmart && topic.smartID && SMART_FILTERS[topic.smartID]) {
+                topicMovies = SMART_FILTERS[topic.smartID](movies, categoryTypes, categories);
             } else {
-                topicMovies = (topic.movieIds || []).map(id => movies.find(m => m.id === id)).filter(Boolean);
+                topicMovies = (topic.movieID || []).map(id => movies.find(m => m.id === id)).filter(Boolean);
             }
 
             return {

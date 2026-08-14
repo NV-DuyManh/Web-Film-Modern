@@ -1,4 +1,4 @@
-﻿import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, TextField, Select, MenuItem, FormControl, InputLabel, Chip } from '@mui/material';
+import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, TextField, Select, MenuItem, FormControl, InputLabel, Chip } from '@mui/material';
 import { useMovies } from '../../../../hooks/useCollections';
 import React, { useContext } from 'react';
 import { FaTimes } from 'react-icons/fa';
@@ -23,7 +23,7 @@ const GRADIENT_OPTIONS = [
 function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSelection, error, addTopic, loading, progress }) {
     const movies = useMovies() || [];
 
-    const selectedMovies = topic.movieIds?.map(id => movies.find(m => m.id === id)).filter(Boolean) || [];
+    const selectedMovies = topic.movieID?.map(id => movies.find(m => m.id === id)).filter(Boolean) || [];
 
     return (
         <Dialog
