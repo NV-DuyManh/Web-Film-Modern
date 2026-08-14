@@ -48,7 +48,7 @@ function Actors() {
             <ParticleBackground />
             <div className="max-w-350 mx-auto relative z-10">
                 <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <h1 className="text-3xl md:text-4xl font-black bg-linear-to-r from-purple-400 via-pink-400 to-amber-300 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(236,72,153,0.3)] tracking-tight mb-2 cursor-default pb-2">
+                    <h1 className="text-3xl md:text-4xl font-black bg-linear-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.3)] tracking-tight mb-2 cursor-default pb-2">
                         Diễn viên
                     </h1>
 

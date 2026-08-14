@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
@@ -24,11 +24,10 @@ import { useNavigate } from 'react-router-dom';
 function Anime() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [mainSwiper, setMainSwiper] = useState(null);
-    const [activeIndex, setActiveIndex] = useState(0);
     const movies = useMovies();
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoryContext);
-    
+
     const plans = useContext(PlanContext);
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -53,6 +52,18 @@ function Anime() {
         }
     };
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (mainSwiper && !mainSwiper.destroyed) mainSwiper.update();
+            if (thumbsSwiper && !thumbsSwiper.destroyed) thumbsSwiper.update();
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [mainSwiper, thumbsSwiper, movies]);
+
+    if (!movies || movies.length === 0) return (
+        <div className='anime-slide bg-white/5 animate-pulse'></div>
+    );
+
     return (
         <div className='anime-container'>
             <div className='flex justify-between items-center mb-4 sm:mb-6'>
@@ -68,17 +79,14 @@ function Anime() {
                 <div className='anime-slide-wrapper'>
                     <Swiper
                         onSwiper={setMainSwiper}
+                        observer={true}
+                        observeParents={true}
                         style={{
                             '--swiper-navigation-color': '#fff',
                             '--swiper-pagination-color': '#fff',
                         }}
                         spaceBetween={0}
-                        onSlideChange={(swiper) => {
-                            setActiveIndex(swiper.realIndex);
-                            if (thumbsSwiper && !thumbsSwiper.destroyed) {
-                                thumbsSwiper.slideToLoop(swiper.realIndex);
-                            }
-                        }}
+                        speed={800}
                         navigation={false}
                         loop={movies?.length >= 7}
                         loopedSlides={movies?.length || 10}
@@ -97,7 +105,7 @@ function Anime() {
                                     src={getOptimizedUrl(e.bannerUrl, 1920, 1080, 'banner')}
                                     alt={e.name}
                                     draggable="false"
-                                width={1920} height={1080} loading="lazy" decoding="async"/>
+                                    width={1920} height={1080} loading="lazy" decoding="async" />
 
                                 <div className="anime-overlay"></div>
 
@@ -115,7 +123,7 @@ function Anime() {
                                             {getObjectById(plans, e.planID)?.name}
                                         </button>
 
-                                        
+
 
                                         <button className='rounded-md border cursor-pointer border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
                                             {e.endEpisode} Tập
@@ -180,6 +188,9 @@ function Anime() {
                 <div className='anime-thumb-wrapper'>
                     <Swiper
                         onSwiper={setThumbsSwiper}
+                        observer={true}
+                        observeParents={true}
+                        speed={800}
                         breakpoints={{
                             0: { slidesPerView: 7, spaceBetween: 6 },
                             480: { slidesPerView: 7, spaceBetween: 8 },
@@ -198,15 +209,7 @@ function Anime() {
                         className="anime-thumb-swiper"
                     >
                         {movies?.map((e, index) => (
-                            <SwiperSlide
-                                key={e.id}
-                                onClick={() => {
-                                    if (mainSwiper && !mainSwiper.destroyed) {
-                                        mainSwiper.slideToLoop(index);
-                                    }
-                                }}
-                                className={activeIndex === index ? 'custom-thumb-active' : ''}
-                            >
+                            <SwiperSlide key={e.id}>
                                 <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt={e.name} draggable="false" />
                             </SwiperSlide>
                         ))}

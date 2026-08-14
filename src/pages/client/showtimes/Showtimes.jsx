@@ -135,8 +135,7 @@ function Showtimes() {
         <div className="min-h-screen bg-[#0a0a0f] pb-20 pt-24 px-6 md:px-10 lg:px-20 xl:px-28 relative overflow-hidden">
             <ParticleBackground />
             <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-8">
-                <FaCalendarAlt className="text-2xl md:text-3xl text-purple-400" />
+            <div className="mb-8">
                 <h1 className="text-3xl md:text-4xl font-black bg-linear-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.3)] tracking-tight mb-2 cursor-default pb-2">
                     Lịch chiếu
                 </h1>
@@ -173,7 +172,7 @@ function Showtimes() {
                                     }
                                     setSelectedDate(date);
                                 }}
-                                className={`group shrink-0 w-[calc(100%/3)] sm:w-[25%] md:w-[20%] lg:w-[calc(100%/7)] py-3 px-4 flex flex-col items-start justify-center border-t-2 border-r border-white/5 transition-all
+                                className={`group shrink-0 w-1/3 sm:w-1/4 md:w-1/5 lg:w-[calc(100%/7)] py-3 px-4 flex flex-col items-start justify-center border-t-2 border-r border-white/5 transition-all
                                     ${isSelected 
                                         ? 'border-t-amber-500 bg-[#2b2f3a] shadow-inner' 
                                         : 'border-t-transparent bg-[#1e232e] hover:bg-[#252a36]'

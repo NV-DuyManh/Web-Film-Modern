@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
@@ -24,12 +24,11 @@ import { useNavigate } from 'react-router-dom';
 function Banner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [mainSwiper, setMainSwiper] = useState(null);
-    const [activeIndex, setActiveIndex] = useState(0);
     const movies = useMovies();
     const hotMovies = movies?.filter(m => m.isHot) || [];
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoryContext);
-    
+
     const plans = useContext(PlanContext);
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -54,6 +53,14 @@ function Banner() {
         }
     };
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (mainSwiper && !mainSwiper.destroyed) mainSwiper.update();
+            if (thumbsSwiper && !thumbsSwiper.destroyed) thumbsSwiper.update();
+        }, 100);
+        return () => clearTimeout(timer);
+    }, [mainSwiper, thumbsSwiper]);
+
     if (!hotMovies || hotMovies.length === 0) return (
         <div className='slide-banner bg-white/5 animate-pulse'></div>
     );
@@ -62,17 +69,14 @@ function Banner() {
         <div className='slide-banner'>
             <Swiper
                 onSwiper={setMainSwiper}
+                observer={true}
+                observeParents={true}
                 style={{
                     '--swiper-navigation-color': '#fff',
                     '--swiper-pagination-color': '#fff',
                 }}
                 spaceBetween={0}
-                onSlideChange={(swiper) => {
-                    setActiveIndex(swiper.realIndex);
-                    if (thumbsSwiper && !thumbsSwiper.destroyed) {
-                        thumbsSwiper.slideToLoop(swiper.realIndex);
-                    }
-                }}
+                speed={800}
                 navigation={false}
                 loop={hotMovies.length >= 7}
                 loopedSlides={hotMovies.length || 10}
@@ -85,7 +89,7 @@ function Banner() {
                 className="mySwiper2"
             >
                 {hotMovies.map((e, index) => (
-                        <SwiperSlide key={e.id}>
+                    <SwiperSlide key={e.id}>
                         <img
                             className="banner-img"
                             src={getOptimizedUrl(e.bannerUrl, 1920, 1080, 'banner')}
@@ -114,7 +118,7 @@ function Banner() {
                                     {getObjectById(plans, e.planID)?.name}
                                 </button>
 
-                                
+
 
                                 <button className='rounded-md cursor-pointer border border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition-all duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
                                     {e.endEpisode} Tập
@@ -175,6 +179,9 @@ function Banner() {
             <div className='thumb-wrapper'>
                 <Swiper
                     onSwiper={setThumbsSwiper}
+                    observer={true}
+                    observeParents={true}
+                    speed={800}
                     breakpoints={{
                         0: { slidesPerView: 7, spaceBetween: 6 },
                         480: { slidesPerView: 7, spaceBetween: 8 },
@@ -193,14 +200,7 @@ function Banner() {
                     className="thumb-swiper"
                 >
                     {hotMovies.map((e, index) => (
-                        <SwiperSlide
-                            key={e.id}
-                            onClick={() => {
-                                if (mainSwiper && !mainSwiper.destroyed) {
-                                    mainSwiper.slideToLoop(index);
-                                }
-                            }}
-                        >
+                        <SwiperSlide key={e.id}>
                             <img
                                 src={getOptimizedUrl(e.bannerUrl, 200, 113, 'thumb')}
                                 alt={e.name}

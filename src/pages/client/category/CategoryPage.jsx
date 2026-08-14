@@ -1,4 +1,4 @@
-﻿import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
 import { useParams, Link } from 'react-router-dom';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
@@ -12,7 +12,7 @@ import SEO from '../../../components/SEO';
 
 function CategoryPage() {
     const { id } = useParams();
-    const movies = useMovies() ;
+    const movies = useMovies() || [];
     const categories = useContext(CategoryContext) || [];
     const plans = useContext(PlanContext) || [];
 

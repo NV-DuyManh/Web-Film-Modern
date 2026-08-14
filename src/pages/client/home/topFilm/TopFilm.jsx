@@ -13,7 +13,21 @@ import { Link } from 'react-router-dom';
 
 function TopFilm() {
     const movies = useMovies();
-    const topMovies = movies?.slice(0, 10) ;
+    
+    const calculateTrendingScore = (movie) => {
+        const views = Number(movie.views) || 0;
+        const createdAt = movie.createdAt ? new Date(movie.createdAt).getTime() : new Date('2024-01-01').getTime();
+        const ageInDays = Math.max(1, (new Date().getTime() - createdAt) / (1000 * 60 * 60 * 24));
+        const velocity = views / ageInDays;
+        
+        let engagementBonus = 1.0;
+        if (movie.planID) engagementBonus += 0.2;
+        if (movie.rent) engagementBonus += 0.3;
+        
+        return (views * 0.3 + velocity * 0.7) * engagementBonus;
+    };
+
+    const topMovies = movies ? [...movies].sort((a, b) => calculateTrendingScore(b) - calculateTrendingScore(a)).slice(0, 10) : [];
     
     const plans = useContext(PlanContext);
 
