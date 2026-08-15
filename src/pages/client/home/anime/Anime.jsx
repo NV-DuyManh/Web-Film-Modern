@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
+import ModalDetail from '../../watch/detailFilm/ModalDetail';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
@@ -32,10 +33,12 @@ function Anime() {
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    const [loginDialog, setLoginDialog] = useState(false);
+
     const handleFavorite = async (e, movieId) => {
         e.stopPropagation();
         if (!isLogin) {
-            import('sweetalert2').then(m => m.default.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim vào yêu thích', 'warning'));
+            setLoginDialog(true);
             return;
         }
         try {
@@ -52,13 +55,7 @@ function Anime() {
         }
     };
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (mainSwiper && !mainSwiper.destroyed) mainSwiper.update();
-            if (thumbsSwiper && !thumbsSwiper.destroyed) thumbsSwiper.update();
-        }, 100);
-        return () => clearTimeout(timer);
-    }, [mainSwiper, thumbsSwiper, movies]);
+
 
     if (!movies || movies.length === 0) return (
         <div className='anime-slide bg-white/5 animate-pulse'></div>
@@ -89,7 +86,7 @@ function Anime() {
                         speed={800}
                         navigation={false}
                         loop={movies?.length >= 7}
-                        loopedSlides={movies?.length || 10}
+                        {...(movies?.length >= 7 ? { loopedSlides: movies.length } : {})}
                         effect={'fade'}
                         fadeEffect={{ crossFade: true }}
                         thumbs={{
@@ -203,7 +200,7 @@ function Anime() {
                         grabCursor={true}
                         allowTouchMove={true}
                         loop={movies?.length >= 7}
-                        loopedSlides={movies?.length || 10}
+                        {...(movies?.length >= 7 ? { loopedSlides: movies.length } : {})}
                         slideToClickedSlide={true}
                         modules={[FreeMode, Navigation, Thumbs]}
                         className="anime-thumb-swiper"
@@ -216,6 +213,13 @@ function Anime() {
                     </Swiper>
                 </div>
             </div>
+
+            <ModalDetail
+                open={loginDialog}
+                handleClose={() => setLoginDialog(false)}
+                title="Yêu cầu đăng nhập"
+                description="Bạn cần đăng nhập để thêm phim vào yêu thích"
+            />
         </div>
     );
 }

@@ -41,7 +41,7 @@ function CollectionCard({ collection, movies, index }) {
         >
             <Link 
                 to={`/topic/${collection.id}`}
-                className="group block relative rounded-3xl overflow-hidden aspect-[4/3] bg-[#0b0f19] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.6)]"
+                className="group block relative rounded-3xl overflow-hidden aspect-4/3 bg-[#0b0f19] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.6)]"
             >
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-br ${collection.gradient} transition-opacity duration-500 z-0`}></div>
                 

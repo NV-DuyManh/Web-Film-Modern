@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
+import ModalDetail from '../../watch/detailFilm/ModalDetail';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
@@ -33,10 +34,12 @@ function Banner() {
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
 
+    const [loginDialog, setLoginDialog] = useState(false);
+
     const handleFavorite = async (e, movieId) => {
         e.stopPropagation();
         if (!isLogin) {
-            import('sweetalert2').then(m => m.default.fire('Vui lòng đăng nhập', 'Bạn cần đăng nhập để thêm phim vào yêu thích', 'warning'));
+            setLoginDialog(true);
             return;
         }
         try {
@@ -53,13 +56,7 @@ function Banner() {
         }
     };
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            if (mainSwiper && !mainSwiper.destroyed) mainSwiper.update();
-            if (thumbsSwiper && !thumbsSwiper.destroyed) thumbsSwiper.update();
-        }, 100);
-        return () => clearTimeout(timer);
-    }, [mainSwiper, thumbsSwiper]);
+
 
     if (!hotMovies || hotMovies.length === 0) return (
         <div className='slide-banner bg-white/5 animate-pulse'></div>
@@ -79,7 +76,7 @@ function Banner() {
                 speed={800}
                 navigation={false}
                 loop={hotMovies.length >= 7}
-                loopedSlides={hotMovies.length || 10}
+                {...(hotMovies.length >= 7 ? { loopedSlides: hotMovies.length } : {})}
                 effect={'fade'}
                 fadeEffect={{ crossFade: true }}
                 thumbs={{
@@ -194,7 +191,7 @@ function Banner() {
                     grabCursor={true}
                     allowTouchMove={true}
                     loop={hotMovies.length >= 7}
-                    loopedSlides={hotMovies.length || 10}
+                    {...(hotMovies.length >= 7 ? { loopedSlides: hotMovies.length } : {})}
                     slideToClickedSlide={true}
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="thumb-swiper"
@@ -214,6 +211,13 @@ function Banner() {
                     ))}
                 </Swiper>
             </div>
+
+            <ModalDetail
+                open={loginDialog}
+                handleClose={() => setLoginDialog(false)}
+                title="Yêu cầu đăng nhập"
+                description="Bạn cần đăng nhập để thêm phim vào yêu thích"
+            />
         </div>
     );
 }

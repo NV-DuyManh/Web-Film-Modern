@@ -99,7 +99,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
         const characterItems = (row.listCharacter || []).map(id => getObjectById(characters, id)).filter(Boolean);
         const totalItems = actorItems.length + authorItems.length + characterItems.length;
 
-        const tooltipWidth = totalItems <= 1 ? "w-[145px]" : totalItems === 2 ? "w-47.5" : totalItems <= 4 ? "w-65" : "w-95";
+        const tooltipWidth = totalItems <= 1 ? "w-36" : totalItems === 2 ? "w-47.5" : totalItems <= 4 ? "w-65" : "w-95";
 
         const renderItem = (item, type) => {
             const hoverRing = type === 'actor' ? 'group-hover:ring-green-400 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.6)]' : type === 'author' ? 'group-hover:ring-amber-400 group-hover:shadow-[0_0_15px_rgba(251,191,36,0.6)]' : 'group-hover:ring-pink-400 group-hover:shadow-[0_0_15px_rgba(244,114,182,0.6)]';

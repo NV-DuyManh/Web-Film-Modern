@@ -5,13 +5,29 @@ import FilmNew from './filmNew/FilmNew';
 import SEO from '../../../components/SEO';
 import LazySection from '../../../components/LazySection';
 
-const FilmCountry = lazy(() => import('./filmCountry/FilmCountry'));
-const TopFilm = lazy(() => import('./topFilm/TopFilm'));
-const Cinema = lazy(() => import('./cinema/Cinema'));
-const Comment = lazy(() => import('./comment/Comment'));
-const FilmComing = lazy(() => import('./filmComing/FilmComing'));
-const Anime = lazy(() => import('./anime/Anime'));
-const FilmHongKong = lazy(() => import('./filmHongKong/FilmHongKong'));
+// Retry wrapper for lazy imports — handles chunk 404 after deployment
+const lazyRetry = (importFn, retries = 3) =>
+    lazy(() =>
+        importFn().catch((err) => {
+            if (retries > 0) {
+                return new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
+                    lazyRetry(importFn, retries - 1)
+                ).then(mod => ({ default: mod.default }));
+            }
+            // After all retries failed, reload the page to get fresh chunk URLs
+            window.location.reload();
+            throw err;
+        })
+    );
+
+const FilmCountry = lazyRetry(() => import('./filmCountry/FilmCountry'));
+const TopFilm = lazyRetry(() => import('./topFilm/TopFilm'));
+const Cinema = lazyRetry(() => import('./cinema/Cinema'));
+const Comment = lazyRetry(() => import('./comment/Comment'));
+const FilmComing = lazyRetry(() => import('./filmComing/FilmComing'));
+const Anime = lazyRetry(() => import('./anime/Anime'));
+const FilmHongKong = lazyRetry(() => import('./filmHongKong/FilmHongKong'));
+
 
 function Home(props) {
     return (

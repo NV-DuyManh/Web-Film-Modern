@@ -113,14 +113,16 @@
     position: absolute;
     z-index: 30;
     bottom: 100px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
+    right: 0;
+    margin: 0 auto;
     width: 95%;
     max-width: 500px;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .anime-main-swiper .swiper-slide:not(.swiper-slide-active) .anime-info-box,
@@ -142,6 +144,8 @@
     .anime-info-box {
         bottom: 80px;
         left: 50px;
+        right: auto;
+        margin: 0;
         transform: none;
         width: 60%;
         max-width: 650px;
@@ -170,7 +174,7 @@
     overflow: hidden;
     cursor: pointer;
     background: #000;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
     position: relative;
     z-index: 1;
 }
@@ -182,7 +186,7 @@
     object-fit: cover;
     pointer-events: none;
     -webkit-user-drag: none;
-    transition: all 0.3s ease;
+    transition: filter 0.3s ease, transform 0.3s ease;
     filter: brightness(0.95) contrast(1.05);
     transform: translateZ(0);
 }
@@ -263,7 +267,7 @@
     }
 
     .anime-thumb-swiper {
-        width: auto;
+        width: 100%;
         max-width: 100%;
     }
 
@@ -321,12 +325,12 @@
 @keyframes slideInUp {
     from {
         opacity: 0;
-        transform: translate(-50%, 20px);
+        transform: translateY(20px);
     }
 
     to {
         opacity: 1;
-        transform: translate(-50%, 0);
+        transform: translateY(0);
     }
 }
 
