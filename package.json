@@ -17,6 +17,7 @@
     "@paypal/react-paypal-js": "^10.2.0",
     "@tailwindcss/vite": "^4.3.3",
     "artplayer": "^5.4.0",
+    "axios": "^1.19.0",
     "crypto-js": "^4.2.0",
     "firebase": "^12.12.0",
     "framer-motion": "^13.0.0",

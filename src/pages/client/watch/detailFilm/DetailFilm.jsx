@@ -9,13 +9,13 @@ import { getExpiryDate, getUserPlanInfo } from '../../../../utils/appUtils';
 import { getDefaultAvatar } from '../../../../utils/appUtils';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
+import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument, fetchDataById, getDocumentById } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ListEpisodes from '../playfilm/ListEpisodes';
 import Comment from './Comment';
 import SEO from '../../../../components/SEO';
-
 
 
 function DetailFilm() {
@@ -33,6 +33,7 @@ function DetailFilm() {
     const characters = useMemo(() => Object.values(charactersMap), [charactersMap]);
 
     const plans = useContext(PlanContext);
+    const categories = useContext(CategoryContext);
     const [episodes, setEpisodes] = useState([]);
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -295,7 +296,7 @@ function DetailFilm() {
 
                 <div className="w-full max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
 
-                    <div className="lg:col-span-3 flex flex-col gap-6">
+                    <div className="lg:col-span-3 flex flex-col gap-6 lg:sticky lg:top-4 lg:self-start">
 
                         <div className="rounded-xl overflow-hidden shadow-2xl w-2/3 sm:w-1/2 sm:h-3/4 lg:w-full mx-auto relative z-20 -mt-24 sm:-mt-70 lg:-mt-48 border-4 border-[#0f1322]">
                             <img
@@ -329,6 +330,7 @@ function DetailFilm() {
                             <div className="text-slate-400"><span className="font-bold text-white inline">Thời lượng:</span> {movie.duration ? movie.duration + ' phút' : (movie.time || 'Đang cập nhật')}</div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Lượt xem:</span> {(Number(movie.views) || 0) + 100}</div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Quốc gia:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</span></div>
+                            <div className="text-slate-400"><span className="font-bold text-white inline">Thể loại:</span> {Array.isArray(movie.listCategory) && movie.listCategory.length > 0 ? <span className="inline-flex flex-wrap gap-1 ml-1">{movie.listCategory.map(id => { const cat = getObjectById(categories, id); return cat ? <Link key={id} to={`/the-loai?cat=${cat.slug || id}`} className="text-yellow-500 hover:text-yellow-300 transition-colors">{cat.name}</Link> : null; }).filter(Boolean).reduce((prev, curr, i) => i === 0 ? [curr] : [...prev, <span key={`sep-${i}`} className="text-slate-600">,</span>, curr], [])}</span> : <span className="text-slate-300">Đang cập nhật</span>}</div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Đạo diễn:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{Array.isArray(movie.listAuthor) && movie.listAuthor.length > 0 ? movie.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</span></div>
                         </div>
 

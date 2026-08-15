@@ -13,6 +13,11 @@ export const getOptimizedUrl = (url, width = 400, height = 600, type = 'poster')
         return url.replace('/upload/', `/upload/${transform}/`);
     }
 
+    // phimimg.com CDN blocks external proxies, serve directly
+    if (url.includes('phimimg.com')) {
+        return url;
+    }
+
     // For third-party URLs (Firebase, PhimAPI, Ophim, etc.), use wsrv.nl image proxy
     // to force resize and WebP conversion on the fly.
     // This saves ~19MB of image payload for APIs that return raw uncompressed images.
