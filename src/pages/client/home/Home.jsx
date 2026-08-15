@@ -48,6 +48,7 @@ function Home(props) {
                             <FilmCountry title={<>Phim Nhật <br className="hidden md:block" />Bản mới</>} countryName="Japan" titleClass="glow-text-1" />
                             <FilmCountry title={<>Phim Trung <br className="hidden md:block" />Quốc mới</>} countryName="China" titleClass="glow-text-2" />
                             <FilmCountry title={<>Phim Hàn <br className="hidden md:block" />Quốc mới</>} countryName="South Korea" titleClass="glow-text-3" />
+                            <FilmCountry title={<>Phim Việt <br className="hidden md:block" />Nam mới</>} countryName="Vietnam" titleClass="glow-text-4" />
                         </div>
                     </div>
                 </div>

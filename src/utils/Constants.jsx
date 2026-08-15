@@ -396,4 +396,10 @@ export const LISTACCOUNT = [
         icon: <FaFilm />,
         path: "/account/rentMovies"
     }
-];
+];
+
+export const YOUR_SERVICE_ID = "service_wrbu7og";
+export const REGISTER_PLAN = "template_8wkt467"; // đk gói
+export const NEW_EPISODE = "template_c5ocp4e"; // tập mới ra
+export const YOUR_USER_ID = "RmhLUxDSJVZ5LuXSd";
+export const CONFIRM_CODE = "template_h0wht88";

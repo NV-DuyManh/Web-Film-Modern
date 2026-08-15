@@ -1,11 +1,12 @@
-﻿import React, { useState, useContext, useEffect, useRef } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { usePackages, useSubscriptions } from '../../../../hooks/useCollections';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { FaCreditCard } from 'react-icons/fa';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
-import { initialOptions } from '../../../../utils/Constants';
+import { initialOptions, YOUR_SERVICE_ID, REGISTER_PLAN, YOUR_USER_ID } from '../../../../utils/Constants';
+import emailjs from '@emailjs/browser';
 import { addDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ModalPayVIP from './ModalPayVIP';
@@ -109,6 +110,17 @@ function PayVIP(props) {
                 expiryDate: renewDate,
                 status: "Success"
             });
+
+            const params = {
+                to_email: isLogin?.email,
+                name: isLogin?.fullName || isLogin?.email,
+                plan: packageInfo.name,
+                price: priceData.final,
+                start: new Date().toLocaleDateString('vi-VN'),
+                end: renewDate.toLocaleDateString('vi-VN'),
+            };
+            emailjs.send(YOUR_SERVICE_ID, REGISTER_PLAN, params, YOUR_USER_ID);
+
             setShowSuccessModal(true);
 
         } catch (error) {

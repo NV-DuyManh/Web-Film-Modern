@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Search from '../../../../components/admin/search/Search';
 import ModalSubscriptions from "./ModalSubscriptions";
 import TableSubscriptions from "./TableSubscriptions";
 import { addDocument, updateDocument } from "../../../../services/firebaseService";
+import { UserContext } from "../../../../contexts/UserProvider";
+import { PlanContext } from "../../../../contexts/PlanProvider";
+import emailjs from "@emailjs/browser";
+import { REGISTER_PLAN, YOUR_SERVICE_ID, YOUR_USER_ID } from "../../../../utils/Constants";
 
 const inner = { transactionID: "", userID: "", planID: "", paymentMethod: "", price: 0, startDate: "", expiryDate: "", status: "success" };
 
@@ -12,9 +16,9 @@ function Subscriptions() {
     const [error, setError] = useState({});
     const [loading, setLoading] = useState(false);
     const [progress, setProgress] = useState(0);
-
+    const users = useContext(UserContext)
     const [search, setSearch] = useState("");
-
+    const plans = useContext(PlanContext);
     const onChangeSearch = (e) => {
         setSearch(e.target.value);
     }
@@ -63,7 +67,9 @@ function Subscriptions() {
 
             setProgress(50);
 
-            if (!subscription.id) {
+            let isNew = !subscription.id;
+            
+            if (isNew) {
                 submitData.createdAt = new Date().toISOString();
                 await addDocument("Subscriptions", submitData);
             } else {
@@ -77,6 +83,7 @@ function Subscriptions() {
                 setProgress(0);
             }, 500);
         } catch (err) {
+            console.error(err);
             alert("Đã xảy ra lỗi, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);

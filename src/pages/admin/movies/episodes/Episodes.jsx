@@ -1,4 +1,4 @@
-﻿import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useSearchParams } from 'react-router-dom';
 import ModalEpisodes from './ModalEpisodes';
@@ -9,10 +9,19 @@ import { BsSearch } from 'react-icons/bs';
 import { FaPlus } from 'react-icons/fa';
 import { MdMovie } from 'react-icons/md';
 
+import { AuthContext } from '../../../../contexts/AuthProvider';
+import { UserContext } from '../../../../contexts/UserProvider';
+import { getObjectById } from '../../../../services/firebaseResponse';
+import { NEW_EPISODE, YOUR_SERVICE_ID, YOUR_USER_ID } from '../../../../utils/Constants';
+import emailjs from "@emailjs/browser";
+
 const inner = { numberEpisode: "", title: "", movieID: "", url: "" };
 
+
 function Episodes() {
+    const users = useContext(UserContext);
     const movies = useMovies() || [];
+    
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedMovie, setSelectedMovie] = useState(null);
 
@@ -106,7 +115,23 @@ function Episodes() {
                     submitData.id = existingEp.id;
                     await updateDocument("Episodes", submitData);
                 } else {
-                    await addDocument("Episodes", submitData);
+                    await addDocument("Episodes", submitData);       
+                    const listUser = users.filter(t => t?.listFavorite?.some(p => p == submitData.movieID));
+                    const movie = getObjectById(movies, submitData.movieID);
+                    
+                    listUser.forEach(p => {
+                        const templateParams = {
+                            to_email: p.email,
+                            user_name: p.name || p.email,
+                            movie_name: movie?.otherName || movie?.name || 'Phim Mới',
+                            episode_number: submitData.numberEpisode,
+                            release_date: new Date().toLocaleDateString('vi-VN'),
+                            movie_banner: movie?.bannerUrl || movie?.imgUrl || movie?.thumbUrl || 'https://via.placeholder.com/480x270',
+                            watch_url: `https://mfilm.online/phim/${movie?.slug || ''}`
+                        };
+                        
+                        emailjs.send(YOUR_SERVICE_ID, NEW_EPISODE, templateParams, YOUR_USER_ID);
+                    });
                 }
             } else {
                 await updateDocument("Episodes", submitData);
@@ -119,7 +144,6 @@ function Episodes() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-
             alert("Có lỗi xảy ra, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);
@@ -169,6 +193,26 @@ function Episodes() {
                         await updateDocument("Episodes", submitData);
                     } else {
                         await addDocument("Episodes", submitData);
+
+                        const listUser = users.filter(t => t.listFavorite.some(p => p == submitData.movieID));
+                        listUser.map(p => {
+                            const templateParams = {
+                                to_email: p.email,
+                                user_name: p.name,
+                                movie_name: getObjectById(movies, submitData.movieID).name,
+                                episode_number: submitData.numberEpisode,
+                                release_date: new Date(),
+                            };
+                            console.log(templateParams);
+
+                            emailjs.send(
+                                YOUR_SERVICE_ID,
+                                NEW_EPISODE,
+                                templateParams,
+                                YOUR_USER_ID
+                            );
+
+                        });
                     }
                 }
 
@@ -212,7 +256,7 @@ function Episodes() {
                         filterOptions={filterOptions}
                         getOptionLabel={(opt) => opt?.otherName || opt?.name || ""}
                         value={selectedMovie}
-                        onChange={(e, val) => { setSelectedMovie(val); if(val) { setSearchParams({movie: val.slug || val.otherName || val.id}); } else { setSearchParams({}); } }}
+                        onChange={(e, val) => { setSelectedMovie(val); if (val) { setSearchParams({ movie: val.slug || val.otherName || val.id }); } else { setSearchParams({}); } }}
                         classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                         className="w-full"
                         sx={{
