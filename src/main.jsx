@@ -6,6 +6,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import App from './App.jsx';
 
+
 import CategoryProvider from './contexts/CategoryProvider.jsx';
 import CategoryTypeProvider from './contexts/CategoryTypeProvider.jsx';
 import PlanProvider from './contexts/PlanProvider.jsx';

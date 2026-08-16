@@ -101,13 +101,13 @@ function HeaderClient() {
             <div className={`absolute inset-0 -z-10 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${isScrolled ? "bg-[#0b1221]/40 backdrop-blur-2xl border-b border-white/10 shadow-lg" : "bg-linear-to-b from-black/80 via-black/20 to-transparent border-none shadow-none"}`}></div>
 
             <div
-                className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1200px]:gap-4 min-[1200px]:px-8 transition-all duration-500`}
+                className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1200px]:gap-4 min-[1200px]:px-8 transition duration-500`}
             >
                 <button
                     ref={hamburgerRef}
                     aria-label={openMenu ? "Đóng menu" : "Mở menu"}
                     onClick={() => setOpenMenu(!openMenu)}
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl text-white transition-all duration-300 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] sm:h-11 sm:w-11 min-[1200px]:hidden"
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-2xl text-white transition duration-300 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.8)] hover:drop-shadow-[0_0_10px_rgba(34,211,238,0.8)] sm:h-11 sm:w-11 min-[1200px]:hidden"
                 >
                     {openMenu ? <IoClose /> : <HiMenuAlt3 />}
                 </button>
@@ -118,7 +118,7 @@ function HeaderClient() {
 
                 <div ref={searchContainerRef} className="relative min-w-0 flex-1 md:max-w-87.5 lg:max-w-112.5 min-[1200px]:max-w-87.5 xl:max-w-112.5 transition-[max-width] duration-500 ease-out md:mx-auto group">
                     <input
-                        className="peer w-full min-w-0 rounded-full bg-transparent px-5 py-2.5 pr-12 text-sm font-medium text-white outline-none transition-all duration-300 placeholder:text-slate-300 border border-[#00f2fe]/50 shadow-[0_0_10px_rgba(0,242,254,0.3),inset_0_0_5px_rgba(0,242,254,0.1)] hover:border-green-500/70 hover:shadow-[0_0_15px_rgba(34,197,94,0.5),inset_0_0_5px_rgba(34,197,94,0.2)] focus:border-[#ff00ff]/80 focus:shadow-[0_0_20px_rgba(255,0,255,0.6),inset_0_0_8px_rgba(255,0,255,0.2)] sm:px-5 sm:py-2.5 sm:pr-12"
+                        className="peer w-full min-w-0 rounded-full bg-transparent px-5 py-2.5 pr-12 text-sm font-medium text-white outline-none transition duration-300 placeholder:text-slate-300 border border-[#00f2fe]/50 shadow-[0_0_10px_rgba(0,242,254,0.3),inset_0_0_5px_rgba(0,242,254,0.1)] hover:border-green-500/70 hover:shadow-[0_0_15px_rgba(34,197,94,0.5),inset_0_0_5px_rgba(34,197,94,0.2)] focus:border-[#ff00ff]/80 focus:shadow-[0_0_20px_rgba(255,0,255,0.6),inset_0_0_8px_rgba(255,0,255,0.2)] sm:px-5 sm:py-2.5 sm:pr-12"
                         type="text" placeholder="Tìm kiếm phim..."
                         aria-label="Tìm kiếm phim"
                         value={searchQuery}
@@ -136,7 +136,7 @@ function HeaderClient() {
                             <IoCloseCircle />
                         </button>
                     ) : (
-                        <FiSearch aria-hidden="true" className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition-all duration-300 peer-focus:scale-110 peer-focus:text-[#ff00ff] peer-focus:drop-shadow-[0_0_12px_rgba(255,0,255,0.8)]" />
+                        <FiSearch aria-hidden="true" className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] transition duration-300 peer-focus:scale-110 peer-focus:text-[#ff00ff] peer-focus:drop-shadow-[0_0_12px_rgba(255,0,255,0.8)]" />
                     )}
                     <SearchHeader
                         searchQuery={searchQuery}
@@ -152,7 +152,7 @@ function HeaderClient() {
                                 if (item.path === "/category") cateRef.current = el;
                                 if (item.path === "/country") countryRef.current = el;
                             }}
-                            className={`relative flex flex-col min-[1200px]:block max-[1199px]:w-full transition-all duration-300 ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-60" : "z-10"}`}
+                            className={`relative flex flex-col min-[1200px]:block max-[1199px]:w-full transition duration-300 ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-60" : "z-10"}`}
                         >
                             <Link to={item.path}
                                 onClick={(e) => {
@@ -169,7 +169,7 @@ function HeaderClient() {
                                         setOpenCountry(false);
                                     }
                                 }}
-                                className={`cursor-pointer flex items-center transition-all duration-300
+                                className={`cursor-pointer flex items-center transition duration-300
                                     max-[1199px]:w-full max-[1199px]:justify-between max-[1199px]:px-4 max-[1199px]:py-2.5 max-[1199px]:rounded-lg max-[1199px]:text-[13px]
                                     min-[1200px]:justify-center min-[1200px]:rounded-full min-[1200px]:px-3 min-[1200px]:py-2 min-[1200px]:text-sm xl:px-4 font-bold outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1221]
                                     ${(location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path + "/")))
@@ -196,7 +196,7 @@ function HeaderClient() {
                         {!isLogin ? (
                             <button
                                 onClick={handleOpenLogin}
-                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-full bg-linear-to-r from-yellow-400 via-yellow-300 to-amber-500 px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition-all duration-300 bg-size-[200%_auto] hover:bg-position-[right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] xl:px-5 ${isSearching
+                                className={`btn-shine-effect cursor-pointer flex shrink-0 items-center gap-1.5 sm:gap-2 rounded-full bg-linear-to-r from-yellow-400 via-yellow-300 to-amber-500 px-3 py-2 sm:px-4 sm:py-2.5 text-xs sm:text-sm font-bold text-black shadow-[0_4px_15px_rgba(250,204,21,0.4)] transition duration-300 bg-size-[200%_auto] hover:bg-position-[right_center] hover:shadow-[0_0_25px_rgba(250,204,21,0.6)] xl:px-5 ${isSearching
                                     ? "max-md:hidden pointer-events-none"
                                     : ""
                                     }`}
@@ -216,7 +216,7 @@ function HeaderClient() {
                                     </WingedFrame>
                                 </button>
 
-                                <div className={`absolute right-0 top-full mt-4 w-80 rounded-2xl bg-black/80 border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(34,211,238,0.15)] overflow-hidden transition-all duration-300 origin-top-right ${isDropdownOpen ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
+                                <div className={`absolute right-0 top-full mt-4 w-80 rounded-2xl bg-black/80 border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.6),0_0_20px_rgba(34,211,238,0.15)] overflow-hidden transition duration-300 origin-top-right ${isDropdownOpen ? "scale-100 opacity-100 visible" : "scale-95 opacity-0 invisible"}`}>
 
                                     <div className="flex items-center gap-4 p-5 border-b border-slate-700/80 bg-linear-to-r from-blue-900/10 to-transparent">
                                         <div className="shrink-0">
@@ -243,7 +243,7 @@ function HeaderClient() {
 
 
                                     <div className="px-4 py-4 border-b border-slate-700/80">
-                                        <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-sm font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition-all duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5">
+                                        <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-sm font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5">
                                             <FaCrown className="text-lg" /> Nâng cấp gói
                                         </button>
  
@@ -253,7 +253,7 @@ function HeaderClient() {
                                             </div>
                                             <div className="flex items-center gap-3">
                                                 <p className="font-bold text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)] text-[15px]">0 R</p>
-                                                <button className="flex items-center gap-1 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-lg text-[13px] font-bold transition-all border border-white/20 hover:border-yellow-400 hover:text-yellow-400">
+                                                <button className="flex items-center gap-1 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-lg text-[13px] font-bold transition border border-white/20 hover:border-yellow-400 hover:text-yellow-400">
                                                     + Nạp
                                                 </button>
                                             </div>
@@ -261,19 +261,19 @@ function HeaderClient() {
                                     </div>
 
                                     <div className="px-3 flex flex-col  ">
-                                        <button onClick={() => { navigate('/account/account'); setIsDropdownOpen(false); }} className="w-full mt-2 flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/account'); setIsDropdownOpen(false); }} className="w-full mt-2 flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition duration-300 hover:translate-x-1">
                                             <FaUser className="text-purple-400 text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" /> Tài khoản
                                         </button>
 
-                                        <button onClick={() => { navigate('/account/favorites'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/favorites'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition duration-300 hover:translate-x-1">
                                             <FaRegHeart className="text-pink-400 text-lg drop-shadow-[0_0_5px_rgba(236,72,153,0.5)]" /> Yêu thích
                                         </button>
 
-                                        <button onClick={() => { navigate('/account/list'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/list'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-xl transition duration-300 hover:translate-x-1">
                                             <FaList className="text-cyan-400 text-lg drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]" /> Danh sách
                                         </button>
 
-                                        <button onClick={() => { navigate('/account/rentMovies'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-xl transition-all duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/rentMovies'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-xl transition duration-300 hover:translate-x-1">
                                             <FaFilm className="text-yellow-400 text-lg drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]" /> Phim đang thuê
                                         </button>
 
@@ -282,7 +282,7 @@ function HeaderClient() {
 
                                         <button
                                             onClick={() => { handleLogout(); setIsDropdownOpen(false); }}
-                                            className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/15 rounded-xl transition-all duration-300 hover:translate-x-1"
+                                            className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/15 rounded-xl transition duration-300 hover:translate-x-1"
                                         >
                                             <FaSignOutAlt className="text-lg drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]" /> Đăng xuất
                                         </button>

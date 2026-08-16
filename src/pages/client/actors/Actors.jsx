@@ -77,7 +77,7 @@ function Actors() {
                             {currentActors.map((actor) => (
                                 <div key={actor.id} className="group cursor-pointer flex flex-col">
                                     <div className="relative mb-2 w-full">
-                                        <div className="relative w-full aspect-4/5 md:aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-pink-500 group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(236,72,153,0.4)]">
+                                        <div className="relative w-full aspect-4/5 md:aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition duration-300 group-hover:border-pink-500 group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(236,72,153,0.4)]">
                                             <img 
                                                 src={(!actor.imgUrl || actor.imgUrl.includes('Logo')) ? getDefaultAvatar(actor.sexID) : actor.imgUrl} 
                                                 alt={actor.name} 
@@ -102,7 +102,7 @@ function Actors() {
                                 <button 
                                     onClick={handlePrev} 
                                     disabled={safePage === 1}
-                                    className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition-all"
+                                    className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition"
                                 >
                                     <FaChevronLeft size={14} />
                                 </button>
@@ -112,7 +112,7 @@ function Actors() {
                                 <button 
                                     onClick={handleNext} 
                                     disabled={safePage === totalPages}
-                                    className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition-all"
+                                    className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition"
                                 >
                                     <FaChevronRight size={14} />
                                 </button>

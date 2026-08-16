@@ -78,7 +78,7 @@ function TopFilm() {
                                 <div className="group cursor-pointer flex flex-col h-full">
 
                                     <div
-                                        className="relative w-full aspect-2/3 transition-all duration-300 group-hover:-translate-y-2 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_12px_15px_rgba(250,204,21,0.3)]"
+                                        className="relative w-full aspect-2/3 transition duration-300 group-hover:-translate-y-2 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_12px_15px_rgba(250,204,21,0.3)]"
                                     >
                                         <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-[3px] border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : 'skew-y-[-8deg]'} origin-center z-10 transition-colors duration-300`}>
                                             <img
@@ -105,7 +105,7 @@ function TopFilm() {
                                             <div className="absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
                                         </div>
 
-                                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex justify-center w-full z-30 transition-all duration-300">
+                                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex justify-center w-full z-30 transition duration-300">
                                             {e.planID && (() => {
                                                 const plan = getObjectById(plans, e.planID);
                                                 if (!plan) return null;
@@ -132,7 +132,7 @@ function TopFilm() {
                                             })()}
                                         </div>
 
-                                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-30 transition-all duration-300">
+                                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-30 transition duration-300">
                                             {e.episodeSub && (
                                                 <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-linear-to-r from-cyan-500 to-blue-500 text-white text-[8px] font-bold rounded shadow-md">
                                                     PĐ.{String(e.episodeSub).trim()}

@@ -42,11 +42,11 @@ function HeaderAdmin() {
                     </h1>
 
                     <div className="flex items-center gap-3 md:gap-5 lg:gap-8 text-xl lg:text-2xl shrink-0">
-                        <button className="text-cyan-400 cursor-pointer drop-shadow-[0_0_4px_rgba(34,211,238,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-cyan-300 hover:drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
+                        <button className="text-cyan-400 cursor-pointer drop-shadow-[0_0_4px_rgba(34,211,238,0.6)] transition duration-300 hover:-translate-y-1 hover:scale-125 hover:text-cyan-300 hover:drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
                             <FiSearch />
                         </button>
 
-                        <button className="relative text-yellow-400 cursor-pointer drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-yellow-300 hover:drop-shadow-[0_0_15px_rgba(250,204,21,1)] group">
+                        <button className="relative text-yellow-400 cursor-pointer drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition duration-300 hover:-translate-y-1 hover:scale-125 hover:text-yellow-300 hover:drop-shadow-[0_0_15px_rgba(250,204,21,1)] group">
                             <IoIosNotifications className="animate-bell" />
                             <span className="absolute top-0 right-0.5 flex h-2.5 w-2.5 -mt-0.5 -mr-0.5">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -54,7 +54,7 @@ function HeaderAdmin() {
                             </span>
                         </button>
 
-                        <button className="relative text-purple-400 cursor-pointer drop-shadow-[0_0_4px_rgba(192,132,252,0.6)] transition-all duration-300 hover:-translate-y-1 hover:scale-125 hover:text-purple-300 hover:drop-shadow-[0_0_15px_rgba(192,132,252,1)] group">
+                        <button className="relative text-purple-400 cursor-pointer drop-shadow-[0_0_4px_rgba(192,132,252,0.6)] transition duration-300 hover:-translate-y-1 hover:scale-125 hover:text-purple-300 hover:drop-shadow-[0_0_15px_rgba(192,132,252,1)] group">
                             <MdEmail className="animate-envelope" />
                             <span className="absolute top-0 right-0 flex h-2.5 w-2.5 -mt-0.5 -mr-1">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" style={{ animationDuration: '2s' }}></span>
@@ -65,7 +65,7 @@ function HeaderAdmin() {
                         <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                className="relative flex items-center justify-center text-green-400 cursor-pointer transition-all duration-300 group"
+                                className="relative flex items-center justify-center text-green-400 cursor-pointer transition duration-300 group"
                             >
                                 <div className="absolute inset-0 rounded-full bg-green-400 opacity-20 blur-sm group-hover:opacity-60 group-hover:animate-pulse transition-opacity duration-300"></div>
                                 
@@ -77,7 +77,7 @@ function HeaderAdmin() {
                             </button>
 
                             {isDropdownOpen && (
-                                <div className="absolute right-0 top-full mt-6 w-64 rounded-xl border border-slate-700 bg-[#0f172a] shadow-[0_15px_40px_rgba(0,0,0,0.6)] z-50 overflow-hidden transform opacity-100 scale-100 transition-all duration-300">
+                                <div className="absolute right-0 top-full mt-6 w-64 rounded-xl border border-slate-700 bg-[#0f172a] shadow-[0_15px_40px_rgba(0,0,0,0.6)] z-50 overflow-hidden transform opacity-100 scale-100 transition duration-300">
                                     <div className="flex items-center gap-3 p-4 border-b border-slate-700/50 bg-slate-800/30">
                                         <WingedFrame theme={isLogin?.selectedFrame || 'admin'} size={48}>
                                             <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="w-full h-full rounded-full object-cover" />
@@ -89,10 +89,10 @@ function HeaderAdmin() {
                                     </div>
 
                                     <div className="p-2">
-                                        <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
+                                        <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition duration-200">
                                             <FaUser className="text-cyan-400 text-lg" /> Hồ sơ của tôi
                                         </Link>
-                                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition-all duration-200">
+                                        <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition duration-200">
                                             <FaCog className="text-yellow-400 text-lg" /> Cài đặt
                                         </button>
 
@@ -104,7 +104,7 @@ function HeaderAdmin() {
                                                 handleLogout();
                                                 setIsDropdownOpen(false);
                                             }}
-                                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition-all duration-200"
+                                            className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition duration-200"
                                         >
                                             <FaSignOutAlt className="text-lg" /> Đăng xuất
                                         </button>

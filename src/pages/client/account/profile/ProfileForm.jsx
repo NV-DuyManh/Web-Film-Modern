@@ -62,15 +62,15 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                     <h3 className="text-white text-sm font-bold uppercase tracking-wider flex items-center gap-2"> Thông tin cá nhân </h3>
                     <div>
                         {!isEditing ? (
-                            <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/60 text-yellow-500 text-xs font-bold shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-yellow-500 hover:text-[#0f172a] hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] hover:scale-105 transition-all duration-300 cursor-pointer">
+                            <button onClick={() => setIsEditing(true)} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500/10 border border-yellow-500/60 text-yellow-500 text-xs font-bold shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-yellow-500 hover:text-[#0f172a] hover:shadow-[0_0_15px_rgba(234,179,8,0.4)] hover:scale-105 transition duration-300 cursor-pointer">
                                 <FaEdit className="text-sm" /> Chỉnh sửa
                             </button>
                         ) : (
                             <div className="flex items-center gap-2">
-                                <button onClick={handleCancelEdit} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold hover:bg-red-500 hover:text-white hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] transition-all duration-300 cursor-pointer">
+                                <button onClick={handleCancelEdit} className="flex items-center gap-2 px-3 py-2 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold hover:bg-red-500 hover:text-white hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] transition duration-300 cursor-pointer">
                                     <FaTimes /> Hủy
                                 </button>
-                                <button onClick={submitProfile} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500 border border-yellow-500 text-[#0f172a] text-xs font-bold shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:bg-yellow-400 hover:scale-105 transition-all duration-300 cursor-pointer">
+                                <button onClick={submitProfile} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-yellow-500 border border-yellow-500 text-[#0f172a] text-xs font-bold shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:bg-yellow-400 hover:scale-105 transition duration-300 cursor-pointer">
                                     <FaSave className="text-sm" /> Lưu
                                 </button>
                             </div>
@@ -89,7 +89,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                             value={formData.name}
                             onChange={handleChange}
                             disabled={!isEditing}
-                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all`}
+                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition`}
                         />
                     </div>
                     <div className="flex flex-col gap-2 group">
@@ -98,7 +98,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                         </label>
                         <input type="email" name="email" value={formData.email} onChange={handleChange} disabled={!isEditing}
                             placeholder={isEditing ? "Nhập email của bạn" : "Chưa cập nhật..."}
-                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all`}
+                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition`}
                         />
                     </div>
                     <div className="flex flex-col gap-2 group">
@@ -107,7 +107,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                         </label>
                         <input type="text" name="phone" value={formData.phone} onChange={handleChange} disabled={!isEditing}
                             placeholder={isEditing ? "Nhập số điện thoại" : "Chưa cập nhật..."}
-                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all`}
+                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition`}
                         />
                     </div>
                     <div className="flex flex-col gap-2 group">
@@ -116,7 +116,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                         </label>
                         <input type="text" name="address" value={formData.address} onChange={handleChange} disabled={!isEditing}
                             placeholder={isEditing ? "Nhập địa chỉ" : "Chưa cập nhật..."}
-                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all`}
+                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition`}
                         />
                     </div>
                     <div className="flex flex-col gap-2 group">
@@ -124,7 +124,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                             <FaBirthdayCake className="text-yellow-500" /> Ngày sinh
                         </label>
                         <input type="date" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} disabled={!isEditing}
-                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all css-color-scheme-dark`}
+                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition css-color-scheme-dark`}
                             style={{ colorScheme: 'dark' }}
                         />
                     </div>
@@ -133,7 +133,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                             <FaVenusMars className="text-yellow-500" /> Giới tính
                         </label>
                         <select name="sexID" value={formData.sexID} onChange={handleChange} disabled={!isEditing}
-                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all [&>option]:bg-slate-800 [&>option]:text-white cursor-pointer disabled:cursor-not-allowed`}
+                            className={`bg-black/20 backdrop-blur-md border ${isEditing ? 'border-yellow-400 shadow-[0_0_15px_rgba(234,179,8,0.3)]' : 'border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)]'} hover:bg-white/5 hover:border-yellow-400 rounded-xl px-4 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition [&>option]:bg-slate-800 [&>option]:text-white cursor-pointer disabled:cursor-not-allowed`}
                         >
                             <option value="">Chưa cập nhật...</option>
                             <option value="Male">Nam</option>
@@ -148,7 +148,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                         <div className="flex flex-col xl:flex-row gap-2 items-start xl:items-center">
                             <div className="relative flex-1 w-full">
                                 <input type={showPassword ? "text" : "password"} value={isLogin?.password || ''} disabled
-                                    className="w-full bg-black/20 backdrop-blur-md cursor-not-allowed border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-1.5 text-white text-base font-bold tracking-widest focus:outline-none transition-all"
+                                    className="w-full bg-black/20 backdrop-blur-md cursor-not-allowed border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-1.5 text-white text-base font-bold tracking-widest focus:outline-none transition"
                                 />
                                 <button
                                     onClick={() => setShowPassword(!showPassword)}
@@ -159,12 +159,12 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                             </div>
                             <button
                                 onClick={() => setIsChangingPassword(!isChangingPassword)}
-                                className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl border font-bold transition-all whitespace-nowrap cursor-pointer ${isChangingPassword ? 'bg-yellow-500 text-[#0f172a] border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'bg-transparent text-yellow-500 border-yellow-500 hover:bg-yellow-500/10'}`}
+                                className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl border font-bold transition whitespace-nowrap cursor-pointer ${isChangingPassword ? 'bg-yellow-500 text-[#0f172a] border-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.4)]' : 'bg-transparent text-yellow-500 border-yellow-500 hover:bg-yellow-500/10'}`}
                             >
                                 <FaKey /> Đổi MK
                             </button>
                         </div>
-                        <div className={`transition-all duration-300 overflow-hidden ${isChangingPassword ? 'max-h-125 opacity-100 mt-6' : 'max-h-0 opacity-0 mt-0'}`}>
+                        <div className={`transition duration-300 overflow-hidden ${isChangingPassword ? 'max-h-125 opacity-100 mt-6' : 'max-h-0 opacity-0 mt-0'}`}>
                             <div className="bg-black/30 border border-yellow-500/30 rounded-2xl p-6 flex flex-col gap-5 shadow-[0_0_15px_rgba(234,179,8,0.1)]">
                                 <div className="flex flex-col gap-2 group/old">
                                     <label className="text-xs font-bold text-slate-200 flex items-center gap-2 uppercase tracking-wide group-focus-within/old:text-yellow-400 transition-colors">
@@ -172,7 +172,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                                     </label>
                                     <div className="relative">
                                         <input type={showPassword ? "text" : "password"} name="currentPassword" value={passwordData.currentPassword} onChange={handlePasswordChange} placeholder="Nhập mật khẩu cũ..."
-                                            className="w-full bg-black/20 backdrop-blur-md border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all"
+                                            className="w-full bg-black/20 backdrop-blur-md border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition"
                                         />
                                         <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-yellow-500 transition-colors cursor-pointer">
                                             {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -185,7 +185,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                                     </label>
                                     <div className="relative">
                                         <input type={showPassword ? "text" : "password"} name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} placeholder="Nhập mật khẩu mới..."
-                                            className="w-full bg-black/20 backdrop-blur-md border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all"
+                                            className="w-full bg-black/20 backdrop-blur-md border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition"
                                         />
                                         <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-yellow-500 transition-colors cursor-pointer">
                                             {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -199,7 +199,7 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                                     </label>
                                     <div className="relative">
                                         <input type={showPassword ? "text" : "password"} name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordChange} placeholder="Xác nhận mật khẩu..."
-                                            className="w-full bg-black/20 backdrop-blur-md border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition-all"
+                                            className="w-full bg-black/20 backdrop-blur-md border border-yellow-500/40 shadow-[0_0_10px_rgba(234,179,8,0.15)] hover:bg-white/5 hover:border-yellow-400 rounded-xl pl-4 pr-10 py-2.5 text-white text-sm font-medium focus:outline-none focus:border-yellow-400 focus:bg-yellow-500/5 focus:shadow-[0_0_15px_rgba(234,179,8,0.3)] transition"
                                         />
                                         <button onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-yellow-500 transition-colors cursor-pointer">
                                             {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -211,10 +211,10 @@ function ProfileForm({ isLogin, onSaveProfile, onSavePassword }) {
                                     <button onClick={() => {
                                         setIsChangingPassword(false);
                                         setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
-                                    }} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] transition-all duration-300 cursor-pointer">
+                                    }} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm font-bold hover:bg-red-500 hover:text-white hover:shadow-[0_0_15px_rgba(239,68,68,0.4)] transition duration-300 cursor-pointer">
                                         <FaTimes className="text-lg" /> Huỷ
                                     </button>
-                                    <button onClick={submitPassword} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-yellow-500 border border-yellow-500 text-[#0f172a] text-sm font-bold shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:bg-yellow-400 hover:scale-105 transition-all duration-300 cursor-pointer">
+                                    <button onClick={submitPassword} className="flex items-center gap-2 px-6 py-2.5 rounded-xl bg-yellow-500 border border-yellow-500 text-[#0f172a] text-sm font-bold shadow-[0_0_15px_rgba(234,179,8,0.3)] hover:bg-yellow-400 hover:scale-105 transition duration-300 cursor-pointer">
                                         <FaSave className="text-lg" /> Xác nhận
                                     </button>
                                 </div>

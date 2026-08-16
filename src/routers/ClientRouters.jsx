@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import LoadingScreen from '../components/client/loadingScreen/LoadingScreen';
+import ErrorBoundary from '../components/ErrorBoundary';
 
 const Home = lazy(() => import('../pages/client/home/Home'));
 const Topic = lazy(() => import('../pages/client/topic/Topic'));
@@ -102,7 +103,7 @@ function ClientRouters(props) {
             <Suspense fallback={<LoadingFallback />}>
                 <Routes>
                     {clientRouter.map((p, index) => (
-                        <Route key={index} path={p.path} element={p.element} />
+                        <Route key={index} path={p.path} element={<ErrorBoundary>{p.element}</ErrorBoundary>} />
                     ))}
                 </Routes>
             </Suspense>

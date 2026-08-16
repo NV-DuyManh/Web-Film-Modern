@@ -81,7 +81,7 @@ function ModalListFilm({ isOpen, onClose, onConfirm, title, placeholder, default
                         onChange={(e) => { setValue(e.target.value); setError(''); }}
                         onKeyDown={handleKeyDown}
                         placeholder={placeholder || 'Nhập tên...'}
-                        className={`w-full bg-slate-800/80 border border-slate-600/80 text-white text-sm rounded-xl py-3.5 px-4 focus:outline-none transition-all duration-300 placeholder:text-slate-500 ${c.inputFocus}`}
+                        className={`w-full bg-slate-800/80 border border-slate-600/80 text-white text-sm rounded-xl py-3.5 px-4 focus:outline-none transition duration-300 placeholder:text-slate-500 ${c.inputFocus}`}
                     />
                     {error && (
                         <p className="text-red-400 text-xs mt-2 text-left font-medium">{error}</p>
@@ -91,13 +91,13 @@ function ModalListFilm({ isOpen, onClose, onConfirm, title, placeholder, default
                 <div className="flex items-center gap-3 w-full mt-6">
                     <button
                         onClick={onClose}
-                        className="flex-1 py-3 rounded-xl bg-slate-700/60 hover:bg-slate-600/80 text-slate-300 hover:text-white font-bold transition-all duration-300 text-sm"
+                        className="flex-1 py-3 rounded-xl bg-slate-700/60 hover:bg-slate-600/80 text-slate-300 hover:text-white font-bold transition duration-300 text-sm"
                     >
                         Hủy bỏ
                     </button>
                     <button
                         onClick={handleSubmit}
-                        className={`flex-1 py-3 rounded-xl bg-linear-to-r ${c.btn} text-white font-bold transition-all duration-300 text-sm hover:scale-[1.02] active:scale-95`}
+                        className={`flex-1 py-3 rounded-xl bg-linear-to-r ${c.btn} text-white font-bold transition duration-300 text-sm hover:scale-[1.02] active:scale-95`}
                     >
                         {confirmText || 'Xác nhận'}
                     </button>

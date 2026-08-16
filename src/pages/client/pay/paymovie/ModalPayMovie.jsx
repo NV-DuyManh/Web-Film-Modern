@@ -64,7 +64,7 @@ function ModalPayMovie({ show, movieName, onClose, onGoHome }) {
                             <button 
                                 type="button"
                                 onClick={onGoHome}
-                                className="w-full sm:w-1/2 py-3.5 rounded-2xl font-bold text-sm text-white/80 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 shadow-lg backdrop-blur-md transition-all duration-300 active:scale-[0.98] order-2 sm:order-1 cursor-pointer"
+                                className="w-full sm:w-1/2 py-3.5 rounded-2xl font-bold text-sm text-white/80 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 shadow-lg backdrop-blur-md transition duration-300 active:scale-[0.98] order-2 sm:order-1 cursor-pointer"
                             >
                                 VỀ TRANG CHI TIẾT
                             </button>
@@ -72,7 +72,7 @@ function ModalPayMovie({ show, movieName, onClose, onGoHome }) {
                             <button 
                                 type="button"
                                 onClick={onClose}
-                                className="w-full sm:w-1/2 py-3.5 rounded-2xl font-black text-[15px] text-white tracking-wide bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 shadow-[0_8px_20px_rgba(244,63,94,0.4)] hover:shadow-[0_12px_25px_rgba(244,63,94,0.6)] transition-all duration-300 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] group overflow-hidden relative border border-rose-400/50 order-1 sm:order-2 cursor-pointer"
+                                className="w-full sm:w-1/2 py-3.5 rounded-2xl font-black text-[15px] text-white tracking-wide bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 shadow-[0_8px_20px_rgba(244,63,94,0.4)] hover:shadow-[0_12px_25px_rgba(244,63,94,0.6)] transition duration-300 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] group overflow-hidden relative border border-rose-400/50 order-1 sm:order-2 cursor-pointer"
                             >
                                 <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
                                 <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-linear-to-r from-rose-400/20 to-pink-500/20 mix-blend-overlay"></div>

@@ -6,6 +6,7 @@ import AdminRouters from './routers/AdminRouters'
 import NoelBackground from './components/admin/noelBackground/NoelBackground'
 import { AuthContext } from './contexts/AuthProvider'
 import LoadingScreen from './components/client/loadingScreen/LoadingScreen';
+import ErrorBoundary from './components/ErrorBoundary';
 
 
 const HomeAdmin = lazy(() => import('./pages/admin/homeAdmin/HomeAdmin'));
@@ -20,12 +21,14 @@ function App() {
 
   return (
     <>
-      <Suspense fallback={<LoadingFallback />}>
-      {
-        isLogin?.role == "admin" ? <>  <NoelBackground />
-          <HomeAdmin /></> : <LayoutClient />
-      }
-      </Suspense>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingFallback />}>
+        {
+          isLogin?.role == "admin" ? <>  <NoelBackground />
+            <HomeAdmin /></> : <LayoutClient />
+        }
+        </Suspense>
+      </ErrorBoundary>
     </>
 
 

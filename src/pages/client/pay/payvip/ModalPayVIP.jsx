@@ -59,7 +59,7 @@ function ModalPayVIP({ show, packageInfo, theme, getBadgeStyle, onClose }) {
                         <button 
                             type="button"
                             onClick={onClose}
-                            className="w-full py-4 rounded-2xl font-black text-[17px] text-white tracking-wide bg-linear-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_8px_25px_rgba(6,182,212,0.5)] hover:shadow-[0_15px_35px_rgba(6,182,212,0.7)] transition-all duration-300 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] group overflow-hidden relative border border-cyan-400/50 cursor-pointer"
+                            className="w-full py-4 rounded-2xl font-black text-[17px] text-white tracking-wide bg-linear-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_8px_25px_rgba(6,182,212,0.5)] hover:shadow-[0_15px_35px_rgba(6,182,212,0.7)] transition duration-300 hover:-translate-y-1 active:translate-y-0 active:scale-[0.98] group overflow-hidden relative border border-cyan-400/50 cursor-pointer"
                         >
                             <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
                             <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-linear-to-r from-cyan-400/20 to-blue-500/20 mix-blend-overlay"></div>

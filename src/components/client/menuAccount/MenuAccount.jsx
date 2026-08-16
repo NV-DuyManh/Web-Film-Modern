@@ -89,7 +89,7 @@ function MenuAccount() {
                                     key={index}
                                     to={item.path}
                                     onClick={() => setIsMobileMenuOpen(false)}
-                                    className={`flex items-center gap-4 w-full px-5 py-4 transition-all duration-300 border-b border-slate-700/50 last:border-b-0 ${activeTab === item.name
+                                    className={`flex items-center gap-4 w-full px-5 py-4 transition duration-300 border-b border-slate-700/50 last:border-b-0 ${activeTab === item.name
                                             ? 'bg-cyan-500/20 text-cyan-400'
                                             : 'text-slate-300 hover:bg-slate-700/50 hover:text-cyan-400'
                                         }`}
@@ -118,7 +118,7 @@ function MenuAccount() {
                             <Link
                                 key={index}
                                 to={item.path}
-                                className={`flex items-center gap-4 w-full px-5 py-3 rounded-lg transition-all duration-300 group border ${activeTab === item.name
+                                className={`flex items-center gap-4 w-full px-5 py-3 rounded-lg transition duration-300 group border ${activeTab === item.name
                                         ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-400 shadow-[inset_4px_0_0_0_#22d3ee,0_0_15px_rgba(34,211,238,0.1)]'
                                         : 'border-transparent bg-slate-800/90 text-slate-300 hover:bg-slate-700 hover:text-cyan-400 hover:border-cyan-500/30'
                                     }`}

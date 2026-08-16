@@ -32,13 +32,13 @@ function ModalDeleteListFilm({ isOpen, onClose, onConfirm, title, message }) {
                 <div className="flex items-center gap-3 w-full">
                     <button
                         onClick={onClose}
-                        className="flex-1 py-3 rounded-xl bg-slate-700/60 hover:bg-slate-600/80 text-slate-300 hover:text-white font-bold transition-all duration-300 text-sm"
+                        className="flex-1 py-3 rounded-xl bg-slate-700/60 hover:bg-slate-600/80 text-slate-300 hover:text-white font-bold transition duration-300 text-sm"
                     >
                         Hủy
                     </button>
                     <button
                         onClick={onConfirm}
-                        className="flex-1 py-3 rounded-xl bg-linear-to-r from-red-500 to-rose-600 hover:from-red-400 hover:to-rose-500 text-white font-bold transition-all duration-300 shadow-[0_4px_20px_rgba(239,68,68,0.3)] hover:shadow-[0_4px_25px_rgba(239,68,68,0.5)] hover:scale-[1.02] active:scale-95 text-sm"
+                        className="flex-1 py-3 rounded-xl bg-linear-to-r from-red-500 to-rose-600 hover:from-red-400 hover:to-rose-500 text-white font-bold transition duration-300 shadow-[0_4px_20px_rgba(239,68,68,0.3)] hover:shadow-[0_4px_25px_rgba(239,68,68,0.5)] hover:scale-[1.02] active:scale-95 text-sm"
                     >
                         Xóa
                     </button>

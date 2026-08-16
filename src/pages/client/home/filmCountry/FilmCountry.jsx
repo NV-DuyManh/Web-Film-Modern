@@ -32,7 +32,7 @@ function FilmCountry({ title, countryName, titleClass }) {
                 <h2 className={`m-0 mb-3 md:mb-4 text-xl md:text-2xl font-bold text-center md:text-left leading-snug tracking-wide drop-shadow-md ${titleClass || 'text-white'}`}>
                     {title}
                 </h2>
-                <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 text-[11px] uppercase tracking-wider font-semibold hover:bg-white/10 hover:text-white hover:border-white/20 transition-all cursor-pointer group">
+                <div className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-slate-300 text-[11px] uppercase tracking-wider font-semibold hover:bg-white/10 hover:text-white hover:border-white/20 transition cursor-pointer group">
                     Khám phá <FaChevronRight className="w-2.5 h-2.5 transition-transform group-hover:translate-x-1 text-[#facc15]" />
                 </div>
             </div>
@@ -58,7 +58,7 @@ function FilmCountry({ title, countryName, titleClass }) {
                             <SwiperSlide key={e.id}>
                                 <Link to={`/phim/${e.slug || e.id}`}>
                                     <div className="group cursor-pointer flex flex-col h-full">
-                                        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                             <img src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')} alt="" draggable="false" className="w-full h-full object-cover" width={480} height={270} loading="lazy" decoding="async" />
                                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
@@ -125,12 +125,12 @@ function FilmCountry({ title, countryName, titleClass }) {
                                             <p className="m-0 mt-1 text-[#8c909e] text-[10px] md:text-[11px] truncate w-full transition-colors group-hover:text-slate-300">{e.name}</p>
                                             <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5 w-full font-bold">
                                                 {e.releaseYear && (
-                                                    <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                    <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                                                         <FaCalendarAlt /> {e.releaseYear}
                                                     </span>
                                                 )}
 
-                                                <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                                                     <FaEye /> {(Number(e.views) || 0) + 100}
                                                 </span>
                                             </div>

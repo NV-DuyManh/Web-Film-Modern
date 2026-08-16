@@ -183,11 +183,11 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
                             }}
                             onKeyDown={handleJump}
                             placeholder=""
-                            className={`w-10 h-7 bg-white/5 border ${errorMsg ? 'border-red-400 focus:border-red-400' : 'border-white/10 focus:border-amber-400'} rounded-md text-amber-400 text-xs font-bold text-center focus:outline-none focus:bg-amber-400/10 transition-all placeholder:text-gray-600`}
+                            className={`w-10 h-7 bg-white/5 border ${errorMsg ? 'border-red-400 focus:border-red-400' : 'border-white/10 focus:border-amber-400'} rounded-md text-amber-400 text-xs font-bold text-center focus:outline-none focus:bg-amber-400/10 transition placeholder:text-gray-600`}
                         />
                         <button
                             onClick={executeJump}
-                            className="flex h-7 items-center justify-center rounded-md border border-amber-400/30 bg-amber-400/10 px-2 text-[10px] font-bold uppercase tracking-wider text-amber-400 transition-all hover:border-amber-400 hover:bg-amber-400/20 active:scale-95"
+                            className="flex h-7 items-center justify-center rounded-md border border-amber-400/30 bg-amber-400/10 px-2 text-[10px] font-bold uppercase tracking-wider text-amber-400 transition hover:border-amber-400 hover:bg-amber-400/20 active:scale-95"
                         >
                             GO
                         </button>

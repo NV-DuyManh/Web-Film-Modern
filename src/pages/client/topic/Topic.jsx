@@ -41,7 +41,7 @@ function CollectionCard({ collection, movies, index }) {
         >
             <Link 
                 to={`/topic/${collection.id}`}
-                className="group block relative rounded-3xl overflow-hidden aspect-4/3 bg-[#0b0f19] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.6)]"
+                className="group block relative rounded-3xl overflow-hidden aspect-4/3 bg-[#0b0f19] transition duration-500 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,0,0,0.6)]"
             >
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-linear-to-br ${collection.gradient} transition-opacity duration-500 z-0`}></div>
                 
@@ -52,10 +52,10 @@ function CollectionCard({ collection, movies, index }) {
                             <img 
                                 src={getOptimizedUrl(previewMovies[0].bannerUrl || previewMovies[0].imgUrl, 480, 270, 'thumb')} 
                                 alt=""
-                                className="absolute w-[90%] h-[70%] object-cover object-center rounded-2xl shadow-2xl transition-all duration-500 opacity-100 group-hover:opacity-0 group-hover:scale-95 group-hover:-translate-y-2 z-50 border border-white/10"
+                                className="absolute w-[90%] h-[70%] object-cover object-center rounded-2xl shadow-2xl transition duration-500 opacity-100 group-hover:opacity-0 group-hover:scale-95 group-hover:-translate-y-2 z-50 border border-white/10"
                             />
                         ) : (
-                            <div className="absolute w-[90%] h-[70%] bg-slate-800 rounded-2xl z-50 border border-white/10 transition-all duration-500 opacity-100 group-hover:opacity-0"></div>
+                            <div className="absolute w-[90%] h-[70%] bg-slate-800 rounded-2xl z-50 border border-white/10 transition duration-500 opacity-100 group-hover:opacity-0"></div>
                         )}
                     </div>
 
@@ -64,28 +64,28 @@ function CollectionCard({ collection, movies, index }) {
                             <img 
                                 src={getOptimizedUrl(previewMovies[3].imgUrl, 300, 450, 'poster')} 
                                 alt=""
-                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-lg transition-all duration-500 opacity-0 group-hover:opacity-80 group-hover:-translate-x-24 group-hover:-translate-y-1 group-hover:-rotate-[20deg] z-10 border border-white/10"
+                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-lg transition duration-500 opacity-0 group-hover:opacity-80 group-hover:-translate-x-24 group-hover:-translate-y-1 group-hover:-rotate-[20deg] z-10 border border-white/10"
                             />
                         )}
                         {previewMovies[2] && (
                             <img 
                                 src={getOptimizedUrl(previewMovies[2].imgUrl, 300, 450, 'poster')} 
                                 alt=""
-                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-lg transition-all duration-500 opacity-0 group-hover:opacity-90 group-hover:-translate-x-10 group-hover:-translate-y-1 group-hover:-rotate-[5deg] group-hover:z-30 z-20 border border-white/10"
+                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-lg transition duration-500 opacity-0 group-hover:opacity-90 group-hover:-translate-x-10 group-hover:-translate-y-1 group-hover:-rotate-[5deg] group-hover:z-30 z-20 border border-white/10"
                             />
                         )}
                         {previewMovies[1] && (
                             <img 
                                 src={getOptimizedUrl(previewMovies[1].imgUrl, 300, 450, 'poster')} 
                                 alt=""
-                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-xl transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-10 group-hover:-translate-y-1 group-hover:rotate-[5deg] group-hover:z-40 z-30 border border-white/10"
+                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-xl transition duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-10 group-hover:-translate-y-1 group-hover:rotate-[5deg] group-hover:z-40 z-30 border border-white/10"
                             />
                         )}
                         {previewMovies[0] && (
                             <img 
                                 src={getOptimizedUrl(previewMovies[0].imgUrl, 300, 450, 'poster')} 
                                 alt=""
-                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-2xl transition-all duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-24 group-hover:-translate-y-1 group-hover:rotate-[20deg] z-40 group-hover:z-50 border border-white/10 group-hover:border-white/30"
+                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-2xl transition duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-24 group-hover:-translate-y-1 group-hover:rotate-[20deg] z-40 group-hover:z-50 border border-white/10 group-hover:border-white/30"
                             />
                         )}
                     </div>
@@ -101,7 +101,7 @@ function CollectionCard({ collection, movies, index }) {
                         </p>
                         
                         <div className="flex items-center justify-between w-full border-t border-white/10 pt-3 group-hover:border-white/20 transition-colors">
-                            <span className="px-3 py-1 rounded-full bg-white/5 backdrop-blur-sm text-white/90 text-[11px] font-bold border border-white/10 group-hover:bg-white/10 group-hover:text-white transition-all">
+                            <span className="px-3 py-1 rounded-full bg-white/5 backdrop-blur-sm text-white/90 text-[11px] font-bold border border-white/10 group-hover:bg-white/10 group-hover:text-white transition">
                                 {movies.length} PHIM
                             </span>
                             <div className="flex items-center gap-1.5 text-xs font-bold text-white/50 group-hover:text-white transition-colors">

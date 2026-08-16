@@ -120,7 +120,7 @@ function TopicDetail() {
                 <div className="absolute top-6 left-6 z-40">
                     <button 
                         onClick={() => navigate('/topic')}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white/80 hover:text-white hover:bg-black/60 transition-all text-sm font-medium cursor-pointer"
+                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 text-white/80 hover:text-white hover:bg-black/60 transition text-sm font-medium cursor-pointer"
                     >
                         <FaArrowLeft className="text-xs" />
                         Tất cả chủ đề
@@ -173,7 +173,7 @@ function TopicDetail() {
                                         transition={{ duration: 0.3, delay: i * 0.03 }}
                                     >
                                         <Link to={`/phim/${movie.slug || movie.id}`} className="group flex flex-col">
-                                            <div className="relative rounded-xl overflow-hidden aspect-2/3 border-[3px] border-transparent group-hover:border-[#facc15] transition-all duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
+                                            <div className="relative rounded-xl overflow-hidden aspect-2/3 border-[3px] border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                                 <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
                                                 
@@ -243,11 +243,11 @@ function TopicDetail() {
 
                                                 <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5 w-full font-bold">
                                                     {movie.releaseYear && (
-                                                        <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                        <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                                                             <FaCalendarAlt /> {movie.releaseYear}
                                                         </div>
                                                     )}
-                                                    <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                                    <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                                                         <FaEye /> {(Number(movie.views) || 0) + 100}
                                                     </div>
                                                 </div>
@@ -262,7 +262,7 @@ function TopicDetail() {
                                     <button 
                                         onClick={handlePrev} 
                                         disabled={safePage === 1}
-                                        className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition-all cursor-pointer"
+                                        className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition cursor-pointer"
                                     >
                                         <FaChevronLeft size={14} />
                                     </button>
@@ -272,7 +272,7 @@ function TopicDetail() {
                                     <button 
                                         onClick={handleNext} 
                                         disabled={safePage === totalPages}
-                                        className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition-all cursor-pointer"
+                                        className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition cursor-pointer"
                                     >
                                         <FaChevronRight size={14} />
                                     </button>

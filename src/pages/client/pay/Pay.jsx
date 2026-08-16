@@ -51,7 +51,7 @@ function Pay(props) {
 
                         <div 
                             onClick={() => setSelectedPlan('rental')}
-                            className={`relative rounded-2xl p-6 cursor-pointer transition-all duration-300 border-2 overflow-hidden bg-slate-900/60 backdrop-blur-md group ${selectedPlan === 'rental' ? 'border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.2)]' : 'border-white/10 hover:border-white/30'}`}
+                            className={`relative rounded-2xl p-6 cursor-pointer transition duration-300 border-2 overflow-hidden bg-slate-900/60 backdrop-blur-md group ${selectedPlan === 'rental' ? 'border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.2)]' : 'border-white/10 hover:border-white/30'}`}
                         >
                             {selectedPlan === 'rental' && (
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-cyan-400/20 blur-3xl rounded-full"></div>
@@ -93,7 +93,7 @@ function Pay(props) {
                                     <div 
                                         key={plan.id}
                                         onClick={() => setSelectedPlan(plan.id)}
-                                        className={`relative rounded-3xl p-6 cursor-pointer transition-all duration-300 border-2 overflow-hidden bg-slate-900/60 backdrop-blur-md flex flex-col h-full group ${selectedPlan === plan.id ? `${theme.borderColor} ${theme.shadowColor} scale-[1.02]` : 'border-white/10 hover:border-white/30 hover:bg-slate-800/60'}`}
+                                        className={`relative rounded-3xl p-6 cursor-pointer transition duration-300 border-2 overflow-hidden bg-slate-900/60 backdrop-blur-md flex flex-col h-full group ${selectedPlan === plan.id ? `${theme.borderColor} ${theme.shadowColor} scale-[1.02]` : 'border-white/10 hover:border-white/30 hover:bg-slate-800/60'}`}
                                     >
                                         {selectedPlan === plan.id && (
                                             <div className={`absolute -top-10 -right-10 w-40 h-40 ${theme.glowColor} blur-3xl rounded-full`}></div>
@@ -137,7 +137,7 @@ function Pay(props) {
                                 navigate(`/payVip?id=${selectedPlan}`);
                             }
                         }}
-                        className="w-full md:w-2/3 bg-linear-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(245,158,11,0.4)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.6)] hover:-translate-y-1 transition-all duration-300">
+                        className="w-full md:w-2/3 bg-linear-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(245,158,11,0.4)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.6)] hover:-translate-y-1 transition duration-300">
                         Tiếp tục thanh toán
                     </button>
                     <button 

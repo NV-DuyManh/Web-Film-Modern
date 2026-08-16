@@ -145,7 +145,7 @@ function Showtimes() {
                 <div className="absolute top-1/2 -translate-y-1/2 -left-5 md:-left-8 lg:-left-12 xl:-left-16 z-10 hidden lg:flex items-center justify-center">
                     <button 
                         onClick={() => scrollByAmount('left')}
-                        className={`w-8 h-8 rounded-full bg-slate-700 hover:bg-amber-500 flex items-center justify-center text-slate-200 hover:text-white transition-all shadow-md cursor-pointer ${canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                        className={`w-8 h-8 rounded-full bg-slate-700 hover:bg-amber-500 flex items-center justify-center text-slate-200 hover:text-white transition shadow-md cursor-pointer ${canScrollLeft ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                     >
                         <FaChevronLeft className="text-sm mr-0.5" />
                     </button>
@@ -172,7 +172,7 @@ function Showtimes() {
                                     }
                                     setSelectedDate(date);
                                 }}
-                                className={`group shrink-0 w-1/3 sm:w-1/4 md:w-1/5 lg:w-[calc(100%/7)] py-3 px-4 flex flex-col items-start justify-center border-t-2 border-r border-white/5 transition-all
+                                className={`group shrink-0 w-1/3 sm:w-1/4 md:w-1/5 lg:w-[calc(100%/7)] py-3 px-4 flex flex-col items-start justify-center border-t-2 border-r border-white/5 transition
                                     ${isSelected 
                                         ? 'border-t-amber-500 bg-[#2b2f3a] shadow-inner' 
                                         : 'border-t-transparent bg-[#1e232e] hover:bg-[#252a36]'
@@ -193,7 +193,7 @@ function Showtimes() {
                 <div className="absolute top-1/2 -translate-y-1/2 -right-5 md:-right-8 lg:-right-12 xl:-right-16 z-10 hidden lg:flex items-center justify-center">
                     <button 
                         onClick={() => scrollByAmount('right')}
-                        className={`w-8 h-8 rounded-full bg-slate-700 hover:bg-amber-500 flex items-center justify-center text-slate-200 hover:text-white transition-all shadow-md cursor-pointer ${canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                        className={`w-8 h-8 rounded-full bg-slate-700 hover:bg-amber-500 flex items-center justify-center text-slate-200 hover:text-white transition shadow-md cursor-pointer ${canScrollRight ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                     >
                         <FaChevronRight className="text-sm ml-0.5" />
                     </button>
@@ -251,7 +251,7 @@ function Showtimes() {
                                                 <button 
                                                     key={i}
                                                     onClick={(e) => { e.stopPropagation(); navigate(`/phim/${movieID}`); }}
-                                                    className="flex items-center gap-1.5 hover:-translate-y-1 hover:scale-105 transition-all duration-300 group/time cursor-pointer"
+                                                    className="flex items-center gap-1.5 hover:-translate-y-1 hover:scale-105 transition duration-300 group/time cursor-pointer"
                                                 >
                                                     
                                                     <div className="flex items-center justify-center gap-1 px-2.5 py-1 bg-linear-to-r from-blue-500 to-cyan-400 rounded-full shadow-[0_2px_10px_rgba(6,182,212,0.3)] group-hover/time:shadow-[0_0_15px_rgba(6,182,212,0.6)] transition-shadow border border-white/10">

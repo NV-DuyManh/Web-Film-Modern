@@ -18,7 +18,11 @@ export default function LazySection({ children, minHeight = '400px', rootMargin 
     }, [rootMargin]);
 
     return (
-        <div ref={ref} style={{ minHeight: isVisible ? 'auto' : minHeight }} className={!isVisible ? "w-full bg-[#111827]" : ""}>
+        <div ref={ref} style={{
+            minHeight: isVisible ? 'auto' : minHeight,
+            contentVisibility: 'auto',
+            containIntrinsicSize: `auto ${minHeight}`,
+        }}>
             {isVisible ? (
                 <ErrorBoundary>
                     <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-slate-500">Đang tải...</div>}>

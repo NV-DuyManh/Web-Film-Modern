@@ -65,7 +65,7 @@ function ModalDelete({ handleClose, open, handleDeleted, titleDelete, contentDel
                 </div>
                 <button
                     onClick={!isDeleting ? handleClose : undefined}
-                    className="w-8 h-8 shrink-0 rounded-full bg-slate-800/80 border border-red-500/50 flex items-center justify-center text-red-400 hover:text-white hover:bg-red-600 hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer disabled:opacity-50"
+                    className="w-8 h-8 shrink-0 rounded-full bg-slate-800/80 border border-red-500/50 flex items-center justify-center text-red-400 hover:text-white hover:bg-red-600 hover:border-red-500 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition duration-300 group cursor-pointer disabled:opacity-50"
                     disabled={isDeleting}
                 >
                     <FaTimes size={16} className="transition-transform duration-200 group-hover:rotate-180 group-hover:scale-125" style={{ strokeWidth: '1.5', stroke: 'currentColor' }} />
@@ -91,7 +91,7 @@ function ModalDelete({ handleClose, open, handleDeleted, titleDelete, contentDel
                         </div>
                         <div className="w-full bg-black/80 rounded-full h-3 overflow-hidden p-0.5 border border-red-500/20">
                             <div
-                                className="bg-linear-to-r from-red-600 via-rose-500 to-orange-500 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(239,68,68,1)]"
+                                className="bg-linear-to-r from-red-600 via-rose-500 to-orange-500 h-full rounded-full transition duration-500 ease-out shadow-[0_0_15px_rgba(239,68,68,1)]"
                                 style={{ width: `${progress}%` }}
                             />
                         </div>

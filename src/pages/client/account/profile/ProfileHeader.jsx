@@ -44,7 +44,7 @@ function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILAB
                                 e.stopPropagation();
                                 fileInputRef.current?.click();
                             }}
-                            className="absolute -bottom-1 -right-1 w-8.5 h-8.5 bg-linear-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-slate-900 border-2 border-[#1e293b] shadow-[0_4px_10px_rgba(0,0,0,0.4)] hover:scale-110 hover:rotate-12 hover:shadow-[0_0_15px_rgba(245,158,11,0.7)] active:scale-95 transition-all duration-300 cursor-pointer z-10"
+                            className="absolute -bottom-1 -right-1 w-8.5 h-8.5 bg-linear-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-slate-900 border-2 border-[#1e293b] shadow-[0_4px_10px_rgba(0,0,0,0.4)] hover:scale-110 hover:rotate-12 hover:shadow-[0_0_15px_rgba(245,158,11,0.7)] active:scale-95 transition duration-300 cursor-pointer z-10"
                         >
                             <FaCamera className="text-sm" />
                         </button>
@@ -123,7 +123,7 @@ function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILAB
                     >
                         <button
                             onClick={() => setShowFrameModal(false)}
-                            className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-slate-700/50 text-slate-400 hover:text-white hover:bg-rose-500 hover:rotate-90 hover:scale-110 hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition-all duration-300"
+                            className="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-slate-700/50 text-slate-400 hover:text-white hover:bg-rose-500 hover:rotate-90 hover:scale-110 hover:shadow-[0_0_15px_rgba(244,63,94,0.5)] transition duration-300"
                         >
                             <FaTimes className="text-lg" />
                         </button>
@@ -147,7 +147,7 @@ function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILAB
                                                 setShowFrameModal(false);
                                             }
                                         }}
-                                        className={`flex flex-col items-center gap-3 p-4 rounded-xl transition-all duration-300 relative ${isUnlocked
+                                        className={`flex flex-col items-center gap-3 p-4 rounded-xl transition duration-300 relative ${isUnlocked
                                                 ? 'cursor-pointer hover:bg-white/5 border ' + (isSelected ? 'border-cyan-400 bg-cyan-500/10 shadow-[0_0_15px_rgba(34,211,238,0.2)]' : 'border-slate-700 hover:border-slate-500')
                                                 : 'opacity-50 grayscale cursor-not-allowed border border-slate-800 bg-black/20'
                                             }`}

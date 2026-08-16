@@ -46,7 +46,7 @@ function Cinema() {
                             <Link to={`/phim/${e.slug || e.id}`}>
                                 <div className="group cursor-pointer flex flex-col">
                                     <div className="relative mb-2 w-full">
-                                        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                             <img src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')} className="w-full h-full object-cover" draggable="false" alt="" width={480} height={270} loading="lazy" decoding="async" />
                                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
@@ -103,7 +103,7 @@ function Cinema() {
                                             </div>
                                         </div>
 
-                                        <div className="absolute -bottom-6 left-4 w-16 md:w-20 aspect-2/3 rounded-lg overflow-hidden border-2 border-[#111827] shadow-[0_4px_15px_rgba(0,0,0,0.8)] transition-all duration-300 group-hover:-translate-y-4 group-hover:scale-105 group-hover:rotate-[-4deg] group-hover:border-[#22d3ee] group-hover:shadow-[0_8px_20px_rgba(34,211,238,0.5)]">
+                                        <div className="absolute -bottom-6 left-4 w-16 md:w-20 aspect-2/3 rounded-lg overflow-hidden border-2 border-[#111827] shadow-[0_4px_15px_rgba(0,0,0,0.8)] transition duration-300 group-hover:-translate-y-4 group-hover:scale-105 group-hover:rotate-[-4deg] group-hover:border-[#22d3ee] group-hover:shadow-[0_8px_20px_rgba(34,211,238,0.5)]">
                                             <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt="" className="w-full h-full object-cover" draggable="false" />
                                         </div>
                                     </div>
@@ -115,11 +115,11 @@ function Cinema() {
                                         <div className="flex flex-col items-center gap-1.5 w-full">
                                             
                                             <div className="flex justify-center gap-2">
-                                                {e.releaseYear && <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-indigo-500 to-purple-500 rounded-full text-white text-[9px] md:text-[10px] w-max font-bold shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(99,102,241,0.6)]"><FaCalendarAlt /> {e.releaseYear}</p>}
-                                                <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-yellow-400 to-amber-600 rounded-full text-white text-[9px] md:text-[10px] font-bold shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(251,191,36,0.6)]">
+                                                {e.releaseYear && <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-indigo-500 to-purple-500 rounded-full text-white text-[9px] md:text-[10px] w-max font-bold shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(99,102,241,0.6)]"><FaCalendarAlt /> {e.releaseYear}</p>}
+                                                <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-yellow-400 to-amber-600 rounded-full text-white text-[9px] md:text-[10px] font-bold shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(251,191,36,0.6)]">
                                                     <FaTicketAlt /> {e.rent} VNĐ
                                                 </p>
-                                                <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-purple-500 to-fuchsia-600 rounded-full text-white text-[9px] md:text-[10px] font-bold shadow-md transition-all hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)]">
+                                                <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-purple-500 to-fuchsia-600 rounded-full text-white text-[9px] md:text-[10px] font-bold shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)]">
                                                     <FaEye /> {(Number(e.views) || 0) + 100}
                                                 </p>
                                             </div>

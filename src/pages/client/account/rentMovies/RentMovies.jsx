@@ -109,19 +109,19 @@ function RentMovies(props) {
                     <div className="flex flex-col sm:flex-row items-center gap-4 w-full md:flex-1">
                         <div className="relative group w-full md:max-w-md lg:max-w-lg">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
-                                <FaSearch className="text-slate-500 group-hover:text-green-500 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.8)] group-focus-within:text-[#ff00ff] group-focus-within:drop-shadow-[0_0_8px_#ff00ff] group-focus-within:scale-[1.15] transition-all duration-300" />
+                                <FaSearch className="text-slate-500 group-hover:text-green-500 group-hover:drop-shadow-[0_0_8px_rgba(34,197,94,0.8)] group-focus-within:text-[#ff00ff] group-focus-within:drop-shadow-[0_0_8px_#ff00ff] group-focus-within:scale-[1.15] transition duration-300" />
                             </div>
                             <input
                                 type="text"
                                 placeholder="Tìm kiếm phim đã thuê..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-transparent text-white text-sm rounded-xl py-2.5 pl-10 pr-4 focus:outline-none placeholder:text-slate-600 relative border border-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.6),inset_0_0_5px_rgba(0,242,254,0.2)] hover:border-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.8),inset_0_0_5px_rgba(34,197,94,0.3)] focus:border-[#ff00ff] focus:shadow-[0_0_25px_rgba(255,0,255,0.9),inset_0_0_10px_rgba(255,0,255,0.4)] transition-all duration-300"
+                                className="w-full bg-transparent text-white text-sm rounded-xl py-2.5 pl-10 pr-4 focus:outline-none placeholder:text-slate-600 relative border border-[#00f2fe] shadow-[0_0_15px_rgba(0,242,254,0.6),inset_0_0_5px_rgba(0,242,254,0.2)] hover:border-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.8),inset_0_0_5px_rgba(34,197,94,0.3)] focus:border-[#ff00ff] focus:shadow-[0_0_25px_rgba(255,0,255,0.9),inset_0_0_10px_rgba(255,0,255,0.4)] transition duration-300"
                             />
                         </div>
                         <div className="premium-border-box flex w-full sm:w-auto justify-center items-center gap-3 px-4 py-2 bg-slate-800/50 backdrop-blur-md rounded-xl shadow-lg whitespace-nowrap group">
                             <span className="text-slate-400 text-xs font-bold uppercase tracking-wider">Số lượng</span>
-                            <div className="flex items-center justify-center bg-fuchsia-500/10 border border-fuchsia-500/20 px-3 py-0.5 rounded-lg group-hover:bg-fuchsia-500/20 group-hover:border-fuchsia-500/40 group-hover:shadow-[0_0_15px_rgba(232,121,249,0.3)] transition-all duration-300">
+                            <div className="flex items-center justify-center bg-fuchsia-500/10 border border-fuchsia-500/20 px-3 py-0.5 rounded-lg group-hover:bg-fuchsia-500/20 group-hover:border-fuchsia-500/40 group-hover:shadow-[0_0_15px_rgba(232,121,249,0.3)] transition duration-300">
                                 <span className="text-fuchsia-400 font-black text-sm">{rentedMovies.length}</span>
                             </div>
                         </div>
@@ -130,13 +130,13 @@ function RentMovies(props) {
                     <div className="flex items-center bg-slate-800/80 p-1.5 rounded-xl border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.5)] backdrop-blur-md w-full md:w-auto justify-center md:justify-start shrink-0">
                         <button
                             onClick={() => setViewMode('grid')}
-                            className={`p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'grid' ? 'bg-fuchsia-400/20 text-fuchsia-400 border border-fuchsia-400 shadow-[0_0_15px_rgba(232,121,249,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
+                            className={`p-2.5 rounded-lg transition duration-300 flex items-center justify-center ${viewMode === 'grid' ? 'bg-fuchsia-400/20 text-fuchsia-400 border border-fuchsia-400 shadow-[0_0_15px_rgba(232,121,249,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
                         >
                             <FaTh size={20} />
                         </button>
                         <button
                             onClick={() => setViewMode('list')}
-                            className={`p-2.5 rounded-lg transition-all duration-300 flex items-center justify-center ${viewMode === 'list' ? 'bg-fuchsia-400/20 text-fuchsia-400 border border-fuchsia-400 shadow-[0_0_15px_rgba(232,121,249,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
+                            className={`p-2.5 rounded-lg transition duration-300 flex items-center justify-center ${viewMode === 'list' ? 'bg-fuchsia-400/20 text-fuchsia-400 border border-fuchsia-400 shadow-[0_0_15px_rgba(232,121,249,0.3)] scale-105' : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'}`}
                         >
                             <FaList size={20} />
                         </button>
@@ -154,10 +154,10 @@ function RentMovies(props) {
                     {filteredMovies.length > 0 ? filteredMovies.map(movie => (
                         viewMode === 'grid' ? (
                             <Link to={`/phim/${movie.slug || movie.id}`} key={`grid-${movie.id}`} className="group relative flex flex-col gap-3 cursor-pointer">
-                                <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-fuchsia-400 transition-all duration-300 hover:shadow-[0_12px_25px_rgba(232,121,249,0.3)] hover:-translate-y-2 aspect-2/3 w-full">
+                                <div className="relative rounded-2xl overflow-hidden border-[3px] border-transparent bg-slate-800/40 hover:border-fuchsia-400 transition duration-300 hover:shadow-[0_12px_25px_rgba(232,121,249,0.3)] hover:-translate-y-2 aspect-2/3 w-full">
                                     <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-90 group-hover:opacity-100" />
                                     <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
-                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-max max-w-[90%] bg-slate-900/80 backdrop-blur-md px-2.5 py-1.5 rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.8)] border border-fuchsia-500/50 group-hover:border-fuchsia-400 group-hover:shadow-[0_0_15px_rgba(232,121,249,0.5)] transition-all duration-300 flex items-center justify-center gap-1.5">
+                                    <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-max max-w-[90%] bg-slate-900/80 backdrop-blur-md px-2.5 py-1.5 rounded-full shadow-[0_4px_15px_rgba(0,0,0,0.8)] border border-fuchsia-500/50 group-hover:border-fuchsia-400 group-hover:shadow-[0_0_15px_rgba(232,121,249,0.5)] transition duration-300 flex items-center justify-center gap-1.5">
                                         <FaPlay size={10} className="text-fuchsia-400 drop-shadow-[0_0_8px_rgba(232,121,249,0.9)] shrink-0" />
                                         <span className="text-fuchsia-400 text-[10px] sm:text-[11px] font-bold truncate">Xem ngay</span>
                                     </div>
@@ -166,30 +166,30 @@ function RentMovies(props) {
                                     </div>
                                 </div>
                                 <div className="px-1 mt-2 mb-1 flex flex-col items-center">
-                                    <h3 className="text-white font-bold text-sm md:text-base text-center line-clamp-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-fuchsia-400 group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.5)] transition-all duration-300">
+                                    <h3 className="text-white font-bold text-sm md:text-base text-center line-clamp-1 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-fuchsia-400 group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.5)] transition duration-300">
                                         {movie.otherName}
                                     </h3>
                                     {movie.otherName && movie.otherName !== movie.name && (
-                                        <p className="text-slate-400 text-[11px] sm:text-xs text-center line-clamp-1 mt-0.5 group-hover:text-slate-300 transition-all duration-300">
+                                        <p className="text-slate-400 text-[11px] sm:text-xs text-center line-clamp-1 mt-0.5 group-hover:text-slate-300 transition duration-300">
                                             {movie.name}
                                         </p>
                                     )}
                                 </div>
                             </Link>
                         ) : (
-                            <div key={`list-${movie.id}`} className="flex flex-col sm:flex-row items-center gap-4 p-3 rounded-2xl border border-white/10 bg-slate-800/50 backdrop-blur-md hover:border-fuchsia-500/40 hover:shadow-[0_0_25px_rgba(232,121,249,0.2)] transition-all duration-300 group">
-                                <Link to={`/phim/${movie.slug || movie.id}`} className="w-32 sm:w-40 md:w-48 h-auto aspect-video rounded-xl overflow-hidden shrink-0 border-[3px] border-transparent group-hover:border-fuchsia-400 transition-all duration-300 relative block">
+                            <div key={`list-${movie.id}`} className="flex flex-col sm:flex-row items-center gap-4 p-3 rounded-2xl border border-white/10 bg-slate-800/50 backdrop-blur-md hover:border-fuchsia-500/40 hover:shadow-[0_0_25px_rgba(232,121,249,0.2)] transition duration-300 group">
+                                <Link to={`/phim/${movie.slug || movie.id}`} className="w-32 sm:w-40 md:w-48 h-auto aspect-video rounded-xl overflow-hidden shrink-0 border-[3px] border-transparent group-hover:border-fuchsia-400 transition duration-300 relative block">
                                     <img src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 480, 270, 'thumb')} alt={movie.name} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
                                 </Link>
 
                                 <div className="flex-1 w-full flex flex-col justify-center py-2 gap-2">
                                     <Link to={`/phim/${movie.slug || movie.id}`}>
-                                        <h3 className="text-white font-bold text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-fuchsia-400 group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.5)] transition-all duration-300 line-clamp-1">
+                                        <h3 className="text-white font-bold text-xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-fuchsia-400 group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.5)] transition duration-300 line-clamp-1">
                                             {movie.otherName || movie.name}
                                         </h3>
                                         {movie.otherName && movie.otherName !== movie.name && (
-                                            <p className="text-slate-400 text-sm mt-0.5 line-clamp-1 group-hover:text-slate-300 transition-all duration-300">
+                                            <p className="text-slate-400 text-sm mt-0.5 line-clamp-1 group-hover:text-slate-300 transition duration-300">
                                                 {movie.name}
                                             </p>
                                         )}
@@ -202,7 +202,7 @@ function RentMovies(props) {
                                 </div>
 
                                 <div className="flex items-center gap-4 shrink-0 sm:ml-auto w-full sm:w-auto justify-end">
-                                    <Link to={`/xem-phim/${movie.slug || movie.id}`} className="flex items-center gap-2 bg-linear-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white px-6 py-2.5 rounded-xl font-bold transition-all duration-300 hover:shadow-[0_0_20px_rgba(232,121,249,0.5)] hover:scale-105 border border-fuchsia-400/50">
+                                    <Link to={`/xem-phim/${movie.slug || movie.id}`} className="flex items-center gap-2 bg-linear-to-r from-fuchsia-600 to-purple-600 hover:from-fuchsia-500 hover:to-purple-500 text-white px-6 py-2.5 rounded-xl font-bold transition duration-300 hover:shadow-[0_0_20px_rgba(232,121,249,0.5)] hover:scale-105 border border-fuchsia-400/50">
                                         <FaPlay size={14} /> Xem ngay
                                     </Link>
                                 </div>

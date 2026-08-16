@@ -23,34 +23,34 @@ function FooterClient() {
 
                     <div className='flex flex-col items-center gap-6 text-center md:flex-row md:items-center md:text-left'>
                         <div className='flex items-center justify-center'>
-                            <img src={Logo2} alt="MFILM" className='h-24 w-auto object-contain transition-all' />
+                            <img src={Logo2} alt="MFILM" className='h-24 w-auto object-contain transition' />
                         </div>
 
                         <div className='hidden h-14 w-px bg-white/10 md:block'></div>
 
                         <div className='flex items-center justify-center gap-4 md:ml-2'>
-                            <a href="https://zalo.me/0779534325" target="_blank" aria-label="Liên hệ qua Zalo" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition-all duration-300 hover:-translate-y-1 hover:bg-white hover:text-blue-600 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]'><SiZalo className='text-3xl' title='Zalo' /></a>
+                            <a href="https://zalo.me/0779534325" target="_blank" aria-label="Liên hệ qua Zalo" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition duration-300 hover:-translate-y-1 hover:bg-white hover:text-blue-600 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]'><SiZalo className='text-3xl' title='Zalo' /></a>
 
-                            <a href="https://www.facebook.com/duymanhdev" target="_blank" aria-label="Trang Facebook của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400/60 hover:bg-blue-600 hover:text-white hover:shadow-[0_0_20px_rgba(37,99,235,0.45)]'><FaFacebookF title='Facebook' /></a>
+                            <a href="https://www.facebook.com/duymanhdev" target="_blank" aria-label="Trang Facebook của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition duration-300 hover:-translate-y-1 hover:border-blue-400/60 hover:bg-blue-600 hover:text-white hover:shadow-[0_0_20px_rgba(37,99,235,0.45)]'><FaFacebookF title='Facebook' /></a>
 
-                            <a href="https://www.linkedin.com/in/duymanhdev/" target="_blank" aria-label="Trang LinkedIn của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500/60 hover:bg-blue-700 hover:text-white hover:shadow-[0_0_20px_rgba(29,78,216,0.45)]'><FaLinkedinIn title='LinkedIn' /></a>
+                            <a href="https://www.linkedin.com/in/duymanhdev/" target="_blank" aria-label="Trang LinkedIn của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition duration-300 hover:-translate-y-1 hover:border-blue-500/60 hover:bg-blue-700 hover:text-white hover:shadow-[0_0_20px_rgba(29,78,216,0.45)]'><FaLinkedinIn title='LinkedIn' /></a>
                         </div>
                     </div>
 
                     <div className='mt-8 flex flex-wrap justify-center gap-x-10 gap-y-4 text-base font-semibold text-white md:justify-start'>
-                        <a href="" className='relative transition-all duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition-all after:duration-300 hover:text-yellow-300 hover:after:w-full'>
+                        <a href="" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
                             Hỏi Đáp
                         </a>
 
-                        <a href="" className='relative transition-all duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition-all after:duration-300 hover:text-yellow-300 hover:after:w-full'>
+                        <a href="" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
                             Chính sách bảo mật
                         </a>
 
-                        <a href="" className='relative transition-all duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition-all after:duration-300 hover:text-yellow-300 hover:after:w-full'>
+                        <a href="" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
                             Điều khoản sử dụng
                         </a>
 
-                        <a href="" className='relative transition-all duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition-all after:duration-300 hover:text-yellow-300 hover:after:w-full'>
+                        <a href="" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
                             Giới thiệu
                         </a>
                     </div>
@@ -75,7 +75,7 @@ function FooterClient() {
                         </h2>
 
                         <div className='mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row'>
-                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition-all duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
+                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
                                 <FaApple className='text-4xl' />
                                 <div className='text-left leading-none'>
                                     <p className='text-xs font-semibold'>Download on the</p>
@@ -83,7 +83,7 @@ function FooterClient() {
                                 </div>
                             </div>
 
-                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition-all duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
+                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
                                 <FaGooglePlay className='text-3xl text-green-400' />
                                 <div className='text-left leading-none'>
                                     <p className='text-xs font-semibold'>GET IT ON</p>
@@ -93,7 +93,7 @@ function FooterClient() {
                         </div>
 
                         <div className='mt-8 flex w-full items-center justify-center'>
-                            <img src={Logo} alt="MFILM" className='w-105 max-w-full object-contain opacity-95 transition-all duration-300 hover:scale-105 hover:opacity-100' />
+                            <img src={Logo} alt="MFILM" className='w-105 max-w-full object-contain opacity-95 transition duration-300 hover:scale-105 hover:opacity-100' />
                         </div>
                     </div>
                 </div>

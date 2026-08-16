@@ -91,7 +91,7 @@ function Notify(props) {
         return (
             <button
                 onClick={() => setFilter(id)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300 border ${
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition duration-300 border ${
                     isActive 
                         ? 'bg-yellow-500/10 border-yellow-500 text-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.2)]' 
                         : 'border-white/10 text-slate-400 hover:text-white hover:border-white/30 bg-transparent'
@@ -129,7 +129,7 @@ function Notify(props) {
                 {unreadCount > 0 && (
                     <button 
                         onClick={handleMarkAllAsRead}
-                        className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 hover:border-yellow-500/50 rounded-xl text-sm font-bold transition-all duration-300 shrink-0 shadow-[0_0_10px_rgba(234,179,8,0.1)] hover:shadow-[0_0_15px_rgba(234,179,8,0.2)]"
+                        className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-500 border border-yellow-500/30 hover:border-yellow-500/50 rounded-xl text-sm font-bold transition duration-300 shrink-0 shadow-[0_0_10px_rgba(234,179,8,0.1)] hover:shadow-[0_0_15px_rgba(234,179,8,0.2)]"
                     >
                         <FaCheckDouble /> Đánh dấu tất cả đã đọc
                     </button>
@@ -149,7 +149,7 @@ function Notify(props) {
                         <div 
                             key={notify.id} 
                             onClick={() => handleMarkAsRead(notify.id)}
-                            className={`relative flex items-start gap-3 p-3 rounded-xl transition-all duration-300 cursor-pointer border ${
+                            className={`relative flex items-start gap-3 p-3 rounded-xl transition duration-300 cursor-pointer border ${
                                 notify.unread 
                                     ? 'bg-[#1c1c1c] border-white/5 hover:border-white/10 hover:bg-[#222]' 
                                     : 'bg-[#151515] border-transparent opacity-70 hover:opacity-100 hover:bg-[#1a1a1a]'

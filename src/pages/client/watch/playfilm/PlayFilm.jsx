@@ -169,7 +169,7 @@ function PlayFilm({ handleOpenLogin }) {
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => navigate(`/phim/${movie?.slug || realMovieId}`)}
-                            className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800/60 text-slate-300 hover:border-yellow-400 hover:text-yellow-400 hover:bg-yellow-400/10 transition-all cursor-pointer shadow-sm"
+                            className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800/60 text-slate-300 hover:border-yellow-400 hover:text-yellow-400 hover:bg-yellow-400/10 transition cursor-pointer shadow-sm"
                             title="Quay lại chi tiết phim"
                         >
                             <FaChevronLeft className="pr-0.5 text-sm" />
@@ -267,18 +267,18 @@ function PlayFilm({ handleOpenLogin }) {
                         <div className="mt-6 p-4 bg-[#14192b] rounded-xl border border-slate-800 flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-2">
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 inline">Bản chiếu:</p>
-                                <button onClick={() => setActiveAudio('vietsub')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer border ${activeAudio === 'vietsub' ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46]'}`}>
+                                <button onClick={() => setActiveAudio('vietsub')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition cursor-pointer border ${activeAudio === 'vietsub' ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46]'}`}>
                                     <FaClosedCaptioning className="text-sm" /> Vietsub
                                 </button>
-                                <button onClick={() => setActiveAudio('thuyetminh')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer border ${activeAudio === 'thuyetminh' ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46]'}`}>
+                                <button onClick={() => setActiveAudio('thuyetminh')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition cursor-pointer border ${activeAudio === 'thuyetminh' ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46]'}`}>
                                     <FaMicrophone className="text-sm" /> Thuyết Minh
                                 </button>
                             </div>
                             <div className="flex items-center gap-2">
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 inline">Server:</p>
-                                <button className="px-4 py-1.5 rounded-lg bg-yellow-400 text-black text-xs font-extrabold shadow-sm hover:bg-yellow-500 transition-all cursor-pointer">SVR 1</button>
-                                <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition-all cursor-pointer">SVR 2</button>
-                                <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition-all cursor-pointer">SVR 3</button>
+                                <button className="px-4 py-1.5 rounded-lg bg-yellow-400 text-black text-xs font-extrabold shadow-sm hover:bg-yellow-500 transition cursor-pointer">SVR 1</button>
+                                <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition cursor-pointer">SVR 2</button>
+                                <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition cursor-pointer">SVR 3</button>
                             </div>
                         </div>
 

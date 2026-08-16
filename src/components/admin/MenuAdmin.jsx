@@ -25,10 +25,10 @@ function MenuAdmin() {
     }, [activePath]);
 
     return (
-        <div className={`flex flex-col p-3 bg-[#0a192f]/80 text-white sm:min-h-screen transition-all duration-500 ease-in-out relative shadow-[2px_0_15px_rgba(0,0,0,0.5)] shrink-0 ${Menu ? "sm:w-20" : "sm:w-60"}`}>
+        <div className={`flex flex-col p-3 bg-[#0a192f]/80 text-white sm:min-h-screen transition duration-500 ease-in-out relative shadow-[2px_0_15px_rgba(0,0,0,0.5)] shrink-0 ${Menu ? "sm:w-20" : "sm:w-60"}`}>
 
             <div className="flex justify-center items-center relative h-8 mb-4 mt-2 shrink-0">
-                <div className={`justify-center items-center gap-2.5 whitespace-nowrap overflow-hidden transition-all duration-300 w-full ${!Menu ? 'flex' : 'hidden max-sm:flex'}`}>
+                <div className={`justify-center items-center gap-2.5 whitespace-nowrap overflow-hidden transition duration-300 w-full ${!Menu ? 'flex' : 'hidden max-sm:flex'}`}>
                     <h1 className='flex items-center font-black tracking-tighter uppercase' style={{ textShadow: '0 0 15px rgba(34,211,238,0.8)' }}>
                         <p className="text-cyan-300 text-[28px] inline">M</p>
                         <p className="text-cyan-500 text-[22px] inline">FILM</p>
@@ -39,7 +39,7 @@ function MenuAdmin() {
                     </h1>
                 </div>
 
-                <div className={`justify-center items-center transition-all duration-300 w-full ${Menu ? 'hidden sm:flex' : 'hidden'}`}>
+                <div className={`justify-center items-center transition duration-300 w-full ${Menu ? 'hidden sm:flex' : 'hidden'}`}>
                     <h1 className='flex items-center justify-center font-black tracking-tighter uppercase' style={{ textShadow: '0 0 15px rgba(34,211,238,0.8)' }}>
                         <p className="text-cyan-300 text-[32px] ml-1 inline">M</p>
                     </h1>
@@ -47,7 +47,7 @@ function MenuAdmin() {
 
                 <button
                     onClick={() => setmMenu(!Menu)}
-                    className='absolute right-0 sm:-right-3 sm:translate-x-1/2 flex justify-center items-center w-9 h-9 cursor-pointer rounded-full bg-[#0f172a]/20 border border-cyan-400 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)] hover:bg-cyan-400 hover:text-[#0f172a] hover:shadow-[0_0_20px_rgba(34,211,238,0.9),inset_0_0_5px_rgba(255,255,255,0.4)] hover:scale-110 transition-all duration-300 z-50'
+                    className='absolute right-0 sm:-right-3 sm:translate-x-1/2 flex justify-center items-center w-9 h-9 cursor-pointer rounded-full bg-[#0f172a]/20 border border-cyan-400 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)] hover:bg-cyan-400 hover:text-[#0f172a] hover:shadow-[0_0_20px_rgba(34,211,238,0.9),inset_0_0_5px_rgba(255,255,255,0.4)] hover:scale-110 transition duration-300 z-50'
                 >
                     {!Menu ? <AiOutlineMenuFold size={20} /> : <AiOutlineMenuUnfold size={20} />}
                 </button>
@@ -55,13 +55,13 @@ function MenuAdmin() {
 
             <ul className={`flex flex-col gap-3 mt-3 ${Menu ? "max-sm:hidden" : ""}`}>
                 <li>
-                    <Link to={"/"} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group border border-transparent 
+                    <Link to={"/"} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition duration-300 group border border-transparent 
                         ${activePath === "/"
                             ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400 shadow-[inset_4px_0_0_0_#22d3ee,0_0_15px_rgba(34,211,238,0.1)]"
                             : "bg-slate-800/90 text-gray-300 hover:bg-slate-700 hover:border-cyan-500/30 hover:text-cyan-400"} 
                         ${Menu ? "sm:justify-center px-0" : "justify-start"}`}>
                         <MdDashboard className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${activePath === "/" ? "drop-shadow-[0_0_5px_#22d3ee]" : ""}`} />
-                        <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition-all duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-36"}`}>
+                        <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-36"}`}>
                             Dashboard
                         </p>
                     </Link>
@@ -73,7 +73,7 @@ function MenuAdmin() {
                         return (
                             <li key={index} className='flex flex-col relative group'>
                                 <Link to={item.path}
-                                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-all duration-300 border border-transparent
+                                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition duration-300 border border-transparent
                                         ${isActive
                                             ? "bg-cyan-600/10 border-cyan-500/30 text-cyan-400 shadow-[inset_4px_0_0_0_#22d3ee]"
                                             : "bg-slate-800/90 text-gray-200 hover:bg-slate-700 hover:border-yellow-500/30 hover:text-yellow-400"}
@@ -81,7 +81,7 @@ function MenuAdmin() {
                                 >
                                     <div className="flex items-center gap-3 overflow-hidden">
                                         <p className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-cyan-400 drop-shadow-[0_0_5px_#22d3ee]" : ""} inline`}>{item.icon}</p>
-                                        <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition-all duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-32"}`}>
+                                        <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-32"}`}>
                                             {item.name}
                                         </p>
                                     </div>
@@ -97,7 +97,7 @@ function MenuAdmin() {
                         <li key={index} className='flex flex-col relative group'>
                             <div
                                 onClick={() => setShow(isOpen ? null : (index + 1))}
-                                className={`flex items-center justify-between px-4 py-3 rounded-lg cursor-pointer transition-all duration-300 border border-transparent
+                                className={`flex items-center justify-between px-4 py-3 rounded-lg cursor-pointer transition duration-300 border border-transparent
                                 ${isParentActive
                                         ? "bg-cyan-600/10 border-cyan-500/30 text-cyan-400 shadow-[inset_4px_0_0_0_#22d3ee]"
                                         : "bg-slate-800/90 text-gray-200 hover:bg-slate-700 hover:border-yellow-500/30 hover:text-yellow-400"}
@@ -105,7 +105,7 @@ function MenuAdmin() {
                             >
                                 <div className="flex items-center gap-3 overflow-hidden">
                                     <p className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${isParentActive ? "text-cyan-400 drop-shadow-[0_0_5px_#22d3ee]" : ""} inline`}>{item.icon}</p>
-                                    <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition-all duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-32"}`}>
+                                    <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-32"}`}>
                                         {item.name}
                                     </p>
                                 </div>
@@ -125,7 +125,7 @@ function MenuAdmin() {
                                                 {item.name}
                                             </div>
                                             {item.subMenu.map((sub, subIdx) => (
-                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 whitespace-nowrap
+                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 whitespace-nowrap
                                                     ${activePath === sub.path
                                                         ? "bg-yellow-500/20 text-yellow-400 shadow-[inset_3px_0_0_0_#eab308]"
                                                         : "text-gray-300 hover:bg-slate-800 hover:text-cyan-400 hover:pl-4"}`}>
@@ -140,7 +140,7 @@ function MenuAdmin() {
                                     <div className="overflow-hidden">
                                         <div className={`flex flex-col gap-1 w-[85%] ml-auto border-l-2 pl-3 py-1 ${isParentActive ? "border-cyan-500/50" : "border-slate-700"}`}>
                                             {item.subMenu.map((sub, subIdx) => (
-                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 text-nowrap
+                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 text-nowrap
                                                     ${activePath === sub.path
                                                         ? "bg-yellow-500/20 text-yellow-400 shadow-[inset_3px_0_0_0_#eab308] translate-x-1"
                                                         : "text-gray-400 hover:bg-slate-800 hover:text-yellow-300 hover:translate-x-1"}`}>

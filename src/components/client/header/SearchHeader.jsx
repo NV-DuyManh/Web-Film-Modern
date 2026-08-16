@@ -35,7 +35,7 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
                         {dataSearch.map((movie) => (
                             <button
                                 onMouseDown={(e) => { e.preventDefault(); handleSelect(movie.slug || movie.id); }}
-                                className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-white/5 transition-all duration-200 cursor-pointer group/movie text-left"
+                                className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-white/5 transition duration-200 cursor-pointer group/movie text-left"
                             >
                                 <div className="w-13 h-18 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover/movie:border-cyan-500/50 transition-colors duration-300 bg-slate-800">
                                     <img src={getOptimizedUrl(movie.imgUrl, 100, 150, 'thumb')} alt={movie.name} className="w-full h-full object-cover" />

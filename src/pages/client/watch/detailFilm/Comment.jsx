@@ -111,7 +111,7 @@ function Comment({ isLogin, onOpenLogin, movieId }) {
                         <button 
                             onClick={handleSendComment}
                             disabled={!commentText.trim() || isSubmitting}
-                            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-bold text-[13px] transition-all duration-300 ${commentText.trim() && !isSubmitting ? 'text-yellow-400 hover:bg-yellow-400/10 cursor-pointer' : 'text-slate-600 cursor-not-allowed'}`}
+                            className={`flex items-center gap-2 px-4 py-1.5 rounded-lg font-bold text-[13px] transition duration-300 ${commentText.trim() && !isSubmitting ? 'text-yellow-400 hover:bg-yellow-400/10 cursor-pointer' : 'text-slate-600 cursor-not-allowed'}`}
                         >
                             {isSubmitting ? 'Đang gửi...' : <>Gửi <FaPaperPlane /></>}
                         </button>

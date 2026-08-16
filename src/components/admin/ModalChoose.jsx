@@ -50,9 +50,9 @@ function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataCho
                         placeholder="Search..." 
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-slate-800/80 border border-yellow-400/40 text-yellow-100 text-xs rounded-full pl-9 pr-4 py-2 focus:outline-none focus:bg-slate-800 focus:border-yellow-400 focus:shadow-[0_0_20px_rgba(250,204,21,0.5),inset_0_0_10px_rgba(250,204,21,0.3)] transition-all placeholder-yellow-400/60 hover:border-yellow-400/70 hover:bg-slate-800 hover:shadow-[0_0_10px_rgba(250,204,21,0.2)] shadow-[inset_0_0_8px_rgba(250,204,21,0.1)]"
+                        className="w-full bg-slate-800/80 border border-yellow-400/40 text-yellow-100 text-xs rounded-full pl-9 pr-4 py-2 focus:outline-none focus:bg-slate-800 focus:border-yellow-400 focus:shadow-[0_0_20px_rgba(250,204,21,0.5),inset_0_0_10px_rgba(250,204,21,0.3)] transition placeholder-yellow-400/60 hover:border-yellow-400/70 hover:bg-slate-800 hover:shadow-[0_0_10px_rgba(250,204,21,0.2)] shadow-[inset_0_0_8px_rgba(250,204,21,0.1)]"
                     />
-                    <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-yellow-400 group-hover:text-yellow-200 group-focus-within:text-yellow-300 group-focus-within:animate-pulse transition-all text-xs drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
+                    <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-yellow-400 group-hover:text-yellow-200 group-focus-within:text-yellow-300 group-focus-within:animate-pulse transition text-xs drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]" />
                 </div>
             </DialogTitle>
             
@@ -64,7 +64,7 @@ function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataCho
                             <button
                                 key={item.id}
                                 onClick={() => handleClickChoose(item.id)}
-                                className={`px-5 py-2 rounded-xl text-xs transition-all font-bold tracking-wider flex items-center gap-2 ${isSelected
+                                className={`px-5 py-2 rounded-xl text-xs transition font-bold tracking-wider flex items-center gap-2 ${isSelected
                                         ? "text-cyan-100 bg-cyan-500/20 border border-cyan-400 shadow-[0_0_20px_rgba(34,211,238,0.5),inset_0_0_10px_rgba(34,211,238,0.3)] scale-105"
                                         : "text-slate-200 bg-slate-800 border border-slate-600 hover:text-cyan-300 hover:border-cyan-500/50 hover:bg-cyan-500/10 hover:shadow-[0_0_15px_rgba(34,211,238,0.2)]"
                                     }`}
@@ -76,14 +76,14 @@ function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataCho
                             <div
                                 key={item.id}
                                 onClick={() => handleClickChoose(item.id)}
-                                className={`cursor-pointer flex flex-col items-center justify-start gap-2 transition-all p-1 rounded-xl h-24 ${isSelected
+                                className={`cursor-pointer flex flex-col items-center justify-start gap-2 transition p-1 rounded-xl h-24 ${isSelected
                                         ? "scale-110 opacity-100"
                                         : "opacity-90 hover:opacity-100 hover:scale-105"
                                     }`}
                                 style={{ width: '80px' }}
                             >
                                 <img
-                                    className={`w-14 h-14 rounded-full object-cover transition-all ${isSelected
+                                    className={`w-14 h-14 rounded-full object-cover transition ${isSelected
                                             ? "ring-[3px] ring-fuchsia-500 shadow-[0_0_25px_rgba(217,70,239,0.7)]"
                                             : "ring-2 ring-transparent shadow-md"
                                         }`}
@@ -107,7 +107,7 @@ function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataCho
                 <div className="text-xs text-slate-500 mr-auto font-medium ml-2 uppercase tracking-widest">
                     Selected: <p className="text-fuchsia-400 font-black drop-shadow-[0_0_5px_rgba(217,70,239,0.5)] text-sm ml-1 inline">{selectedItems.length}</p>
                 </div>
-                <Button onClick={handleCloseChoose} className="bg-linear-to-r! from-fuchsia-600! to-pink-500! text-white! px-8! py-2! rounded-xl! text-xs! font-bold! tracking-widest! hover:scale-105! hover:shadow-[0_0_20px_rgba(217,70,239,0.6)]! transition-all!">
+                <Button onClick={handleCloseChoose} className="bg-linear-to-r! from-fuchsia-600! to-pink-500! text-white! px-8! py-2! rounded-xl! text-xs! font-bold! tracking-widest! hover:scale-105! hover:shadow-[0_0_20px_rgba(217,70,239,0.6)]! transition!">
                     DONE
                 </Button>
             </DialogActions>

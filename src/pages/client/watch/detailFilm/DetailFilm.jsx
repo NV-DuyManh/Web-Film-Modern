@@ -229,9 +229,48 @@ function DetailFilm() {
 
     if (!movie) {
         return (
-            <div className="bg-[#0f1322] min-h-screen text-slate-300 flex items-center justify-center py-20">
-                <div className="text-center space-y-4">
-                    <p className="text-lg font-bold text-slate-400">Đang tải thông tin phim...</p>
+            <div className="bg-[#0f1322] min-h-screen text-slate-300">
+                <div className="w-full h-112.5 md:h-137.5 lg:h-162.5 bg-slate-800 animate-pulse" />
+
+                <div className="relative z-10 w-full bg-[#0f1322] rounded-t-3xl pt-8 lg:pt-12 -mt-20 lg:-mt-32">
+                    <div className="w-full max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+                        <div className="lg:col-span-3 flex flex-col gap-4 items-center lg:items-start">
+                            <div className="w-2/3 sm:w-1/2 lg:w-full aspect-2/3 bg-slate-800 rounded-xl animate-pulse -mt-24 sm:-mt-70 lg:-mt-48 border-4 border-[#0f1322]" />
+                            <div className="w-3/4 h-6 bg-slate-800 rounded animate-pulse" />
+                            <div className="w-1/2 h-4 bg-slate-800 rounded animate-pulse" />
+                            <div className="flex gap-2 mt-2">
+                                <div className="w-12 h-5 bg-slate-800 rounded animate-pulse" />
+                                <div className="w-16 h-5 bg-slate-800 rounded animate-pulse" />
+                                <div className="w-10 h-5 bg-slate-800 rounded animate-pulse" />
+                            </div>
+                            <div className="space-y-2 w-full mt-3">
+                                <div className="w-full h-3 bg-slate-800 rounded animate-pulse" />
+                                <div className="w-full h-3 bg-slate-800 rounded animate-pulse" />
+                                <div className="w-4/5 h-3 bg-slate-800 rounded animate-pulse" />
+                                <div className="w-3/5 h-3 bg-slate-800 rounded animate-pulse" />
+                            </div>
+                        </div>
+
+                        <div className="lg:col-span-9 flex flex-col gap-6">
+                            <div className="flex items-center gap-4">
+                                <div className="w-36 h-12 bg-yellow-500/20 rounded-full animate-pulse" />
+                                <div className="w-10 h-10 bg-slate-800 rounded-full animate-pulse" />
+                                <div className="w-10 h-10 bg-slate-800 rounded-full animate-pulse" />
+                                <div className="w-10 h-10 bg-slate-800 rounded-full animate-pulse" />
+                            </div>
+                            <div className="flex gap-6 border-b border-slate-800 pb-3">
+                                <div className="w-20 h-5 bg-slate-800 rounded animate-pulse" />
+                                <div className="w-16 h-5 bg-slate-800 rounded animate-pulse" />
+                                <div className="w-20 h-5 bg-slate-800 rounded animate-pulse" />
+                                <div className="w-16 h-5 bg-slate-800 rounded animate-pulse" />
+                            </div>
+                            <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
+                                {Array.from({ length: 12 }).map((_, i) => (
+                                    <div key={i} className="h-10 bg-slate-800 rounded-lg animate-pulse" style={{ animationDelay: `${i * 80}ms` }} />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -292,7 +331,7 @@ function DetailFilm() {
                 />
             </div>
 
-            <div className="relative z-10 w-full bg-[#0f1322] rounded-t-[40px] pt-8 lg:pt-12 -mt-20 lg:-mt-32">
+            <div className="relative z-10 w-full bg-[#0f1322] rounded-t-3xl pt-8 lg:pt-12 -mt-20 lg:-mt-32">
 
                 <div className="w-full max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
 
@@ -341,16 +380,16 @@ function DetailFilm() {
                                     if (!character) return null;
                                     return (
                                         <div key={idx} className="relative flex flex-col items-center gap-1.5 w-14 cursor-pointer group">
-                                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-600 group-hover:border-yellow-400 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.5)] transition-all duration-300 transform group-hover:scale-110 z-10">
+                                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-600 group-hover:border-yellow-400 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.5)] transition duration-300 transform group-hover:scale-110 z-10">
                                                 <img src={character.imgUrl || getDefaultAvatar(character.sexID)} alt={character.name} className="w-full h-full object-cover" onError={(e) => e.target.src = getDefaultAvatar(character.sexID)} />
                                             </div>
                                             <p className="text-[10px] text-center text-slate-300 truncate w-full transition-opacity duration-300">{character.name}</p>
 
-                                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-1 transition-all duration-300 z-50 pointer-events-none whitespace-nowrap">
+                                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-1 transition duration-300 z-50 pointer-events-none whitespace-nowrap">
                                                 <div className="bg-[#0f1322]/90 backdrop-blur-md text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
                                                     {character.name}
                                                 </div>
-                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
+                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-5 border-r-5 border-t-5 border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
                                                 <div className="absolute -bottom-0.75 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
                                             </div>
                                         </div>
@@ -388,7 +427,7 @@ function DetailFilm() {
                                             <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.name}</h4>
                                             <p className="text-[11px] text-slate-400 mt-0.5">{m.year || 2024} • {m.endEpisode} Tập</p>
 
-                                            <div className="absolute top-0 left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-[-110%] transition-all duration-300 z-50 pointer-events-none whitespace-nowrap">
+                                            <div className="absolute top-0 left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-[-110%] transition duration-300 z-50 pointer-events-none whitespace-nowrap">
                                                 <div className="bg-[#0f1322]/95 backdrop-blur-md text-yellow-400 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
                                                     {m.name}
                                                 </div>
@@ -419,7 +458,7 @@ function DetailFilm() {
                                             return;
                                         }
                                         navigate(`/pay/${realMovieId}`);
-                                    }} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition-all shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 cursor-pointer">
+                                    }} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 cursor-pointer">
                                         <FaCrown className="text-sm" /> Mua phim
                                     </button>}
                                     <button onClick={handleFavorite} className={`flex flex-col items-center gap-1.5 transition-colors cursor-pointer ${isFavorite ? 'text-red-500 hover:text-red-400' : 'text-slate-400 hover:text-white'}`}>
@@ -473,7 +512,7 @@ function DetailFilm() {
                             <div className="flex items-center gap-6 md:gap-8 border-b border-slate-700/60 pb-1">
                                 <button
                                     onClick={() => setActiveTab('episodes')}
-                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'episodes'
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition duration-200 cursor-pointer ${activeTab === 'episodes'
                                         ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
                                         : "text-slate-400 hover:text-white"
                                         }`}
@@ -483,7 +522,7 @@ function DetailFilm() {
 
                                 <button
                                     onClick={() => setActiveTab('gallery')}
-                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'gallery'
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition duration-200 cursor-pointer ${activeTab === 'gallery'
                                         ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
                                         : "text-slate-400 hover:text-white"
                                         }`}
@@ -493,7 +532,7 @@ function DetailFilm() {
 
                                 <button
                                     onClick={() => setActiveTab('actors')}
-                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'actors'
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition duration-200 cursor-pointer ${activeTab === 'actors'
                                         ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
                                         : "text-slate-400 hover:text-white"
                                         }`}
@@ -503,7 +542,7 @@ function DetailFilm() {
 
                                 <button
                                     onClick={() => setActiveTab('recommend')}
-                                    className={`relative pb-3 text-sm md:text-base font-bold transition-all duration-200 cursor-pointer ${activeTab === 'recommend'
+                                    className={`relative pb-3 text-sm md:text-base font-bold transition duration-200 cursor-pointer ${activeTab === 'recommend'
                                         ? "text-yellow-400 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-yellow-400 after:rounded-full after:shadow-[0_0_10px_rgba(250,204,21,0.8)]"
                                         : "text-slate-400 hover:text-white"
                                         }`}
@@ -521,7 +560,7 @@ function DetailFilm() {
                                         galleryImages.map((imgSrc, idx) => (
                                             <div
                                                 key={idx}
-                                                className="group relative rounded-2xl overflow-hidden aspect-video border-[3px] border-transparent shadow-md hover:border-[#facc15] hover:-translate-y-2 hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] transition-all duration-300 cursor-pointer"
+                                                className="group relative rounded-2xl overflow-hidden aspect-video border-3 border-transparent shadow-md hover:border-[#facc15] hover:-translate-y-2 hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] transition duration-300 cursor-pointer"
                                             >
                                                 <img
                                                     src={imgSrc}
@@ -545,7 +584,7 @@ function DetailFilm() {
                                                 <img
                                                     src={char.imgUrl || getDefaultAvatar(char.sexID)}
                                                     alt={char.name}
-                                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-[3px] border-slate-700 group-hover:border-[#facc15] group-hover:shadow-[0_0_20px_rgba(250,204,21,0.5)] group-hover:-translate-y-2 transition-all duration-300"
+                                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-3 border-slate-700 group-hover:border-[#facc15] group-hover:shadow-[0_0_20px_rgba(250,204,21,0.5)] group-hover:-translate-y-2 transition duration-300"
                                                     onError={(e) => e.target.src = getDefaultAvatar(char.sexID)}
                                                 />
                                                 <p className="text-xs sm:text-sm font-bold text-slate-200 group-hover:text-[#facc15] transition-colors w-full truncate text-center mt-1">
@@ -557,11 +596,11 @@ function DetailFilm() {
                                                     </p>
                                                 )}
 
-                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-20 flex flex-col items-center">
+                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none z-20 flex flex-col items-center">
                                                     <div className="bg-[#0f1322]/90 backdrop-blur-md text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)] whitespace-nowrap">
                                                         {char.name}
                                                     </div>
-                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
+                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-5 border-r-5 border-t-5 border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
                                                     <div className="absolute -bottom-0.75 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
                                                 </div>
                                             </div>
@@ -584,7 +623,7 @@ function DetailFilm() {
                                             }}
                                             className="group cursor-pointer flex flex-col h-full"
                                         >
-                                            <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition-all duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                            <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                                 <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.name} className="w-full h-full object-cover" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
                                                 <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">

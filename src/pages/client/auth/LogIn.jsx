@@ -133,7 +133,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
                 </div>
 
                 <div className="w-full md:w-1/2 pt-12 pb-8 px-8 relative bg-slate-900 flex flex-col justify-center">
-                    <button onClick={handleCloseLogin} className="absolute cursor-pointer right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition-all duration-300 hover:scale-110 hover:bg-red-600 active:scale-95">
+                    <button onClick={handleCloseLogin} className="absolute cursor-pointer right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition duration-300 hover:scale-110 hover:bg-red-600 active:scale-95">
                         <IoClose size={22} />
                     </button>
 
@@ -177,7 +177,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
                         </button>
                     </div>
 
-                    <button onClick={handleLogin} className="w-full cursor-pointer font-bold py-3 mt-6 rounded-xl text-sm tracking-wide bg-yellow-400 hover:bg-yellow-500 text-black transition-all shadow-[0_4px_14px_rgba(250,204,21,0.2)]">
+                    <button onClick={handleLogin} className="w-full cursor-pointer font-bold py-3 mt-6 rounded-xl text-sm tracking-wide bg-yellow-400 hover:bg-yellow-500 text-black transition shadow-[0_4px_14px_rgba(250,204,21,0.2)]">
                         Đăng nhập
                     </button>
 
@@ -187,7 +187,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
                         <div className="h-px flex-1 bg-slate-700" />
                     </div>
 
-                    <button onClick={signInWithGoogle} className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition-all">
+                    <button onClick={signInWithGoogle} className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition">
                         <FcGoogle size={18} /> Đăng nhập với Google
                     </button>
                 </div>
