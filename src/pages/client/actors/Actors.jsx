@@ -21,6 +21,10 @@ function Actors() {
         setPage(1);
     }, [searchTerm]);
 
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [page]);
+
     const removeDiacritics = (str) => {
         return str ? str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : '';
     };
@@ -35,12 +39,10 @@ function Actors() {
 
     const handlePrev = () => {
         setPage(p => (p > 1 ? p - 1 : p));
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleNext = () => {
         setPage(p => (p < totalPages ? p + 1 : p));
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     return (

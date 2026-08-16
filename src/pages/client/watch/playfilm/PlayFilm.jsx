@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
@@ -21,6 +21,8 @@ function PlayFilm({ handleOpenLogin }) {
     const tap = searchParams.get('tap');
     
     const [activeAudio, setActiveAudio] = useState('vietsub');
+    const serverParam = searchParams.get('server');
+    const [activeServer, setActiveServer] = useState(serverParam ? parseInt(serverParam) : 1);
     const movies = useMovies();
     const plans = useContext(PlanContext);
     const [episodes, setEpisodes] = useState([]);
@@ -58,6 +60,12 @@ function PlayFilm({ handleOpenLogin }) {
             setCurrentEpisode(ep);
         }
     }, [episodeShow, tap]);
+
+    useEffect(() => {
+        if (playEpisodes && activeServer === 2 && !playEpisodes.url2) {
+            setActiveServer(1);
+        }
+    }, [playEpisodes, activeServer]);
 
     useEffect(() => {
         if (!realMovieId) return;
@@ -125,7 +133,7 @@ function PlayFilm({ handleOpenLogin }) {
                 seconds: Math.floor(time),
             });
         }
-        window.location.href = `/xem-phim/${slug}?tap=${ep.numberEpisode}`;
+        navigate(`/xem-phim/${slug}?tap=${ep.numberEpisode}&server=${activeServer}`);
     };
 
     const handleResume = () => {
@@ -205,7 +213,7 @@ function PlayFilm({ handleOpenLogin }) {
                 <div className="relative w-full mb-8 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-black group">
                     <VideoPlayer
                         ref={playerRef}
-                        src={playEpisodes?.url}
+                        src={activeServer === 2 && playEpisodes?.url2 ? playEpisodes.url2 : playEpisodes?.url}
                         onTimeUpdate={handleTimeUpdate}
                         autoPlay={false}
                         hideControls={showModal}
@@ -276,9 +284,24 @@ function PlayFilm({ handleOpenLogin }) {
                             </div>
                             <div className="flex items-center gap-2">
                                 <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1 inline">Server:</p>
-                                <button className="px-4 py-1.5 rounded-lg bg-yellow-400 text-black text-xs font-extrabold shadow-sm hover:bg-yellow-500 transition cursor-pointer">SVR 1</button>
-                                <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition cursor-pointer">SVR 2</button>
-                                <button className="px-4 py-1.5 rounded-lg bg-[#1b2236] text-slate-300 border border-slate-700/60 text-xs font-bold hover:bg-[#232c46] hover:text-white transition cursor-pointer">SVR 3</button>
+                                {playEpisodes?.url && (
+                                    <button 
+                                        onClick={() => {
+                                            setActiveServer(1);
+                                            navigate(`/xem-phim/${slug}?tap=${playEpisodes.numberEpisode || tap || 1}&server=1`, { replace: true });
+                                        }} 
+                                        className={`px-4 py-1.5 rounded-lg text-xs transition cursor-pointer border ${activeServer === 1 ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46] font-bold'}`}
+                                    >SVR 1</button>
+                                )}
+                                {playEpisodes?.url2 && (
+                                    <button 
+                                        onClick={() => {
+                                            setActiveServer(2);
+                                            navigate(`/xem-phim/${slug}?tap=${playEpisodes.numberEpisode || tap || 1}&server=2`, { replace: true });
+                                        }} 
+                                        className={`px-4 py-1.5 rounded-lg text-xs transition cursor-pointer border ${activeServer === 2 ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46] font-bold'}`}
+                                    >SVR 2</button>
+                                )}
                             </div>
                         </div>
 

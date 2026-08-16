@@ -189,7 +189,7 @@ function RentalChart({ rentMovies = [] }) {
                 </p>
             </div>
 
-            <div className="w-full h-56 [&_*]:!outline-none">
+            <div className="w-full h-56 [&_*]:outline-none!">
                 {data.length === 0 ? (
                     <div className="h-full flex items-center justify-center text-gray-500">
                         No revenue data available

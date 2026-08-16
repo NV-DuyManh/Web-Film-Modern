@@ -6,7 +6,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEpisodes, error, loading, progress, episode, setEpisode, isBulkMode, setIsBulkMode, bulkText, setBulkText, selectedMovie }) {
+function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEpisodes, error, loading, progress, episode, setEpisode, isBulkMode, setIsBulkMode, bulkTarget, setBulkTarget, bulkText, setBulkText, selectedMovie }) {
 
     const handleNumberChange = (e) => {
         const onlyNums = e.target.value.replace(/[^0-9]/g, '');
@@ -65,12 +65,20 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
                 
                 {isBulkMode && !episode.id ? (
                     <div className="mt-4">
-                        <label className="text-sm font-bold text-slate-300 mb-2 block">Bulk Episode Format (Tập 01|URL)</label>
+                        <div className="flex gap-2 mb-4 items-center">
+                            <span className="text-sm font-bold text-slate-300 mr-2">Target:</span>
+                            <button onClick={() => setBulkTarget('1')} className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${bulkTarget === '1' ? 'bg-cyan-500 text-black shadow-[0_0_10px_rgba(34,211,238,0.5)]' : 'bg-slate-800 text-slate-400 hover:text-white border border-white/10'}`}>Server 1</button>
+                            <button onClick={() => setBulkTarget('2')} className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${bulkTarget === '2' ? 'bg-cyan-500 text-black shadow-[0_0_10px_rgba(34,211,238,0.5)]' : 'bg-slate-800 text-slate-400 hover:text-white border border-white/10'}`}>Server 2</button>
+                            <button onClick={() => setBulkTarget('both')} className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${bulkTarget === 'both' ? 'bg-cyan-500 text-black shadow-[0_0_10px_rgba(34,211,238,0.5)]' : 'bg-slate-800 text-slate-400 hover:text-white border border-white/10'}`}>Both</button>
+                        </div>
+                        <label className="text-sm font-bold text-slate-300 mb-2 block">
+                            Bulk Episode Format {bulkTarget === 'both' ? '(Tập 01|URL 1|URL 2)' : '(Tập 01|URL)'}
+                        </label>
                         <textarea
                             value={bulkText}
                             onChange={(e) => setBulkText(e.target.value)}
                             className="w-full h-40 bg-slate-900/50 border border-white/10 rounded-xl p-4 text-slate-300 text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-mono resize-none"
-                            placeholder={"Tập 01|https://player.phimapi.com/player/?url=https://s2.phim1280.tv/20240301/v7zHGDA1/index.m3u8\nTập 02|https://player.phimapi.com/player/?url=https://s2.phim1280.tv/20240301/6SHJeWr1/index.m3u8"}
+                            placeholder={bulkTarget === 'both' ? "Tập 01|https://link-m3u8...|https://link-embed...\nTập 02|https://link-m3u8...|https://link-embed..." : "Tập 01|https://link...\nTập 02|https://link..."}
                         />
                     </div>
                 ) : (
@@ -92,11 +100,21 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
                             name="url"
                             onChange={onChangeInput}
                             fullWidth
-                            label="Video URL"
+                            label="Video URL (Server 1)"
                             variant="outlined"
                             value={episode.url}
                             helperText={error.url}
                             error={!!error.url}
+                        />
+
+                        <TextField
+                            className="modal-input-x"
+                            name="url2"
+                            onChange={onChangeInput}
+                            fullWidth
+                            label="Backup Video URL (Server 2 - Optional)"
+                            variant="outlined"
+                            value={episode.url2 || ''}
                         />
                     </>
                 )}

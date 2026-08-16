@@ -173,15 +173,15 @@ export const stripHtml = (html) => {
 export const mapCountryName = (countryArr) => {
     if (!countryArr || countryArr.length === 0) return 'Other';
     const slugMap = {
-        'nhat-ban': 'Japan', 'han-quoc': 'Korea', 'trung-quoc': 'China',
-        'au-my': 'US-UK', 'thai-lan': 'Thailand', 'dai-loan': 'Taiwan',
-        'hong-kong': 'Hong Kong', 'an-do': 'India', 'anh': 'UK',
-        'phap': 'France', 'canada': 'Canada', 'duc': 'Germany',
-        'tay-ban-nha': 'Spain', 'brazil': 'Brazil', 'uc': 'Australia',
+        'nhat-ban': 'Nhật Bản', 'han-quoc': 'Hàn Quốc', 'trung-quoc': 'Trung Quốc',
+        'au-my': 'Âu Mỹ', 'thai-lan': 'Thái Lan', 'dai-loan': 'Đài Loan',
+        'hong-kong': 'Hồng Kông', 'an-do': 'Ấn Độ', 'anh': 'Anh',
+        'phap': 'Pháp', 'canada': 'Canada', 'duc': 'Đức',
+        'tay-ban-nha': 'Tây Ban Nha', 'brazil': 'Brazil', 'uc': 'Úc',
         'indonesia': 'Indonesia', 'philippines': 'Philippines',
-        'viet-nam': 'Vietnam', 'quoc-gia-khac': 'Other',
+        'viet-nam': 'Việt Nam', 'quoc-gia-khac': 'Quốc gia khác',
     };
     const firstCountry = countryArr[0];
     const slug = firstCountry?.slug || '';
-    return slugMap[slug] || firstCountry?.name || 'Other';
+    return slugMap[slug] || firstCountry?.name || 'Quốc gia khác';
 };

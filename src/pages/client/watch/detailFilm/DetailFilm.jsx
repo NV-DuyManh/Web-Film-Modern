@@ -130,6 +130,16 @@ function DetailFilm() {
         return episodes.filter(e => e.movieID == realMovieId).sort((a, b) => a.numberEpisode - b.numberEpisode)
     }, [realMovieId, episodes]);
 
+    const movieAuthors = useMemo(() => {
+        if (!movie) return [];
+        let authorList = movie.listAuthor || (movie.author ? [movie.author] : []);
+        if (Array.isArray(authorList) && authorList.length > 0) {
+            const resolved = authorList.map(a => typeof a === 'string' ? getObjectById(authors, a) : a).filter(Boolean);
+            if (resolved.length > 0) return resolved;
+        }
+        return [];
+    }, [movie, authors]);
+
     const movieActors = useMemo(() => {
         if (!movie) return [];
         let actorList = movie.actor || movie.actors || movie.listActor || [];
@@ -369,33 +379,66 @@ function DetailFilm() {
                             <div className="text-slate-400"><span className="font-bold text-white inline">Thời lượng:</span> {movie.duration ? movie.duration + ' phút' : (movie.time || 'Đang cập nhật')}</div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Lượt xem:</span> {(Number(movie.views) || 0) + 100}</div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Quốc gia:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</span></div>
-                            <div className="text-slate-400"><span className="font-bold text-white inline">Thể loại:</span> {Array.isArray(movie.listCategory) && movie.listCategory.length > 0 ? <span className="inline-flex flex-wrap gap-1 ml-1">{movie.listCategory.map(id => { const cat = getObjectById(categories, id); return cat ? <Link key={id} to={`/the-loai?cat=${cat.slug || id}`} className="text-yellow-500 hover:text-yellow-300 transition-colors">{cat.name}</Link> : null; }).filter(Boolean).reduce((prev, curr, i) => i === 0 ? [curr] : [...prev, <span key={`sep-${i}`} className="text-slate-600">,</span>, curr], [])}</span> : <span className="text-slate-300">Đang cập nhật</span>}</div>
-                            <div className="text-slate-400"><span className="font-bold text-white inline">Đạo diễn:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{Array.isArray(movie.listAuthor) && movie.listAuthor.length > 0 ? movie.listAuthor.map(id => getObjectById(authors, id)?.name).filter(Boolean).join(', ') : (getObjectById(authors, movie.author)?.name || 'Đang cập nhật')}</span></div>
+                            <div className="text-slate-400"><span className="font-bold text-white inline">Thể loại:</span> {Array.isArray(movie.listCategory) && movie.listCategory.length > 0 ? <span className="ml-1">{movie.listCategory.map(id => { const cat = getObjectById(categories, id); return cat ? <span key={id} className="text-yellow-500">{cat.name}</span> : null; }).filter(Boolean).reduce((prev, curr, i) => i === 0 ? [curr] : [...prev, <span key={`sep-${i}`} className="text-slate-400">, </span>, curr], [])}</span> : <span className="text-slate-300">Đang cập nhật</span>}</div>
                         </div>
 
-                        <div className="mt-4">
-                            <h3 className="text-base font-bold text-white mb-3">Nhân vật</h3>
-                            <div className="flex flex-wrap gap-4">
-                                {movieCharacters.map((character, idx) => {
-                                    if (!character) return null;
-                                    return (
-                                        <div key={idx} className="relative flex flex-col items-center gap-1.5 w-14 cursor-pointer group">
-                                            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-600 group-hover:border-yellow-400 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.5)] transition duration-300 transform group-hover:scale-110 z-10">
-                                                <img src={character.imgUrl || getDefaultAvatar(character.sexID)} alt={character.name} className="w-full h-full object-cover" onError={(e) => e.target.src = getDefaultAvatar(character.sexID)} />
-                                            </div>
-                                            <p className="text-[10px] text-center text-slate-300 truncate w-full transition-opacity duration-300">{character.name}</p>
+                        <div className="flex flex-col gap-2">
+                                <div>
+                                    <h3 className="text-base font-bold text-white mb-2 flex items-center gap-2">
+                                        Đạo diễn
+                                        {movieAuthors.length === 0 && <span className="text-slate-400 text-sm italic font-normal">Đang cập nhật...</span>}
+                                    </h3>
+                                    {movieAuthors.length > 0 && (
+                                        <div className="flex flex-wrap gap-4">
+                                            {movieAuthors.map((author, idx) => {
+                                                if (!author) return null;
+                                                return (
+                                                    <div key={idx} className="relative flex flex-col items-center gap-1.5 w-14 cursor-pointer group">
+                                                        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-600 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition duration-300 transform group-hover:scale-110 z-10">
+                                                            <img src={author.imgUrl || getDefaultAvatar(author.sexID)} alt={author.name} className="w-full h-full object-cover" onError={(e) => e.target.src = getDefaultAvatar(author.sexID)} />
+                                                        </div>
+                                                        <p className="text-[10px] text-center text-slate-300 truncate w-full transition-opacity duration-300">{author.name}</p>
 
-                                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-1 transition duration-300 z-50 pointer-events-none whitespace-nowrap">
-                                                <div className="bg-[#0f1322]/90 backdrop-blur-md text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
-                                                    {character.name}
-                                                </div>
-                                                <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-5 border-r-5 border-t-5 border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
-                                                <div className="absolute -bottom-0.75 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
-                                            </div>
+                                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-1 transition duration-300 z-50 pointer-events-none whitespace-nowrap">
+                                                            <div className="bg-[#0f1322]/90 backdrop-blur-md text-cyan-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-cyan-500/30 shadow-[0_5px_20px_rgba(34,211,238,0.2)]">
+                                                                {author.name}
+                                                            </div>
+                                                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-5 border-r-5 border-t-5 border-l-transparent border-r-transparent border-t-cyan-500/30"></div>
+                                                            <div className="absolute -bottom-0.75 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
-                                    );
-                                })}
-                            </div>
+                                    )}
+                                </div>
+
+                            {movieCharacters.length > 0 && (
+                                <div>
+                                    <h3 className="text-base font-bold text-white mb-2">Nhân vật</h3>
+                                    <div className="flex flex-wrap gap-4">
+                                        {movieCharacters.map((character, idx) => {
+                                            if (!character) return null;
+                                            return (
+                                                <div key={idx} className="relative flex flex-col items-center gap-1.5 w-14 cursor-pointer group">
+                                                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-600 group-hover:border-yellow-400 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.5)] transition duration-300 transform group-hover:scale-110 z-10">
+                                                        <img src={character.imgUrl || getDefaultAvatar(character.sexID)} alt={character.name} className="w-full h-full object-cover" onError={(e) => e.target.src = getDefaultAvatar(character.sexID)} />
+                                                    </div>
+                                                    <p className="text-[10px] text-center text-slate-300 truncate w-full transition-opacity duration-300">{character.name}</p>
+
+                                                    <div className="absolute -top-8 left-1/2 -translate-x-1/2 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-1 transition duration-300 z-50 pointer-events-none whitespace-nowrap">
+                                                        <div className="bg-[#0f1322]/90 backdrop-blur-md text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
+                                                            {character.name}
+                                                        </div>
+                                                        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-5 border-r-5 border-t-5 border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
+                                                        <div className="absolute -bottom-0.75 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
                         </div>
 
                         <div className="mt-8 hidden lg:block">
@@ -654,32 +697,76 @@ function DetailFilm() {
                         <div className="flex flex-col gap-5 animate-fade-in mt-2">
                             <h3 className="text-xl font-bold text-white">Các bản chiếu</h3>
 
-                            <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
-                                <div className="absolute top-0 right-0 w-[80%] h-full z-0">
-                                    <img
-                                        src={movie.imgUrl || movie.bannerUrl}
-                                        alt="bg"
-                                        className="w-full h-full object-cover object-top opacity-50"
-                                    />
-                                    <div className="absolute inset-0 bg-linear-to-r from-[#3b415a] via-[#3b415a]/80 to-transparent"></div>
-                                </div>
-
-                                <div className="relative z-10 p-5 flex flex-col gap-4">
-                                    <div className="flex items-center gap-2.5">
-                                        <div className="bg-[#6366f1] rounded flex items-center justify-center p-1.5 shadow">
-                                            <FaComment className="text-white text-xs" />
+                            <div className="flex flex-wrap gap-4">
+                                {episodes.length > 0 && episodes[0]?.url && (
+                                    <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
+                                        <div className="absolute top-0 right-0 w-[80%] h-full z-0">
+                                            <img
+                                                src={movie.imgUrl || movie.bannerUrl}
+                                                alt="bg"
+                                                className="w-full h-full object-cover object-top opacity-50"
+                                            />
+                                            <div className="absolute inset-0 bg-linear-to-r from-[#3b415a] via-[#3b415a]/80 to-transparent"></div>
                                         </div>
-                                        <p className="font-bold text-white text-[15px] inline">Vietsub #1</p>
-                                    </div>
 
-                                    <div className="mt-1 mb-1">
-                                        <p className="font-black text-white text-xl inline">1</p>
-                                    </div>
+                                        <div className="relative z-10 p-5 flex flex-col gap-4">
+                                            <div className="flex items-center gap-2.5">
+                                                <div className="bg-[#6366f1] rounded flex items-center justify-center p-1.5 shadow">
+                                                    <FaComment className="text-white text-xs" />
+                                                </div>
+                                                <p className="font-bold text-white text-[15px] inline">Server 1 (M3U8)</p>
+                                            </div>
 
-                                    <button className="bg-white hover:bg-slate-100 text-black px-4 py-2 mt-1 rounded-md font-bold text-[13px] w-fit shadow-md transition-colors">
-                                        Xem bản này
-                                    </button>
-                                </div>
+                                            <div className="mt-1 mb-1">
+                                                <p className="font-semibold text-slate-300 text-sm inline">Nguồn phát chất lượng cao</p>
+                                            </div>
+
+                                            <button 
+                                                onClick={() => navigate(`/xem-phim/${movie.slug || movie.id}?server=1`)}
+                                                className="bg-white hover:bg-slate-100 text-black px-4 py-2 mt-1 rounded-md font-bold text-[13px] w-fit shadow-md transition-colors cursor-pointer"
+                                            >
+                                                Xem bản này
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {episodes.length > 0 && episodes[0]?.url2 && (
+                                    <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
+                                        <div className="absolute top-0 right-0 w-[80%] h-full z-0">
+                                            <img
+                                                src={movie.imgUrl || movie.bannerUrl}
+                                                alt="bg"
+                                                className="w-full h-full object-cover object-top opacity-50"
+                                            />
+                                            <div className="absolute inset-0 bg-linear-to-r from-[#3b415a] via-[#3b415a]/80 to-transparent"></div>
+                                        </div>
+
+                                        <div className="relative z-10 p-5 flex flex-col gap-4">
+                                            <div className="flex items-center gap-2.5">
+                                                <div className="bg-yellow-500 rounded flex items-center justify-center p-1.5 shadow">
+                                                    <FaPlay className="text-white text-xs" />
+                                                </div>
+                                                <p className="font-bold text-white text-[15px] inline">Server 2 (Embed)</p>
+                                            </div>
+
+                                            <div className="mt-1 mb-1">
+                                                <p className="font-semibold text-slate-300 text-sm inline">Nguồn phát dự phòng</p>
+                                            </div>
+
+                                            <button 
+                                                onClick={() => navigate(`/xem-phim/${movie.slug || movie.id}?server=2`)}
+                                                className="bg-white hover:bg-slate-100 text-black px-4 py-2 mt-1 rounded-md font-bold text-[13px] w-fit shadow-md transition-colors cursor-pointer"
+                                            >
+                                                Xem bản này
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {episodes.length === 0 && (
+                                    <p className="text-slate-400 italic text-sm">Đang cập nhật bản chiếu...</p>
+                                )}
                             </div>
                         </div>
 

@@ -21,8 +21,11 @@ function CategoryPage() {
 
     useEffect(() => {
         setPage(1);
-        window.scrollTo(0, 0);
     }, [id]);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [page, id]);
 
     const currentCategory = useMemo(() => {
         return categories.find(c => String(c.id) === String(id)) || { name: 'Đang cập nhật...' };

@@ -1,4 +1,4 @@
-﻿import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
 import { useParams, Link } from 'react-router-dom';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -19,8 +19,11 @@ function CountryPage() {
 
     useEffect(() => {
         setPage(1);
-        window.scrollTo(0, 0);
     }, [name]);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [page, name]);
 
     const decodedName = decodeURIComponent(name);
 

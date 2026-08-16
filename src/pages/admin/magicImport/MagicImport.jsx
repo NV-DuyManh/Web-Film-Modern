@@ -503,6 +503,9 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                 addCrawlLog(`✅ Trang ${page}: Tìm thấy ${items.length} phim.`, 'success');
 
                 for (let i = 0; i < items.length; i++) {
+                    const currentProgress = ((page - crawlPageStart) / totalPages) * 100 + ((i + 1) / items.length) * (100 / totalPages);
+                    setCrawlProgress(Math.round(currentProgress));
+
                     if (crawlAbortRef.current) break;
                     while (crawlPauseRef.current) { await sleep(500); }
 
@@ -653,7 +656,8 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         for (const ep of serverData) {
                             const epNumMatch = ep.name?.match(/(\d+)/);
                             const epNum = epNumMatch ? parseInt(epNumMatch[1]) : 1;
-                            const epUrl = ep.link_embed || ep.link_m3u8 || '';
+                            const epUrl = ep.link_m3u8 || ep.link_embed || '';
+                            const epUrl2 = ep.link_embed || '';
                             if (!epUrl) continue;
                             const epRef = doc(collection(db, "Episodes"));
                             await setDoc(epRef, {
@@ -662,6 +666,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 title: submitMovie.name,
                                 numberEpisode: epNum,
                                 url: epUrl,
+                                url2: epUrl2 !== epUrl ? epUrl2 : '',
                             });
                             stats.episodes++;
                         }
@@ -684,7 +689,6 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
 
                 stats.pages++;
                 setCrawlStats({ ...stats });
-                setCrawlProgress(Math.round(((page - crawlPageStart + 1) / totalPages) * 100));
                 addCrawlLog(`📊 Hoàn thành trang ${page}/${crawlPageEnd}. Tổng: ${stats.movies} phim, ${stats.episodes} tập.`, 'success');
                 if (page < crawlPageEnd) await sleep(crawlDelay);
             }

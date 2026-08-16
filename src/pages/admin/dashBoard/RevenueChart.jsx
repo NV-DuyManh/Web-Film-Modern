@@ -203,7 +203,7 @@ function RevenueChart({ data = [] }) {
             </div>
 
 
-            <div className="w-full h-56 [&_*]:!outline-none">
+            <div className="w-full h-56 [&_*]:outline-none!">
 
                 {data.length === 0 ? (
 

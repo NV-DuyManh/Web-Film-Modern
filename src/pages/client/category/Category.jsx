@@ -1,16 +1,25 @@
-﻿import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useMovies } from '../../../hooks/useCollections';
 import { useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../../contexts/CategoryProvider";
+import { FaSearch } from "react-icons/fa";
+import { searchTV } from "../../../components/admin/search/SearchTV";
 
 function Category({ openCate, setOpenCate, isRightCol }) {
     const categories = useContext(CategoryContext) || [];
     const movies = useMovies() || [];
     const navigate = useNavigate();
-    
+    const [searchTerm, setSearchTerm] = useState('');
+
+    useEffect(() => {
+        if (!openCate) {
+            setSearchTerm('');
+        }
+    }, [openCate]);
+
     const validCategories = categories.filter(c => 
         movies.some(m => (m.listCategory || []).some(catId => String(catId) === String(c.id)))
-    );
+    ).filter(c => searchTV(c.name).includes(searchTV(searchTerm)));
 
     return (
         <div 
@@ -20,8 +29,20 @@ function Category({ openCate, setOpenCate, isRightCol }) {
                 e.stopPropagation();
             }}
         >
-            <div className="px-3 pb-4 pt-2 grid grid-cols-2 sm:grid-cols-4 max-h-80 overflow-y-auto custom-scrollbar">
-                {validCategories.map((e, index) => (
+            <div className="sticky top-0 z-10 px-4 pt-4 pb-2 bg-[#0f172a] rounded-t-2xl border-b border-white/5">
+                <div className="relative w-full group">
+                    <input 
+                        type="text" 
+                        placeholder="Tìm kiếm thể loại..." 
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full bg-slate-800/80 border border-cyan-400/40 text-cyan-100 text-[13px] rounded-full pl-9 pr-4 py-2 focus:outline-none focus:bg-slate-800 focus:border-cyan-400 focus:shadow-[0_0_20px_rgba(34,211,238,0.5),inset_0_0_10px_rgba(34,211,238,0.3)] transition placeholder-cyan-400/60 hover:border-cyan-400/70 hover:bg-slate-800 hover:shadow-[0_0_10px_rgba(34,211,238,0.2)] shadow-[inset_0_0_8px_rgba(34,211,238,0.1)]"
+                    />
+                    <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400 group-hover:text-cyan-200 group-focus-within:text-cyan-300 group-focus-within:animate-pulse transition text-sm drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+                </div>
+            </div>
+            <div className="px-3 pb-4 pt-2 grid grid-cols-2 sm:grid-cols-4 max-h-[300px] overflow-y-auto custom-scrollbar">
+                {validCategories.length > 0 ? validCategories.map((e, index) => (
                     <div 
                         key={index} 
                         onClick={(event) => {
@@ -36,7 +57,11 @@ function Category({ openCate, setOpenCate, isRightCol }) {
                             {e.name}
                         </div>
                     </div>
-                ))}
+                )) : (
+                    <div className="col-span-full text-center py-8 text-slate-400 text-sm font-medium">
+                        Không tìm thấy thể loại "{searchTerm}"
+                    </div>
+                )}
             </div>
         </div>
     );

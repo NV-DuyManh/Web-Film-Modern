@@ -39,8 +39,11 @@ function TopicDetail() {
 
     useEffect(() => {
         setPage(1);
-        window.scrollTo(0, 0);
     }, [id]);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [page, id]);
 
     const collectionData = useMemo(() => {
         const customCol = customTopics.find(t => t.id === id);
@@ -73,12 +76,10 @@ function TopicDetail() {
 
     const handlePrev = () => {
         setPage(p => (p > 1 ? p - 1 : p));
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     const handleNext = () => {
         setPage(p => (p < totalPages ? p + 1 : p));
-        window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
     if (!collectionData) {

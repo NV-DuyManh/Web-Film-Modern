@@ -115,7 +115,7 @@ function PlanChart({ data = [] }) {
             </div>
 
 
-            <div className="w-full h-56 [&_.recharts-wrapper]:outline-none [&_.recharts-wrapper]:!outline-none [&_svg]:!outline-none [&_div]:!outline-none">
+            <div className="w-full h-56 [&_.recharts-wrapper]:outline-none [&_.recharts-wrapper]:outline-none! [&_svg]:outline-none! [&_div]:outline-none!">
 
                 {data.length === 0 ? (
 

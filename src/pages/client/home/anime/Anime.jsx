@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useMemo, useEffect } from 'react';
 import ModalDetail from '../../watch/detailFilm/ModalDetail';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -35,6 +35,16 @@ function Anime() {
 
     const [loginDialog, setLoginDialog] = useState(false);
 
+    const filteredMovies = useMemo(() => {
+        if (!movies) return [];
+        let base = movies;
+        const animeType = categoryTypes?.find(ct => ct.name.toLowerCase().includes('anime') || ct.name.toLowerCase().includes('hoạt hình'));
+        if (animeType) {
+            base = base.filter(m => m.categoryTypeID === animeType.id);
+        }
+        return base;
+    }, [movies, categoryTypes]);
+
     const handleFavorite = async (e, movieId) => {
         e.stopPropagation();
         if (!isLogin) {
@@ -63,16 +73,18 @@ function Anime() {
 
     return (
         <div className='anime-container'>
-            <div className='flex justify-between items-center mb-4 sm:mb-6'>
-                <div className='flex items-center gap-2 sm:gap-3'>
+            <div className='flex flex-col xl:flex-row justify-between items-start xl:items-center mb-4 sm:mb-6 gap-4'>
+                <div className='flex items-center gap-2 sm:gap-3 whitespace-nowrap'>
                     <h2 className='font-bold text-xl sm:text-2xl md:text-3xl glow-text-multi'>
-                        Kho Tàng Anime Mới Nhất
+                        Kho Tàng Anime
                     </h2>
                     <FaChevronRight className='border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full' />
                 </div>
+
+
             </div>
 
-            <div className='anime-slide-outer'>
+            <div className='anime-slide-outer' key="anime-swiper">
                 <div className='anime-slide-wrapper'>
                     <Swiper
                         onSwiper={setMainSwiper}
@@ -85,8 +97,8 @@ function Anime() {
                         spaceBetween={0}
                         speed={800}
                         navigation={false}
-                        loop={movies?.length >= 7}
-                        {...(movies?.length >= 7 ? { loopedSlides: movies.length } : {})}
+                        loop={filteredMovies?.length >= 7}
+                        {...(filteredMovies?.length >= 7 ? { loopedSlides: filteredMovies.length } : {})}
                         effect={'fade'}
                         fadeEffect={{ crossFade: true }}
                         thumbs={{
@@ -95,7 +107,7 @@ function Anime() {
                         modules={[FreeMode, Navigation, Thumbs, EffectFade]}
                         className="anime-main-swiper"
                     >
-                        {movies?.map((e) => (
+                        {filteredMovies?.map((e) => (
                             <SwiperSlide key={e.id}>
                                 <img
                                     className="anime-main-img"
@@ -108,11 +120,11 @@ function Anime() {
 
                                 <div className='anime-info-box'>
                                     <h2 className='text-center lg:text-left text-xl sm:text-2xl lg:text-3xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
-                                        {e.name}
+                                        {e.otherName || "Đang cập nhật tên gốc"}
                                     </h2>
 
                                     <h3 className='mt-1 lg:mt-1.5 text-center lg:text-left text-xs sm:text-sm font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
-                                        {getObjectById(categoryTypes, e.categoryTypeID)?.name || "Series Movie"}
+                                        {e.name}
                                     </h3>
 
                                     <div className='mt-2 sm:mt-3 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
@@ -149,7 +161,17 @@ function Anime() {
                                         })}
                                     </div>
 
-                                    <p className='hidden lg:block mt-2 lg:mt-2 max-w-130 text-left text-xs lg:text-sm leading-5 lg:leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-2'>
+                                    <p 
+                                        className='hidden lg:block mt-2 lg:mt-2 max-w-130 text-left text-xs lg:text-sm leading-5 lg:leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]'
+                                        style={{
+                                            display: '-webkit-box',
+                                            WebkitLineClamp: 3,
+                                            WebkitBoxOrient: 'vertical',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'normal'
+                                        }}
+                                    >
                                         {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
                                     </p>
 
@@ -199,13 +221,13 @@ function Anime() {
                         watchSlidesProgress={true}
                         grabCursor={true}
                         allowTouchMove={true}
-                        loop={movies?.length >= 7}
-                        {...(movies?.length >= 7 ? { loopedSlides: movies.length } : {})}
+                        loop={filteredMovies?.length >= 7}
+                        {...(filteredMovies?.length >= 7 ? { loopedSlides: filteredMovies.length } : {})}
                         slideToClickedSlide={true}
                         modules={[FreeMode, Navigation, Thumbs]}
                         className="anime-thumb-swiper"
                     >
-                        {movies?.map((e, index) => (
+                        {filteredMovies?.map((e, index) => (
                             <SwiperSlide key={e.id}>
                                 <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt={e.name} draggable="false" />
                             </SwiperSlide>

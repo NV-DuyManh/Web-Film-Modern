@@ -1,4 +1,4 @@
-﻿import MALE_AVATAR from '../assets/Male.png';
+import MALE_AVATAR from '../assets/Male.png';
 import FEMALE_AVATAR from '../assets/Female.png';
 import { getObjectById } from '../services/firebaseResponse';
 
@@ -97,16 +97,17 @@ export const getThemeNameByIndex = (index) => {
 export const slugify = (str) => {
     if (!str) return '';
     str = str.toLowerCase();
-    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
-    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
-    str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
-    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
-    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
-    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+    // Thay thế chữ đ/Đ trước khi normalize
     str = str.replace(/đ/g, "d");
+    // Loại bỏ dấu tiếng Việt
+    str = str.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    // Bỏ các ký tự đặc biệt
     str = str.replace(/[^a-z0-9\s-]/g, '');
+    // Thay khoảng trắng bằng dấu gạch ngang
     str = str.replace(/\s+/g, '-');
+    // Bỏ nhiều dấu gạch ngang liên tiếp
     str = str.replace(/-+/g, '-');
+    // Cắt bỏ dấu gạch ngang ở đầu và cuối
     str = str.replace(/^-+|-+$/g, '');
     
     return str;

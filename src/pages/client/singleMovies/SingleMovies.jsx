@@ -1,4 +1,4 @@
-﻿import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
 import { Link } from 'react-router-dom';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
@@ -20,8 +20,11 @@ function SingleMovies() {
 
     useEffect(() => {
         setPage(1);
-        window.scrollTo(0, 0);
     }, []);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [page]);
 
     const categoryMovies = useMemo(() => {
         const id = categoryTypes.find(c => c.name.toLowerCase().includes('lẻ'))?.id;

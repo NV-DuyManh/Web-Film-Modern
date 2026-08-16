@@ -52,6 +52,7 @@ function Episodes() {
     const [progress, setProgress] = useState(0);
 
     const [isBulkMode, setIsBulkMode] = useState(false);
+    const [bulkTarget, setBulkTarget] = useState('both');
     const [bulkText, setBulkText] = useState("");
     const [search, setSearch] = useState("");
 
@@ -80,6 +81,7 @@ function Episodes() {
     const handleClose = () => {
         setOpen(false);
         setIsBulkMode(false);
+        setBulkTarget('both');
         setBulkText("");
         setEpisode({ ...inner, movieID: selectedMovie ? selectedMovie.id : "" });
     };
@@ -174,7 +176,17 @@ function Episodes() {
 
                 if (parts.length >= 2) {
                     const epName = parts[0].trim();
-                    const url = parts.slice(1).join('|').trim();
+                    let url = '';
+                    let url2 = '';
+
+                    if (bulkTarget === '1') {
+                        url = parts[1]?.trim() || '';
+                    } else if (bulkTarget === '2') {
+                        url2 = parts[1]?.trim() || '';
+                    } else {
+                        url = parts[1]?.trim() || '';
+                        url2 = parts[2]?.trim() || '';
+                    }
 
                     const numMatch = epName.match(/\d+/);
                     const numberEpisode = numMatch ? parseInt(numMatch[0]) : (i + 1);
@@ -185,8 +197,14 @@ function Episodes() {
                         movieID: episode.movieID,
                         title: selectedMovie?.name || "",
                         numberEpisode: numberEpisode,
-                        url: url
                     };
+
+                    if (bulkTarget === '1' || bulkTarget === 'both') {
+                        submitData.url = url;
+                    }
+                    if (bulkTarget === '2' || bulkTarget === 'both') {
+                        submitData.url2 = url2;
+                    }
 
                     if (existingEp) {
                         submitData.id = existingEp.id;
@@ -368,6 +386,8 @@ function Episodes() {
                 setEpisode={setEpisode}
                 isBulkMode={isBulkMode}
                 setIsBulkMode={setIsBulkMode}
+                bulkTarget={bulkTarget}
+                setBulkTarget={setBulkTarget}
                 bulkText={bulkText}
                 setBulkText={setBulkText}
                 selectedMovie={selectedMovie}

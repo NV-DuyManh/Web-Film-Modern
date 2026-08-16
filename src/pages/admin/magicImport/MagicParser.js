@@ -1,3 +1,5 @@
+import { slugify } from '../../../utils/appUtils';
+
 export const parseTSV = (text) => {
     if (!text) return [];
     
@@ -27,10 +29,13 @@ export const mapMovieData = (parsedData) => {
         const epSub = parseInt(row["số tập vietsub"] || row["ep sub"] || row["tập sub"]) || epTotal;
         const epDub = parseInt(row["số tập thuyết minh"] || row["ep dub"] || row["tập dub"]) || 0;
         const epVoice = parseInt(row["số tập lồng tiếng"] || row["ep voice"] || row["tập voice"]) || 0;
+        const movieName = row["name"] || row["movie name"] || row["tên phim"] || "";
+        const movieOtherName = row["original name"] || row["other name"] || row["tên gốc"] || row["tên tiếng việt"] || "";
 
         return {
-            name: row["name"] || row["movie name"] || row["tên phim"] || "",
-            otherName: row["original name"] || row["other name"] || row["tên gốc"] || row["tên tiếng việt"] || "",
+            name: movieName,
+            slug: slugify(movieOtherName || movieName),
+            otherName: movieOtherName,
             
             description: row["movie description"] || row["description"] || row["mô tả"] || "Đang cập nhật...",
             rawCategoryDesc: row["cat desc"] || row["category description"] || row["mô tả thể loại"] || "",
