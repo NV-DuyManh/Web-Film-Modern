@@ -1,4 +1,4 @@
-﻿import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -15,6 +15,18 @@ function FilmHongKong() {
     const movies = useMovies();
     
     const plans = useContext(PlanContext);
+
+    const hkMovies = useMemo(() => {
+        if (!movies) return [];
+        let filtered = movies.filter(m => m.countriesID?.toLowerCase() === 'hồng kông' || m.countriesID?.toLowerCase() === 'hong kong' || m.countriesID?.toLowerCase() === 'hongkong');
+        if (filtered.length < 15) {
+            const others = movies.filter(m => !(m.countriesID?.toLowerCase() === 'hồng kông' || m.countriesID?.toLowerCase() === 'hong kong' || m.countriesID?.toLowerCase() === 'hongkong'));
+            filtered = [...filtered, ...others].slice(0, 15);
+        } else {
+            filtered = filtered.slice(0, 15);
+        }
+        return filtered;
+    }, [movies]);
 
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
@@ -47,7 +59,7 @@ function FilmHongKong() {
                     }}
                     className="movie-swiper"
                 >
-                    {movies?.map((e) => (
+                    {hkMovies?.map((e) => (
                         <SwiperSlide key={e.id}>
                             <Link to={`/phim/${e.slug || e.id}`}>
                                 <div className="group cursor-pointer flex flex-col h-full">

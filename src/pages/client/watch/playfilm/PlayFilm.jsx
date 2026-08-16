@@ -183,7 +183,7 @@ function PlayFilm({ handleOpenLogin }) {
                             <FaChevronLeft className="pr-0.5 text-sm" />
                         </button>
                         <h1 className="text-lg sm:text-xl font-bold text-white flex flex-wrap items-center gap-2">
-                            <p className="inline">Xem phim <p className="text-yellow-400 inline">{movie?.otherName || movie?.name}</p></p>
+                            <span className="inline">Xem phim <span className="text-yellow-400 inline">{movie?.otherName || movie?.name}</span></span>
                             {playEpisodes?.numberEpisode && (
                                 <>
                                     <p className="text-slate-500 inline">•</p>

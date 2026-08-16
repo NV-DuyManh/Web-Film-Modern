@@ -1,4 +1,4 @@
-﻿import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -10,11 +10,31 @@ import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
+import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 
 function Cinema() {
     const movies = useMovies();
     
     const plans = useContext(PlanContext);
+    const categoryTypes = useContext(CategoryTypeContext);
+
+    const cinemaMovies = useMemo(() => {
+        if (!movies) return [];
+        let base = movies;
+        const cinemaType = categoryTypes?.find(ct => ct.name.toLowerCase().includes('chiếu rạp'));
+        if (cinemaType) {
+            let filtered = base.filter(m => m.categoryTypeID === cinemaType.id);
+            if (filtered.length < 15) {
+                const others = base.filter(m => m.categoryTypeID !== cinemaType.id);
+                base = [...filtered, ...others].slice(0, 15);
+            } else {
+                base = filtered.slice(0, 15);
+            }
+        } else {
+            base = movies.slice(0, 15);
+        }
+        return base;
+    }, [movies, categoryTypes]);
 
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
@@ -41,7 +61,7 @@ function Cinema() {
                     }}
                     className="movie-swiper"
                 >
-                    {movies?.map((e) => (
+                    {cinemaMovies?.map((e) => (
                         <SwiperSlide key={e.id}>
                             <Link to={`/phim/${e.slug || e.id}`}>
                                 <div className="group cursor-pointer flex flex-col">

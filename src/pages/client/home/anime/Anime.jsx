@@ -40,7 +40,15 @@ function Anime() {
         let base = movies;
         const animeType = categoryTypes?.find(ct => ct.name.toLowerCase().includes('anime') || ct.name.toLowerCase().includes('hoạt hình'));
         if (animeType) {
-            base = base.filter(m => m.categoryTypeID === animeType.id);
+            let filtered = base.filter(m => m.categoryTypeID === animeType.id);
+            if (filtered.length < 15) {
+                const others = base.filter(m => m.categoryTypeID !== animeType.id);
+                base = [...filtered, ...others].slice(0, 15);
+            } else {
+                base = filtered.slice(0, 15);
+            }
+        } else {
+            base = base.slice(0, 15);
         }
         return base;
     }, [movies, categoryTypes]);

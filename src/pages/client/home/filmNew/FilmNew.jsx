@@ -1,4 +1,4 @@
-﻿import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -16,6 +16,15 @@ function FilmNew(props) {
     const movies = useMovies();
     
     const plans = useContext(PlanContext);
+
+    const newMovies = useMemo(() => {
+        if (!movies) return [];
+        return [...movies].sort((a, b) => {
+            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return dateB - dateA;
+        }).slice(0, 15);
+    }, [movies]);
 
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
@@ -44,7 +53,7 @@ function FilmNew(props) {
                     }}
                     className="movie-swiper"
                 >
-                    {movies?.map((e) => (
+                    {newMovies?.map((e) => (
 
                         <SwiperSlide key={e.id}>
                             <Link to={`/phim/${e.slug || e.id}`}>

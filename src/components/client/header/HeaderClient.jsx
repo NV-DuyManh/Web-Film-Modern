@@ -101,7 +101,7 @@ function HeaderClient() {
             <div className={`absolute inset-0 -z-10 transition-[background-color,backdrop-filter,box-shadow] duration-300 ${isScrolled ? "bg-[#0b1221]/40 backdrop-blur-2xl border-b border-white/10 shadow-lg" : "bg-linear-to-b from-black/80 via-black/20 to-transparent border-none shadow-none"}`}></div>
 
             <div
-                className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1200px]:gap-4 min-[1200px]:px-8 transition duration-500`}
+                className={`relative flex w-full items-center gap-2 px-3 py-3 sm:gap-3 sm:px-4 min-[1200px]:gap-4 min-[1200px]:px-8`}
             >
                 <button
                     ref={hamburgerRef}
@@ -116,7 +116,7 @@ function HeaderClient() {
                     <img src={Logo2} alt="MFILM" width="150" height="60" className="h-10.5 w-auto object-contain sm:h-13 md:h-15" />
                 </a>
 
-                <div ref={searchContainerRef} className="relative min-w-0 flex-1 md:max-w-87.5 lg:max-w-112.5 min-[1200px]:max-w-87.5 xl:max-w-112.5 transition-[max-width] duration-500 ease-out md:mx-auto group">
+                <div ref={searchContainerRef} className="relative min-w-0 flex-1 md:max-w-87.5 lg:max-w-112.5 min-[1200px]:max-w-87.5 xl:max-w-112.5 md:mx-auto group">
                     <input
                         className="peer w-full min-w-0 rounded-full bg-transparent px-5 py-2.5 pr-12 text-sm font-medium text-white outline-none transition duration-300 placeholder:text-slate-300 border border-[#00f2fe]/50 shadow-[0_0_10px_rgba(0,242,254,0.3),inset_0_0_5px_rgba(0,242,254,0.1)] hover:border-green-500/70 hover:shadow-[0_0_15px_rgba(34,197,94,0.5),inset_0_0_5px_rgba(34,197,94,0.2)] focus:border-[#ff00ff]/80 focus:shadow-[0_0_20px_rgba(255,0,255,0.6),inset_0_0_8px_rgba(255,0,255,0.2)] sm:px-5 sm:py-2.5 sm:pr-12"
                         type="text" placeholder="Tìm kiếm phim..."
@@ -152,7 +152,7 @@ function HeaderClient() {
                                 if (item.path === "/category") cateRef.current = el;
                                 if (item.path === "/country") countryRef.current = el;
                             }}
-                            className={`relative flex flex-col min-[1200px]:block max-[1199px]:w-full transition duration-300 ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-60" : "z-10"}`}
+                            className={`relative flex flex-col min-[1200px]:block max-[1199px]:w-full ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-60" : "z-10"}`}
                         >
                             <Link to={item.path}
                                 onClick={(e) => {
@@ -169,7 +169,7 @@ function HeaderClient() {
                                         setOpenCountry(false);
                                     }
                                 }}
-                                className={`cursor-pointer flex items-center transition duration-300
+                                className={`cursor-pointer flex items-center transition-colors duration-300
                                     max-[1199px]:w-full max-[1199px]:justify-between max-[1199px]:px-4 max-[1199px]:py-2.5 max-[1199px]:rounded-lg max-[1199px]:text-[13px]
                                     min-[1200px]:justify-center min-[1200px]:rounded-full min-[1200px]:px-3 min-[1200px]:py-2 min-[1200px]:text-sm xl:px-4 font-bold outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1221]
                                     ${(location.pathname === item.path || (item.path !== "/" && location.pathname.startsWith(item.path + "/")))

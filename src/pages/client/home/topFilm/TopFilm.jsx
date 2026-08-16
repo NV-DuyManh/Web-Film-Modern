@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -14,20 +14,24 @@ import { Link } from 'react-router-dom';
 function TopFilm() {
     const movies = useMovies();
     
-    const calculateTrendingScore = (movie) => {
-        const views = Number(movie.views) || 0;
-        const createdAt = movie.createdAt ? new Date(movie.createdAt).getTime() : new Date('2024-01-01').getTime();
-        const ageInDays = Math.max(1, (new Date().getTime() - createdAt) / (1000 * 60 * 60 * 24));
-        const velocity = views / ageInDays;
+    const topMovies = useMemo(() => {
+        if (!movies) return [];
         
-        let engagementBonus = 1.0;
-        if (movie.planID) engagementBonus += 0.2;
-        if (movie.rent) engagementBonus += 0.3;
-        
-        return (views * 0.3 + velocity * 0.7) * engagementBonus;
-    };
+        const calculateTrendingScore = (movie) => {
+            const views = Number(movie.views) || 0;
+            const createdAt = movie.createdAt ? new Date(movie.createdAt).getTime() : new Date('2024-01-01').getTime();
+            const ageInDays = Math.max(1, (new Date().getTime() - createdAt) / (1000 * 60 * 60 * 24));
+            const velocity = views / ageInDays;
+            
+            let engagementBonus = 1.0;
+            if (movie.planID) engagementBonus += 0.2;
+            if (movie.rent) engagementBonus += 0.3;
+            
+            return (views * 0.3 + velocity * 0.7) * engagementBonus;
+        };
 
-    const topMovies = movies ? [...movies].sort((a, b) => calculateTrendingScore(b) - calculateTrendingScore(a)).slice(0, 10) : [];
+        return [...movies].sort((a, b) => calculateTrendingScore(b) - calculateTrendingScore(a)).slice(0, 10);
+    }, [movies]);
     
     const plans = useContext(PlanContext);
 
@@ -168,11 +172,7 @@ function TopFilm() {
                                                 {e.name}
                                             </p>
                                             <div className="flex flex-wrap items-center gap-2 mt-1.5 text-[9px] md:text-[10px] font-bold">
-                                                {e.rent != null && (
-                                                    <span className="flex items-center gap-1 text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)] transition-transform duration-300 group-hover:scale-105">
-                                                        <FaTicketAlt /> {e.rent} VNĐ
-                                                    </span>
-                                                )}
+                                            
                                                 {e.rent != null && e.endEpisode && (
                                                     <span className="text-slate-500">•</span>
                                                 )}

@@ -1,4 +1,4 @@
-﻿import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -15,6 +15,18 @@ function FilmComing() {
     const movies = useMovies();
     
     const plans = useContext(PlanContext);
+
+    const comingMovies = useMemo(() => {
+        if (!movies) return [];
+        let filtered = movies.filter(m => m.status === 'Sắp chiếu' || m.status === 'trailer');
+        if (filtered.length < 15) {
+            const others = movies.filter(m => m.status !== 'Sắp chiếu' && m.status !== 'trailer');
+            filtered = [...filtered, ...others].slice(0, 15);
+        } else {
+            filtered = filtered.slice(0, 15);
+        }
+        return filtered;
+    }, [movies]);
 
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
@@ -43,7 +55,7 @@ function FilmComing() {
                     }}
                     className="movie-swiper"
                 >
-                    {movies?.map((e) => (
+                    {comingMovies?.map((e) => (
                         <SwiperSlide key={e.id}>
                             <Link to={`/phim/${e.slug || e.id}`}>
                                 <div className="group cursor-pointer flex flex-col">
