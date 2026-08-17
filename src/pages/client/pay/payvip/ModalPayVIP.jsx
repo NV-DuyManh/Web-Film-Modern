@@ -39,7 +39,7 @@ function ModalPayVIP({ show, packageInfo, theme, getBadgeStyle, onClose }) {
                             style={{ animation: 'checkmarkBounce 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s both, pulseGlow 2s infinite 1s' }}
                         >
                             <div className="absolute inset-0 rounded-full border border-white/30"></div>
-                            <div className="absolute inset-[-10px] rounded-full border border-cyan-400/30 animate-ping opacity-50"></div>
+                            <div className="absolute -inset-2.5 rounded-full border border-cyan-400/30 animate-ping opacity-50"></div>
                             <svg className="w-12 h-12 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3.5} d="M5 13l4 4L19 7" />
                             </svg>

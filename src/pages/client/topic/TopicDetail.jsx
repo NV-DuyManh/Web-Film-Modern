@@ -1,7 +1,7 @@
 import { getOptimizedUrl } from '../../../utils/cloudinary';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useTopics, useMovies } from '../../../hooks/useCollections';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate , useSearchParams } from 'react-router-dom';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -34,12 +34,18 @@ function TopicDetail() {
     const customTopics = useTopics() || [];
     const plans = useContext(PlanContext) || [];
 
-    const [page, setPage] = useState(1);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const page = parseInt(searchParams.get('page')) || 1;
+    const setPage = (updater) => {
+        setSearchParams(prev => {
+            const currentPage = parseInt(prev.get('page')) || 1;
+            const newPage = typeof updater === 'function' ? updater(currentPage) : updater;
+            prev.set('page', newPage);
+            return prev;
+        });
+    };
     const moviesPerPage = ITEMS_PER_PAGE;
 
-    useEffect(() => {
-        setPage(1);
-    }, [id]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -174,7 +180,7 @@ function TopicDetail() {
                                         transition={{ duration: 0.3, delay: i * 0.03 }}
                                     >
                                         <Link to={`/phim/${movie.slug || movie.id}`} className="group flex flex-col">
-                                            <div className="relative rounded-xl overflow-hidden aspect-2/3 border-[3px] border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
+                                            <div className="relative rounded-xl overflow-hidden aspect-2/3 border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                                 <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
                                                 

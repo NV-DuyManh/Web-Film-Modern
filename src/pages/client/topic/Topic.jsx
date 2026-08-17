@@ -64,28 +64,28 @@ function CollectionCard({ collection, movies, index }) {
                             <img 
                                 src={getOptimizedUrl(previewMovies[3].imgUrl, 300, 450, 'poster')} 
                                 alt=""
-                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-lg transition duration-500 opacity-0 group-hover:opacity-80 group-hover:-translate-x-24 group-hover:-translate-y-1 group-hover:-rotate-[20deg] z-10 border border-white/10"
+                                className="absolute w-2/5 h-4/5 object-cover object-top rounded-xl shadow-lg transition duration-500 opacity-0 group-hover:opacity-80 group-hover:-translate-x-24 group-hover:-translate-y-1 group-hover:-rotate-[20deg] z-10 border border-white/10"
                             />
                         )}
                         {previewMovies[2] && (
                             <img 
                                 src={getOptimizedUrl(previewMovies[2].imgUrl, 300, 450, 'poster')} 
                                 alt=""
-                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-lg transition duration-500 opacity-0 group-hover:opacity-90 group-hover:-translate-x-10 group-hover:-translate-y-1 group-hover:-rotate-[5deg] group-hover:z-30 z-20 border border-white/10"
+                                className="absolute w-2/5 h-4/5 object-cover object-top rounded-xl shadow-lg transition duration-500 opacity-0 group-hover:opacity-90 group-hover:-translate-x-10 group-hover:-translate-y-1 group-hover:-rotate-[5deg] group-hover:z-30 z-20 border border-white/10"
                             />
                         )}
                         {previewMovies[1] && (
                             <img 
                                 src={getOptimizedUrl(previewMovies[1].imgUrl, 300, 450, 'poster')} 
                                 alt=""
-                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-xl transition duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-10 group-hover:-translate-y-1 group-hover:rotate-[5deg] group-hover:z-40 z-30 border border-white/10"
+                                className="absolute w-2/5 h-4/5 object-cover object-top rounded-xl shadow-xl transition duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-10 group-hover:-translate-y-1 group-hover:rotate-[5deg] group-hover:z-40 z-30 border border-white/10"
                             />
                         )}
                         {previewMovies[0] && (
                             <img 
                                 src={getOptimizedUrl(previewMovies[0].imgUrl, 300, 450, 'poster')} 
                                 alt=""
-                                className="absolute w-[40%] h-[80%] object-cover object-top rounded-xl shadow-2xl transition duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-24 group-hover:-translate-y-1 group-hover:rotate-[20deg] z-40 group-hover:z-50 border border-white/10 group-hover:border-white/30"
+                                className="absolute w-2/5 h-4/5 object-cover object-top rounded-xl shadow-2xl transition duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-24 group-hover:-translate-y-1 group-hover:rotate-[20deg] z-40 group-hover:z-50 border border-white/10 group-hover:border-white/30"
                             />
                         )}
                     </div>

@@ -700,7 +700,7 @@ function DetailFilm() {
                             <div className="flex flex-wrap gap-4">
                                 {episodes.length > 0 && episodes[0]?.url && (
                                     <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
-                                        <div className="absolute top-0 right-0 w-[80%] h-full z-0">
+                                        <div className="absolute top-0 right-0 w-4/5 h-full z-0">
                                             <img
                                                 src={movie.imgUrl || movie.bannerUrl}
                                                 alt="bg"
@@ -733,7 +733,7 @@ function DetailFilm() {
 
                                 {episodes.length > 0 && episodes[0]?.url2 && (
                                     <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
-                                        <div className="absolute top-0 right-0 w-[80%] h-full z-0">
+                                        <div className="absolute top-0 right-0 w-4/5 h-full z-0">
                                             <img
                                                 src={movie.imgUrl || movie.bannerUrl}
                                                 alt="bg"

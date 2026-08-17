@@ -1,6 +1,6 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link , useSearchParams } from 'react-router-dom';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
@@ -11,33 +11,41 @@ import ParticleBackground from '../../../components/client/background/ParticleBa
 import SEO from '../../../components/SEO';
 
 function CategoryPage() {
-    const { id } = useParams();
+    const { name } = useParams();
     const movies = useMovies() || [];
     const categories = useContext(CategoryContext) || [];
     const plans = useContext(PlanContext) || [];
 
-    const [page, setPage] = useState(1);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const page = parseInt(searchParams.get('page')) || 1;
+    const setPage = (updater) => {
+        setSearchParams(prev => {
+            const currentPage = parseInt(prev.get('page')) || 1;
+            const newPage = typeof updater === 'function' ? updater(currentPage) : updater;
+            prev.set('page', newPage);
+            return prev;
+        });
+    };
     const moviesPerPage = 14;
 
-    useEffect(() => {
-        setPage(1);
-    }, [id]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [page, id]);
+    }, [page, name]);
+
+    const decodedName = decodeURIComponent(name || '');
 
     const currentCategory = useMemo(() => {
-        return categories.find(c => String(c.id) === String(id)) || { name: 'Đang cập nhật...' };
-    }, [id, categories]);
+        return categories.find(c => c.name?.toLowerCase() === decodedName.toLowerCase()) || { name: decodedName || 'Đang cập nhật...', id: null };
+    }, [decodedName, categories]);
 
     const categoryMovies = useMemo(() => {
-        if (movies.length === 0) return [];
+        if (movies.length === 0 || !currentCategory.id) return [];
         return movies.filter(m => {
             const list = m.listCategory || [];
-            return list.some(catId => String(catId) === String(id));
+            return list.some(catId => String(catId) === String(currentCategory.id));
         });
-    }, [id, movies]);
+    }, [currentCategory.id, movies]);
 
     const totalPages = Math.ceil(categoryMovies.length / moviesPerPage) || 1;
     const safePage = Math.min(page, totalPages);
@@ -52,11 +60,11 @@ function CategoryPage() {
     };
 
     return (
-        <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
+        <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden pt-20 md:pt-28 pb-10">
             <SEO 
                 title={`Phim ${currentCategory.name} - Xem Phim Online`}
                 description={`Tổng hợp phim ${currentCategory.name} hay nhất, mới nhất. Xem phim ${currentCategory.name} vietsub, thuyết minh chất lượng cao tại MFILM.`}
-                url={`/category/${id}`}
+                url={`/category/${name}`}
             />
             <ParticleBackground />
             <div className="max-w-350 mx-auto relative z-10">
@@ -84,7 +92,7 @@ function CategoryPage() {
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
                             {currentMovies.map(movie => (
                                 <Link to={`/phim/${movie.slug || movie.id}`} key={movie.id} className="group flex flex-col">
-                                    <div className="relative rounded-xl overflow-hidden aspect-2/3 border-[3px] border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
+                                    <div className="relative rounded-xl overflow-hidden aspect-2/3 border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                         <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" width={300} height={450} loading="lazy" decoding="async" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
                                         

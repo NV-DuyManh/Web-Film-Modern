@@ -20,7 +20,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 function Anime() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -82,12 +82,12 @@ function Anime() {
     return (
         <div className='anime-container'>
             <div className='flex flex-col xl:flex-row justify-between items-start xl:items-center mb-4 sm:mb-6 gap-4'>
-                <div className='flex items-center gap-2 sm:gap-3 whitespace-nowrap'>
-                    <h2 className='font-bold text-xl sm:text-2xl md:text-3xl glow-text-multi'>
+                <Link to="/anime" className='flex items-center gap-2 sm:gap-3 whitespace-nowrap group'>
+                    <h2 className='font-bold text-xl sm:text-2xl md:text-3xl glow-text-multi group-hover:text-[#facc15] transition-colors duration-300'>
                         Kho Tàng Anime
                     </h2>
-                    <FaChevronRight className='border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full' />
-                </div>
+                    <FaChevronRight className='border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full group-hover:bg-yellow-400 group-hover:text-black transition-colors duration-300' />
+                </Link>
 
 
             </div>
@@ -169,19 +169,21 @@ function Anime() {
                                         })}
                                     </div>
 
-                                    <p 
-                                        className='hidden lg:block mt-2 lg:mt-2 max-w-130 text-left text-xs lg:text-sm leading-5 lg:leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]'
-                                        style={{
-                                            display: '-webkit-box',
-                                            WebkitLineClamp: 3,
-                                            WebkitBoxOrient: 'vertical',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'normal'
-                                        }}
-                                    >
-                                        {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
-                                    </p>
+                                    <div className="hidden lg:block">
+                                        <p
+                                            className='mt-2 lg:mt-2 max-w-130 text-left text-xs lg:text-sm leading-5 lg:leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]'
+                                            style={{
+                                                display: '-webkit-box',
+                                                WebkitLineClamp: 3,
+                                                WebkitBoxOrient: 'vertical',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'normal'
+                                            }}
+                                        >
+                                            {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
+                                        </p>
+                                    </div>
 
                                     <div className='mt-3 sm:mt-4 lg:mt-3 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
                                         <button aria-label="Xem phim" onClick={() => navigate(`/xem-phim/${e.slug || e.id}`)} className='group relative flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-300 to-yellow-500 text-lg sm:text-xl text-slate-900 shadow-[0_0_20px_rgba(251,191,36,0.4)] transition duration-500 hover:-translate-y-1 hover:scale-110 hover:shadow-[0_0_40px_rgba(251,191,36,0.6)] active:scale-95 cursor-pointer'>

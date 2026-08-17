@@ -22,6 +22,12 @@ const PayVIP = lazy(() => import('../pages/client/pay/payvip/PayVIP'));
 const PayMovie = lazy(() => import('../pages/client/pay/paymovie/PayMovie'));
 const MenuAccount = lazy(() => import('../components/client/menuAccount/MenuAccount'));
 
+const FilmNewPage = lazy(() => import('../pages/client/home/filmNew/FilmNewPage'));
+const CinemaPage = lazy(() => import('../pages/client/home/cinema/CinemaPage'));
+const FilmComingPage = lazy(() => import('../pages/client/home/filmComing/FilmComingPage'));
+const FilmHongKongPage = lazy(() => import('../pages/client/home/filmHongKong/FilmHongKongPage'));
+const AnimePage = lazy(() => import('../pages/client/home/anime/AnimePage'));
+
 const LoadingFallback = () => (
     <div className="flex items-center justify-center min-h-[60vh] bg-transparent">
         <div className="w-12 h-12 border-4 border-amber-500 border-t-transparent rounded-full animate-spin"></div>
@@ -42,7 +48,7 @@ function ClientRouters(props) {
             element: <TopicDetail />
         },
         {
-            path: "/category/:id",
+            path: "/category/:name",
             element: <CategoryPage />
         },
         {
@@ -96,6 +102,26 @@ function ClientRouters(props) {
         {
             path: "/account/:tab",
             element: <MenuAccount />
+        },
+        {
+            path: "/film-new",
+            element: <FilmNewPage />
+        },
+        {
+            path: "/cinema-movies",
+            element: <CinemaPage />
+        },
+        {
+            path: "/film-coming",
+            element: <FilmComingPage />
+        },
+        {
+            path: "/film-hongkong",
+            element: <FilmHongKongPage />
+        },
+        {
+            path: "/anime",
+            element: <AnimePage />
         },
     ]
     return (

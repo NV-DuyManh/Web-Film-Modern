@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import { FaSearch, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -7,8 +8,17 @@ import { getDefaultAvatar } from '../../../utils/appUtils';
 function Actors() {
     const [searchTerm, setSearchTerm] = useState('');
     const [actors, setActors] = useState([]);
-    
-    const [page, setPage] = useState(1);
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    const page = parseInt(searchParams.get('page')) || 1;
+    const setPage = (updater) => {
+        setSearchParams(prev => {
+            const currentPage = parseInt(prev.get('page')) || 1;
+            const newPage = typeof updater === 'function' ? updater(currentPage) : updater;
+            prev.set('page', newPage);
+            return prev;
+        });
+    };
     const itemsPerPage = 18;
 
     useEffect(() => {
@@ -17,9 +27,6 @@ function Actors() {
         return () => unsub();
     }, []);
 
-    useEffect(() => {
-        setPage(1);
-    }, [searchTerm]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -29,7 +36,7 @@ function Actors() {
         return str ? str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : '';
     };
 
-    const filteredActors = actors.filter(actor => 
+    const filteredActors = actors.filter(actor =>
         removeDiacritics(actor.name).includes(removeDiacritics(searchTerm))
     );
 
@@ -55,9 +62,9 @@ function Actors() {
                     </h1>
 
                     <div className="search w-full md:w-80">
-                        <input 
-                            type="text" 
-                            placeholder="Tìm kiếm diễn viên..." 
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm diễn viên..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                             className="search-input"
@@ -79,11 +86,11 @@ function Actors() {
                             {currentActors.map((actor) => (
                                 <div key={actor.id} className="group cursor-pointer flex flex-col">
                                     <div className="relative mb-2 w-full">
-                                        <div className="relative w-full aspect-4/5 md:aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition duration-300 group-hover:border-pink-500 group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(236,72,153,0.4)]">
-                                            <img 
-                                                src={(!actor.imgUrl || actor.imgUrl.includes('Logo')) ? getDefaultAvatar(actor.sexID) : actor.imgUrl} 
-                                                alt={actor.name} 
-                                                className="w-full h-full object-cover" 
+                                        <div className="relative w-full aspect-4/5 md:aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-pink-500 group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(236,72,153,0.4)]">
+                                            <img
+                                                src={(!actor.imgUrl || actor.imgUrl.includes('Logo')) ? getDefaultAvatar(actor.sexID) : actor.imgUrl}
+                                                alt={actor.name}
+                                                className="w-full h-full object-cover"
                                                 loading="lazy"
                                                 onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(actor.sexID); }}
                                             />
@@ -101,8 +108,8 @@ function Actors() {
 
                         {totalPages > 1 && (
                             <div className="flex justify-center items-center gap-4 mt-8">
-                                <button 
-                                    onClick={handlePrev} 
+                                <button
+                                    onClick={handlePrev}
                                     disabled={safePage === 1}
                                     className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition"
                                 >
@@ -111,8 +118,8 @@ function Actors() {
                                 <div className="px-6 py-2 rounded-full bg-slate-800/80 text-slate-300 font-semibold text-sm shadow-inner">
                                     Trang <span className="text-white mx-1">{safePage}</span> / {totalPages}
                                 </div>
-                                <button 
-                                    onClick={handleNext} 
+                                <button
+                                    onClick={handleNext}
                                     disabled={safePage === totalPages}
                                     className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition"
                                 >

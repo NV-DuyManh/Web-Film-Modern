@@ -84,7 +84,7 @@ function TopFilm() {
                                     <div
                                         className="relative w-full aspect-2/3 transition duration-300 group-hover:-translate-y-2 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_12px_15px_rgba(250,204,21,0.3)]"
                                     >
-                                        <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-[3px] border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : 'skew-y-[-8deg]'} origin-center z-10 transition-colors duration-300`}>
+                                        <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-3 border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : 'skew-y-[-8deg]'} origin-center z-10 transition-colors duration-300`}>
                                             <img
                                                 src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')}
                                                 alt={e.name}
@@ -97,7 +97,7 @@ function TopFilm() {
                                         </div>
 
 
-                                        <div className="absolute bottom-0 left-0 w-full h-[20%] rounded-b-xl overflow-hidden border-b-[3px] border-l-[3px] border-r-[3px] border-transparent group-hover:border-[#facc15] z-20 transition-colors duration-300">
+                                        <div className="absolute bottom-0 left-0 w-full h-[20%] rounded-b-xl overflow-hidden border-b-3 border-l-3 border-r-3 border-transparent group-hover:border-[#facc15] z-20 transition-colors duration-300">
                                             <img
                                                 src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')}
                                                 alt={e.name}

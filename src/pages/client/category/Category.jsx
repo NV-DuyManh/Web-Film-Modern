@@ -23,13 +23,13 @@ function Category({ openCate, setOpenCate, isRightCol }) {
 
     return (
         <div 
-            className={`absolute top-full mt-3 z-100 rounded-2xl bg-[#0f172a] border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.1)] transition duration-300 ${openCate ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible -translate-y-2 scale-95"} max-[1199px]:absolute max-[1199px]:w-[calc(200%+4px)] ${isRightCol ? 'max-[1199px]:right-0 max-[1199px]:origin-top-right' : 'max-[1199px]:left-0 max-[1199px]:origin-top-left'} min-[1200px]:-left-4 min-[1200px]:origin-top min-[1200px]:w-150`}
+            className={`absolute top-full mt-1 z-100 rounded-2xl bg-[#0f172a] border border-white/20 shadow-[0_30px_60px_rgba(0,0,0,0.9),inset_0_1px_0_rgba(255,255,255,0.1)] transition duration-300 ${openCate ? "opacity-100 visible translate-y-0 scale-100" : "opacity-0 invisible -translate-y-2 scale-95"} max-[1199px]:absolute max-[1199px]:w-[calc(200%+4px)] ${isRightCol ? 'max-[1199px]:right-0 max-[1199px]:origin-top-right' : 'max-[1199px]:left-0 max-[1199px]:origin-top-left'} min-[1200px]:-left-4 min-[1200px]:origin-top min-[1200px]:w-150`}
             onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
             }}
         >
-            <div className="sticky top-0 z-10 px-4 pt-4 pb-2 bg-[#0f172a] rounded-t-2xl border-b border-white/5">
+            <div className="px-4 pt-3 pb-2 bg-[#0f172a] rounded-t-2xl border-b border-white/5 z-10">
                 <div className="relative w-full group">
                     <input 
                         type="text" 
@@ -48,7 +48,7 @@ function Category({ openCate, setOpenCate, isRightCol }) {
                         onClick={(event) => {
                             event.preventDefault();
                             event.stopPropagation();
-                            navigate(`/category/${e.id}`);
+                            navigate(`/category/${encodeURIComponent(e.name)}`);
                             if (setOpenCate) setOpenCate(false);
                         }}
                         className="cursor-pointer px-2 py-1 group"

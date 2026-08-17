@@ -168,7 +168,7 @@ function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILAB
                                                     filter: 'drop-shadow(0 4px 5px rgba(0,0,0,0.9))'
                                                 }}></div>
 
-                                                <div className="z-10 bg-linear-to-b from-slate-700 to-slate-900 w-10.5 h-10.5 flex items-center justify-center rounded-full border-[3px] border-slate-400 shadow-[0_5px_15px_rgba(0,0,0,1),inset_0_2px_4px_rgba(255,255,255,0.4)] relative">
+                                                <div className="z-10 bg-linear-to-b from-slate-700 to-slate-900 w-10.5 h-10.5 flex items-center justify-center rounded-full border-3 border-slate-400 shadow-[0_5px_15px_rgba(0,0,0,1),inset_0_2px_4px_rgba(255,255,255,0.4)] relative">
                                                     <div className="absolute top-0.5 w-6.5 h-3 rounded-full border-t-2 border-slate-300 opacity-60"></div>
                                                     <FaLock className="text-lg text-slate-300 drop-shadow-[0_2px_2px_black]" />
                                                 </div>

@@ -39,10 +39,10 @@ function Cinema() {
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
             <div className='flex justify-between items-center '>
-                <div className='flex items-center gap-3'>
+                <Link to="/cinema-movies" className='flex items-center gap-3'>
                     <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>Mãn Nhãn với Phim Chiếu Rạp</h2>
-                    <FaChevronRight className='border w-6 h-6 md:w-8 md:h-8 bg-transparent text-white border-white/30 p-1.5 rounded-full ' />
-                </div>
+                    <FaChevronRight className='border w-6 h-6 md:w-8 md:h-8 bg-transparent text-white border-white/30 p-1.5 rounded-full' />
+                </Link>
             </div>
 
             <div className="movie-slider-wrapper relative group/slider">
@@ -66,7 +66,7 @@ function Cinema() {
                             <Link to={`/phim/${e.slug || e.id}`}>
                                 <div className="group cursor-pointer flex flex-col">
                                     <div className="relative mb-2 w-full">
-                                        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                             <img src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')} className="w-full h-full object-cover" draggable="false" alt="" width={480} height={270} loading="lazy" decoding="async" />
                                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 

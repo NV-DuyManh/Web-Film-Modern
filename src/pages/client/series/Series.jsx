@@ -1,26 +1,36 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
-import { Link } from 'react-router-dom';
+import { Link , useSearchParams } from 'react-router-dom';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { getAgeRatingColorClass } from '../../../utils/appUtils';
 import { getOptimizedUrl } from '../../../utils/cloudinary';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight, FaCalendarAlt, FaEye, FaShieldAlt } from 'react-icons/fa';
+import { BsSearch } from 'react-icons/bs';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import SEO from '../../../components/SEO';
+import { searchTV } from '../../../components/admin/search/SearchTV';
 
 function Series() {
     const movies = useMovies() || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
     const plans = useContext(PlanContext) || [];
 
-    const [page, setPage] = useState(1);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const page = parseInt(searchParams.get('page')) || 1;
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const setPage = (updater) => {
+        setSearchParams(prev => {
+            const currentPage = parseInt(prev.get('page')) || 1;
+            const newPage = typeof updater === 'function' ? updater(currentPage) : updater;
+            prev.set('page', newPage);
+            return prev;
+        });
+    };
     const moviesPerPage = 14;
 
-    useEffect(() => {
-        setPage(1);
-    }, []);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -28,8 +38,15 @@ function Series() {
 
     const categoryMovies = useMemo(() => {
         const id = categoryTypes.find(c => c.name.toLowerCase().includes('bộ'))?.id;
-        return movies.filter(m => m.categoryTypeID == id);
-    }, [movies, categoryTypes]);
+        let filtered = movies.filter(m => (id && m.categoryTypeID === id) || Number(m.endEpisode) >= 2);
+        if (searchTerm) {
+            filtered = filtered.filter(m => 
+                searchTV(m.name || '').includes(searchTV(searchTerm)) || 
+                searchTV(m.otherName || '').includes(searchTV(searchTerm))
+            );
+        }
+        return filtered;
+    }, [movies, categoryTypes, searchTerm]);
 
     const totalPages = Math.ceil(categoryMovies.length / moviesPerPage) || 1;
     const safePage = Math.min(page, totalPages);
@@ -52,11 +69,24 @@ function Series() {
             />
             <ParticleBackground />
             <div className="max-w-350 mx-auto relative z-10">
-                <div className="mb-8">
-                    <h1 className="text-3xl md:text-4xl font-black bg-linear-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.3)] tracking-tight mb-2 cursor-default pb-2">
+                <div className="mb-8 grid lg:grid-cols-8 gap-3 p-4 bg-black/20 text-white items-center rounded-xl border border-white/5">
+                    <h1 className="font-bold text-3xl md:text-4xl glow-text lg:col-span-3 m-0 flex items-center cursor-default">
                         Phim bộ
                     </h1>
-
+                    
+                    <div className="search lg:col-span-5">
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm phim bộ..."
+                            className="search-input"
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setPage(1);
+                            }}
+                        />
+                        <BsSearch className="search-icon" />
+                    </div>
                 </div>
 
                 {movies.length === 0 ? (
@@ -76,7 +106,7 @@ function Series() {
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
                             {currentMovies.map(movie => (
                                 <Link to={`/phim/${movie.slug || movie.id}`} key={movie.id} className="group flex flex-col">
-                                    <div className="relative rounded-xl overflow-hidden aspect-2/3 border-[3px] border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
+                                    <div className="relative rounded-xl overflow-hidden aspect-2/3 border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                         <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" width={300} height={450} loading="lazy" decoding="async" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
                                         

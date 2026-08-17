@@ -129,7 +129,7 @@ function HeaderClient() {
                                 setIsSearching(false);
                             }
                         }}
-              
+
                     />
                     {searchQuery ? (
                         <button aria-label="Xóa tìm kiếm" onClick={() => { setSearchQuery(''); }} className="absolute right-4 top-1/2 -translate-y-1/2 text-xl text-slate-400 hover:text-white transition-colors duration-200 cursor-pointer z-10">
@@ -149,9 +149,9 @@ function HeaderClient() {
 
                     {LISTCLIENT.map((item, index) => (
                         <div key={index} ref={(el) => {
-                                if (item.path === "/category") cateRef.current = el;
-                                if (item.path === "/country") countryRef.current = el;
-                            }}
+                            if (item.path === "/category") cateRef.current = el;
+                            if (item.path === "/country") countryRef.current = el;
+                        }}
                             className={`relative flex flex-col min-[1200px]:block max-[1199px]:w-full ${(item.path === "/category" && openCate) || (item.path === "/country" && openCountry) ? "z-60" : "z-10"}`}
                         >
                             <Link to={item.path}
@@ -246,7 +246,7 @@ function HeaderClient() {
                                         <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-sm font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5">
                                             <FaCrown className="text-lg" /> Nâng cấp gói
                                         </button>
- 
+
                                         <div className="flex justify-between items-center px-1">
                                             <div className="flex items-center gap-2 text-sm text-gray-300 font-medium">
                                                 <FaWallet className="text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)] text-lg" /> Số dư

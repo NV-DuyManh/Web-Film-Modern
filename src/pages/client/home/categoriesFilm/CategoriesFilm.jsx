@@ -35,7 +35,7 @@ function CategoriesFilm() {
                     validCategories.slice(0, 6).map((e, index) => (
                         <Link
                             key={e.id}
-                            to={`/category/${e.id}`}
+                            to={`/category/${e.name}`}
                             className={`group flex h-20 sm:h-24 md:h-28 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl bg-linear-to-br px-3 sm:px-4 md:px-5 transition duration-300 hover:-translate-y-2 ${categoryStyles[index % categoryStyles.length]}`}
                         >
                             <div className='rounded-full bg-white/25 blur-2xl transition duration-300 group-hover:scale-150'></div>

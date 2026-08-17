@@ -141,9 +141,11 @@ function Banner() {
                                 })}
                             </div>
 
-                            <p className='hidden lg:block mt-3 lg:mt-4 max-w-130 text-left text-sm leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-3'>
-                                {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
-                            </p>
+                            <div className='hidden lg:block mt-3 lg:mt-4 max-w-130'>
+                                <p className='text-left text-sm leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-7'>
+                                    {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
+                                </p>
+                            </div>
 
                             <div className='mt-4 lg:mb-20 sm:mt-6 lg:-translate-y-2 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
                                 <button aria-label="Xem phim" onClick={() => navigate(`/xem-phim/${e.slug || e.id}`)} className='group relative flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-300 to-yellow-500 text-lg sm:text-xl text-slate-900 shadow-[0_0_20px_rgba(251,191,36,0.4)] transition duration-500 hover:-translate-y-1 hover:scale-110 hover:shadow-[0_0_40px_rgba(251,191,36,0.6)] active:scale-95 cursor-pointer'>

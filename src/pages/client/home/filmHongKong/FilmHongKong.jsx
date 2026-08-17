@@ -31,12 +31,12 @@ function FilmHongKong() {
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
             <div className='flex justify-between items-center '>
-                <div className='flex items-center gap-3 pt-10 '>
+                <Link to="/film-hongkong" className='flex items-center gap-3 pt-10'>
                     <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>
                         Điện Ảnh Hồng Kông ở Chỗ Này Này
                     </h2>
                     <FaChevronRight className='border w-6 h-6 md:w-8 md:h-8 bg-transparent text-white border-white/30 p-1.5 rounded-full' />
-                </div>
+                </Link>
             </div>
 
             <div className="movie-slider-wrapper relative group/slider">
@@ -64,7 +64,7 @@ function FilmHongKong() {
                             <Link to={`/phim/${e.slug || e.id}`}>
                                 <div className="group cursor-pointer flex flex-col h-full">
 
-                                    <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-[3px] border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                                    <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                         <img
                                             src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')}
                                             alt={e.name}
@@ -120,7 +120,7 @@ function FilmHongKong() {
                                             })()}
                                             {e.duration && (
                                                 <span className="flex items-center gap-1 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-1.5 py-0.5 rounded shadow-md text-[8px] md:text-[9px] font-bold whitespace-nowrap">
-                                                    <FaClock /> {e.duration}
+                                                    <FaClock /> {e.duration} phút
                                                 </span>
                                             )}
                                         </div>

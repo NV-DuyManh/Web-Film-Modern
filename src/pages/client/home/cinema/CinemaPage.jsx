@@ -1,26 +1,22 @@
 import React, { useContext, useMemo, useState, useEffect } from 'react';
-import { useMovies } from '../../../hooks/useCollections';
+import { useMovies } from '../../../../hooks/useCollections';
 import { Link , useSearchParams } from 'react-router-dom';
-import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
-import { PlanContext } from '../../../contexts/PlanProvider';
-import { getObjectById } from '../../../services/firebaseResponse';
-import { getAgeRatingColorClass } from '../../../utils/appUtils';
-import { getOptimizedUrl } from '../../../utils/cloudinary';
+import { PlanContext } from '../../../../contexts/PlanProvider';
+import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
+import { getObjectById } from '../../../../services/firebaseResponse';
+import { getAgeRatingColorClass } from '../../../../utils/appUtils';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight, FaCalendarAlt, FaEye, FaShieldAlt } from 'react-icons/fa';
-import { BsSearch } from 'react-icons/bs';
-import ParticleBackground from '../../../components/client/background/ParticleBackground';
-import SEO from '../../../components/SEO';
-import { searchTV } from '../../../components/admin/search/SearchTV';
+import ParticleBackground from '../../../../components/client/background/ParticleBackground';
+import SEO from '../../../../components/SEO';
 
-function SingleMovies() {
+function CinemaPage() {
     const movies = useMovies() || [];
-    const categoryTypes = useContext(CategoryTypeContext) || [];
     const plans = useContext(PlanContext) || [];
+    const categoryTypes = useContext(CategoryTypeContext) || [];
 
     const [searchParams, setSearchParams] = useSearchParams();
     const page = parseInt(searchParams.get('page')) || 1;
-    const [searchTerm, setSearchTerm] = useState('');
-
     const setPage = (updater) => {
         setSearchParams(prev => {
             const currentPage = parseInt(prev.get('page')) || 1;
@@ -36,21 +32,23 @@ function SingleMovies() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [page]);
 
-    const categoryMovies = useMemo(() => {
-        const id = categoryTypes.find(c => c.name.toLowerCase().includes('lẻ'))?.id;
-        let filtered = movies.filter(m => (id && m.categoryTypeID === id) && (!m.endEpisode || Number(m.endEpisode) < 2));
-        if (searchTerm) {
-            filtered = filtered.filter(m => 
-                searchTV(m.name || '').includes(searchTV(searchTerm)) || 
-                searchTV(m.otherName || '').includes(searchTV(searchTerm))
-            );
+    const cinemaMovies = useMemo(() => {
+        if (!movies || movies.length === 0) return [];
+        const cinemaType = categoryTypes?.find(ct => ct.name.toLowerCase().includes('chiếu rạp'));
+        if (cinemaType) {
+            let filtered = movies.filter(m => m.categoryTypeID === cinemaType.id);
+            if (filtered.length < 15) {
+                const others = movies.filter(m => m.categoryTypeID !== cinemaType.id);
+                filtered = [...filtered, ...others];
+            }
+            return filtered;
         }
-        return filtered;
-    }, [movies, categoryTypes, searchTerm]);
+        return movies;
+    }, [movies, categoryTypes]);
 
-    const totalPages = Math.ceil(categoryMovies.length / moviesPerPage) || 1;
+    const totalPages = Math.ceil(cinemaMovies.length / moviesPerPage) || 1;
     const safePage = Math.min(page, totalPages);
-    const currentMovies = categoryMovies.slice((safePage - 1) * moviesPerPage, safePage * moviesPerPage);
+    const currentMovies = cinemaMovies.slice((safePage - 1) * moviesPerPage, safePage * moviesPerPage);
 
     const handlePrev = () => {
         setPage(p => (p > 1 ? p - 1 : p));
@@ -61,32 +59,18 @@ function SingleMovies() {
     };
 
     return (
-        <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
+        <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden pt-20 md:pt-28 pb-10">
             <SEO 
-                title="Phim Lẻ - Xem Phim Lẻ Online"
-                description="Tổng hợp phim lẻ hay nhất, mới nhất. Xem phim lẻ vietsub, thuyết minh chất lượng cao miễn phí tại MFILM."
-                url="/singleMovies"
+                title="Mãn Nhãn với Phim Chiếu Rạp - MFILM"
+                description="Tổng hợp phim chiếu rạp hay nhất, mới nhất tại MFILM."
+                url="/cinema-movies"
             />
             <ParticleBackground />
             <div className="max-w-350 mx-auto relative z-10">
-                <div className="mb-8 grid lg:grid-cols-8 gap-3 p-4 bg-black/20 text-white items-center rounded-xl border border-white/5">
-                    <h1 className="font-bold text-3xl md:text-4xl glow-text lg:col-span-3 m-0 flex items-center cursor-default">
-                        Phim lẻ
+                <div className="mb-8">
+                    <h1 className="text-3xl md:text-4xl font-black bg-linear-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.3)] tracking-tight mb-2 cursor-default pb-2">
+                        Mãn Nhãn với Phim Chiếu Rạp
                     </h1>
-
-                    <div className="search lg:col-span-5">
-                        <input
-                            type="text"
-                            placeholder="Tìm kiếm phim lẻ..."
-                            className="search-input"
-                            value={searchTerm}
-                            onChange={(e) => {
-                                setSearchTerm(e.target.value);
-                                setPage(1);
-                            }}
-                        />
-                        <BsSearch className="search-icon" />
-                    </div>
                 </div>
 
                 {movies.length === 0 ? (
@@ -101,7 +85,7 @@ function SingleMovies() {
                             </div>
                         ))}
                     </div>
-                ) : categoryMovies.length > 0 ? (
+                ) : cinemaMovies.length > 0 ? (
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
                             {currentMovies.map(movie => (
@@ -180,7 +164,7 @@ function SingleMovies() {
                                                     <FaCalendarAlt /> {movie.releaseYear}
                                                 </div>
                                             )}
-                                            <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-orange-400 to-amber-500 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(245,158,11,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                            <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                                                 <FaEye /> {(Number(movie.views) || 0) + 100}
                                             </div>
                                         </div>
@@ -212,7 +196,7 @@ function SingleMovies() {
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="text-6xl mb-4">🎬</div>
-                        <h2 className="text-xl text-slate-400 font-semibold">Chưa có phim nào trong thể loại này</h2>
+                        <h2 className="text-xl text-slate-400 font-semibold">Chưa có phim nào</h2>
                     </div>
                 )}
             </div>
@@ -220,4 +204,4 @@ function SingleMovies() {
     );
 }
 
-export default SingleMovies;
+export default CinemaPage;
