@@ -41,7 +41,7 @@ function Category({ openCate, setOpenCate, isRightCol }) {
                     <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-400 group-hover:text-cyan-200 group-focus-within:text-cyan-300 group-focus-within:animate-pulse transition text-sm drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
                 </div>
             </div>
-            <div className="px-3 pb-4 pt-2 grid grid-cols-2 sm:grid-cols-4 max-h-[300px] overflow-y-auto custom-scrollbar">
+            <div className="px-3 pb-4 pt-2 grid grid-cols-2 sm:grid-cols-4 max-h-75 overflow-y-auto custom-scrollbar">
                 {validCategories.length > 0 ? validCategories.map((e, index) => (
                     <div 
                         key={index} 
