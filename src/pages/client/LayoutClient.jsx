@@ -5,10 +5,9 @@ import ClientRouters from '../../routers/ClientRouters';
 import FooterClient from '../../components/client/footer/FooterClient';
 import LoadingScreen from '../../components/client/loadingScreen/LoadingScreen';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { apiKey } from '../../utils/Constants';
+import { apiKeys } from '../../utils/Constants';
 import { useMovies } from '../../hooks/useCollections';
 
-const genAI = new GoogleGenerativeAI(apiKey);
 function LayoutClient() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -143,6 +142,9 @@ QUAN TRỌNG:
                 }
             ];
 
+            const randomKey = apiKeys[Math.floor(Math.random() * apiKeys.length)];
+            const genAI = new GoogleGenerativeAI(randomKey);
+
             const model = genAI.getGenerativeModel({ 
                 model: "gemini-3-flash-preview",
                 systemInstruction: systemInstruction,
@@ -252,9 +254,13 @@ QUAN TRỌNG:
         } catch (error) {
             console.error("AI Error:", error);
             
-            let errorMessage = `Hệ thống báo lỗi: ${error.message || "Không rõ nguyên nhân"}`;
-            if (error.message && error.message.includes("429")) {
-                errorMessage = "Hệ thống báo lỗi: AI đang bị quá tải do vượt quá 5 tin nhắn/phút (giới hạn của Google). Bạn vui lòng đợi 10 giây rồi gửi lại nha!";
+            let errorMessage = "Hệ thống báo lỗi: Không rõ nguyên nhân";
+            if (error.message) {
+                if (error.message.includes("429") || error.message.includes("Quota exceeded")) {
+                    errorMessage = "Hệ thống báo lỗi: Trợ lý AI đang tạm thời vượt quá giới hạn lượt dùng (Quota exceeded). Bạn vui lòng đợi khoảng 1 phút rồi thử lại nhé!";
+                } else {
+                    errorMessage = `Hệ thống báo lỗi: ${error.message}`;
+                }
             }
             
             const errorMsg = { 
