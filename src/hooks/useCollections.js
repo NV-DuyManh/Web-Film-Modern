@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { fetchDocumentsRealtime } from '../services/firebaseService';
 import { subscribeToCollection, getCachedData } from '../utils/appUtils';
 import Logo5 from '../assets/Logo5.png';
@@ -25,6 +25,10 @@ function processMovies(movieList) {
 }
 
 export const useMovies        = createCollectionHook('movies',        'Movies',        processMovies);
+export const useAuthors       = createCollectionHook('authors',       'Authors');
+export const useActors        = createCollectionHook('actors',        'Actors');
+export const useCharacters    = createCollectionHook('characters',    'Characters');
+export const useCategories    = createCollectionHook('categories',    'Categories');
 export const useShowTimes     = createCollectionHook('showTimes',     'ShowTimes');
 export const useTopics        = createCollectionHook('topics',        'Topics');
 export const useSubscriptions = createCollectionHook('subscriptions', 'Subscriptions');
