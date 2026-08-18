@@ -400,6 +400,8 @@ export const LISTACCOUNT = [
     }
 ];
 
+export const apiKey = "AQ.Ab8RN6IveRm3gO-FowMg_pTLxO4HYVVxcW06hi8LvyoBKaiuEA";
+
 export const YOUR_SERVICE_ID = "service_wrbu7og";
 export const REGISTER_PLAN = "template_8wkt467"; // đk gói
 export const NEW_EPISODE = "template_c5ocp4e"; // tập mới ra
