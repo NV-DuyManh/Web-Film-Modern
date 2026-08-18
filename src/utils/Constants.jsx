@@ -400,7 +400,7 @@ export const LISTACCOUNT = [
     }
 ];
 
-export const apiKey = "AQ.Ab8RN6IveRm3gO-AQ.Ab8RN6KMTXDzxfq0KPwbqpVvnd1VZOSRIRHPDqI_EePwacgqnA";
+export const apiKey = "AQ.Ab8RN6KMTXDzxfq0KPwbqpVvnd1VZOSRIRHPDqI_EePwacgqnA";
 
 export const YOUR_SERVICE_ID = "service_wrbu7og";
 export const REGISTER_PLAN = "template_8wkt467"; // đk gói
