@@ -33,6 +33,26 @@ function HeaderClient() {
     const searchContainerRef = useRef(null);
     const { isLogin, handleLogout, globalAvatarPreview } = useContext(AuthContext);
     const subscriptions = useSubscriptions() || [];
+
+    useEffect(() => {
+        const handleOpenSearch = (e) => {
+            setSearchQuery(e.detail || '');
+            setIsSearching(true);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        const handleOpenLogin = () => setOpenLogin(true);
+        const handleOpenRegister = () => setOpenRegister(true);
+
+        window.addEventListener('OPEN_SEARCH', handleOpenSearch);
+        window.addEventListener('OPEN_LOGIN', handleOpenLogin);
+        window.addEventListener('OPEN_REGISTER', handleOpenRegister);
+
+        return () => {
+            window.removeEventListener('OPEN_SEARCH', handleOpenSearch);
+            window.removeEventListener('OPEN_LOGIN', handleOpenLogin);
+            window.removeEventListener('OPEN_REGISTER', handleOpenRegister);
+        };
+    }, []);
     const plans = useContext(PlanContext) || [];
 
     const currentPlanInfo = React.useMemo(() => {
