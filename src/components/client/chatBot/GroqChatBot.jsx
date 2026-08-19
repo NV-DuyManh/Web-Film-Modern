@@ -303,8 +303,11 @@ export default function GroqChatBot() {
                 });
 
                 if (res.status === 429 || res.status >= 500) {
-                    // Chuyển sang key tiếp theo ngay lập tức (không chờ delay nếu còn key khác)
                     keyIndex++;
+                    // Nếu bị rate limit model, tự động đổi sang llama-3.1-8b-instant
+                    if (payload.model !== "llama-3.1-8b-instant") {
+                        payload.model = "llama-3.1-8b-instant";
+                    }
                     if (keys.length > 0 && (attempt + 1) % keys.length === 0 && attempt < maxAttempts - 1) {
                         await new Promise((resolve, reject) => {
                             const timer = setTimeout(resolve, 600);
@@ -324,6 +327,9 @@ export default function GroqChatBot() {
                     const errMsg = err.error?.message || `Lỗi API Groq (${res.status})`;
                     lastError = new Error(errMsg);
                     keyIndex++;
+                    if (errMsg.includes("tokens per minute") || errMsg.includes("TPM") || errMsg.includes("too large")) {
+                        payload.model = "llama-3.1-8b-instant";
+                    }
                     continue;
                 }
 
@@ -393,7 +399,7 @@ export default function GroqChatBot() {
                 : [];
 
             const recentMessages = currentSessionMessages
-                .slice(-6)
+                .slice(-4)
                 .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi'));
             let groqMessages = [
                 { role: "system", content: systemInstruction },
@@ -416,7 +422,7 @@ export default function GroqChatBot() {
                     messages: groqMessages,
                     tools: GROQ_TOOLS,
                     tool_choice: "auto",
-                    max_tokens: 2048
+                    max_tokens: 800
                 }, apiKeys, abortController.signal);
 
                 const responseMessage = data.choices[0].message;
@@ -651,18 +657,7 @@ export default function GroqChatBot() {
                                                 ? 'bg-amber-600 text-white font-medium rounded-tr-none'
                                                 : 'bg-white text-black border border-gray-100 rounded-tl-none'
                                             }`}>
-                                            {msg.sender === 'user' ? (
-                                                renderMessage(msg.text, handleLinkClick)
-                                            ) : (
-                                                <TypewriterText
-                                                    text={msg.text}
-                                                    isNew={msg.id === lastAiMsgId}
-                                                    onComplete={() => setLastAiMsgId(null)}
-                                                    onLinkClick={handleLinkClick}
-                                                    movies={movies}
-                                                    plans={plans}
-                                                />
-                                            )}
+                                            {renderMessage(msg.text, handleLinkClick, movies, plans)}
                                         </div>
                                     </div>
                                 ))}

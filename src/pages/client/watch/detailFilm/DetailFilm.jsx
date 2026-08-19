@@ -24,7 +24,7 @@ function DetailFilm() {
     const [activeTab, setActiveTab] = useState('episodes');
     const [showListDropdown, setShowListDropdown] = useState(false);
     const [loginDialogState, setLoginDialogState] = useState({ open: false, title: "Yêu cầu đăng nhập", description: "Bạn cần đăng nhập tài khoản để mua hoặc thuê phim này" });
-    const movies = useMovies();
+    const movies = useMovies() || [];
 
     const [authorsMap, setAuthorsMap] = useState({});
     const [actorsMap, setActorsMap] = useState({});
@@ -33,8 +33,8 @@ function DetailFilm() {
     const actors = useMemo(() => Object.values(actorsMap), [actorsMap]);
     const characters = useMemo(() => Object.values(charactersMap), [charactersMap]);
 
-    const plans = useContext(PlanContext);
-    const categories = useContext(CategoryContext);
+    const plans = useContext(PlanContext) || [];
+    const categories = useContext(CategoryContext) || [];
     const [episodes, setEpisodes] = useState([]);
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -46,7 +46,7 @@ function DetailFilm() {
     }, [slug]);
 
     const movie = useMemo(() => {
-        return movies.find(m => m.slug === slug || m.id === slug);
+        return (movies || []).find(m => m.slug === slug || m.id === slug);
     }, [movies, slug]);
 
     const id = movie?.id;

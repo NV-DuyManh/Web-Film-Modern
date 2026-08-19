@@ -541,18 +541,7 @@ export default function GeminiChatBot() {
                                                 ? 'bg-amber-600 text-white font-medium rounded-tr-none'
                                                 : 'bg-white text-black border border-gray-100 rounded-tl-none'
                                             }`}>
-                                            {msg.sender === 'user' ? (
-                                                renderMessage(msg.text, handleLinkClick)
-                                            ) : (
-                                                <TypewriterText
-                                                    text={msg.text}
-                                                    isNew={msg.id === lastAiMsgId}
-                                                    onComplete={() => setLastAiMsgId(null)}
-                                                    onLinkClick={handleLinkClick}
-                                                    movies={movies}
-                                                    plans={plans}
-                                                />
-                                            )}
+                                            {renderMessage(msg.text, handleLinkClick, movies, plans)}
                                         </div>
                                     </div>
                                 ))}

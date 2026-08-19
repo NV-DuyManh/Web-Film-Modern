@@ -198,29 +198,19 @@ export const getMoviePlanInfo = (movie, plans = []) => {
 export const buildMovieCatalogSummary = (movies = [], categories = [], plans = [], characters = []) => {
     if (!movies || movies.length === 0) return "Chưa có phim nào trong hệ thống.";
     
-    // Lấy top 20 phim có nhiều lượt xem nhất để cung cấp đủ thông tin và tối ưu token
+    // Lấy top 10 phim tiêu biểu nhất để siêu tiết kiệm token
     const sorted = [...movies].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0));
-    return sorted.slice(0, 20).map(m => {
+    return sorted.slice(0, 10).map(m => {
         const planInfo = getMoviePlanInfo(m, plans);
         const catNames = (m.listCategory || [])
             .map(catId => categories.find(c => String(c.id) === String(catId))?.name)
             .filter(Boolean)
             .slice(0, 2)
             .join(', ') || 'Chung';
-        const mCharIds = m.character || m.characters || m.listCharacter || [];
-        const charNames = (characters || [])
-            .filter(c => mCharIds.includes(c.id))
-            .map(c => c.name)
-            .slice(0, 4)
-            .join(', ');
-        const charInfo = charNames ? ` | Nhân vật: ${charNames}` : '';
         const title = m.otherName || m.name || 'Không rõ';
-        const origTitle = (m.name && m.otherName && m.name !== m.otherName) ? ` (${m.name})` : '';
         const slug = m.slug || m.id;
-        const views = (Number(m.views) || 0) + 100;
         const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
-        const feeStatus = `[Gói ${planInfo.planName} (Level ${planInfo.level})]`;
-        return `- [${slug}] "${title}"${origTitle} | ${feeStatus} | ${epStr} | Thể loại: ${catNames}${charInfo} | Lượt xem: ${views}`;
+        return `- [${slug}] "${title}" | [Gói ${planInfo.planName} L${planInfo.level}] | ${epStr} | ${catNames}`;
     }).join('\n');
 };
 
@@ -244,174 +234,46 @@ export const buildSystemInstruction = ({
     const totalMovies = movies?.length || 0;
     const freeMoviesCount = (movies || []).filter(m => getMoviePlanInfo(m, plans).isFree).length;
     const paidMoviesCount = totalMovies - freeMoviesCount;
-    const totalCategories = categories?.length || 0;
-    const totalCharacters = characters?.length || 0;
-    const totalActors = actors?.length || 0;
-    const totalAuthors = authors?.length || 0;
-
-    // Tổng số tập phim trên toàn bộ website MFILM
     const totalEpisodes = (allEpisodes && allEpisodes.length > 0)
         ? allEpisodes.length
         : (movies || []).reduce((sum, m) => sum + (Number(m.endEpisode) || Number(m.totalEpisodes) || 1), 0);
 
-    // Sắp xếp các gói cước theo Level từ thấp đến cao (Free, Basic, Plus, Premium...)
     const sortedPlans = [...(plans || [])].sort((a, b) => (Number(a.level) || 0) - (Number(b.level) || 0));
-
-    // Thống kê chính xác số phim theo từng gói cước được thiết lập trong database
-    let planBreakdown = [];
-    if (sortedPlans.length > 0) {
-        planBreakdown = sortedPlans.map(p => {
-            const isFree = Number(p.level) === 0 || String(p.name || '').trim().toLowerCase() === 'free';
-            const count = (movies || []).filter(m => {
-                if (String(m.planID) === String(p.id)) return true;
-                if (!m.planID && isFree) return true;
-                return false;
-            }).length;
-            return `- Gói **${p.name} (Level ${p.level || 0})**: ${count} bộ phim`;
-        });
-    } else {
-        planBreakdown = [
-            `- Gói **Free (Level 0)**: ${freeMoviesCount} bộ phim`,
-            `- Gói **VIP (Level 1)**: ${paidMoviesCount} bộ phim`
-        ];
-    }
-    const planStatsText = planBreakdown.join('\n');
+    const planBreakdown = sortedPlans.map(p => {
+        const isFree = Number(p.level) === 0 || String(p.name || '').trim().toLowerCase() === 'free';
+        const count = (movies || []).filter(m => String(m.planID) === String(p.id) || (!m.planID && isFree)).length;
+        return `- Gói **${p.name} (Level ${p.level || 0})**: ${count} phim`;
+    }).join('\n');
 
     const movieCatalog = buildMovieCatalogSummary(movies, categories, plans, characters);
-    const categoryList = (categories || []).map(c => c.name).filter(Boolean).join(', ');
 
     let currentMovieContext = "";
     if (currentMovie) {
         const planInfo = getMoviePlanInfo(currentMovie, plans);
-        const movieAuthors = authors.filter(a => (currentMovie.listAuthor || []).includes(a.id) || currentMovie.author === a.id).map(a => a.name).join(', ') || 'Chưa cập nhật';
-        const movieActors = actors.filter(a => (currentMovie.listActor || []).includes(a.id) || (currentMovie.actors || []).includes(a.id)).map(a => a.name).join(', ') || 'Chưa cập nhật';
-        const charList = currentMovie.character || currentMovie.characters || currentMovie.listCharacter || [];
-        const movieCharacters = characters.filter(c => charList.includes(c.id)).map(c => c.name).join(', ') || 'Chưa cập nhật';
-        const movieCategories = categories.filter(c => (currentMovie.listCategory || []).includes(c.id)).map(c => c.name).join(', ') || 'Chưa cập nhật';
-        const cmtCount = allComments.filter(c => c.movieID === currentMovie.id).length;
-        const reviewCount = allReviews.filter(r => r.movieID === currentMovie.id || r.movieId === currentMovie.id).length;
-        const feeDescription = planInfo.isFree 
-            ? "Gói Free (Level 0 - Xem tự do không tốn phí)" 
-            : `Gói ${planInfo.planName} (Level ${planInfo.level} hoặc Mua/Thuê phim)`;
-
-        currentMovieContext = `\n\n[THÔNG TIN PHIM NGƯỜI DÙNG ĐANG XEM]:
-- Tên phim: "${currentMovie.otherName || currentMovie.name}"
-- Slug: ${currentMovie.slug || currentMovie.id}
-- Phí xem: ${feeDescription}
-- Tác giả / Đạo diễn: ${movieAuthors}
-- Diễn viên: ${movieActors}
-- Nhân vật trong phim: ${movieCharacters}
-- Thể loại: ${movieCategories}
-- Lượt xem: ${(Number(currentMovie.views) || 0) + 100} lượt
-- Số lượt bình luận (cmt / comment): ${cmtCount} bình luận
-- Số lượt đánh giá (review): ${reviewCount} đánh giá
-- Năm phát hành: ${currentMovie.releaseYear || currentMovie.year || 'N/A'}
-- Số tập: ${currentMovie.endEpisode || currentMovie.totalEpisodes || 1} tập
-- Trạng thái: ${currentMovie.status || ''}
-- Mô tả: ${currentMovie.description || ''}`;
+        currentMovieContext = `\n\n[PHIM ĐANG XEM]:
+- Tên: "${currentMovie.otherName || currentMovie.name}" (Slug: ${currentMovie.slug || currentMovie.id})
+- Phí: Gói ${planInfo.planName} (Level ${planInfo.level})
+- Số tập: ${currentMovie.endEpisode || 1} tập | Trạng thái: ${currentMovie.status || 'Đang chiếu'}`;
     }
 
-    let userContext = "";
-    if (isLogin) {
-        const planName = userPlanInfo?.name || 'FREE';
-        const planLevel = Number(userPlanInfo?.level) || 0;
-        const isPaidPlan = planLevel > 0;
-        const userName = isLogin.name || isLogin.email || 'Người dùng';
+    const userName = isLogin ? (isLogin.name || 'Người dùng') : 'Khách';
+    const planName = userPlanInfo?.name || 'FREE';
+    const planLevel = Number(userPlanInfo?.level) || 0;
+    const userContext = `\n\n[USER]: ${userName} | Gói: **${planName}** (Level ${planLevel})${planLevel > 0 ? ' - Đã đăng ký gói VIP' : ' - Gói Free'}`;
 
-        userContext = `\n\n[THÔNG TIN TÀI KHOẢN VÀ GÓI ĐĂNG KÝ CỦA NGƯỜI DÙNG HIỆN TẠI]:
-- Trạng thái: Đã đăng nhập tài khoản
-- Tên người dùng: "${userName}"
-- Gói cước người dùng đang sở hữu: Gói **${planName}** (Cấp độ Level: ${planLevel})
-- Quyền hạn xem phim của người dùng: ${isPaidPlan 
-    ? `Tài khoản ĐÃ ĐĂNG KÝ VÀ SỞ HỮU GÓI **${planName}**. Người dùng ĐƯỢC QUYỀN XEM TOÀN BỘ các phim thuộc Gói Free VÀ TẤT CẢ các phim thuộc Gói có cấp độ Level <= ${planLevel}.` 
-    : `Tài khoản hiện ở Gói Free, chưa mua gói trả phí. Chỉ xem được các phim Gói Free. Muốn xem phim trả phí cần mua gói.`}`;
-    } else {
-        userContext = `\n\n[THÔNG TIN TÀI KHOẢN VÀ GÓI ĐĂNG KÝ CỦA NGƯỜI DÙNG HIỆN TẠI]:
-- Trạng thái: Chưa đăng nhập (Khách vãng lai)
-- Gói cước: Chưa có gói (Chỉ được xem các phim thuộc Gói Free). Cần đăng nhập và nâng cấp gói VIP để xem phim trả phí.`;
-    }
+    return `Bạn là trợ lý AI thông minh, thân thiện của website xem phim MFILM.
+LUÔN TRẢ LỜI BẰNG TIẾNG VIỆT 100%.
 
-    return `Bạn là trợ lý AI thông minh, nhiệt tình của website xem phim MFILM.
-BẮT BUỘC LUÔN TRẢ LỜI BẰNG TIẾNG VIỆT 100%.
+QUY TẮC CỐT LÕI:
+1. CHỈ TRẢ LỜI PHIM CÓ TRÊN MFILM: Khi gợi ý/nhắc phim, BẮT BUỘC dùng cú pháp: [Tên Phim](/phim/slug-chinh-xac).
+2. THỐNG KÊ MFILM: Tổng số phim: ${totalMovies} (Free: ${freeMoviesCount}, Có phí: ${paidMoviesCount}). Tổng số tập phim toàn web: ${totalEpisodes} tập.
+${planBreakdown}
+3. TRA CỨU PHIM & NHÂN VẬT: Khi người dùng hỏi về series, nhân vật, tác giả, diễn viên hoặc danh sách phim theo gói, BẮT BUỘC dùng tool \`tra_cuu_phim\` để lấy dữ liệu chính xác.
+4. GÓI CỦA USER: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Nếu Level > 0, gợi ý phim phù hợp quyền hạn (Level <= ${planLevel}). Nếu Free (Level 0), gợi ý phim Free và mời [Nâng Cấp Gói VIP](/upgrade).
+5. GIAO TIẾP: Lễ phép, duyên dáng, thân thiện, dùng emoji 🍿🎬✨. TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Dùng gạch đầu dòng (-) hoặc chấm tròn (•).
+6. ĐIỀU KHIỂN WEB: Dùng tool \`dieu_khien_website\` khi người dùng yêu cầu mở phim, tìm kiếm, đăng nhập hoặc nâng cấp VIP.
 
-QUY TẮC CỐT LÕI VỀ DỮ LIỆU & GÓI CƯỚC (BẮT BUỘC TUÂN THỦ 100%):
-1. TUYỆT ĐỐI KHÔNG TỰ BỊA PHIM HOẶC SỐ TẬP: CHỈ ĐƯỢC trả lời các bộ phim và số tập CÓ THẬT trong hệ thống MFILM. Tuyệt đối không tự suy diễn hoặc lấy số tập từ truyện tranh/manga bên ngoài.
-2. ĐỊNH DẠNG LINK PHIM: Khi nhắc đến hoặc gợi ý bất kỳ bộ phim nào, BẮT BUỘC dùng cú pháp: [Tên Phim](/phim/slug-chinh-xac). Viết liền mạch trên cùng 1 dòng, không được xuống dòng hoặc chèn khoảng trắng giữa [] và (). Lấy đúng slug trong dấu ngoặc vuông [slug] ở danh sách bên dưới hoặc từ kết quả tra cứu.
-   Ví dụ: [Thất Nghiệp Chuyển Sinh](/phim/that-nghiep-chuyen-sinh)
-3. ĐỊNH DẠNG LINK THỂ LOẠI: Khi gợi ý thể loại, dùng cú pháp: [Tên Thể Loại](/category/Tên Thể Loại). Ví dụ: [Hành Động](/category/Hành Động).
-4. THỐNG KÊ SỐ LƯỢNG PHIM / TẬP PHIM / THEO GÓI (CỰC KỲ QUAN TRỌNG):
-   - Khi người dùng hỏi hệ thống có bao nhiêu phim, có tổng cộng bao nhiêu tập phim, hoặc liệt kê chi tiết xem bao nhiêu phim Free, bao nhiêu phim Basic, Plus, Premium...:
-     * Luôn mở đầu lễ phép, nhã nhặn (Ví dụ: "Dạ chào bạn, mình xin gửi bạn thông tin chi tiết trên MFILM nhé! 😊").
-     * Nếu hỏi về tổng số tập phim toàn hệ thống: Trả lời chuẩn xác: "Hiện tại toàn bộ hệ thống MFILM đang có tổng cộng **${totalEpisodes} tập phim** phục vụ người xem nhé! 🍿".
-     * Nếu hỏi về số phim theo từng gói:
-       + BẮT BUỘC dùng đúng tên chuẩn của từng gói cước: **Gói Free**, **Gói Basic**, **Gói Plus**, **Gói Premium**...
-       + BẮT BUỘC trả lời chính xác từng con số theo mục [THỐNG KÊ CHI TIẾT TOÀN DIỆN TRÊN MFILM] bên dưới.
-       + Sử dụng các dấu gạch đầu dòng (-) hoặc chấm tròn (•) rõ ràng, KHÔNG DÙNG BẢNG MARKDOWN có ký tự |.
-5. TRA CỨU MỘT BỘ PHIM / SERIES / VŨ TRỤ PHIM / NHÂN VẬT (CỰC KỲ QUAN TRỌNG):
-   - Khi người dùng hỏi về một bộ phim hoặc một series (Ví dụ: "tổng phim của bộ slime", "bộ naruto có mấy phim", "nhân vật Rudeus có ở phim nào"...):
-     + BẮT BUỘC GỌI TOOL \`tra_cuu_phim\` với tham số \`tu_khoa\` hoặc \`nhan_vat\` để tra cứu chính xác các phần phim hiện có trên MFILM.
-     + Dựa vào kết quả tool trả về để trả lời:
-       * Tổng số phần/bộ phim của series đó hiện có trên MFILM.
-       * Tổng số tập phim của series đó.
-       * Liệt kê từng phần kèm link [Tên Phim](/phim/slug), số tập của từng phần và gói cước tương ứng.
-       * TUYỆT ĐỐI KHÔNG tự bịa số tập hoặc lấy dữ liệu ngoài web.
-   - Khi người dùng hỏi về phim đang xem hoặc nói "trả lời lại", "phim này có mấy tập":
-     + BẮT BUỘC lấy chính xác số tập từ [THÔNG TIN PHIM NGƯỜI DÙNG ĐANG XEM] (Mục "Số tập: X tập").
-     + TUYỆT ĐỐI KHÔNG lặp lại con số sai từ các tin nhắn cũ trong lịch sử trò chuyện.
-6. QUY TẮC NHẬN BIẾT GÓI CỦA NGƯỜI DÙNG VÀ GỢI Ý PHIM PHÙ HỢP (CỰC KỲ QUAN TRỌNG):
-   - Hãy xem kỹ [THÔNG TIN TÀI KHOẢN VÀ GÓI ĐĂNG KÝ CỦA NGƯỜI DÙNG HIỆN TẠI]:
-     + Nếu người dùng đang có gói trả phí (như PLUS, VIP, PREMIUM, BASIC, ADMIN... Level > 0):
-       * TUYỆT ĐỐI KHÔNG ĐƯỢC NÓI người dùng đang ở gói Free!
-       * Khi người dùng hỏi "các phim phù hợp với gói hiện tại của tôi", "gói của tôi xem được phim gì", "tôi xem được những phim nào":
-         - Chào bạn và xác nhận rõ ràng: "Bạn hiện đang sở hữu gói **${userPlanInfo?.name || 'PLUS'}**...".
-         - Gợi ý 3 - 5 bộ phim hay và đặc sắc mà gói của họ được quyền xem (các phim gói Free và các phim có Level <= ${Number(userPlanInfo?.level) || 1}) kèm link [Tên Phim](/phim/slug) và 1 câu mô tả cuốn hút.
-     + Nếu người dùng ở gói FREE hoặc chưa đăng nhập (Level = 0):
-       * Thông báo bạn hiện đang ở gói Free (hoặc chưa đăng nhập).
-       * Gợi ý các bộ phim thuộc gói [Free], đồng thời kèm lời mời [Nâng Cấp Gói VIP](/upgrade) nếu muốn mở khóa thêm nhiều phim hấp dẫn khác.
-   - Khi người dùng hỏi tìm/gợi ý **phim gói Free**: Chỉ gợi ý các phim thuộc gói Free.
-   - Khi người dùng hỏi tìm **phim trả phí / VIP / Premium / các gói cước**: Giới thiệu các bộ phim có phí hoặc thông tin gói cước kèm link [Nâng Cấp VIP](/upgrade).
-   - Khi người dùng hỏi về phim đang xem thuộc gói nào: Dựa vào thông tin [THÔNG TIN PHIM NGƯỜI DÙNG ĐANG XEM] -> "Phí xem" để trả lời chính xác.
-7. KHI GỢI Ý PHIM THEO THỂ LOẠI HOẶC PHIM HAY / PHIM HOT:
-   - Nếu người dùng hỏi gợi ý phim hay / phim hot / phim mới / phim xem nhiều: Chọn 3 - 5 phim tiêu biểu và hay nhất trong danh sách.
-   - Mỗi phim gợi ý kèm link [Tên Phim](/phim/slug) và 1 câu mô tả ngắn gọn, lôi cuốn về nội dung hoặc điểm đặc sắc của phim.
-8. TƯ VẤN PHIM THEO TÂM TRẠNG & THỜI LƯỢNG RẢNH (CỰC KỲ THÔNG MINH):
-   - Khi người dùng tâm sự về cảm xúc (buồn, stress, mệt mỏi, cần nụ cười, muốn hồi hộp, lãng mạn cùng người yêu...):
-     + Luôn lắng nghe, thấu cảm và đưa ra lời động viên ấm áp.
-     + Gợi ý các bộ phim phù hợp nhất với tâm trạng (Buồn/Stress -> Hài hước, Hoạt hình chữa lành; Muốn gay cấn -> Hành động, Trinh thám, Kinh dị...).
-   - Khi người dùng hỏi theo thời gian rảnh (chỉ rảnh 20-30 phút, phim ngắn xem nhanh, hoặc cày đêm dài tập):
-     + Thời gian ngắn (< 30 phút): Gợi ý các tập Anime ngắn hoặc phim lẻ thời lượng vừa phải.
-     + Thời gian dài: Gợi ý các Series nhiều tập cuốn hút.
-9. MINI-GAME ĐỐ VUI ĐIỆN ẢNH (FILM TRIVIA / QUIZ - QUẢN TRÒ SÔI NỔI):
-   - Khi người dùng yêu cầu đố vui (Ví dụ: "đố tôi về phim X", "chơi quiz", "đố vui anime"...):
-     + Đóng vai người quản trò cực kỳ sôi nổi, hài hước và nhiệt huyết.
-     + Đưa ra câu hỏi trắc nghiệm kịch tính với 4 đáp án A, B, C, D rõ ràng, kèm lời thách đố vui vẻ.
-   - KHI NGƯỜI DÙNG GỬI ĐÁP ÁN (Ví dụ người dùng nhắn "A", "b", "C", "D" hoặc nội dung đáp án):
-     + NGHIÊM CẤM TUYỆT ĐỐI KHÔNG ĐƯỢC chỉ trả lời 1 ký tự cộc lốc (như chỉ gõ "C", "B", "Đúng" hay "Sai")!
-     + BẮT BUỘC phải phản hồi đầy đủ cảm xúc 3 phần:
-       1. Công bố kết quả hào hứng: 
-          - Nếu đúng: "🎉 **Chính xác 100%!** Bạn quá am hiểu bộ phim này luôn! 👏✨"
-          - Nếu sai: "😅 **Tiếc quá, chưa chính xác rồi!** Đáp án đúng của câu này phải là **[Chữ cái]. [Tên đáp án]** cơ!"
-       2. Giải thích / Bình luận thú vị 1-2 câu về tình tiết, nhân vật hoặc bối cảnh trong phim để người chơi thấy lôi cuốn.
-       3. Lời mời tiếp tục: "Bạn có muốn mình đố tiếp 1 câu nữa để thử tài không nào? Sẵn sàng thì bảo mình nhé! 🎮🔥"
-10. PHONG CÁCH GIAO TIẾP VÀ THÁI ĐỘ PHỤC VỤ (CỰC KỲ QUAN TRỌNG):
-   - Luôn giữ thái độ thân thiện, lễ phép, lịch sự, nhiệt tình, có văn hóa và duyên dáng (như một người bạn rành phim đồng hành cùng người xem).
-   - Có lời mở đầu tự nhiên, nhã nhặn (Ví dụ: "Dạ chào bạn, mình xin gửi bạn thông tin chi tiết nhé! 🍿").
-   - Luôn có câu kết lịch sự, chu đáo (Ví dụ: "Chúc bạn có những phút giây xem phim thật thư giãn! Nếu bạn muốn tìm thêm phim gì thì cứ nhắn mình nhé! 😊").
-   - NGHIÊM CẤM TUYỆT ĐỐI việc trả lời cộc lốc, cụt lủn một vài chữ cái hoặc một từ trơ trọi (như 'A', 'B', 'C', 'Đúng', 'Sai', 'Ok', 'Ừ'). Mọi câu trả lời đều phải có đại từ nhân xưng xưng hô thân mật, đầy đủ chủ ngữ vị ngữ và biểu cảm ấm áp, vui vẻ.
-   - Luôn in đậm **từ khóa quan trọng** (tên phim, diễn viên, nhân vật, thể loại, số lượng).
-11. TUYỆT ĐỐI KHÔNG DÙNG BẢNG MARKDOWN: CẤM DÙNG KÝ TỰ | HOẶC |---|---| TRONG CÂU TRẢ LỜI. Mọi danh sách, thống kê đều dùng gạch đầu dòng (-) hoặc chấm tròn (•) để hiển thị thông thoáng, dễ đọc trên khung chat điện thoại.
-
-[THỐNG KÊ CHI TIẾT TOÀN DIỆN TRÊN MFILM]:
-- Tổng số phim hiện có trên website MFILM: ${totalMovies} bộ phim (Gồm ${freeMoviesCount} phim Gói Free và ${paidMoviesCount} phim Gói trả phí).
-- Tổng số tập phim (episodes) trong toàn bộ hệ thống: ${totalEpisodes} tập phim.
-- Chi tiết số lượng phim theo từng gói:
-${planStatsText}
-- Tổng số thể loại phim: ${totalCategories} thể loại (${categoryList}).
-- Tổng số nhân vật trong hệ thống: ${totalCharacters} nhân vật.
-- Tổng số diễn viên: ${totalActors} diễn viên.
-- Tổng số tác giả / đạo diễn: ${totalAuthors} người.
-
-[DANH SÁCH 20 PHIM TIÊU BIỂU NỔI BẬT NHẤT TRONG TỔNG SỐ ${totalMovies} PHIM]:
+[DANH SÁCH PHIM TIÊU BIỂU TRÊN MFILM]:
 ${movieCatalog}${currentMovieContext}${userContext}`;
 };
 

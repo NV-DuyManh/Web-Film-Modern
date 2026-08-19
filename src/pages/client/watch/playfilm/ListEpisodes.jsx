@@ -60,16 +60,6 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const startX = useRef(0);
     const scrollLeft = useRef(0);
 
-    if (!episodeShow || episodeShow.length === 0) {
-        return (
-            <div className="py-8 text-center text-slate-400 bg-[#0d121f] rounded-xl border border-slate-700/80 my-2">
-                <p className="text-sm font-medium">Danh sách tập phim đang được cập nhật...</p>
-            </div>
-        );
-    }
-
-
-
     const handleMouseDown = (e) => {
         isDown.current = true;
         if (scrollRef.current) {
@@ -133,6 +123,14 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     }, [uniqueEpisodes, hasRanges, CHUNK_SIZE]);
 
     const currentEpisodes = hasRanges ? (ranges[rangeIndex] || uniqueEpisodes) : uniqueEpisodes;
+
+    if (!episodeShow || episodeShow.length === 0 || uniqueEpisodes.length === 0) {
+        return (
+            <div className="py-8 text-center text-slate-400 bg-[#0d121f] rounded-xl border border-slate-700/80 my-2">
+                <p className="text-sm font-medium">Danh sách tập phim đang được cập nhật...</p>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col gap-4 py-1">
