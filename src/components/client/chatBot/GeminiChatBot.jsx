@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { useMovies, useAuthors, useActors, useCategories, useComments, useReviews } from '../../../hooks/useCollections';
+import { useMovies, useAuthors, useActors, useCharacters, useCategories, useComments, useReviews, useSubscriptions, useEpisodes } from '../../../hooks/useCollections';
+import { getUserPlanInfo } from '../../../utils/appUtils';
 import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots } from 'react-icons/fa';
 import {
     buildSystemInstruction,
@@ -29,13 +31,21 @@ const createNewSession = () => ({
 export default function GeminiChatBot() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { isLogin } = useContext(AuthContext);
+    const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
     const movies = useMovies() || [];
     const authors = useAuthors() || [];
     const actors = useActors() || [];
+    const characters = useCharacters() || [];
     const categories = useCategories() || [];
     const allComments = useComments() || [];
     const allReviews = useReviews() || [];
+    const allEpisodes = useEpisodes() || [];
+
+    const userPlanInfo = useMemo(() => {
+        return getUserPlanInfo(isLogin, subscriptions, plans);
+    }, [isLogin, subscriptions, plans]);
 
     const [sessions, setSessions] = useState(() => {
         try {
@@ -72,6 +82,7 @@ export default function GeminiChatBot() {
     const [message, setMessage] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef(null);
+    const isCancelledRef = useRef(false);
 
     // Save sessions to localStorage & sessionStorage
     useEffect(() => {
@@ -98,10 +109,10 @@ export default function GeminiChatBot() {
     const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0] || createNewSession();
     const messages = activeSession.messages || [];
 
-    const updateActiveMessages = (updater) => {
+    const updateSessionMessages = (sessionId, updater) => {
         setSessions(prevSessions => {
             return prevSessions.map(session => {
-                if (session.id === activeSessionId) {
+                if (session.id === sessionId) {
                     const newMessages = typeof updater === 'function' ? updater(session.messages || []) : updater;
                     let title = session.title;
                     const firstUserMsg = newMessages.find(m => m.sender === 'user');
@@ -123,6 +134,9 @@ export default function GeminiChatBot() {
     };
 
     const handleNewChat = () => {
+        isCancelledRef.current = true;
+        setIsTyping(false);
+
         const userMsgCount = messages.filter(m => m.sender === 'user').length;
         if (userMsgCount === 0) {
             setShowHistory(false);
@@ -136,12 +150,23 @@ export default function GeminiChatBot() {
     };
 
     const handleSelectSession = (id) => {
+        if (id === activeSessionId) {
+            setShowHistory(false);
+            return;
+        }
+
+        isCancelledRef.current = true;
+        setIsTyping(false);
         setActiveSessionId(id);
         setShowHistory(false);
     };
 
     const handleDeleteSession = (e, id) => {
         e.stopPropagation();
+        if (id === activeSessionId) {
+            isCancelledRef.current = true;
+            setIsTyping(false);
+        }
         setSessions(prev => {
             const filtered = prev.filter(s => s.id !== id);
             if (filtered.length === 0) {
@@ -157,6 +182,8 @@ export default function GeminiChatBot() {
     };
 
     const handleClearAllSessions = () => {
+        isCancelledRef.current = true;
+        setIsTyping(false);
         const fresh = createNewSession();
         setSessions([fresh]);
         setActiveSessionId(fresh.id);
@@ -169,7 +196,10 @@ export default function GeminiChatBot() {
         : location.pathname.startsWith('/xem-phim/') 
             ? location.pathname.replace('/xem-phim/', '').split('?')[0] 
             : null;
-    const currentMovie = currentSlug ? movies.find(m => m.slug === currentSlug || m.id === currentSlug) : null;
+    const cleanSlug = currentSlug ? decodeURIComponent(currentSlug).replace(/\/$/, '') : null;
+    const currentMovie = cleanSlug 
+        ? movies.find(m => m.slug === cleanSlug || m.id === cleanSlug || m.slug === currentSlug || m.id === currentSlug) 
+        : null;
 
     useEffect(() => {
         if (isChatOpen && !showHistory) {
@@ -178,12 +208,17 @@ export default function GeminiChatBot() {
     }, [messages, isChatOpen, showHistory]);
 
     const handleSend = async () => {
-        if (!message.trim()) return;
+        if (!message.trim() || isTyping) return;
+
+        const targetSessionId = activeSessionId;
+        const targetSession = sessions.find(s => s.id === targetSessionId);
+        const currentSessionMessages = targetSession?.messages || [];
 
         const userMsg = { id: Date.now(), text: message.trim(), sender: 'user' };
-        updateActiveMessages(prev => [...prev, userMsg]);
+        updateSessionMessages(targetSessionId, prev => [...prev, userMsg]);
         setMessage('');
         setIsTyping(true);
+        isCancelledRef.current = false;
 
         try {
             const systemInstruction = buildSystemInstruction({
@@ -191,10 +226,14 @@ export default function GeminiChatBot() {
                 currentMovie,
                 authors,
                 actors,
+                characters,
                 categories,
                 allComments,
                 allReviews,
-                plans
+                allEpisodes,
+                plans,
+                isLogin,
+                userPlanInfo
             });
 
             const apiKeyString = import.meta.env.VITE_GEMINI_API_KEYS || import.meta.env.VITE_GEMINI_API_KEY;
@@ -210,7 +249,7 @@ export default function GeminiChatBot() {
                 tools: GEMINI_TOOLS
             });
 
-            const recentMessages = messages
+            const recentMessages = currentSessionMessages
                 .slice(-6)
                 .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi')); 
             const history = recentMessages.map(m => ({
@@ -221,23 +260,27 @@ export default function GeminiChatBot() {
             const chat = model.startChat({ history });
 
             let result = await chat.sendMessage(userMsg.text);
+            if (isCancelledRef.current) return;
+
             let response = await result.response;
             let finalAiMsgText = "";
 
             let loopCount = 0;
             while (loopCount < 4) {
+                if (isCancelledRef.current) return;
                 loopCount++;
                 const calls = response.functionCalls();
                 if (calls && calls.length > 0) {
                     const call = calls[0];
                     if (call.name === "dieu_khien_website") {
-                        finalAiMsgText = executeWebsiteControl({ args: call.args, movies, navigate });
+                        finalAiMsgText = executeWebsiteControl({ args: call.args, movies, characters, actors, authors, navigate });
                         if (window.innerWidth < 768) {
                             setIsChatOpen(false);
                         }
                         break; 
                     } else if (call.name === "tra_cuu_phim") {
-                        const topMatches = executeMovieLookup({ args: call.args, movies, authors, actors, categories, plans });
+                        const topMatches = executeMovieLookup({ args: call.args, movies, authors, actors, characters, categories, plans, userPlanInfo });
+                        if (isCancelledRef.current) return;
                         result = await chat.sendMessage([{ 
                             functionResponse: { 
                                 name: 'tra_cuu_phim', 
@@ -253,13 +296,19 @@ export default function GeminiChatBot() {
                 }
             }
 
+            if (isCancelledRef.current) return;
+
             const aiMsg = { 
                 id: Date.now() + 1, 
                 text: finalAiMsgText, 
                 sender: 'ai' 
             };
-            updateActiveMessages(prev => [...prev, aiMsg]);
+            updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
         } catch (error) {
+            if (isCancelledRef.current) {
+                console.log("Gemini chat request cancelled due to tab switch.");
+                return;
+            }
             console.error("AI Error:", error);
             let errorMessage = "Hệ thống báo lỗi: Không rõ nguyên nhân";
             if (error.message) {
@@ -269,7 +318,7 @@ export default function GeminiChatBot() {
                     errorMessage = `Hệ thống báo lỗi: ${error.message}`;
                 }
             }
-            updateActiveMessages(prev => [
+            updateSessionMessages(targetSessionId, prev => [
                 ...prev, 
                 { id: Date.now() + 1, text: errorMessage, sender: 'ai' }
             ]);

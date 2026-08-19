@@ -33,6 +33,7 @@ export const useShowTimes     = createCollectionHook('showTimes',     'ShowTimes
 export const useTopics        = createCollectionHook('topics',        'Topics');
 export const useSubscriptions = createCollectionHook('subscriptions', 'Subscriptions');
 export const useRentMovies    = createCollectionHook('rentMovies',    'RentMovies');
+export const useEpisodes      = createCollectionHook('episodes',      'Episodes');
 export const useReviews       = createCollectionHook('reviews',       'Reviews');
 export const useComments      = createCollectionHook('comments',      'Comments');
 export const usePackages      = createCollectionHook('packages',      'Packages');

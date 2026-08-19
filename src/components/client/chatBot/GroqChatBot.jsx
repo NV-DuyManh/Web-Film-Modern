@@ -1,7 +1,9 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
+import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { useMovies, useAuthors, useActors, useCategories, useComments, useReviews } from '../../../hooks/useCollections';
+import { useMovies, useAuthors, useActors, useCharacters, useCategories, useComments, useReviews, useSubscriptions, useEpisodes } from '../../../hooks/useCollections';
+import { getUserPlanInfo } from '../../../utils/appUtils';
 import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots } from 'react-icons/fa';
 import {
     buildSystemInstruction,
@@ -28,13 +30,21 @@ const createNewSession = () => ({
 export default function GroqChatBot() {
     const navigate = useNavigate();
     const location = useLocation();
+    const { isLogin } = useContext(AuthContext);
+    const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
     const movies = useMovies() || [];
     const authors = useAuthors() || [];
     const actors = useActors() || [];
+    const characters = useCharacters() || [];
     const categories = useCategories() || [];
     const allComments = useComments() || [];
     const allReviews = useReviews() || [];
+    const allEpisodes = useEpisodes() || [];
+
+    const userPlanInfo = useMemo(() => {
+        return getUserPlanInfo(isLogin, subscriptions, plans);
+    }, [isLogin, subscriptions, plans]);
 
     const [sessions, setSessions] = useState(() => {
         try {
@@ -71,6 +81,7 @@ export default function GroqChatBot() {
     const [message, setMessage] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const messagesEndRef = useRef(null);
+    const abortControllerRef = useRef(null);
 
     // Save sessions to localStorage & sessionStorage
     useEffect(() => {
@@ -97,10 +108,10 @@ export default function GroqChatBot() {
     const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0] || createNewSession();
     const messages = activeSession.messages || [];
 
-    const updateActiveMessages = (updater) => {
+    const updateSessionMessages = (sessionId, updater) => {
         setSessions(prevSessions => {
             return prevSessions.map(session => {
-                if (session.id === activeSessionId) {
+                if (session.id === sessionId) {
                     const newMessages = typeof updater === 'function' ? updater(session.messages || []) : updater;
                     let title = session.title;
                     const firstUserMsg = newMessages.find(m => m.sender === 'user');
@@ -122,6 +133,13 @@ export default function GroqChatBot() {
     };
 
     const handleNewChat = () => {
+        // Hủy bỏ bất kỳ truy vấn nào đang chạy ở tab cũ
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            abortControllerRef.current = null;
+        }
+        setIsTyping(false);
+
         // If current session is already empty, just close history
         const userMsgCount = messages.filter(m => m.sender === 'user').length;
         if (userMsgCount === 0) {
@@ -136,12 +154,28 @@ export default function GroqChatBot() {
     };
 
     const handleSelectSession = (id) => {
+        if (id === activeSessionId) {
+            setShowHistory(false);
+            return;
+        }
+
+        // Hủy bỏ bất kỳ truy vấn nào đang chạy khi chuyển sang tab khác
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            abortControllerRef.current = null;
+        }
+        setIsTyping(false);
         setActiveSessionId(id);
         setShowHistory(false);
     };
 
     const handleDeleteSession = (e, id) => {
         e.stopPropagation();
+        if (id === activeSessionId && abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            abortControllerRef.current = null;
+            setIsTyping(false);
+        }
         setSessions(prev => {
             const filtered = prev.filter(s => s.id !== id);
             if (filtered.length === 0) {
@@ -157,6 +191,11 @@ export default function GroqChatBot() {
     };
 
     const handleClearAllSessions = () => {
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+            abortControllerRef.current = null;
+        }
+        setIsTyping(false);
         const fresh = createNewSession();
         setSessions([fresh]);
         setActiveSessionId(fresh.id);
@@ -169,7 +208,10 @@ export default function GroqChatBot() {
         : location.pathname.startsWith('/xem-phim/') 
             ? location.pathname.replace('/xem-phim/', '').split('?')[0] 
             : null;
-    const currentMovie = currentSlug ? movies.find(m => m.slug === currentSlug || m.id === currentSlug) : null;
+    const cleanSlug = currentSlug ? decodeURIComponent(currentSlug).replace(/\/$/, '') : null;
+    const currentMovie = cleanSlug 
+        ? movies.find(m => m.slug === cleanSlug || m.id === cleanSlug || m.slug === currentSlug || m.id === currentSlug) 
+        : null;
 
     useEffect(() => {
         if (isChatOpen && !showHistory) {
@@ -177,46 +219,102 @@ export default function GroqChatBot() {
         }
     }, [messages, isChatOpen, showHistory]);
 
-    const callGroqWithRetry = async (payload, groqApiKey, maxRetries = 3) => {
-        for (let attempt = 0; attempt < maxRetries; attempt++) {
+    const callGroqWithRetry = async (payload, apiKeysList, signal) => {
+        const fallbackKeys = import.meta.env.VITE_GROQ_API_KEY ? [import.meta.env.VITE_GROQ_API_KEY] : [];
+        const keys = apiKeysList.length > 0 ? apiKeysList : fallbackKeys;
+
+        // Bắt đầu ngẫu nhiên một key để phân tán tải
+        let keyIndex = keys.length > 0 ? Math.floor(Math.random() * keys.length) : 0;
+        const maxAttempts = Math.max(keys.length * 2, 6);
+        let lastError = null;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            if (signal?.aborted) {
+                const err = new Error("Request was aborted");
+                err.name = "AbortError";
+                throw err;
+            }
+
+            const currentApiKey = keys.length > 0 ? keys[keyIndex % keys.length] : '';
+
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${groqApiKey}`
+                        "Authorization": `Bearer ${currentApiKey}`
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(payload),
+                    signal
                 });
 
-                if ((res.status === 429 || res.status >= 500) && attempt < maxRetries - 1) {
-                    await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+                if (res.status === 429 || res.status >= 500) {
+                    // Chuyển sang key tiếp theo ngay lập tức (không chờ delay nếu còn key khác)
+                    keyIndex++;
+                    if (keys.length > 0 && (attempt + 1) % keys.length === 0 && attempt < maxAttempts - 1) {
+                        await new Promise((resolve, reject) => {
+                            const timer = setTimeout(resolve, 600);
+                            signal?.addEventListener('abort', () => {
+                                clearTimeout(timer);
+                                const abortErr = new Error("Request was aborted");
+                                abortErr.name = "AbortError";
+                                reject(abortErr);
+                            }, { once: true });
+                        });
+                    }
                     continue;
                 }
 
                 if (!res.ok) {
                     const err = await res.json().catch(() => ({}));
-                    throw new Error(err.error?.message || `Lỗi API Groq (${res.status})`);
+                    const errMsg = err.error?.message || `Lỗi API Groq (${res.status})`;
+                    lastError = new Error(errMsg);
+                    keyIndex++;
+                    continue;
                 }
 
                 return await res.json();
             } catch (err) {
-                if (attempt < maxRetries - 1) {
-                    await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
-                    continue;
+                if (err.name === 'AbortError' || signal?.aborted) {
+                    throw err;
                 }
-                throw err;
+                lastError = err;
+                keyIndex++;
+                if (keys.length > 0 && (attempt + 1) % keys.length === 0 && attempt < maxAttempts - 1) {
+                    await new Promise((resolve, reject) => {
+                        const timer = setTimeout(resolve, 600);
+                        signal?.addEventListener('abort', () => {
+                            clearTimeout(timer);
+                            const abortErr = new Error("Request was aborted");
+                            abortErr.name = "AbortError";
+                            reject(abortErr);
+                        }, { once: true });
+                    });
+                }
             }
         }
+
+        throw lastError || new Error("Không thể kết nối đến máy chủ Groq AI sau nhiều lần thử.");
     };
 
     const handleSend = async () => {
-        if (!message.trim()) return;
+        if (!message.trim() || isTyping) return;
+
+        const targetSessionId = activeSessionId;
+        const targetSession = sessions.find(s => s.id === targetSessionId);
+        const currentSessionMessages = targetSession?.messages || [];
 
         const userMsg = { id: Date.now(), text: message.trim(), sender: 'user' };
-        updateActiveMessages(prev => [...prev, userMsg]);
+        updateSessionMessages(targetSessionId, prev => [...prev, userMsg]);
         setMessage('');
         setIsTyping(true);
+
+        // Hủy request trước đó nếu còn đang chạy
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        const abortController = new AbortController();
+        abortControllerRef.current = abortController;
 
         try {
             const systemInstruction = buildSystemInstruction({
@@ -224,14 +322,20 @@ export default function GroqChatBot() {
                 currentMovie,
                 authors,
                 actors,
+                characters,
                 categories,
                 allComments,
                 allReviews,
-                plans
+                allEpisodes,
+                plans,
+                isLogin,
+                userPlanInfo
             });
 
-            const groqApiKey = import.meta.env.VITE_GROQ_API_KEY;
-            const recentMessages = messages
+            const apiKeyString = import.meta.env.VITE_GROQ_API_KEYS || import.meta.env.VITE_GROQ_API_KEY;
+            const apiKeys = apiKeyString ? apiKeyString.split(',').map(k => k.trim()).filter(Boolean) : [];
+
+            const recentMessages = currentSessionMessages
                 .slice(-6)
                 .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi')); 
             let groqMessages = [
@@ -245,6 +349,7 @@ export default function GroqChatBot() {
 
             let finalAiMsgText = "";
             let loopCount = 0;
+            let lastLookupResults = "";
 
             while (loopCount < 4) {
                 loopCount++;
@@ -254,8 +359,8 @@ export default function GroqChatBot() {
                     messages: groqMessages,
                     tools: GROQ_TOOLS,
                     tool_choice: "auto",
-                    max_tokens: 1000
-                }, groqApiKey);
+                    max_tokens: 2048
+                }, apiKeys, abortController.signal);
 
                 const responseMessage = data.choices[0].message;
                 groqMessages.push(responseMessage);
@@ -271,13 +376,14 @@ export default function GroqChatBot() {
                     }
 
                     if (functionName === "dieu_khien_website") {
-                        finalAiMsgText = executeWebsiteControl({ args, movies, navigate });
+                        finalAiMsgText = executeWebsiteControl({ args, movies, characters, actors, authors, navigate });
                         if (window.innerWidth < 768) {
                             setIsChatOpen(false);
                         }
                         break; 
                     } else if (functionName === "tra_cuu_phim") {
-                        const topMatches = executeMovieLookup({ args, movies, authors, actors, categories, plans });
+                        const topMatches = executeMovieLookup({ args, movies, authors, actors, characters, categories, plans, userPlanInfo });
+                        lastLookupResults = topMatches;
                         groqMessages.push({
                             tool_call_id: toolCall.id,
                             role: "tool",
@@ -287,18 +393,27 @@ export default function GroqChatBot() {
                         continue; 
                     }
                 } else {
-                    finalAiMsgText = responseMessage.content || "Tôi có thể giúp gì thêm cho bạn?";
+                    finalAiMsgText = responseMessage.content || "";
                     break;
                 }
             }
 
+            if (!finalAiMsgText && lastLookupResults && lastLookupResults !== "Không tìm thấy bộ phim nào phù hợp với yêu cầu.") {
+                finalAiMsgText = `Chào bạn, mình xin gợi ý một số bộ phim rất hấp dẫn đang có trên MFILM để bạn tham khảo nhé! 🍿\n\n${lastLookupResults.split('\n').map(line => `- ${line}`).join('\n')}\n\nChúc bạn xem phim vui vẻ! Nếu bạn cần tìm thể loại nào khác thì cứ nhắn mình nha! 😊`;
+            }
+
             const aiMsg = { 
                 id: Date.now() + 1, 
-                text: finalAiMsgText || "Tôi có thể giúp gì thêm cho bạn?", 
+                text: finalAiMsgText || "Dạ chào bạn! Bạn đang tìm kiếm bộ phim hay thể loại nào để mình hỗ trợ gợi ý cho bạn nhé? 😊", 
                 sender: 'ai' 
             };
-            updateActiveMessages(prev => [...prev, aiMsg]);
+            updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
         } catch (error) {
+            // Nếu hủy do người dùng chuyển tab hoặc đóng chat thì không ghi lỗi ra giao diện
+            if (error?.name === 'AbortError' || abortController.signal.aborted) {
+                console.log("Chat request cancelled due to session switch or abort.");
+                return;
+            }
             console.error("Groq AI Error:", error);
             let errorMessage = "Hệ thống báo lỗi: Không rõ nguyên nhân";
             if (error && error.message) {
@@ -310,12 +425,15 @@ export default function GroqChatBot() {
                     errorMessage = `Hệ thống báo lỗi: ${error.message}`;
                 }
             }
-            updateActiveMessages(prev => [
+            updateSessionMessages(targetSessionId, prev => [
                 ...prev, 
                 { id: Date.now() + 1, text: errorMessage, sender: 'ai' }
             ]);
         } finally {
-            setIsTyping(false);
+            if (abortControllerRef.current === abortController) {
+                abortControllerRef.current = null;
+                setIsTyping(false);
+            }
         }
     };
 
