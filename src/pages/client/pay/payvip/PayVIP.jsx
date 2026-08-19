@@ -58,6 +58,13 @@ function PayVIP(props) {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     useEffect(() => {
+        if (!isLogin) {
+            window.dispatchEvent(new CustomEvent('OPEN_LOGIN'));
+            navigate('/upgrade');
+        }
+    }, [isLogin, navigate]);
+
+    useEffect(() => {
         if (durations.length > 0 && !durations.find(d => d.id === selectedDuration)) {
             setSelectedDuration(durations[0].id);
         }

@@ -1,4 +1,4 @@
-﻿import React, { useContext, useState, useEffect, useMemo } from 'react';
+import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { useFeatures, useSubscriptions } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
 import { FaCheckCircle, FaCrown } from 'react-icons/fa';
@@ -67,42 +67,61 @@ function UpgradeVIP(props) {
                 </div>
 
                 <div className="flex flex-col items-center mb-12">
-                    <div className="relative flex items-center gap-4 bg-[#0a0f1d]/80 backdrop-blur-xl py-3 px-6 rounded-full border border-cyan-500/30 shadow-[0_0_25px_rgba(34,211,238,0.15)] hover:shadow-[0_0_35px_rgba(34,211,238,0.3)] hover:border-cyan-400/50 hover:-translate-y-1 transition duration-500 overflow-hidden group cursor-pointer">
-                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+                    {isLogin ? (
+                        <div className="relative flex items-center gap-4 bg-[#0a0f1d]/80 backdrop-blur-xl py-3 px-6 rounded-full border border-cyan-500/30 shadow-[0_0_25px_rgba(34,211,238,0.15)] hover:shadow-[0_0_35px_rgba(34,211,238,0.3)] hover:border-cyan-400/50 hover:-translate-y-1 transition duration-500 overflow-hidden group cursor-pointer">
+                            <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
 
-                        <div className="relative">
-                            <img
-                                src={isLogin?.avatarUrl || Logo5}
-                                alt="Avatar"
-                                className="w-14 h-14 rounded-full object-cover border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)] group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <div className="absolute inset-0 rounded-full border border-cyan-300/30 animate-ping opacity-20" />
+                            <div className="relative">
+                                <img
+                                    src={isLogin?.avatarUrl || Logo5}
+                                    alt="Avatar"
+                                    className="w-14 h-14 rounded-full object-cover border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)] group-hover:scale-105 transition-transform duration-300"
+                                />
+                                <div className="absolute inset-0 rounded-full border border-cyan-300/30 animate-ping opacity-20" />
+                            </div>
+
+                            <div className="relative z-10 pr-2">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <h3 className="text-base font-black bg-linear-to-r from-white via-cyan-100 to-slate-300 bg-clip-text text-transparent drop-shadow-sm tracking-wide">
+                                        {isLogin?.fullName || isLogin?.email}
+                                    </h3>
+                                    <FaCrown className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)] text-sm animate-pulse" />
+                                </div>
+                                <div className="flex items-center gap-3 text-[13px]">
+                                    <div className="text-slate-400 flex items-center gap-1.5">
+                                        Gói hiện tại:
+                                        <span className={`font-bold ${levelUser > 0 ? 'text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.6)]' : 'text-slate-300'}`}>
+                                            {currentPlanName}
+                                        </span>
+                                    </div>
+                                    <div className="w-1.5 h-1.5 bg-cyan-500/50 rounded-full shadow-[0_0_5px_rgba(34,211,238,0.5)]"></div>
+                                    <div className="text-slate-400 flex items-center gap-1.5">
+                                        Số dư:
+                                        <span className="text-yellow-400 font-black drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] tracking-wide">
+                                            {isLogin?.balance ? isLogin.balance.toLocaleString('vi-VN') : '0'}₫
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-
-                        <div className="relative z-10 pr-2">
-                            <div className="flex items-center gap-2 mb-1">
-                                <h3 className="text-base font-black bg-linear-to-r from-white via-cyan-100 to-slate-300 bg-clip-text text-transparent drop-shadow-sm tracking-wide">
-                                    {isLogin?.fullName || isLogin?.email}
+                    ) : (
+                        <div 
+                            onClick={() => window.dispatchEvent(new CustomEvent('OPEN_LOGIN'))}
+                            className="relative flex items-center gap-4 bg-[#0a0f1d]/90 backdrop-blur-xl py-3 px-6 rounded-full border border-amber-500/40 shadow-[0_0_25px_rgba(245,158,11,0.2)] hover:border-amber-400 hover:-translate-y-1 transition duration-300 cursor-pointer group"
+                        >
+                            <div className="w-12 h-12 rounded-full bg-amber-500/20 border border-amber-400/50 flex items-center justify-center text-amber-400 text-xl font-bold">
+                                👑
+                            </div>
+                            <div className="text-left pr-2">
+                                <h3 className="text-sm font-bold text-white group-hover:text-amber-300 transition-colors">
+                                    Bạn chưa đăng nhập
                                 </h3>
-                                <FaCrown className="text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)] text-sm animate-pulse" />
-                            </div>
-                            <div className="flex items-center gap-3 text-[13px]">
-                                <div className="text-slate-400 flex items-center gap-1.5">
-                                    Gói hiện tại:
-                                    <span className={`font-bold ${levelUser > 0 ? 'text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.6)]' : 'text-slate-300'}`}>
-                                        {currentPlanName}
-                                    </span>
-                                </div>
-                                <div className="w-1.5 h-1.5 bg-cyan-500/50 rounded-full shadow-[0_0_5px_rgba(34,211,238,0.5)]"></div>
-                                <div className="text-slate-400 flex items-center gap-1.5">
-                                    Số dư:
-                                    <span className="text-yellow-400 font-black drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] tracking-wide">
-                                        {isLogin?.balance ? isLogin.balance.toLocaleString('vi-VN') : '0'}₫
-                                    </span>
-                                </div>
+                                <p className="text-xs text-amber-400/90 font-medium">
+                                    Nhấn vào đây để đăng nhập tài khoản và nâng cấp gói VIP
+                                </p>
                             </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 <div className="flex items-center justify-center mb-8">
@@ -112,14 +131,6 @@ function UpgradeVIP(props) {
                     </p>
                     <div className="h-px flex-1 bg-linear-to-r from-transparent via-slate-600 to-transparent"></div>
                 </div>
-
-
-
-
-
-
-
-
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
                     {displayPlans.map((plan) => {
@@ -175,7 +186,7 @@ function UpgradeVIP(props) {
 
                                 <ul className="space-y-3.5 flex-1 relative z-10">
                                     {plan.features.map((feat) => (
-                                        <li className="flex items-start gap-3">
+                                        <li key={feat} className="flex items-start gap-3">
                                             <FaCheckCircle className="mt-1 shrink-0 text-yellow-500 text-[15px]" />
                                             <p className="text-white font-medium text-[15px] leading-tight">{feat}</p>
                                         </li>
@@ -183,7 +194,7 @@ function UpgradeVIP(props) {
 
                                 </ul>
                                 {
-                                    levelUser == plan.level && (
+                                    levelUser == plan.level && isLogin && (
                                         <div className="w-full mt-5 flex justify-center items-center gap-2 bg-linear-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm py-3 rounded-full shadow-[0_4px_15px_rgba(16,185,129,0.4)] cursor-default ring-2 ring-emerald-400/50">
                                             <FaCheckCircle className="text-white text-base" />
                                             <span>Gói hiện tại</span>
@@ -198,10 +209,16 @@ function UpgradeVIP(props) {
 
                 <div className="flex flex-col items-center space-y-4">
                     <button
-                        onClick={() => navigate(`/payVip?id=${selectedPlan}`)}
+                        onClick={() => {
+                            if (!isLogin) {
+                                window.dispatchEvent(new CustomEvent('OPEN_LOGIN'));
+                                return;
+                            }
+                            navigate(`/payVip?id=${selectedPlan}`);
+                        }}
                         className="w-full md:w-2/3 max-w-md bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(79,70,229,0.4)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.6)] hover:-translate-y-1 transition duration-300 cursor-pointer"
                     >
-                        Tiếp tục thanh toán
+                        {isLogin ? "Tiếp tục thanh toán" : "Đăng nhập để nâng cấp"}
                     </button>
                     <button
                         onClick={() => navigate('/')}

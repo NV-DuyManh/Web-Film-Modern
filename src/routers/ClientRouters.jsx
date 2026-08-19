@@ -88,6 +88,10 @@ function ClientRouters(props) {
             element: <UpgradeVIP />
         },
         {
+            path: "/upgrade-vip",
+            element: <UpgradeVIP />
+        },
+        {
             path: "/payVip",
             element: <PayVIP />
         },

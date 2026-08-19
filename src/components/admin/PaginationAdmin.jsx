@@ -38,7 +38,7 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
     };
 
     return (
-<div className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-[rgba(15,23,42,0.1)] px-6 py-2 backdrop-blur-[2px]">            
+        <div className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-[rgba(15,23,42,0.1)] px-6 py-2 backdrop-blur-[2px]">            
             <div className="flex items-center gap-3">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 inline">Rows</p>
                 <Select
@@ -133,6 +133,7 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
                                 margin: "0 1px",
                                 borderRadius: "6px",
                                 transition: "all 0.2s ease-in-out",
+                                cursor: "pointer",
                                 "&:hover": {
                                     bgcolor: "rgba(251, 191, 36, 0.1)",
                                     borderColor: "#fbbf24",
@@ -187,7 +188,7 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
                         />
                         <button
                             onClick={executeJump}
-                            className="flex h-7 items-center justify-center rounded-md border border-amber-400/30 bg-amber-400/10 px-2 text-[10px] font-bold uppercase tracking-wider text-amber-400 transition hover:border-amber-400 hover:bg-amber-400/20 active:scale-95"
+                            className="flex h-7 items-center justify-center rounded-md border border-amber-400/30 bg-amber-400/10 px-2 text-[10px] font-bold uppercase tracking-wider text-amber-400 transition hover:border-amber-400 hover:bg-amber-400/20 active:scale-95 cursor-pointer"
                         >
                             GO
                         </button>

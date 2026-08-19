@@ -55,7 +55,7 @@ function MenuAdmin() {
 
             <ul className={`flex flex-col gap-3 mt-3 ${Menu ? "max-sm:hidden" : ""}`}>
                 <li>
-                    <Link to={"/"} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition duration-300 group border border-transparent 
+                    <Link to={"/"} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition duration-300 group border border-transparent cursor-pointer
                         ${activePath === "/"
                             ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400 shadow-[inset_4px_0_0_0_#22d3ee,0_0_15px_rgba(34,211,238,0.1)]"
                             : "bg-slate-800/90 text-gray-300 hover:bg-slate-700 hover:border-cyan-500/30 hover:text-cyan-400"} 
@@ -73,7 +73,7 @@ function MenuAdmin() {
                         return (
                             <li key={index} className='flex flex-col relative group'>
                                 <Link to={item.path}
-                                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition duration-300 border border-transparent
+                                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition duration-300 border border-transparent cursor-pointer
                                         ${isActive
                                             ? "bg-cyan-600/10 border-cyan-500/30 text-cyan-400 shadow-[inset_4px_0_0_0_#22d3ee]"
                                             : "bg-slate-800/90 text-gray-200 hover:bg-slate-700 hover:border-yellow-500/30 hover:text-yellow-400"}
@@ -125,7 +125,7 @@ function MenuAdmin() {
                                                 {item.name}
                                             </div>
                                             {item.subMenu.map((sub, subIdx) => (
-                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 whitespace-nowrap
+                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 whitespace-nowrap cursor-pointer
                                                     ${activePath === sub.path
                                                         ? "bg-yellow-500/20 text-yellow-400 shadow-[inset_3px_0_0_0_#eab308]"
                                                         : "text-gray-300 hover:bg-slate-800 hover:text-cyan-400 hover:pl-4"}`}>
@@ -140,7 +140,7 @@ function MenuAdmin() {
                                     <div className="overflow-hidden">
                                         <div className={`flex flex-col gap-1 w-[85%] ml-auto border-l-2 pl-3 py-1 ${isParentActive ? "border-cyan-500/50" : "border-slate-700"}`}>
                                             {item.subMenu.map((sub, subIdx) => (
-                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 text-nowrap
+                                                <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 text-nowrap cursor-pointer
                                                     ${activePath === sub.path
                                                         ? "bg-yellow-500/20 text-yellow-400 shadow-[inset_3px_0_0_0_#eab308] translate-x-1"
                                                         : "text-gray-400 hover:bg-slate-800 hover:text-yellow-300 hover:translate-x-1"}`}>

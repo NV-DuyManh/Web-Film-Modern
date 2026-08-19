@@ -263,7 +263,7 @@ function HeaderClient() {
 
 
                                     <div className="px-4 py-4 border-b border-slate-700/80">
-                                        <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-sm font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5">
+                                        <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-sm font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5 cursor-pointer">
                                             <FaCrown className="text-lg" /> Nâng cấp gói
                                         </button>
 
@@ -273,36 +273,35 @@ function HeaderClient() {
                                             </div>
                                             <div className="flex items-center gap-3">
                                                 <p className="font-bold text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)] text-[15px]">0 R</p>
-                                                <button className="flex items-center gap-1 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-lg text-[13px] font-bold transition border border-white/20 hover:border-yellow-400 hover:text-yellow-400">
+                                                <button className="flex items-center gap-1 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-lg text-[13px] font-bold transition border border-white/20 hover:border-yellow-400 hover:text-yellow-400 cursor-pointer">
                                                     + Nạp
                                                 </button>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="px-3 flex flex-col  ">
-                                        <button onClick={() => { navigate('/account/account'); setIsDropdownOpen(false); }} className="w-full mt-2 flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition duration-300 hover:translate-x-1">
+                                    <div className="px-3 flex flex-col">
+                                        <button onClick={() => { navigate('/account/account'); setIsDropdownOpen(false); }} className="w-full mt-2 flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-purple-400 hover:bg-purple-500/10 rounded-xl transition duration-300 hover:translate-x-1 cursor-pointer">
                                             <FaUser className="text-purple-400 text-lg drop-shadow-[0_0_5px_rgba(168,85,247,0.5)]" /> Tài khoản
                                         </button>
 
-                                        <button onClick={() => { navigate('/account/favorites'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/favorites'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-pink-400 hover:bg-pink-500/10 rounded-xl transition duration-300 hover:translate-x-1 cursor-pointer">
                                             <FaRegHeart className="text-pink-400 text-lg drop-shadow-[0_0_5px_rgba(236,72,153,0.5)]" /> Yêu thích
                                         </button>
 
-                                        <button onClick={() => { navigate('/account/list'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-xl transition duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/list'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-xl transition duration-300 hover:translate-x-1 cursor-pointer">
                                             <FaList className="text-cyan-400 text-lg drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]" /> Danh sách
                                         </button>
 
-                                        <button onClick={() => { navigate('/account/rentMovies'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-xl transition duration-300 hover:translate-x-1">
+                                        <button onClick={() => { navigate('/account/rentMovies'); setIsDropdownOpen(false); }} className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-gray-200 hover:text-yellow-400 hover:bg-yellow-500/10 rounded-xl transition duration-300 hover:translate-x-1 cursor-pointer">
                                             <FaFilm className="text-yellow-400 text-lg drop-shadow-[0_0_5px_rgba(250,204,21,0.5)]" /> Phim đang thuê
                                         </button>
-
 
                                         <div className="h-px bg-slate-700/80 my-1 mx-2"></div>
 
                                         <button
                                             onClick={() => { handleLogout(); setIsDropdownOpen(false); }}
-                                            className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/15 rounded-xl transition duration-300 hover:translate-x-1"
+                                            className="w-full flex items-center gap-4 px-4 py-3 text-sm font-semibold text-red-400 hover:text-red-300 hover:bg-red-500/15 rounded-xl transition duration-300 hover:translate-x-1 cursor-pointer"
                                         >
                                             <FaSignOutAlt className="text-lg drop-shadow-[0_0_5px_rgba(248,113,113,0.5)]" /> Đăng xuất
                                         </button>
