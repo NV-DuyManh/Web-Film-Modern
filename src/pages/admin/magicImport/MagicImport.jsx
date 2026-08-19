@@ -1,14 +1,13 @@
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
-import { useShowTimes, useMovies } from '../../../hooks/useCollections';
+import { useShowTimes, useMovies, useEpisodes } from '../../../hooks/useCollections';
 import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
-import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser, FaPause, FaStop, FaGlobe, FaDatabase, FaSpider } from 'react-icons/fa';
+import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser, FaPause, FaStop, FaGlobe, FaDatabase, FaSpider, FaBroom, FaSyncAlt, FaClock } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
-import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 import { CategoryContext } from '../../../contexts/CategoryProvider';
-
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 
@@ -16,6 +15,67 @@ import { fetchMoviesList, fetchMovieDetails, fetchMovieImages, fetchAllCategorie
 
 import LOGO from "../../../assets/Logo6.png";
 import LOGO_BANNER from "../../../assets/Logo5.png";
+
+// Helper chuyển chuỗi tiếng Việt có dấu thành slug không dấu
+const slugify = (text) => {
+    if (!text) return '';
+    const vietnameseMap = {
+        'à':'a','á':'a','ả':'a','ã':'a','ạ':'a','ă':'a','ằ':'a','ắ':'a','ẳ':'a','ẵ':'a','ặ':'a','â':'a','ầ':'a','ấ':'a','ẩ':'a','ẫ':'a','ậ':'a',
+        'è':'e','é':'e','ẻ':'e','ẽ':'e','ẹ':'e','ê':'e','ề':'e','ế':'e','ể':'e','ễ':'e','ệ':'e',
+        'ì':'i','í':'i','ỉ':'i','ĩ':'i','ị':'i',
+        'ò':'o','ó':'o','ỏ':'o','õ':'o','ọ':'o','ô':'o','ồ':'o','ố':'o','ổ':'o','ỗ':'o','ộ':'o','ơ':'o','ờ':'o','ớ':'o','ở':'o','ỡ':'o','ợ':'o',
+        'ù':'u','ú':'u','ủ':'u','ũ':'u','ụ':'u','ư':'u','ừ':'u','ứ':'u','ử':'u','ữ':'u','ự':'u',
+        'ỳ':'y','ý':'y','ỷ':'y','ỹ':'y','ỵ':'y',
+        'đ':'d',
+        'À':'a','Á':'a','Ả':'a','Ã':'a','Ạ':'a','Ă':'a','Ằ':'a','Ắ':'a','Ẳ':'a','Ẵ':'a','Ặ':'a','Â':'a','Ầ':'a','Ấ':'a','Ẩ':'a','Ẫ':'a','Ậ':'a',
+        'È':'e','É':'e','Ẻ':'e','Ẽ':'e','Ẹ':'e','Ê':'e','Ề':'e','Ế':'e','Ể':'e','Ễ':'e','Ệ':'e',
+        'Ì':'i','Í':'i','Ỉ':'i','Ĩ':'i','Ị':'i',
+        'Ò':'o','Ó':'o','Ỏ':'o','Õ':'o','Ọ':'o','Ô':'o','Ồ':'o','Ố':'o','Ổ':'o','Ỗ':'o','Ộ':'o','Ơ':'o','Ờ':'o','Ớ':'o','Ở':'o','Ỡ':'o','Ợ':'o',
+        'Ù':'u','Ú':'u','Ủ':'u','Ũ':'u','Ụ':'u','Ư':'u','Ừ':'u','Ứ':'u','Ử':'u','Ữ':'u','Ự':'u',
+        'Ỳ':'y','Ý':'y','Ỷ':'y','Ỹ':'y','Ỵ':'y',
+        'Đ':'d'
+    };
+    return text.split('').map(c => vietnameseMap[c] || c).join('')
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/[\s_]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+};
+
+const normalizeStr = (str) => {
+    if (!str) return '';
+    return str.toString().trim().toLowerCase();
+};
+
+// Kiểm tra 2 bộ phim có phải là cùng 1 bộ phim không (so sánh chéo tên gốc, tên Việt, slug)
+const isSameMovie = (m1, m2) => {
+    if (!m1 || !m2) return false;
+    if (m1.id && m2.id && m1.id === m2.id) return true;
+
+    // So sánh Slug
+    const s1 = slugify(m1.slug || m1.otherName || m1.name || '');
+    const s2 = slugify(m2.slug || m2.otherName || m2.name || m2.origin_name || '');
+    if (s1 && s2 && s1 === s2) return true;
+
+    // So sánh Tên tiếng Việt và Tên gốc
+    const n1 = normalizeStr(m1.name);
+    const o1 = normalizeStr(m1.otherName);
+    const n2 = normalizeStr(m2.name);
+    const o2 = normalizeStr(m2.otherName || m2.origin_name);
+
+    if (n1 && (n1 === n2 || n1 === o2)) return true;
+    if (o1 && (o1 === n2 || o1 === o2)) return true;
+    if (n2 && (n2 === n1 || n2 === o1)) return true;
+    if (o2 && (o2 === n1 || o2 === o1)) return true;
+
+    return false;
+};
+
+const findMatchingMovie = (movieList, candidate) => {
+    if (!candidate || !movieList) return null;
+    return movieList.find(m => isSameMovie(m, candidate)) || null;
+};
 
 function MagicImport() {
     const [actors, setActors] = useState([]);
@@ -41,13 +101,15 @@ function MagicImport() {
     const [promptTheme, setPromptTheme] = useState("Anime Isekai");
 
     const categories = useContext(CategoryContext) || [];
-    
     const plans = useContext(PlanContext) || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
     
-    
     const existingMovies = useMovies() || [];
     const existingShowtimes = useShowTimes() || [];
+    const existingEpisodes = useEpisodes() || [];
+
+    const [isDeduplicating, setIsDeduplicating] = useState(false);
+    const [dedupMsg, setDedupMsg] = useState("");
 
     useEffect(() => {
         let timer;
@@ -71,7 +133,7 @@ function MagicImport() {
 
     const enrichWithMovieMapping = (mappedData) => {
         return mappedData.map(movie => {
-            const match = existingMovies.find(m => m?.name && movie?.name && m.name.toLowerCase() === movie.name.toLowerCase());
+            const match = findMatchingMovie(existingMovies, movie);
             return { ...movie, matchedMovieId: match ? match.id : "" };
         });
     };
@@ -247,7 +309,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                 if (movie.matchedMovieId) {
                     existingMovie = localMovies.find(m => m.id === movie.matchedMovieId);
                 } else {
-                    existingMovie = localMovies.find(m => m?.name && movie?.name && m.name.toLowerCase() === movie.name.toLowerCase());
+                    existingMovie = findMatchingMovie(localMovies, movie);
                 }
 
                 if (existingMovie && mode === 'IMPORT') {
@@ -391,7 +453,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             }
                         });
                         await setDoc(movieRef, submitMovie);
-                        localMovies.push({ id: currentMovieId, name: movie.name });
+                        localMovies.push({ id: currentMovieId, name: movie.name, otherName: movie.otherName || '', slug: movie.slug || slugify(movie.name) });
                         moviesAdded++;
                     }
                 }
@@ -513,10 +575,15 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     const slug = item.slug;
                     if (!slug) continue;
 
-                    // Skip nếu phim đã tồn tại
-                    const existCheck = localMovies.find(m => m?.name && item?.name && m.name.toLowerCase() === item.name.toLowerCase());
-                    if (existCheck) {
-                        addCrawlLog(`⏭️ Bỏ qua "${item.name}" (đã tồn tại).`);
+                    // Skip nếu phim đã tồn tại trong database (kiểm tra sơ bộ)
+                    const candidatePre = {
+                        name: item.origin_name || item.name,
+                        otherName: item.name,
+                        slug: item.slug || slugify(item.name)
+                    };
+                    const existCheck1 = findMatchingMovie(localMovies, candidatePre);
+                    if (existCheck1) {
+                        addCrawlLog(`⏭️ Bỏ qua "${item.name}" (đã tồn tại trong hệ thống).`);
                         continue;
                     }
 
@@ -535,6 +602,18 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     const movieData = detail?.movie;
                     const episodesData = detail?.episodes || [];
                     if (!movieData) { addCrawlLog(`⚠️ Không có dữ liệu chi tiết cho "${item.name}".`, 'warning'); continue; }
+
+                    // Kiểm tra kỹ lại lần 2 với tên gốc và tên tiếng Việt đầy đủ từ detail
+                    const candidateDetail = {
+                        name: movieData.origin_name || item.name,
+                        otherName: movieData.name || item.name,
+                        slug: movieData.slug || slugify(movieData.name || movieData.origin_name || item.name)
+                    };
+                    const existCheck2 = findMatchingMovie(localMovies, candidateDetail);
+                    if (existCheck2) {
+                        addCrawlLog(`⏭️ Bỏ qua "${movieData.name || item.name}" (đã tồn tại trong hệ thống).`);
+                        continue;
+                    }
 
                     // === Map Categories ===
                     let listCategory = [];
@@ -638,7 +717,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         createdAt: new Date().toISOString(),
                     };
                     await setDoc(movieRef, submitMovie);
-                    localMovies.push({ id: newMovieId, name: submitMovie.name });
+                    localMovies.push({ id: newMovieId, name: submitMovie.name, otherName: submitMovie.otherName, slug: submitMovie.slug });
                     stats.movies++;
 
                     // === Fetch Gallery Images ===
@@ -706,32 +785,6 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     const handleStopCrawl = () => { crawlAbortRef.current = true; crawlPauseRef.current = false; setCrawlStatus('idle'); };
 
     // === Auto Fix Missing Slugs ===
-    const slugify = (text) => {
-        if (!text) return '';
-        const vietnameseMap = {
-            'à':'a','á':'a','ả':'a','ã':'a','ạ':'a','ă':'a','ằ':'a','ắ':'a','ẳ':'a','ẵ':'a','ặ':'a','â':'a','ầ':'a','ấ':'a','ẩ':'a','ẫ':'a','ậ':'a',
-            'è':'e','é':'e','ẻ':'e','ẽ':'e','ẹ':'e','ê':'e','ề':'e','ế':'e','ể':'e','ễ':'e','ệ':'e',
-            'ì':'i','í':'i','ỉ':'i','ĩ':'i','ị':'i',
-            'ò':'o','ó':'o','ỏ':'o','õ':'o','ọ':'o','ô':'o','ồ':'o','ố':'o','ổ':'o','ỗ':'o','ộ':'o','ơ':'o','ờ':'o','ớ':'o','ở':'o','ỡ':'o','ợ':'o',
-            'ù':'u','ú':'u','ủ':'u','ũ':'u','ụ':'u','ư':'u','ừ':'u','ứ':'u','ử':'u','ữ':'u','ự':'u',
-            'ỳ':'y','ý':'y','ỷ':'y','ỹ':'y','ỵ':'y',
-            'đ':'d',
-            'À':'a','Á':'a','Ả':'a','Ã':'a','Ạ':'a','Ă':'a','Ằ':'a','Ắ':'a','Ẳ':'a','Ẵ':'a','Ặ':'a','Â':'a','Ầ':'a','Ấ':'a','Ẩ':'a','Ẫ':'a','Ậ':'a',
-            'È':'e','É':'e','Ẻ':'e','Ẽ':'e','Ẹ':'e','Ê':'e','Ề':'e','Ế':'e','Ể':'e','Ễ':'e','Ệ':'e',
-            'Ì':'i','Í':'i','Ỉ':'i','Ĩ':'i','Ị':'i',
-            'Ò':'o','Ó':'o','Ỏ':'o','Õ':'o','Ọ':'o','Ô':'o','Ồ':'o','Ố':'o','Ổ':'o','Ỗ':'o','Ộ':'o','Ơ':'o','Ờ':'o','Ớ':'o','Ở':'o','Ỡ':'o','Ợ':'o',
-            'Ù':'u','Ú':'u','Ủ':'u','Ũ':'u','Ụ':'u','Ư':'u','Ừ':'u','Ứ':'u','Ử':'u','Ữ':'u','Ự':'u',
-            'Ỳ':'y','Ý':'y','Ỷ':'y','Ỹ':'y','Ỵ':'y',
-            'Đ':'d'
-        };
-        return text.split('').map(c => vietnameseMap[c] || c).join('')
-            .toLowerCase()
-            .replace(/[^a-z0-9\s-]/g, '')
-            .replace(/[\s_]+/g, '-')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '');
-    };
-
     const autoFixSlugs = useCallback(async () => {
         const moviesToFix = existingMovies.filter(m => {
             if (!m.otherName) return !m.slug; // Nếu không có otherName, chỉ fix nếu chưa có slug
@@ -760,20 +813,332 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         }
     }, [existingMovies]);
 
+    // === Dọn dẹp và xóa phim trùng lặp ===
+    const handleDeduplicateMovies = async () => {
+        if (existingMovies.length === 0) return;
+        const confirm = window.confirm(`Hệ thống sẽ quét và tự động gộp/xóa các bản ghi phim trùng lặp (dựa trên tên tiếng Việt, tên gốc và slug) trong tổng số ${existingMovies.length} phim hiện có.\n\nBạn có muốn tiếp tục không?`);
+        if (!confirm) return;
+
+        setIsDeduplicating(true);
+        setDedupMsg("🔍 Đang quét và phân tích phim trùng lặp...");
+        try {
+            const groups = [];
+            const processedIds = new Set();
+
+            for (let i = 0; i < existingMovies.length; i++) {
+                const m1 = existingMovies[i];
+                if (processedIds.has(m1.id)) continue;
+
+                const group = [m1];
+                processedIds.add(m1.id);
+
+                for (let j = i + 1; j < existingMovies.length; j++) {
+                    const m2 = existingMovies[j];
+                    if (processedIds.has(m2.id)) continue;
+
+                    if (isSameMovie(m1, m2)) {
+                        group.push(m2);
+                        processedIds.add(m2.id);
+                    }
+                }
+
+                if (group.length > 1) {
+                    groups.push(group);
+                }
+            }
+
+            if (groups.length === 0) {
+                setDedupMsg("✅ Tuyệt vời! Không có phim nào bị trùng lặp trong hệ thống.");
+                setTimeout(() => setDedupMsg(""), 4000);
+                setIsDeduplicating(false);
+                return;
+            }
+
+            let totalDeleted = 0;
+            setDedupMsg(`⚡ Đã tìm thấy ${groups.length} nhóm phim trùng. Đang tiến hành gộp tập phim và xóa bản ghi trùng...`);
+
+            for (const group of groups) {
+                // Chọn bản ghi chính (bản ghi đầu tiên), các bản ghi còn lại là trùng
+                const primaryMovie = group[0];
+                const duplicateMovies = group.slice(1);
+
+                for (const dup of duplicateMovies) {
+                    // Chuyển toàn bộ tập phim của bản ghi trùng sang phim chính
+                    const dupEpisodes = existingEpisodes.filter(e => e.movieID === dup.id);
+                    for (const ep of dupEpisodes) {
+                        const epExistInPrimary = existingEpisodes.find(e => e.movieID === primaryMovie.id && e.numberEpisode === ep.numberEpisode);
+                        if (!epExistInPrimary) {
+                            await updateDoc(doc(db, "Episodes", ep.id), { movieID: primaryMovie.id, title: primaryMovie.name });
+                        } else {
+                            await deleteDoc(doc(db, "Episodes", ep.id));
+                        }
+                    }
+
+                    // Chuyển lịch chiếu sang phim chính
+                    const dupShowtimes = existingShowtimes.filter(s => s.movieId === dup.id);
+                    for (const st of dupShowtimes) {
+                        await updateDoc(doc(db, "ShowTimes", st.id), { movieId: primaryMovie.id });
+                    }
+
+                    // Xóa bản ghi phim trùng lặp khỏi Firestore
+                    await deleteDoc(doc(db, "Movies", dup.id));
+                    totalDeleted++;
+                }
+            }
+
+            setDedupMsg(`🎉 Đã dọn dẹp thành công! Đã xóa ${totalDeleted} bản ghi phim trùng lặp.`);
+            setTimeout(() => setDedupMsg(""), 6000);
+        } catch (err) {
+            console.error("Lỗi khi dọn dẹp phim trùng lặp:", err);
+            setDedupMsg(`❌ Lỗi: ${err.message}`);
+        } finally {
+            setIsDeduplicating(false);
+        }
+    };
+
+    // ==================== KKPHIM AUTO-SYNC EPISODES ====================
+    const [syncPages, setSyncPages] = useState(2); // Số trang phim mới quét (1 trang ~ 24 phim)
+    const [syncStatus, setSyncStatus] = useState('idle'); // idle | running | done
+    const [syncLogs, setSyncLogs] = useState([]);
+    const [syncStats, setSyncStats] = useState({ checked: 0, moviesUpdated: 0, newEpisodes: 0, errors: 0 });
+    const [syncProgress, setSyncProgress] = useState(0);
+    const [autoCronInterval, setAutoCronInterval] = useState(() => {
+        return Number(localStorage.getItem('kkphim_auto_sync_interval') || 0); // 0 = tắt, 15, 30, 60 (phút)
+    });
+    const [lastSyncTime, setLastSyncTime] = useState(() => localStorage.getItem('kkphim_last_sync_time') || '');
+    const syncAbortRef = useRef(false);
+
+    const addSyncLog = useCallback((message, type = 'info') => {
+        setSyncLogs(prev => [{ message, type, time: new Date().toLocaleTimeString('vi-VN') }, ...prev].slice(0, 500));
+    }, []);
+
+    const handleSetAutoCron = (val) => {
+        setAutoCronInterval(val);
+        localStorage.setItem('kkphim_auto_sync_interval', val.toString());
+        if (val > 0) {
+            addSyncLog(`⏰ Đã kích hoạt chế độ tự động kiểm tra tập mới mỗi ${val} phút.`, 'success');
+        } else {
+            addSyncLog(`⏹️ Đã tắt chế độ tự động kiểm tra tập mới.`, 'warning');
+        }
+    };
+
+    const handleStartSync = async () => {
+        if (syncStatus === 'running') return;
+        syncAbortRef.current = false;
+        setSyncStatus('running');
+        setSyncLogs([]);
+        setSyncProgress(0);
+        const stats = { checked: 0, moviesUpdated: 0, newEpisodes: 0, errors: 0 };
+        setSyncStats(stats);
+
+        addSyncLog(`🚀 Bắt đầu quét tập mới từ ${syncPages} trang mới nhất của KKPhim (~${syncPages * 24} phim)...`, 'info');
+
+        try {
+            for (let page = 1; page <= syncPages; page++) {
+                if (syncAbortRef.current) { addSyncLog('⛔ Đã dừng đồng bộ.', 'error'); break; }
+
+                addSyncLog(`📄 Đang kiểm tra trang ${page}/${syncPages}...`);
+                let listData;
+                try {
+                    listData = await fetchMoviesList(page);
+                } catch (err) {
+                    addSyncLog(`❌ Lỗi tải trang ${page}: ${err.message}`, 'error');
+                    stats.errors++;
+                    setSyncStats({ ...stats });
+                    await sleep(1000);
+                    continue;
+                }
+
+                const items = listData?.data?.items || [];
+                if (items.length === 0) continue;
+
+                for (let i = 0; i < items.length; i++) {
+                    if (syncAbortRef.current) break;
+
+                    const currentProgress = ((page - 1) / syncPages) * 100 + ((i + 1) / items.length) * (100 / syncPages);
+                    setSyncProgress(Math.round(currentProgress));
+
+                    const item = items[i];
+                    stats.checked++;
+                    setSyncStats({ ...stats });
+
+                    // Kiểm tra xem phim này có trong database của ta không
+                    const matchedMovie = findMatchingMovie(existingMovies, {
+                        name: item.origin_name || item.name,
+                        otherName: item.name,
+                        slug: item.slug
+                    });
+
+                    if (!matchedMovie) {
+                        // Phim này chưa có trong kho phim -> bỏ qua
+                        continue;
+                    }
+
+                    // Nếu có phim trong kho -> Lấy chi tiết tập phim từ KKPhim
+                    let detail;
+                    try {
+                        detail = await fetchMovieDetails(item.slug);
+                        await sleep(Math.max(250, crawlDelay / 3));
+                    } catch (err) {
+                        stats.errors++;
+                        setSyncStats({ ...stats });
+                        continue;
+                    }
+
+                    const movieData = detail?.movie;
+                    const episodesData = detail?.episodes || [];
+                    if (!episodesData || episodesData.length === 0) continue;
+
+                    // Lấy danh sách tập hiện có của phim trong database
+                    const currentMovieEps = existingEpisodes.filter(e => e.movieID === matchedMovie.id);
+                    const currentEpMap = new Map(currentMovieEps.map(e => [Number(e.numberEpisode), e]));
+
+                    let newEpsCountForThisMovie = 0;
+                    let fixedEpsCountForThisMovie = 0;
+                    let highestEp = matchedMovie.endEpisode || 0;
+
+                    const firstServer = episodesData[0];
+                    const serverData = firstServer?.server_data || [];
+
+                    for (const ep of serverData) {
+                        const epNum = parseInt(ep.name.replace(/[^0-9]/g, '')) || 1;
+                        if (epNum > highestEp) highestEp = epNum;
+
+                        const existingEp = currentEpMap.get(epNum);
+
+                        if (!existingEp) {
+                            // 1. Thêm tập mới chưa có
+                            const epRef = doc(collection(db, "Episodes"));
+                            await setDoc(epRef, {
+                                id: epRef.id,
+                                movieID: matchedMovie.id,
+                                title: matchedMovie.name,
+                                numberEpisode: epNum,
+                                nameEpisode: ep.name || `Tập ${epNum}`,
+                                url: ep.link_embed || '',
+                                urlM3u8: ep.link_m3u8 || '',
+                                description: "Đang cập nhật...",
+                                createdAt: new Date().toISOString(),
+                            });
+                            currentEpMap.set(epNum, { id: epRef.id, numberEpisode: epNum, url: ep.link_embed, urlM3u8: ep.link_m3u8 });
+                            newEpsCountForThisMovie++;
+                            stats.newEpisodes++;
+                            setSyncStats({ ...stats });
+                        } else {
+                            // 2. Sửa lại link nếu link cũ bị sai, rác ("vdvdfv") hoặc không chuẩn
+                            const isDummyOrBroken = !existingEp.url || 
+                                                    !existingEp.url.startsWith('http') || 
+                                                    existingEp.url !== ep.link_embed || 
+                                                    existingEp.urlM3u8 !== ep.link_m3u8;
+
+                            if (isDummyOrBroken && (ep.link_embed || ep.link_m3u8)) {
+                                const epRef = doc(db, "Episodes", existingEp.id);
+                                await updateDoc(epRef, {
+                                    url: ep.link_embed || existingEp.url || '',
+                                    urlM3u8: ep.link_m3u8 || existingEp.urlM3u8 || '',
+                                    nameEpisode: ep.name || existingEp.nameEpisode || `Tập ${epNum}`,
+                                    title: matchedMovie.name || existingEp.title || '',
+                                    updatedAt: new Date().toISOString()
+                                });
+                                fixedEpsCountForThisMovie++;
+                            }
+                        }
+                    }
+
+                    if (newEpsCountForThisMovie > 0 || fixedEpsCountForThisMovie > 0) {
+                        // Cập nhật trạng thái và số tập của phim
+                        const movieRef = doc(db, "Movies", matchedMovie.id);
+                        const updatePayload = {
+                            endEpisode: Math.max(highestEp, matchedMovie.endEpisode || 1),
+                            status: movieData?.status ? mapMovieStatus(movieData.status) : (matchedMovie.status || 'Đang chiếu'),
+                            updatedAt: new Date().toISOString()
+                        };
+                        await updateDoc(movieRef, updatePayload);
+
+                        stats.moviesUpdated++;
+                        setSyncStats({ ...stats });
+                        addSyncLog(`🎉 CẬP NHẬT THÀNH CÔNG: "${matchedMovie.otherName || matchedMovie.name}" (+${newEpsCountForThisMovie} tập mới, sửa ${fixedEpsCountForThisMovie} link tập)`, 'success');
+                    } else {
+                        addSyncLog(`✔️ "${matchedMovie.otherName || matchedMovie.name}" đã chuẩn xác đủ ${currentEpMap.size} tập, không cần sửa.`);
+                    }
+                }
+                await sleep(500);
+            }
+
+            const nowStr = new Date().toLocaleString('vi-VN');
+            setLastSyncTime(nowStr);
+            localStorage.setItem('kkphim_last_sync_time', nowStr);
+            setSyncStatus('done');
+            setSyncProgress(100);
+            addSyncLog(`🏁 Hoàn tất đồng bộ! Đã kiểm tra ${stats.checked} phim: Cập nhật ${stats.moviesUpdated} phim (+${stats.newEpisodes} tập mới).`, 'success');
+        } catch (err) {
+            console.error("Lỗi khi auto-sync tập mới:", err);
+            addSyncLog(`❌ Lỗi đồng bộ: ${err.message}`, 'error');
+            setSyncStatus('idle');
+        }
+    };
+
+    const handleStopSync = () => {
+        syncAbortRef.current = true;
+        setSyncStatus('idle');
+    };
+
+    // Background auto cron sync timer
+    useEffect(() => {
+        if (!autoCronInterval || autoCronInterval <= 0) return;
+
+        const intervalMs = autoCronInterval * 60 * 1000;
+        const intervalTimer = setInterval(() => {
+            if (syncStatus !== 'running') {
+                console.log(`[AutoSync] Đang tự động kiểm tra tập mới (định kỳ mỗi ${autoCronInterval} phút)...`);
+                handleStartSync();
+            }
+        }, intervalMs);
+
+        return () => clearInterval(intervalTimer);
+    }, [autoCronInterval, syncStatus, existingMovies, existingEpisodes]);
+
     return (
         <div className='p-6 min-h-screen text-white'>
-            {/* ======= TOP-LEVEL TAB SWITCHER ======= */}
-            <div className="flex items-center gap-2 mb-6">
-                <button onClick={() => setMainTab('MANUAL')}
-                    className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer
-                    ${mainTab === 'MANUAL' ? 'bg-linear-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)]' : 'bg-slate-800/60 text-gray-400 hover:text-white hover:bg-slate-700/60 border border-white/10'}`}>
-                    <FaMagic /> Manual Import
-                </button>
-                <button onClick={() => setMainTab('CRAWLER')}
-                    className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer
-                    ${mainTab === 'CRAWLER' ? 'bg-linear-to-r from-orange-500 to-red-600 text-white shadow-[0_0_20px_rgba(249,115,22,0.4)]' : 'bg-slate-800/60 text-gray-400 hover:text-white hover:bg-slate-700/60 border border-white/10'}`}>
-                    <FaSpider /> KKPhim Crawler
-                </button>
+            {/* ======= TOP-LEVEL TAB SWITCHER & DEDUPLICATION TOOL ======= */}
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+                <div className="flex items-center gap-2">
+                    <button onClick={() => setMainTab('MANUAL')}
+                        className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer
+                        ${mainTab === 'MANUAL' ? 'bg-linear-to-r from-cyan-500 to-blue-600 text-white shadow-[0_0_20px_rgba(6,182,212,0.4)]' : 'bg-slate-800/60 text-gray-400 hover:text-white hover:bg-slate-700/60 border border-white/10'}`}>
+                        <FaMagic /> Manual Import
+                    </button>
+                    <button onClick={() => setMainTab('CRAWLER')}
+                        className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer
+                        ${mainTab === 'CRAWLER' ? 'bg-linear-to-r from-orange-500 to-red-600 text-white shadow-[0_0_20px_rgba(249,115,22,0.4)]' : 'bg-slate-800/60 text-gray-400 hover:text-white hover:bg-slate-700/60 border border-white/10'}`}>
+                        <FaSpider /> KKPhim Crawler
+                    </button>
+                    <button onClick={() => setMainTab('SYNC')}
+                        className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer
+                        ${mainTab === 'SYNC' ? 'bg-linear-to-r from-emerald-500 to-teal-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'bg-slate-800/60 text-gray-400 hover:text-white hover:bg-slate-700/60 border border-white/10'}`}>
+                        <FaSyncAlt className={syncStatus === 'running' ? 'animate-spin' : ''} /> Auto-Sync Tập Mới
+                        {autoCronInterval > 0 && (
+                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-1" title={`Tự động quét mỗi ${autoCronInterval} phút`} />
+                        )}
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    {dedupMsg && (
+                        <span className="text-xs font-semibold text-cyan-300 bg-cyan-950/70 border border-cyan-500/30 px-3 py-1.5 rounded-lg animate-pulse">
+                            {dedupMsg}
+                        </span>
+                    )}
+                    <button
+                        onClick={handleDeduplicateMovies}
+                        disabled={isDeduplicating}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-white border border-red-500/40 shadow-xs active:scale-95 disabled:opacity-50"
+                        title="Quét và xóa tự động các phim bị trùng lặp tên/slug"
+                    >
+                        <FaBroom className={isDeduplicating ? "animate-spin" : ""} />
+                        <span>{isDeduplicating ? "Đang lọc trùng..." : "Lọc & Xóa phim trùng lặp"}</span>
+                    </button>
+                </div>
             </div>
 
             {mainTab === 'CRAWLER' ? (
@@ -917,6 +1282,166 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                             <div key={idx} className={`py-1 px-2 rounded transition-all
                                                 ${log.type === 'error' ? 'text-red-400 bg-red-500/5' :
                                                   log.type === 'success' ? 'text-emerald-400 bg-emerald-500/5' :
+                                                  log.type === 'warning' ? 'text-yellow-400 bg-yellow-500/5' :
+                                                  'text-gray-400'}`}>
+                                                <span className="text-gray-600 mr-2">[{log.time}]</span>{log.message}
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            ) : mainTab === 'SYNC' ? (
+            /* ==================== AUTO-SYNC EPISODES UI ==================== */
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* LEFT: Controls & Settings */}
+                <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
+                    <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(16, 185, 129, 0.25), rgba(20, 184, 166, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
+                        <div className='table-container p-5' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+                            <h2 className='text-emerald-400 font-bold mb-4 uppercase tracking-wider text-sm flex items-center gap-2'>
+                                <FaSyncAlt className={`text-xl ${syncStatus === 'running' ? 'animate-spin' : ''}`} /> Auto-Sync Tập Mới
+                            </h2>
+
+                            {/* Scope of sync */}
+                            <div className="mb-4">
+                                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-bold block mb-1">Số trang quét (Phim Mới Cập Nhật)</label>
+                                <select
+                                    value={syncPages}
+                                    onChange={e => setSyncPages(Number(e.target.value))}
+                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
+                                >
+                                    <option value={1} className="bg-slate-900">1 Trang (~24 phim mới nhất)</option>
+                                    <option value={2} className="bg-slate-900">2 Trang (~48 phim mới nhất)</option>
+                                    <option value={3} className="bg-slate-900">3 Trang (~72 phim mới nhất - Khuyến nghị)</option>
+                                    <option value={5} className="bg-slate-900">5 Trang (~120 phim mới nhất)</option>
+                                </select>
+                            </div>
+
+                            {/* Auto Cron Background Timer */}
+                            <div className="mb-4 p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                                <div className="flex items-center justify-between mb-2">
+                                    <label className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                                        <FaClock className="text-sm" /> Tự động quét ngầm định kỳ
+                                    </label>
+                                    {autoCronInterval > 0 && (
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                            Đang bật
+                                        </span>
+                                    )}
+                                </div>
+                                <select
+                                    value={autoCronInterval}
+                                    onChange={e => handleSetAutoCron(Number(e.target.value))}
+                                    className="w-full bg-black/40 border border-emerald-500/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
+                                >
+                                    <option value={0} className="bg-slate-900">Tắt (Chỉ quét khi bấm nút)</option>
+                                    <option value={15} className="bg-slate-900">Mỗi 15 phút (Cập nhật siêu tốc)</option>
+                                    <option value={30} className="bg-slate-900">Mỗi 30 phút (Khuyến nghị)</option>
+                                    <option value={60} className="bg-slate-900">Mỗi 60 phút (1 tiếng)</option>
+                                </select>
+                                <p className="text-[10px] text-gray-400 mt-2">
+                                    Khi bật, hệ thống sẽ tự động định kỳ quét KKPhim và chèn các tập mới nhất vào phim mà không cần thao tác tay.
+                                </p>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex flex-col gap-2 mb-4">
+                                {syncStatus !== 'running' ? (
+                                    <button
+                                        onClick={handleStartSync}
+                                        className="w-full py-3 rounded-xl bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all"
+                                    >
+                                        <FaPlay /> Quét & Cập nhật tập mới ngay
+                                    </button>
+                                ) : (
+                                    <button
+                                        onClick={handleStopSync}
+                                        className="w-full py-3 rounded-xl bg-red-600/80 hover:bg-red-600 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all"
+                                    >
+                                        <FaStop /> Dừng đồng bộ
+                                    </button>
+                                )}
+                            </div>
+
+                            {/* Last Sync Info */}
+                            {lastSyncTime && (
+                                <div className="text-[11px] text-gray-400 flex items-center justify-between border-t border-white/5 pt-3">
+                                    <span>Lần cập nhật gần nhất:</span>
+                                    <span className="font-semibold text-emerald-300">{lastSyncTime}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* RIGHT: Live Monitor & Logs */}
+                <div className="col-span-1 lg:col-span-8 flex flex-col gap-4">
+                    <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
+                        <div className='table-container p-5 flex flex-col h-full' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+                            {/* Stats Counters */}
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                                <div className="bg-black/30 border border-white/10 rounded-xl p-3 text-center">
+                                    <div className="text-xl font-bold text-gray-200">{syncStats.checked}</div>
+                                    <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Phim đã quét</div>
+                                </div>
+                                <div className="bg-black/30 border border-emerald-500/30 rounded-xl p-3 text-center bg-emerald-500/5">
+                                    <div className="text-xl font-bold text-emerald-400">{syncStats.moviesUpdated}</div>
+                                    <div className="text-[10px] text-emerald-300 uppercase tracking-wider mt-0.5">Phim có tập mới</div>
+                                </div>
+                                <div className="bg-black/30 border border-teal-500/30 rounded-xl p-3 text-center bg-teal-500/5">
+                                    <div className="text-xl font-bold text-teal-400">{syncStats.newEpisodes}</div>
+                                    <div className="text-[10px] text-teal-300 uppercase tracking-wider mt-0.5">Tập mới đã thêm</div>
+                                </div>
+                                <div className="bg-black/30 border border-red-500/30 rounded-xl p-3 text-center">
+                                    <div className="text-xl font-bold text-red-400">{syncStats.errors}</div>
+                                    <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Lỗi</div>
+                                </div>
+                            </div>
+
+                            {/* Progress Bar */}
+                            {syncStatus === 'running' && (
+                                <div className="mb-3">
+                                    <div className="flex justify-between text-xs font-bold text-emerald-400 mb-1">
+                                        <span>⏳ Đang đồng bộ tập mới...</span>
+                                        <span>{syncProgress}%</span>
+                                    </div>
+                                    <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
+                                        <div className="bg-linear-to-r from-emerald-400 via-teal-500 to-cyan-500 h-full rounded-full transition-[width] duration-500 ease-out"
+                                            style={{ width: `${syncProgress}%` }} />
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Log Console */}
+                            <div className="flex-1 bg-black/30 border border-white/10 rounded-xl overflow-hidden flex flex-col">
+                                <div className="flex items-center justify-between px-3 py-2 bg-white/5 border-b border-white/10 text-xs font-bold text-gray-300">
+                                    <span className="flex items-center gap-1.5">
+                                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                        Nhật ký Đồng bộ (Live Sync Log)
+                                    </span>
+                                    {syncLogs.length > 0 && (
+                                        <button
+                                            onClick={() => setSyncLogs([])}
+                                            className="text-[10px] text-gray-400 hover:text-white px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 cursor-pointer"
+                                        >
+                                            Xóa log
+                                        </button>
+                                    )}
+                                </div>
+                                <div className="h-[450px] overflow-y-auto custom-scrollbar p-3 font-mono text-xs space-y-1">
+                                    {syncLogs.length === 0 ? (
+                                        <div className="flex flex-col items-center justify-center h-full text-gray-500 opacity-60">
+                                            <FaSyncAlt className="text-4xl mb-3 text-emerald-400 opacity-40" />
+                                            <p className="text-center">Bấm "Quét & Cập nhật tập mới ngay" hoặc bật chế độ tự động ngầm để bắt đầu.</p>
+                                        </div>
+                                    ) : (
+                                        syncLogs.map((log, idx) => (
+                                            <div key={idx} className={`py-1 px-2 rounded transition-all
+                                                ${log.type === 'error' ? 'text-red-400 bg-red-500/5' :
+                                                  log.type === 'success' ? 'text-emerald-400 bg-emerald-500/10 font-semibold' :
                                                   log.type === 'warning' ? 'text-yellow-400 bg-yellow-500/5' :
                                                   'text-gray-400'}`}>
                                                 <span className="text-gray-600 mr-2">[{log.time}]</span>{log.message}

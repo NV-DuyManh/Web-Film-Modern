@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../utils/cloudinary';
+import { getOptimizedUrl } from '../../../utils/cloudinary';
 import React, { useMemo, useRef } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
@@ -13,9 +13,21 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
     const plans = React.useContext(PlanContext);
     const searchRef = useRef(null);
 
-    const dataSearch = useMemo(() => 
-        (!searchQuery || searchQuery.trim() === "") ? [] : movies.filter(e => searchTV(e.name || '').includes(searchTV(searchQuery)) || searchTV(e.otherName || '').includes(searchTV(searchQuery))), 
-    [searchQuery, movies]);
+    const dataSearch = useMemo(() => {
+        if (!searchQuery || searchQuery.trim() === "") return [];
+        const matched = movies.filter(e => 
+            searchTV(e.name || '').includes(searchTV(searchQuery)) || 
+            searchTV(e.otherName || '').includes(searchTV(searchQuery))
+        );
+        // Loại bỏ kết quả trùng lặp theo slug hoặc tên
+        const seen = new Set();
+        return matched.filter(m => {
+            const key = (m.slug || m.otherName || m.name || m.id).toLowerCase().trim();
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+    }, [searchQuery, movies]);
 
     const handleSelect = (movieId) => {
         onClose();
@@ -34,6 +46,7 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
                     <div className="max-h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-transparent">
                         {dataSearch.map((movie) => (
                             <button
+                                key={movie.id}
                                 onMouseDown={(e) => { e.preventDefault(); handleSelect(movie.slug || movie.id); }}
                                 className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-white/5 transition duration-200 cursor-pointer group/movie text-left"
                             >
@@ -60,9 +73,9 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
                     </div>
                 </>
             ) : (
-                <div className="flex flex-col items-center justify-center py-10 px-6">
-                    <FaFilm className="text-slate-600 text-3xl mb-3" />
-                    <p className="text-slate-400 text-sm font-medium">Không tìm thấy phim nào cho "{searchQuery}"</p>
+                <div className="p-8 text-center text-slate-400">
+                    <FaFilm className="mx-auto text-3xl mb-2 opacity-40 text-cyan-400" />
+                    <p className="text-sm font-medium">Không tìm thấy phim phù hợp</p>
                 </div>
             )}
         </div>

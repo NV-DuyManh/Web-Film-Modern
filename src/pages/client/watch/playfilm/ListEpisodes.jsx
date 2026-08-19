@@ -104,15 +104,35 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
         scrollRef.current.scrollLeft = scrollLeft.current - walk;
     };
 
-    const hasRanges = episodeShow.length > CHUNK_SIZE;
-    const ranges = [];
-    if (hasRanges) {
-        for (let i = 0; i < episodeShow.length; i += CHUNK_SIZE) {
-            ranges.push(episodeShow.slice(i, i + CHUNK_SIZE));
-        }
-    }
+    const uniqueEpisodes = useMemo(() => {
+        if (!episodeShow || episodeShow.length === 0) return [];
+        const map = new Map();
+        const sorted = [...episodeShow].sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0));
+        sorted.forEach(ep => {
+            const epNum = Number(ep.numberEpisode);
+            if (!map.has(epNum)) {
+                map.set(epNum, ep);
+            } else {
+                const prev = map.get(epNum);
+                if ((!prev.url || !prev.url.startsWith('http')) && ep.url?.startsWith('http')) {
+                    map.set(epNum, ep);
+                }
+            }
+        });
+        return Array.from(map.values()).sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0));
+    }, [episodeShow]);
 
-    const currentEpisodes = hasRanges ? (ranges[rangeIndex] || episodeShow) : episodeShow;
+    const hasRanges = uniqueEpisodes.length > CHUNK_SIZE;
+    const ranges = useMemo(() => {
+        if (!hasRanges) return [];
+        const r = [];
+        for (let i = 0; i < uniqueEpisodes.length; i += CHUNK_SIZE) {
+            r.push(uniqueEpisodes.slice(i, i + CHUNK_SIZE));
+        }
+        return r;
+    }, [uniqueEpisodes, hasRanges, CHUNK_SIZE]);
+
+    const currentEpisodes = hasRanges ? (ranges[rangeIndex] || uniqueEpisodes) : uniqueEpisodes;
 
     return (
         <div className="flex flex-col gap-4 py-1">
@@ -130,9 +150,9 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                         onMouseMove={handleMouseMove}
                         className="flex items-center gap-2 overflow-x-auto scrollbar-hide cursor-grab flex-1"
                     >
-                        {ranges.map((_, idx) => {
-                            const start = idx * CHUNK_SIZE + 1;
-                            const end = Math.min((idx + 1) * CHUNK_SIZE, episodeShow.length);
+                        {ranges.map((chunk, idx) => {
+                            const startEp = chunk[0]?.numberEpisode || (idx * CHUNK_SIZE + 1);
+                            const endEp = chunk[chunk.length - 1]?.numberEpisode || Math.min((idx + 1) * CHUNK_SIZE, uniqueEpisodes.length);
                             const isSelected = rangeIndex === idx;
                             return (
                                 <button
@@ -143,7 +163,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                                         : "bg-[#0d121f] text-slate-300 hover:text-white hover:bg-[#161d30] border-slate-700/80"
                                         }`}
                                 >
-                                    Tập {start} - {end}
+                                    Tập {startEp} - {endEp}
                                 </button>
                             );
                         })}

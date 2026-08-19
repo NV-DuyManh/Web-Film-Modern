@@ -1,0 +1,25 @@
+name: Auto Sync Episodes 24/7
+
+on:
+  schedule:
+    # Chạy tự động mỗi 1 tiếng trên Cloud GitHub (24/7/365)
+    - cron: '0 * * * *'
+  workflow_dispatch: # Cho phép bấm nút chạy thủ công trên GitHub Actions nếu muốn
+
+jobs:
+  sync-episodes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run Episode Cloud Sync
+        run: node scripts/cloudSync.mjs

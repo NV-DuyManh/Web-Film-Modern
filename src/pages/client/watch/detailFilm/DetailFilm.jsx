@@ -16,6 +16,7 @@ import Swal from 'sweetalert2';
 import ListEpisodes from '../playfilm/ListEpisodes';
 import Comment from './Comment';
 import SEO from '../../../../components/SEO';
+import { syncSingleMovieEpisodes } from '../../../../services/autoEpisodeSyncService';
 
 
 function DetailFilm() {
@@ -57,6 +58,13 @@ function DetailFilm() {
         });
         return () => unsubscribe();
     }, [id]);
+
+    // Tự động kiểm tra và thêm tập mới tức thì khi người xem truy cập bộ phim
+    useEffect(() => {
+        if (movie && movie.slug) {
+            syncSingleMovieEpisodes(movie, episodes);
+        }
+    }, [movie?.id, movie?.slug]);
 
 
     useEffect(() => {
@@ -127,7 +135,20 @@ function DetailFilm() {
     const realMovieId = movie?.id || id;
 
     const episodeShow = useMemo(() => {
-        return episodes.filter(e => e.movieID == realMovieId).sort((a, b) => a.numberEpisode - b.numberEpisode)
+        const list = episodes.filter(e => e.movieID == realMovieId);
+        const map = new Map();
+        list.sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0)).forEach(e => {
+            const num = Number(e.numberEpisode);
+            if (!map.has(num)) {
+                map.set(num, e);
+            } else {
+                const prev = map.get(num);
+                if ((!prev.url || !prev.url.startsWith('http')) && e.url?.startsWith('http')) {
+                    map.set(num, e);
+                }
+            }
+        });
+        return Array.from(map.values()).sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0));
     }, [realMovieId, episodes]);
 
     const movieAuthors = useMemo(() => {

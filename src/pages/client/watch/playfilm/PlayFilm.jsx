@@ -13,6 +13,7 @@ import VideoPlayer from './VideoPlayer';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import Comment from '../detailFilm/Comment';
 import SEO from '../../../../components/SEO';
+import { syncSingleMovieEpisodes } from '../../../../services/autoEpisodeSyncService';
 
 function PlayFilm({ handleOpenLogin }) {
     const { slug } = useParams();
@@ -41,9 +42,29 @@ function PlayFilm({ handleOpenLogin }) {
         return () => unsubscribe();
     }, [realMovieId]);
 
+    // Tự động kiểm tra và thêm tập mới tức thì khi người xem phát phim
+    useEffect(() => {
+        if (movie && movie.slug) {
+            syncSingleMovieEpisodes(movie, episodes);
+        }
+    }, [movie?.id, movie?.slug]);
+
     const episodeShow = useMemo(() => {
         if (!realMovieId) return [];
-        return episodes.filter(e => e.movieID == realMovieId).sort((a, b) => a.numberEpisode - b.numberEpisode);
+        const list = episodes.filter(e => e.movieID == realMovieId);
+        const map = new Map();
+        list.sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0)).forEach(e => {
+            const num = Number(e.numberEpisode);
+            if (!map.has(num)) {
+                map.set(num, e);
+            } else {
+                const prev = map.get(num);
+                if ((!prev.url || !prev.url.startsWith('http')) && e.url?.startsWith('http')) {
+                    map.set(num, e);
+                }
+            }
+        });
+        return Array.from(map.values()).sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0));
     }, [realMovieId, episodes]);
 
     const [playEpisodes, setPlayEpisodes] = useState({});

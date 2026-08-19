@@ -6,12 +6,28 @@ import FooterClient from '../../components/client/footer/FooterClient';
 import LoadingScreen from '../../components/client/loadingScreen/LoadingScreen';
 import GroqChatBot from '../../components/client/chatBot/GroqChatBot';
 // import GeminiChatBot from '../../components/client/chatBot/GeminiChatBot';
+import { useMovies, useEpisodes } from '../../hooks/useCollections';
+import { autoSyncAllOngoingMovies } from '../../services/autoEpisodeSyncService';
 
 function LayoutClient() {
     const location = useLocation();
     const navigate = useNavigate();
     const scrollMap = useRef({});
     const prevPath = useRef(location.pathname);
+    const movies = useMovies() || [];
+    const episodes = useEpisodes() || [];
+
+    // Tự động kiểm tra và đồng bộ tập mới cho toàn bộ các phim đang chiếu trong database
+    useEffect(() => {
+        if (movies.length > 0) {
+            autoSyncAllOngoingMovies(movies, episodes);
+            // Định kỳ kiểm tra ngầm mỗi 30 phút
+            const timer = setInterval(() => {
+                autoSyncAllOngoingMovies(movies, episodes);
+            }, 30 * 60 * 1000);
+            return () => clearInterval(timer);
+        }
+    }, [movies, episodes]);
 
     useEffect(() => {
         const handleScroll = () => {
