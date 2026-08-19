@@ -5,7 +5,7 @@ import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { useMovies, useAuthors, useActors, useCharacters, useCategories, useComments, useReviews, useSubscriptions, useEpisodes } from '../../../hooks/useCollections';
 import { getUserPlanInfo } from '../../../utils/appUtils';
-import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots, FaMicrophone, FaStop } from 'react-icons/fa';
+import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots, FaMicrophone, FaStop, FaPaperPlane } from 'react-icons/fa';
 import {
     buildSystemInstruction,
     executeWebsiteControl,
@@ -597,14 +597,14 @@ export default function GeminiChatBot() {
                                 <div ref={messagesEndRef} />
                             </div>
 
-                            <div className="p-3 bg-white border-t border-gray-100 flex gap-2 items-center">
+                            <div className="p-3 bg-white border-t border-gray-100 flex items-center gap-2">
                                 <input
                                     type="text"
                                     placeholder={isListening ? "Đang lắng nghe... hãy nói đi bạn..." : "Nhập tin nhắn hoặc dùng mic..."}
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                                    className={`flex-1 border rounded-xl px-4 py-2.5 text-sm text-black outline-none transition-all placeholder:text-gray-400 ${isListening
+                                    className={`flex-1 h-10 border rounded-xl px-3.5 text-sm text-black outline-none transition-all placeholder:text-gray-400 ${isListening
                                             ? 'border-red-400 ring-2 ring-red-200 bg-red-50/30'
                                             : 'border-gray-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-200'
                                         }`}
@@ -613,7 +613,7 @@ export default function GeminiChatBot() {
                                     onClick={handleVoiceInput}
                                     type="button"
                                     title={isListening ? "Đang lắng nghe... bấm để dừng" : "Nói câu hỏi của bạn (Giọng nói tiếng Việt)"}
-                                    className={`p-2.5 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center shrink-0 ${isListening
+                                    className={`w-10 h-10 rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center shrink-0 ${isListening
                                             ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse ring-4 ring-red-200'
                                             : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-black'
                                         }`}
@@ -622,12 +622,11 @@ export default function GeminiChatBot() {
                                 </button>
                                 <button
                                     onClick={() => handleSend()}
+                                    type="button"
                                     disabled={!message.trim() || isTyping}
-                                    className="bg-linear-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 disabled:opacity-50 text-white p-2.5 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center shrink-0"
+                                    className="w-10 h-10 bg-linear-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 disabled:opacity-50 text-white rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
                                 >
-                                    <svg className="w-5 h-5 -rotate-45 translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                                    </svg>
+                                    <FaPaperPlane className="w-3.5 h-3.5" />
                                 </button>
                             </div>
                         </>
