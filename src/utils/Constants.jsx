@@ -401,7 +401,10 @@ export const LISTACCOUNT = [
 ];
 
 export const apiKey = import.meta.env.VITE_GEMINI_API_KEY || "";
-export const apiKeys = (import.meta.env.VITE_GEMINI_API_KEYS || import.meta.env.VITE_GEMINI_API_KEY || "").split(',').map(k => k.trim()).filter(Boolean);
+export const apiKeys = (import.meta.env.VITE_GEMINI_API_KEYS || import.meta.env.VITE_GEMINI_API_KEY || "")
+    .split(',')
+    .map(k => k.trim().replace(/[\r\n\\"]/g, ''))
+    .filter(Boolean);
 
 export const YOUR_SERVICE_ID = "service_wrbu7og";
 export const REGISTER_PLAN = "template_8wkt467"; // đk gói

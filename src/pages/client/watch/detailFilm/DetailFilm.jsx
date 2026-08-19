@@ -245,7 +245,7 @@ function DetailFilm() {
                 <div className="relative z-10 w-full bg-[#0f1322] rounded-t-3xl pt-8 lg:pt-12 -mt-20 lg:-mt-32">
                     <div className="w-full max-w-7xl mx-auto px-4 md:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
                         <div className="lg:col-span-3 flex flex-col gap-4 items-center lg:items-start">
-                            <div className="w-2/3 sm:w-1/2 lg:w-full aspect-2/3 bg-slate-800 rounded-xl animate-pulse -mt-24 sm:-mt-70 lg:-mt-48 border-4 border-[#0f1322]" />
+                            <div className="w-44 sm:w-52 lg:w-full aspect-2/3 bg-slate-800 rounded-xl animate-pulse -mt-32 sm:-mt-52 lg:-mt-48 border-4 border-[#0f1322]" />
                             <div className="w-3/4 h-6 bg-slate-800 rounded animate-pulse" />
                             <div className="w-1/2 h-4 bg-slate-800 rounded animate-pulse" />
                             <div className="flex gap-2 mt-2">
@@ -347,7 +347,7 @@ function DetailFilm() {
 
                     <div className="lg:col-span-3 flex flex-col gap-6 lg:sticky lg:top-4 lg:self-start">
 
-                        <div className="rounded-xl overflow-hidden shadow-2xl w-2/3 sm:w-1/2 sm:h-3/4 lg:w-full mx-auto relative z-20 -mt-24 sm:-mt-70 lg:-mt-48 border-4 border-[#0f1322]">
+                        <div className="rounded-xl overflow-hidden shadow-2xl w-44 sm:w-52 lg:w-full mx-auto relative z-20 -mt-32 sm:-mt-52 lg:-mt-48 border-4 border-[#0f1322]">
                             <img
                                 src={getOptimizedUrl(movie.imgUrl, 600, 900, 'poster')}
                                 alt={movie.name}

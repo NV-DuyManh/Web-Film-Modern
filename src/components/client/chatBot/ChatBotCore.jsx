@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { FaPlay, FaInfoCircle } from 'react-icons/fa';
 
 export const STOP_WORDS = new Set(['phim', 'bo', 'tap', 'xem', 'mo', 'cho', 'toi', 'co', 'nay', 'va', 'la', 'nhung', 'cac', 'the', 'nhan', 'vat', 'dien', 'vien', 'tac', 'gia', 'dao', 'dien']);
 
@@ -373,13 +374,32 @@ QUY TẮC CỐT LÕI VỀ DỮ LIỆU & GÓI CƯỚC (BẮT BUỘC TUÂN THỦ 1
 7. KHI GỢI Ý PHIM THEO THỂ LOẠI HOẶC PHIM HAY / PHIM HOT:
    - Nếu người dùng hỏi gợi ý phim hay / phim hot / phim mới / phim xem nhiều: Chọn 3 - 5 phim tiêu biểu và hay nhất trong danh sách.
    - Mỗi phim gợi ý kèm link [Tên Phim](/phim/slug) và 1 câu mô tả ngắn gọn, lôi cuốn về nội dung hoặc điểm đặc sắc của phim.
-8. PHONG CÁCH GIAO TIẾP VÀ THÁI ĐỘ PHỤC VỤ (CỰC KỲ QUAN TRỌNG):
+8. TƯ VẤN PHIM THEO TÂM TRẠNG & THỜI LƯỢNG RẢNH (CỰC KỲ THÔNG MINH):
+   - Khi người dùng tâm sự về cảm xúc (buồn, stress, mệt mỏi, cần nụ cười, muốn hồi hộp, lãng mạn cùng người yêu...):
+     + Luôn lắng nghe, thấu cảm và đưa ra lời động viên ấm áp.
+     + Gợi ý các bộ phim phù hợp nhất với tâm trạng (Buồn/Stress -> Hài hước, Hoạt hình chữa lành; Muốn gay cấn -> Hành động, Trinh thám, Kinh dị...).
+   - Khi người dùng hỏi theo thời gian rảnh (chỉ rảnh 20-30 phút, phim ngắn xem nhanh, hoặc cày đêm dài tập):
+     + Thời gian ngắn (< 30 phút): Gợi ý các tập Anime ngắn hoặc phim lẻ thời lượng vừa phải.
+     + Thời gian dài: Gợi ý các Series nhiều tập cuốn hút.
+9. MINI-GAME ĐỐ VUI ĐIỆN ẢNH (FILM TRIVIA / QUIZ - QUẢN TRÒ SÔI NỔI):
+   - Khi người dùng yêu cầu đố vui (Ví dụ: "đố tôi về phim X", "chơi quiz", "đố vui anime"...):
+     + Đóng vai người quản trò cực kỳ sôi nổi, hài hước và nhiệt huyết.
+     + Đưa ra câu hỏi trắc nghiệm kịch tính với 4 đáp án A, B, C, D rõ ràng, kèm lời thách đố vui vẻ.
+   - KHI NGƯỜI DÙNG GỬI ĐÁP ÁN (Ví dụ người dùng nhắn "A", "b", "C", "D" hoặc nội dung đáp án):
+     + NGHIÊM CẤM TUYỆT ĐỐI KHÔNG ĐƯỢC chỉ trả lời 1 ký tự cộc lốc (như chỉ gõ "C", "B", "Đúng" hay "Sai")!
+     + BẮT BUỘC phải phản hồi đầy đủ cảm xúc 3 phần:
+       1. Công bố kết quả hào hứng: 
+          - Nếu đúng: "🎉 **Chính xác 100%!** Bạn quá am hiểu bộ phim này luôn! 👏✨"
+          - Nếu sai: "😅 **Tiếc quá, chưa chính xác rồi!** Đáp án đúng của câu này phải là **[Chữ cái]. [Tên đáp án]** cơ!"
+       2. Giải thích / Bình luận thú vị 1-2 câu về tình tiết, nhân vật hoặc bối cảnh trong phim để người chơi thấy lôi cuốn.
+       3. Lời mời tiếp tục: "Bạn có muốn mình đố tiếp 1 câu nữa để thử tài không nào? Sẵn sàng thì bảo mình nhé! 🎮🔥"
+10. PHONG CÁCH GIAO TIẾP VÀ THÁI ĐỘ PHỤC VỤ (CỰC KỲ QUAN TRỌNG):
    - Luôn giữ thái độ thân thiện, lễ phép, lịch sự, nhiệt tình, có văn hóa và duyên dáng (như một người bạn rành phim đồng hành cùng người xem).
    - Có lời mở đầu tự nhiên, nhã nhặn (Ví dụ: "Dạ chào bạn, mình xin gửi bạn thông tin chi tiết nhé! 🍿").
    - Luôn có câu kết lịch sự, chu đáo (Ví dụ: "Chúc bạn có những phút giây xem phim thật thư giãn! Nếu bạn muốn tìm thêm phim gì thì cứ nhắn mình nhé! 😊").
-   - TUYỆT ĐỐI KHÔNG trả lời cộc lốc hoặc chỉ thảy danh sách gạch đầu dòng trơ trọi không lời chào hỏi.
+   - NGHIÊM CẤM TUYỆT ĐỐI việc trả lời cộc lốc, cụt lủn một vài chữ cái hoặc một từ trơ trọi (như 'A', 'B', 'C', 'Đúng', 'Sai', 'Ok', 'Ừ'). Mọi câu trả lời đều phải có đại từ nhân xưng xưng hô thân mật, đầy đủ chủ ngữ vị ngữ và biểu cảm ấm áp, vui vẻ.
    - Luôn in đậm **từ khóa quan trọng** (tên phim, diễn viên, nhân vật, thể loại, số lượng).
-9. TUYỆT ĐỐI KHÔNG DÙNG BẢNG MARKDOWN: CẤM DÙNG KÝ TỰ | HOẶC |---|---| TRONG CÂU TRẢ LỜI. Mọi danh sách, thống kê đều dùng gạch đầu dòng (-) hoặc chấm tròn (•) để hiển thị thông thoáng, dễ đọc trên khung chat điện thoại.
+11. TUYỆT ĐỐI KHÔNG DÙNG BẢNG MARKDOWN: CẤM DÙNG KÝ TỰ | HOẶC |---|---| TRONG CÂU TRẢ LỜI. Mọi danh sách, thống kê đều dùng gạch đầu dòng (-) hoặc chấm tròn (•) để hiển thị thông thoáng, dễ đọc trên khung chat điện thoại.
 
 [THỐNG KÊ CHI TIẾT TOÀN DIỆN TRÊN MFILM]:
 - Tổng số phim hiện có trên website MFILM: ${totalMovies} bộ phim (Gồm ${freeMoviesCount} phim Gói Free và ${paidMoviesCount} phim Gói trả phí).
@@ -641,46 +661,35 @@ const renderTextWithNewlines = (text) => {
 };
 
 /**
- * Render tin nhắn chat với link chuyển trang (hỗ trợ xuống dòng, dấu ngoặc lồng nhau) và chữ in đậm
+ * Render một dòng text đơn lẻ kèm Markdown link và in đậm
  */
-export const renderMessage = (text, onLinkClick) => {
-    if (!text) return null;
-
-    // Regex bắt chuẩn Markdown links kể cả khi bị AI ngắt dòng giữa ] và ( hoặc có dấu () trong tên phim
+const renderSingleLineText = (lineText, onLinkClick) => {
+    if (!lineText) return null;
     const linkRegex = /\[([^\]]+)\]\s*\(([^)]+)\)/g;
-
     const elements = [];
     let lastIndex = 0;
     let match;
 
-    while ((match = linkRegex.exec(text)) !== null) {
-        // Đoạn văn bản trước link
+    while ((match = linkRegex.exec(lineText)) !== null) {
         if (match.index > lastIndex) {
-            const rawText = text.substring(lastIndex, match.index);
             elements.push(
                 <React.Fragment key={`text-${lastIndex}`}>
-                    {renderTextWithNewlines(rawText)}
+                    {renderFormattedText(lineText.substring(lastIndex, match.index))}
                 </React.Fragment>
             );
         }
 
         const title = match[1].trim();
         let url = match[2].trim();
-
         if (!url.startsWith('/') && !url.startsWith('http')) {
             url = '/' + url;
         }
 
-        const linkKey = `link-${match.index}`;
         elements.push(
             <Link
-                key={linkKey}
+                key={`link-${match.index}`}
                 to={url}
-                onClick={() => {
-                    if (typeof onLinkClick === 'function') {
-                        onLinkClick();
-                    }
-                }}
+                onClick={() => onLinkClick && onLinkClick()}
                 className="font-bold text-amber-700 hover:text-amber-900 bg-amber-500/10 hover:bg-amber-500/20 px-1.5 py-0.5 rounded transition-all cursor-pointer inline underline decoration-amber-500/60 underline-offset-2"
             >
                 {renderFormattedText(title)}
@@ -690,17 +699,216 @@ export const renderMessage = (text, onLinkClick) => {
         lastIndex = linkRegex.lastIndex;
     }
 
-    // Đoạn văn bản còn lại sau link cuối cùng
-    if (lastIndex < text.length) {
-        const remaining = text.substring(lastIndex);
+    if (lastIndex < lineText.length) {
         elements.push(
             <React.Fragment key={`text-${lastIndex}`}>
-                {renderTextWithNewlines(remaining)}
+                {renderFormattedText(lineText.substring(lastIndex))}
             </React.Fragment>
         );
     }
 
-    return elements.length > 0 ? elements : renderTextWithNewlines(text);
+    return elements.length > 0 ? elements : renderFormattedText(lineText);
+};
+
+/**
+ * Lấy style và màu sắc badge chuẩn riêng biệt của từng gói cước
+ */
+export const getPlanBadgeStyle = (planInfo) => {
+    const level = Number(planInfo?.level) || 0;
+    const name = String(planInfo?.planName || planInfo?.name || '').trim().toLowerCase();
+
+    if (level >= 3 || name === 'premium' || name === 'prenium') {
+        return {
+            text: 'PREMIUM',
+            className: 'bg-linear-to-r from-fuchsia-600 via-pink-400 to-rose-500 border border-pink-300 text-white shadow-[0_0_10px_rgba(236,72,153,0.7)] premium-laser'
+        };
+    } else if (level === 2 || name === 'plus') {
+        return {
+            text: 'PLUS',
+            className: 'bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border border-yellow-300 text-black shadow-[0_0_8px_rgba(245,158,11,0.6)]'
+        };
+    } else if (level === 1 || name === 'basic') {
+        return {
+            text: 'BASIC',
+            className: 'bg-linear-to-r from-blue-600 to-cyan-500 border border-cyan-300 text-white shadow-[0_0_8px_rgba(6,182,212,0.5)]'
+        };
+    } else {
+        return {
+            text: 'FREE',
+            className: 'bg-slate-700 border border-slate-500 text-white'
+        };
+    }
+};
+
+/**
+ * Component hiển thị 1 thẻ phim mini trực quan ngay dưới dòng mô tả
+ */
+export const SingleMovieCard = ({ movie, plans = [], onLinkClick }) => {
+    if (!movie) return null;
+    const planInfo = getMoviePlanInfo(movie, plans);
+    const badgeStyle = getPlanBadgeStyle(planInfo);
+    const movieSlug = movie.slug || movie.id;
+    const posterUrl = movie.imgUrl || movie.poster || movie.image || '/assets/Logo6.png';
+    const title = movie.otherName || movie.name;
+    const epText = movie.endEpisode ? `${movie.endEpisode} tập` : '1 tập';
+
+    return (
+        <div className="my-1.5 p-2 rounded-xl bg-slate-900 text-white shadow-md border border-amber-500/20 hover:border-amber-500/50 transition-all flex items-center gap-2.5">
+            <img 
+                src={posterUrl} 
+                alt={title}
+                onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = '/assets/Logo6.png';
+                }}
+                className="w-13 h-18 rounded-lg object-cover shrink-0 shadow-sm border border-slate-700 pointer-events-none select-none" 
+            />
+            <div className="min-w-0 flex-1 pr-1">
+                <h4 className="font-bold text-[11.5px] text-white truncate group-hover:text-amber-400 transition-colors" title={title}>
+                    {title}
+                </h4>
+                <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[9.5px]">
+                    <span className={`text-[8px] font-extrabold px-1.5 py-0.25 rounded uppercase tracking-wider inline ${badgeStyle.className}`}>
+                        {badgeStyle.text}
+                    </span>
+                    <span className="px-1.5 py-0.25 rounded bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 font-medium inline">
+                        {epText}
+                    </span>
+                    {movie.releaseYear && (
+                        <span className="px-1.5 py-0.25 rounded bg-purple-500/15 border border-purple-500/40 text-purple-300 font-medium inline">
+                            {movie.releaseYear}
+                        </span>
+                    )}
+                </div>
+                <div className="flex items-center gap-1.5 mt-1.5 flex-nowrap">
+                    <Link
+                        to={`/xem-phim/${movieSlug}`}
+                        onClick={() => onLinkClick && onLinkClick()}
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black text-[10px] font-extrabold shadow-xs transition-transform active:scale-95 cursor-pointer whitespace-nowrap shrink-0"
+                    >
+                        <FaPlay className="text-[7px] shrink-0" />
+                        <span>Xem ngay</span>
+                    </Link>
+                    <Link
+                        to={`/phim/${movieSlug}`}
+                        onClick={() => onLinkClick && onLinkClick()}
+                        className="flex items-center gap-1 px-2 py-0.5 rounded-md bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 hover:text-cyan-100 text-[10px] font-bold border border-cyan-500/35 transition-all shadow-xs active:scale-95 cursor-pointer whitespace-nowrap shrink-0"
+                    >
+                        <FaInfoCircle className="text-[8px] shrink-0" />
+                        <span>Chi tiết</span>
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+/**
+ * Render tin nhắn chat theo từng dòng, nếu dòng nào có link phim thì thẻ phim sẽ nằm NGAY DƯỚI dòng đó!
+ */
+export const renderMessage = (text, onLinkClick, movies = [], plans = []) => {
+    if (!text) return null;
+
+    const rawLines = text.split('\n');
+    // Lọc bỏ dòng phân cách bảng markdown như |---|---|
+    const validLines = rawLines.filter(line => !/^\|?\s*[-:]+[-|\s:]+$/.test(line.trim()));
+    const seenMovieIds = new Set();
+
+    return validLines.map((line, i, arr) => {
+        let cleanLine = line.trim();
+        if (!cleanLine && i < arr.length - 1) {
+            return <div key={`empty-${i}`} className="h-1.5" />;
+        }
+
+        // Tự động chuyển đổi bảng Markdown dạng | cột 1 | cột 2 | thành dạng chấm tròn gọn đẹp
+        if (cleanLine.startsWith('|') && cleanLine.endsWith('|')) {
+            const cells = cleanLine.split('|').map(c => c.trim()).filter(Boolean);
+            if (cells.length > 0) {
+                const isHeader = cells.some(c => /^(gói|stt|tên phim|số phim|cột|thể loại|level)/i.test(c));
+                if (isHeader) {
+                    cleanLine = `**${cells.join(' • ')}**`;
+                } else {
+                    cleanLine = `• ${cells.join(' — ')}`;
+                }
+            }
+        } else if (cleanLine.startsWith('>')) {
+            cleanLine = cleanLine.replace(/^>\s*/, '💡 ');
+        }
+
+        // Kiểm tra xem dòng này có link /phim/slug không
+        const movieSlugMatch = cleanLine.match(/\/phim\/([a-zA-Z0-9_-]+)/i);
+        let movieForThisLine = null;
+        if (movieSlugMatch && movies && movies.length > 0) {
+            const slug = movieSlugMatch[1].toLowerCase();
+            const found = movies.find(m => 
+                String(m.slug || '').toLowerCase() === slug || 
+                String(m.id || '').toLowerCase() === slug
+            );
+            if (found && !seenMovieIds.has(found.id)) {
+                seenMovieIds.add(found.id);
+                movieForThisLine = found;
+            }
+        }
+
+        return (
+            <div key={`line-${i}`} className="leading-relaxed">
+                <div>{renderSingleLineText(cleanLine, onLinkClick)}</div>
+                {movieForThisLine && (
+                    <SingleMovieCard 
+                        movie={movieForThisLine} 
+                        plans={plans} 
+                        onLinkClick={onLinkClick} 
+                    />
+                )}
+            </div>
+        );
+    });
+};
+
+/**
+ * Component hiệu ứng gõ chữ (Typewriter Effect) mượt mà cho tin nhắn AI
+ */
+export const TypewriterText = ({ text, isNew = false, onComplete, onLinkClick, movies = [], plans = [] }) => {
+    const [displayedLength, setDisplayedLength] = React.useState(() => isNew ? 0 : (text?.length || 0));
+
+    React.useEffect(() => {
+        if (!isNew || !text) {
+            setDisplayedLength(text?.length || 0);
+            return;
+        }
+
+        let current = 0;
+        const total = text.length;
+        const speed = Math.max(8, Math.min(22, Math.floor(1200 / total)));
+
+        const timer = setInterval(() => {
+            current += 3;
+            if (current >= total) {
+                setDisplayedLength(total);
+                clearInterval(timer);
+                if (onComplete) onComplete();
+            } else {
+                setDisplayedLength(current);
+            }
+        }, speed);
+
+        return () => clearInterval(timer);
+    }, [text, isNew, onComplete]);
+
+    const handleSkipTypewriter = () => {
+        if (displayedLength < (text?.length || 0)) {
+            setDisplayedLength(text?.length || 0);
+            if (onComplete) onComplete();
+        }
+    };
+
+    const visibleText = text ? text.substring(0, displayedLength) : '';
+
+    return (
+        <div onClick={handleSkipTypewriter} className="cursor-text select-text flex flex-col gap-1">
+            {renderMessage(visibleText, onLinkClick, movies, plans)}
+        </div>
+    );
 };
 
 /**

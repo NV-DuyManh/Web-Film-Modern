@@ -4,12 +4,13 @@ import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { useMovies, useAuthors, useActors, useCharacters, useCategories, useComments, useReviews, useSubscriptions, useEpisodes } from '../../../hooks/useCollections';
 import { getUserPlanInfo } from '../../../utils/appUtils';
-import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots } from 'react-icons/fa';
+import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots, FaMicrophone, FaStop } from 'react-icons/fa';
 import {
     buildSystemInstruction,
     executeWebsiteControl,
     executeMovieLookup,
     renderMessage,
+    TypewriterText,
     GROQ_TOOLS
 } from './ChatBotCore.jsx';
 
@@ -65,7 +66,7 @@ export default function GroqChatBot() {
         try {
             const savedId = localStorage.getItem(ACTIVE_SESSION_ID_KEY) || sessionStorage.getItem(ACTIVE_SESSION_ID_KEY);
             if (savedId) return savedId;
-        } catch (e) {}
+        } catch (e) { }
         return sessions[0]?.id || `session_${Date.now()}`;
     });
 
@@ -80,28 +81,31 @@ export default function GroqChatBot() {
     const [showHistory, setShowHistory] = useState(false);
     const [message, setMessage] = useState('');
     const [isTyping, setIsTyping] = useState(false);
+    const [isListening, setIsListening] = useState(false);
+    const [lastAiMsgId, setLastAiMsgId] = useState(null);
     const messagesEndRef = useRef(null);
     const abortControllerRef = useRef(null);
+    const recognitionRef = useRef(null);
 
     // Save sessions to localStorage & sessionStorage
     useEffect(() => {
         try {
             localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
             sessionStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
-        } catch (e) {}
+        } catch (e) { }
     }, [sessions]);
 
     useEffect(() => {
         try {
             localStorage.setItem(ACTIVE_SESSION_ID_KEY, activeSessionId);
             sessionStorage.setItem(ACTIVE_SESSION_ID_KEY, activeSessionId);
-        } catch (e) {}
+        } catch (e) { }
     }, [activeSessionId]);
 
     useEffect(() => {
         try {
             sessionStorage.setItem(CHAT_OPEN_KEY, String(isChatOpen));
-        } catch (e) {}
+        } catch (e) { }
     }, [isChatOpen]);
 
     // Current active session and messages
@@ -116,8 +120,8 @@ export default function GroqChatBot() {
                     let title = session.title;
                     const firstUserMsg = newMessages.find(m => m.sender === 'user');
                     if (firstUserMsg && (session.title === 'Đoạn chat mới' || !session.title)) {
-                        title = firstUserMsg.text.length > 28 
-                            ? firstUserMsg.text.substring(0, 28) + '...' 
+                        title = firstUserMsg.text.length > 28
+                            ? firstUserMsg.text.substring(0, 28) + '...'
                             : firstUserMsg.text;
                     }
                     return {
@@ -203,21 +207,71 @@ export default function GroqChatBot() {
     };
 
     // Xác định phim đang xem từ URL
-    const currentSlug = location.pathname.startsWith('/phim/') 
-        ? location.pathname.replace('/phim/', '') 
-        : location.pathname.startsWith('/xem-phim/') 
-            ? location.pathname.replace('/xem-phim/', '').split('?')[0] 
+    const currentSlug = location.pathname.startsWith('/phim/')
+        ? location.pathname.replace('/phim/', '')
+        : location.pathname.startsWith('/xem-phim/')
+            ? location.pathname.replace('/xem-phim/', '').split('?')[0]
             : null;
     const cleanSlug = currentSlug ? decodeURIComponent(currentSlug).replace(/\/$/, '') : null;
-    const currentMovie = cleanSlug 
-        ? movies.find(m => m.slug === cleanSlug || m.id === cleanSlug || m.slug === currentSlug || m.id === currentSlug) 
+    const currentMovie = cleanSlug
+        ? movies.find(m => m.slug === cleanSlug || m.id === cleanSlug || m.slug === currentSlug || m.id === currentSlug)
         : null;
+
+    // Tính năng nhận diện giọng nói (Web Speech API)
+    const handleVoiceInput = () => {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert('Trình duyệt của bạn chưa hỗ trợ nhận diện giọng nói. Bạn hãy thử dùng Google Chrome hoặc Cốc Cốc nhé!');
+            return;
+        }
+
+        if (isListening) {
+            if (recognitionRef.current) {
+                try { recognitionRef.current.stop(); } catch (e) { }
+            }
+            setIsListening(false);
+            return;
+        }
+
+        try {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'vi-VN';
+            recognition.continuous = false;
+            recognition.interimResults = false;
+
+            recognition.onstart = () => {
+                setIsListening(true);
+            };
+
+            recognition.onresult = (event) => {
+                const transcript = event?.results?.[0]?.[0]?.transcript;
+                if (transcript) {
+                    setMessage(prev => (prev ? `${prev} ${transcript}` : transcript));
+                }
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech recognition error:", event.error);
+                setIsListening(false);
+            };
+
+            recognition.onend = () => {
+                setIsListening(false);
+            };
+
+            recognitionRef.current = recognition;
+            recognition.start();
+        } catch (err) {
+            console.error("Speech recognition start failed:", err);
+            setIsListening(false);
+        }
+    };
 
     useEffect(() => {
         if (isChatOpen && !showHistory) {
             messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
         }
-    }, [messages, isChatOpen, showHistory]);
+    }, [messages, isChatOpen, showHistory, lastAiMsgId]);
 
     const callGroqWithRetry = async (payload, apiKeysList, signal) => {
         const fallbackKeys = import.meta.env.VITE_GROQ_API_KEY ? [import.meta.env.VITE_GROQ_API_KEY] : [];
@@ -297,14 +351,15 @@ export default function GroqChatBot() {
         throw lastError || new Error("Không thể kết nối đến máy chủ Groq AI sau nhiều lần thử.");
     };
 
-    const handleSend = async () => {
-        if (!message.trim() || isTyping) return;
+    const handleSend = async (customText) => {
+        const textToSend = typeof customText === 'string' ? customText.trim() : message.trim();
+        if (!textToSend || isTyping) return;
 
         const targetSessionId = activeSessionId;
         const targetSession = sessions.find(s => s.id === targetSessionId);
         const currentSessionMessages = targetSession?.messages || [];
 
-        const userMsg = { id: Date.now(), text: message.trim(), sender: 'user' };
+        const userMsg = { id: Date.now(), text: textToSend, sender: 'user' };
         updateSessionMessages(targetSessionId, prev => [...prev, userMsg]);
         setMessage('');
         setIsTyping(true);
@@ -333,11 +388,13 @@ export default function GroqChatBot() {
             });
 
             const apiKeyString = import.meta.env.VITE_GROQ_API_KEYS || import.meta.env.VITE_GROQ_API_KEY;
-            const apiKeys = apiKeyString ? apiKeyString.split(',').map(k => k.trim()).filter(Boolean) : [];
+            const apiKeys = apiKeyString
+                ? apiKeyString.split(',').map(k => k.trim().replace(/[\r\n\\"]/g, '')).filter(Boolean)
+                : [];
 
             const recentMessages = currentSessionMessages
                 .slice(-6)
-                .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi')); 
+                .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi'));
             let groqMessages = [
                 { role: "system", content: systemInstruction },
                 ...recentMessages.map(m => ({
@@ -353,9 +410,9 @@ export default function GroqChatBot() {
 
             while (loopCount < 4) {
                 loopCount++;
-                
+
                 const data = await callGroqWithRetry({
-                    model: "openai/gpt-oss-20b", 
+                    model: "openai/gpt-oss-20b",
                     messages: groqMessages,
                     tools: GROQ_TOOLS,
                     tool_choice: "auto",
@@ -380,7 +437,7 @@ export default function GroqChatBot() {
                         if (window.innerWidth < 768) {
                             setIsChatOpen(false);
                         }
-                        break; 
+                        break;
                     } else if (functionName === "tra_cuu_phim") {
                         const topMatches = executeMovieLookup({ args, movies, authors, actors, characters, categories, plans, userPlanInfo });
                         lastLookupResults = topMatches;
@@ -390,7 +447,7 @@ export default function GroqChatBot() {
                             name: functionName,
                             content: JSON.stringify({ movies: topMatches })
                         });
-                        continue; 
+                        continue;
                     }
                 } else {
                     finalAiMsgText = responseMessage.content || "";
@@ -402,10 +459,12 @@ export default function GroqChatBot() {
                 finalAiMsgText = `Chào bạn, mình xin gợi ý một số bộ phim rất hấp dẫn đang có trên MFILM để bạn tham khảo nhé! 🍿\n\n${lastLookupResults.split('\n').map(line => `- ${line}`).join('\n')}\n\nChúc bạn xem phim vui vẻ! Nếu bạn cần tìm thể loại nào khác thì cứ nhắn mình nha! 😊`;
             }
 
-            const aiMsg = { 
-                id: Date.now() + 1, 
-                text: finalAiMsgText || "Dạ chào bạn! Bạn đang tìm kiếm bộ phim hay thể loại nào để mình hỗ trợ gợi ý cho bạn nhé? 😊", 
-                sender: 'ai' 
+            const newAiId = Date.now() + 1;
+            setLastAiMsgId(newAiId);
+            const aiMsg = {
+                id: newAiId,
+                text: finalAiMsgText || "Dạ chào bạn! Bạn đang tìm kiếm bộ phim hay thể loại nào để mình hỗ trợ gợi ý cho bạn nhé? 😊",
+                sender: 'ai'
             };
             updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
         } catch (error) {
@@ -426,7 +485,7 @@ export default function GroqChatBot() {
                 }
             }
             updateSessionMessages(targetSessionId, prev => [
-                ...prev, 
+                ...prev,
                 { id: Date.now() + 1, text: errorMessage, sender: 'ai' }
             ]);
         } finally {
@@ -479,15 +538,15 @@ export default function GroqChatBot() {
                                     Trợ lý MFILM AI
                                 </h3>
                                 <p className="text-amber-100 text-[11px] truncate">
-                                    {showHistory ? "Lịch sử đoạn chat" : (activeSession?.title || "Đoạn chat mới")}
+                                    {showHistory ? "Lịch sử đoạn chat" : "Trực tuyến"}
                                 </p>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-1 shrink-0">
                             {/* Nút + Chat mới */}
-                            <button 
-                                onClick={handleNewChat} 
+                            <button
+                                onClick={handleNewChat}
                                 title="Tạo đoạn chat mới"
                                 className="flex items-center gap-1 bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-2.5 py-1.5 rounded-full transition-all cursor-pointer shadow-xs active:scale-95"
                             >
@@ -496,18 +555,18 @@ export default function GroqChatBot() {
                             </button>
 
                             {/* Nút Xem lịch sử */}
-                            <button 
-                                onClick={() => setShowHistory(!showHistory)} 
-                                title={showHistory ? "Quay lại đoạn chat" : "Danh sách đoạn chat đã lưu"} 
+                            <button
+                                onClick={() => setShowHistory(!showHistory)}
+                                title={showHistory ? "Quay lại đoạn chat" : "Danh sách đoạn chat đã lưu"}
                                 className={`transition-colors cursor-pointer p-1.5 rounded-full ${showHistory ? 'bg-white text-amber-600 shadow-md font-bold' : 'text-amber-100 hover:text-white hover:bg-white/20'}`}
                             >
                                 <FaHistory className="w-3.5 h-3.5" />
                             </button>
 
                             {/* Nút Đóng chat */}
-                            <button 
-                                onClick={() => setIsChatOpen(false)} 
-                                title="Đóng chat" 
+                            <button
+                                onClick={() => setIsChatOpen(false)}
+                                title="Đóng chat"
                                 className="text-white hover:bg-white/20 transition-colors cursor-pointer p-1.5 rounded-full"
                             >
                                 <FaTimes className="w-4 h-4" />
@@ -524,8 +583,8 @@ export default function GroqChatBot() {
                                         Đoạn chat gần đây ({sessions.length})
                                     </span>
                                     {sessions.length > 1 && (
-                                        <button 
-                                            onClick={handleClearAllSessions} 
+                                        <button
+                                            onClick={handleClearAllSessions}
                                             className="text-xs text-red-400 hover:text-red-300 font-semibold cursor-pointer hover:underline"
                                         >
                                             Xóa tất cả
@@ -538,14 +597,13 @@ export default function GroqChatBot() {
                                         const isActive = sess.id === activeSessionId;
                                         const userMsgCount = (sess.messages || []).filter(m => m.sender === 'user').length;
                                         return (
-                                            <div 
+                                            <div
                                                 key={sess.id}
                                                 onClick={() => handleSelectSession(sess.id)}
-                                                className={`group flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all border ${
-                                                    isActive 
-                                                        ? 'bg-amber-500/20 border-amber-500/40 text-amber-300 shadow-sm' 
+                                                className={`group flex items-center justify-between p-2.5 rounded-xl cursor-pointer transition-all border ${isActive
+                                                        ? 'bg-amber-500/20 border-amber-500/40 text-amber-300 shadow-sm'
                                                         : 'bg-slate-800/80 border-slate-700/60 text-slate-200 hover:bg-slate-700/80 hover:border-slate-600'
-                                                }`}
+                                                    }`}
                                             >
                                                 <div className="flex items-center gap-2.5 min-w-0 flex-1 pr-2">
                                                     <FaRegCommentDots className={`text-base shrink-0 ${isActive ? 'text-amber-400' : 'text-slate-400 group-hover:text-amber-400'}`} />
@@ -559,7 +617,7 @@ export default function GroqChatBot() {
                                                     </div>
                                                 </div>
 
-                                                <button 
+                                                <button
                                                     onClick={(e) => handleDeleteSession(e, sess.id)}
                                                     title="Xóa đoạn chat này"
                                                     className="opacity-60 group-hover:opacity-100 hover:text-red-400 text-slate-400 p-1.5 rounded-lg hover:bg-red-500/10 transition-all cursor-pointer shrink-0"
@@ -572,7 +630,7 @@ export default function GroqChatBot() {
                                 </div>
                             </div>
 
-                            <button 
+                            <button
                                 onClick={handleNewChat}
                                 className="w-full py-2.5 mt-2 bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold text-xs md:text-sm rounded-xl flex items-center justify-center gap-2 shadow-md cursor-pointer transition-transform active:scale-98 shrink-0"
                             >
@@ -585,19 +643,54 @@ export default function GroqChatBot() {
                                 {messages.map((msg) => (
                                     <div key={msg.id} className={`flex items-start gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                                         {msg.sender === 'ai' && (
-                                            <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0 shadow-sm border border-amber-200">
+                                            <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0 shadow-sm border border-amber-200 mt-0.5">
                                                 AI
                                             </div>
                                         )}
-                                        <div className={`max-w-[80%] rounded-2xl p-3.5 shadow-sm text-sm leading-relaxed ${
-                                            msg.sender === 'user' 
-                                                ? 'bg-amber-600 text-white font-medium rounded-tr-none' 
+                                        <div className={`max-w-4/5 rounded-2xl p-3.5 shadow-sm text-sm leading-relaxed ${msg.sender === 'user'
+                                                ? 'bg-amber-600 text-white font-medium rounded-tr-none'
                                                 : 'bg-white text-black border border-gray-100 rounded-tl-none'
-                                        }`}>
-                                            {renderMessage(msg.text, handleLinkClick)}
+                                            }`}>
+                                            {msg.sender === 'user' ? (
+                                                renderMessage(msg.text, handleLinkClick)
+                                            ) : (
+                                                <TypewriterText
+                                                    text={msg.text}
+                                                    isNew={msg.id === lastAiMsgId}
+                                                    onComplete={() => setLastAiMsgId(null)}
+                                                    onLinkClick={handleLinkClick}
+                                                    movies={movies}
+                                                    plans={plans}
+                                                />
+                                            )}
                                         </div>
                                     </div>
                                 ))}
+
+                                {messages.length <= 1 && (
+                                    <div className="flex flex-col gap-2 mt-1 px-1">
+                                        <p className="text-[11px] text-slate-500 font-semibold flex items-center gap-1">
+                                            <span>💡 Gợi ý câu hỏi nhanh:</span>
+                                        </p>
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {[
+                                                { icon: '🍿', text: 'Phim hợp gói của tôi', prompt: 'Phim phù hợp gói của tôi' },
+                                                { icon: '🔥', text: 'Top Anime xem nhiều', prompt: 'Top Anime xem nhiều nhất' },
+                                                { icon: '🎭', text: 'Tâm trạng buồn xem gì?', prompt: 'Tâm trạng buồn, xem gì vui?' },
+                                                { icon: '🎮', text: 'Đố tôi 1 câu về anime', prompt: 'Đố tôi 1 câu về anime' }
+                                            ].map((item, idx) => (
+                                                <button
+                                                    key={idx}
+                                                    onClick={() => handleSend(item.prompt)}
+                                                    className="w-full flex items-center gap-1.5 bg-amber-50/90 hover:bg-amber-100/90 text-amber-900 border border-amber-200/90 px-2.5 py-2 rounded-xl text-[11px] font-semibold transition-all active:scale-95 cursor-pointer text-left shadow-2xs group"
+                                                >
+                                                    <span className="text-sm shrink-0 group-hover:scale-110 transition-transform">{item.icon}</span>
+                                                    <span className="leading-snug line-clamp-1">{item.text}</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
 
                                 {isTyping && (
                                     <div className="flex items-start gap-2.5 justify-start">
@@ -617,14 +710,28 @@ export default function GroqChatBot() {
                             <div className="p-3 bg-white border-t border-gray-100 flex gap-2 items-center">
                                 <input
                                     type="text"
-                                    placeholder="Nhập tin nhắn..."
+                                    placeholder={isListening ? "Đang lắng nghe... hãy nói đi bạn..." : "Nhập tin nhắn hoặc dùng mic..."}
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                                    className="flex-1 border border-gray-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-200 rounded-xl px-4 py-2.5 text-sm text-black outline-none transition-all placeholder:text-gray-400"
+                                    className={`flex-1 border rounded-xl px-4 py-2.5 text-sm text-black outline-none transition-all placeholder:text-gray-400 ${isListening
+                                            ? 'border-red-400 ring-2 ring-red-200 bg-red-50/30'
+                                            : 'border-gray-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-200'
+                                        }`}
                                 />
                                 <button
-                                    onClick={handleSend}
+                                    onClick={handleVoiceInput}
+                                    type="button"
+                                    title={isListening ? "Đang lắng nghe... bấm để dừng" : "Nói câu hỏi của bạn (Giọng nói tiếng Việt)"}
+                                    className={`p-2.5 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center shrink-0 ${isListening
+                                            ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse ring-4 ring-red-200'
+                                            : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-black'
+                                        }`}
+                                >
+                                    {isListening ? <FaStop className="w-4 h-4" /> : <FaMicrophone className="w-4 h-4" />}
+                                </button>
+                                <button
+                                    onClick={() => handleSend()}
                                     disabled={!message.trim() || isTyping}
                                     className="bg-linear-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 disabled:opacity-50 text-white p-2.5 rounded-xl transition-all shadow-md cursor-pointer flex items-center justify-center shrink-0"
                                 >
