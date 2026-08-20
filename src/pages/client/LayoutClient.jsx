@@ -6,7 +6,7 @@ import FooterClient from '../../components/client/footer/FooterClient';
 import LoadingScreen from '../../components/client/loadingScreen/LoadingScreen';
 import GroqChatBot from '../../components/client/chatBot/GroqChatBot';
 // import GeminiChatBot from '../../components/client/chatBot/GeminiChatBot';
-import { useMovies, useEpisodes } from '../../hooks/useCollections';
+import { useMovies } from '../../hooks/useCollections';
 import { autoSyncAllOngoingMovies } from '../../services/autoEpisodeSyncService';
 
 function LayoutClient() {
@@ -15,19 +15,24 @@ function LayoutClient() {
     const scrollMap = useRef({});
     const prevPath = useRef(location.pathname);
     const movies = useMovies() || [];
-    const episodes = useEpisodes() || [];
+    const hasSyncedRef = useRef(false);
 
-    // Tự động kiểm tra và đồng bộ tập mới cho toàn bộ các phim đang chiếu trong database
+    // Tự động kiểm tra và đồng bộ tập mới định kỳ (chỉ chạy khi có danh sách phim)
     useEffect(() => {
-        if (movies.length > 0) {
-            autoSyncAllOngoingMovies(movies, episodes);
-            // Định kỳ kiểm tra ngầm mỗi 30 phút
-            const timer = setInterval(() => {
-                autoSyncAllOngoingMovies(movies, episodes);
-            }, 30 * 60 * 1000);
-            return () => clearInterval(timer);
+        if (movies.length > 0 && !hasSyncedRef.current) {
+            hasSyncedRef.current = true;
+            autoSyncAllOngoingMovies(movies);
         }
-    }, [movies, episodes]);
+
+        // Định kỳ kiểm tra ngầm mỗi 30 phút
+        const timer = setInterval(() => {
+            if (movies.length > 0) {
+                autoSyncAllOngoingMovies(movies);
+            }
+        }, 30 * 60 * 1000);
+
+        return () => clearInterval(timer);
+    }, [movies.length]);
 
     useEffect(() => {
         const handleScroll = () => {

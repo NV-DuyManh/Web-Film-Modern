@@ -2,14 +2,27 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlay, FaInfoCircle } from 'react-icons/fa';
 
-export const STOP_WORDS = new Set(['phim', 'bo', 'tap', 'xem', 'mo', 'cho', 'toi', 'co', 'nay', 'va', 'la', 'nhung', 'cac', 'the', 'nhan', 'vat', 'dien', 'vien', 'tac', 'gia', 'dao', 'dien']);
+export const STOP_WORDS = new Set([
+    'phim', 'bo', 'tap', 'xem', 'mo', 'cho', 'toi', 'co', 'nay', 'va', 'la', 'nhung', 'cac', 'the',
+    'nhan', 'vat', 'dien', 'vien', 'tac', 'gia', 'dao', 'dien', 'k', 'ko', 'khong', 'chua', 'nao',
+    'nhi', 'nhe', 'a', 'ha', 'tim', 'kiem', 'muon', 'can', 'hoi', 've', 'co phai', 'hay khong', 'voi',
+    'gi', 'trong', 'duoc', 'o', 'tai', 'website', 'mfilm', 'app'
+]);
 
-export const normalizeTokens = (str) => {
-    return String(str || '')
-        .toLowerCase()
-        .replace(/đ/g, 'd')
+export const searchTV = (str) => {
+    if (!str) return '';
+    return str
+        .toString()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .replace(/Đ/g, 'D')
+        .toLowerCase()
+        .trim();
+};
+
+export const normalizeTokens = (str) => {
+    return searchTV(str)
         .replace(/[^a-z0-9\s]/g, ' ')
         .split(/\s+/)
         .filter(t => t.length > 0 && !STOP_WORDS.has(t));
@@ -60,8 +73,8 @@ export const levenshtein = (a, b) => {
  */
 export const isFuzzyMatch = (searchTerm, targetStr) => {
     if (!searchTerm || !targetStr) return false;
-    const s1 = normalizeTokens(searchTerm).join(' ');
-    const s2 = normalizeTokens(targetStr).join(' ');
+    const s1 = searchTV(searchTerm);
+    const s2 = searchTV(targetStr);
     if (!s1 || !s2) return false;
 
     if (s2.includes(s1) || s1.includes(s2)) return true;
@@ -70,12 +83,10 @@ export const isFuzzyMatch = (searchTerm, targetStr) => {
     const s2Tokens = normalizeTokens(targetStr);
 
     for (const t1 of s1Tokens) {
-        if (t1.length < 3) {
-            if (s2Tokens.includes(t1)) return true;
-            continue;
-        }
+        if (t1.length < 3) continue;
         for (const t2 of s2Tokens) {
-            if (t2.includes(t1) || t1.includes(t2)) return true;
+            if (t2.length < 3) continue;
+            if (t2 === t1) return true;
             const maxDist = t1.length >= 6 ? 2 : 1;
             if (Math.abs(t1.length - t2.length) <= maxDist) {
                 const dist = levenshtein(t1, t2);
@@ -97,81 +108,38 @@ export const findTargetMovie = (query, movies = [], characters = [], actors = []
     let target = movies.find(m => m.slug === clean || m.id === clean);
     if (target) return target;
 
-    // 2. Tách tokens từ query
-    let queryTokens = normalizeTokens(clean);
-    if (queryTokens.length === 0) {
-        queryTokens = String(clean).toLowerCase().replace(/đ/g, 'd').normalize('NFD').replace(/[\u0300-\u036f]/g, '').split(/\s+/).filter(Boolean);
-    }
-    if (queryTokens.length === 0) return null;
+    const cleanKw = searchTV(clean)
+        .replace(/\b(co phim|tim phim|phim|bo phim|xem phim|hoat hinh|anime|co|khong|k|ko|chua|nao|nhe|nhi|a|ha|voi|ve|cho toi|giup toi)\b/gi, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
 
-    // 3. Chấm điểm độ khớp
+    if (!cleanKw) return null;
+
+    // 2. Tìm phim khớp nhất
     let bestMovie = null;
     let highestScore = 0;
 
     for (const m of movies) {
-        const otherTokens = normalizeTokens(m.otherName);
-        const nameTokens = normalizeTokens(m.name);
-        const slugTokens = normalizeTokens(m.slug);
-
-        const mCharIds = m.character || m.characters || m.listCharacter || [];
-        const charNames = (characters || []).filter(c => mCharIds.includes(c.id)).map(c => c.name);
-        const charTokens = normalizeTokens(charNames.join(' '));
-
-        const mActorIds = m.actor || m.actors || m.listActor || [];
-        const actorNames = (actors || []).filter(a => mActorIds.includes(a.id)).map(a => a.name);
-        const actorTokens = normalizeTokens(actorNames.join(' '));
-
-        const mAuthorIds = m.listAuthor || (m.author ? [m.author] : []);
-        const authorNames = (authors || []).filter(a => mAuthorIds.includes(a.id) || m.author === a.id).map(a => a.name);
-        const authorTokens = normalizeTokens(authorNames.join(' '));
+        const mName = searchTV(m.name || '');
+        const mOther = searchTV(m.otherName || '');
+        const mSlug = searchTV(m.slug || '');
 
         let score = 0;
-        let matchedQueryTokens = 0;
-
-        for (const qToken of queryTokens) {
-            let tokenMatched = false;
-
-            if (otherTokens.includes(qToken)) {
-                score += 100;
-                tokenMatched = true;
-            } else if (otherTokens.some(t => t.startsWith(qToken) && qToken.length >= 2)) {
-                score += 50;
-                tokenMatched = true;
-            } else if (nameTokens.includes(qToken) || slugTokens.includes(qToken)) {
-                score += 30;
-                tokenMatched = true;
-            } else if (slugTokens.some(t => t.startsWith(qToken) && qToken.length >= 2)) {
-                score += 15;
-                tokenMatched = true;
-            } else if (charTokens.includes(qToken) || charTokens.some(t => isFuzzyMatch(qToken, t))) {
-                score += 90;
-                tokenMatched = true;
-            } else if (actorTokens.includes(qToken) || actorTokens.some(t => isFuzzyMatch(qToken, t))) {
-                score += 70;
-                tokenMatched = true;
-            } else if (authorTokens.includes(qToken) || authorTokens.some(t => isFuzzyMatch(qToken, t))) {
-                score += 50;
-                tokenMatched = true;
-            } else if (otherTokens.some(t => isFuzzyMatch(qToken, t))) {
-                score += 40;
-                tokenMatched = true;
-            }
-
-            if (tokenMatched) matchedQueryTokens++;
+        if (mOther === cleanKw || mName === cleanKw || mSlug === cleanKw) {
+            score += 1000;
+        } else if (mOther.startsWith(cleanKw) || mName.startsWith(cleanKw)) {
+            score += 500;
+        } else if (mOther.includes(cleanKw) || mName.includes(cleanKw) || mSlug.includes(cleanKw)) {
+            score += 300;
         }
 
-        if (matchedQueryTokens >= Math.ceil(queryTokens.length / 2)) {
-            if (matchedQueryTokens === queryTokens.length) {
-                score += 200;
-            }
-            if (score > highestScore) {
-                highestScore = score;
-                bestMovie = m;
-            }
+        if (score > highestScore) {
+            highestScore = score;
+            bestMovie = m;
         }
     }
 
-    return highestScore >= 70 ? bestMovie : null;
+    return highestScore >= 300 ? bestMovie : null;
 };
 
 /**
@@ -265,13 +233,35 @@ export const buildSystemInstruction = ({
 LUÔN TRẢ LỜI BẰNG TIẾNG VIỆT 100%.
 
 QUY TẮC CỐT LÕI:
-1. CHỈ TRẢ LỜI PHIM CÓ TRÊN MFILM: Khi gợi ý/nhắc phim, BẮT BUỘC dùng cú pháp: [Tên Phim](/phim/slug-chinh-xac).
-2. THỐNG KÊ MFILM: Tổng số phim: ${totalMovies} (Free: ${freeMoviesCount}, Có phí: ${paidMoviesCount}). Tổng số tập phim toàn web: ${totalEpisodes} tập.
+1. CHỈ GIỚI THIỆU PHIM CÓ TRÊN MFILM & ĐÚNG TỪ KHÓA:
+   - Khi người dùng hỏi về một phim/series (ví dụ: "có phim slime không", "tìm phim naruto", "conan"...), BẮT BUỘC dùng tool \`tra_cuu_phim\` để tra cứu dữ liệu thực tế.
+   - CHỈ nhắc đến và đề xuất ĐÚNG các bộ/phần phim mà tool \`tra_cuu_phim\` trả về.
+   - TUYỆT ĐỐI KHÔNG tự bịa hoặc chèn thêm các bộ phim không liên quan.
+   - Khi gợi ý/nhắc phim, BẮT BUỘC dùng cú pháp: [Tên Phim](/phim/slug-chinh-xac).
+2. XỬ LÝ PHIM CÓ NHIỀU PHẦN/MÙA (FRANCHISE):
+   - Trên hệ thống MFILM, mỗi phần/mùa phim (Phần 1, Phần 2, Phần 3, Phần 4, Movie, Ngoại truyện...) được lưu thành 1 BỘ PHIM RIÊNG BIỆT.
+   - Khi người dùng hỏi về một series/phim có nhiều phần, hãy LIỆT KÊ ĐẦY ĐỦ TẤT CẢ CÁC PHẦN mà hệ thống tìm thấy theo đúng thứ tự (Phần 1, Phần 2, Phần 3, Phần 4...), cung cấp link và thông tin chi tiết từng phần để người dùng dễ chọn xem.
+3. SỐ LƯỢNG ĐỀ XUẤT PHIM (QUY TẮC CHIA ĐỢT TỐI ĐA 5 PHIM / LẦN):
+   - MỖI LẦN TRẢ LỜI CHỈ GỬI TỐI ĐA 5 BỘ PHIM để giao diện chat luôn gọn gàng, đẹp mắt và không bị đứt đoạn token.
+   - KHI NGƯỜI DÙNG YÊU CẦU SỐ LƯỢNG LỚN (ví dụ: "100 phim", "top 20", "50 phim"...):
+     + Hãy giải thích thân thiện: "Danh sách [N] phim khá dài có thể làm rối khung chat nè. Mình xin phép gửi trước 5 bộ phim tiêu biểu nhất nhé! Bạn có thể bấm nút **Xem tiếp** bên dưới hoặc nhắn *tiếp* nha! 🍿"
+     + Sau đó hiển thị đúng 5 phim do tool \`tra_cuu_phim\` trả về.
+   - KHI NGƯỜI DÙNG YÊU CẦU SỐ LƯỢNG NHỎ (từ 1 đến 5 phim): Gửi đúng số lượng phim được yêu cầu.
+   - KHI TÌM SERIES NHIỀU PHẦN (như Slime, Naruto...): Liệt kê đầy đủ tất cả các phần của series mà hệ thống tìm thấy.
+4. XỬ LÝ KHI NGƯỜI DÙNG BẢO "TIẾP", "THÊM", "CÒN NỮA KHÔNG", "XEM TIẾP":
+   - Khi người dùng muốn xem tiếp danh sách, gọi tool \`tra_cuu_phim\` với xem_tiep=true.
+   - Đề xuất 5 bộ phim TIẾP THEO từ kết quả tra cứu, TUYỆT ĐỐI KHÔNG lặp lại các phim đã giới thiệu ở các tin nhắn phía trên.
+5. THỐNG KÊ MFILM: Tổng số phim: ${totalMovies} (Free: ${freeMoviesCount}, Có phí: ${paidMoviesCount}). Tổng số tập phim toàn web: ${totalEpisodes} tập.
 ${planBreakdown}
-3. TRA CỨU PHIM & NHÂN VẬT: Khi người dùng hỏi về series, nhân vật, tác giả, diễn viên hoặc danh sách phim theo gói, BẮT BUỘC dùng tool \`tra_cuu_phim\` để lấy dữ liệu chính xác.
-4. GÓI CỦA USER: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Nếu Level > 0, gợi ý phim phù hợp quyền hạn (Level <= ${planLevel}). Nếu Free (Level 0), gợi ý phim Free và mời [Nâng Cấp Gói VIP](/upgrade).
-5. GIAO TIẾP: Lễ phép, duyên dáng, thân thiện, dùng emoji 🍿🎬✨. TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Dùng gạch đầu dòng (-) hoặc chấm tròn (•).
-6. ĐIỀU KHIỂN WEB: Dùng tool \`dieu_khien_website\` khi người dùng yêu cầu mở phim, tìm kiếm, đăng nhập hoặc nâng cấp VIP.
+6. GÓI CỦA USER: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Nếu Level > 0, gợi ý phim phù hợp quyền hạn (Level <= ${planLevel}). Nếu Free (Level 0), gợi ý phim Free và mời [Nâng Cấp Gói VIP](/upgrade).
+7. GIAO TIẾP: Lễ phép, duyên dáng, thân thiện, dùng emoji 🍿🎬✨. TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Dùng gạch đầu dòng (-) hoặc chấm tròn (•).
+8. ĐIỀU KHIỂN WEB: Dùng tool \`dieu_khien_website\` khi người dùng yêu cầu mở phim, tìm kiếm, đăng nhập hoặc nâng cấp VIP.
+9. PHÂN BIỆT CÂU HỎI TRẢ LỜI ĐƠN LẺ VS DANH SÁCH GỢI Ý:
+   - KHI NGƯỜI DÙNG HỎI CÂU HỎI ĐƠN LẺ (ví dụ: "phim nào nhiều tập nhất?", "phim này do ai đóng?", "nội dung phim X", "phim này chiếu năm nào?"):
+     + Hãy trả lời trực tiếp, chính xác thông tin bộ phim đó.
+     + TUYỆT ĐỐI KHÔNG tự chèn thêm câu "nếu cần thêm gợi ý hãy nhắn tiếp" hay mở luồng xem tiếp khi người dùng không yêu cầu danh sách gợi ý.
+   - KHI NGƯỜI DÙNG YÊU CẦU DANH SÁCH / GỢI Ý NHIỀU PHIM (ví dụ: "gợi ý phim hay", "top 5 phim", "phim hành động hot", hoặc bấm "Xem tiếp"):
+     + Gợi ý danh sách các bộ phim kèm thông tin chi tiết.
 
 [DANH SÁCH PHIM TIÊU BIỂU TRÊN MFILM]:
 ${movieCatalog}${currentMovieContext}${userContext}`;
@@ -303,12 +293,12 @@ export const executeWebsiteControl = ({ args = {}, movies = [], characters = [],
                 replyText = `Đã mở trang chi tiết phim **${movieTitle}** cho bạn!`;
             }
         } else {
-            const cleanSearch = normalizeTokens(rawQuery).join(' ') || rawQuery;
+            const cleanSearch = searchTV(rawQuery);
             window.dispatchEvent(new CustomEvent('OPEN_SEARCH', { detail: cleanSearch }));
             replyText = `Đã tìm kiếm từ khóa "${cleanSearch}" cho bạn!`;
         }
     } else if (args.action === 'search' && args.searchQuery) {
-        const cleanSearch = normalizeTokens(args.searchQuery).join(' ') || args.searchQuery;
+        const cleanSearch = searchTV(args.searchQuery);
         window.dispatchEvent(new CustomEvent('OPEN_SEARCH', { detail: cleanSearch }));
         replyText = `Đã mở tìm kiếm với từ khóa: ${cleanSearch}`;
     } else if (args.action === 'open_login') {
@@ -323,6 +313,26 @@ export const executeWebsiteControl = ({ args = {}, movies = [], characters = [],
 };
 
 /**
+ * Trích xuất thứ tự phần / mùa phim (Season 1, Phần 4, Movie...) để sắp xếp tự nhiên theo franchise
+ */
+export const extractPartOrder = (movie) => {
+    const title = `${movie.otherName || ''} ${movie.name || ''} ${movie.slug || ''}`.toLowerCase();
+    
+    // Tìm các mẫu như "(Phần 4)", "Phần 2", "Season 3", "SS4", "P4"
+    const partMatch = title.match(/(?:phan|season|ss|p\.?)\s*(\d+)/i);
+    if (partMatch) {
+        return Number(partMatch[1]);
+    }
+    // Nếu là movie, ngoại truyện, OVA -> cho đứng sau các phần chính
+    if (/(?:movie|dien anh|chieu rap|special|ova|ngoai truyen)/i.test(title)) {
+        return 990;
+    }
+    // Nếu không ghi phần (thường là Phần 1 ban đầu)
+    const year = Number(movie.releaseYear || movie.year || 0);
+    return year > 0 ? (year / 10000) : 1;
+};
+
+/**
  * Xử lý tra cứu dữ liệu phim khi AI gọi tool tra_cuu_phim
  */
 export const executeMovieLookup = ({ 
@@ -333,10 +343,33 @@ export const executeMovieLookup = ({
     characters = [], 
     categories = [], 
     plans = [],
-    userPlanInfo = { name: 'FREE', level: 0 }
+    userPlanInfo = { name: 'FREE', level: 0 },
+    excludeSlugs = [],
+    rawUserQuery = ''
 }) => {
     let filtered = [...movies];
 
+    const cleanUserQuery = searchTV(rawUserQuery || args.tu_khoa || '');
+    const isPagingNext = Boolean(
+        args.xem_tiep || 
+        args.loai_tru_phim_da_xem || 
+        /\b(tiep|tiep tuc|them|nua|con nua khong|con khong|xem tiep|goi y tiep|khac|phim khac|5 phim nua)\b/i.test(cleanUserQuery)
+    );
+
+    const slugsToExclude = new Set(
+        (Array.isArray(excludeSlugs) ? excludeSlugs : []).map(s => String(s).toLowerCase().trim())
+    );
+
+    // Nếu người dùng yêu cầu xem tiếp / thêm phim khác, loại trừ các phim đã từng xuất hiện
+    if (slugsToExclude.size > 0 && isPagingNext) {
+        filtered = filtered.filter(m => {
+            const mSlug = String(m.slug || '').toLowerCase().trim();
+            const mId = String(m.id || '').toLowerCase().trim();
+            return !slugsToExclude.has(mSlug) && !slugsToExclude.has(mId);
+        });
+    }
+
+    // Lọc theo gói cước
     if (args.loai_phi === 'user_plan' || args.phu_hop_goi_user) {
         const userLevel = Number(userPlanInfo?.level) || 0;
         filtered = filtered.filter(m => {
@@ -349,11 +382,12 @@ export const executeMovieLookup = ({
         filtered = filtered.filter(m => !getMoviePlanInfo(m, plans).isFree);
     }
 
+    // Lọc theo thể loại nếu có
     if (args.the_loai) {
-        const catKw = normalizeTokens(args.the_loai).join(' ').toLowerCase();
+        const cleanCat = searchTV(args.the_loai).trim();
         const matchedCats = categories.filter(c => {
-            const cName = normalizeTokens(c.name).join(' ').toLowerCase();
-            return cName.includes(catKw) || catKw.includes(cName) || isFuzzyMatch(catKw, cName);
+            const cName = searchTV(c.name || '').trim();
+            return cName.includes(cleanCat) || cleanCat.includes(cName);
         });
         const matchedCatIds = matchedCats.map(c => String(c.id));
         
@@ -365,89 +399,212 @@ export const executeMovieLookup = ({
         }
     }
 
+    // Lọc theo quốc gia nếu có
     if (args.quoc_gia) {
-        const countryKw = String(args.quoc_gia).toLowerCase();
+        const countryKw = searchTV(args.quoc_gia).trim();
         filtered = filtered.filter(m => 
-            (m.country && m.country.toLowerCase().includes(countryKw)) ||
-            (m.countriesID && String(m.countriesID).toLowerCase().includes(countryKw))
+            (m.country && searchTV(m.country).includes(countryKw)) ||
+            (m.countriesID && searchTV(String(m.countriesID)).includes(countryKw))
         );
     }
 
-    // Các từ khóa tìm kiếm: nhan_vat, dien_vien, tac_gia, tu_khoa
+    // Danh sách từ khóa tìm kiếm: tu_khoa, nhan_vat, dien_vien, tac_gia
     const searchTerms = [
+        args.tu_khoa,
         args.nhan_vat,
         args.dien_vien,
-        args.tac_gia,
-        args.tu_khoa
+        args.tac_gia
     ].filter(Boolean);
 
     const GENERIC_RECOMMEND_INTENTS = new Set([
         'hay', 'hot', 'moi', 'top', 'de xuat', 'goi y', 'phim hay', 'phim hot', 'phim moi', 
-        'thinh hanh', 'xem nhieu', 'xem gi', 'chieu rap', 'phim', 'bo phim', 'phim gi', 'k ban', 'k', 'co phim nao hay',
-        'goi hien tai', 'goi cua toi', 'phu hop voi goi', 'phu hop voi goi hien tai'
+        'thinh hanh', 'xem nhieu', 'xem gi', 'chieu rap', 'phim', 'bo phim', 'phim gi',
+        'goi hien tai', 'goi cua toi', 'phu hop voi goi', 'phu hop voi goi hien tai',
+        'tiep', 'tiep tuc', 'them', 'nua', 'con nua khong', 'con khong', 'xem tiep',
+        'nhieu tap nhat', 'dai tap nhat', 'dai nhat', 'nhieu tap', 'so tap nhieu nhat',
+        'it tap nhat', 'ngan tap nhat', 'ngan nhat', 'it tap', 'so tap it nhat',
+        'moi nhat', 'cu nhat', 'xem nhieu nhat', 'hot nhat', 'nhieu view nhat', 'top view'
     ]);
 
+    // Nhận diện các ý định sắp xếp đặc biệt
+    const isMostEpisodes = /\b(nhieu tap nhat|dai tap nhat|so tap nhieu nhat|nhieu tap|dai tap|dai nhat|nhieu tap nhat web|nhieu tap nhat he thong)\b/i.test(cleanUserQuery) || args.sap_xep === 'nhieu_tap_nhat';
+    const isLeastEpisodes = /\b(it tap nhat|ngan tap nhat|ngan nhat|it tap|so tap it nhat)\b/i.test(cleanUserQuery) || args.sap_xep === 'it_tap_nhat';
+    const isNewest = /\b(moi nhat|moi ra|moi phat hanh|nam moi nhat)\b/i.test(cleanUserQuery) || args.sap_xep === 'moi_nhat';
+    const isOldest = /\b(cu nhat|lau doi nhat|xua nhat|nam cu nhat)\b/i.test(cleanUserQuery) || args.sap_xep === 'cu_nhat';
+    const isMostViewed = /\b(xem nhieu nhat|nhieu view nhat|hot nhat|top view|thinh hanh nhat)\b/i.test(cleanUserQuery) || args.sap_xep === 'xem_nhieu_nhat';
+
+    // Nhận diện câu hỏi đơn lẻ (không phải yêu cầu danh sách gợi ý phim)
+    const isSingleQuestion = (
+        /\b(phim nao|bo nao|cai nao|ai la|co phai|la gi|bao nhieu tap|may tap|chieu nam nao|dao dien la ai)\b/i.test(cleanUserQuery) &&
+        !/\b(top|danh sach|goi y|cac phim|nhung phim|nhieu phim)\b/i.test(cleanUserQuery)
+    );
+
+    let isSpecificSearch = false;
+
     for (const rawKw of searchTerms) {
-        const lowerKw = String(rawKw).toLowerCase().trim();
-        if (['premium', 'prenium', 'vip', 'basic', 'plus', 'co phi', 'tra phi'].includes(lowerKw)) {
+        let cleanKw = searchTV(rawKw)
+            .replace(/\b(co phim|tim phim|phim|bo phim|xem phim|hoat hinh|anime|co|khong|k|ko|chua|nao|nhe|nhi|a|ha|voi|ve|cho toi|giup toi)\b/gi, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        if (!cleanKw || GENERIC_RECOMMEND_INTENTS.has(cleanKw)) {
+            continue;
+        }
+
+        // Bỏ qua các từ chỉ tiêu chí sắp xếp để không nhầm sang tìm tên phim
+        if (isMostEpisodes || isLeastEpisodes || isNewest || isOldest || isMostViewed) {
+            cleanKw = cleanKw
+                .replace(/\b(nhieu tap nhat|dai tap nhat|so tap nhieu nhat|nhieu tap|dai tap|dai nhat|it tap nhat|ngan tap nhat|ngan nhat|it tap|moi nhat|cu nhat|xem nhieu nhat|hot nhat|nhieu view nhat|top view|nhat|nhieu|it|moi|cu)\b/gi, ' ')
+                .trim();
+            if (!cleanKw) continue;
+        }
+
+        if (['premium', 'prenium', 'vip', 'basic', 'plus', 'co phi', 'tra phi'].includes(cleanKw)) {
             filtered = filtered.filter(m => !getMoviePlanInfo(m, plans).isFree);
             continue;
-        } else if (['free', 'mien phi'].includes(lowerKw)) {
+        } else if (['free', 'mien phi'].includes(cleanKw)) {
             filtered = filtered.filter(m => getMoviePlanInfo(m, plans).isFree);
             continue;
-        } else if (lowerKw.includes('goi cua toi') || lowerKw.includes('phu hop voi goi')) {
+        } else if (cleanKw.includes('goi cua toi') || cleanKw.includes('phu hop voi goi')) {
             const userLevel = Number(userPlanInfo?.level) || 0;
             filtered = filtered.filter(m => getMoviePlanInfo(m, plans).level <= userLevel);
             continue;
         }
 
-        const kwTokens = normalizeTokens(rawKw);
+        isSpecificSearch = true;
+        const kwTokens = cleanKw.split(/\s+/).filter(t => t.length >= 2 && !STOP_WORDS.has(t));
 
-        // Nếu từ khóa chỉ là ý định xin gợi ý phim hay / phim hot / đề xuất -> không lọc theo chuỗi cứng mà giữ lại phim để sort theo views
-        if (GENERIC_RECOMMEND_INTENTS.has(lowerKw) || kwTokens.length === 0 || kwTokens.every(t => ['hay', 'hot', 'moi', 'top'].includes(t))) {
-            continue;
-        }
+        // Chấm điểm từng bộ phim theo độ liên quan chính xác
+        const scoredMovies = [];
 
-        filtered = filtered.filter(m => {
-            const mName = String(m.name || '');
-            const mOther = String(m.otherName || '');
-            const mDesc = String(m.description || '');
+        for (const m of filtered) {
+            const mName = searchTV(m.name || '');
+            const mOther = searchTV(m.otherName || '');
+            const mSlug = searchTV(m.slug || '');
+            const mDesc = searchTV(m.description || '');
 
             const mCharIds = m.character || m.characters || m.listCharacter || [];
-            const charNames = characters.filter(c => mCharIds.includes(c.id) || (typeof c === 'object' && mCharIds.includes(c))).map(c => c.name);
+            const charNames = characters.filter(c => mCharIds.includes(c.id) || (typeof c === 'object' && mCharIds.includes(c))).map(c => searchTV(c.name || ''));
 
             const mActorIds = m.actor || m.actors || m.listActor || [];
-            const actorNames = actors.filter(a => mActorIds.includes(a.id) || (typeof a === 'object' && mActorIds.includes(a))).map(a => a.name);
+            const actorNames = actors.filter(a => mActorIds.includes(a.id) || (typeof a === 'object' && mActorIds.includes(a))).map(a => searchTV(a.name || ''));
 
             const mAuthorIds = m.listAuthor || (m.author ? [m.author] : []);
-            const authorNames = authors.filter(a => mAuthorIds.includes(a.id) || m.author === a.id).map(a => a.name);
+            const authorNames = authors.filter(a => mAuthorIds.includes(a.id) || m.author === a.id).map(a => searchTV(a.name || ''));
 
-            // 1. Direct contains check
-            const allText = [mName, mOther, mDesc, ...charNames, ...actorNames, ...authorNames].join(' ').toLowerCase();
-            if (allText.includes(lowerKw)) return true;
+            let score = 0;
 
-            // 2. Token overlap check
-            if (kwTokens.length > 0 && kwTokens.some(t => allText.includes(t))) return true;
+            // 1. Khớp cụm từ khóa nguyên vẹn trong Tiêu đề (Ưu tiên tuyệt đối cao nhất)
+            if (mOther.includes(cleanKw) || mName.includes(cleanKw) || mSlug.includes(cleanKw)) {
+                score += 1000;
+            }
 
-            // 3. Fuzzy typo check for each target
-            if (isFuzzyMatch(rawKw, mOther) || isFuzzyMatch(rawKw, mName)) return true;
-            if (charNames.some(cName => isFuzzyMatch(rawKw, cName))) return true;
-            if (actorNames.some(aName => isFuzzyMatch(rawKw, aName))) return true;
-            if (authorNames.some(auName => isFuzzyMatch(rawKw, auName))) return true;
+            // 2. Khớp từng token trong Tiêu đề
+            let matchedTokensCount = 0;
+            for (const token of kwTokens) {
+                if (mOther.includes(token) || mName.includes(token) || mSlug.includes(token)) {
+                    score += 150;
+                    matchedTokensCount++;
+                }
+            }
 
-            return false;
-        });
+            // Nếu khớp toàn bộ các từ của cụm tìm kiếm trong tiêu đề
+            if (kwTokens.length > 1 && matchedTokensCount === kwTokens.length) {
+                score += 500;
+            }
+
+            // 3. Khớp nhân vật
+            if (charNames.some(c => c.includes(cleanKw) || kwTokens.some(t => t.length >= 3 && c.includes(t)))) {
+                score += 800;
+            }
+
+            // 4. Khớp diễn viên / tác giả
+            if (actorNames.some(a => a.includes(cleanKw)) || authorNames.some(au => au.includes(cleanKw))) {
+                score += 600;
+            }
+
+            // 5. Khớp trong mô tả chỉ khi từ khóa dài và khớp trọn vẹn
+            if (cleanKw.length >= 4 && mDesc.includes(cleanKw)) {
+                score += 100;
+            }
+
+            if (score > 0) {
+                scoredMovies.push({
+                    movie: m,
+                    score,
+                    partOrder: extractPartOrder(m)
+                });
+            }
+        }
+
+        // Chỉ giữ lại những phim THỰC SỰ có điểm liên quan
+        if (scoredMovies.length > 0) {
+            scoredMovies.sort((a, b) => {
+                if (Math.abs(a.score - b.score) <= 300) {
+                    return a.partOrder - b.partOrder;
+                }
+                return b.score - a.score;
+            });
+            filtered = scoredMovies.map(item => item.movie);
+        } else {
+            filtered = [];
+        }
     }
-    
-    filtered.sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0));
-    const resultList = filtered.length > 0 ? filtered.slice(0, 6) : [];
+
+    // Sắp xếp danh sách phim theo tiêu chí
+    if (isMostEpisodes) {
+        filtered.sort((a, b) => {
+            const epA = Number(a.endEpisode) || Number(a.totalEpisodes) || 1;
+            const epB = Number(b.endEpisode) || Number(b.totalEpisodes) || 1;
+            return epB - epA;
+        });
+    } else if (isLeastEpisodes) {
+        filtered.sort((a, b) => {
+            const epA = Number(a.endEpisode) || Number(a.totalEpisodes) || 1;
+            const epB = Number(b.endEpisode) || Number(b.totalEpisodes) || 1;
+            return epA - epB;
+        });
+    } else if (isNewest) {
+        filtered.sort((a, b) => (Number(b.releaseYear || b.year) || 0) - (Number(a.releaseYear || a.year) || 0));
+    } else if (isOldest) {
+        filtered.sort((a, b) => (Number(a.releaseYear || a.year) || 9999) - (Number(b.releaseYear || b.year) || 9999));
+    } else if (!isSpecificSearch) {
+        filtered.sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0));
+    }
+
+    // Tính toán số lượng cần lấy:
+    let requestedLimit = null;
+    if (args.so_luong && Number(args.so_luong) > 0) {
+        requestedLimit = Number(args.so_luong);
+    } else {
+        const countMatch = cleanUserQuery.match(/(?:top|goi y|cho|lay|xem|danh sach|tim)?\s*(\d+)\s*(?:phim|bo phim|bo|anime|series)/i)
+            || cleanUserQuery.match(/(\d+)\s*(?:phim|bo phim|bo|anime|series)/i)
+            || cleanUserQuery.match(/top\s*(\d+)/i);
+        if (countMatch && Number(countMatch[1]) > 0) {
+            requestedLimit = Number(countMatch[1]);
+        }
+    }
+
+    // Xác định số lượng phản hồi
+    let limit = 5;
+    if (isSingleQuestion && !requestedLimit) {
+        limit = 1;
+    } else if (requestedLimit && requestedLimit > 0 && requestedLimit <= 5) {
+        limit = requestedLimit;
+    } else if (isSpecificSearch && !requestedLimit) {
+        limit = Math.min(filtered.length, 5);
+    }
+
+    const resultList = filtered.slice(0, limit);
 
     if (resultList.length === 0) {
+        if (slugsToExclude.size > 0 && isPagingNext) {
+            return "Đã hiển thị hết tất cả các bộ phim phù hợp với tiêu chí này trên MFILM rồi bạn nhé! Bạn có thể thử tìm kiếm theo thể loại hoặc từ khóa khác.";
+        }
         return "Không tìm thấy bộ phim nào phù hợp với yêu cầu.";
     }
 
-    const totalFound = filtered.length;
-    const totalEpsFound = filtered.reduce((sum, m) => sum + (Number(m.endEpisode) || Number(m.totalEpisodes) || 1), 0);
+    const totalRemaining = Math.max(0, filtered.length - resultList.length);
 
     const topMatches = resultList.map((m, idx) => {
         const planInfo = getMoviePlanInfo(m, plans);
@@ -461,7 +618,16 @@ export const executeMovieLookup = ({
         return `Phần/Phim ${idx + 1}: [${m.otherName || m.name}](/phim/${m.slug || m.id}) | Số tập: ${epStr} | Gói xem: ${feeStr} | Thể loại: ${catNames} | Nhân vật: ${charNames} | Lượt xem: ${(Number(m.views) || 0) + 100} | Năm: ${m.releaseYear || m.year || ''}`;
     }).join('\n');
 
-    return `Tìm thấy ${totalFound} bộ/phần phim liên quan trên hệ thống MFILM (Tổng cộng: ${totalEpsFound} tập phim):\n${topMatches}`;
+    let noteMessage = '';
+    if (!isSingleQuestion) {
+        if (requestedLimit && requestedLimit > 5) {
+            noteMessage = ` (Do yêu cầu ${requestedLimit} phim khá dài nên mình gửi trước 5 phim, bạn có thể bấm nút **Xem tiếp** bên dưới hoặc nhắn "tiếp" nhé! 🍿)`;
+        } else if (totalRemaining > 0 && (isPagingNext || (requestedLimit && requestedLimit > 1) || (!isSpecificSearch && limit > 1))) {
+            noteMessage = ` (còn ${totalRemaining} phim khác, bạn có thể bấm nút **Xem tiếp** bên dưới hoặc nhắn "tiếp")`;
+        }
+    }
+
+    return `Kết quả ${resultList.length} phim phù hợp${noteMessage}:\n${topMatches}`;
 };
 
 /**
@@ -825,7 +991,10 @@ export const GROQ_TOOLS = [
                     the_loai: { type: "string", description: "Thể loại phim" },
                     quoc_gia: { type: "string", description: "Quốc gia" },
                     loai_phi: { type: "string", description: "Lọc phim: 'free' (chỉ phim miễn phí), 'paid' (chỉ phim có phí), 'user_plan' (chỉ phim phù hợp gói cước hiện tại của người dùng)" },
-                    phu_hop_goi_user: { type: "boolean", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại của họ" }
+                    phu_hop_goi_user: { type: "boolean", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại của họ" },
+                    sap_xep: { type: "string", enum: ["nhieu_tap_nhat", "it_tap_nhat", "moi_nhat", "cu_nhat", "xem_nhieu_nhat"], description: "Tiêu chí sắp xếp: 'nhieu_tap_nhat' (khi hỏi phim nhiều tập nhất/dài nhất), 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
+                    xem_tiep: { type: "boolean", description: "Đặt là true khi người dùng muốn xem tiếp hoặc gợi ý thêm 5 phim khác trong danh sách (loại trừ các phim đã hiển thị trước đó)" },
+                    so_luong: { type: "number", description: "Số lượng phim cần lấy (khi người dùng yêu cầu số lượng cụ thể như top 10, top 20, 3 phim...). Mặc định là 5." }
                 }
             }
         }
@@ -881,7 +1050,10 @@ export const GEMINI_TOOLS = [
                         the_loai: { type: "STRING", description: "Thể loại phim" },
                         quoc_gia: { type: "STRING", description: "Quốc gia" },
                         loai_phi: { type: "STRING", description: "Lọc phim: 'free', 'paid', 'user_plan'" },
-                        phu_hop_goi_user: { type: "BOOLEAN", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại của họ" }
+                        phu_hop_goi_user: { type: "BOOLEAN", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại của họ" },
+                        sap_xep: { type: "STRING", description: "Tiêu chí sắp xếp: 'nhieu_tap_nhat', 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
+                        xem_tiep: { type: "BOOLEAN", description: "Đặt là true khi người dùng muốn xem tiếp hoặc gợi ý thêm 5 phim khác trong danh sách" },
+                        so_luong: { type: "NUMBER", description: "Số lượng phim cần lấy (khi người dùng yêu cầu số lượng cụ thể như top 10, top 20, 3 phim...)" }
                     }
                 }
             }

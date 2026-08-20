@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { useMovies, useAuthors, useActors, useCharacters, useCategories, useComments, useReviews, useSubscriptions, useEpisodes } from '../../../hooks/useCollections';
+import { useMovies, useAuthors, useActors, useCharacters, useCategories, useComments, useReviews, useSubscriptions } from '../../../hooks/useCollections';
 import { getUserPlanInfo } from '../../../utils/appUtils';
 import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots, FaMicrophone, FaStop, FaPaperPlane } from 'react-icons/fa';
 import {
@@ -41,7 +41,6 @@ export default function GroqChatBot() {
     const categories = useCategories() || [];
     const allComments = useComments() || [];
     const allReviews = useReviews() || [];
-    const allEpisodes = useEpisodes() || [];
 
     const userPlanInfo = useMemo(() => {
         return getUserPlanInfo(isLogin, subscriptions, plans);
@@ -49,23 +48,48 @@ export default function GroqChatBot() {
 
     const [sessions, setSessions] = useState(() => {
         try {
-            const saved = localStorage.getItem(SESSIONS_STORAGE_KEY) || sessionStorage.getItem(SESSIONS_STORAGE_KEY);
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                if (Array.isArray(parsed) && parsed.length > 0) {
-                    return parsed;
+            const sessionActiveId = sessionStorage.getItem(ACTIVE_SESSION_ID_KEY);
+            const sessionSaved = sessionStorage.getItem(SESSIONS_STORAGE_KEY);
+            const localSaved = localStorage.getItem(SESSIONS_STORAGE_KEY);
+
+            // Nếu đang trong cùng một phiên duyệt tab (ví dụ F5 hoặc chuyển trang) và đã có session hoạt động
+            if (sessionActiveId && sessionSaved) {
+                const parsedSession = JSON.parse(sessionSaved);
+                if (Array.isArray(parsedSession) && parsedSession.length > 0) {
+                    const activeExists = parsedSession.some(s => s.id === sessionActiveId);
+                    if (activeExists) {
+                        return parsedSession;
+                    }
                 }
             }
+
+            // Khi người dùng tắt hoàn toàn trang web rồi mở lại (hoặc mở tab mới):
+            // Lấy toàn bộ lịch sử các đoạn chat cũ từ localStorage (chỉ lấy các session đã có tin nhắn của user)
+            let historySessions = [];
+            if (localSaved) {
+                const parsedLocal = JSON.parse(localSaved);
+                if (Array.isArray(parsedLocal)) {
+                    historySessions = parsedLocal.filter(s =>
+                        s && Array.isArray(s.messages) && s.messages.some(m => m.sender === 'user')
+                    );
+                }
+            }
+
+            // Tạo đoạn chat mới tinh để người dùng bắt đầu phiên chat mới
+            const freshSession = createNewSession();
+            sessionStorage.setItem(ACTIVE_SESSION_ID_KEY, freshSession.id);
+            return [freshSession, ...historySessions];
         } catch (e) {
-            console.error("Error loading sessions:", e);
+            console.error("Error initializing chatbot sessions:", e);
+            const freshSession = createNewSession();
+            return [freshSession];
         }
-        return [createNewSession()];
     });
 
     const [activeSessionId, setActiveSessionId] = useState(() => {
         try {
-            const savedId = localStorage.getItem(ACTIVE_SESSION_ID_KEY) || sessionStorage.getItem(ACTIVE_SESSION_ID_KEY);
-            if (savedId) return savedId;
+            const savedSessionId = sessionStorage.getItem(ACTIVE_SESSION_ID_KEY);
+            if (savedSessionId) return savedSessionId;
         } catch (e) { }
         return sessions[0]?.id || `session_${Date.now()}`;
     });
@@ -90,15 +114,24 @@ export default function GroqChatBot() {
     // Save sessions to localStorage & sessionStorage
     useEffect(() => {
         try {
-            localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
+            // sessionStorage lưu đầy đủ các session trong tab hiện tại
             sessionStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessions));
-        } catch (e) { }
+
+            // localStorage lưu lại lịch sử các đoạn chat đã có tương tác người dùng
+            const sessionsToPersist = sessions.filter(s =>
+                s.messages && s.messages.some(m => m.sender === 'user')
+            );
+            localStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify(sessionsToPersist));
+        } catch (e) {
+            console.error("Error saving sessions:", e);
+        }
     }, [sessions]);
 
     useEffect(() => {
         try {
-            localStorage.setItem(ACTIVE_SESSION_ID_KEY, activeSessionId);
             sessionStorage.setItem(ACTIVE_SESSION_ID_KEY, activeSessionId);
+            // Xóa active id khỏi localStorage để đảm bảo khi tắt web mở lại sẽ không bị ghim vào đoạn chat cũ
+            localStorage.removeItem(ACTIVE_SESSION_ID_KEY);
         } catch (e) { }
     }, [activeSessionId]);
 
@@ -147,6 +180,14 @@ export default function GroqChatBot() {
         // If current session is already empty, just close history
         const userMsgCount = messages.filter(m => m.sender === 'user').length;
         if (userMsgCount === 0) {
+            setShowHistory(false);
+            return;
+        }
+
+        // Kiểm tra xem đã có session rỗng nào chưa, nếu có thì chuyển qua đó
+        const existingEmpty = sessions.find(s => !s.messages || !s.messages.some(m => m.sender === 'user'));
+        if (existingEmpty) {
+            setActiveSessionId(existingEmpty.id);
             setShowHistory(false);
             return;
         }
@@ -204,6 +245,11 @@ export default function GroqChatBot() {
         setSessions([fresh]);
         setActiveSessionId(fresh.id);
         setShowHistory(false);
+        try {
+            localStorage.removeItem(SESSIONS_STORAGE_KEY);
+            sessionStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify([fresh]));
+            sessionStorage.setItem(ACTIVE_SESSION_ID_KEY, fresh.id);
+        } catch (e) { }
     };
 
     // Xác định phim đang xem từ URL
@@ -304,10 +350,6 @@ export default function GroqChatBot() {
 
                 if (res.status === 429 || res.status >= 500) {
                     keyIndex++;
-                    // Nếu bị rate limit model, tự động đổi sang llama-3.1-8b-instant
-                    if (payload.model !== "llama-3.1-8b-instant") {
-                        payload.model = "llama-3.1-8b-instant";
-                    }
                     if (keys.length > 0 && (attempt + 1) % keys.length === 0 && attempt < maxAttempts - 1) {
                         await new Promise((resolve, reject) => {
                             const timer = setTimeout(resolve, 600);
@@ -327,9 +369,6 @@ export default function GroqChatBot() {
                     const errMsg = err.error?.message || `Lỗi API Groq (${res.status})`;
                     lastError = new Error(errMsg);
                     keyIndex++;
-                    if (errMsg.includes("tokens per minute") || errMsg.includes("TPM") || errMsg.includes("too large")) {
-                        payload.model = "llama-3.1-8b-instant";
-                    }
                     continue;
                 }
 
@@ -387,7 +426,6 @@ export default function GroqChatBot() {
                 categories,
                 allComments,
                 allReviews,
-                allEpisodes,
                 plans,
                 isLogin,
                 userPlanInfo
@@ -445,7 +483,28 @@ export default function GroqChatBot() {
                         }
                         break;
                     } else if (functionName === "tra_cuu_phim") {
-                        const topMatches = executeMovieLookup({ args, movies, authors, actors, characters, categories, plans, userPlanInfo });
+                        const suggestedSlugs = [];
+                        for (const msg of currentSessionMessages) {
+                            if (msg.sender === 'ai' && msg.text) {
+                                const matches = msg.text.matchAll(/\/phim\/([a-zA-Z0-9_-]+)/gi);
+                                for (const match of matches) {
+                                    if (match[1]) suggestedSlugs.push(match[1].toLowerCase().trim());
+                                }
+                            }
+                        }
+
+                        const topMatches = executeMovieLookup({
+                            args,
+                            movies,
+                            authors,
+                            actors,
+                            characters,
+                            categories,
+                            plans,
+                            userPlanInfo,
+                            excludeSlugs: suggestedSlugs,
+                            rawUserQuery: textToSend
+                        });
                         lastLookupResults = topMatches;
                         groqMessages.push({
                             tool_call_id: toolCall.id,
@@ -646,21 +705,49 @@ export default function GroqChatBot() {
                     ) : (
                         <>
                             <div className="flex-1 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-4 scroll-smooth">
-                                {messages.map((msg) => (
-                                    <div key={msg.id} className={`flex items-start gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                        {msg.sender === 'ai' && (
-                                            <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0 shadow-sm border border-amber-200 mt-0.5">
-                                                AI
+                                {messages.map((msg, index) => {
+                                    const isLatestAi = !isTyping && index === messages.length - 1 && msg.sender === 'ai';
+                                    const movieLinkCount = (msg.text?.match(/\/phim\//g) || []).length;
+                                    const hasPromptContinuation = /bấm nút \*\*Xem tiếp\*\*|nhắn \*\*tiếp\*\*|nhắn "tiếp"|xem tiếp các phim sau/i.test(msg.text || '');
+                                    const isMovieList = isLatestAi && (movieLinkCount >= 2 || (movieLinkCount === 1 && hasPromptContinuation));
+
+                                    return (
+                                        <div key={msg.id} className={`flex items-start gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                                            {msg.sender === 'ai' && (
+                                                <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0 shadow-sm border border-amber-200 mt-0.5">
+                                                    AI
+                                                </div>
+                                            )}
+                                            <div className={`max-w-4/5 rounded-2xl p-3.5 shadow-sm text-sm leading-relaxed ${msg.sender === 'user'
+                                                    ? 'bg-amber-600 text-white font-medium rounded-tr-none'
+                                                    : 'bg-white text-black border border-gray-100 rounded-tl-none'
+                                                }`}>
+                                                {renderMessage(msg.text, handleLinkClick, movies, plans)}
+
+                                                {isMovieList && (
+                                                    <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-slate-100/80">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleSend("Cảm ơn bạn, mình chọn được phim rồi nha!")}
+                                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-slate-50 hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-semibold text-xs rounded-xl shadow-2xs hover:shadow-xs cursor-pointer transition-all duration-200 active:scale-95 border border-slate-200 hover:border-rose-200 whitespace-nowrap"
+                                                        >
+                                                            <span className="text-xs">✋</span>
+                                                            <span>Đủ rồi</span>
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleSend("tiếp")}
+                                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-linear-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs rounded-xl shadow-xs hover:shadow-md hover:shadow-orange-500/20 cursor-pointer transition-all duration-200 active:scale-95 border border-amber-400/40 whitespace-nowrap"
+                                                        >
+                                                            <span className="text-xs">⏩</span>
+                                                            <span>Xem tiếp</span>
+                                                        </button>
+                                                    </div>
+                                                )}
                                             </div>
-                                        )}
-                                        <div className={`max-w-4/5 rounded-2xl p-3.5 shadow-sm text-sm leading-relaxed ${msg.sender === 'user'
-                                                ? 'bg-amber-600 text-white font-medium rounded-tr-none'
-                                                : 'bg-white text-black border border-gray-100 rounded-tl-none'
-                                            }`}>
-                                            {renderMessage(msg.text, handleLinkClick, movies, plans)}
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
 
                                 {messages.length <= 1 && (
                                     <div className="flex flex-col gap-2 mt-1 px-1">

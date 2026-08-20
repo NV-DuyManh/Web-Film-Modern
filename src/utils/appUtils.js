@@ -117,21 +117,36 @@ const cache = {};
 
 export function subscribeToCollection(key, collectionName, callback, fetchFn, processData) {
     if (!cache[key]) {
-        cache[key] = { data: null, listeners: new Set(), unsubscribe: null };
+        cache[key] = { data: null, listeners: new Set(), unsubscribe: null, timer: null };
         cache[key].unsubscribe = fetchFn(collectionName, (rawData) => {
             const processed = processData ? processData(rawData) : rawData;
             cache[key].data = processed;
             cache[key].listeners.forEach(cb => cb(processed));
         });
     }
+
+    // Nếu đang có timer chờ hủy cache do chuyển trang, hủy timer ngay lập tức
+    if (cache[key].timer) {
+        clearTimeout(cache[key].timer);
+        cache[key].timer = null;
+    }
+
     cache[key].listeners.add(callback);
     if (cache[key].data !== null) callback(cache[key].data);
+
     return () => {
         if (!cache[key]) return;
         cache[key].listeners.delete(callback);
+
+        // Giữ listener và cache sống thêm 3 phút khi không còn component nào lắng nghe
+        // Giúp khi user chuyển giữa các trang, dữ liệu luôn có sẵn từ RAM mà không bị đọc lại Firestore!
         if (cache[key].listeners.size === 0) {
-            cache[key].unsubscribe?.();
-            delete cache[key];
+            cache[key].timer = setTimeout(() => {
+                if (cache[key] && cache[key].listeners.size === 0) {
+                    cache[key].unsubscribe?.();
+                    delete cache[key];
+                }
+            }, 180000); // 3 phút
         }
     };
 }
@@ -142,6 +157,7 @@ export function getCachedData(key) {
 
 export function invalidateCache(key) {
     if (cache[key]) {
+        if (cache[key].timer) clearTimeout(cache[key].timer);
         cache[key].unsubscribe?.();
         delete cache[key];
     }
