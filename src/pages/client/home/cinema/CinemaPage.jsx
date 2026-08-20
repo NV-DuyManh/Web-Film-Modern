@@ -7,8 +7,10 @@ import { getObjectById } from '../../../../services/firebaseResponse';
 import { getAgeRatingColorClass } from '../../../../utils/appUtils';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight, FaCalendarAlt, FaEye, FaShieldAlt } from 'react-icons/fa';
+import { BsSearch } from 'react-icons/bs';
 import ParticleBackground from '../../../../components/client/background/ParticleBackground';
 import SEO from '../../../../components/SEO';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
 
 function CinemaPage() {
     const movies = useMovies() || [];
@@ -17,6 +19,7 @@ function CinemaPage() {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const page = parseInt(searchParams.get('page')) || 1;
+    const [searchTerm, setSearchTerm] = useState('');
     const setPage = (updater) => {
         setSearchParams(prev => {
             const currentPage = parseInt(prev.get('page')) || 1;
@@ -25,7 +28,7 @@ function CinemaPage() {
             return prev;
         });
     };
-    const moviesPerPage = 14;
+    const moviesPerPage = 28;
 
 
     useEffect(() => {
@@ -34,17 +37,23 @@ function CinemaPage() {
 
     const cinemaMovies = useMemo(() => {
         if (!movies || movies.length === 0) return [];
+        let filtered = movies;
         const cinemaType = categoryTypes?.find(ct => ct.name.toLowerCase().includes('chiếu rạp'));
         if (cinemaType) {
-            let filtered = movies.filter(m => m.categoryTypeID === cinemaType.id);
+            filtered = movies.filter(m => m.categoryTypeID === cinemaType.id);
             if (filtered.length < 15) {
                 const others = movies.filter(m => m.categoryTypeID !== cinemaType.id);
                 filtered = [...filtered, ...others];
             }
-            return filtered;
         }
-        return movies;
-    }, [movies, categoryTypes]);
+        if (searchTerm) {
+            filtered = filtered.filter(m => 
+                searchTV(m.name || '').includes(searchTV(searchTerm)) || 
+                searchTV(m.otherName || '').includes(searchTV(searchTerm))
+            );
+        }
+        return filtered;
+    }, [movies, categoryTypes, searchTerm]);
 
     const totalPages = Math.ceil(cinemaMovies.length / moviesPerPage) || 1;
     const safePage = Math.min(page, totalPages);
@@ -59,7 +68,7 @@ function CinemaPage() {
     };
 
     return (
-        <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden pt-20 md:pt-28 pb-10">
+        <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
             <SEO 
                 title="Mãn Nhãn với Phim Chiếu Rạp - MFILM"
                 description="Tổng hợp phim chiếu rạp hay nhất, mới nhất tại MFILM."
@@ -67,15 +76,29 @@ function CinemaPage() {
             />
             <ParticleBackground />
             <div className="max-w-350 mx-auto relative z-10">
-                <div className="mb-8">
-                    <h1 className="text-3xl md:text-4xl font-black bg-linear-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text drop-shadow-[0_0_10px_rgba(34,211,238,0.3)] tracking-tight mb-2 cursor-default pb-2">
-                        Mãn Nhãn với Phim Chiếu Rạp
+                <div className="mb-8 grid lg:grid-cols-8 gap-3 p-4 bg-black/20 text-white items-center rounded-xl border border-white/5">
+                    <h1 className="font-bold text-3xl md:text-4xl glow-text lg:col-span-3 m-0 flex items-center cursor-default">
+                        Phim Chiếu Rạp
                     </h1>
+
+                    <div className="search lg:col-span-5">
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm phim chiếu rạp..."
+                            className="search-input"
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setPage(1);
+                            }}
+                        />
+                        <BsSearch className="search-icon" />
+                    </div>
                 </div>
 
                 {movies.length === 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
-                        {Array.from({ length: 14 }).map((_, i) => (
+                        {Array.from({ length: 28 }).map((_, i) => (
                             <div key={i} className="flex flex-col gap-2 animate-pulse">
                                 <div className="rounded-xl aspect-2/3 bg-slate-700/50"></div>
                                 <div className="px-1 space-y-1.5">
@@ -196,7 +219,9 @@ function CinemaPage() {
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="text-6xl mb-4">🎬</div>
-                        <h2 className="text-xl text-slate-400 font-semibold">Chưa có phim nào</h2>
+                        <h2 className="text-xl text-slate-400 font-semibold">
+                            {searchTerm ? "Không tìm thấy phim phù hợp" : "Chưa có phim nào"}
+                        </h2>
                     </div>
                 )}
             </div>

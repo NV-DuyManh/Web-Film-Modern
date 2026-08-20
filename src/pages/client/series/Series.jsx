@@ -29,7 +29,7 @@ function Series() {
             return prev;
         });
     };
-    const moviesPerPage = 14;
+    const moviesPerPage = 28;
 
 
     useEffect(() => {
@@ -91,7 +91,7 @@ function Series() {
 
                 {movies.length === 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
-                        {Array.from({ length: 14 }).map((_, i) => (
+                        {Array.from({ length: 28 }).map((_, i) => (
                             <div key={i} className="flex flex-col gap-2 animate-pulse">
                                 <div className="rounded-xl aspect-2/3 bg-slate-700/50"></div>
                                 <div className="px-1 space-y-1.5">

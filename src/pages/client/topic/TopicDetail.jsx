@@ -8,6 +8,7 @@ import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { getAgeRatingColorClass } from '../../../utils/appUtils';
 import { FaFire, FaStar, FaFilm, FaGlobeAsia, FaTv, FaTheaterMasks, FaPlay, FaChevronLeft, FaChevronRight, FaArrowLeft, FaCalendarAlt, FaEye, FaShieldAlt } from 'react-icons/fa';
+import { BsSearch } from 'react-icons/bs';
 
 const ICON_MAP = {
     'FaFire': <FaFire />,
@@ -21,8 +22,9 @@ import { motion } from 'framer-motion';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import SEO from '../../../components/SEO';
 import { SMART_FILTERS } from './Topic';
+import { searchTV } from '../../../components/admin/search/SearchTV';
 
-const ITEMS_PER_PAGE = 24;
+const ITEMS_PER_PAGE = 28;
 
 
 function TopicDetail() {
@@ -36,6 +38,7 @@ function TopicDetail() {
 
     const [searchParams, setSearchParams] = useSearchParams();
     const page = parseInt(searchParams.get('page')) || 1;
+    const [searchTerm, setSearchTerm] = useState('');
     const setPage = (updater) => {
         setSearchParams(prev => {
             const currentPage = parseInt(prev.get('page')) || 1;
@@ -74,7 +77,16 @@ function TopicDetail() {
         return null;
     }, [id, movies, categoryTypes, categories, customTopics]);
 
-    const collectionMovies = collectionData?.movies || [];
+    const collectionMovies = useMemo(() => {
+        let list = collectionData?.movies || [];
+        if (searchTerm) {
+            list = list.filter(m => 
+                searchTV(m.name || '').includes(searchTV(searchTerm)) || 
+                searchTV(m.otherName || '').includes(searchTV(searchTerm))
+            );
+        }
+        return list;
+    }, [collectionData, searchTerm]);
 
     const totalPages = Math.ceil(collectionMovies.length / moviesPerPage) || 1;
     const safePage = Math.min(page, totalPages);
@@ -156,10 +168,29 @@ function TopicDetail() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
                 <ParticleBackground />
                 <div className="max-w-350 mx-auto relative z-10">
+                    <div className="mb-8 grid lg:grid-cols-8 gap-3 p-4 bg-black/40 backdrop-blur-md text-white items-center rounded-xl border border-white/10">
+                        <h2 className="font-bold text-2xl md:text-3xl glow-text lg:col-span-3 m-0 flex items-center cursor-default">
+                            {collectionData.title}
+                        </h2>
+
+                        <div className="search lg:col-span-5">
+                            <input
+                                type="text"
+                                placeholder={`Tìm kiếm trong ${collectionData.title}...`}
+                                className="search-input"
+                                value={searchTerm}
+                                onChange={(e) => {
+                                    setSearchTerm(e.target.value);
+                                    setPage(1);
+                                }}
+                            />
+                            <BsSearch className="search-icon" />
+                        </div>
+                    </div>
 
                     {movies.length === 0 ? (
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mt-8">
-                            {Array.from({ length: 14 }).map((_, i) => (
+                            {Array.from({ length: 28 }).map((_, i) => (
                                 <div key={i} className="flex flex-col gap-2 animate-pulse">
                                     <div className="rounded-xl aspect-2/3 bg-slate-700/50"></div>
                                     <div className="px-1 space-y-1.5">
@@ -289,7 +320,9 @@ function TopicDetail() {
                     ) : (
                         <div className="flex flex-col items-center justify-center py-20">
                             <div className="text-6xl mb-4">🎬</div>
-                            <h2 className="text-xl text-slate-400 font-semibold">Chưa có phim nào trong bộ sưu tập này</h2>
+                            <h2 className="text-xl text-slate-400 font-semibold">
+                                {searchTerm ? "Không tìm thấy phim phù hợp trong bộ sưu tập này" : "Chưa có phim nào trong bộ sưu tập này"}
+                            </h2>
                         </div>
                     )}
                 </div>

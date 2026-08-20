@@ -1,15 +1,15 @@
 import { getOptimizedUrl } from '../../../utils/cloudinary';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useTopics, useMovies } from '../../../hooks/useCollections';
 import { Link } from 'react-router-dom';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 import { FaFire, FaStar, FaFilm, FaGlobeAsia, FaTv, FaTheaterMasks, FaPlay, FaArrowRight } from 'react-icons/fa';
-
-
+import { BsSearch } from 'react-icons/bs';
 import { motion } from 'framer-motion';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import SEO from '../../../components/SEO';
+import { searchTV } from '../../../components/admin/search/SearchTV';
 
 export const SMART_FILTERS = {
     'phim-hot': (movies) => [...movies].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0)).slice(0, 20),
@@ -123,10 +123,12 @@ function Topic() {
 
     const customTopics = useTopics() || [];
 
+    const [searchTerm, setSearchTerm] = useState('');
+
     const collections = useMemo(() => {
         if (movies.length === 0) return [];
         
-        const customCols = customTopics.map(topic => {
+        let customCols = customTopics.map(topic => {
             let topicMovies = [];
             if (topic.isSmart && topic.smartID && SMART_FILTERS[topic.smartID]) {
                 topicMovies = SMART_FILTERS[topic.smartID](movies, categoryTypes, categories);
@@ -143,11 +145,18 @@ function Topic() {
             };
         }).filter(col => col.movies.length > 0);
 
+        if (searchTerm) {
+            customCols = customCols.filter(col => 
+                searchTV(col.title || '').includes(searchTV(searchTerm)) || 
+                searchTV(col.description || '').includes(searchTV(searchTerm))
+            );
+        }
+
         return customCols;
-    }, [movies, categoryTypes, categories, customTopics]);
+    }, [movies, categoryTypes, categories, customTopics, searchTerm]);
 
     return (
-        <div className="w-full min-h-screen bg-transparent relative overflow-hidden" style={{ paddingTop: '90px', paddingBottom: '60px' }}>
+        <div className="w-full min-h-screen bg-transparent relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '60px' }}>
             <SEO 
                 title="Chủ Đề Phim - Bộ Sưu Tập Phim Hay"
                 description="Khám phá các bộ sưu tập phim theo chủ đề: Phim Hot, Anime, Phim Hàn, Phim Trung Quốc, Phim Bộ Dài Tập và nhiều hơn nữa tại MFILM."
@@ -156,19 +165,25 @@ function Topic() {
             <ParticleBackground />
 
             <div className="max-w-350 mx-auto px-4 sm:px-6 md:px-8 relative z-10">
+                <div className="mb-8 grid lg:grid-cols-8 gap-3 p-4 bg-black/20 text-white items-center rounded-xl border border-white/5">
+                    <div className="lg:col-span-3">
+                        <h1 className="font-bold text-2xl md:text-3xl glow-text m-0 flex items-center cursor-default">
+                            Tất Cả Bộ Sưu Tập
+                        </h1>
+                        <p className="text-slate-400 text-xs mt-0.5">Khám phá phim theo chủ đề yêu thích của bạn</p>
+                    </div>
 
-
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3 }}
-                    className="mb-8"
-                >
-                    <h1 className="text-2xl md:text-3xl font-black bg-linear-to-r from-purple-400 via-cyan-400 to-amber-300 text-transparent bg-clip-text tracking-tight pb-1">
-                        Tất Cả Bộ Sưu Tập
-                    </h1>
-                    <p className="text-slate-500 text-sm mt-1">Khám phá phim theo chủ đề yêu thích của bạn</p>
-                </motion.div>
+                    <div className="search lg:col-span-5">
+                        <input
+                            type="text"
+                            placeholder="Tìm kiếm bộ sưu tập..."
+                            className="search-input"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                        <BsSearch className="search-icon" />
+                    </div>
+                </div>
 
                 {movies.length === 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
@@ -176,7 +191,7 @@ function Topic() {
                             <div key={i} className="rounded-2xl aspect-4/3 bg-slate-800/50 animate-pulse"></div>
                         ))}
                     </div>
-                ) : (
+                ) : collections.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                         {collections.map((col, index) => (
                             <CollectionCard
@@ -187,12 +202,12 @@ function Topic() {
                             />
                         ))}
                     </div>
-                )}
-
-                {movies.length > 0 && collections.length === 0 && (
+                ) : (
                     <div className="flex flex-col items-center justify-center py-20">
                         <div className="text-6xl mb-4">🎬</div>
-                        <h2 className="text-xl text-slate-400 font-semibold">Chưa có bộ sưu tập nào</h2>
+                        <h2 className="text-xl text-slate-400 font-semibold">
+                            {searchTerm ? "Không tìm thấy bộ sưu tập phù hợp" : "Chưa có bộ sưu tập nào"}
+                        </h2>
                     </div>
                 )}
             </div>
