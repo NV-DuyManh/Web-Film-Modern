@@ -1,157 +1,581 @@
 <div align="center">
-  <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?auto=format&fit=crop&q=80&w=1200&h=300" alt="ManhFilm Banner" style="border-radius: 15px; margin-bottom: 20px;" />
 
-  <h1>🍿 ManhFilm Platform 🎬</h1>
-  
-  <p><strong>A comprehensive, modern web application designed for managing and streaming movies with an ultra-prenium UI.</strong></p>
+# 🎬 MFILM — Xem Phim Online Chất Lượng Cao
 
-  <div>
-    <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
-    <img src="https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E" alt="Vite" />
-    <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
-    <img src="https://img.shields.io/badge/firebase-ffca28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" />
-    <img src="https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=Cloudinary&logoColor=white" alt="Cloudinary" />
-    <img src="https://img.shields.io/badge/Material%20UI-007FFF?style=for-the-badge&logo=mui&logoColor=white" alt="MUI" />
-  </div>
+<p><em>Nền tảng xem phim trực tuyến & quản trị nội dung phim toàn diện</em></p>
 
-  <br />
+<br />
+
+<img src="https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
+<img src="https://img.shields.io/badge/Vite_8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
+<img src="https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4" />
+<img src="https://img.shields.io/badge/Firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white" alt="Firebase" />
+<img src="https://img.shields.io/badge/MUI_7-007FFF?style=for-the-badge&logo=mui&logoColor=white" alt="MUI 7" />
+<img src="https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white" alt="Cloudinary" />
+<img src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion" />
+<img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal" />
+<img src="https://img.shields.io/badge/Gemini_AI-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini AI" />
+<img src="https://img.shields.io/badge/Groq-F55036?style=for-the-badge&logo=groq&logoColor=white" alt="Groq" />
+
+<br />
+<br />
+
+<a href="https://mfilm.online">🌐 Live Demo — mfilm.online</a>
+
 </div>
 
 ---
-
-## 🌟 Introduction
-
-**ManhFilm** is built to deliver a premium streaming experience combined with a powerful Content Management System (CMS). Whether you are managing thousands of movies or serving millions of viewers, ManhFilm provides the tools and the aesthetics to make it happen.
-
----
-
-## 📸 Sneak Peek (Demo)
 
 <div align="center">
-  <img src="https://images.unsplash.com/photo-1626814026160-2237a95fc5a0?auto=format&fit=crop&w=800&q=80" width="48%" alt="Client Home Page Placeholder" style="border-radius: 10px; margin-right: 2%; border: 2px solid #333;" />
-  <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80" width="48%" alt="Admin Dashboard Placeholder" style="border-radius: 10px; border: 2px solid #333;" />
-  <p><em>Left: Stunning Client Interface | Right: Powerful Admin Dashboard</em></p>
+
+### 📋 Mục Lục
+
+[`📖 Giới Thiệu`](#-giới-thiệu) · [`📸 Screenshots`](#-screenshots) · [`✨ Tính Năng`](#-tính-năng) · [`🛠️ Tech Stack`](#️-tech-stack) · [`📁 Kiến Trúc`](#-kiến-trúc-dự-án)
+
+[`🚀 Cài Đặt`](#-cài-đặt--chạy) · [`🔐 Biến Môi Trường`](#-biến-môi-trường) · [`📜 Scripts`](#-scripts) · [`🌐 Deploy`](#-deploy) · [`👨‍💻 Tác Giả`](#-tác-giả)
+
 </div>
 
 ---
 
-## 🚀 Amazing Features
+## 📖 Giới Thiệu
 
-### 💎 Client Portal
-- 🎬 **Dynamic Home Page**: Features a stunning hero banner, anime section, cinema releases, and categorized movie lists.
-- 🍿 **Immersive Streaming**: Dedicated pages for viewing movie details, trailers, and streaming full episodes (Sub, Dub, Voiceover).
-- 📱 **Responsive & Fluid**: Fully responsive UI built with Tailwind CSS, ensuring a buttery-smooth experience on desktop and mobile.
-- 🔍 **Smart Search**: Easily find movies by name, category, or type.
+**MFILM** là nền tảng xem phim trực tuyến được xây dựng bằng **React 19** & **Vite 8**, tích hợp dữ liệu phim từ **KKPhim API** (phimapi.com) kết hợp với **Firebase** làm backend. Hệ thống chia thành 2 phần chính:
 
-### 🛡️ Admin Panel
-- 📊 **Analytics Dashboard**: Overview of platform statistics and metrics at a glance.
-- 📝 **Movie Management**: Complete CRUD operations for movies. Includes support for specifying release years, duration, age ratings, categories, and uploading posters/banners.
-- 👥 **Entity Management**: Easily manage Categories, Actors, Authors, and Characters.
-- 🔐 **User Management**: Manage community users, roles, and permissions safely.
-- ⚡ **Magic Import**: Import movies and data efficiently using bulk tools.
-- ☁️ **Media Uploads**: Seamless integration with **Cloudinary** for blazing-fast image hosting.
+| | Mô tả |
+| :--- | :--- |
+| 🍿 **Client** | Giao diện xem phim cho người dùng — trang chủ, chi tiết phim, trình phát video (ArtPlayer + HLS.js), tìm kiếm, bình luận, yêu thích, lịch sử xem, nâng cấp VIP, thuê phim, chatbot AI |
+| 🛡️ **Admin** | Hệ thống quản trị — dashboard thống kê biểu đồ, quản lý phim/tập phim, metadata, entity (diễn viên/tác giả/nhân vật), cộng đồng (users/reviews/comments), gói VIP & thanh toán, Magic Import từ KKPhim |
+
+> **Website:** [mfilm.online](https://mfilm.online) • Deploy trên **Vercel** • PWA Support
 
 ---
 
-## 🛠️ Deep Dive Tech Stack
+## 📸 Screenshots
 
-| Domain | Technology | Description |
+### 🍿 Giao Diện Client (Người Dùng)
+
+<details>
+<summary><b>🏠 Trang Chủ — Banner & Hero</b></summary>
+<br />
+<div align="center">
+<img width="1837" height="748" alt="image" src="https://github.com/user-attachments/assets/3ac8d672-e2fb-4077-b7a3-d54dcd2331ed" />
+</div>
+</details>
+
+<details>
+<summary><b>🎞️ Trang Chủ — Phim Mới Cập Nhật</b></summary>
+<br />
+<div align="center">
+<img width="1839" height="464" alt="image" src="https://github.com/user-attachments/assets/a0a6d5b4-62d2-47db-b00b-a61e46f6da37" />
+</div>
+</details>
+
+<details>
+<summary><b>🌏 Trang Chủ — Phim Theo Quốc Gia</b></summary>
+<br />
+<div align="center">
+<img width="1744" height="663" alt="image" src="https://github.com/user-attachments/assets/64fe76eb-d69b-46be-bf8b-350428a9874a" />
+</div>
+</details>
+
+<details>
+<summary><b>🏆 Trang Chủ — Top Phim </b></summary>
+<br />
+<div align="center">
+<img width="1838" height="590" alt="image" src="https://github.com/user-attachments/assets/14054b90-a7b4-489f-b11e-cd4a53f47212" />
+</div>
+</details>
+
+<details>
+<summary><b>🎬 Trang Chủ — Phim Chiếu Rạp</b></summary>
+<br />
+<div align="center">
+<img width="1837" height="443" alt="image" src="https://github.com/user-attachments/assets/b6cb6fcd-530c-4221-9b4a-042e9e3a9c30" />
+</div>
+</details>
+
+<details>
+<summary><b>📄 Trang Chủ — Bình luận</b></summary>
+<br />
+<div align="center">
+<img width="1820" height="533" alt="image" src="https://github.com/user-attachments/assets/a4d0f738-7438-4e79-ae57-57a30613683e" />
+</div>
+</details>
+
+<details>
+<summary><b>🎌 Trang Chủ — Anime</b></summary>
+<br />
+<div align="center">
+<img width="1832" height="667" alt="image" src="https://github.com/user-attachments/assets/af4cd0f3-2b2f-444e-b88b-12c152669e2b" />
+</div>
+</details>
+
+<details>
+<summary><b>🎞️ Trang Chủ — Phim Hồng Kông</b></summary>
+<br />
+<div align="center">
+<img width="1835" height="593" alt="image" src="https://github.com/user-attachments/assets/ebdc0fb8-d46c-4c09-bed8-d72d85eda27f" />
+</div>
+</details>
+
+<details>
+<summary><b>📄 Chi Tiết Phim</b></summary>
+<br />
+<div align="center">
+<img width="1832" height="874" alt="image" src="https://github.com/user-attachments/assets/e705aa3e-dc84-4095-8bad-e2dc415c01fb" />
+<img width="1822" height="804" alt="image" src="https://github.com/user-attachments/assets/ba5c5bbf-186f-4b40-b37f-4302a567ff1f" />
+</div>
+</details>
+
+<details>
+<summary><b>▶️ Trình Phát Phim (Video Player)</b></summary>
+<br />
+<div align="center">
+<img width="1830" height="873" alt="image" src="https://github.com/user-attachments/assets/20ca484d-6479-4a1a-a3ae-66009f4905da" />
+<img width="1830" height="776" alt="image" src="https://github.com/user-attachments/assets/4bd610c5-5728-45d6-b21b-ac491f5f90e5" />
+</div>
+</details>
+
+<details>
+<summary><b>🔍 Tìm Kiếm & Lọc Phim</b></summary>
+<br />
+<div align="center">
+<img width="1029" height="777" alt="image" src="https://github.com/user-attachments/assets/67e26792-f683-4965-9a11-1af0ce31b9b5" />
+</div>
+</details>
+
+<details>
+<summary><b>👤 Tài Khoản & Đăng Nhập</b></summary>
+<br />
+<div align="center">
+<img width="1834" height="870" alt="image" src="https://github.com/user-attachments/assets/918ae46c-37a0-479b-a556-07f92736fde4" />
+<img width="788" height="326" alt="image" src="https://github.com/user-attachments/assets/62dc1349-b22e-457e-88b5-74c4dca86e01" />
+<img width="1831" height="872" alt="image" src="https://github.com/user-attachments/assets/5b039542-d0eb-4776-99ed-07f5ed7fce2d" />
+</div>
+</details>
+
+<details>
+<summary><b>💎 Nâng Cấp VIP & Thanh Toán</b></summary>
+<br />
+<div align="center">
+<img width="1107" height="761" alt="image" src="https://github.com/user-attachments/assets/2bb534fa-e591-4be8-abe3-a6215ab1d2a3" />
+<img width="765" height="732" alt="image" src="https://github.com/user-attachments/assets/783ceb6c-c214-408b-ba3a-e03b5c367608" />
+</div>
+</details>
+
+<details>
+<summary><b>🤖 Chatbot AI</b></summary>
+<br />
+<div align="center">
+<img width="524" height="673" alt="image" src="https://github.com/user-attachments/assets/b07af513-7fdd-4852-abdd-6cfc46c05908" />
+</div>
+</details>
+
+<details>
+<summary><b>📱 Giao Diện Mobile (Responsive)</b></summary>
+<br />
+<div align="center">
+<img width="543" height="877" alt="image" src="https://github.com/user-attachments/assets/20861826-c4dd-4e08-b4d6-1256aed3794a" />
+</div>
+</details>
+
+---
+
+### 🛡️ Giao Diện Admin (Quản Trị)
+
+<details>
+<summary><b>📊 Dashboard — Tổng Quan & Biểu Đồ</b></summary>
+<br />
+<div align="center">
+<img width="1833" height="872" alt="image" src="https://github.com/user-attachments/assets/73c280aa-e35e-4872-a3d8-e60efbdd7a2c" />
+</div>
+</details>
+
+<details>
+<summary><b>📊 Dashboard — Top Phim & Top Thuê</b></summary>
+<br />
+<div align="center">
+<img width="1572" height="794" alt="image" src="https://github.com/user-attachments/assets/581566fa-64df-4854-a151-7fbb5478fac7" />
+</div>
+</details>
+
+<details>
+<summary><b>🎬 Quản Lý Phim</b></summary>
+<br />
+<div align="center">
+<img width="1837" height="871" alt="image" src="https://github.com/user-attachments/assets/aec5b553-f4dc-48f8-9744-66b13fe0b8e5" />
+<img width="1257" height="820" alt="image" src="https://github.com/user-attachments/assets/f8c82874-f63f-4530-ba04-0dd48b70fa49" />
+<img width="1046" height="815" alt="image" src="https://github.com/user-attachments/assets/f702d1c5-7988-4463-8e97-00c03b1016da" />
+</div>
+</details>
+
+<details>
+<summary><b>📺 Quản Lý Tập Phim & Lịch Chiếu</b></summary>
+<br />
+<div align="center">
+<img width="1824" height="872" alt="image" src="https://github.com/user-attachments/assets/b0e74483-8c56-4934-8e67-0c5291caa70c" />
+<img width="1839" height="877" alt="image" src="https://github.com/user-attachments/assets/f858c71a-56cd-4b71-a666-338d92a1529a" />
+</div>
+</details>
+
+<details>
+<summary><b>🏷️ Quản Lý Metadata (Thể Loại / Loại Phim / Chủ Đề)</b></summary>
+<br />
+<div align="center">
+<img width="1840" height="878" alt="image" src="https://github.com/user-attachments/assets/3a71efaf-828a-4411-9b40-afd0aa451c11" />
+<img width="1830" height="876" alt="image" src="https://github.com/user-attachments/assets/83af132a-51e8-4a35-8e0d-049ff7bc9293" />
+</div>
+</details>
+
+<details>
+<summary><b>🎭 Quản Lý Entity (Diễn Viên / Tác Giả / Nhân Vật)</b></summary>
+<br />
+<div align="center">
+<img width="1825" height="868" alt="image" src="https://github.com/user-attachments/assets/e98a64ab-aa0f-4e29-b40d-6557b9b908e0" />
+</div>
+</details>
+
+<details>
+<summary><b>👥 Quản Lý Cộng Đồng (Users / Reviews / Comments)</b></summary>
+<br />
+<div align="center">
+<img width="1832" height="873" alt="image" src="https://github.com/user-attachments/assets/10e9fd02-34ed-4460-8ecb-8f01c9354bca" />
+<img width="1842" height="867" alt="image" src="https://github.com/user-attachments/assets/fc44b581-849a-4673-ad9b-791b97f4ec7e" />
+</div>
+</details>
+
+<details>
+<summary><b>💎 Quản Lý VIP (Plans / Features / Packages)</b></summary>
+<br />
+<div align="center">
+<img width="1832" height="868" alt="image" src="https://github.com/user-attachments/assets/ba89f336-8507-4231-a2ef-e1531100c44d" />
+<img width="1821" height="863" alt="image" src="https://github.com/user-attachments/assets/255ca59c-60ca-4363-8fa4-acc592cea55e" />
+<img width="1834" height="867" alt="image" src="https://github.com/user-attachments/assets/11f98283-e10a-40e2-b480-9e38127003df" />
+</div>
+</details>
+
+<details>
+<summary><b>💰 Quản Lý Thanh Toán (Thuê Phim / Subscriptions)</b></summary>
+<br />
+<div align="center">
+<img width="1853" height="869" alt="image" src="https://github.com/user-attachments/assets/79a487a3-d13b-4ec6-a0c2-659143ca86b0" />
+<img width="1850" height="861" alt="image" src="https://github.com/user-attachments/assets/1635e9ef-9a85-4909-bf69-2d1e4cf105fd" />
+</div>
+</details>
+
+<details>
+<summary><b>⚡ Magic Import (Nhập Phim Từ KKPhim)</b></summary>
+<br />
+<div align="center">
+<img width="1822" height="868" alt="image" src="https://github.com/user-attachments/assets/8ebe9e09-3b6e-4dcc-9fda-5fbf65becee8" />
+<img width="1595" height="808" alt="image" src="https://github.com/user-attachments/assets/e751146f-91b9-46e8-9005-483bf5c7c2a7" />
+<img width="1590" height="799" alt="image" src="https://github.com/user-attachments/assets/c555b8cf-63de-4e7d-a0ab-925e644f3f3b" />
+</div>
+</details>
+
+---
+
+## ✨ Tính Năng
+
+### 🍿 Client — Trải Nghiệm Người Dùng
+
+| Tính Năng | Mô Tả |
+| :--- | :--- |
+| 🏠 **Trang Chủ Đa Dạng** | Banner slider, phim mới, phim theo quốc gia (Nhật/Trung/Hàn/Việt), top phim, chiếu rạp, anime, Hồng Kông, phim sắp chiếu |
+| ▶️ **Video Player Chuyên Nghiệp** | Tích hợp **ArtPlayer** + **HLS.js** — hỗ trợ Vietsub, Thuyết Minh, Lồng Tiếng, chuyển server, lưu tiến độ xem |
+| 📄 **Chi Tiết Phim** | Thông tin đầy đủ (poster, banner, trailer, diễn viên, tác giả, nhân vật), danh sách tập, bình luận, đánh giá |
+| 🔍 **Tìm Kiếm & Lọc** | Tìm theo tên, thể loại, quốc gia, phim lẻ/phim bộ |
+| 💬 **Bình Luận & Đánh Giá** | Hệ thống comment real-time trên Firebase, rating phim |
+| ❤️ **Yêu Thích & Danh Sách** | Lưu phim yêu thích, tạo danh sách phim cá nhân |
+| 📜 **Lịch Sử Xem** | Tự động lưu & tiếp tục xem từ vị trí dừng (resume playback) |
+| 💎 **Hệ Thống VIP** | Nhiều gói VIP với đặc quyền khác nhau, avatar frame, theme profile |
+| 💰 **Thanh Toán** | Tích hợp **PayPal** — thuê phim lẻ hoặc đăng ký gói VIP |
+| 🤖 **Chatbot AI** | Chatbot thông minh tích hợp **Google Gemini** & **Groq AI** — gợi ý phim, trả lời câu hỏi |
+| 📅 **Lịch Chiếu** | Xem lịch chiếu phim theo ngày |
+| 👤 **Tài Khoản** | Đăng nhập/đăng ký (Firebase Auth), quản lý profile, xem subscription, thông báo |
+| 🔔 **Thông Báo** | Hệ thống notification cho người dùng |
+| 📱 **PWA & Responsive** | Hỗ trợ Progressive Web App, responsive trên mọi thiết bị |
+| ⚡ **Lazy Loading & SEO** | Code-splitting, lazy load sections, React Helmet cho SEO, auto retry chunk load |
+
+### 🛡️ Admin — Hệ Thống Quản Trị
+
+| Tính Năng | Mô Tả |
+| :--- | :--- |
+| 📊 **Dashboard Analytics** | 6 loại biểu đồ: Revenue, Plan Distribution, Demographic, Category, Rental Analysis, Top Films/Top Rents (Recharts) |
+| 🎬 **Quản Lý Phim** | CRUD phim — tên, slug, poster, banner, năm, thời lượng, rating, giá thuê, trạng thái, quốc gia, thể loại |
+| 📺 **Quản Lý Tập Phim** | Thêm/sửa/xóa episode, auto-sync tập mới từ KKPhim API |
+| 📅 **Lịch Chiếu** | Quản lý showtime cho phim chiếu rạp |
+| 🏷️ **Metadata** | Quản lý thể loại (Categories), loại phim (Category Types), chủ đề (Topics) |
+| 🎭 **Entity** | Quản lý diễn viên (Actors), tác giả (Authors), nhân vật (Characters) |
+| 👥 **Cộng Đồng** | Quản lý Users, Reviews, Comments |
+| 💎 **VIP** | Quản lý Plans, Features, Packages |
+| 💰 **Hóa Đơn** | Quản lý Rent Movies, Subscriptions |
+| ⚡ **Magic Import** | Import phim hàng loạt từ KKPhim API — tự động parse dữ liệu, mapping thể loại, tạo episodes |
+| ☁️ **Upload Ảnh** | Tích hợp **Cloudinary** — upload & optimize poster/banner |
+| 🔍 **Search & Pagination** | Tìm kiếm, phân trang nâng cao trong admin |
+| 🎄 **Seasonal Theme** | Hiệu ứng Noel trang trí admin panel |
+
+---
+
+## 🛠️ Tech Stack
+
+| Lớp | Công Nghệ | Chi Tiết |
 | :--- | :--- | :--- |
-| **Frontend Core** | React 19, Vite 8 | Lightning-fast development & optimized builds |
-| **Styling** | Tailwind CSS 4, MUI 7 | Beautiful, utility-first CSS & accessible components |
-| **Backend / DB** | Firebase | Firestore (DB), Auth, Storage for seamless serverless backend |
-| **Media Hosting** | Cloudinary API | Real-time image optimization and delivery |
-| **State & Routing**| Context API, React Router | Centralized state management & dynamic routing |
-| **Extra Utilities** | Crypto-js, Swiper, SheetJS | Secure signatures, modern sliders, and excel handling |
+| **Frontend** | React 19, Vite 8 | SPA, Code-splitting, HMR, Lazy Loading |
+| **Styling** | Tailwind CSS 4, MUI 7, SCSS | Utility-first CSS, Component library, Custom styles |
+| **Animation** | Framer Motion 13 | Page transitions, micro-interactions |
+| **Backend** | Firebase 12 | Firestore (NoSQL DB), Authentication, Real-time listeners |
+| **Media** | Cloudinary, ArtPlayer, HLS.js, React Player | Image CDN, Video streaming, HLS protocol |
+| **AI** | Google Gemini, Groq | Chatbot AI gợi ý phim |
+| **Payment** | PayPal React SDK | Thanh toán VIP & thuê phim |
+| **SEO** | React Helmet Async | Dynamic meta tags, Open Graph, Twitter Cards |
+| **Routing** | React Router DOM 7 | Client-side routing, lazy routes |
+| **State** | React Context API | Auth, Category, Plan, Subscription, User providers |
+| **Charts** | Recharts 3 | Dashboard analytics & biểu đồ |
+| **UI Kit** | React Icons, SweetAlert2, Swiper 12 | Icons, alerts, carousel sliders |
+| **Data** | Axios, SheetJS (xlsx) | HTTP requests, Excel import/export |
+| **Security** | Crypto-js | Mã hóa dữ liệu nhạy cảm |
+| **Build** | Vite 8, ESLint 9 | Bundler, Linting |
+| **Deploy** | Vercel | Hosting & CI/CD |
+| **PWA** | vite-plugin-pwa | Progressive Web App support |
 
 ---
 
-## 📋 Prerequisites
+## 📁 Kiến Trúc Dự Án
 
-Before you jump in, ensure you have the following ready:
-- 🟢 [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- 📦 npm, yarn, or pnpm
-- 🔥 A [Firebase](https://firebase.google.com/) Project setup
-- ☁️ A [Cloudinary](https://cloudinary.com/) Account setup
+```text
+FILM_MANAGEMENT/
+├── public/                        # Static assets
+├── src/
+│   ├── assets/                    # Images, logos, avatar frames
+│   ├── components/
+│   │   ├── admin/                 # Admin UI components
+│   │   │   ├── HeaderAdmin        #   → Top bar admin
+│   │   │   ├── MenuAdmin          #   → Sidebar menu
+│   │   │   ├── PaginationAdmin    #   → Phân trang
+│   │   │   ├── ModalChoose        #   → Modal chọn entity
+│   │   │   ├── ModalDelete        #   → Modal xác nhận xóa
+│   │   │   ├── DeleteBar          #   → Thanh xóa hàng loạt
+│   │   │   └── search/            #   → Component tìm kiếm
+│   │   ├── client/                # Client UI components
+│   │   │   ├── header/            #   → Header & navigation
+│   │   │   ├── footer/            #   → Footer
+│   │   │   ├── chatBot/           #   → Chatbot AI (Gemini + Groq)
+│   │   │   ├── menuAccount/       #   → Menu tài khoản
+│   │   │   ├── loadingScreen/     #   → Loading animation
+│   │   │   └── background/        #   → Background effects
+│   │   └── common/                # Shared components
+│   │       └── PageLoadingSpinner #   → Loading spinner
+│   ├── config/
+│   │   ├── firebaseConfig.js      # Firebase configuration
+│   │   └── cloudinaryConfig.jsx   # Cloudinary configuration
+│   ├── contexts/                  # React Context Providers
+│   │   ├── AuthProvider           #   → Xác thực người dùng
+│   │   ├── CategoryProvider       #   → Dữ liệu thể loại
+│   │   ├── CategoryTypeProvider   #   → Loại phim
+│   │   ├── PlanProvider           #   → Gói VIP
+│   │   ├── SubscriptionProvider   #   → Đăng ký VIP
+│   │   └── UserProvider           #   → Thông tin user
+│   ├── hooks/
+│   │   └── useCollections.js      # Custom hooks cho Firestore
+│   ├── pages/
+│   │   ├── admin/                 # ===== ADMIN PAGES =====
+│   │   │   ├── dashBoard/         #   → Dashboard (6 charts + top films)
+│   │   │   ├── movies/            #   → Quản lý phim, tập phim, lịch chiếu
+│   │   │   ├── metaData/          #   → Thể loại, loại phim, chủ đề
+│   │   │   ├── entity/            #   → Diễn viên, tác giả, nhân vật
+│   │   │   ├── community/         #   → Users, reviews, comments
+│   │   │   ├── vip/               #   → Plans, features, packages
+│   │   │   ├── bills/             #   → Thuê phim, subscriptions
+│   │   │   ├── magicImport/       #   → Import phim từ KKPhim
+│   │   │   ├── homeAdmin/         #   → Layout admin
+│   │   │   └── profile/           #   → Profile admin
+│   │   └── client/                # ===== CLIENT PAGES =====
+│   │       ├── home/              #   → Trang chủ (banner, sections)
+│   │       ├── watch/             #   → Chi tiết phim & xem phim
+│   │       ├── category/          #   → Phim theo thể loại
+│   │       ├── country/           #   → Phim theo quốc gia
+│   │       ├── singleMovies/      #   → Phim lẻ
+│   │       ├── series/            #   → Phim bộ
+│   │       ├── actors/            #   → Diễn viên
+│   │       ├── topic/             #   → Chủ đề phim
+│   │       ├── showtimes/         #   → Lịch chiếu
+│   │       ├── pay/               #   → Thanh toán & VIP
+│   │       ├── auth/              #   → Đăng nhập & đăng ký
+│   │       └── account/           #   → Tài khoản cá nhân
+│   ├── routers/
+│   │   ├── AdminRouters.jsx       # Routes admin (20 routes)
+│   │   └── ClientRouters.jsx      # Routes client (21 routes)
+│   ├── services/
+│   │   ├── firebaseService.js     # CRUD operations Firestore
+│   │   ├── firebaseResponse.js    # Helper responses
+│   │   ├── kkphimService.js       # KKPhim API integration
+│   │   └── autoEpisodeSyncService.js  # Auto-sync episodes
+│   └── utils/
+│       ├── Constants.jsx          # App constants & configs
+│       ├── appUtils.js            # Helper functions
+│       ├── cloudinary.js          # Image optimization
+│       ├── lazyRetry.js           # Lazy load with retry
+│       └── watchHistory.js        # Lịch sử xem (localStorage)
+├── .env                           # Environment variables
+├── index.html                     # Entry HTML (SEO optimized)
+├── vite.config.js                 # Vite configuration
+├── vercel.json                    # Vercel deployment config
+└── package.json                   # Dependencies & scripts
+```
 
 ---
 
-## ⚙️ Installation & Setup Guide
+## 🚀 Cài Đặt & Chạy
 
-### 1️⃣ Clone the repository
+### Yêu Cầu
+
+- [Node.js](https://nodejs.org/) >= 18
+- npm / yarn / pnpm
+- Tài khoản [Firebase](https://firebase.google.com/) (Firestore + Auth)
+- Tài khoản [Cloudinary](https://cloudinary.com/)
+- (Tùy chọn) API Key [Google Gemini](https://ai.google.dev/) & [Groq](https://groq.com/) cho chatbot AI
+- (Tùy chọn) Tài khoản [PayPal Developer](https://developer.paypal.com/) cho thanh toán
+
+### Hướng Dẫn
+
+**1. Clone repo**
 ```bash
-git clone <repository-url>
+git clone https://github.com/NV-DuyManh/ManhFilm.git
 cd FILM_MANAGEMENT
 ```
 
-### 2️⃣ Install dependencies
+**2. Cài dependencies**
 ```bash
 npm install
-# or
-yarn install
 ```
 
-### 3️⃣ Configure Firebase
-Open `src/config/firebaseConfig.js` and update the `firebaseConfig` object with your Firebase project credentials. *(🔥 Pro-tip: For production, it is highly recommended to move these to a `.env` file).*
+**3. Cấu hình Firebase**
+
+Mở `src/config/firebaseConfig.js` và cập nhật thông tin Firebase project:
 
 ```javascript
 const firebaseConfig = {
     apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
     projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.firebasestorage.app",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    storageBucket: "YOUR_PROJECT.firebasestorage.app",
+    messagingSenderId: "YOUR_SENDER_ID",
     appId: "YOUR_APP_ID",
     measurementId: "YOUR_MEASUREMENT_ID"
 };
 ```
 
-### 4️⃣ Configure Cloudinary
-Open `src/config/cloudiaryConfig.jsx` and `src/utils/Contants.jsx` to update your Cloudinary credentials (`cloud_name`, `upload_preset`, `apiKey`, `apiSecret`).
+**4. Cấu hình Cloudinary**
 
-### 5️⃣ Run the Application
+Mở `src/config/cloudinaryConfig.jsx` và `src/utils/Constants.jsx` để cập nhật `cloud_name`, `upload_preset`, `apiKey`, `apiSecret`.
+
+**5. Chạy development server**
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-### 6️⃣ View the Magic ✨
-Navigate to `http://localhost:5173` in your favorite browser.
+**6. Mở trình duyệt**
+
+Truy cập → `http://localhost:5173`
 
 ---
 
-## 📂 Folder Structure
+## 🔐 Biến Môi Trường
 
-```text
-src/
-├── 🎨 assets/        # Static assets like images and logos
-├── 🧩 components/    # Reusable UI components (Admin & Client)
-├── ⚙️ config/        # Configuration files (Firebase, Cloudinary)
-├── 🌐 contexts/      # React Context Providers for global state management
-├── 📄 pages/         # Page components
-│   ├── 🛠️ admin/     # Admin Panel pages (Movies, Users, Actors, etc.)
-│   └── 🍿 client/    # Client-facing pages (Home, Watch, etc.)
-├── 📡 services/      # API and Firebase interaction logic
-└── 🧰 utils/         # Helper functions and constants
+Tạo file `.env` tại thư mục gốc:
+
+```env
+# AI Chatbot (tùy chọn)
+VITE_GEMINI_API_KEYS="your_gemini_api_key"
+VITE_GROQ_API_KEYS="your_groq_api_key"
 ```
+
+> **Lưu ý:** Cấu hình Firebase và Cloudinary nằm trong source code (`src/config/`). Đối với production, nên chuyển sang `.env`.
 
 ---
 
-## 📜 Available Scripts
+## 📜 Scripts
 
-| Command | Action |
+| Command | Mô Tả |
 | :--- | :--- |
-| `npm run dev` | Starts the Vite development server with HMR. |
-| `npm run build` | Builds the app for production to the `dist` folder. |
-| `npm run preview` | Locally preview the production build. |
-| `npm run lint` | Runs ESLint to check for code quality and errors. |
+| `npm run dev` | Khởi chạy Vite dev server (HMR) |
+| `npm run build` | Build production → thư mục `dist/` |
+| `npm run preview` | Preview bản build production |
+| `npm run lint` | Kiểm tra code với ESLint |
 
 ---
+
+## 🌐 Deploy
+
+Dự án đang được deploy trên **Vercel** tại [mfilm.online](https://mfilm.online).
+
+File `vercel.json` đã cấu hình SPA rewrite:
+
+```json
+{
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
+```
+
+---
+
+## 🎯 Luồng Hoạt Động Chính
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                      MFILM ARCHITECTURE                       │
+├──────────────────────────────────────────────────────────────┤
+│                                                               │
+│   👤 User                      🔐 Admin                      │
+│     │                            │                            │
+│     ▼                            ▼                            │
+│   ┌──────────┐              ┌──────────┐                     │
+│   │  Client  │              │  Admin   │                     │
+│   │  Layout  │              │  Panel   │                     │
+│   └────┬─────┘              └────┬─────┘                     │
+│        │                         │                            │
+│        ▼                         ▼                            │
+│   ┌─────────────────────────────────────┐                    │
+│   │         React Context API           │                    │
+│   │  (Auth, Category, Plan, User, ...)  │                    │
+│   └────────────────┬────────────────────┘                    │
+│                    │                                          │
+│        ┌───────────┼───────────┐                             │
+│        ▼           ▼           ▼                             │
+│   ┌─────────┐ ┌─────────┐ ┌─────────┐                      │
+│   │Firebase │ │ KKPhim  │ │Cloudinary│                      │
+│   │Firestore│ │   API   │ │  (CDN)  │                      │
+│   │ + Auth  │ │phimapi  │ │ Images  │                      │
+│   └─────────┘ └─────────┘ └─────────┘                      │
+│                                                               │
+│   ┌─────────┐ ┌─────────┐ ┌─────────┐                      │
+│   │ PayPal  │ │ Gemini  │ │  Groq   │                      │
+│   │   SDK   │ │   AI    │ │   AI    │                      │
+│   └─────────┘ └─────────┘ └─────────┘                      │
+│                                                               │
+└──────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 👨‍💻 Tác Giả
 
 <div align="center">
-  <p>Made with ❤️ by the ManhFilm Team</p>
-  <p>
-    <a href="#top">Back to top ⬆️</a>
-  </p>
+
+**Nguyễn Văn Duy Mạnh**
+
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/NV-DuyManh)
+
+<br />
+
+⭐ **Nếu thấy dự án hữu ích, hãy cho mình một star nhé!** ⭐
+
+<br />
+
+<a href="#-mfilm--xem-phim-online-chất-lượng-cao">⬆️ Về đầu trang</a>
+
 </div>
