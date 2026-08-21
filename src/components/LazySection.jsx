@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import ErrorBoundary from './ErrorBoundary';
+import PageLoadingSpinner from './common/PageLoadingSpinner';
 
 export default function LazySection({ children, minHeight = '400px', rootMargin = '300px' }) {
     const [isVisible, setIsVisible] = useState(false);
@@ -25,7 +26,7 @@ export default function LazySection({ children, minHeight = '400px', rootMargin 
         }}>
             {isVisible ? (
                 <ErrorBoundary>
-                    <Suspense fallback={<div className="w-full h-full flex items-center justify-center text-slate-500">Đang tải...</div>}>
+                    <Suspense fallback={<PageLoadingSpinner minHeight="min-h-[250px]" text="" />}>
                         {children}
                     </Suspense>
                 </ErrorBoundary>

@@ -14,6 +14,7 @@ import { AuthContext } from '../../../../contexts/AuthProvider';
 import Comment from '../detailFilm/Comment';
 import SEO from '../../../../components/SEO';
 import { syncSingleMovieEpisodes } from '../../../../services/autoEpisodeSyncService';
+import PageLoadingSpinner from '../../../../components/common/PageLoadingSpinner';
 
 function PlayFilm({ handleOpenLogin }) {
     const { slug } = useParams();
@@ -181,6 +182,13 @@ function PlayFilm({ handleOpenLogin }) {
         }, 300);
     };
 
+    if (!realMovieId && movies.length === 0) {
+        return (
+            <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 pt-20">
+                <PageLoadingSpinner text="Đang tải dữ liệu phim..." minHeight="min-h-[70vh]" />
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25 relative overflow-hidden">

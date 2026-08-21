@@ -9,9 +9,26 @@ export const STOP_WORDS = new Set([
     'gi', 'trong', 'duoc', 'o', 'tai', 'website', 'mfilm', 'app'
 ]);
 
-export const searchTV = (str) => {
+export const normalizeVietnameseTypo = (str) => {
     if (!str) return '';
     return str
+        .toString()
+        // Sửa các lỗi gõ Telex dính phím phổ biến
+        .replace(/nhimeej|nhimej|nhiejm|nhiemj|nheejm/gi, 'nhiệm')
+        .replace(/đặt nhiệm|dat nhiem|dac nhimeej|dac nhimej/gi, 'đặc nhiệm')
+        .replace(/([a-z])ee([rsfajx]?)/gi, '$1ê')
+        .replace(/([a-z])oo([rsfajx]?)/gi, '$1ô')
+        .replace(/([a-z])aa([rsfajx]?)/gi, '$1â')
+        .replace(/([a-z])uw([rsfajx]?)/gi, '$1ư')
+        .replace(/([a-z])ow([rsfajx]?)/gi, '$1ơ')
+        .replace(/([a-z])aw([rsfajx]?)/gi, '$1ă')
+        .replace(/dd/gi, 'đ');
+};
+
+export const searchTV = (str) => {
+    if (!str) return '';
+    let s = normalizeVietnameseTypo(str);
+    return s
         .toString()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
@@ -161,14 +178,76 @@ export const getMoviePlanInfo = (movie, plans = []) => {
 };
 
 /**
+ * Trích xuất thứ tự phần / mùa phim (Season 1, Phần 4, Movie...) để sắp xếp tự nhiên theo franchise
+ */
+export const extractPartOrder = (movie) => {
+    const title = `${movie.otherName || ''} ${movie.name || ''} ${movie.slug || ''}`.toLowerCase();
+    
+    // Tìm các mẫu như "(Phần 4)", "Phần 2", "Season 3", "SS4", "P4"
+    const partMatch = title.match(/(?:phan|season|ss|p\.?)\s*(\d+)/i);
+    if (partMatch) {
+        return Number(partMatch[1]);
+    }
+    // Nếu là movie, ngoại truyện, OVA -> cho đứng sau các phần chính
+    if (/(?:movie|dien anh|chieu rap|special|ova|ngoai truyen)/i.test(title)) {
+        return 990;
+    }
+    // Nếu không ghi phần (thường là Phần 1 ban đầu)
+    const year = Number(movie.releaseYear || movie.year || 0);
+    return year > 0 ? (year / 10000) : 1;
+};
+
+/**
+ * Phân tích và nhóm các phim theo Series / Franchise (như Đội Đặc Nhiệm SEAL, Cánh Buồm Đen, Slime...)
+ * để biết chính xác bộ phim nào có nhiều phần nhất trong hệ thống.
+ */
+export const getFranchiseStats = (movies = []) => {
+    const franchiseMap = new Map();
+
+    for (const m of movies) {
+        const rawTitle = (m.otherName || m.name || '').trim();
+        if (!rawTitle) continue;
+
+        // Bóc tách tên gốc của franchise bằng cách loại bỏ các ký hiệu phần/season
+        const baseTitle = rawTitle
+            .replace(/\s*[\(\[\{]?(?:Phần|Season|SS|Mùa|P\.?)\s*\d+[\)\]\}]?/gi, '')
+            .replace(/\s*-\s*(?:Phần|Season|SS|Mùa|P\.?)\s*\d+/gi, '')
+            .replace(/:\s*(?:Phần|Season|SS|Mùa|P\.?)\s*\d+/gi, '')
+            .replace(/\s*[\(\[\{](?:Season|Phần)\s*\d+[\)\]\}]/gi, '')
+            .trim();
+
+        const baseKey = searchTV(baseTitle);
+        if (!baseKey || baseKey.length < 2) continue;
+
+        if (!franchiseMap.has(baseKey)) {
+            franchiseMap.set(baseKey, {
+                baseName: baseTitle,
+                key: baseKey,
+                movies: []
+            });
+        }
+        franchiseMap.get(baseKey).movies.push(m);
+    }
+
+    const franchises = Array.from(franchiseMap.values()).map(f => {
+        f.movies.sort((a, b) => extractPartOrder(a) - extractPartOrder(b));
+        f.totalParts = f.movies.length;
+        return f;
+    });
+
+    franchises.sort((a, b) => b.totalParts - a.totalParts);
+    return franchises;
+};
+
+/**
  * Xây dựng danh mục phim tóm tắt cho prompt để AI luôn biết chính xác phim & nhân vật nào có trong website
  */
 export const buildMovieCatalogSummary = (movies = [], categories = [], plans = [], characters = []) => {
     if (!movies || movies.length === 0) return "Chưa có phim nào trong hệ thống.";
     
-    // Lấy top 10 phim tiêu biểu nhất để siêu tiết kiệm token
+    // Top 20 phim tiêu biểu nhất
     const sorted = [...movies].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0));
-    return sorted.slice(0, 10).map(m => {
+    const sampleMovies = sorted.slice(0, 20).map(m => {
         const planInfo = getMoviePlanInfo(m, plans);
         const catNames = (m.listCategory || [])
             .map(catId => categories.find(c => String(c.id) === String(catId))?.name)
@@ -180,6 +259,14 @@ export const buildMovieCatalogSummary = (movies = [], categories = [], plans = [
         const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
         return `- [${slug}] "${title}" | [Gói ${planInfo.planName} L${planInfo.level}] | ${epStr} | ${catNames}`;
     }).join('\n');
+
+    // Thống kê các series nhiều phần nhất thực tế trên MFILM
+    const franchises = getFranchiseStats(movies);
+    const topFranchises = franchises.slice(0, 5).filter(f => f.totalParts > 1).map(f => {
+        return `- Series "${f.baseName}": Có ${f.totalParts} phần (${f.movies.map(m => m.otherName || m.name).join(', ')})`;
+    }).join('\n');
+
+    return `${sampleMovies}\n\n[TOP SERIES NHIỀU PHẦN NHẤT TRÊN MFILM]:\n${topFranchises || 'Chưa có series nhiều phần'}`;
 };
 
 /**
@@ -214,6 +301,7 @@ export const buildSystemInstruction = ({
     }).join('\n');
 
     const movieCatalog = buildMovieCatalogSummary(movies, categories, plans, characters);
+    const allCategoriesList = (categories || []).map(c => c.name).filter(Boolean).join(', ');
 
     let currentMovieContext = "";
     if (currentMovie) {
@@ -232,36 +320,41 @@ export const buildSystemInstruction = ({
     return `Bạn là trợ lý AI thông minh, thân thiện của website xem phim MFILM.
 LUÔN TRẢ LỜI BẰNG TIẾNG VIỆT 100%.
 
-QUY TẮC CỐT LÕI:
-1. CHỈ GIỚI THIỆU PHIM CÓ TRÊN MFILM & ĐÚNG TỪ KHÓA:
-   - Khi người dùng hỏi về một phim/series (ví dụ: "có phim slime không", "tìm phim naruto", "conan"...), BẮT BUỘC dùng tool \`tra_cuu_phim\` để tra cứu dữ liệu thực tế.
-   - CHỈ nhắc đến và đề xuất ĐÚNG các bộ/phần phim mà tool \`tra_cuu_phim\` trả về.
-   - TUYỆT ĐỐI KHÔNG tự bịa hoặc chèn thêm các bộ phim không liên quan.
-   - Khi gợi ý/nhắc phim, BẮT BUỘC dùng cú pháp: [Tên Phim](/phim/slug-chinh-xac).
-2. XỬ LÝ PHIM CÓ NHIỀU PHẦN/MÙA (FRANCHISE):
-   - Trên hệ thống MFILM, mỗi phần/mùa phim (Phần 1, Phần 2, Phần 3, Phần 4, Movie, Ngoại truyện...) được lưu thành 1 BỘ PHIM RIÊNG BIỆT.
-   - Khi người dùng hỏi về một series/phim có nhiều phần, hãy LIỆT KÊ ĐẦY ĐỦ TẤT CẢ CÁC PHẦN mà hệ thống tìm thấy theo đúng thứ tự (Phần 1, Phần 2, Phần 3, Phần 4...), cung cấp link và thông tin chi tiết từng phần để người dùng dễ chọn xem.
-3. SỐ LƯỢNG ĐỀ XUẤT PHIM (QUY TẮC CHIA ĐỢT TỐI ĐA 5 PHIM / LẦN):
-   - MỖI LẦN TRẢ LỜI CHỈ GỬI TỐI ĐA 5 BỘ PHIM để giao diện chat luôn gọn gàng, đẹp mắt và không bị đứt đoạn token.
-   - KHI NGƯỜI DÙNG YÊU CẦU SỐ LƯỢNG LỚN (ví dụ: "100 phim", "top 20", "50 phim"...):
-     + Hãy giải thích thân thiện: "Danh sách [N] phim khá dài có thể làm rối khung chat nè. Mình xin phép gửi trước 5 bộ phim tiêu biểu nhất nhé! Bạn có thể bấm nút **Xem tiếp** bên dưới hoặc nhắn *tiếp* nha! 🍿"
-     + Sau đó hiển thị đúng 5 phim do tool \`tra_cuu_phim\` trả về.
-   - KHI NGƯỜI DÙNG YÊU CẦU SỐ LƯỢNG NHỎ (từ 1 đến 5 phim): Gửi đúng số lượng phim được yêu cầu.
-   - KHI TÌM SERIES NHIỀU PHẦN (như Slime, Naruto...): Liệt kê đầy đủ tất cả các phần của series mà hệ thống tìm thấy.
-4. XỬ LÝ KHI NGƯỜI DÙNG BẢO "TIẾP", "THÊM", "CÒN NỮA KHÔNG", "XEM TIẾP":
-   - Khi người dùng muốn xem tiếp danh sách, gọi tool \`tra_cuu_phim\` với xem_tiep=true.
-   - Đề xuất 5 bộ phim TIẾP THEO từ kết quả tra cứu, TUYỆT ĐỐI KHÔNG lặp lại các phim đã giới thiệu ở các tin nhắn phía trên.
+QUY TẮC CỐT LÕI & NGUYÊN TẮC ỨNG BIẾN LINH HOẠT:
+1. TÙY CƠ ỨNG BIẾN THEO MỤC ĐÍCH CÂU CHUYỆN (KHÔNG MÁY MÓC SPAM 5 PHIM):
+   - KHI TRÒ CHUYỆN THÔNG THƯỜNG / CHÀO HỎI / HỎI THĂM / TÁN GẪU: Trả lời tự nhiên, hóm hỉnh, vui vẻ như một người bạn thân. TUYỆT ĐỐI KHÔNG tự tiện chèn danh sách 5 phim hay card phim nếu người dùng không yêu cầu.
+   - KHI NGƯỜI DÙNG HỎI CÂU HỎI ĐƠN LẺ / THÔNG TIN CỤ THỂ (ví dụ: "phim nào nhiều phần nhất?", "phim này ai đóng?", "nội dung phim X", "phim này chiếu năm nào?"):
+     + Hãy trả lời trực tiếp, chính xác thông tin bộ phim đó. Đi thẳng vào vấn đề, ngắn gọn, súc tích.
+   - KHI TÌM KIẾM MỘT PHIM HOẶC MỘT SERIES CỤ THỂ (ví dụ: "có phim đặc nhiệm không?", "tìm phim slime", "naruto"):
+     + CHỈ hiển thị đúng các phần của bộ phim/series đó mà tool \`tra_cuu_phim\` trả về. KHÔNG chèn thêm các phim ngẫu nhiên khác.
+   - CHỈ HIỂN THỊ DANH SÁCH GỢI Ý 5 PHIM KHI người dùng thật sự yêu cầu danh sách / xin gợi ý phim (ví dụ: "gợi ý vài phim hay", "top phim kinh dị", "phim hot hiện nay").
+
+2. DUY TRÌ ĐÚNG CHỦ ĐỀ & NGỮ CẢNH HỘI THOẠI (CONTEXT CONTINUITY):
+   - KHI ĐANG NÓI VỀ THỂ LOẠI / CHỦ ĐỀ / QUỐC GIA / GÓI CƯỚC / DIỄN VIÊN:
+     + Nếu người dùng nói: "không có cái nào hay à", "cái khác đi", "cho thể loại khác", "còn thể loại nào nữa không", "đổi thể loại khác", "thể loại khác", "chủ đề khác":
+       * BẮT BUỘC hiểu là người dùng đang muốn XEM THÊM CÁC THỂ LOẠI / CHỦ ĐỀ KHÁC có trên MFILM (như Anime, Hoạt hình, Phim lẻ, Phim bộ, Phim chiếu rạp, Cổ trang, Võ thuật, Tình cảm, Phiêu lưu, Học đường, Gia đình, Thể thao, Âm nhạc...).
+       * BẮT BUỘC liệt kê tiếp các thể loại / chủ đề khác chưa được nhắc đến.
+       * TUYỆT ĐỐI KHÔNG tự tiện gọi tool tra cứu và hiển thị danh sách phim khi người dùng chưa chọn thể loại hoặc chưa yêu cầu xem phim!
+   - CHỈ HIỂU LÀ ĐỔI PHIM / CHÊ PHIM KHI:
+     + Tin nhắn trước đó AI ĐANG GIỚI THIỆU DANH SÁCH PHIM hoặc 1 BỘ PHIM CỤ THỂ, và người dùng chê bộ phim đó. Lúc này mới gọi tool \`tra_cuu_phim\` với \`xem_tiep=true\` để đổi sang bộ phim khác.
+
+3. XỬ LÝ LỖI CHÍNH TẢ / TỪ KHÓA LẠ / GÕ SAI:
+   - Khi người dùng gõ từ khóa có thể bị lỗi Telex (ví dụ: "đặc nhimeej", "dặc nhiệm", "narutoo", "jhoong có cái nào hay"): BẮT BUỘC hiểu đúng nghĩa tiếng Việt và nếu là tên phim lạ thì gọi tool \`tra_cuu_phim\` để tìm kiếm gần đúng.
+   - NẾU TOOL BÁO KHÔNG TÌM THẤY: Hãy lịch sự và hỏi lại người dùng để làm rõ (ví dụ: "Hiện tại trên MFILM chưa có phim tên '[tên gõ]', có phải bạn đang tìm series hành động **'Đội Đặc Nhiệm SEAL'** không nè? 🍿").
+   - TUYỆT ĐỐI KHÔNG tự chế hoặc lấy bừa các phim hoàn toàn không liên quan.
+
+4. XỬ LÝ PHIM CÓ NHIỀU PHẦN/MÙA (FRANCHISE):
+   - Trên hệ thống MFILM, mỗi phần/mùa (Phần 1, Phần 2, Phần 3... Season 1, Season 2...) được lưu thành 1 BỘ PHIM RIÊNG BIỆT.
+   - Khi người dùng hỏi series hoặc hỏi "phim nào nhiều phần nhất", BẮT BUỘC gọi tool \`tra_cuu_phim\` với \`sap_xep='nhieu_phan_nhat'\` để lấy số liệu thực tế chính xác (ví dụ: series **Đội Đặc Nhiệm SEAL** có 7 phần: Season 1 đến Season 7).
+
 5. THỐNG KÊ MFILM: Tổng số phim: ${totalMovies} (Free: ${freeMoviesCount}, Có phí: ${paidMoviesCount}). Tổng số tập phim toàn web: ${totalEpisodes} tập.
 ${planBreakdown}
-6. GÓI CỦA USER: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Nếu Level > 0, gợi ý phim phù hợp quyền hạn (Level <= ${planLevel}). Nếu Free (Level 0), gợi ý phim Free và mời [Nâng Cấp Gói VIP](/upgrade).
-7. GIAO TIẾP: Lễ phép, duyên dáng, thân thiện, dùng emoji 🍿🎬✨. TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Dùng gạch đầu dòng (-) hoặc chấm tròn (•).
+6. GÓI CỦA USER: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Nếu Free (Level 0), gợi ý phim Free và mời [Nâng Cấp Gói VIP](/upgrade).
+7. GIAO TIẾP & ĐỊNH DẠNG: Lễ phép, duyên dáng, thân thiện, dùng emoji 🍿🎬✨. TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Khi liệt kê danh sách, dùng 1 loại gạch đầu dòng duy nhất: dấu gạch ngang "-" (ví dụ: "- Hài", "- Hành động"), TUYỆT ĐỐI KHÔNG lặp/ghép 2 ký tự như "- •" hay "• -". Dùng cú pháp [Tên Phim](/phim/slug-chinh-xac).
 8. ĐIỀU KHIỂN WEB: Dùng tool \`dieu_khien_website\` khi người dùng yêu cầu mở phim, tìm kiếm, đăng nhập hoặc nâng cấp VIP.
-9. PHÂN BIỆT CÂU HỎI TRẢ LỜI ĐƠN LẺ VS DANH SÁCH GỢI Ý:
-   - KHI NGƯỜI DÙNG HỎI CÂU HỎI ĐƠN LẺ (ví dụ: "phim nào nhiều tập nhất?", "phim này do ai đóng?", "nội dung phim X", "phim này chiếu năm nào?"):
-     + Hãy trả lời trực tiếp, chính xác thông tin bộ phim đó.
-     + TUYỆT ĐỐI KHÔNG tự chèn thêm câu "nếu cần thêm gợi ý hãy nhắn tiếp" hay mở luồng xem tiếp khi người dùng không yêu cầu danh sách gợi ý.
-   - KHI NGƯỜI DÙNG YÊU CẦU DANH SÁCH / GỢI Ý NHIỀU PHIM (ví dụ: "gợi ý phim hay", "top 5 phim", "phim hành động hot", hoặc bấm "Xem tiếp"):
-     + Gợi ý danh sách các bộ phim kèm thông tin chi tiết.
+
+[DANH SÁCH TẤT CẢ THỂ LOẠI & CHỦ ĐỀ TRÊN MFILM]:
+${allCategoriesList || 'Hành động, Hài, Giả tưởng, Chính kịch, Kinh dị, Khoa học, Kỳ ảo, Tâm lý, Viễn tưởng, Phiêu lưu, Hoạt hình, Anime, Võ thuật, Cổ trang, Tình cảm, Học đường, Gia đình, Thể thao, Âm nhạc, Chiếu rạp, Phim bộ, Phim lẻ'}
 
 [DANH SÁCH PHIM TIÊU BIỂU TRÊN MFILM]:
 ${movieCatalog}${currentMovieContext}${userContext}`;
@@ -313,26 +406,6 @@ export const executeWebsiteControl = ({ args = {}, movies = [], characters = [],
 };
 
 /**
- * Trích xuất thứ tự phần / mùa phim (Season 1, Phần 4, Movie...) để sắp xếp tự nhiên theo franchise
- */
-export const extractPartOrder = (movie) => {
-    const title = `${movie.otherName || ''} ${movie.name || ''} ${movie.slug || ''}`.toLowerCase();
-    
-    // Tìm các mẫu như "(Phần 4)", "Phần 2", "Season 3", "SS4", "P4"
-    const partMatch = title.match(/(?:phan|season|ss|p\.?)\s*(\d+)/i);
-    if (partMatch) {
-        return Number(partMatch[1]);
-    }
-    // Nếu là movie, ngoại truyện, OVA -> cho đứng sau các phần chính
-    if (/(?:movie|dien anh|chieu rap|special|ova|ngoai truyen)/i.test(title)) {
-        return 990;
-    }
-    // Nếu không ghi phần (thường là Phần 1 ban đầu)
-    const year = Number(movie.releaseYear || movie.year || 0);
-    return year > 0 ? (year / 10000) : 1;
-};
-
-/**
  * Xử lý tra cứu dữ liệu phim khi AI gọi tool tra_cuu_phim
  */
 export const executeMovieLookup = ({ 
@@ -353,14 +426,14 @@ export const executeMovieLookup = ({
     const isPagingNext = Boolean(
         args.xem_tiep || 
         args.loai_tru_phim_da_xem || 
-        /\b(tiep|tiep tuc|them|nua|con nua khong|con khong|xem tiep|goi y tiep|khac|phim khac|5 phim nua)\b/i.test(cleanUserQuery)
+        /\b(tiep|tiep tuc|them|nua|con nua khong|con khong|xem tiep|goi y tiep|khac|phim khac|5 phim nua|che|che nha|che phim|che phim nay|khong thich|khong muon xem|bo qua|doi phim|doi phim khac|next|chan|do ec)\b/i.test(cleanUserQuery)
     );
 
     const slugsToExclude = new Set(
         (Array.isArray(excludeSlugs) ? excludeSlugs : []).map(s => String(s).toLowerCase().trim())
     );
 
-    // Nếu người dùng yêu cầu xem tiếp / thêm phim khác, loại trừ các phim đã từng xuất hiện
+    // Nếu người dùng yêu cầu xem tiếp / thêm phim khác / từ chối chê phim vừa gợi ý, loại trừ các phim đã từng xuất hiện
     if (slugsToExclude.size > 0 && isPagingNext) {
         filtered = filtered.filter(m => {
             const mSlug = String(m.slug || '').toLowerCase().trim();
@@ -421,17 +494,34 @@ export const executeMovieLookup = ({
         'thinh hanh', 'xem nhieu', 'xem gi', 'chieu rap', 'phim', 'bo phim', 'phim gi',
         'goi hien tai', 'goi cua toi', 'phu hop voi goi', 'phu hop voi goi hien tai',
         'tiep', 'tiep tuc', 'them', 'nua', 'con nua khong', 'con khong', 'xem tiep',
+        'che', 'che nha', 'che phim', 'che phim nay', 'khong thich', 'khong muon xem', 'bo qua', 'doi phim', 'doi phim khac', 'next', 'chan', 'do ec',
         'nhieu tap nhat', 'dai tap nhat', 'dai nhat', 'nhieu tap', 'so tap nhieu nhat',
         'it tap nhat', 'ngan tap nhat', 'ngan nhat', 'it tap', 'so tap it nhat',
         'moi nhat', 'cu nhat', 'xem nhieu nhat', 'hot nhat', 'nhieu view nhat', 'top view'
     ]);
 
     // Nhận diện các ý định sắp xếp đặc biệt
+    const isMostParts = /\b(nhieu phan nhat|nhieu season nhat|nhieu ss nhat|nhieu mua nhat|dai tap nhat ve phan|series nhieu phan nhat|phim nhieu phan nhat|bo nao nhieu phan nhat|phim nao nhieu phan nhat|bo phim nao nhieu phan nhat)\b/i.test(cleanUserQuery) || args.sap_xep === 'nhieu_phan_nhat';
     const isMostEpisodes = /\b(nhieu tap nhat|dai tap nhat|so tap nhieu nhat|nhieu tap|dai tap|dai nhat|nhieu tap nhat web|nhieu tap nhat he thong)\b/i.test(cleanUserQuery) || args.sap_xep === 'nhieu_tap_nhat';
     const isLeastEpisodes = /\b(it tap nhat|ngan tap nhat|ngan nhat|it tap|so tap it nhat)\b/i.test(cleanUserQuery) || args.sap_xep === 'it_tap_nhat';
     const isNewest = /\b(moi nhat|moi ra|moi phat hanh|nam moi nhat)\b/i.test(cleanUserQuery) || args.sap_xep === 'moi_nhat';
     const isOldest = /\b(cu nhat|lau doi nhat|xua nhat|nam cu nhat)\b/i.test(cleanUserQuery) || args.sap_xep === 'cu_nhat';
     const isMostViewed = /\b(xem nhieu nhat|nhieu view nhat|hot nhat|top view|thinh hanh nhat)\b/i.test(cleanUserQuery) || args.sap_xep === 'xem_nhieu_nhat';
+
+    // Xử lý riêng khi người dùng hỏi bộ phim/series nào có nhiều phần nhất
+    if (isMostParts) {
+        const franchises = getFranchiseStats(movies);
+        if (franchises.length > 0) {
+            const topFranchise = franchises[0];
+            const partsList = topFranchise.movies.map((m, idx) => {
+                const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
+                const planInfo = getMoviePlanInfo(m, plans);
+                return `- Phần ${idx + 1}: [${m.otherName || m.name}](/phim/${m.slug || m.id}) | ${epStr} | Gói ${planInfo.planName} (Level ${planInfo.level})`;
+            }).join('\n');
+
+            return `Bộ phim hiện có nhiều phần nhất trên hệ thống MFILM là series **"${topFranchise.baseName}"** với tổng cộng **${topFranchise.totalParts} phần**:\n${partsList}`;
+        }
+    }
 
     // Nhận diện câu hỏi đơn lẻ (không phải yêu cầu danh sách gợi ý phim)
     const isSingleQuestion = (
@@ -443,7 +533,7 @@ export const executeMovieLookup = ({
 
     for (const rawKw of searchTerms) {
         let cleanKw = searchTV(rawKw)
-            .replace(/\b(co phim|tim phim|phim|bo phim|xem phim|hoat hinh|anime|co|khong|k|ko|chua|nao|nhe|nhi|a|ha|voi|ve|cho toi|giup toi)\b/gi, ' ')
+            .replace(/\b(co phim|tim phim|phim|bo phim|xem phim|hoat hinh|anime|co|khong|k|ko|chua|nao|nhe|nhi|a|ha|voi|ve|cho toi|giup toi|che|che nha|che phim|che phim nay|khong thich|khong muon xem|bo qua|doi phim|doi phim khac|next|chan|do ec)\b/gi, ' ')
             .replace(/\s+/g, ' ')
             .trim();
 
@@ -452,9 +542,9 @@ export const executeMovieLookup = ({
         }
 
         // Bỏ qua các từ chỉ tiêu chí sắp xếp để không nhầm sang tìm tên phim
-        if (isMostEpisodes || isLeastEpisodes || isNewest || isOldest || isMostViewed) {
+        if (isMostEpisodes || isLeastEpisodes || isNewest || isOldest || isMostViewed || isMostParts) {
             cleanKw = cleanKw
-                .replace(/\b(nhieu tap nhat|dai tap nhat|so tap nhieu nhat|nhieu tap|dai tap|dai nhat|it tap nhat|ngan tap nhat|ngan nhat|it tap|moi nhat|cu nhat|xem nhieu nhat|hot nhat|nhieu view nhat|top view|nhat|nhieu|it|moi|cu)\b/gi, ' ')
+                .replace(/\b(nhieu phan nhat|nhieu season nhat|nhieu tap nhat|dai tap nhat|so tap nhieu nhat|nhieu tap|dai tap|dai nhat|it tap nhat|ngan tap nhat|ngan nhat|it tap|moi nhat|cu nhat|xem nhieu nhat|hot nhat|nhieu view nhat|top view|nhat|nhieu|it|moi|cu)\b/gi, ' ')
                 .trim();
             if (!cleanKw) continue;
         }
@@ -503,14 +593,14 @@ export const executeMovieLookup = ({
             let matchedTokensCount = 0;
             for (const token of kwTokens) {
                 if (mOther.includes(token) || mName.includes(token) || mSlug.includes(token)) {
-                    score += 150;
+                    score += 200;
                     matchedTokensCount++;
                 }
             }
 
             // Nếu khớp toàn bộ các từ của cụm tìm kiếm trong tiêu đề
             if (kwTokens.length > 1 && matchedTokensCount === kwTokens.length) {
-                score += 500;
+                score += 600;
             }
 
             // 3. Khớp nhân vật
@@ -601,6 +691,9 @@ export const executeMovieLookup = ({
         if (slugsToExclude.size > 0 && isPagingNext) {
             return "Đã hiển thị hết tất cả các bộ phim phù hợp với tiêu chí này trên MFILM rồi bạn nhé! Bạn có thể thử tìm kiếm theo thể loại hoặc từ khóa khác.";
         }
+        if (args.tu_khoa || rawUserQuery) {
+            return `KHÔNG_TÌM_THẤY: Không có bộ phim nào khớp với từ khóa "${args.tu_khoa || rawUserQuery}" trên MFILM. Hãy hỏi lại người dùng thật lịch sự để làm rõ xem họ có gõ nhầm tên phim không. TUYỆT ĐỐI KHÔNG tự bịa ra phim khác.`;
+        }
         return "Không tìm thấy bộ phim nào phù hợp với yêu cầu.";
     }
 
@@ -621,9 +714,9 @@ export const executeMovieLookup = ({
     let noteMessage = '';
     if (!isSingleQuestion) {
         if (requestedLimit && requestedLimit > 5) {
-            noteMessage = ` (Do yêu cầu ${requestedLimit} phim khá dài nên mình gửi trước 5 phim, bạn có thể bấm nút **Xem tiếp** bên dưới hoặc nhắn "tiếp" nhé! 🍿)`;
+            noteMessage = ` (Do yêu cầu ${requestedLimit} phim khá dài nên mình gửi trước 5 phim, bạn có thể nhắn "tiếp" để xem thêm nhé! 🍿)`;
         } else if (totalRemaining > 0 && (isPagingNext || (requestedLimit && requestedLimit > 1) || (!isSpecificSearch && limit > 1))) {
-            noteMessage = ` (còn ${totalRemaining} phim khác, bạn có thể bấm nút **Xem tiếp** bên dưới hoặc nhắn "tiếp")`;
+            noteMessage = ` (còn ${totalRemaining} phim khác, bạn có thể nhắn "tiếp" để xem tiếp)`;
         }
     }
 
@@ -678,6 +771,11 @@ const renderTextWithNewlines = (text) => {
         } else if (cleanLine.startsWith('>')) {
             cleanLine = cleanLine.replace(/^>\s*/, '💡 ');
         }
+
+        // Chuẩn hóa gạch đầu dòng/chấm tròn bị lặp hoặc ghép đôi (ví dụ: "- •", "• -", "- -", "* •")
+        cleanLine = cleanLine
+            .replace(/^[-*•\s]*[-*•]\s*[-*•]\s*/, '• ')
+            .replace(/^[-*]\s+/, '• ');
 
         return (
             <React.Fragment key={i}>
@@ -863,6 +961,11 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = []) => {
             cleanLine = cleanLine.replace(/^>\s*/, '💡 ');
         }
 
+        // Chuẩn hóa gạch đầu dòng/chấm tròn bị lặp hoặc ghép đôi (ví dụ: "- •", "• -", "- -", "* •")
+        cleanLine = cleanLine
+            .replace(/^[-*•\s]*[-*•]\s*[-*•]\s*/, '• ')
+            .replace(/^[-*]\s+/, '• ');
+
         // Kiểm tra xem dòng này có link /phim/slug không
         const movieSlugMatch = cleanLine.match(/\/phim\/([a-zA-Z0-9_-]+)/i);
         let movieForThisLine = null;
@@ -980,7 +1083,7 @@ export const GROQ_TOOLS = [
         type: "function",
         function: {
             name: "tra_cuu_phim",
-            description: "Tra cứu phim trong hệ thống MFILM theo tên phim, nhân vật, diễn viên, tác giả, thể loại, hoặc lọc theo gói cước của người dùng.",
+            description: "Tra cứu phim trong hệ thống MFILM theo tên phim, nhân vật, diễn viên, tác giả, thể loại, hoặc lọc theo gói cước của người dùng. Khi người dùng từ chối/chê/không thích phim vừa gợi ý hoặc bảo 'tiếp'/'đổi phim khác', hãy gọi tool này với xem_tiep=true để gợi ý phim mới khác.",
             parameters: {
                 type: "object",
                 properties: {
@@ -992,7 +1095,7 @@ export const GROQ_TOOLS = [
                     quoc_gia: { type: "string", description: "Quốc gia" },
                     loai_phi: { type: "string", description: "Lọc phim: 'free' (chỉ phim miễn phí), 'paid' (chỉ phim có phí), 'user_plan' (chỉ phim phù hợp gói cước hiện tại của người dùng)" },
                     phu_hop_goi_user: { type: "boolean", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại của họ" },
-                    sap_xep: { type: "string", enum: ["nhieu_tap_nhat", "it_tap_nhat", "moi_nhat", "cu_nhat", "xem_nhieu_nhat"], description: "Tiêu chí sắp xếp: 'nhieu_tap_nhat' (khi hỏi phim nhiều tập nhất/dài nhất), 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
+                    sap_xep: { type: "string", enum: ["nhieu_phan_nhat", "nhieu_tap_nhat", "it_tap_nhat", "moi_nhat", "cu_nhat", "xem_nhieu_nhat"], description: "Tiêu chí sắp xếp: 'nhieu_phan_nhat' (khi hỏi phim nhiều phần/season nhất), 'nhieu_tap_nhat', 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
                     xem_tiep: { type: "boolean", description: "Đặt là true khi người dùng muốn xem tiếp hoặc gợi ý thêm 5 phim khác trong danh sách (loại trừ các phim đã hiển thị trước đó)" },
                     so_luong: { type: "number", description: "Số lượng phim cần lấy (khi người dùng yêu cầu số lượng cụ thể như top 10, top 20, 3 phim...). Mặc định là 5." }
                 }
@@ -1039,7 +1142,7 @@ export const GEMINI_TOOLS = [
             },
             {
                 name: "tra_cuu_phim",
-                description: "Tra cứu phim trong hệ thống MFILM theo tên phim, nhân vật, diễn viên, tác giả, thể loại, hoặc lọc theo gói cước của người dùng.",
+                description: "Tra cứu phim trong hệ thống MFILM theo tên phim, nhân vật, diễn viên, tác giả, thể loại, hoặc lọc theo gói cước của người dùng. Khi người dùng từ chối/chê/không thích phim vừa gợi ý hoặc bảo 'tiếp'/'đổi phim khác', hãy gọi tool này với xem_tiep=true để gợi ý phim mới khác.",
                 parameters: {
                     type: "OBJECT",
                     properties: {
@@ -1051,7 +1154,7 @@ export const GEMINI_TOOLS = [
                         quoc_gia: { type: "STRING", description: "Quốc gia" },
                         loai_phi: { type: "STRING", description: "Lọc phim: 'free', 'paid', 'user_plan'" },
                         phu_hop_goi_user: { type: "BOOLEAN", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại của họ" },
-                        sap_xep: { type: "STRING", description: "Tiêu chí sắp xếp: 'nhieu_tap_nhat', 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
+                        sap_xep: { type: "STRING", description: "Tiêu chí sắp xếp: 'nhieu_phan_nhat', 'nhieu_tap_nhat', 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
                         xem_tiep: { type: "BOOLEAN", description: "Đặt là true khi người dùng muốn xem tiếp hoặc gợi ý thêm 5 phim khác trong danh sách" },
                         so_luong: { type: "NUMBER", description: "Số lượng phim cần lấy (khi người dùng yêu cầu số lượng cụ thể như top 10, top 20, 3 phim...)" }
                     }

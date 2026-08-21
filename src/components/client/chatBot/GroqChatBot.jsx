@@ -723,27 +723,6 @@ export default function GroqChatBot() {
                                                     : 'bg-white text-black border border-gray-100 rounded-tl-none'
                                                 }`}>
                                                 {renderMessage(msg.text, handleLinkClick, movies, plans)}
-
-                                                {isMovieList && (
-                                                    <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-slate-100/80">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => handleSend("Cảm ơn bạn, mình chọn được phim rồi nha!")}
-                                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-slate-50 hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-semibold text-xs rounded-xl shadow-2xs hover:shadow-xs cursor-pointer transition-all duration-200 active:scale-95 border border-slate-200 hover:border-rose-200 whitespace-nowrap"
-                                                        >
-                                                            <span className="text-xs">✋</span>
-                                                            <span>Đủ rồi</span>
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => handleSend("tiếp")}
-                                                            className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 bg-linear-to-r from-amber-500 via-orange-500 to-amber-600 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-xs rounded-xl shadow-xs hover:shadow-md hover:shadow-orange-500/20 cursor-pointer transition-all duration-200 active:scale-95 border border-amber-400/40 whitespace-nowrap"
-                                                        >
-                                                            <span className="text-xs">⏩</span>
-                                                            <span>Xem tiếp</span>
-                                                        </button>
-                                                    </div>
-                                                )}
                                             </div>
                                         </div>
                                     );

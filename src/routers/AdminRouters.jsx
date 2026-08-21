@@ -1,35 +1,28 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Route, Routes } from 'react-router-dom';
+import PageLoadingSpinner from '../components/common/PageLoadingSpinner';
+import lazyRetry from '../utils/lazyRetry';
 
-const DashBoard = lazy(() => import('../pages/admin/dashBoard/DashBoard'));
-const Categories = lazy(() => import('../pages/admin/metaData/categories/Categories'));
-const CategoriesType = lazy(() => import('../pages/admin/metaData/categoryType/CategoriesType'));
-const Topics = lazy(() => import('../pages/admin/metaData/topics/Topics'));
-const MoviesList = lazy(() => import('../pages/admin/movies/moviesList/MoviesList'));
-const Episodes = lazy(() => import('../pages/admin/movies/episodes/Episodes'));
-const ShowTimes = lazy(() => import('../pages/admin/movies/showTimes/ShowTimes'));
-const Users = lazy(() => import('../pages/admin/community/users/Users'));
-const Reviews = lazy(() => import('../pages/admin/community/reviews/Reviews'));
-const Comments = lazy(() => import('../pages/admin/community/comments/Comments'));
-const Actors = lazy(() => import('../pages/admin/entity/actors/Actors'));
-const Authors = lazy(() => import('../pages/admin/entity/authors/Authors'));
-const Characters = lazy(() => import('../pages/admin/entity/characters/Characters'));
-const Plans = lazy(() => import('../pages/admin/vip/plans/Plans'));
-const Features = lazy(() => import('../pages/admin/vip/features/Features'));
-const Packages = lazy(() => import('../pages/admin/vip/packages/Packages'));
-const RentMovies = lazy(() => import('../pages/admin/bills/rentMovies/RentMovies'));
-const Subscriptions = lazy(() => import('../pages/admin/bills/subscriptions/Subscriptions'));
-const MagicImport = lazy(() => import('../pages/admin/magicImport/MagicImport'));
-const ProfileAdmin = lazy(() => import('../pages/admin/profile/ProfileAdmin'));
-
-const LoadingFallback = () => (
-    <div className="flex justify-center items-center h-[80vh] w-full">
-        <div className="relative w-16 h-16">
-            <div className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-[#0ea5e9] border-r-[#0ea5e9] rounded-full animate-spin drop-shadow-[0_0_10px_rgba(14,165,233,0.5)]"></div>
-            <div className="absolute top-2 left-2 w-12 h-12 border-4 border-transparent border-l-purple-500 border-b-purple-500 rounded-full animate-[spin_1.5s_linear_infinite_reverse] drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]"></div>
-        </div>
-    </div>
-);
+const DashBoard = lazyRetry(() => import('../pages/admin/dashBoard/DashBoard'));
+const Categories = lazyRetry(() => import('../pages/admin/metaData/categories/Categories'));
+const CategoriesType = lazyRetry(() => import('../pages/admin/metaData/categoryType/CategoriesType'));
+const Topics = lazyRetry(() => import('../pages/admin/metaData/topics/Topics'));
+const MoviesList = lazyRetry(() => import('../pages/admin/movies/moviesList/MoviesList'));
+const Episodes = lazyRetry(() => import('../pages/admin/movies/episodes/Episodes'));
+const ShowTimes = lazyRetry(() => import('../pages/admin/movies/showTimes/ShowTimes'));
+const Users = lazyRetry(() => import('../pages/admin/community/users/Users'));
+const Reviews = lazyRetry(() => import('../pages/admin/community/reviews/Reviews'));
+const Comments = lazyRetry(() => import('../pages/admin/community/comments/Comments'));
+const Actors = lazyRetry(() => import('../pages/admin/entity/actors/Actors'));
+const Authors = lazyRetry(() => import('../pages/admin/entity/authors/Authors'));
+const Characters = lazyRetry(() => import('../pages/admin/entity/characters/Characters'));
+const Plans = lazyRetry(() => import('../pages/admin/vip/plans/Plans'));
+const Features = lazyRetry(() => import('../pages/admin/vip/features/Features'));
+const Packages = lazyRetry(() => import('../pages/admin/vip/packages/Packages'));
+const RentMovies = lazyRetry(() => import('../pages/admin/bills/rentMovies/RentMovies'));
+const Subscriptions = lazyRetry(() => import('../pages/admin/bills/subscriptions/Subscriptions'));
+const MagicImport = lazyRetry(() => import('../pages/admin/magicImport/MagicImport'));
+const ProfileAdmin = lazyRetry(() => import('../pages/admin/profile/ProfileAdmin'));
 
 function AdminRouters(props) {
     const adminRouter = [
@@ -115,7 +108,7 @@ function AdminRouters(props) {
         }
     ]
     return (
-        <Suspense fallback={<LoadingFallback />}>
+        <Suspense fallback={<PageLoadingSpinner text="Đang tải trang quản trị..." />}>
             <Routes>
                 {adminRouter.map((p, index) => (
                     <Route key={index} path={p.path} element={p.element} />
