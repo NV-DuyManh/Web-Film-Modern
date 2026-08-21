@@ -4,23 +4,36 @@
 
 <p><em>Nền tảng xem phim trực tuyến & quản trị nội dung phim toàn diện</em></p>
 
-<br />
+<a href="https://mfilm.online" target="_blank">
+  <img src="https://img.shields.io/badge/🌐_LIVE_DEMO-MFILM.ONLINE-0ea5e9?style=for-the-badge" alt="Live Demo" />
+</a>
+&nbsp;&nbsp;
+<a href="https://github.com/NV-DuyManh/ManhFilm" target="_blank">
+  <img src="https://img.shields.io/badge/📦_GITHUB-REPOSITORY-181717?style=for-the-badge&logo=github&logoColor=white" alt="Repository" />
+</a>
 
-<img src="https://img.shields.io/badge/React_19-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React 19" />
+<br /><br />
+
+<img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" />
 <img src="https://img.shields.io/badge/Vite_8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
 <img src="https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" alt="Tailwind CSS 4" />
-<img src="https://img.shields.io/badge/Firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white" alt="Firebase" />
-<img src="https://img.shields.io/badge/MUI_7-007FFF?style=for-the-badge&logo=mui&logoColor=white" alt="MUI 7" />
-<img src="https://img.shields.io/badge/Cloudinary-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white" alt="Cloudinary" />
+<img src="https://img.shields.io/badge/React_Router_7-CA4245?style=for-the-badge&logo=reactrouter&logoColor=white" alt="React Router 7" />
 <img src="https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white" alt="Framer Motion" />
-<img src="https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal" />
-<img src="https://img.shields.io/badge/Gemini_AI-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini AI" />
-<img src="https://img.shields.io/badge/Groq-F55036?style=for-the-badge&logo=groq&logoColor=white" alt="Groq" />
-
+<img src="https://img.shields.io/badge/Material_UI_7-007FFF?style=for-the-badge&logo=mui&logoColor=white" alt="MUI 7" />
 <br />
+<img src="https://img.shields.io/badge/Firebase_12-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase 12" />
+<img src="https://img.shields.io/badge/Cloudinary_CDN-3448C5?style=for-the-badge&logo=cloudinary&logoColor=white" alt="Cloudinary CDN" />
+<img src="https://img.shields.io/badge/KKPhim_API-10B981?style=for-the-badge&logo=themoviedatabase&logoColor=white" alt="KKPhim API" />
+<img src="https://img.shields.io/badge/ArtPlayer-FF0055?style=for-the-badge&logo=playstation&logoColor=white" alt="ArtPlayer" />
+<img src="https://img.shields.io/badge/HLS.js_Stream-E36322?style=for-the-badge&logo=html5&logoColor=white" alt="HLS.js" />
+<img src="https://img.shields.io/badge/PWA_Ready-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white" alt="PWA" />
 <br />
-
-<a href="https://mfilm.online">🌐 Live Demo — mfilm.online</a>
+<img src="https://img.shields.io/badge/Google_Gemini-8E75B2?style=for-the-badge&logo=googlegemini&logoColor=white" alt="Gemini AI" />
+<img src="https://img.shields.io/badge/Groq_LPU-F55036?style=for-the-badge&logo=groq&logoColor=white" alt="Groq" />
+<img src="https://img.shields.io/badge/Recharts-22B5BF?style=for-the-badge&logo=googleanalytics&logoColor=white" alt="Recharts" />
+<img src="https://img.shields.io/badge/PayPal_SDK-00457C?style=for-the-badge&logo=paypal&logoColor=white" alt="PayPal" />
+<img src="https://img.shields.io/badge/Swiper_12-6332F6?style=for-the-badge&logo=swiper&logoColor=white" alt="Swiper 12" />
+<img src="https://img.shields.io/badge/Vercel_Deploy-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel" />
 
 </div>
 
@@ -525,39 +538,21 @@ File `vercel.json` đã cấu hình SPA rewrite:
 
 ## 🎯 Luồng Hoạt Động Chính
 
-```
-┌──────────────────────────────────────────────────────────┐
-│                     MFILM ARCHITECTURE                   │
-├──────────────────────────────────────────────────────────┤
-│                                                          │
-│         👤 User                     🔐 Admin            │
-│              │                            │              │
-│              ▼                            ▼              │
-│        ┌──────────┐                 ┌──────────┐         │
-│        │  Client  │                 │  Admin   │         │
-│        │  Layout  │                 │  Panel   │         │
-│        └────┬─────┘                 └────┬─────┘         │
-│             │                            │               │
-│             ▼                            ▼               │
-│         ┌─────────────────────────────────────┐          │
-│         │         React Context API           │          │
-│         │  (Auth, Category, Plan, User, ...)  │          │
-│         └────────────────┬────────────────────┘          │
-│                          │                               │
-│              ┌───────────┼───────────┐                   │
-│              ▼           ▼           ▼                   │
-│         ┌─────────┐ ┌─────────┐ ┌──────────┐             │
-│         │Firebase │ │ KKPhim  │ │Cloudinary│             │
-│         │Firestore│ │   API   │ │  (CDN)   │             │
-│         │ + Auth  │ │phimapi  │ │ Images   │             │
-│         └─────────┘ └─────────┘ └──────────┘             │
-│                                                          │
-│          ┌─────────┐ ┌─────────┐ ┌─────────┐             │
-│          │ PayPal  │ │ Gemini  │ │  Groq   │             │
-│          │   SDK   │ │   AI    │ │   AI    │             │
-│          └─────────┘ └─────────┘ └─────────┘             │
-│                                                          │
-└──────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+    subgraph MFILM["🎬 MFILM ARCHITECTURE"]
+        direction TB
+        U["👤 User"] --> CL["🍿 Client Layout"]
+        A["🔐 Admin"] --> AP["🛡️ Admin Panel"]
+        CL --> CTX["⚛️ React Context API\n(Auth, Category, Plan, User, Subscription)"]
+        AP --> CTX
+        CTX --> FB["🔥 Firebase\nFirestore + Auth"]
+        CTX --> KK["🎬 KKPhim API\nphimapi.com"]
+        CTX --> CD["☁️ Cloudinary\nImage CDN"]
+        CTX --> PP["💰 PayPal SDK\nThanh toán"]
+        CTX --> GM["🤖 Gemini AI\nChatbot"]
+        CTX --> GQ["⚡ Groq AI\nChatbot"]
+    end
 ```
 
 ---
@@ -566,16 +561,36 @@ File `vercel.json` đã cấu hình SPA rewrite:
 
 <div align="center">
 
-**Nguyễn Văn Duy Mạnh**
-
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/NV-DuyManh)
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=footer&text=Made%20with%20❤️%20by%20Duy%20Mạnh&fontSize=28&fontColor=fff&animation=twinkling&fontAlignY=65" width="100%" />
 
 <br />
 
-⭐ **Nếu thấy dự án hữu ích, hãy cho mình một star nhé!** ⭐
+### 👤 [Nguyễn Văn Duy Mạnh](https://github.com/NV-DuyManh)
+
+<p align="center">
+  <a href="https://github.com/NV-DuyManh" target="_blank">
+    <img src="https://img.shields.io/badge/GitHub-NV--DuyManh-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://mfilm.online" target="_blank">
+    <img src="https://img.shields.io/badge/Website-mfilm.online-00b4d8?style=for-the-badge&logo=safari&logoColor=white" alt="Website" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/NV-DuyManh/ManhFilm/stargazers" target="_blank">
+    <img src="https://img.shields.io/badge/Give_a_⭐-Star_Repo-f59e0b?style=for-the-badge&logoColor=white" alt="Star" />
+  </a>
+</p>
+
+<p align="center">
+  <sub>✨ <i>Cảm ơn bạn đã ghé thăm dự án <b>MFILM</b>. Hãy để lại 1 ⭐ star nếu bạn thấy hữu ích nhé!</i> ✨</sub>
+</p>
 
 <br />
 
-<a href="#-mfilm--xem-phim-online-chất-lượng-cao">⬆️ Về đầu trang</a>
+<a href="#-mfilm--xem-phim-online-chất-lượng-cao">
+  <img src="https://img.shields.io/badge/BACK%20TO%20TOP-▲-ff007f?style=for-the-badge&labelColor=7928ca" alt="Back to top" />
+</a>
+
+<br /><br />
 
 </div>
