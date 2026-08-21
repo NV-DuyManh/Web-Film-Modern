@@ -12,7 +12,9 @@
   <img src="https://img.shields.io/badge/📦_GITHUB-REPOSITORY-181717?style=for-the-badge&logo=github&logoColor=white" alt="Repository" />
 </a>
 
-<br /><br />
+
+
+---
 
 <img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React 19" />
 <img src="https://img.shields.io/badge/Vite_8-646CFF?style=for-the-badge&logo=vite&logoColor=white" alt="Vite 8" />
