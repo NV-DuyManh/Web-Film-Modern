@@ -5,6 +5,10 @@ import { HelmetProvider } from 'react-helmet-async';
 
 import './index.css';
 import App from './App.jsx';
+import { registerSW } from 'virtual:pwa-register';
+
+// Tự động kiểm tra và cập nhật phiên bản mới ngay lập tức khi mở web
+registerSW({ immediate: true });
 
 
 import CategoryProvider from './contexts/CategoryProvider.jsx';

@@ -12,6 +12,9 @@ export default defineConfig({
             includeAssets: ['favicon.svg', 'robots.txt', 'sitemap.xml'],
             workbox: {
                 disableDevLogs: true,
+                cleanupOutdatedCaches: true,
+                clientsClaim: true,
+                skipWaiting: true,
             },
             manifest: {
                 name: 'MFILM - Phim online chất lượng cao',
