@@ -122,22 +122,17 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
         onChangeInput({ target: { name: e.target.name, value: val } });
     };
 
-    const handleClickChoose = (id) => {
+    const handleSaveChoose = (selectedIds) => {
         switch (type) {
-            case "actors": setMovie(pre => ({ ...pre, listActor: toggleById(pre.listActor, id) })); break;
-            case "authors": setMovie(pre => ({ ...pre, listAuthor: toggleById(pre.listAuthor, id) })); break;
-            case "characters": setMovie(pre => ({ ...pre, listCharacter: toggleById(pre.listCharacter, id) })); break;
+            case "actors": setMovie(pre => ({ ...pre, listActor: selectedIds })); break;
+            case "authors": setMovie(pre => ({ ...pre, listAuthor: selectedIds })); break;
+            case "characters": setMovie(pre => ({ ...pre, listCharacter: selectedIds })); break;
             case "categories":
-                setMovie(pre => ({ ...pre, listCategory: toggleById(pre.listCategory, id) }));
+                setMovie(pre => ({ ...pre, listCategory: selectedIds }));
                 if (setError) setError(pre => ({ ...pre, listCategory: "" }));
                 break;
             default: break;
         }
-    };
-
-    const toggleById = (list, id) => {
-        if (!Array.isArray(list)) list = [];
-        return list.includes(id) ? list.filter(e => e !== id) : [...list, id];
     };
 
     const handleRemoveItem = (itemType, id) => {
@@ -471,7 +466,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
             </DialogActions>
 
             <ModalChoose
-                handleClickChoose={handleClickChoose} type={type} dataChoose={dataChoose}
+                handleSaveChoose={handleSaveChoose} type={type} dataChoose={dataChoose}
                 handleCloseChoose={handleCloseChoose} openChoose={openChoose} selectedItems={getSelectedItems()}
             />
         </Dialog>
