@@ -3,7 +3,7 @@ import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle
 import Slide from '@mui/material/Slide';
 import { FaTimes,  FaCloudUploadAlt, FaLink } from 'react-icons/fa';
 import { COUNTRIES } from '../../../../utils/Constants';
-import LOGO from "../../../../assets/Logo.png";
+import { getDefaultAvatar, getSafeEntityAvatar } from '../../../../utils/appUtils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -88,7 +88,7 @@ function ModalCharacters({ open, onChangeInput, handleClose, addcharacter, error
                     PopperProps={{ placement: "top-end" }}
                     value={character.countriesID || null}
                     onChange={(e, value) => {
-                        onChangeInput({ target: { name: "countriesID", value: value } });
+                        onChangeInput({ target: { name: "countriesID", value: value }, });
                     }}
                     renderInput={(params) => <TextField {...params} 
                         label="Country"
@@ -100,22 +100,23 @@ function ModalCharacters({ open, onChangeInput, handleClose, addcharacter, error
                     <div className={`gender-box ${!!error?.sexID ? 'error' : ''}`}>
                         <p className="gender-label inline">Gender</p>
                         <RadioGroup
+                            row
                             name="sexID"
-                            sx={{ flexDirection: "row", width: '100%', justifyContent: 'space-around' }}
                             value={character.sexID}
                             onChange={onChangeInput}
+                            className="gender-radio-group"
                         >
-                            <FormControlLabel value="Male" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Male" sx={{ color: '#e5e7eb', margin: 0 }} />
-                            <FormControlLabel value="Female" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
-                            <FormControlLabel value="Other" control={<Radio sx={{ color: !!error?.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Other" sx={{ color: '#e5e7eb', margin: 0 }} />
+                            <FormControlLabel value="Male" control={<Radio className="gender-radio" />} label="Male" />
+                            <FormControlLabel value="Female" control={<Radio className="gender-radio" />} label="Female" />
+                            <FormControlLabel value="Other" control={<Radio className="gender-radio" />} label="Other" />
                         </RadioGroup>
                     </div>
                     {error?.sexID && <p className="gender-error-text inline">{error.sexID}</p>}
                 </FormControl>
 
-                <div className="upload-container pb-2 flex flex-col items-center">
-                    <p className="upload-title mb-3 inline">Character Photo</p>
-                    
+                <div className="w-full flex flex-col items-center mt-2 mb-2">
+                    <p className="gender-label mb-2 inline">Character Avatar</p>
+
                     <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-4 w-full max-w-50 border border-white/10 mx-auto">
                         <button type="button" onClick={() => setUploadMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${uploadMode === 'file' ? 'bg-linear-to-r from-cyan-400 to-blue-500 text-white shadow-[0_0_12px_rgba(34,211,238,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                             <FaCloudUploadAlt className="text-xs" /> File
@@ -129,9 +130,10 @@ function ModalCharacters({ open, onChangeInput, handleClose, addcharacter, error
                         {uploadMode === 'file' ? (
                             <div className="relative w-36 h-36 rounded-full border-2 border-dashed border-slate-600 hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-slate-900/50 flex items-center justify-center">
                                 <img 
-                                    src={character.imgFile ? URL.createObjectURL(character.imgFile) : (character.imgUrl || LOGO)} 
+                                    src={character.imgFile ? URL.createObjectURL(character.imgFile) : getSafeEntityAvatar(character.imgUrl, character.sexID)} 
                                     alt="Character Avatar" 
                                     className="w-full h-full object-cover transition-all duration-500 group-hover:opacity-30" 
+                                    onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(character.sexID); }}
                                 />
                                 <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! p-0! rounded-full! cursor-pointer">
                                     <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
@@ -153,7 +155,7 @@ function ModalCharacters({ open, onChangeInput, handleClose, addcharacter, error
                                     InputProps={{ style: { fontSize: 12 } }}
                                 />
                                 <div className="w-36 h-36 rounded-full overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
-                                    <img src={character.imgUrl || LOGO} className="w-full h-full object-cover" alt="Preview" onError={(e) => e.target.src = LOGO} />
+                                    <img src={getSafeEntityAvatar(character.imgUrl, character.sexID)} className="w-full h-full object-cover" alt="Preview" onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(character.sexID); }} />
                                 </div>
                             </div>
                         )}

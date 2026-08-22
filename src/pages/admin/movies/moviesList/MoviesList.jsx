@@ -1,4 +1,4 @@
-﻿import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useSearchParams } from 'react-router-dom';
 import Search from '../../../../components/admin/search/Search';
@@ -109,7 +109,6 @@ function MoviesList() {
         newError.planID = movie.planID ? "" : "Please select plan";
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
         newError.listCategory = movie.listCategory?.length > 0 ? "" : "Please select category";
-        newError.listAuthor = movie.listAuthor?.length > 0 ? "" : "Please select director(s)";
         newError.categoryTypeID = movie.categoryTypeID ? "" : "Please select category type";
         setError(newError);
         return Object.values(newError).some(e => e !== "");

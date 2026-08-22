@@ -4,7 +4,7 @@ import ParticleBackground from '../../../components/client/background/ParticleBa
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { BsSearch } from 'react-icons/bs';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
-import { getDefaultAvatar } from '../../../utils/appUtils';
+import { getDefaultAvatar, getSafeEntityAvatar } from '../../../utils/appUtils';
 import { searchTV } from '../../../components/admin/search/SearchTV';
 import SEO from '../../../components/SEO';
 
@@ -108,7 +108,7 @@ function Actors() {
                                     <div className="relative mb-2 w-full flex justify-center">
                                         <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-38 lg:h-38 xl:w-40 xl:h-40 rounded-full overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                             <img
-                                                src={(!actor.imgUrl || actor.imgUrl.includes('Logo')) ? getDefaultAvatar(actor.sexID) : actor.imgUrl}
+                                                src={getSafeEntityAvatar(actor.imgUrl, actor.sexID)}
                                                 alt={actor.name}
                                                 className="w-full h-full object-cover rounded-full"
                                                 loading="lazy"

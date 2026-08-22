@@ -43,8 +43,8 @@ export const mapMovieData = (parsedData) => {
             rawActorDesc: row["actor desc"] || row["actor description"] || row["mô tả diễn viên"] || "Đang cập nhật...",
             rawCharacterDesc: row["char desc"] || row["character description"] || row["mô tả nhân vật"] || "Đang cập nhật...",
             
-            gender: row["gender"] || row["giới tính"] || "Male",
-            charGender: row["char gender"] || row["giới tính nhân vật"] || "Male",
+            gender: row["gender"] || row["giới tính"] || "Other",
+            charGender: row["char gender"] || row["giới tính nhân vật"] || "Other",
             rawPlan: row["plan"] || row["gói"] || "",
             roomName: row["room"] || row["phòng chiếu"] || "",
             epNumber: parseInt(row["episode number"] || row["tập số"]) || "",

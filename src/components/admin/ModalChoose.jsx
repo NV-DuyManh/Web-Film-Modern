@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { FaSearch } from 'react-icons/fa';
 import { searchTV } from './search/SearchTV';
+import { getSafeEntityAvatar, getDefaultAvatar } from '../../utils/appUtils';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -87,8 +88,12 @@ function ModalChoose({ handleClickChoose, handleCloseChoose, openChoose, dataCho
                                             ? "ring-[3px] ring-fuchsia-500 shadow-[0_0_25px_rgba(217,70,239,0.7)]"
                                             : "ring-2 ring-transparent shadow-md"
                                         }`}
-                                    src={item.imgUrl}
+                                    src={getSafeEntityAvatar(item.imgUrl, item.sexID)}
                                     alt={item.name}
+                                    onError={(e) => {
+                                        e.target.onerror = null;
+                                        e.target.src = getDefaultAvatar(item.sexID);
+                                    }}
                                 />
                                 <h1 className={`text-[10px] font-bold text-center w-full leading-tight ${isSelected ? "text-fuchsia-300 drop-shadow-[0_0_5px_rgba(217,70,239,0.9)] line-clamp-2" : "text-slate-300 line-clamp-2"}`} title={item.name}>
                                     {item.name}

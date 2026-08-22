@@ -1,4 +1,4 @@
-﻿import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
+import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -11,7 +11,7 @@ import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar
 import LOGO from "../../../../assets/Logo.png";
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
-import { getDefaultAvatar } from '../../../../utils/appUtils';
+import { getDefaultAvatar, getSafeEntityAvatar, OTHER_AVATAR } from '../../../../utils/appUtils';
 
 
 const getSexStyle = (sex) => {
@@ -124,10 +124,10 @@ function TableCharacters({ handleClickOpen, setCharacter, character, search }) {
                                         <div className="flex justify-center items-center py-2">
                                             <div className="group relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-white/10 cursor-pointer">
                                                 <img 
-                                                    src={row.imgUrl ? getOptimizedUrl(row.imgUrl) : getDefaultAvatar(row.sexID)} 
+                                                    src={getSafeEntityAvatar(row.imgUrl, row.sexID)} 
                                                     alt={row.name} 
                                                     className="w-full h-full object-cover transition-all duration-300" 
-                                                    onError={(e) => e.target.src = getDefaultAvatar(row.sexID)}
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(row.sexID); }}
                                                 />
                                             </div>
                                         </div>

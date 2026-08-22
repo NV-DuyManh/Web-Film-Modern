@@ -15,6 +15,7 @@ import { fetchMoviesList, fetchMovieDetails, fetchMovieImages, fetchAllCategorie
 
 import LOGO from "../../../assets/Logo6.png";
 import LOGO_BANNER from "../../../assets/Logo5.png";
+import { detectGender } from '../../../utils/genderDetect';
 
 // Helper chuyển chuỗi tiếng Việt có dấu thành slug không dấu
 const slugify = (text) => {
@@ -358,7 +359,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         for (let i = 0; i < names.length; i++) {
                             const name = names[i];
                             const finalDesc = descs[i] || "Đang cập nhật...";
-                            const finalGender = genders[i] || "Male";
+                            const finalGender = genders[i] || detectGender(name);
 
                             const exist = localAuthors.find(a => a.name.toLowerCase() === name.toLowerCase());
                             if (exist) {
@@ -366,7 +367,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 if (mode === 'UPDATE') await updateDoc(doc(db, "Authors", exist.id), { description: finalDesc, sexID: finalGender });
                             } else {
                                 const newRef = doc(collection(db, "Authors"));
-                                await setDoc(newRef, { id: newRef.id, name, imgUrl: LOGO, description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
+                                await setDoc(newRef, { id: newRef.id, name, imgUrl: "", description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
                                 listAuthor.push(newRef.id);
                                 localAuthors.push({ id: newRef.id, name });
                             }
@@ -380,7 +381,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         for (let i = 0; i < names.length; i++) {
                             const name = names[i];
                             const finalDesc = descs[i] || "Đang cập nhật...";
-                            const finalGender = genders[i] || "Male";
+                            const finalGender = genders[i] || detectGender(name);
 
                             const exist = localActors.find(a => a.name.toLowerCase() === name.toLowerCase());
                             if (exist) {
@@ -388,7 +389,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 if (mode === 'UPDATE') await updateDoc(doc(db, "Actors", exist.id), { description: finalDesc, sexID: finalGender });
                             } else {
                                 const newRef = doc(collection(db, "Actors"));
-                                await setDoc(newRef, { id: newRef.id, name, imgUrl: LOGO, description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
+                                await setDoc(newRef, { id: newRef.id, name, imgUrl: "", description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
                                 listActor.push(newRef.id);
                                 localActors.push({ id: newRef.id, name });
                             }
@@ -402,7 +403,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         for (let i = 0; i < names.length; i++) {
                             const name = names[i];
                             const finalDesc = descs[i] || "Đang cập nhật...";
-                            const finalGender = genders[i] || "Male";
+                            const finalGender = genders[i] || detectGender(name);
 
                             const exist = localCharacters.find(c => c.name.toLowerCase() === name.toLowerCase());
                             if (exist) {
@@ -410,7 +411,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 if (mode === 'UPDATE') await updateDoc(doc(db, "Characters", exist.id), { description: finalDesc, sexID: finalGender });
                             } else {
                                 const newRef = doc(collection(db, "Characters"));
-                                await setDoc(newRef, { id: newRef.id, name, imgUrl: LOGO, description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
+                                await setDoc(newRef, { id: newRef.id, name, imgUrl: "", description: finalDesc, sexID: finalGender, countriesID: movie.countriesID });
                                 listCharacter.push(newRef.id);
                                 localCharacters.push({ id: newRef.id, name });
                             }
@@ -656,7 +657,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 listAuthor.push(exist.id);
                             } else {
                                 const newRef = doc(collection(db, "Authors"));
-                                await setDoc(newRef, { id: newRef.id, name: dirName, imgUrl: LOGO, description: "Đang cập nhật...", sexID: "Male", countriesID: mapCountryName(movieData.country) });
+                                await setDoc(newRef, { id: newRef.id, name: dirName, imgUrl: "", description: "Đang cập nhật...", sexID: detectGender(dirName), countriesID: mapCountryName(movieData.country) });
                                 listAuthor.push(newRef.id);
                                 localAuthors.push({ id: newRef.id, name: dirName });
                                 stats.directors++;
@@ -674,7 +675,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 listActor.push(exist.id);
                             } else {
                                 const newRef = doc(collection(db, "Actors"));
-                                await setDoc(newRef, { id: newRef.id, name: actorName, imgUrl: LOGO, description: "Đang cập nhật...", sexID: "Male", countriesID: mapCountryName(movieData.country) });
+                                await setDoc(newRef, { id: newRef.id, name: actorName, imgUrl: "", description: "Đang cập nhật...", sexID: detectGender(actorName), countriesID: mapCountryName(movieData.country) });
                                 listActor.push(newRef.id);
                                 localActors.push({ id: newRef.id, name: actorName });
                                 stats.actors++;

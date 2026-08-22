@@ -6,7 +6,7 @@ import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCr
 import ModalDetail from './ModalDetail';
 import ModalPayMovie from '../../pay/paymovie/ModalPayMovie';
 import { getExpiryDate, getUserPlanInfo } from '../../../../utils/appUtils';
-import { getDefaultAvatar } from '../../../../utils/appUtils';
+import { getDefaultAvatar, getSafeEntityAvatar } from '../../../../utils/appUtils';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
@@ -416,7 +416,7 @@ function DetailFilm() {
                                                 return (
                                                     <div key={idx} className="relative flex flex-col items-center gap-1.5 w-14 cursor-pointer group">
                                                         <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-600 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition duration-300 transform group-hover:scale-110 z-10">
-                                                            <img src={author.imgUrl || getDefaultAvatar(author.sexID)} alt={author.name} className="w-full h-full object-cover" onError={(e) => e.target.src = getDefaultAvatar(author.sexID)} />
+                                                            <img src={getSafeEntityAvatar(author.imgUrl, author.sexID)} alt={author.name} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(author.sexID); }} />
                                                         </div>
                                                         <p className="text-[10px] text-center text-slate-300 truncate w-full transition-opacity duration-300">{author.name}</p>
 
@@ -443,7 +443,7 @@ function DetailFilm() {
                                             return (
                                                 <div key={idx} className="relative flex flex-col items-center gap-1.5 w-14 cursor-pointer group">
                                                     <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-600 group-hover:border-yellow-400 group-hover:shadow-[0_0_15px_rgba(250,204,21,0.5)] transition duration-300 transform group-hover:scale-110 z-10">
-                                                        <img src={character.imgUrl || getDefaultAvatar(character.sexID)} alt={character.name} className="w-full h-full object-cover" onError={(e) => e.target.src = getDefaultAvatar(character.sexID)} />
+                                                        <img src={getSafeEntityAvatar(character.imgUrl, character.sexID)} alt={character.name} className="w-full h-full object-cover" onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(character.sexID); }} />
                                                     </div>
                                                     <p className="text-[10px] text-center text-slate-300 truncate w-full transition-opacity duration-300">{character.name}</p>
 
@@ -646,10 +646,10 @@ function DetailFilm() {
                                         movieActors.map((char, idx) => (
                                             <div key={idx} className="flex flex-col items-center gap-2 relative group cursor-pointer">
                                                 <img
-                                                    src={char.imgUrl || getDefaultAvatar(char.sexID)}
+                                                    src={getSafeEntityAvatar(char.imgUrl, char.sexID)}
                                                     alt={char.name}
                                                     className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-3 border-slate-700 group-hover:border-[#facc15] group-hover:shadow-[0_0_20px_rgba(250,204,21,0.5)] group-hover:-translate-y-2 transition duration-300"
-                                                    onError={(e) => e.target.src = getDefaultAvatar(char.sexID)}
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(char.sexID); }}
                                                 />
                                                 <p className="text-xs sm:text-sm font-bold text-slate-200 group-hover:text-[#facc15] transition-colors w-full truncate text-center mt-1">
                                                     {char.name}

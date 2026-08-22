@@ -1,6 +1,9 @@
 import MALE_AVATAR from '../assets/Male.png';
 import FEMALE_AVATAR from '../assets/Female.png';
+import OTHER_AVATAR from '../assets/Other.png';
 import { getObjectById } from '../services/firebaseResponse';
+
+export { MALE_AVATAR, FEMALE_AVATAR, OTHER_AVATAR };
 
 export const getAgeRatingColorClass = (rating) => {
     switch (rating) {
@@ -20,7 +23,26 @@ export const getAgeRatingColorClass = (rating) => {
 };
 
 export const getDefaultAvatar = (sexID) => {
-    return sexID === 'Female' ? FEMALE_AVATAR : MALE_AVATAR;
+    if (sexID === 'Female') return FEMALE_AVATAR;
+    if (sexID === 'Male') return MALE_AVATAR;
+    return OTHER_AVATAR;
+};
+
+export const getSafeEntityAvatar = (imgUrl, sexID) => {
+    if (!imgUrl || typeof imgUrl !== 'string') return getDefaultAvatar(sexID);
+    const trimmed = imgUrl.trim();
+    if (!trimmed) return getDefaultAvatar(sexID);
+    const lower = trimmed.toLowerCase();
+    if (
+        lower.includes('logo') || 
+        lower.startsWith('/assets') || 
+        lower.startsWith('assets/') || 
+        lower.startsWith('/src/assets') ||
+        lower.startsWith('src/assets')
+    ) {
+        return getDefaultAvatar(sexID);
+    }
+    return trimmed;
 };
 
 export const getExpiryDate = (p) => {
