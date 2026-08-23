@@ -13,26 +13,26 @@ import { Link } from 'react-router-dom';
 
 function TopFilm() {
     const movies = useMovies();
-    
+
     const topMovies = useMemo(() => {
         if (!movies) return [];
-        
+
         const calculateTrendingScore = (movie) => {
             const views = Number(movie.views) || 0;
             const createdAt = movie.createdAt ? new Date(movie.createdAt).getTime() : new Date('2024-01-01').getTime();
             const ageInDays = Math.max(1, (new Date().getTime() - createdAt) / (1000 * 60 * 60 * 24));
             const velocity = views / ageInDays;
-            
+
             let engagementBonus = 1.0;
             if (movie.planID) engagementBonus += 0.2;
             if (movie.rent) engagementBonus += 0.3;
-            
+
             return (views * 0.3 + velocity * 0.7) * engagementBonus;
         };
 
         return [...movies].sort((a, b) => calculateTrendingScore(b) - calculateTrendingScore(a)).slice(0, 10);
     }, [movies]);
-    
+
     const plans = useContext(PlanContext);
 
     return (
@@ -91,7 +91,7 @@ function TopFilm() {
                                                 className={`absolute left-0 w-full object-cover scale-[1.08] transform ${index % 2 === 0 ? 'skew-y-[-8deg]' : 'skew-y-[8deg]'} origin-center`}
                                                 style={{ height: 'calc(100% * 100 / 90)', top: '0' }}
                                                 draggable="false"
-                                            loading="lazy" decoding="async"/>
+                                                loading="lazy" decoding="async" />
                                             <div className={`absolute left-0 w-full bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40 pointer-events-none transform ${index % 2 === 0 ? 'skew-y-[-8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
                                             <div className={`absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none transform ${index % 2 === 0 ? 'skew-y-[-8deg]' : 'skew-y-[8deg]'} origin-center`} style={{ height: 'calc(100% * 100 / 90)', top: '0' }}></div>
                                         </div>
@@ -104,7 +104,7 @@ function TopFilm() {
                                                 className="absolute left-0 w-full object-cover scale-[1.08] origin-center"
                                                 style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}
                                                 draggable="false"
-                                            loading="lazy" decoding="async"/>
+                                                loading="lazy" decoding="async" />
                                             <div className="absolute left-0 w-full bg-linear-to-t from-black/80 via-transparent to-transparent opacity-60 transition-opacity group-hover:opacity-40 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
                                             <div className="absolute left-0 w-full bg-[#facc15]/15 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}></div>
                                         </div>
@@ -172,7 +172,7 @@ function TopFilm() {
                                                 {e.name}
                                             </p>
                                             <div className="flex flex-wrap items-center gap-2 mt-1.5 text-[9px] md:text-[10px] font-bold">
-                                            
+
                                                 {e.rent != null && e.endEpisode && (
                                                     <span className="text-slate-500">•</span>
                                                 )}

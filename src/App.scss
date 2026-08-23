@@ -1439,6 +1439,12 @@ td:last-child {
     width: 100%;
     padding-top: 24px !important;
     padding-bottom: 24px !important;
+
+    &.country-continuous-swiper {
+        .swiper-wrapper {
+            transition-timing-function: linear !important;
+        }
+    }
 }
 
 .movie-nav-btn {
@@ -1447,25 +1453,33 @@ td:last-child {
 
     &.filmcoming-prev-btn,
     &.filmcoming-next-btn {
-        top: calc(50% - 40px);
+        top: calc(50% - 46px);
     }
 
     &.cinema-prev-btn,
     &.cinema-next-btn {
-        top: calc(50% - 65px);
+        top: calc(50% - 57px);
     }
 
     &.filmnew-prev-btn,
-    &.filmnew-next-btn,
-    &.hk-prev-btn,
-    &.hk-next-btn,
+    &.filmnew-next-btn {
+        top: calc(50% - 46px);
+    }
+
+    &.filmcountry-prev-btn,
+    &.filmcountry-next-btn,
     &[class*="filmcountry-"] {
-        top: calc(50% - 40px);
+        top: calc(50% - 38px);
+    }
+
+    &.hk-prev-btn,
+    &.hk-next-btn {
+        top: calc(50% - 42px);
     }
 
     &.top-prev-btn,
     &.top-next-btn {
-        top: calc(50% - 35px);
+        top: calc(50% - 38px);
     }
 
     z-index: 40;
