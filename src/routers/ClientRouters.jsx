@@ -28,6 +28,7 @@ const CinemaPage = lazyRetry(() => import('../pages/client/home/cinema/CinemaPag
 const FilmComingPage = lazyRetry(() => import('../pages/client/home/filmComing/FilmComingPage'));
 const FilmHongKongPage = lazyRetry(() => import('../pages/client/home/filmHongKong/FilmHongKongPage'));
 const AnimePage = lazyRetry(() => import('../pages/client/home/anime/AnimePage'));
+const ActorDetail = lazyRetry(() => import('../pages/client/actors/ActorDetail'));
 
 function ClientRouters(props) {
     const clientRouter = [
@@ -122,6 +123,18 @@ function ClientRouters(props) {
         {
             path: "/anime",
             element: <AnimePage />
+        },
+        {
+            path: "/dien-vien/:slug",
+            element: <ActorDetail type="actor" />
+        },
+        {
+            path: "/tac-gia/:slug",
+            element: <ActorDetail type="author" />
+        },
+        {
+            path: "/nhan-vat/:slug",
+            element: <ActorDetail type="character" />
         },
     ]
     return (

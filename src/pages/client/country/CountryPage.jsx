@@ -10,6 +10,7 @@ import { BsSearch } from 'react-icons/bs';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import SEO from '../../../components/SEO';
 import { searchTV } from '../../../components/admin/search/SearchTV';
+import Pagination from '../../../components/common/Pagination';
 
 function CountryPage() {
     const { name } = useParams();
@@ -176,25 +177,15 @@ function CountryPage() {
                             ))}
                         </div>
 
-                        <div className="flex justify-center items-center gap-4 mt-8">
-                            <button 
-                                onClick={handlePrev} 
-                                disabled={safePage === 1}
-                                className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition"
-                            >
-                                <FaChevronLeft size={14} />
-                            </button>
-                            <div className="px-6 py-2 rounded-full bg-slate-800/80 text-slate-300 font-semibold text-sm shadow-inner">
-                                Trang <span className="text-white mx-1">{safePage}</span> / {totalPages}
-                            </div>
-                            <button 
-                                onClick={handleNext} 
-                                disabled={safePage === totalPages}
-                                className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition"
-                            >
-                                <FaChevronRight size={14} />
-                            </button>
-                        </div>
+                        {totalPages > 1 && (
+                            <Pagination
+                                currentPage={safePage}
+                                totalPages={totalPages}
+                                totalItems={countryMovies.length}
+                                itemsPerPage={moviesPerPage}
+                                onPageChange={(p) => setPage(p)}
+                            />
+                        )}
                     </>
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20">

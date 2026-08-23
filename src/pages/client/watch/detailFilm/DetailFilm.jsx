@@ -644,7 +644,7 @@ function DetailFilm() {
                                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6 py-4">
                                     {movieActors.length > 0 ? (
                                         movieActors.map((char, idx) => (
-                                            <div key={idx} className="flex flex-col items-center gap-2 relative group cursor-pointer">
+                                            <Link to={`/dien-vien/${char.slug || char.id}`} key={idx} className="flex flex-col items-center gap-2 relative group cursor-pointer">
                                                 <img
                                                     src={getSafeEntityAvatar(char.imgUrl, char.sexID)}
                                                     alt={char.name}
@@ -667,7 +667,7 @@ function DetailFilm() {
                                                     <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-5 border-r-5 border-t-5 border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
                                                     <div className="absolute -bottom-0.75 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
                                                 </div>
-                                            </div>
+                                            </Link>
                                         ))
                                     ) : (
                                         <div className="col-span-full py-12 text-center text-slate-400 text-sm bg-[#131828]/60 rounded-2xl border border-slate-800/60">

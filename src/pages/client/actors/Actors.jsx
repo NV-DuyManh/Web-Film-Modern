@@ -1,5 +1,6 @@
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import React, { useEffect, useState, useMemo } from 'react';
+import Pagination from '../../../components/common/Pagination';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { BsSearch } from 'react-icons/bs';
@@ -22,7 +23,7 @@ function Actors() {
             return prev;
         });
     };
-    const itemsPerPage = 24;
+    const itemsPerPage = 36;
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -86,7 +87,7 @@ function Actors() {
 
                 {actors.length === 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3 gap-y-5 sm:gap-x-4 sm:gap-y-6 md:gap-x-5 md:gap-y-6 mb-10">
-                        {Array.from({ length: 24 }).map((_, i) => (
+                        {Array.from({ length: 36 }).map((_, i) => (
                             <div key={i} className="flex flex-col items-center gap-2.5 animate-pulse">
                                 <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-38 lg:h-38 xl:w-40 xl:h-40 rounded-full bg-slate-700/50"></div>
                                 <div className="h-3.5 bg-slate-700/40 rounded w-20"></div>
@@ -104,7 +105,7 @@ function Actors() {
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3 gap-y-5 sm:gap-x-4 sm:gap-y-6 md:gap-x-5 md:gap-y-6 mb-10 min-h-[50vh]">
                             {currentActors.map((actor) => (
-                                <div key={actor.id} className="group cursor-pointer flex flex-col items-center">
+                                <Link to={`/dien-vien/${actor.slug || actor.id}`} key={actor.id} className="group cursor-pointer flex flex-col items-center">
                                     <div className="relative mb-2 w-full flex justify-center">
                                         <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-38 lg:h-38 xl:w-40 xl:h-40 rounded-full overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                             <img
@@ -122,30 +123,18 @@ function Actors() {
                                             {actor.name}
                                         </h3>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
 
                         {totalPages > 1 && (
-                            <div className="flex justify-center items-center gap-4 mt-8">
-                                <button
-                                    onClick={handlePrev}
-                                    disabled={safePage === 1}
-                                    className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition"
-                                >
-                                    <FaChevronLeft size={14} />
-                                </button>
-                                <div className="px-6 py-2 rounded-full bg-slate-800/80 text-slate-300 font-semibold text-sm shadow-inner">
-                                    Trang <span className="text-white mx-1">{safePage}</span> / {totalPages}
-                                </div>
-                                <button
-                                    onClick={handleNext}
-                                    disabled={safePage === totalPages}
-                                    className="w-10 h-10 rounded-full bg-slate-800/80 text-white flex items-center justify-center hover:bg-pink-500 hover:shadow-[0_0_15px_rgba(236,72,153,0.6)] disabled:opacity-50 disabled:hover:bg-slate-800 disabled:cursor-not-allowed transition"
-                                >
-                                    <FaChevronRight size={14} />
-                                </button>
-                            </div>
+                            <Pagination
+                                currentPage={safePage}
+                                totalPages={totalPages}
+                                totalItems={filteredActors.length}
+                                itemsPerPage={itemsPerPage}
+                                onPageChange={(p) => setPage(p)}
+                            />
                         )}
                     </>
                 )}
