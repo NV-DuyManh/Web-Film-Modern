@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 function FilmHongKong() {
     const movies = useMovies();
-    
+
     const plans = useContext(PlanContext);
 
     const hkMovies = useMemo(() => {
@@ -31,11 +31,11 @@ function FilmHongKong() {
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
             <div className='flex justify-between items-center '>
-                <Link to="/film-hongkong" className='flex items-center gap-3 pt-10'>
-                    <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>
+                <Link to="/film-hongkong" className='flex items-center gap-2 sm:gap-3 pt-10 group'>
+                    <h2 className='font-bold text-2xl md:text-3xl glow-text-multi group-hover:text-[#facc15] transition-colors duration-300'>
                         Điện Ảnh Hồng Kông ở Chỗ Này Này
                     </h2>
-                    <FaChevronRight className='border w-6 h-6 md:w-8 md:h-8 bg-transparent text-white border-white/30 p-1.5 rounded-full' />
+                    <FaChevronRight className='border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full group-hover:bg-yellow-400 group-hover:text-black transition-colors duration-300' />
                 </Link>
             </div>
 

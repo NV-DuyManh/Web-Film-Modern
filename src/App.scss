@@ -1655,7 +1655,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 2rem;
-    
+
     box-shadow:
         0 15px 35px rgba(0, 0, 0, 0.4),
         0 0 0 1px rgba(255, 255, 255, 0.05) inset;
@@ -1742,6 +1742,7 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     opacity: 0 !important;
     visibility: hidden !important;
 }
+
 .vip-theme-slate {
     --vip-color: #94a3b8;
     --vip-bg-glow: rgba(148, 163, 184, 0.1);
@@ -1820,28 +1821,44 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
     &.stat-cyan {
         border: 1px solid rgba(6, 182, 212, 0.7);
         box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
-        .stat-value { color: #22d3ee; }
+
+        .stat-value {
+            color: #22d3ee;
+        }
     }
+
     &.stat-emerald {
         border: 1px solid rgba(16, 185, 129, 0.7);
         box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-        .stat-value { color: #34d399; }
+
+        .stat-value {
+            color: #34d399;
+        }
     }
+
     &.stat-purple {
         border: 1px solid rgba(168, 85, 247, 0.7);
         box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
-        .stat-value { color: #c084fc; }
+
+        .stat-value {
+            color: #c084fc;
+        }
     }
+
     &.stat-rose {
         border: 1px solid rgba(244, 63, 94, 0.7);
         box-shadow: 0 0 10px rgba(244, 63, 94, 0.2);
-        .stat-value { color: #fb7185; }
+
+        .stat-value {
+            color: #fb7185;
+        }
     }
 }
 
 .premium-border-box {
     position: relative;
     z-index: 1;
+
     &::before {
         content: '';
         position: absolute;
@@ -1864,7 +1881,29 @@ body.swal2-shown {
     padding-right: 0 !important;
     overflow-y: auto !important;
 }
+
 body.swal2-height-auto {
     height: auto !important;
 }
 
+.premium-border-box {
+    position: relative;
+    z-index: 1;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 2px;
+        background: linear-gradient(135deg, #00f2fe, #4facfe, #8b5cf6, #ec4899, #00f2fe);
+        background-size: 300% 300%;
+        animation: animateGlow 4s linear infinite;
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        z-index: -1;
+        pointer-events: none;
+    }
+}

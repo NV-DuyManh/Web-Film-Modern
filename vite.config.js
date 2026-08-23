@@ -15,6 +15,34 @@ export default defineConfig({
                 cleanupOutdatedCaches: true,
                 clientsClaim: true,
                 skipWaiting: true,
+                // Không cache navigation requests (index.html) - luôn lấy từ network
+                navigateFallback: null,
+                runtimeCaching: [
+                    {
+                        // Cache các file assets có hash (JS, CSS) - immutable
+                        urlPattern: /\/assets\/.*\.(js|css|woff2?|ttf|eot)$/i,
+                        handler: 'CacheFirst',
+                        options: {
+                            cacheName: 'assets-cache',
+                            expiration: {
+                                maxEntries: 100,
+                                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 năm
+                            },
+                        },
+                    },
+                    {
+                        // Cache hình ảnh
+                        urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif|ico)$/i,
+                        handler: 'StaleWhileRevalidate',
+                        options: {
+                            cacheName: 'images-cache',
+                            expiration: {
+                                maxEntries: 200,
+                                maxAgeSeconds: 60 * 60 * 24 * 30, // 30 ngày
+                            },
+                        },
+                    },
+                ],
             },
             manifest: {
                 name: 'MFILM - Phim online chất lượng cao',

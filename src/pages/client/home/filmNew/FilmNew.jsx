@@ -14,7 +14,7 @@ import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 function FilmNew(props) {
     const movies = useMovies();
-    
+
     const plans = useContext(PlanContext);
 
     const newMovies = useMemo(() => {
@@ -29,11 +29,11 @@ function FilmNew(props) {
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
             <div className='flex justify-between items-center'>
-                <Link to="/film-new" className='flex items-center gap-3'>
-                    <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>
+                <Link to="/film-new" className='flex items-center gap-2 sm:gap-3 group'>
+                    <h2 className='font-bold text-2xl md:text-3xl glow-text-multi group-hover:text-[#facc15] transition-colors duration-300'>
                         Phim Điện Ảnh Mới Coóng
                     </h2>
-                    <FaChevronRight className='border w-6 h-6 md:w-8 md:h-8 bg-transparent text-white border-white/30 p-1.5 rounded-full' />
+                    <FaChevronRight className='border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full group-hover:bg-yellow-400 group-hover:text-black transition-colors duration-300' />
                 </Link>
             </div>
 
@@ -104,9 +104,9 @@ function FilmNew(props) {
                                                     } else if (cId.includes('us') || cId.includes('mỹ') || cId.includes('u.s') || cId.includes('america')) {
                                                         bgCls = "from-blue-600 to-indigo-700 border-blue-400 shadow-[0_2px_4px_rgba(37,99,235,0.4)]";
                                                     }
-                                                    
+
                                                     const textCls = cId.includes('vietnam') || cId.includes('việt') ? 'text-black' : 'text-white';
-                                                    
+
                                                     return (
                                                         <p className={`bg-linear-to-r ${bgCls} ${textCls} border text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap uppercase tracking-wider`}>
                                                             {e.countriesID}

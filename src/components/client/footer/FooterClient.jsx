@@ -59,7 +59,7 @@ function FooterClient() {
                         <p>
                             MFILM - Trang xem phim online miễn phí chất lượng cao Vietsub, thuyết minh, lồng tiếng Full HD – 4K. Kho phim mới khổng lồ gồm phim chiếu rạp, phim bộ, phim lẻ từ Việt Nam, Hàn Quốc, Trung Quốc, Thái Lan, Nhật Bản, Âu Mỹ… đa dạng thể loại.
                             <br />
-                            Dịp Tết Việt Nam, RoPhim trở lại với loạt phim xuân hấp dẫn, hài Tết và siêu phẩm mới nhất, mang đến trải nghiệm giải trí trọn vẹn bên gia đình.
+                            Dịp Tết Việt Nam, MFILM trở lại với loạt phim xuân hấp dẫn, hài Tết và siêu phẩm mới nhất, mang đến trải nghiệm giải trí trọn vẹn bên gia đình.
                         </p>
 
                         <p className='mt-5 text-sm font-medium tracking-wide text-gray-400'>

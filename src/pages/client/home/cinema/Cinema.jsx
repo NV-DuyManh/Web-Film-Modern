@@ -14,7 +14,7 @@ import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 
 function Cinema() {
     const movies = useMovies();
-    
+
     const plans = useContext(PlanContext);
     const categoryTypes = useContext(CategoryTypeContext);
 
@@ -39,9 +39,11 @@ function Cinema() {
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>
             <div className='flex justify-between items-center '>
-                <Link to="/cinema-movies" className='flex items-center gap-3'>
-                    <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>Mãn Nhãn với Phim Chiếu Rạp</h2>
-                    <FaChevronRight className='border w-6 h-6 md:w-8 md:h-8 bg-transparent text-white border-white/30 p-1.5 rounded-full' />
+                <Link to="/cinema-movies" className='flex items-center gap-2 sm:gap-3 group'>
+                    <h2 className='font-bold text-2xl md:text-3xl glow-text-multi group-hover:text-[#facc15] transition-colors duration-300'>
+                        Mãn Nhãn với Phim Chiếu Rạp
+                    </h2>
+                    <FaChevronRight className='border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full group-hover:bg-yellow-400 group-hover:text-black transition-colors duration-300' />
                 </Link>
             </div>
 
@@ -111,9 +113,9 @@ function Cinema() {
                                                     } else if (cId.includes('us') || cId.includes('mỹ') || cId.includes('u.s') || cId.includes('america')) {
                                                         bgCls = "from-blue-600 to-indigo-700 border-blue-400 shadow-[0_2px_4px_rgba(37,99,235,0.4)]";
                                                     }
-                                                    
+
                                                     const textCls = cId.includes('vietnam') || cId.includes('việt') ? 'text-black' : 'text-white';
-                                                    
+
                                                     return (
                                                         <p className={`bg-linear-to-r ${bgCls} ${textCls} border text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap uppercase tracking-wider`}>
                                                             {e.countriesID}
@@ -131,9 +133,9 @@ function Cinema() {
                                     <div className="pt-6 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
                                         <h3 className="text-white font-bold text-base md:text-lg truncate w-full transition-colors group-hover:text-[#facc15]">{e.otherName}</h3>
                                         <p className="text-slate-400 text-[10px] md:text-[11px] truncate w-full mt-0.5 mb-1 transition-colors group-hover:text-slate-200">{e.name}</p>
-                                        
+
                                         <div className="flex flex-col items-center gap-1.5 w-full">
-                                            
+
                                             <div className="flex justify-center gap-2">
                                                 {e.releaseYear && <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-indigo-500 to-purple-500 rounded-full text-white text-[9px] md:text-[10px] w-max font-bold shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(99,102,241,0.6)]"><FaCalendarAlt /> {e.releaseYear}</p>}
                                                 <p className="flex items-center gap-1.5 px-2.5 py-0.5 bg-linear-to-r from-yellow-400 to-amber-600 rounded-full text-white text-[9px] md:text-[10px] font-bold shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(251,191,36,0.6)]">
