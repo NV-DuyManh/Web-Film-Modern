@@ -349,7 +349,7 @@ QUY TẮC CỐT LÕI & NGUYÊN TẮC ỨNG BIẾN LINH HOẠT:
 
 5. THỐNG KÊ MFILM: Tổng số phim: ${totalMovies} (Free: ${freeMoviesCount}, Có phí: ${paidMoviesCount}). Tổng số tập phim toàn web: ${totalEpisodes} tập.
 ${planBreakdown}
-6. GÓI CỦA USER: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Nếu Free (Level 0), gợi ý phim Free và mời [Nâng Cấp Gói VIP](/upgrade).
+6. GÓI CỦA USER & QUYỀN TRUY CẬP: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Mặc định ưu tiên gợi ý phim phù hợp gói. TUY NHIÊN, nếu người dùng ĐẶC BIỆT YÊU CẦU tìm phim thuộc gói cao hơn (như Premium, VIP) hoặc muốn thuê phim, BẮT BUỘC PHẢI TÌM VÀ CUNG CẤP danh sách phim đó cho họ (không được từ chối), sau đó có thể gợi ý nâng cấp gói VIP hoặc thuê phim.
 7. GIAO TIẾP & ĐỊNH DẠNG: Lễ phép, duyên dáng, thân thiện, dùng emoji 🍿🎬✨. TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Khi liệt kê danh sách, dùng 1 loại gạch đầu dòng duy nhất: dấu gạch ngang "-" (ví dụ: "- Hài", "- Hành động"), TUYỆT ĐỐI KHÔNG lặp/ghép 2 ký tự như "- •" hay "• -". Dùng cú pháp [Tên Phim](/phim/slug-chinh-xac).
 8. ĐIỀU KHIỂN WEB: Dùng tool \`dieu_khien_website\` khi người dùng yêu cầu mở phim, tìm kiếm, đăng nhập hoặc nâng cấp VIP.
 
@@ -1093,8 +1093,8 @@ export const GROQ_TOOLS = [
                     tac_gia: { type: "string", description: "Tên tác giả hoặc đạo diễn" },
                     the_loai: { type: "string", description: "Thể loại phim" },
                     quoc_gia: { type: "string", description: "Quốc gia" },
-                    loai_phi: { type: "string", description: "Lọc phim: 'free' (chỉ phim miễn phí), 'paid' (chỉ phim có phí), 'user_plan' (chỉ phim phù hợp gói cước hiện tại của người dùng)" },
-                    phu_hop_goi_user: { type: "boolean", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại của họ" },
+                    loai_phi: { type: "string", description: "Lọc phim: 'free' (chỉ phim miễn phí), 'paid' (khi người dùng ĐẶC BIỆT yêu cầu tìm phim Premium, VIP, có phí, hoặc thuê phim), 'user_plan' (chỉ phim phù hợp gói cước hiện tại của người dùng)" },
+                    phu_hop_goi_user: { type: "boolean", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại. Đặt là false nếu người dùng đang đặc biệt yêu cầu tìm phim Premium/VIP nhưng gói của họ không đủ." },
                     sap_xep: { type: "string", enum: ["nhieu_phan_nhat", "nhieu_tap_nhat", "it_tap_nhat", "moi_nhat", "cu_nhat", "xem_nhieu_nhat"], description: "Tiêu chí sắp xếp: 'nhieu_phan_nhat' (khi hỏi phim nhiều phần/season nhất), 'nhieu_tap_nhat', 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
                     xem_tiep: { type: "boolean", description: "Đặt là true khi người dùng muốn xem tiếp hoặc gợi ý thêm 5 phim khác trong danh sách (loại trừ các phim đã hiển thị trước đó)" },
                     so_luong: { type: "number", description: "Số lượng phim cần lấy (khi người dùng yêu cầu số lượng cụ thể như top 10, top 20, 3 phim...). Mặc định là 5." }
@@ -1152,8 +1152,8 @@ export const GEMINI_TOOLS = [
                         tac_gia: { type: "STRING", description: "Tên tác giả hoặc đạo diễn" },
                         the_loai: { type: "STRING", description: "Thể loại phim" },
                         quoc_gia: { type: "STRING", description: "Quốc gia" },
-                        loai_phi: { type: "STRING", description: "Lọc phim: 'free', 'paid', 'user_plan'" },
-                        phu_hop_goi_user: { type: "BOOLEAN", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại của họ" },
+                        loai_phi: { type: "STRING", description: "Lọc phim: 'free', 'paid' (khi người dùng yêu cầu phim Premium/VIP/có phí), 'user_plan'" },
+                        phu_hop_goi_user: { type: "BOOLEAN", description: "Đặt là true khi người dùng hỏi phim phù hợp gói. Đặt là false nếu người dùng muốn tìm phim Premium/VIP nhưng gói không đủ." },
                         sap_xep: { type: "STRING", description: "Tiêu chí sắp xếp: 'nhieu_phan_nhat', 'nhieu_tap_nhat', 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
                         xem_tiep: { type: "BOOLEAN", description: "Đặt là true khi người dùng muốn xem tiếp hoặc gợi ý thêm 5 phim khác trong danh sách" },
                         so_luong: { type: "NUMBER", description: "Số lượng phim cần lấy (khi người dùng yêu cầu số lượng cụ thể như top 10, top 20, 3 phim...)" }
