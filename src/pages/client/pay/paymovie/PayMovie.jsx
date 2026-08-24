@@ -1,4 +1,4 @@
-﻿import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useState } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -149,7 +149,7 @@ function PayMovie(props) {
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
                                     <p className="text-slate-300 font-medium inline">Phim:</p>
-                                    <p className="text-rose-400 font-black inline">{movie?.name}</p>
+                                    <p className="text-rose-400 font-black inline">{movie?.otherName || movie?.name}</p>
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
                                     <p className="text-slate-300 font-medium inline">Thời lượng:</p>
@@ -261,7 +261,7 @@ function PayMovie(props) {
             </div>
             <ModalPayMovie 
                 show={showModal} 
-                movieName={movie?.name} 
+                movieName={movie?.otherName || movie?.name} 
                 onClose={() => {
                     setShowModal(false);
                     window.scrollTo(0, 0);

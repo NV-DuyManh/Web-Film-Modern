@@ -371,14 +371,14 @@ function DetailFilm() {
                         <div className="rounded-xl overflow-hidden shadow-2xl w-44 sm:w-52 lg:w-full mx-auto relative z-20 -mt-32 sm:-mt-52 lg:-mt-48 border-4 border-[#0f1322]">
                             <img
                                 src={getOptimizedUrl(movie.imgUrl, 600, 900, 'poster')}
-                                alt={movie.name}
+                                alt={movie.otherName || movie.name}
                                 className="w-full aspect-2/3 object-cover"
                             />
                         </div>
 
                         <div className="text-center lg:text-left mt-1">
                             <h1 className="text-xl md:text-2xl font-extrabold text-white mb-1 leading-tight">
-                                {movie.otherName}
+                                {movie.otherName || movie.name}
                             </h1>
                             <h2 className="text-xs md:text-sm text-yellow-500 font-medium">
                                 {movie.name}
@@ -485,15 +485,15 @@ function DetailFilm() {
                                             {index + 1}
                                         </div>
                                         <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 border border-slate-700/60">
-                                            <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.otherName || m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                         </div>
                                         <div className="flex flex-col min-w-0 relative">
-                                            <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.name}</h4>
+                                            <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.otherName || m.name}</h4>
                                             <p className="text-[11px] text-slate-400 mt-0.5">{m.year || 2024} • {m.endEpisode} Tập</p>
 
                                             <div className="absolute top-0 left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-[-110%] transition duration-300 z-50 pointer-events-none whitespace-nowrap">
                                                 <div className="bg-[#0f1322]/95 backdrop-blur-md text-yellow-400 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
-                                                    {m.name}
+                                                    {m.otherName || m.name}
                                                 </div>
                                             </div>
                                         </div>
@@ -688,7 +688,7 @@ function DetailFilm() {
                                             className="group cursor-pointer flex flex-col h-full"
                                         >
                                             <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                                <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.name} className="w-full h-full object-cover" />
+                                                <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.otherName || m.name} className="w-full h-full object-cover" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
                                                 <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
                                                     <p className="bg-blue-600/90 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap">
