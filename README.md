@@ -457,8 +457,7 @@ FILM_MANAGEMENT/
 
 **1. Clone repo**
 ```bash
-git clone https://github.com/NV-DuyManh/ManhFilm.git
-cd FILM_MANAGEMENT
+https://github.com/NV-DuyManh/Web-Film-Modern.git
 ```
 
 **2. Cài dependencies**
