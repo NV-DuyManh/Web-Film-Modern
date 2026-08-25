@@ -20,9 +20,7 @@ export default function LazySection({ children, minHeight = '400px', rootMargin 
 
     return (
         <div ref={ref} style={{
-            minHeight: isVisible ? 'auto' : minHeight,
-            contentVisibility: 'auto',
-            containIntrinsicSize: `auto ${minHeight}`,
+            minHeight: isVisible ? undefined : minHeight,
         }}>
             {isVisible ? (
                 <ErrorBoundary>

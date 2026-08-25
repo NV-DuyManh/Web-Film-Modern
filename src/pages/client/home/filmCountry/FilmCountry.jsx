@@ -18,7 +18,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
     const [cardWidth, setCardWidth] = useState(0);
     const [gap, setGap] = useState(20);
 
-    const [isHovered, setIsHovered] = useState(false);
+    const isHoveredRef = useRef(false);
     const isInteracting = useRef(false);
 
     // Smooth button animation state
@@ -39,11 +39,11 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
         return (movies || []).filter(m => m.countriesID?.toLowerCase() === countryName.toLowerCase());
     }, [movies, countryName]);
 
-    // Ensure enough items so duplicating creates a seamless infinite loop
+    // Ensure enough items so duplicating creates a seamless infinite loop (12+ items for wide screens)
     const duplicatedMovies = useMemo(() => {
         if (!filteredMovies || filteredMovies.length === 0) return [];
         let list = [...filteredMovies];
-        while (list.length < 8) {
+        while (list.length < 12) {
             list = [...list, ...filteredMovies];
         }
         return [...list, ...list].map((m, idx) => ({
@@ -57,6 +57,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
         const updateSizes = () => {
             if (!containerRef.current) return;
             const width = containerRef.current.clientWidth;
+            if (!width) return;
             let count = 4;
             let g = 20;
             if (width < 400) {
@@ -79,9 +80,13 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
         updateSizes();
         const observer = new ResizeObserver(() => updateSizes());
         if (containerRef.current) observer.observe(containerRef.current);
+        window.addEventListener('resize', updateSizes);
 
-        return () => observer.disconnect();
-    }, []);
+        return () => {
+            observer.disconnect();
+            window.removeEventListener('resize', updateSizes);
+        };
+    }, [duplicatedMovies.length]);
 
     // Set initial position for reverse direction
     useEffect(() => {
@@ -123,7 +128,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                     isAnimatingBtn.current = false;
                     posRef.current = targetPos.current;
                 }
-            } else if (!isHovered && !isInteracting.current) {
+            } else if (!isHoveredRef.current && !isInteracting.current) {
                 const deltaTime = currentTime - lastTime;
                 const distance = (speed * deltaTime) / 1000;
 
@@ -149,14 +154,29 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
         return () => {
             cancelAnimationFrame(animationFrameId);
         };
-    }, [isHovered, duplicatedMovies, speed, isReverse, cardWidth]);
+    }, [duplicatedMovies, speed, isReverse, cardWidth]);
+
+    const getStep = () => {
+        if (containerRef.current) {
+            const width = containerRef.current.clientWidth;
+            if (width > 0) {
+                let count = 4;
+                let g = 20;
+                if (width < 400) { count = 1; g = 10; }
+                else if (width < 900) { count = 2; g = 12; }
+                else if (width < 1280) { count = 3; g = 15; }
+                else { count = 4; g = 20; }
+                return Math.max(100, (width - (count - 1) * g) / count) + g;
+            }
+        }
+        return (cardWidth || 280) + gap;
+    };
 
     // Smooth button click handlers (no stutter, no snapback)
     const handleNext = (e) => {
         e?.preventDefault();
         e?.stopPropagation();
-        if (!cardWidth) return;
-        const step = cardWidth + gap;
+        const step = getStep();
         startPos.current = posRef.current;
         targetPos.current = posRef.current + step;
         animStartTime.current = performance.now();
@@ -166,8 +186,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
     const handlePrev = (e) => {
         e?.preventDefault();
         e?.stopPropagation();
-        if (!cardWidth) return;
-        const step = cardWidth + gap;
+        const step = getStep();
         startPos.current = posRef.current;
         targetPos.current = posRef.current - step;
         animStartTime.current = performance.now();
@@ -218,7 +237,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
     if (countryName && filteredMovies.length === 0) return null;
 
     return (
-        <div className="country-section w-full md:flex md:items-center gap-6 lg:gap-8 py-2 px-6 md:px-10 overflow-hidden font-sans">
+        <div className="country-section w-full md:flex md:items-center gap-6 lg:gap-8 py-2 px-6 md:px-10 font-sans">
             <div className="country-sidebar justify-center items-center md:items-start max-md:mt-4 shrink-0 flex flex-col max-md:w-full md:w-40 md:-translate-y-5">
                 <h2 className={`m-0 mb-3 md:mb-4 text-xl md:text-2xl font-bold text-center md:text-left leading-snug tracking-wide drop-shadow-md ${titleClass || 'text-white'}`}>
                     {title}
@@ -231,16 +250,19 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
             <div className="country-slider flex-1 min-w-0" ref={containerRef}>
                 <div
                     className="movie-slider-wrapper relative group/slider py-3"
-                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseEnter={() => { isHoveredRef.current = true; }}
                     onMouseLeave={() => {
-                        setIsHovered(false);
+                        isHoveredRef.current = false;
                         onMouseUp();
                     }}
                 >
                     {/* Centered exactly on the 16:9 image poster (accounting for wrapper and track paddings) */}
                     <button
+                        type="button"
                         aria-label="Previous"
                         onClick={handlePrev}
+                        onMouseEnter={() => { isHoveredRef.current = true; }}
+                        onMouseLeave={() => { isHoveredRef.current = false; }}
                         className="movie-nav-btn movie-nav-btn--prev filmcountry-prev-btn z-30 cursor-pointer pointer-events-auto!"
                         draggable="false"
                     >
@@ -392,8 +414,11 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                     </div>
 
                     <button
+                        type="button"
                         aria-label="Next"
                         onClick={handleNext}
+                        onMouseEnter={() => { isHoveredRef.current = true; }}
+                        onMouseLeave={() => { isHoveredRef.current = false; }}
                         className="movie-nav-btn movie-nav-btn--next filmcountry-next-btn z-30 cursor-pointer pointer-events-auto!"
                         draggable="false"
                     >
