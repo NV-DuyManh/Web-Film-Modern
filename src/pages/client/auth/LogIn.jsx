@@ -6,7 +6,8 @@ import Logo2 from '../../../assets/Logo2.png';
 import { UserContext } from '../../../contexts/UserProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider } from '../../../config/firebaseConfig';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { auth, googleProvider, db } from '../../../config/firebaseConfig';
 import { ROLES } from '../../../utils/Constants';
 import { addDocument } from '../../../services/firebaseService';
 
@@ -14,6 +15,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
     const [showPassword, setShowPassword] = useState(false);
     const users = useContext(UserContext);
     const { loginByUser } = useContext(AuthContext);
+    const [loadingGoogle, setLoadingGoogle] = useState(false);
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -29,6 +31,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
             });
             setErrors({});
             setShowPassword(false);
+            setLoadingGoogle(false);
         }
     }, [openLogin]);
 
@@ -77,29 +80,53 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
     };
 
     const signInWithGoogle = async () => {
+        if (loadingGoogle) return;
+        setLoadingGoogle(true);
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
-            const existingCustomer = users.find(c => c.email === user.email);
-            let loggedInCustomer;
+            if (!user || !user.email) {
+                throw new Error("Không lấy được email tài khoản Google");
+            }
 
+            const targetEmail = user.email.toLowerCase().trim();
+
+            // 1. Kiểm tra trong UserContext trước
+            let existingCustomer = users?.find(c => c.email?.toLowerCase().trim() === targetEmail);
+
+            // 2. Nếu trong context chưa thấy, truy vấn trực tiếp Firestore để đảm bảo chính xác 100%
+            if (!existingCustomer) {
+                const q = query(collection(db, "Users"), where("email", "==", targetEmail));
+                const snap = await getDocs(q);
+                if (!snap.empty) {
+                    existingCustomer = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                }
+            }
+
+            let loggedInCustomer;
             if (!existingCustomer) {
                 const newCustomer = {
-                    name: user.displayName || user.email?.split('@')[0] || 'Người dùng',
+                    name: user.displayName || targetEmail.split('@')[0] || 'Người dùng',
+                    avatarUrl: user.photoURL || '',
                     imgUrl: user.photoURL || '',
                     role: ROLES.USER,
-                    email: user.email
+                    email: targetEmail
                 };
                 const userNew = await addDocument('Users', newCustomer);
                 loggedInCustomer = userNew;
             } else {
                 loggedInCustomer = existingCustomer;
             }
+
             loginByUser(loggedInCustomer);
             handleCloseLogin();
         } catch (error) {
             console.error("Google sign-in error:", error);
-            alert('Đăng nhập thất bại. Vui lòng thử lại.');
+            if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+                alert('Đăng nhập thất bại: ' + (error.message || 'Vui lòng thử lại.'));
+            }
+        } finally {
+            setLoadingGoogle(false);
         }
     };
 
@@ -188,8 +215,21 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
                         <div className="h-px flex-1 bg-slate-700" />
                     </div>
 
-                    <button onClick={signInWithGoogle} className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition">
-                        <FcGoogle size={18} /> Đăng nhập với Google
+                    <button 
+                        onClick={signInWithGoogle} 
+                        disabled={loadingGoogle}
+                        className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                        {loadingGoogle ? (
+                            <span className="flex items-center gap-2">
+                                <span className="inline-block w-4 h-4 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></span>
+                                Đang xử lý đăng nhập...
+                            </span>
+                        ) : (
+                            <>
+                                <FcGoogle size={18} /> Đăng nhập với Google
+                            </>
+                        )}
                     </button>
                 </div>
             </DialogContent>

@@ -5,18 +5,38 @@ import { FcGoogle } from 'react-icons/fc';
 import Logo2 from '../../../assets/Logo2.png';
 import { addDocument } from '../../../services/firebaseService';
 import { UserContext } from '../../../contexts/UserProvider';
+import { AuthContext } from '../../../contexts/AuthProvider';
 import { ROLES } from '../../../utils/Constants';
+import { signInWithPopup } from 'firebase/auth';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { auth, googleProvider, db } from '../../../config/firebaseConfig';
 
 function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const users = useContext(UserContext);
+    const { loginByUser } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);
+    const [loadingGoogle, setLoadingGoogle] = useState(false);
     const [formData, setFormData] = useState({
         name: '', email: '', password: '', confirmPassword: '', role: ROLES.USER
     });
 
     const [errors, setErrors] = useState({});
+
+    useEffect(() => {
+        if (!openRegister) {
+            setFormData({
+                name: '', email: '', password: '', confirmPassword: '', role: ROLES.USER
+            });
+            setErrors({});
+            setShowPassword(false);
+            setShowConfirmPassword(false);
+            setLoading(false);
+            setLoadingGoogle(false);
+        }
+    }, [openRegister]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -47,7 +67,58 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
         await addDocument("Users", submitData);
         handleCloseRegister();
         setLoading(false);
-    }
+    };
+
+    const signInWithGoogle = async () => {
+        if (loadingGoogle) return;
+        setLoadingGoogle(true);
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+            if (!user || !user.email) {
+                throw new Error("Không lấy được email tài khoản Google");
+            }
+
+            const targetEmail = user.email.toLowerCase().trim();
+
+            // 1. Kiểm tra trong UserContext trước
+            let existingCustomer = users?.find(c => c.email?.toLowerCase().trim() === targetEmail);
+
+            // 2. Nếu trong context chưa thấy, truy vấn trực tiếp Firestore để đảm bảo chính xác 100%
+            if (!existingCustomer) {
+                const q = query(collection(db, "Users"), where("email", "==", targetEmail));
+                const snap = await getDocs(q);
+                if (!snap.empty) {
+                    existingCustomer = { id: snap.docs[0].id, ...snap.docs[0].data() };
+                }
+            }
+
+            let loggedInCustomer;
+            if (!existingCustomer) {
+                const newCustomer = {
+                    name: user.displayName || targetEmail.split('@')[0] || 'Người dùng',
+                    avatarUrl: user.photoURL || '',
+                    imgUrl: user.photoURL || '',
+                    role: ROLES.USER,
+                    email: targetEmail
+                };
+                const userNew = await addDocument('Users', newCustomer);
+                loggedInCustomer = userNew;
+            } else {
+                loggedInCustomer = existingCustomer;
+            }
+
+            loginByUser(loggedInCustomer);
+            handleCloseRegister();
+        } catch (error) {
+            console.error("Google sign-in error:", error);
+            if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
+                alert('Đăng nhập thất bại: ' + (error.message || 'Vui lòng thử lại.'));
+            }
+        } finally {
+            setLoadingGoogle(false);
+        }
+    };
 
     return (
         <Dialog
@@ -142,8 +213,12 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
                         />
                     </div>
 
-                    <button onClick={addRegister} className="w-full cursor-pointer font-bold py-3 mt-6 rounded-xl text-sm tracking-wide bg-yellow-400 hover:bg-yellow-500 text-black transition shadow-[0_4px_14px_rgba(250,204,21,0.2)]">
-                        Đăng ký ngay
+                    <button 
+                        onClick={addRegister} 
+                        disabled={loading}
+                        className="w-full cursor-pointer font-bold py-3 mt-6 rounded-xl text-sm tracking-wide bg-yellow-400 hover:bg-yellow-500 text-black transition shadow-[0_4px_14px_rgba(250,204,21,0.2)] disabled:opacity-60"
+                    >
+                        {loading ? "Đang tạo tài khoản..." : "Đăng ký ngay"}
                     </button>
 
                     <div className="my-5 flex items-center gap-3 text-xs text-slate-500">
@@ -152,8 +227,21 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
                         <div className="h-px flex-1 bg-slate-700" />
                     </div>
 
-                    <button className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition">
-                        <FcGoogle size={18} /> Đăng ký với Google
+                    <button 
+                        onClick={signInWithGoogle}
+                        disabled={loadingGoogle}
+                        className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition disabled:opacity-60 disabled:cursor-not-allowed"
+                    >
+                        {loadingGoogle ? (
+                            <span className="flex items-center gap-2">
+                                <span className="inline-block w-4 h-4 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></span>
+                                Đang xử lý đăng nhập...
+                            </span>
+                        ) : (
+                            <>
+                                <FcGoogle size={18} /> Đăng ký với Google
+                            </>
+                        )}
                     </button>
                 </div>
             </DialogContent>

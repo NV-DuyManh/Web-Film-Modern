@@ -5,8 +5,12 @@ import { uploadImageToCloudinary } from "../config/cloudinaryConfig";
 const CREATED_AT_COLLECTIONS = ["Movies", "Users", "Reviews", "Comments", "Favorites", "Folders", "MoviesSave", "WatchHistory"];
 
 const uploadIfNeeded = async (url, collectionName) => {
-    if (url && !url.includes("res.cloudinary.com") && (url.startsWith("data:image") || url.startsWith("http"))) {
-        return await uploadImageToCloudinary(url, collectionName);
+    try {
+        if (url && typeof url === 'string' && url.startsWith("data:image") && !url.includes("res.cloudinary.com")) {
+            return await uploadImageToCloudinary(url, collectionName);
+        }
+    } catch (err) {
+        console.warn("Could not upload image to Cloudinary, using original:", err);
     }
     return url;
 };
