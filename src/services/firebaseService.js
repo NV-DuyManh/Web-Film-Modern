@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, query, where, limit, orderBy } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, setDoc, query, where, limit, orderBy } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { uploadImageToCloudinary } from "../config/cloudinaryConfig";
 
@@ -19,12 +19,15 @@ export const addDocument = async (collectionName, values) => {
     try {
         if (values.imgUrl) values.imgUrl = await uploadIfNeeded(values.imgUrl, collectionName);
         if (values.avatarUrl) values.avatarUrl = await uploadIfNeeded(values.avatarUrl, collectionName);
-        if (CREATED_AT_COLLECTIONS.includes(collectionName)) values.createdAt = Date.now();
-
-        const docRef = await addDoc(collection(db, collectionName), values);
-        await updateDoc(doc(db, collectionName, docRef.id), { id: docRef.id });
-        const addedDoc = await getDoc(doc(db, collectionName, docRef.id));
-        return { id: docRef.id, ...addedDoc.data() };
+        
+        const docRef = doc(collection(db, collectionName));
+        const finalData = {
+            ...values,
+            id: docRef.id,
+            ...(CREATED_AT_COLLECTIONS.includes(collectionName) ? { createdAt: Date.now() } : {})
+        };
+        await setDoc(docRef, finalData);
+        return finalData;
     } catch (error) {
         throw error;
     }
