@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Dialog, DialogContent, TextField, InputAdornment, IconButton } from '@mui/material';
 import { IoClose, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 import { FcGoogle } from 'react-icons/fc';
+import Swal from 'sweetalert2';
 import Logo2 from '../../../assets/Logo2.png';
-import { addDocument } from '../../../services/firebaseService';
+import { addDocument, updateDocument } from '../../../services/firebaseService';
 import { UserContext } from '../../../contexts/UserProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { ROLES } from '../../../utils/Constants';
@@ -63,20 +64,62 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
             return;
         }
         setLoading(true);
-        const { confirmPassword, ...submitData } = formData;
-        await addDocument("Users", submitData);
-        handleCloseRegister();
-        setLoading(false);
+        try {
+            const { confirmPassword, ...submitData } = formData;
+            const newUser = await addDocument("Users", submitData);
+            handleCloseRegister();
+            loginByUser(newUser);
+            Swal.fire({
+                icon: 'success',
+                title: 'Đăng ký thành công!',
+                text: `Chào mừng ${newUser.name || 'bạn'} gia nhập MFILM!`,
+                timer: 1800,
+                showConfirmButton: false,
+                background: '#0f172a',
+                color: '#fff',
+                customClass: {
+                    popup: 'border border-slate-700 shadow-2xl rounded-2xl'
+                }
+            });
+        } catch (error) {
+            console.error("Register error:", error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Đăng ký thất bại',
+                text: error.message || 'Vui lòng thử lại.',
+                background: '#0f172a',
+                color: '#fff',
+                confirmButtonColor: '#eab308'
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     const signInWithGoogle = async () => {
         if (loadingGoogle) return;
         setLoadingGoogle(true);
         try {
-            const result = await signInWithPopup(auth, googleProvider);
-            const user = result.user;
+            let user = null;
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                user = result?.user;
+            } catch (popupError) {
+                console.warn("Popup error, checking auth.currentUser fallback:", popupError);
+                if (auth.currentUser?.email) {
+                    user = auth.currentUser;
+                } else {
+                    await new Promise(r => setTimeout(r, 600));
+                    if (auth.currentUser?.email) {
+                        user = auth.currentUser;
+                    } else {
+                        throw popupError;
+                    }
+                }
+            }
+
             if (!user || !user.email) {
-                throw new Error("Không lấy được email tài khoản Google");
+                throw new Error("Không thể lấy thông tin tài khoản Google.");
             }
 
             const targetEmail = user.email.toLowerCase().trim();
@@ -84,7 +127,7 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
             // 1. Kiểm tra trong UserContext trước
             let existingCustomer = users?.find(c => c.email?.toLowerCase().trim() === targetEmail);
 
-            // 2. Nếu trong context chưa thấy, truy vấn trực tiếp Firestore để đảm bảo chính xác 100%
+            // 2. Nếu trong context chưa thấy, truy vấn trực tiếp Firestore
             if (!existingCustomer) {
                 const q = query(collection(db, "Users"), where("email", "==", targetEmail));
                 const snap = await getDocs(q);
@@ -105,15 +148,39 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
                 const userNew = await addDocument('Users', newCustomer);
                 loggedInCustomer = userNew;
             } else {
+                if (!existingCustomer.avatarUrl && user.photoURL) {
+                    existingCustomer.avatarUrl = user.photoURL;
+                    updateDocument('Users', { id: existingCustomer.id, avatarUrl: user.photoURL }).catch(() => {});
+                }
                 loggedInCustomer = existingCustomer;
             }
 
             loginByUser(loggedInCustomer);
             handleCloseRegister();
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Đăng nhập thành công!',
+                text: `Chào mừng ${loggedInCustomer.name || 'bạn'} đến với MFILM!`,
+                timer: 1800,
+                showConfirmButton: false,
+                background: '#0f172a',
+                color: '#fff',
+                customClass: {
+                    popup: 'border border-slate-700 shadow-2xl rounded-2xl'
+                }
+            });
         } catch (error) {
             console.error("Google sign-in error:", error);
             if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
-                alert('Đăng nhập thất bại: ' + (error.message || 'Vui lòng thử lại.'));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Đăng nhập thất bại',
+                    text: error.message || 'Vui lòng thử lại.',
+                    background: '#0f172a',
+                    color: '#fff',
+                    confirmButtonColor: '#eab308'
+                });
             }
         } finally {
             setLoadingGoogle(false);
