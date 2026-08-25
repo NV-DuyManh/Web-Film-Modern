@@ -74,7 +74,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
         } else {
             setErrors({ email: 'Tài khoản hoặc mật khẩu không chính xác' });
         }
-    }
+    };
 
     const signInWithGoogle = async () => {
         try {
@@ -85,23 +85,24 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
 
             if (!existingCustomer) {
                 const newCustomer = {
-                    name: user.name,
-                    imgUrl: user.photoURL,
+                    name: user.displayName || user.email?.split('@')[0] || 'Người dùng',
+                    imgUrl: user.photoURL || '',
                     role: ROLES.USER,
                     email: user.email
                 };
-               const userNew =  await addDocument('Users', newCustomer);
-
-                loggedInCustomer = userNew ;
+                const userNew = await addDocument('Users', newCustomer);
+                loggedInCustomer = userNew;
             } else {
                 loggedInCustomer = existingCustomer;
             }
-             loginByUser(loggedInCustomer);
-             handleCloseLogin();
+            loginByUser(loggedInCustomer);
+            handleCloseLogin();
         } catch (error) {
-           alert('Đăng nhập thất bại. Vui lòng thử lại.');
+            console.error("Google sign-in error:", error);
+            alert('Đăng nhập thất bại. Vui lòng thử lại.');
         }
     };
+
     return (
         <Dialog
             open={openLogin}
