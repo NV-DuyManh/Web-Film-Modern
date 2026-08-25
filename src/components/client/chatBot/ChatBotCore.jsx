@@ -16,6 +16,19 @@ export const normalizeVietnameseTypo = (str) => {
         // Sửa các lỗi gõ Telex dính phím phổ biến
         .replace(/nhimeej|nhimej|nhiejm|nhiemj|nheejm/gi, 'nhiệm')
         .replace(/đặt nhiệm|dat nhiem|dac nhimeej|dac nhimej/gi, 'đặc nhiệm')
+        .replace(/trungf|trunf|tq/gi, 'trung')
+        .replace(/quoocs|quosc|qooc|qoc/gi, 'quốc')
+        .replace(/hafn|hann/gi, 'hàn')
+        .replace(/nhaatj|nhatj|nhatr/gi, 'nhật')
+        .replace(/vieetj|vietj|vieet/gi, 'việt')
+        .replace(/namf|namr/gi, 'nam')
+        .replace(/myx|mwx|myj|mi~/gi, 'mỹ')
+        .replace(/thais|thais lan/gi, 'thái')
+        .replace(/hoongf|hoong/gi, 'hồng')
+        .replace(/koong|koongf/gi, 'kông')
+        .replace(/kiemf|kiemj|kieepm/gi, 'kiếm')
+        .replace(/hiepff|hiepj|hieejp/gi, 'hiệp')
+        .replace(/tieen|tiejn/gi, 'tiên')
         .replace(/([a-z])ee([rsfajx]?)/gi, '$1ê')
         .replace(/([a-z])oo([rsfajx]?)/gi, '$1ô')
         .replace(/([a-z])aa([rsfajx]?)/gi, '$1â')
@@ -112,6 +125,155 @@ export const isFuzzyMatch = (searchTerm, targetStr) => {
         }
     }
     return false;
+};
+
+/**
+ * Từ điển nhận diện và ánh xạ quốc gia đa ngôn ngữ (Việt - Anh - Tên viết tắt - Tiếng lóng người Việt hay dùng)
+ */
+export const COUNTRY_DICTIONARY = {
+    'trung quoc': [
+        'trung quoc', 'china', 'chinese', 'trung', 'hoa ngu', 'dai luc', 'bac kinh', 'beijing', 
+        'thuong hai', 'tq', 'c-drama', 'cdrama', 'c drama', 'tau', 'tau khua', 'khua', 'phim tau',
+        'kiem hiep', 'tien hiep', 'tu tien', 'huyen huyen', 'cung dau', 'ngon tinh'
+    ],
+    'han quoc': [
+        'han quoc', 'korea', 'south korea', 'korean', 'han', 'seoul', 'hq', 'k-drama', 'kdrama', 'k drama',
+        'kim chi', 'xu kim chi', 'xu so kim chi', 'oppa', 'han xeng', 'phim han xeng'
+    ],
+    'nhat ban': [
+        'nhat ban', 'japan', 'japanese', 'nhat', 'anime', 'tokyo', 'manga', 'j-drama', 'jdrama', 'j drama',
+        'hoa anh dao', 'xu hoa anh dao', 'xu so hoa anh dao', 'phu tang', 'xu phu tang', 'xu so phu tang',
+        'wibu', 'otaku', 'live action', 'isekai'
+    ],
+    'viet nam': [
+        'viet nam', 'vietnam', 'vn', 'viet', 'nuoc minh', 'nuoc nha', 'nha minh', 'trong nuoc',
+        'phim viet', 'phim vtv', 'chieu rap viet', 'dien anh viet'
+    ],
+    'my': [
+        'my', 'us', 'usa', 'united states', 'america', 'american', 'hollywood', 'au my', 'us-uk', 'usuk',
+        'phim tay', 'phuong tay', 'chu sam', 'phim chu sam', 'bom tan my', 'bom tan hollywood'
+    ],
+    'thai lan': [
+        'thai lan', 'thailand', 'thai', 'chua vang', 'xu chua vang', 'xu so chua vang', 't-drama', 'tdrama',
+        'bangkok', 'phim thai', 'dam my thai'
+    ],
+    'hong kong': [
+        'hong kong', 'hongkong', 'huong cang', 'xu huong cang', 'hk', 'tvb', 'phim tvb', 'canh sat hong kong'
+    ],
+    'dai loan': [
+        'dai loan', 'taiwan', 'taiwanese', 'than tuong dai loan'
+    ],
+    'an do': [
+        'an do', 'india', 'indian', 'bollywood', 'co dau 8 tuoi'
+    ],
+    'anh': [
+        'anh', 'uk', 'united kingdom', 'england', 'british', 'suong mu', 'xu suong mu', 'xu so suong mu'
+    ],
+    'phap': [
+        'phap', 'france', 'french', 'paris', 'chau au'
+    ]
+};
+
+/**
+ * Trích xuất quốc gia từ câu hỏi / tiếng lóng / cách nói chuyện tự nhiên của người Việt
+ */
+export const detectCountryInQuery = (str) => {
+    if (!str) return null;
+    const s = searchTV(str);
+    
+    // 1. Trung Quốc: phim trung, hoa ngữ, đại lục, tàu, tàu khựa, c-drama, tq, kiếm hiệp, tiên hiệp, tu tiên, cung đấu...
+    if (/\b(trung quoc|phim trung|trung|hoa ngu|dai luc|china|chinese|tq|c-drama|cdrama|c drama|tau khua|phim tau|khua|kiem hiep|tien hiep|tu tien|cung dau|ngon tinh|bac kinh|thuong hai)\b/i.test(s)) {
+        return 'trung quoc';
+    }
+    // 2. Hàn Quốc: phim hàn, k-drama, xứ kim chi, oppa, hàn xẻng, korea, seoul...
+    if (/\b(han quoc|phim han|han|south korea|korean|korea|hq|k-drama|kdrama|k drama|kim chi|xu kim chi|xu so kim chi|oppa|han xeng|seoul)\b/i.test(s)) {
+        return 'han quoc';
+    }
+    // 3. Nhật Bản: phim nhật, anime, xứ hoa anh đào, xứ phù tang, japan, wibu, tokyo, manga...
+    if (/\b(nhat ban|phim nhat|nhat|japan|japanese|anime|wibu|otaku|isekai|manga|j-drama|jdrama|j drama|hoa anh dao|xu hoa anh dao|phu tang|xu phu tang|live action|tokyo)\b/i.test(s)) {
+        return 'nhat ban';
+    }
+    // 4. Việt Nam: phim việt, nước mình, nước nhà, phim nhà mình, trong nước, vn, vtv...
+    if (/\b(viet nam|phim viet|viet|vietnam|vn|nuoc minh|nuoc nha|nha minh|trong nuoc|vtv|chieu rap viet)\b/i.test(s)) {
+        return 'viet nam';
+    }
+    // 5. Mỹ / Âu Mỹ: phim mỹ, hollywood, âu mỹ, chú sam, usa, us-uk, phương tây...
+    if (/\b(phim my|au my|hollywood|usa|united states|us|us-uk|usuk|chu sam|phim tay|phuong tay|bom tan my|bom tan hollywood)\b/i.test(s)) {
+        return 'my';
+    }
+    // 6. Thái Lan: phim thái, xứ chùa vàng, thailand, t-drama, bangkok...
+    if (/\b(thai lan|phim thai|thai|thailand|chua vang|xu chua vang|xu so chua vang|t-drama|tdrama|bangkok)\b/i.test(s)) {
+        return 'thai lan';
+    }
+    // 7. Hồng Kông: phim hồng kông, tvb, hương cảng, hk...
+    if (/\b(hong kong|hongkong|phim hong kong|phim tvb|tvb|huong cang|xu huong cang|hk)\b/i.test(s)) {
+        return 'hong kong';
+    }
+    // 8. Đài Loan
+    if (/\b(dai loan|taiwan|taiwanese)\b/i.test(s)) {
+        return 'dai loan';
+    }
+    // 9. Ấn Độ: bollywood, ấn độ, india...
+    if (/\b(an do|india|indian|bollywood)\b/i.test(s)) {
+        return 'an do';
+    }
+    // 10. Anh / Pháp / Châu Âu
+    if (/\b(phim anh|united kingdom|england|british|suong mu|xu suong mu)\b/i.test(s)) {
+        return 'anh';
+    }
+    if (/\b(phim phap|france|french|paris|chau au)\b/i.test(s)) {
+        return 'phap';
+    }
+    
+    return null;
+};
+
+/**
+ * Kiểm tra xem một bộ phim có thuộc quốc gia được yêu cầu không
+ */
+export const isMovieMatchCountry = (m, targetCountryKey) => {
+    if (!m || !targetCountryKey) return false;
+    const mCountryRaw = searchTV(m.countriesID || m.country || '').trim();
+    if (!mCountryRaw) return false;
+
+    const aliases = COUNTRY_DICTIONARY[targetCountryKey] || [targetCountryKey];
+    
+    return aliases.some(alias => 
+        mCountryRaw === alias ||
+        mCountryRaw.includes(alias) ||
+        alias.includes(mCountryRaw)
+    );
+};
+
+/**
+ * Nhận diện yêu cầu gói cước từ câu hỏi của người dùng (Premium, VIP, Plus, Basic, Free, Xịn nhất, Cao nhất...)
+ */
+export const detectPlanInQuery = (str) => {
+    if (!str) return null;
+    const s = searchTV(str);
+    
+    // Level 3 / Premium / VIP / Xịn nhất / Cao nhất / Đắt nhất
+    if (/\b(premium|prenium|vip|goi vip|goi premium|level 3|l3|cao cap|vip nhat|xin nhat|xin|xịn nhất|xịn|cao nhat|dat nhat|tot nhat|vip pro|vip max|max|loai xin|loai xin nhat|loai cao|loai cao nhat)\b/i.test(s)) {
+        return { name: 'Premium', targetLevel: 3, isPaid: true };
+    }
+    // Level 2 / Plus / Tầm trung / Vừa
+    if (/\b(plus|goi plus|level 2|l2|tam trung|goi vua|loai vua)\b/i.test(s)) {
+        return { name: 'Plus', targetLevel: 2, isPaid: true };
+    }
+    // Level 1 / Basic / Cơ bản / Thấp nhất / Rẻ nhất
+    if (/\b(basic|goi basic|level 1|l1|co ban|thap nhat|re nhat|loai re|loai thap)\b/i.test(s)) {
+        return { name: 'Basic', targetLevel: 1, isPaid: true };
+    }
+    // Free / Miễn phí / 0 đồng / Không mất tiền
+    if (/\b(free|mien phi|goi free|level 0|l0|khong mat tien|khong ton phi|khong ton tien|0 dong|xem free)\b/i.test(s)) {
+        return { name: 'Free', targetLevel: 0, isFree: true };
+    }
+    // Paid chung chung (có phí / trả phí)
+    if (/\b(co phi|tra phi|tinh phi|mua goi|nang cap)\b/i.test(s)) {
+        return { name: 'Paid', targetLevel: null, isPaid: true };
+    }
+    
+    return null;
 };
 
 /**
@@ -245,9 +407,9 @@ export const getFranchiseStats = (movies = []) => {
 export const buildMovieCatalogSummary = (movies = [], categories = [], plans = [], characters = []) => {
     if (!movies || movies.length === 0) return "Chưa có phim nào trong hệ thống.";
     
-    // Top 20 phim tiêu biểu nhất
+    // Top 25 phim tiêu biểu nhất
     const sorted = [...movies].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0));
-    const sampleMovies = sorted.slice(0, 20).map(m => {
+    const sampleMovies = sorted.slice(0, 25).map(m => {
         const planInfo = getMoviePlanInfo(m, plans);
         const catNames = (m.listCategory || [])
             .map(catId => categories.find(c => String(c.id) === String(catId))?.name)
@@ -257,7 +419,8 @@ export const buildMovieCatalogSummary = (movies = [], categories = [], plans = [
         const title = m.otherName || m.name || 'Không rõ';
         const slug = m.slug || m.id;
         const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
-        return `- [${slug}] "${title}" | [Gói ${planInfo.planName} L${planInfo.level}] | ${epStr} | ${catNames}`;
+        const country = m.countriesID || m.country || 'Khác';
+        return `- [${slug}] "${title}" | QG: ${country} | [Gói ${planInfo.planName} L${planInfo.level}] | ${epStr} | ${catNames}`;
     }).join('\n');
 
     // Thống kê các series nhiều phần nhất thực tế trên MFILM
@@ -349,9 +512,24 @@ QUY TẮC CỐT LÕI & NGUYÊN TẮC ỨNG BIẾN LINH HOẠT:
 
 5. THỐNG KÊ MFILM: Tổng số phim: ${totalMovies} (Free: ${freeMoviesCount}, Có phí: ${paidMoviesCount}). Tổng số tập phim toàn web: ${totalEpisodes} tập.
 ${planBreakdown}
-6. GÓI CỦA USER & QUYỀN TRUY CẬP: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Mặc định ưu tiên gợi ý phim phù hợp gói. TUY NHIÊN, nếu người dùng ĐẶC BIỆT YÊU CẦU tìm phim thuộc gói cao hơn (như Premium, VIP) hoặc muốn thuê phim, BẮT BUỘC PHẢI TÌM VÀ CUNG CẤP danh sách phim đó cho họ (không được từ chối), sau đó có thể gợi ý nâng cấp gói VIP hoặc thuê phim.
-7. GIAO TIẾP & ĐỊNH DẠNG: Lễ phép, duyên dáng, thân thiện, dùng emoji 🍿🎬✨. TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Khi liệt kê danh sách, dùng 1 loại gạch đầu dòng duy nhất: dấu gạch ngang "-" (ví dụ: "- Hài", "- Hành động"), TUYỆT ĐỐI KHÔNG lặp/ghép 2 ký tự như "- •" hay "• -". Dùng cú pháp [Tên Phim](/phim/slug-chinh-xac).
+6. GÓI CỦA USER & QUYỀN TRUY CẬP: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Ưu tiên gợi ý phim xem được. Nếu người dùng muốn tìm phim gói cao hơn hoặc thuê phim, hãy tìm và cung cấp thông tin cho họ.
+7. GIAO TIẾP TỰ NHIÊN, NGẮN GỌN, DỄ HIỂU:
+   - Trả lời ngắn gọn, súc tích, đi thẳng vào câu trả lời, dùng emoji nhẹ nhàng 🍿🎬.
+   - TUYỆT ĐỐI KHÔNG nói dài dòng, TUYỆT ĐỐI KHÔNG lặp đi lặp lại những câu giải thích rườm rà trong ngoặc đơn (như "(Bạn đang dùng gói Free, nên phim này hiện chưa thể xem được. Bạn có thể nâng cấp...)").
+   - Khi giới thiệu phim: Chỉ cần tên phim, số tập, thể loại ngắn gọn (1 dòng).
+   - TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Khi liệt kê dùng dấu gạch ngang "-" duy nhất. Dùng cú pháp [Tên Phim](/phim/slug-chinh-xac).
 8. ĐIỀU KHIỂN WEB: Dùng tool \`dieu_khien_website\` khi người dùng yêu cầu mở phim, tìm kiếm, đăng nhập hoặc nâng cấp VIP.
+9. QUY TẮC BẢO ĐẢM ĐÚNG QUỐC GIA & NGỮ CẢNH HỘI THOẠI:
+   - Khi đang trò chuyện về một quốc gia (ví dụ: Việt Nam, Trung Quốc, Nhật Bản...) mà người dùng hỏi tiếp về gói cước ("còn loại xịn nhất thì sao", "gói VIP thì sao", "phim có phí"): BẮT BUỘC duy trì ngữ cảnh quốc gia đó khi tra cứu.
+   - NẾU TRÊN MFILM CHƯA CÓ PHIM CỦA QUỐC GIA ĐÓ THUỘC GÓI ĐƯỢC HỎI (ví dụ: chưa có phim Việt Nam nào thuộc gói Premium):
+     + BẮT BUỘC NÓI THẲNG: "Hiện tại trên MFILM chưa có phim Việt Nam nào thuộc gói Premium."
+     + TUYỆT ĐỐI KHÔNG BAO GIỜ lấy phim Nhật Bản / nước khác rồi gọi đó là "Phim Việt Nam xịn nhất"!
+     + Nếu muốn gợi ý phim nước khác: Phải nói rõ ràng "Nhưng MFILM đang có các phim Nhật Bản gói Premium như [Tên Phim], bạn có muốn xem thử không nè?".
+10. QUY TẮC TRA CỨU THEO GÓI CƯỚC (PREMIUM / XỊN NHẤT, PLUS, BASIC, FREE):
+    - Khi người dùng hỏi về gói cước bằng bất kỳ từ ngữ nào (ví dụ: "gói xịn nhất", "gói cao nhất", "phim VIP", "phim Premium", "gói Plus", "gói Basic", "phim Free"):
+      + BẮT BUỘC gọi tool \`tra_cuu_phim\` với tham số \`loai_phi='premium'\` (khi hỏi gói xịn nhất/Premium/VIP), \`loai_phi='plus'\`, \`loai_phi='basic'\`, hoặc \`loai_phi='free'\`.
+      + Nếu có kèm quốc gia (ví dụ: "phim VN gói xịn nhất"), truyền thêm \`quoc_gia='Việt Nam'\`.
+      + BẮT BUỘC hiển thị theo ĐÚNG danh sách phim do tool \`tra_cuu_phim\` trả về. TUYỆT ĐỐI KHÔNG tự trả lời bằng trí nhớ hay tự bịa số lượng phim!
 
 [DANH SÁCH TẤT CẢ THỂ LOẠI & CHỦ ĐỀ TRÊN MFILM]:
 ${allCategoriesList || 'Hành động, Hài, Giả tưởng, Chính kịch, Kinh dị, Khoa học, Kỳ ảo, Tâm lý, Viễn tưởng, Phiêu lưu, Hoạt hình, Anime, Võ thuật, Cổ trang, Tình cảm, Học đường, Gia đình, Thể thao, Âm nhạc, Chiếu rạp, Phim bộ, Phim lẻ'}
@@ -442,6 +620,15 @@ export const executeMovieLookup = ({
         });
     }
 
+    // 2. Nhận diện gói cước từ args.loai_phi HOẶC args.tu_khoa HOẶC rawUserQuery
+    let requestedPlan = null;
+    if (args.loai_phi) {
+        requestedPlan = detectPlanInQuery(args.loai_phi);
+    }
+    if (!requestedPlan) {
+        requestedPlan = detectPlanInQuery(args.tu_khoa) || detectPlanInQuery(rawUserQuery);
+    }
+
     // Lọc theo gói cước
     if (args.loai_phi === 'user_plan' || args.phu_hop_goi_user) {
         const userLevel = Number(userPlanInfo?.level) || 0;
@@ -449,10 +636,16 @@ export const executeMovieLookup = ({
             const planInfo = getMoviePlanInfo(m, plans);
             return planInfo.level <= userLevel;
         });
-    } else if (args.loai_phi === 'free' || args.is_free === true || args.mien_phi === true) {
-        filtered = filtered.filter(m => getMoviePlanInfo(m, plans).isFree);
-    } else if (args.loai_phi === 'paid' || args.is_free === false || args.mien_phi === false || args.loai_phi === 'premium' || args.loai_phi === 'vip' || args.loai_phi === 'basic' || args.loai_phi === 'plus') {
+    } else if (requestedPlan && requestedPlan.targetLevel !== null && requestedPlan.targetLevel !== undefined) {
+        // Lọc CHÍNH XÁC gói cước được yêu cầu (ví dụ: chỉ lấy gói Plus Level 2, hoặc chỉ lấy gói Premium Level 3...)
+        filtered = filtered.filter(m => {
+            const planInfo = getMoviePlanInfo(m, plans);
+            return planInfo.level === requestedPlan.targetLevel;
+        });
+    } else if (requestedPlan?.isPaid || args.loai_phi === 'paid' || args.is_free === false || args.mien_phi === false) {
         filtered = filtered.filter(m => !getMoviePlanInfo(m, plans).isFree);
+    } else if (requestedPlan?.isFree || args.loai_phi === 'free' || args.is_free === true || args.mien_phi === true) {
+        filtered = filtered.filter(m => getMoviePlanInfo(m, plans).isFree);
     }
 
     // Lọc theo thể loại nếu có
@@ -472,13 +665,17 @@ export const executeMovieLookup = ({
         }
     }
 
-    // Lọc theo quốc gia nếu có
+    // 1. Nhận diện quốc gia từ args.quoc_gia HOẶC từ args.tu_khoa HOẶC từ rawUserQuery
+    let targetCountryKey = null;
     if (args.quoc_gia) {
-        const countryKw = searchTV(args.quoc_gia).trim();
-        filtered = filtered.filter(m => 
-            (m.country && searchTV(m.country).includes(countryKw)) ||
-            (m.countriesID && searchTV(String(m.countriesID)).includes(countryKw))
-        );
+        targetCountryKey = detectCountryInQuery(args.quoc_gia) || searchTV(args.quoc_gia).trim();
+    }
+    if (!targetCountryKey) {
+        targetCountryKey = detectCountryInQuery(args.tu_khoa) || detectCountryInQuery(rawUserQuery);
+    }
+
+    if (targetCountryKey) {
+        filtered = filtered.filter(m => isMovieMatchCountry(m, targetCountryKey));
     }
 
     // Danh sách từ khóa tìm kiếm: tu_khoa, nhan_vat, dien_vien, tac_gia
@@ -493,6 +690,7 @@ export const executeMovieLookup = ({
         'hay', 'hot', 'moi', 'top', 'de xuat', 'goi y', 'phim hay', 'phim hot', 'phim moi', 
         'thinh hanh', 'xem nhieu', 'xem gi', 'chieu rap', 'phim', 'bo phim', 'phim gi',
         'goi hien tai', 'goi cua toi', 'phu hop voi goi', 'phu hop voi goi hien tai',
+        'xin', 'xin nhat', 'cao nhat', 'dat nhat', 'tot nhat', 'loai xin', 'loai xin nhat',
         'tiep', 'tiep tuc', 'them', 'nua', 'con nua khong', 'con khong', 'xem tiep',
         'che', 'che nha', 'che phim', 'che phim nay', 'khong thich', 'khong muon xem', 'bo qua', 'doi phim', 'doi phim khac', 'next', 'chan', 'do ec',
         'nhieu tap nhat', 'dai tap nhat', 'dai nhat', 'nhieu tap', 'so tap nhieu nhat',
@@ -538,6 +736,16 @@ export const executeMovieLookup = ({
             .trim();
 
         if (!cleanKw || GENERIC_RECOMMEND_INTENTS.has(cleanKw)) {
+            continue;
+        }
+
+        // Bỏ qua nếu từ khóa tìm kiếm chính là tên quốc gia (đã được lọc ở bước nhận diện quốc gia)
+        if (detectCountryInQuery(cleanKw)) {
+            continue;
+        }
+
+        // Bỏ qua nếu từ khóa tìm kiếm chính là tên gói cước (đã được lọc ở bước nhận diện gói cước)
+        if (detectPlanInQuery(cleanKw)) {
             continue;
         }
 
@@ -658,6 +866,36 @@ export const executeMovieLookup = ({
         filtered.sort((a, b) => (Number(b.releaseYear || b.year) || 0) - (Number(a.releaseYear || a.year) || 0));
     } else if (isOldest) {
         filtered.sort((a, b) => (Number(a.releaseYear || a.year) || 9999) - (Number(b.releaseYear || b.year) || 9999));
+    } else if (requestedPlan && requestedPlan.targetLevel !== null && requestedPlan.targetLevel !== undefined) {
+        // Ưu tiên cao nhất: các bộ phim thuộc ĐÚNG CHÍNH XÁC gói cước được yêu cầu (ví dụ: Level 3 Premium lên đầu)
+        const targetLevel = requestedPlan.targetLevel;
+        filtered.sort((a, b) => {
+            const planA = getMoviePlanInfo(a, plans);
+            const planB = getMoviePlanInfo(b, plans);
+            
+            const isExactA = planA.level === targetLevel;
+            const isExactB = planB.level === targetLevel;
+            
+            if (isExactA && !isExactB) return -1;
+            if (!isExactA && isExactB) return 1;
+            
+            // Nếu không phải gói yêu cầu, xếp theo cấp độ giảm dần (Level 3 -> Level 2 -> Level 1)
+            if (planB.level !== planA.level) {
+                return planB.level - planA.level;
+            }
+            
+            return (Number(b.views) || 0) - (Number(a.views) || 0);
+        });
+    } else if (requestedPlan?.isPaid) {
+        // Yêu cầu phim có phí chung chung: xếp theo gói cao xuống thấp (Premium -> Plus -> Basic)
+        filtered.sort((a, b) => {
+            const planA = getMoviePlanInfo(a, plans);
+            const planB = getMoviePlanInfo(b, plans);
+            if (planB.level !== planA.level) {
+                return planB.level - planA.level;
+            }
+            return (Number(b.views) || 0) - (Number(a.views) || 0);
+        });
     } else if (!isSpecificSearch) {
         filtered.sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0));
     }
@@ -691,6 +929,28 @@ export const executeMovieLookup = ({
         if (slugsToExclude.size > 0 && isPagingNext) {
             return "Đã hiển thị hết tất cả các bộ phim phù hợp với tiêu chí này trên MFILM rồi bạn nhé! Bạn có thể thử tìm kiếm theo thể loại hoặc từ khóa khác.";
         }
+
+        // Trường hợp tìm theo Quốc gia + Gói cước mà không có phim nào:
+        if (targetCountryKey && requestedPlan) {
+            const countryDisplayName = args.quoc_gia || (targetCountryKey === 'viet nam' ? 'Việt Nam' : targetCountryKey === 'nhat ban' ? 'Nhật Bản' : targetCountryKey === 'trung quoc' ? 'Trung Quốc' : targetCountryKey === 'han quoc' ? 'Hàn Quốc' : targetCountryKey === 'my' ? 'Mỹ' : targetCountryKey === 'thai lan' ? 'Thái Lan' : targetCountryKey);
+
+            const otherCountryMoviesInPlan = movies.filter(m => {
+                const p = getMoviePlanInfo(m, plans);
+                return p.level === requestedPlan.targetLevel && !isMovieMatchCountry(m, targetCountryKey);
+            });
+
+            let suggestionText = "";
+            if (otherCountryMoviesInPlan.length > 0) {
+                const sampleTitles = otherCountryMoviesInPlan.slice(0, 3).map(m => {
+                    const c = m.countriesID || m.country || 'Nước ngoài';
+                    return `[${m.otherName || m.name}](/phim/${m.slug || m.id}) (Phim ${c})`;
+                }).join(', ');
+                suggestionText = ` Tuy nhiên MFILM có các phim gói ${requestedPlan.name} của nước khác như: ${sampleTitles}. Hãy hỏi khách xem có muốn tham khảo phim nước khác không.`;
+            }
+
+            return `THÔNG_BÁO: Hiện tại trên MFILM KHÔNG CÓ bất kỳ bộ phim ${countryDisplayName} nào thuộc gói ${requestedPlan.name}. BẮT BUỘC trả lời ngắn gọn: "Hiện tại MFILM chưa có phim ${countryDisplayName} nào thuộc gói ${requestedPlan.name} nha bạn."${suggestionText} TUYỆT ĐỐI KHÔNG gọi các phim nước khác là phim ${countryDisplayName}!`;
+        }
+
         if (args.tu_khoa || rawUserQuery) {
             return `KHÔNG_TÌM_THẤY: Không có bộ phim nào khớp với từ khóa "${args.tu_khoa || rawUserQuery}" trên MFILM. Hãy hỏi lại người dùng thật lịch sự để làm rõ xem họ có gõ nhầm tên phim không. TUYỆT ĐỐI KHÔNG tự bịa ra phim khác.`;
         }
@@ -702,13 +962,13 @@ export const executeMovieLookup = ({
     const topMatches = resultList.map((m, idx) => {
         const planInfo = getMoviePlanInfo(m, plans);
         const authNames = authors.filter(a => (m.listAuthor || []).includes(a.id) || m.author === a.id).map(a => a.name).join(', ') || 'Chưa cập nhật';
-        const actNames = actors.filter(a => (m.listActor || []).includes(a.id)).map(a => a.name).slice(0, 3).join(', ') || 'Chưa cập nhật';
         const mCharIds = m.character || m.characters || m.listCharacter || [];
         const charNames = characters.filter(c => mCharIds.includes(c.id)).map(c => c.name).slice(0, 5).join(', ') || 'Chưa cập nhật';
         const catNames = (m.listCategory || []).map(catId => categories.find(c => String(c.id) === String(catId))?.name).filter(Boolean).join(', ') || 'Đang cập nhật';
         const feeStr = `Gói ${planInfo.planName} (Level ${planInfo.level})`;
         const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
-        return `Phần/Phim ${idx + 1}: [${m.otherName || m.name}](/phim/${m.slug || m.id}) | Số tập: ${epStr} | Gói xem: ${feeStr} | Thể loại: ${catNames} | Nhân vật: ${charNames} | Lượt xem: ${(Number(m.views) || 0) + 100} | Năm: ${m.releaseYear || m.year || ''}`;
+        const countryStr = m.countriesID || m.country || 'Chưa cập nhật';
+        return `Phần/Phim ${idx + 1}: [${m.otherName || m.name}](/phim/${m.slug || m.id}) | Quốc gia: ${countryStr} | Số tập: ${epStr} | Gói xem: ${feeStr} | Thể loại: ${catNames} | Nhân vật: ${charNames} | Lượt xem: ${(Number(m.views) || 0) + 100} | Năm: ${m.releaseYear || m.year || ''}`;
     }).join('\n');
 
     let noteMessage = '';
@@ -1092,8 +1352,8 @@ export const GROQ_TOOLS = [
                     dien_vien: { type: "string", description: "Tên diễn viên" },
                     tac_gia: { type: "string", description: "Tên tác giả hoặc đạo diễn" },
                     the_loai: { type: "string", description: "Thể loại phim" },
-                    quoc_gia: { type: "string", description: "Quốc gia" },
-                    loai_phi: { type: "string", description: "Lọc phim: 'free' (chỉ phim miễn phí), 'paid' (khi người dùng ĐẶC BIỆT yêu cầu tìm phim Premium, VIP, có phí, hoặc thuê phim), 'user_plan' (chỉ phim phù hợp gói cước hiện tại của người dùng)" },
+                    quoc_gia: { type: "string", description: "Quốc gia sản xuất phim (ví dụ: 'Trung Quốc', 'Hàn Quốc', 'Nhật Bản', 'Việt Nam', 'Mỹ', 'Thái Lan', 'Hồng Kông', 'Anh', 'Pháp'). BẮT BUỘC truyền khi người dùng hỏi hoặc yêu cầu phim của bất kỳ quốc gia nào." },
+                    loai_phi: { type: "string", description: "Lọc gói cước: 'premium' (khi hỏi gói Premium, gói VIP, gói xịn nhất, cao cấp nhất), 'plus' (gói Plus), 'basic' (gói Basic, gói cơ bản), 'free' (gói Free, miễn phí), 'paid' (phim có phí nói chung), 'user_plan' (phù hợp gói người dùng). BẮT BUỘC truyền khi người dùng hỏi phim theo gói hoặc hỏi loại xịn nhất." },
                     phu_hop_goi_user: { type: "boolean", description: "Đặt là true khi người dùng hỏi các phim phù hợp với gói hiện tại. Đặt là false nếu người dùng đang đặc biệt yêu cầu tìm phim Premium/VIP nhưng gói của họ không đủ." },
                     sap_xep: { type: "string", enum: ["nhieu_phan_nhat", "nhieu_tap_nhat", "it_tap_nhat", "moi_nhat", "cu_nhat", "xem_nhieu_nhat"], description: "Tiêu chí sắp xếp: 'nhieu_phan_nhat' (khi hỏi phim nhiều phần/season nhất), 'nhieu_tap_nhat', 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
                     xem_tiep: { type: "boolean", description: "Đặt là true khi người dùng muốn xem tiếp hoặc gợi ý thêm 5 phim khác trong danh sách (loại trừ các phim đã hiển thị trước đó)" },
@@ -1151,8 +1411,8 @@ export const GEMINI_TOOLS = [
                         dien_vien: { type: "STRING", description: "Tên diễn viên" },
                         tac_gia: { type: "STRING", description: "Tên tác giả hoặc đạo diễn" },
                         the_loai: { type: "STRING", description: "Thể loại phim" },
-                        quoc_gia: { type: "STRING", description: "Quốc gia" },
-                        loai_phi: { type: "STRING", description: "Lọc phim: 'free', 'paid' (khi người dùng yêu cầu phim Premium/VIP/có phí), 'user_plan'" },
+                        quoc_gia: { type: "STRING", description: "Quốc gia sản xuất phim (ví dụ: 'Trung Quốc', 'Hàn Quốc', 'Nhật Bản', 'Việt Nam', 'Mỹ', 'Thái Lan', 'Hồng Kông'). BẮT BUỘC truyền khi người dùng hỏi phim theo quốc gia." },
+                        loai_phi: { type: "STRING", description: "Lọc gói cước: 'premium' (gói xịn nhất, VIP, Premium), 'plus', 'basic', 'free', 'paid', 'user_plan'. BẮT BUỘC truyền khi hỏi theo gói cước hoặc loại xịn nhất." },
                         phu_hop_goi_user: { type: "BOOLEAN", description: "Đặt là true khi người dùng hỏi phim phù hợp gói. Đặt là false nếu người dùng muốn tìm phim Premium/VIP nhưng gói không đủ." },
                         sap_xep: { type: "STRING", description: "Tiêu chí sắp xếp: 'nhieu_phan_nhat', 'nhieu_tap_nhat', 'it_tap_nhat', 'moi_nhat', 'cu_nhat', 'xem_nhieu_nhat'" },
                         xem_tiep: { type: "BOOLEAN", description: "Đặt là true khi người dùng muốn xem tiếp hoặc gợi ý thêm 5 phim khác trong danh sách" },
