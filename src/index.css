@@ -74,3 +74,18 @@
   animation: text-shine 3s linear infinite;
 }
 
+.swal2-toast-mfilm {
+  background: rgba(15, 23, 42, 0.92) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(234, 179, 8, 0.35) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(234, 179, 8, 0.2) !important;
+  border-radius: 1rem !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.swal2-toast-mfilm .swal2-timer-progress-bar {
+  background: linear-gradient(90deg, #eab308, #f59e0b) !important;
+  height: 3px !important;
+}
+

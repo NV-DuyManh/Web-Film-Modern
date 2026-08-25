@@ -4,6 +4,7 @@ import { IoClose, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 import { FcGoogle } from 'react-icons/fc';
 import Swal from 'sweetalert2';
 import Logo2 from '../../../assets/Logo2.png';
+import Logo5 from '../../../assets/Logo5.png';
 import { addDocument, updateDocument } from '../../../services/firebaseService';
 import { UserContext } from '../../../contexts/UserProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
@@ -11,6 +12,48 @@ import { ROLES } from '../../../utils/Constants';
 import { signInWithPopup } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../../../config/firebaseConfig';
+
+const showAuthSuccessToast = (customer, message = 'Đăng ký thành công') => {
+    const avatar = customer.avatarUrl || customer.imgUrl || Logo5;
+    const name = customer.name || customer.displayName || 'Người dùng';
+    
+    Swal.fire({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        background: 'transparent',
+        html: `
+            <div style="display: flex; align-items: center; gap: 14px; text-align: left;">
+                <div style="position: relative; flex-shrink: 0;">
+                    <img src="${avatar}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #eab308; box-shadow: 0 0 15px rgba(234,179,8,0.4);" />
+                    <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background-color: #10b981; border-radius: 50%; border: 2px solid #0f172a;"></span>
+                </div>
+                <div style="display: flex; flex-direction: column; overflow: hidden; min-width: 0;">
+                    <div style="display: flex; align-items: center; gap: 6px;">
+                        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #eab308; background: rgba(234, 179, 8, 0.15); padding: 2px 8px; border-radius: 9999px; border: 1px solid rgba(234, 179, 8, 0.3);">
+                            ${message}
+                        </span>
+                    </div>
+                    <span style="font-size: 14px; font-weight: 700; color: #ffffff; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 190px;">
+                        ${name}
+                    </span>
+                    <span style="font-size: 11px; color: #94a3b8;">
+                        Chào mừng bạn đến với MFILM!
+                    </span>
+                </div>
+            </div>
+        `,
+        customClass: {
+            popup: 'swal2-toast-mfilm'
+        },
+        didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+        }
+    });
+};
 
 function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
     const [showPassword, setShowPassword] = useState(false);
@@ -69,27 +112,27 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
             const newUser = await addDocument("Users", submitData);
             handleCloseRegister();
             loginByUser(newUser);
-            Swal.fire({
-                icon: 'success',
-                title: 'Đăng ký thành công!',
-                text: `Chào mừng ${newUser.name || 'bạn'} gia nhập MFILM!`,
-                timer: 1800,
-                showConfirmButton: false,
-                background: '#0f172a',
-                color: '#fff',
-                customClass: {
-                    popup: 'border border-slate-700 shadow-2xl rounded-2xl'
-                }
-            });
+            showAuthSuccessToast(newUser, 'Đăng ký thành công');
         } catch (error) {
             console.error("Register error:", error);
             Swal.fire({
-                icon: 'error',
-                title: 'Đăng ký thất bại',
-                text: error.message || 'Vui lòng thử lại.',
-                background: '#0f172a',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3500,
+                timerProgressBar: true,
+                background: 'rgba(15, 23, 42, 0.95)',
                 color: '#fff',
-                confirmButtonColor: '#eab308'
+                html: `
+                    <div style="display: flex; align-items: center; gap: 10px; text-align: left;">
+                        <span style="color: #ef4444; font-size: 20px;">⚠️</span>
+                        <div>
+                            <h4 style="font-size: 13px; font-weight: 700; color: #ef4444; margin: 0;">Đăng ký thất bại</h4>
+                            <p style="font-size: 11px; color: #94a3b8; margin: 2px 0 0;">${error.message || 'Vui lòng thử lại.'}</p>
+                        </div>
+                    </div>
+                `,
+                customClass: { popup: 'swal2-toast-mfilm' }
             });
         } finally {
             setLoading(false);
@@ -105,16 +148,11 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
                 const result = await signInWithPopup(auth, googleProvider);
                 user = result?.user;
             } catch (popupError) {
-                console.warn("Popup error, checking auth.currentUser fallback:", popupError);
+                console.warn("Popup closed or handshake error, checking currentUser fallback:", popupError);
                 if (auth.currentUser?.email) {
                     user = auth.currentUser;
                 } else {
-                    await new Promise(r => setTimeout(r, 600));
-                    if (auth.currentUser?.email) {
-                        user = auth.currentUser;
-                    } else {
-                        throw popupError;
-                    }
+                    throw popupError;
                 }
             }
 
@@ -155,31 +193,32 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
                 loggedInCustomer = existingCustomer;
             }
 
+            // Đăng nhập và đóng modal ngay lập tức không delay
             loginByUser(loggedInCustomer);
             handleCloseRegister();
+            showAuthSuccessToast(loggedInCustomer, 'Đăng nhập thành công');
 
-            Swal.fire({
-                icon: 'success',
-                title: 'Đăng nhập thành công!',
-                text: `Chào mừng ${loggedInCustomer.name || 'bạn'} đến với MFILM!`,
-                timer: 1800,
-                showConfirmButton: false,
-                background: '#0f172a',
-                color: '#fff',
-                customClass: {
-                    popup: 'border border-slate-700 shadow-2xl rounded-2xl'
-                }
-            });
         } catch (error) {
             console.error("Google sign-in error:", error);
             if (error.code !== 'auth/popup-closed-by-user' && error.code !== 'auth/cancelled-popup-request') {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Đăng nhập thất bại',
-                    text: error.message || 'Vui lòng thử lại.',
-                    background: '#0f172a',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3500,
+                    timerProgressBar: true,
+                    background: 'rgba(15, 23, 42, 0.95)',
                     color: '#fff',
-                    confirmButtonColor: '#eab308'
+                    html: `
+                        <div style="display: flex; align-items: center; gap: 10px; text-align: left;">
+                            <span style="color: #ef4444; font-size: 20px;">⚠️</span>
+                            <div>
+                                <h4 style="font-size: 13px; font-weight: 700; color: #ef4444; margin: 0;">Đăng nhập thất bại</h4>
+                                <p style="font-size: 11px; color: #94a3b8; margin: 2px 0 0;">${error.message || 'Vui lòng thử lại.'}</p>
+                            </div>
+                        </div>
+                    `,
+                    customClass: { popup: 'swal2-toast-mfilm' }
                 });
             }
         } finally {
