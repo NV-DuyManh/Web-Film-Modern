@@ -232,7 +232,12 @@ function HeaderClient() {
                                     className="relative flex items-center justify-center p-1 cursor-pointer"
                                 >
                                     <WingedFrame theme={displayTheme} size={42}>
-                                        <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+                                        <img 
+                                            src={globalAvatarPreview || isLogin?.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(isLogin?.name || 'User')}&background=random`} 
+                                            onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(isLogin?.name || 'User')}&background=random`; }}
+                                            alt="avatar" 
+                                            className="w-full h-full object-cover" 
+                                        />
                                     </WingedFrame>
                                 </button>
 
@@ -241,7 +246,12 @@ function HeaderClient() {
                                     <div className="flex items-center gap-4 p-5 border-b border-slate-700/80 bg-linear-to-r from-blue-900/10 to-transparent">
                                         <div className="shrink-0">
                                             <WingedFrame theme={displayTheme} size={48}>
-                                                <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="w-full h-full object-cover" />
+                                                <img 
+                                                    src={globalAvatarPreview || isLogin?.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(isLogin?.name || 'User')}&background=random`} 
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(isLogin?.name || 'User')}&background=random`; }}
+                                                    alt="avatar" 
+                                                    className="w-full h-full object-cover" 
+                                                />
                                             </WingedFrame>
                                         </div>
 
