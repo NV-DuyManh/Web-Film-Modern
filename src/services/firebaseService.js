@@ -49,11 +49,13 @@ export const fetchDocumentsRealtimePage = (collectionName, pageSize, callback) =
     });
 };
 
-export const updateDocument = async (collectionName, values) => {
+export const updateDocument = async (collectionName, values, skipUpdatedAt = false) => {
     const { id, ...updatedValues } = values;
     if (updatedValues.imgUrl) updatedValues.imgUrl = await uploadIfNeeded(updatedValues.imgUrl, collectionName);
     if (updatedValues.avatarUrl) updatedValues.avatarUrl = await uploadIfNeeded(updatedValues.avatarUrl, collectionName);
-    updatedValues.updatedAt = Date.now();
+    if (!skipUpdatedAt) {
+        updatedValues.updatedAt = Date.now();
+    }
     await updateDoc(doc(db, collectionName, id), updatedValues);
 };
 

@@ -97,7 +97,7 @@ function PlayFilm({ handleOpenLogin }) {
         if (!realMovieId) return;
 
         const currentViews = movie?.views || 0;
-        updateDocument("Movies", { id: realMovieId, views: currentViews + 1 }).catch(e => console.error(e));
+        updateDocument("Movies", { id: realMovieId, views: currentViews + 1 }, true).catch(e => console.error(e));
     }, [realMovieId, playEpisodes?.id]);
 
 
