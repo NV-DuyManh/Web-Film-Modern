@@ -70,8 +70,18 @@ function Showtimes() {
 
     useEffect(() => {
         handleScroll(); 
-        window.addEventListener('resize', handleScroll);
-        return () => window.removeEventListener('resize', handleScroll);
+        let resizeTimer;
+        const debouncedHandleScroll = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                handleScroll();
+            }, 150);
+        };
+        window.addEventListener('resize', debouncedHandleScroll);
+        return () => {
+            clearTimeout(resizeTimer);
+            window.removeEventListener('resize', debouncedHandleScroll);
+        };
     }, [dates]);
 
     const scrollByAmount = (direction) => {

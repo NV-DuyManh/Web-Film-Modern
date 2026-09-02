@@ -77,14 +77,23 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
             setCardWidth(Math.max(100, (width - (count - 1) * g) / count));
         };
 
+        let resizeTimer;
+        const debouncedUpdateSizes = () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                updateSizes();
+            }, 150);
+        };
+
         updateSizes();
-        const observer = new ResizeObserver(() => updateSizes());
+        const observer = new ResizeObserver(debouncedUpdateSizes);
         if (containerRef.current) observer.observe(containerRef.current);
-        window.addEventListener('resize', updateSizes);
+        window.addEventListener('resize', debouncedUpdateSizes);
 
         return () => {
+            clearTimeout(resizeTimer);
             observer.disconnect();
-            window.removeEventListener('resize', updateSizes);
+            window.removeEventListener('resize', debouncedUpdateSizes);
         };
     }, [duplicatedMovies.length]);
 
