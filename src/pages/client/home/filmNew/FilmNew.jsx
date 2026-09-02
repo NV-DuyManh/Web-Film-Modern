@@ -20,8 +20,8 @@ function FilmNew(props) {
     const newMovies = useMemo(() => {
         if (!movies) return [];
         return [...movies].sort((a, b) => {
-            const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-            const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : (a.createdAt ? new Date(a.createdAt).getTime() : 0);
+            const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
             return dateB - dateA;
         }).slice(0, 15);
     }, [movies]);
