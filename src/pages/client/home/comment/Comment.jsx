@@ -71,7 +71,7 @@ function Comment() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 bg-[#151720] border border-gray-800 rounded-xl overflow-hidden shadow-lg">
 
-                    <div className="p-6 border-b md:border-b-0 md:border-r border-gray-800 flex flex-col h-full">
+                    <div className="p-6 border-b lg:border-b-0 md:border-r border-gray-800 flex flex-col h-full">
                         <div className="flex items-center gap-2 mb-6 text-yellow-400 font-bold text-base tracking-wide">
                             <BiSolidMoviePlay className="text-lg" />
                             SÔI NỔI NHẤT

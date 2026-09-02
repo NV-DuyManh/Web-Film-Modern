@@ -5,7 +5,7 @@ import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExcha
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
-import { collection, doc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, getDoc, serverTimestamp } from 'firebase/firestore';
 
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -942,34 +942,86 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     const [syncLogs, setSyncLogs] = useState([]);
     const [syncStats, setSyncStats] = useState({ checked: 0, moviesUpdated: 0, newEpisodes: 0, errors: 0 });
     const [syncProgress, setSyncProgress] = useState(0);
-    const [autoCronInterval, setAutoCronInterval] = useState(() => {
-        return Number(localStorage.getItem('kkphim_auto_sync_interval') || 0); // 0 = tắt, 15, 30, 60 (phút)
-    });
-    const [lastSyncTime, setLastSyncTime] = useState(() => localStorage.getItem('kkphim_last_sync_time') || '');
+    const [autoCronInterval, setAutoCronInterval] = useState(0);
+    const [lastSyncTime, setLastSyncTime] = useState('');
     const syncAbortRef = useRef(false);
 
     const addSyncLog = useCallback((message, type = 'info') => {
         setSyncLogs(prev => [{ message, type, time: new Date().toLocaleTimeString('vi-VN') }, ...prev].slice(0, 500));
     }, []);
 
-    const handleSetAutoCron = (val) => {
+    // Lắng nghe cấu hình AutoSync từ Firebase Realtime
+    useEffect(() => {
+        const docRef = doc(db, "Settings", "AutoSync");
+        const unsub = onSnapshot(docRef, (snap) => {
+            if (snap.exists()) {
+                const data = snap.data();
+                setAutoCronInterval(Number(data.interval) || 0);
+                if (data.lastSyncTime) setLastSyncTime(data.lastSyncTime);
+                if (data.syncPages) setSyncPages(Number(data.syncPages));
+            }
+        });
+        return () => unsub();
+    }, []);
+
+    const handleSetAutoCron = async (val) => {
         setAutoCronInterval(val);
-        localStorage.setItem('kkphim_auto_sync_interval', val.toString());
+        const docRef = doc(db, "Settings", "AutoSync");
+        await setDoc(docRef, { interval: val }, { merge: true });
+
         if (val > 0) {
-            addSyncLog(`⏰ Đã kích hoạt chế độ tự động kiểm tra tập mới mỗi ${val} phút.`, 'success');
+            addSyncLog(`⏰ Đã kích hoạt chế độ tự động kiểm tra tập mới mỗi ${val} phút (Đồng bộ Cloud).`, 'success');
         } else {
             addSyncLog(`⏹️ Đã tắt chế độ tự động kiểm tra tập mới.`, 'warning');
         }
     };
 
-    const handleStartSync = async () => {
+    const handleSetSyncPages = async (val) => {
+        setSyncPages(val);
+        const docRef = doc(db, "Settings", "AutoSync");
+        await setDoc(docRef, { syncPages: val }, { merge: true });
+    };
+
+    const handleStartSync = async (isAuto = false) => {
         if (syncStatus === 'running') return;
+
+        // Cơ chế Distributed Lock (Khóa phân tán chống chạy đè)
+        if (isAuto && autoCronInterval > 0) {
+            try {
+                const docRef = doc(db, "Settings", "AutoSync");
+                const snap = await getDoc(docRef);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    if (data.lastSyncTime) {
+                        const lastSyncDate = new Date(data.lastSyncTime);
+                        const now = new Date();
+                        const diffMins = (now - lastSyncDate) / (1000 * 60);
+                        // Cho phép sai số 1 phút (để bù trừ độ trễ)
+                        if (diffMins < (autoCronInterval - 1)) {
+                            console.log(`[AutoSync] Bỏ qua do đã có máy khác chạy cách đây ${diffMins.toFixed(1)} phút.`);
+                            return; // Dừng lại, nhường máy khác chạy
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error("Lỗi khi kiểm tra Lock:", err);
+            }
+        }
+
         syncAbortRef.current = false;
         setSyncStatus('running');
         setSyncLogs([]);
         setSyncProgress(0);
         const stats = { checked: 0, moviesUpdated: 0, newEpisodes: 0, errors: 0 };
         setSyncStats(stats);
+
+        // Khóa ngay lập tức trên Firebase để báo cho các máy khác biết "Tôi đang chạy"
+        try {
+            const nowISO = new Date().toISOString();
+            await setDoc(doc(db, "Settings", "AutoSync"), { lastSyncTime: nowISO }, { merge: true });
+        } catch (err) {
+            console.error("Lỗi set lock:", err);
+        }
 
         addSyncLog(`🚀 Bắt đầu quét tập mới từ ${syncPages} trang mới nhất của KKPhim (~${syncPages * 24} phim)...`, 'info');
 
@@ -1106,8 +1158,6 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
             }
 
             const nowStr = new Date().toLocaleString('vi-VN');
-            setLastSyncTime(nowStr);
-            localStorage.setItem('kkphim_last_sync_time', nowStr);
             setSyncStatus('done');
             setSyncProgress(100);
             addSyncLog(`🏁 Hoàn tất đồng bộ! Đã kiểm tra ${stats.checked} phim: Cập nhật ${stats.moviesUpdated} phim (+${stats.newEpisodes} tập mới).`, 'success');
@@ -1131,7 +1181,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         const intervalTimer = setInterval(() => {
             if (syncStatus !== 'running') {
                 console.log(`[AutoSync] Đang tự động kiểm tra tập mới (định kỳ mỗi ${autoCronInterval} phút)...`);
-                handleStartSync();
+                handleStartSync(true); // isAuto = true
             }
         }, intervalMs);
 
@@ -1419,7 +1469,9 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 {lastSyncTime && (
                                     <div className="text-[11px] text-gray-400 flex items-center justify-between border-t border-white/5 pt-3">
                                         <span>Lần cập nhật gần nhất:</span>
-                                        <span className="font-semibold text-emerald-300">{lastSyncTime}</span>
+                                        <span className="font-semibold text-emerald-300">
+                                            {new Date(lastSyncTime).toLocaleString('vi-VN')}
+                                        </span>
                                     </div>
                                 )}
                             </div>
