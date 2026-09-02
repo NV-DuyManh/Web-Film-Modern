@@ -175,7 +175,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
             )}
 
 
-            <div className="grid grid-cols-5 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-2 sm:gap-4">
+            <div className="grid grid-cols-5 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-4">
                 {currentEpisodes.map((e) => {
                     const isActive = playEpisodes?.id == e.id;
                     return (
@@ -192,7 +192,14 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                             ) : (
                                 <FaLock className="text-[10px] sm:text-xs shrink-0 transition duration-300 text-rose-500 group-hover:text-rose-400 group-hover:scale-110 drop-shadow-[0_0_5px_rgba(244,63,94,0.5)]" />
                             )}
-                            <p className="relative inline truncate">{formatEpisodeName(e.numberEpisode, isSingle)}</p>
+                            <p className="relative inline truncate">
+                                <span className="hidden sm:inline">
+                                    {(isSingle && Number(e.numberEpisode) === 1) ? '' : 'Tập '}
+                                </span>
+                                <span>
+                                    {(isSingle && Number(e.numberEpisode) === 1) ? 'Full' : e.numberEpisode}
+                                </span>
+                            </p>
                         </button>
                     );
                 })}
