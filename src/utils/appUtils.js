@@ -184,3 +184,14 @@ export function invalidateCache(key) {
         delete cache[key];
     }
 }
+
+export const isSingleMovie = (movie, categoryTypes) => {
+    if (!movie || !categoryTypes) return false;
+    const ct = categoryTypes.find(c => c.id === movie.categoryTypeID);
+    return ct?.name?.toLowerCase() === 'phim lẻ';
+};
+
+export const formatEpisodeName = (epNumber, isSingle) => {
+    if (isSingle && Number(epNumber) === 1) return "Full";
+    return `Tập ${epNumber}`;
+};

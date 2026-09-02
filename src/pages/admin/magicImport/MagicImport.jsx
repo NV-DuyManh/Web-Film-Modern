@@ -21,20 +21,20 @@ import { detectGender } from '../../../utils/genderDetect';
 const slugify = (text) => {
     if (!text) return '';
     const vietnameseMap = {
-        'à':'a','á':'a','ả':'a','ã':'a','ạ':'a','ă':'a','ằ':'a','ắ':'a','ẳ':'a','ẵ':'a','ặ':'a','â':'a','ầ':'a','ấ':'a','ẩ':'a','ẫ':'a','ậ':'a',
-        'è':'e','é':'e','ẻ':'e','ẽ':'e','ẹ':'e','ê':'e','ề':'e','ế':'e','ể':'e','ễ':'e','ệ':'e',
-        'ì':'i','í':'i','ỉ':'i','ĩ':'i','ị':'i',
-        'ò':'o','ó':'o','ỏ':'o','õ':'o','ọ':'o','ô':'o','ồ':'o','ố':'o','ổ':'o','ỗ':'o','ộ':'o','ơ':'o','ờ':'o','ớ':'o','ở':'o','ỡ':'o','ợ':'o',
-        'ù':'u','ú':'u','ủ':'u','ũ':'u','ụ':'u','ư':'u','ừ':'u','ứ':'u','ử':'u','ữ':'u','ự':'u',
-        'ỳ':'y','ý':'y','ỷ':'y','ỹ':'y','ỵ':'y',
-        'đ':'d',
-        'À':'a','Á':'a','Ả':'a','Ã':'a','Ạ':'a','Ă':'a','Ằ':'a','Ắ':'a','Ẳ':'a','Ẵ':'a','Ặ':'a','Â':'a','Ầ':'a','Ấ':'a','Ẩ':'a','Ẫ':'a','Ậ':'a',
-        'È':'e','É':'e','Ẻ':'e','Ẽ':'e','Ẹ':'e','Ê':'e','Ề':'e','Ế':'e','Ể':'e','Ễ':'e','Ệ':'e',
-        'Ì':'i','Í':'i','Ỉ':'i','Ĩ':'i','Ị':'i',
-        'Ò':'o','Ó':'o','Ỏ':'o','Õ':'o','Ọ':'o','Ô':'o','Ồ':'o','Ố':'o','Ổ':'o','Ỗ':'o','Ộ':'o','Ơ':'o','Ờ':'o','Ớ':'o','Ở':'o','Ỡ':'o','Ợ':'o',
-        'Ù':'u','Ú':'u','Ủ':'u','Ũ':'u','Ụ':'u','Ư':'u','Ừ':'u','Ứ':'u','Ử':'u','Ữ':'u','Ự':'u',
-        'Ỳ':'y','Ý':'y','Ỷ':'y','Ỹ':'y','Ỵ':'y',
-        'Đ':'d'
+        'à': 'a', 'á': 'a', 'ả': 'a', 'ã': 'a', 'ạ': 'a', 'ă': 'a', 'ằ': 'a', 'ắ': 'a', 'ẳ': 'a', 'ẵ': 'a', 'ặ': 'a', 'â': 'a', 'ầ': 'a', 'ấ': 'a', 'ẩ': 'a', 'ẫ': 'a', 'ậ': 'a',
+        'è': 'e', 'é': 'e', 'ẻ': 'e', 'ẽ': 'e', 'ẹ': 'e', 'ê': 'e', 'ề': 'e', 'ế': 'e', 'ể': 'e', 'ễ': 'e', 'ệ': 'e',
+        'ì': 'i', 'í': 'i', 'ỉ': 'i', 'ĩ': 'i', 'ị': 'i',
+        'ò': 'o', 'ó': 'o', 'ỏ': 'o', 'õ': 'o', 'ọ': 'o', 'ô': 'o', 'ồ': 'o', 'ố': 'o', 'ổ': 'o', 'ỗ': 'o', 'ộ': 'o', 'ơ': 'o', 'ờ': 'o', 'ớ': 'o', 'ở': 'o', 'ỡ': 'o', 'ợ': 'o',
+        'ù': 'u', 'ú': 'u', 'ủ': 'u', 'ũ': 'u', 'ụ': 'u', 'ư': 'u', 'ừ': 'u', 'ứ': 'u', 'ử': 'u', 'ữ': 'u', 'ự': 'u',
+        'ỳ': 'y', 'ý': 'y', 'ỷ': 'y', 'ỹ': 'y', 'ỵ': 'y',
+        'đ': 'd',
+        'À': 'a', 'Á': 'a', 'Ả': 'a', 'Ã': 'a', 'Ạ': 'a', 'Ă': 'a', 'Ằ': 'a', 'Ắ': 'a', 'Ẳ': 'a', 'Ẵ': 'a', 'Ặ': 'a', 'Â': 'a', 'Ầ': 'a', 'Ấ': 'a', 'Ẩ': 'a', 'Ẫ': 'a', 'Ậ': 'a',
+        'È': 'e', 'É': 'e', 'Ẻ': 'e', 'Ẽ': 'e', 'Ẹ': 'e', 'Ê': 'e', 'Ề': 'e', 'Ế': 'e', 'Ể': 'e', 'Ễ': 'e', 'Ệ': 'e',
+        'Ì': 'i', 'Í': 'i', 'Ỉ': 'i', 'Ĩ': 'i', 'Ị': 'i',
+        'Ò': 'o', 'Ó': 'o', 'Ỏ': 'o', 'Õ': 'o', 'Ọ': 'o', 'Ô': 'o', 'Ồ': 'o', 'Ố': 'o', 'Ổ': 'o', 'Ỗ': 'o', 'Ộ': 'o', 'Ơ': 'o', 'Ờ': 'o', 'Ớ': 'o', 'Ở': 'o', 'Ỡ': 'o', 'Ợ': 'o',
+        'Ù': 'u', 'Ú': 'u', 'Ủ': 'u', 'Ũ': 'u', 'Ụ': 'u', 'Ư': 'u', 'Ừ': 'u', 'Ứ': 'u', 'Ử': 'u', 'Ữ': 'u', 'Ự': 'u',
+        'Ỳ': 'y', 'Ý': 'y', 'Ỷ': 'y', 'Ỹ': 'y', 'Ỵ': 'y',
+        'Đ': 'd'
     };
     return text.split('').map(c => vietnameseMap[c] || c).join('')
         .toLowerCase()
@@ -78,6 +78,22 @@ const findMatchingMovie = (movieList, candidate) => {
     return movieList.find(m => isSameMovie(m, candidate)) || null;
 };
 
+const getRandomPlanID = (plans) => {
+    if (!plans || plans.length === 0) return "";
+    const rand = Math.random();
+    let targetLevel = 0;
+    if (rand < 0.3) targetLevel = 0;
+    else if (rand < 0.6) targetLevel = 1;
+    else if (rand < 0.8) targetLevel = 2;
+    else targetLevel = 3;
+
+    const matchingPlans = plans.filter(p => Number(p.level) === targetLevel);
+    if (matchingPlans.length > 0) {
+        return matchingPlans[Math.floor(Math.random() * matchingPlans.length)].id;
+    }
+    return plans[0].id;
+};
+
 function MagicImport() {
     const [actors, setActors] = useState([]);
     useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
@@ -104,13 +120,36 @@ function MagicImport() {
     const categories = useContext(CategoryContext) || [];
     const plans = useContext(PlanContext) || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
-    
+
     const existingMovies = useMovies() || [];
     const existingShowtimes = useShowTimes() || [];
     const existingEpisodes = useEpisodes() || [];
 
     const [isDeduplicating, setIsDeduplicating] = useState(false);
     const [dedupMsg, setDedupMsg] = useState("");
+
+    const [isRandomizingPlans, setIsRandomizingPlans] = useState(false);
+    const handleRandomizePlans = async () => {
+        if (!window.confirm("Bạn có chắc muốn random lại gói (Plan) cho TẤT CẢ các phim hiện có?")) return;
+        setIsRandomizingPlans(true);
+        setSuccessMsg("");
+        setErrorMsg("");
+        let updatedCount = 0;
+        try {
+            for (const movie of existingMovies) {
+                const newPlanID = getRandomPlanID(plans);
+                if (movie.planID !== newPlanID) {
+                    await updateDoc(doc(db, "Movies", movie.id), { planID: newPlanID });
+                    updatedCount++;
+                }
+            }
+            setSuccessMsg(`Đã random thành công gói cho ${updatedCount} bộ phim!`);
+        } catch (err) {
+            setErrorMsg("Lỗi khi random gói: " + err.message);
+        } finally {
+            setIsRandomizingPlans(false);
+        }
+    };
 
     useEffect(() => {
         let timer;
@@ -418,7 +457,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         }
                     }
 
-                    let finalPlanID = plans.length > 0 ? plans[0].id : "";
+                    let finalPlanID = getRandomPlanID(plans);
                     if (movie.rawPlan) {
                         const foundPlan = plans.find(p => p.name.toLowerCase() === movie.rawPlan.toLowerCase());
                         if (foundPlan) finalPlanID = foundPlan.id;
@@ -463,11 +502,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     const epExists = localEpisodes.find(e => e.movieID === currentMovieId && e.numberEpisode === Number(movie.epNumber));
                     if (!epExists) {
                         const epRef = doc(collection(db, "Episodes"));
-                        await setDoc(epRef, { 
-                            id: epRef.id, 
-                            movieID: currentMovieId, 
+                        await setDoc(epRef, {
+                            id: epRef.id,
+                            movieID: currentMovieId,
                             title: movie.name,
-                            numberEpisode: Number(movie.epNumber), 
+                            numberEpisode: Number(movie.epNumber),
                             url: movie.epUrl
                         });
                         localEpisodes.push({ movieID: currentMovieId, numberEpisode: Number(movie.epNumber) });
@@ -701,7 +740,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         listCharacter: [],
                         listAuthor,
                         categoryTypeID,
-                        planID: finalPlanID,
+                        planID: getRandomPlanID(plans),
                         countriesID: mapCountryName(movieData.country),
                         releaseYear: movieData.year || new Date().getFullYear(),
                         duration: parseDuration(movieData.time),
@@ -1027,10 +1066,10 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             setSyncStats({ ...stats });
                         } else {
                             // 2. Sửa lại link nếu link cũ bị sai, rác ("vdvdfv") hoặc không chuẩn
-                            const isDummyOrBroken = !existingEp.url || 
-                                                    !existingEp.url.startsWith('http') || 
-                                                    existingEp.url !== ep.link_embed || 
-                                                    existingEp.urlM3u8 !== ep.link_m3u8;
+                            const isDummyOrBroken = !existingEp.url ||
+                                !existingEp.url.startsWith('http') ||
+                                existingEp.url !== ep.link_embed ||
+                                existingEp.urlM3u8 !== ep.link_m3u8;
 
                             if (isDummyOrBroken && (ep.link_embed || ep.link_m3u8)) {
                                 const epRef = doc(db, "Episodes", existingEp.id);
@@ -1139,673 +1178,682 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         <FaBroom className={isDeduplicating ? "animate-spin" : ""} />
                         <span>{isDeduplicating ? "Đang lọc trùng..." : "Lọc & Xóa phim trùng lặp"}</span>
                     </button>
+                    <button
+                        onClick={handleRandomizePlans}
+                        disabled={isRandomizingPlans}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer bg-fuchsia-500/20 hover:bg-fuchsia-500/30 text-fuchsia-300 hover:text-white border border-fuchsia-500/40 shadow-xs active:scale-95 disabled:opacity-50"
+                        title="Randomize lại plan (gói VIP) cho tất cả phim theo tỉ lệ chuẩn"
+                    >
+                        <FaMagic className={isRandomizingPlans ? "animate-spin" : ""} />
+                        <span>{isRandomizingPlans ? "Đang random..." : "Random Gói (Tất cả phim)"}</span>
+                    </button>
                 </div>
             </div>
 
             {mainTab === 'CRAWLER' ? (
-            /* ==================== CRAWLER UI ==================== */
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* LEFT: Controls */}
-                <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
-                    <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(249, 115, 22, 0.25), rgba(239, 68, 68, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
-                        <div className='table-container p-5' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                            <h2 className='text-orange-400 font-bold mb-4 uppercase tracking-wider text-sm flex items-center gap-2'>
-                                <FaGlobe className="text-xl" /> KKPhim Auto Crawler
-                            </h2>
-
-                            {/* Page Range */}
-                            <div className="grid grid-cols-2 gap-3 mb-4">
-                                <div>
-                                    <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Trang bắt đầu</label>
-                                    <input type="number" min="1" value={crawlPageStart} onChange={e => setCrawlPageStart(Math.max(1, parseInt(e.target.value) || 1))}
-                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
-                                </div>
-                                <div>
-                                    <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Trang kết thúc</label>
-                                    <input type="number" min="1" value={crawlPageEnd} onChange={e => setCrawlPageEnd(Math.max(1, parseInt(e.target.value) || 1))}
-                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
-                                </div>
-                            </div>
-
-                            {/* Delay */}
-                            <div className="mb-4">
-                                <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Delay giữa các trang (ms)</label>
-                                <input type="number" min="500" step="100" value={crawlDelay} onChange={e => setCrawlDelay(Math.max(500, parseInt(e.target.value) || 1500))}
-                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
-                                <p className="text-[10px] text-gray-600 mt-1">Khuyến nghị: 1500ms. Thấp hơn 500ms có thể bị API chặn.</p>
-                            </div>
-
-                            {/* Info */}
-                            <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-3 mb-4">
-                                <p className="text-[11px] text-orange-300">📌 Mỗi trang có ~24 phim. Crawl {crawlPageEnd - crawlPageStart + 1} trang ≈ <span className="font-bold text-white">{(crawlPageEnd - crawlPageStart + 1) * 24}</span> phim.</p>
-                                <p className="text-[11px] text-orange-300 mt-1">⏱️ Thời gian ước tính: ~<span className="font-bold text-white">{Math.round(((crawlPageEnd - crawlPageStart + 1) * 24 * (crawlDelay / 2 + 300) + (crawlPageEnd - crawlPageStart + 1) * crawlDelay) / 60000)}</span> phút.</p>
-                            </div>
-
-                            {/* Action Buttons */}
-                            <div className="flex flex-col gap-2">
-                                {crawlStatus === 'idle' || crawlStatus === 'done' ? (
-                                    <button onClick={handleStartCrawl}
-                                        className="w-full py-3 rounded-xl bg-linear-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all">
-                                        <FaPlay /> Bắt đầu Crawl
-                                    </button>
-                                ) : (
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <button onClick={handlePauseCrawl}
-                                            className={`py-3 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all
-                                            ${crawlStatus === 'paused' ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-yellow-600 hover:bg-yellow-500 text-white'}`}>
-                                            {crawlStatus === 'paused' ? <><FaPlay /> Tiếp tục</> : <><FaPause /> Tạm dừng</>}
-                                        </button>
-                                        <button onClick={handleStopCrawl}
-                                            className="py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all">
-                                            <FaStop /> Dừng hẳn
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Stats Card */}
-                    <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(249, 115, 22, 0.25), rgba(239, 68, 68, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
-                        <div className='table-container p-5' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                            <h2 className='text-orange-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
-                                <FaDatabase className="text-lg" /> Thống kê
-                            </h2>
-                            <div className="grid grid-cols-2 gap-2 text-xs">
-                                <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-2.5 text-center">
-                                    <p className="text-cyan-400 font-black text-lg">{crawlStats.movies}</p>
-                                    <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Phim đã lưu</p>
-                                </div>
-                                <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-2.5 text-center">
-                                    <p className="text-emerald-400 font-black text-lg">{crawlStats.episodes}</p>
-                                    <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Tập phim</p>
-                                </div>
-                                <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-2.5 text-center">
-                                    <p className="text-purple-400 font-black text-lg">{crawlStats.categories}</p>
-                                    <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Thể loại mới</p>
-                                </div>
-                                <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-2.5 text-center">
-                                    <p className="text-blue-400 font-black text-lg">{crawlStats.actors}</p>
-                                    <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Diễn viên mới</p>
-                                </div>
-                                <div className="bg-pink-500/10 border border-pink-500/20 rounded-lg p-2.5 text-center">
-                                    <p className="text-pink-400 font-black text-lg">{crawlStats.directors}</p>
-                                    <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Đạo diễn mới</p>
-                                </div>
-                                <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2.5 text-center">
-                                    <p className="text-red-400 font-black text-lg">{crawlStats.errors}</p>
-                                    <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Lỗi</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* RIGHT: Logs */}
-                <div className="col-span-1 lg:col-span-8 flex flex-col gap-4">
-                    <div className='table-wrapper h-full' style={{ background: 'linear-gradient(120deg, rgba(249, 115, 22, 0.25), rgba(239, 68, 68, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
-                        <div className='table-container p-5 h-full flex flex-col' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                            <h2 className='text-orange-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between'>
-                                <span className="flex items-center gap-2">📋 Live Logs</span>
-                                <span className={`px-3 py-1 rounded-full text-xs border transition-all
-                                    ${crawlStatus === 'running' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse' :
-                                      crawlStatus === 'paused' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
-                                      crawlStatus === 'done' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
-                                      'bg-gray-500/20 text-gray-400 border-gray-500/30'}`}>
-                                    {crawlStatus === 'running' ? '🟢 Đang chạy' : crawlStatus === 'paused' ? '🟡 Tạm dừng' : crawlStatus === 'done' ? '🔵 Hoàn tất' : '⚪ Chờ lệnh'}
-                                </span>
-                            </h2>
-
-                            {/* Progress Bar */}
-                            {crawlStatus !== 'idle' && (
-                                <div className="mb-3">
-                                    <div className="flex justify-between text-xs font-bold text-orange-400 mb-1">
-                                        <span>{crawlStatus === 'running' ? '⏳ Đang crawl...' : crawlStatus === 'paused' ? '⏸️ Tạm dừng' : '✅ Hoàn tất'}</span>
-                                        <span>{crawlProgress}%</span>
-                                    </div>
-                                    <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
-                                        <div className="bg-linear-to-r from-orange-400 via-red-500 to-pink-500 h-full rounded-full transition-[width] duration-500 ease-out"
-                                            style={{ width: `${crawlProgress}%` }} />
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Log Area */}
-                            <div className="flex-1 bg-black/30 border border-white/10 rounded-xl overflow-hidden">
-                                <div className="h-[500px] overflow-y-auto custom-scrollbar p-3 font-mono text-xs space-y-1">
-                                    {crawlLogs.length === 0 ? (
-                                        <div className="flex flex-col items-center justify-center h-full text-gray-600 opacity-50">
-                                            <FaSpider className="text-5xl mb-3" />
-                                            <p>Nhấn "Bắt đầu Crawl" để bắt đầu thu thập dữ liệu từ KKPhim...</p>
-                                        </div>
-                                    ) : (
-                                        crawlLogs.map((log, idx) => (
-                                            <div key={idx} className={`py-1 px-2 rounded transition-all
-                                                ${log.type === 'error' ? 'text-red-400 bg-red-500/5' :
-                                                  log.type === 'success' ? 'text-emerald-400 bg-emerald-500/5' :
-                                                  log.type === 'warning' ? 'text-yellow-400 bg-yellow-500/5' :
-                                                  'text-gray-400'}`}>
-                                                <span className="text-gray-600 mr-2">[{log.time}]</span>{log.message}
-                                            </div>
-                                        ))
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            ) : mainTab === 'SYNC' ? (
-            /* ==================== AUTO-SYNC EPISODES UI ==================== */
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                {/* LEFT: Controls & Settings */}
-                <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
-                    <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(16, 185, 129, 0.25), rgba(20, 184, 166, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
-                        <div className='table-container p-5' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                            <h2 className='text-emerald-400 font-bold mb-4 uppercase tracking-wider text-sm flex items-center gap-2'>
-                                <FaSyncAlt className={`text-xl ${syncStatus === 'running' ? 'animate-spin' : ''}`} /> Auto-Sync Tập Mới
-                            </h2>
-
-                            {/* Scope of sync */}
-                            <div className="mb-4">
-                                <label className="text-[10px] uppercase tracking-wider text-gray-400 font-bold block mb-1">Số trang quét (Phim Mới Cập Nhật)</label>
-                                <select
-                                    value={syncPages}
-                                    onChange={e => setSyncPages(Number(e.target.value))}
-                                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
-                                >
-                                    <option value={1} className="bg-slate-900">1 Trang (~24 phim mới nhất)</option>
-                                    <option value={2} className="bg-slate-900">2 Trang (~48 phim mới nhất)</option>
-                                    <option value={3} className="bg-slate-900">3 Trang (~72 phim mới nhất - Khuyến nghị)</option>
-                                    <option value={5} className="bg-slate-900">5 Trang (~120 phim mới nhất)</option>
-                                </select>
-                            </div>
-
-                            {/* Auto Cron Background Timer */}
-                            <div className="mb-4 p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-                                <div className="flex items-center justify-between mb-2">
-                                    <label className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-                                        <FaClock className="text-sm" /> Tự động quét ngầm định kỳ
-                                    </label>
-                                    {autoCronInterval > 0 && (
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                                            Đang bật
-                                        </span>
-                                    )}
-                                </div>
-                                <select
-                                    value={autoCronInterval}
-                                    onChange={e => handleSetAutoCron(Number(e.target.value))}
-                                    className="w-full bg-black/40 border border-emerald-500/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
-                                >
-                                    <option value={0} className="bg-slate-900">Tắt (Chỉ quét khi bấm nút)</option>
-                                    <option value={15} className="bg-slate-900">Mỗi 15 phút (Cập nhật siêu tốc)</option>
-                                    <option value={30} className="bg-slate-900">Mỗi 30 phút (Khuyến nghị)</option>
-                                    <option value={60} className="bg-slate-900">Mỗi 60 phút (1 tiếng)</option>
-                                </select>
-                                <p className="text-[10px] text-gray-400 mt-2">
-                                    Khi bật, hệ thống sẽ tự động định kỳ quét KKPhim và chèn các tập mới nhất vào phim mà không cần thao tác tay.
-                                </p>
-                            </div>
-
-                            {/* Action Buttons */}
-                            <div className="flex flex-col gap-2 mb-4">
-                                {syncStatus !== 'running' ? (
-                                    <button
-                                        onClick={handleStartSync}
-                                        className="w-full py-3 rounded-xl bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all"
-                                    >
-                                        <FaPlay /> Quét & Cập nhật tập mới ngay
-                                    </button>
-                                ) : (
-                                    <button
-                                        onClick={handleStopSync}
-                                        className="w-full py-3 rounded-xl bg-red-600/80 hover:bg-red-600 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all"
-                                    >
-                                        <FaStop /> Dừng đồng bộ
-                                    </button>
-                                )}
-                            </div>
-
-                            {/* Last Sync Info */}
-                            {lastSyncTime && (
-                                <div className="text-[11px] text-gray-400 flex items-center justify-between border-t border-white/5 pt-3">
-                                    <span>Lần cập nhật gần nhất:</span>
-                                    <span className="font-semibold text-emerald-300">{lastSyncTime}</span>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* RIGHT: Live Monitor & Logs */}
-                <div className="col-span-1 lg:col-span-8 flex flex-col gap-4">
-                    <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
-                        <div className='table-container p-5 flex flex-col h-full' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                            {/* Stats Counters */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                                <div className="bg-black/30 border border-white/10 rounded-xl p-3 text-center">
-                                    <div className="text-xl font-bold text-gray-200">{syncStats.checked}</div>
-                                    <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Phim đã quét</div>
-                                </div>
-                                <div className="bg-black/30 border border-emerald-500/30 rounded-xl p-3 text-center bg-emerald-500/5">
-                                    <div className="text-xl font-bold text-emerald-400">{syncStats.moviesUpdated}</div>
-                                    <div className="text-[10px] text-emerald-300 uppercase tracking-wider mt-0.5">Phim có tập mới</div>
-                                </div>
-                                <div className="bg-black/30 border border-teal-500/30 rounded-xl p-3 text-center bg-teal-500/5">
-                                    <div className="text-xl font-bold text-teal-400">{syncStats.newEpisodes}</div>
-                                    <div className="text-[10px] text-teal-300 uppercase tracking-wider mt-0.5">Tập mới đã thêm</div>
-                                </div>
-                                <div className="bg-black/30 border border-red-500/30 rounded-xl p-3 text-center">
-                                    <div className="text-xl font-bold text-red-400">{syncStats.errors}</div>
-                                    <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Lỗi</div>
-                                </div>
-                            </div>
-
-                            {/* Progress Bar */}
-                            {syncStatus === 'running' && (
-                                <div className="mb-3">
-                                    <div className="flex justify-between text-xs font-bold text-emerald-400 mb-1">
-                                        <span>⏳ Đang đồng bộ tập mới...</span>
-                                        <span>{syncProgress}%</span>
-                                    </div>
-                                    <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
-                                        <div className="bg-linear-to-r from-emerald-400 via-teal-500 to-cyan-500 h-full rounded-full transition-[width] duration-500 ease-out"
-                                            style={{ width: `${syncProgress}%` }} />
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Log Console */}
-                            <div className="flex-1 bg-black/30 border border-white/10 rounded-xl overflow-hidden flex flex-col">
-                                <div className="flex items-center justify-between px-3 py-2 bg-white/5 border-b border-white/10 text-xs font-bold text-gray-300">
-                                    <span className="flex items-center gap-1.5">
-                                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                                        Nhật ký Đồng bộ (Live Sync Log)
-                                    </span>
-                                    {syncLogs.length > 0 && (
-                                        <button
-                                            onClick={() => setSyncLogs([])}
-                                            className="text-[10px] text-gray-400 hover:text-white px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 cursor-pointer"
-                                        >
-                                            Xóa log
-                                        </button>
-                                    )}
-                                </div>
-                                <div className="h-[450px] overflow-y-auto custom-scrollbar p-3 font-mono text-xs space-y-1">
-                                    {syncLogs.length === 0 ? (
-                                        <div className="flex flex-col items-center justify-center h-full text-gray-500 opacity-60">
-                                            <FaSyncAlt className="text-4xl mb-3 text-emerald-400 opacity-40" />
-                                            <p className="text-center">Bấm "Quét & Cập nhật tập mới ngay" hoặc bật chế độ tự động ngầm để bắt đầu.</p>
-                                        </div>
-                                    ) : (
-                                        syncLogs.map((log, idx) => (
-                                            <div key={idx} className={`py-1 px-2 rounded transition-all
-                                                ${log.type === 'error' ? 'text-red-400 bg-red-500/5' :
-                                                  log.type === 'success' ? 'text-emerald-400 bg-emerald-500/10 font-semibold' :
-                                                  log.type === 'warning' ? 'text-yellow-400 bg-yellow-500/5' :
-                                                  'text-gray-400'}`}>
-                                                <span className="text-gray-600 mr-2">[{log.time}]</span>{log.message}
-                                            </div>
-                                        ))
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            ) : (
-            /* ==================== MANUAL IMPORT UI (existing) ==================== */
-            <>
-            <div className='magic-header flex items-center justify-between gap-4 mb-6 py-3 px-5 rounded-2xl'>
-                <div className='flex items-center gap-4'>
-                    <div className='w-12 h-12 rounded-xl bg-linear-to-br from-cyan-400 to-purple-500 flex justify-center items-center shadow-[0_0_15px_rgba(34,211,238,0.5)]'>
-                        <FaMagic className='text-2xl text-white' />
-                    </div>
-                    <div>
-                        <h1 className='text-2xl font-black tracking-wide glow-text uppercase'>Magic Import</h1>
-                        <p className='text-gray-400 text-xs mt-0.5'>Copy table from Excel to automatically sync Movies, Episodes & Showtimes.</p>
-                    </div>
-                </div>
-
-                {/* CLEAR BUTTON */}
-                <div className='flex items-center gap-4'>
-                    <button
-                        onClick={handleClearAll}
-                        title="Clear all inputs and tables"
-                        className="flex hover:scale-105 cursor-pointer items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
-                    >
-                        <FaEraser className="text-sm" />
-                        <p className="text-xs font-bold uppercase tracking-wider hidden sm:block">Clear</p>
-                    </button>
-
-                    {/* AI PROMPT CONTROL BAR */}
-                    <div className='flex items-stretch rounded-xl overflow-hidden'
-                        style={{
-                            background: 'rgba(10, 15, 25, 0.6)',
-                            backdropFilter: 'blur(10px)',
-                            WebkitBackdropFilter: 'blur(10px)',
-                            border: '1px solid rgba(0, 242, 254, 0.2)',
-                            boxShadow: '0 0 8px rgba(0, 242, 254, 0.15), 0 0 20px rgba(139, 92, 246, 0.08), inset 0 0 12px rgba(0, 242, 254, 0.03)',
-                        }}
-                    >
-                        {/* AI PROMPT LABEL */}
-                        <div className='flex items-center gap-2 px-3'>
-                            <FaRobot className="text-pink-400 text-xl" />
-                            <p className="text-xs font-bold text-pink-300 uppercase tracking-wider hidden xl:block whitespace-nowrap">AI Prompt</p>
-                        </div>
-
-                        {/* SEPARATOR */}
-                        <div className="w-px self-stretch my-1.5 bg-white/10"></div>
-
-                        {/* COUNT INPUT */}
-                        <div className='flex items-center gap-1.5 px-2'>
-                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">SL</p>
-                            <input
-                                type="number"
-                                className="w-12 bg-transparent border-none p-2.5 text-xs text-center text-gray-300 focus:outline-none focus:bg-white/5 transition-all"
-                                placeholder="Số lượng"
-                                value={promptCount}
-                                onChange={(e) => setPromptCount(e.target.value)}
-                            />
-                        </div>
-
-                        {/* SEPARATOR */}
-                        <div className="w-px self-stretch my-1.5 bg-white/10"></div>
-
-                        {/* THEME INPUT */}
-                        <input
-                            type="text"
-                            className="w-44 lg:w-56 bg-transparent border-none p-2.5 text-xs text-gray-300 focus:outline-none focus:bg-white/5 transition-all"
-                            placeholder="Nhập thể loại (VD: Marvel, Anime...)"
-                            value={promptTheme}
-                            onChange={(e) => setPromptTheme(e.target.value)}
-                        />
-
-                        {/* SEPARATOR */}
-                        <div className="w-px self-stretch my-1.5 bg-white/10"></div>
-
-                        {/* COPY BUTTON */}
-                        <button
-                            onClick={handleCopyPrompt}
-                            className={`px-4 py-2.5 cursor-pointer hover:scale-105 text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 active:scale-95 ${isCopied ? 'bg-emerald-600/80' : 'bg-pink-600/80 hover:bg-pink-500/80'}`}
-                        >
-                            {isCopied ? (
-                                <>
-                                    <FaCheckCircle className="text-sm" /> Copied!
-                                </>
-                            ) : (
-                                <>
-                                    <FaCopy className="text-sm" /> Copy
-                                </>
-                            )}
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
-                <div className='col-span-1 lg:col-span-4 flex flex-col gap-4'>
-                    <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(0, 255, 255, 0.25), rgba(139, 92, 246, 0.25))', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.08)' }}>
-                        <div className='table-container p-5 relative group transition-all' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-
-                            <div className="flex bg-slate-800/50 rounded-xl p-1 mb-5 border border-white/10 relative">
-                                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-yellow-600/60 p-2 flex justify-center items-center rounded-full z-10">
-                                    <FaExchangeAlt className="text-yellow-300 text-xs " />
-                                </div>
-                                <button
-                                    onClick={() => setMode('IMPORT')}
-                                    className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
-                                    ${mode === 'IMPORT' ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
-                                >
-                                    Import Only
-                                </button>
-                                <button
-                                    onClick={() => setMode('UPDATE')}
-                                    className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
-                                    ${mode === 'UPDATE' ? 'bg-fuchsia-500 text-white shadow-[0_0_15px_rgba(217,70,239,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
-                                >
-                                    Smart Update
-                                </button>
-                            </div>
-
-                            <h2 className='text-cyan-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
-                                <FaCloudUploadAlt className="text-xl" /> Data Input Area
-                            </h2>
-                            <textarea
-                                className='w-full h-56 bg-black/20 border border-white/10 rounded-xl p-4 text-sm text-gray-300 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.2)] custom-scrollbar'
-                                placeholder='Paste data table here...'
-                                value={inputText}
-                                onChange={(e) => setInputText(e.target.value)}
-                            />
-
-                            <div className="flex flex-col gap-3 mt-4">
-                                {errorMsg && (
-                                    <div className="text-red-400 bg-red-500/10 border border-red-500/30 p-2.5 rounded-lg text-xs font-bold text-center shadow-[0_0_10px_rgba(239,68,68,0.1)]">
-                                        {errorMsg}
-                                    </div>
-                                )}
-
-                                <button
-                                    onClick={handleParse}
-                                    className={`w-full cursor-pointer hover:scale-105 py-3 rounded-xl text-white font-bold tracking-wider uppercase transition-all active:scale-95
-                                    ${mode === 'IMPORT' ? 'bg-cyan-600 hover:bg-cyan-500 shadow-[0_0_15px_rgba(8,145,178,0.4)]' : 'bg-fuchsia-600 hover:bg-fuchsia-500 shadow-[0_0_15px_rgba(192,38,211,0.4)]'}`}
-                                >
-                                    Parse Data ({mode})
-                                </button>
-
-                                <label className='w-full  hover:scale-105 py-3 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold tracking-wider uppercase transition-all cursor-pointer shadow-[0_0_15px_rgba(5,150,105,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] active:scale-95'>
-                                    <FaFileExcel className="text-xl" /> Upload Excel
-                                    <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileUpload} className="hidden" />
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className='col-span-1 lg:col-span-8 flex flex-col gap-4'>
-                    <div className='table-wrapper h-full' style={{ background: 'linear-gradient(120deg, rgba(0, 255, 255, 0.25), rgba(139, 92, 246, 0.25))', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.08)' }}>
-                        <div className='table-container p-5 h-full flex flex-col justify-between transition-all duration-300' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                            <div>
-                                <h2 className={`font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between transition-colors
-                                ${mode === 'IMPORT' ? 'text-cyan-400' : 'text-fuchsia-400'}`}>
-                                    <p className="inline">Preview Table ({mode === 'UPDATE' ? 'Update Mode' : 'Import Mode'})</p>
-                                    <p className={`px-3 py-1 rounded-full text-xs border transition-colors
-                                    ${mode === 'IMPORT' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' : 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30'} inline`}>
-                                        {previewData.length} items
-                                    </p>
+                /* ==================== CRAWLER UI ==================== */
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    {/* LEFT: Controls */}
+                    <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
+                        <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(249, 115, 22, 0.25), rgba(239, 68, 68, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
+                            <div className='table-container p-5' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+                                <h2 className='text-orange-400 font-bold mb-4 uppercase tracking-wider text-sm flex items-center gap-2'>
+                                    <FaGlobe className="text-xl" /> KKPhim Auto Crawler
                                 </h2>
 
-                                <div className='border border-white/10 rounded-xl overflow-hidden mt-4'>
-                                    <div className='h-72 flex flex-col relative'>
-                                        {previewData.length > 0 ? (
-                                            <div className='overflow-auto h-full custom-scrollbar'>
-                                                <table className='w-full whitespace-nowrap text-xs min-w-max text-left border-collapse'>
-                                                    <thead className='table-header border-b border-white/20 sticky top-0 z-10'>
-                                                        <tr>
-                                                            <th className='p-3 text-center align-middle'>STT</th>
-                                                            <th className='p-3 text-center align-middle'>ACTION</th>
-                                                            <th className='p-3 text-center align-middle'>NAME (INTL / SELECT)</th>
-                                                            <th className='p-3 text-center align-middle'>NAME (VN)</th>
-                                                            <th className='p-3 text-center align-middle'>MOVIE DESC</th>
-                                                            <th className='p-3 text-center align-middle'>TYPE</th>
-                                                            <th className='p-3 text-center align-middle'>CATEGORIES</th>
-                                                            <th className='p-3 text-center align-middle'>CAT DESC</th>
-                                                            <th className='p-3 text-center align-middle'>DIRECTOR</th>
-                                                            <th className='p-3 text-center align-middle'>DIR DESC</th>
-                                                            <th className='p-3 text-center align-middle'>ACTORS</th>
-                                                            <th className='p-3 text-center align-middle'>ACTOR DESC</th>
-                                                            <th className='p-3 text-center align-middle'>CHARACTERS</th>
-                                                            <th className='p-3 text-center align-middle'>CHAR DESC</th>
-                                                            <th className='p-3 text-center align-middle'>GENDER</th>
-                                                            <th className='p-3 text-center align-middle'>CHAR GENDER</th>
-                                                            <th className='p-3 text-center align-middle'>INFO (YEAR/AGE/PLAN)</th>
-                                                            <th className='p-3 text-center align-middle'>DURATION</th>
-                                                            <th className='p-3 text-center align-middle'>RENT PRICE</th>
-                                                            <th className='p-3 text-center align-middle'>COUNTRY</th>
-                                                            <th className='p-3 text-center align-middle'>EPISODES</th>
-                                                            <th className='p-3 text-center align-middle'>EP DATA (NUM/URL)</th>
-                                                            <th className='p-3 text-center align-middle'>SHOWTIME (ROOM/TIME)</th>
-                                                            <th className='p-3 text-center align-middle'>STATUS</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {previewData.map((row, idx) => {
-                                                            const isDuplicated = existingMovies.some(m => m?.name && row?.name && m.name.toLowerCase() === row.name.toLowerCase());
+                                {/* Page Range */}
+                                <div className="grid grid-cols-2 gap-3 mb-4">
+                                    <div>
+                                        <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Trang bắt đầu</label>
+                                        <input type="number" min="1" value={crawlPageStart} onChange={e => setCrawlPageStart(Math.max(1, parseInt(e.target.value) || 1))}
+                                            className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
+                                    </div>
+                                    <div>
+                                        <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Trang kết thúc</label>
+                                        <input type="number" min="1" value={crawlPageEnd} onChange={e => setCrawlPageEnd(Math.max(1, parseInt(e.target.value) || 1))}
+                                            className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
+                                    </div>
+                                </div>
 
-                                                            let rowClass = "border-b border-white/5 transition-all duration-300 text-gray-200 ";
-                                                            if (rowStatuses[idx] === 'processing') {
-                                                                rowClass += "bg-cyan-500/15 border-l-4 border-l-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)] animate-pulse text-cyan-300";
-                                                            } else if (rowStatuses[idx] === 'success') {
-                                                                rowClass += "bg-emerald-500/15 border-l-4 border-l-emerald-500 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]";
-                                                            } else if (isDuplicated) {
-                                                                rowClass += mode === 'UPDATE' ? 'bg-fuchsia-500/10 hover:bg-fuchsia-500/20' : 'bg-indigo-500/10 hover:bg-indigo-500/20';
-                                                            } else {
-                                                                rowClass += "hover:bg-white/5";
-                                                            }
+                                {/* Delay */}
+                                <div className="mb-4">
+                                    <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Delay giữa các trang (ms)</label>
+                                    <input type="number" min="500" step="100" value={crawlDelay} onChange={e => setCrawlDelay(Math.max(500, parseInt(e.target.value) || 1500))}
+                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
+                                    <p className="text-[10px] text-gray-600 mt-1">Khuyến nghị: 1500ms. Thấp hơn 500ms có thể bị API chặn.</p>
+                                </div>
 
-                                                            return (
-                                                                <tr key={idx} className={rowClass}>
-                                                                    <td className='p-3 text-center align-middle font-bold text-gray-400'>
-                                                                        {idx + 1}
-                                                                    </td>
-                                                                    <td className='p-3 text-center align-middle'>
-                                                                        <button onClick={() => handleRemoveRow(idx)} className="p-1.5 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-all" title="Remove row"><FaTrash size={14} /></button>
-                                                                    </td>
+                                {/* Info */}
+                                <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-3 mb-4">
+                                    <p className="text-[11px] text-orange-300">📌 Mỗi trang có ~24 phim. Crawl {crawlPageEnd - crawlPageStart + 1} trang ≈ <span className="font-bold text-white">{(crawlPageEnd - crawlPageStart + 1) * 24}</span> phim.</p>
+                                    <p className="text-[11px] text-orange-300 mt-1">⏱️ Thời gian ước tính: ~<span className="font-bold text-white">{Math.round(((crawlPageEnd - crawlPageStart + 1) * 24 * (crawlDelay / 2 + 300) + (crawlPageEnd - crawlPageStart + 1) * crawlDelay) / 60000)}</span> phút.</p>
+                                </div>
 
-                                                                    <td className='p-3 text-center align-middle font-bold text-cyan-300 min-w-45'>
-                                                                        <div className="flex flex-col gap-1">
-                                                                            <p className="inline">{row.name}</p>
-                                                                            {mode === 'UPDATE' && (
-                                                                                <select
-                                                                                    value={row.matchedMovieId || ""}
-                                                                                    onChange={(e) => {
-                                                                                        const val = e.target.value;
-                                                                                        setPreviewData(prev => prev.map((item, i) => i === idx ? { ...item, matchedMovieId: val } : item));
-                                                                                    }}
-                                                                                    className="bg-slate-800 border border-white/10 rounded px-2 py-1.5 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 w-full font-sans cursor-pointer mt-1"
-                                                                                >
-                                                                                    <option value="">-- Manual Link Select --</option>
-                                                                                    {existingMovies.map(m => (
-                                                                                        <option key={m.id} value={m.id} className="bg-slate-800 text-gray-200 py-1">{m.name}</option>
-                                                                                    ))}
-                                                                                </select>
-                                                                            )}
-                                                                            {rowStatuses[idx] === 'processing' && <div className="text-[10px] text-cyan-400 font-normal mt-1">Syncing Data...</div>}
-                                                                            {rowStatuses[idx] === 'success' && <div className="text-[10px] text-emerald-400 font-bold mt-1">✓ Completed</div>}
-                                                                            {!rowStatuses[idx] && isDuplicated && (
-                                                                                mode === 'UPDATE' ? (
-                                                                                    <div className="text-[9px] bg-fuchsia-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Will Update</div>
-                                                                                ) : (
-                                                                                    <div className="text-[9px] bg-indigo-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Append Eps</div>
-                                                                                )
-                                                                            )}
-                                                                            {!rowStatuses[idx] && !isDuplicated && <div className="text-[9px] bg-emerald-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Create New</div>}
-                                                                        </div>
-                                                                    </td>
+                                {/* Action Buttons */}
+                                <div className="flex flex-col gap-2">
+                                    {crawlStatus === 'idle' || crawlStatus === 'done' ? (
+                                        <button onClick={handleStartCrawl}
+                                            className="w-full py-3 rounded-xl bg-linear-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all">
+                                            <FaPlay /> Bắt đầu Crawl
+                                        </button>
+                                    ) : (
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <button onClick={handlePauseCrawl}
+                                                className={`py-3 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all
+                                            ${crawlStatus === 'paused' ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-yellow-600 hover:bg-yellow-500 text-white'}`}>
+                                                {crawlStatus === 'paused' ? <><FaPlay /> Tiếp tục</> : <><FaPause /> Tạm dừng</>}
+                                            </button>
+                                            <button onClick={handleStopCrawl}
+                                                className="py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all">
+                                                <FaStop /> Dừng hẳn
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
 
-                                                                    <td className='p-3 text-center align-middle text-emerald-300 font-semibold'>{row.otherName}</td>
-                                                                    <td className='p-3 text-center align-middle text-gray-300 truncate max-w-40' title={row.description}>{row.description}</td>
-                                                                    <td className='p-3 text-center align-middle text-purple-300'>{row.rawCategoryType}</td>
-                                                                    <td className='p-3 text-center align-middle text-pink-300'>{row.rawCategories}</td>
-                                                                    <td className='p-3 text-center align-middle text-pink-200 truncate max-w-40' title={row.rawCategoryDesc}>{row.rawCategoryDesc}</td>
-                                                                    <td className='p-3 text-center align-middle text-green-300'>{row.rawAuthor}</td>
-                                                                    <td className='p-3 text-center align-middle text-green-200 truncate max-w-40' title={row.rawAuthorDesc}>{row.rawAuthorDesc}</td>
-                                                                    <td className='p-3 text-center align-middle text-blue-300 truncate max-w-30' title={row.rawActors}>{row.rawActors}</td>
-                                                                    <td className='p-3 text-center align-middle text-blue-200 truncate max-w-40' title={row.rawActorDesc}>{row.rawActorDesc}</td>
-                                                                    <td className='p-3 text-center align-middle text-orange-300 truncate max-w-30' title={row.rawCharacters}>{row.rawCharacters}</td>
-                                                                    <td className='p-3 text-center align-middle text-orange-200 truncate max-w-40' title={row.rawCharacterDesc}>{row.rawCharacterDesc}</td>
-                                                                    <td className='p-3 text-center align-middle text-pink-300 truncate max-w-20' title={row.gender}>{row.gender}</td>
-                                                                    <td className='p-3 text-center align-middle text-pink-300 truncate max-w-20' title={row.charGender}>{row.charGender}</td>
-                                                                    <td className='p-3 text-center align-middle'>
-                                                                        <div className="flex flex-col gap-1 items-center">
-                                                                            <p className="text-yellow-400 font-bold inline">{row.releaseYear}</p>
-                                                                            <p className="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.ageRating}</p>
-                                                                            <p className="bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.rawPlan || "Free"}</p>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td className='p-3 text-center align-middle font-mono'>{row.duration}m</td>
-                                                                    <td className='p-3 text-center align-middle font-mono text-green-400'>{row.rent.toLocaleString()}</td>
-                                                                    <td className='p-3 text-center align-middle'><p className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-1 rounded text-[11px] font-bold inline">{row.countriesID}</p></td>
-                                                                    <td className='p-3 text-center align-middle'>
-                                                                        <div className="flex flex-col gap-1 items-center bg-purple-500/10 border border-purple-500/20 p-1.5 rounded-lg">
-                                                                            <p className="text-purple-300 font-bold text-[13px] inline">Total: {row.endEpisode}</p>
-                                                                            <p className="text-[10px] text-purple-400 inline">S:{row.episodeSub} | D:{row.episodeDub}</p>
-                                                                        </div>
-                                                                    </td>
-                                                                    <td className='p-3 text-center align-middle'>
-                                                                        <div className="flex flex-col gap-1 items-center">
-                                                                            {row.epNumber ? <p className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">Ep: {row.epNumber}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
-                                                                            {row.epUrl ? <p className="text-blue-400 text-[10px] truncate w-16 inline" title={row.epUrl}>URL OK</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
-                                                                        </div>
-                                                                    </td>
-                                                                    <td className='p-3 text-center align-middle'>
-                                                                        <div className="flex flex-col gap-1 items-center">
-                                                                            {row.roomName ? <p className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">{row.roomName}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
-                                                                            {row.rawShowtimes ? <p className="text-cyan-200 text-[10px] truncate w-16 inline" title={row.rawShowtimes}>{row.rawShowtimes}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
-                                                                        </div>
-                                                                    </td>
-                                                                    <td className='p-3 text-center align-middle'>
-                                                                        <p className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)} inline`}>{row.status}</p>
-                                                                    </td>
-                                                                </tr>
-                                                            );
-                                                        })}
-                                                    </tbody>
-                                                </table>
+                        {/* Stats Card */}
+                        <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(249, 115, 22, 0.25), rgba(239, 68, 68, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
+                            <div className='table-container p-5' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+                                <h2 className='text-orange-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
+                                    <FaDatabase className="text-lg" /> Thống kê
+                                </h2>
+                                <div className="grid grid-cols-2 gap-2 text-xs">
+                                    <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-2.5 text-center">
+                                        <p className="text-cyan-400 font-black text-lg">{crawlStats.movies}</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Phim đã lưu</p>
+                                    </div>
+                                    <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-2.5 text-center">
+                                        <p className="text-emerald-400 font-black text-lg">{crawlStats.episodes}</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Tập phim</p>
+                                    </div>
+                                    <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-2.5 text-center">
+                                        <p className="text-purple-400 font-black text-lg">{crawlStats.categories}</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Thể loại mới</p>
+                                    </div>
+                                    <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-2.5 text-center">
+                                        <p className="text-blue-400 font-black text-lg">{crawlStats.actors}</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Diễn viên mới</p>
+                                    </div>
+                                    <div className="bg-pink-500/10 border border-pink-500/20 rounded-lg p-2.5 text-center">
+                                        <p className="text-pink-400 font-black text-lg">{crawlStats.directors}</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Đạo diễn mới</p>
+                                    </div>
+                                    <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2.5 text-center">
+                                        <p className="text-red-400 font-black text-lg">{crawlStats.errors}</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Lỗi</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* RIGHT: Logs */}
+                    <div className="col-span-1 lg:col-span-8 flex flex-col gap-4">
+                        <div className='table-wrapper h-full' style={{ background: 'linear-gradient(120deg, rgba(249, 115, 22, 0.25), rgba(239, 68, 68, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
+                            <div className='table-container p-5 h-full flex flex-col' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+                                <h2 className='text-orange-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between'>
+                                    <span className="flex items-center gap-2">📋 Live Logs</span>
+                                    <span className={`px-3 py-1 rounded-full text-xs border transition-all
+                                    ${crawlStatus === 'running' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse' :
+                                            crawlStatus === 'paused' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
+                                                crawlStatus === 'done' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
+                                                    'bg-gray-500/20 text-gray-400 border-gray-500/30'}`}>
+                                        {crawlStatus === 'running' ? '🟢 Đang chạy' : crawlStatus === 'paused' ? '🟡 Tạm dừng' : crawlStatus === 'done' ? '🔵 Hoàn tất' : '⚪ Chờ lệnh'}
+                                    </span>
+                                </h2>
+
+                                {/* Progress Bar */}
+                                {crawlStatus !== 'idle' && (
+                                    <div className="mb-3">
+                                        <div className="flex justify-between text-xs font-bold text-orange-400 mb-1">
+                                            <span>{crawlStatus === 'running' ? '⏳ Đang crawl...' : crawlStatus === 'paused' ? '⏸️ Tạm dừng' : '✅ Hoàn tất'}</span>
+                                            <span>{crawlProgress}%</span>
+                                        </div>
+                                        <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
+                                            <div className="bg-linear-to-r from-orange-400 via-red-500 to-pink-500 h-full rounded-full transition-[width] duration-500 ease-out"
+                                                style={{ width: `${crawlProgress}%` }} />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Log Area */}
+                                <div className="flex-1 bg-black/30 border border-white/10 rounded-xl overflow-hidden">
+                                    <div className="h-[500px] overflow-y-auto custom-scrollbar p-3 font-mono text-xs space-y-1">
+                                        {crawlLogs.length === 0 ? (
+                                            <div className="flex flex-col items-center justify-center h-full text-gray-600 opacity-50">
+                                                <FaSpider className="text-5xl mb-3" />
+                                                <p>Nhấn "Bắt đầu Crawl" để bắt đầu thu thập dữ liệu từ KKPhim...</p>
                                             </div>
                                         ) : (
-                                            <div className='absolute inset-0 flex flex-col items-center justify-center text-gray-500 opacity-50'>
-                                                <FaMagic className='text-5xl mb-3' />
-                                                <p>Data will appear here after parsing</p>
-                                            </div>
+                                            crawlLogs.map((log, idx) => (
+                                                <div key={idx} className={`py-1 px-2 rounded transition-all
+                                                ${log.type === 'error' ? 'text-red-400 bg-red-500/5' :
+                                                        log.type === 'success' ? 'text-emerald-400 bg-emerald-500/5' :
+                                                            log.type === 'warning' ? 'text-yellow-400 bg-yellow-500/5' :
+                                                                'text-gray-400'}`}>
+                                                    <span className="text-gray-600 mr-2">[{log.time}]</span>{log.message}
+                                                </div>
+                                            ))
                                         )}
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="mt-4 p-4">
-                                {loading && (
-                                    <div className="mb-4">
-                                        <div className="flex justify-between text-xs font-bold text-cyan-400 mb-1.5 uppercase tracking-wider">
-                                            <p className="animate-pulse inline">Syncing Cloud Database...</p>
-                                            <p className="inline">{parseFloat(Number(visualProgress).toFixed(2))}%</p>
-                                        </div>
-                                        <div className="w-full bg-black/40 rounded-full h-3.5 overflow-hidden p-0.5 border border-white/10 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
-                                            <div
-                                                className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-[width] duration-1500 ease-out shadow-[0_0_20px_rgba(217,70,239,0.7)]"
-                                                style={{ width: `${visualProgress}%` }}
-                                            />
-                                        </div>
-                                    </div>
-                                )}
-
-                                {successMsg && (
-                                    <div className="mb-3 p-2.5 border rounded-lg flex items-center justify-center gap-2 text-xs font-bold bg-green-500/10 border-green-500/20 text-green-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
-                                        <FaCheckCircle className="text-base" /> {successMsg}
-                                    </div>
-                                )}
-
-                                <button
-                                    onClick={handleExecuteImport}
-                                    disabled={loading || previewData.length === 0}
-                                    className={`w-full py-3.5 rounded-xl font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 text-xs text-white
-                                    ${previewData.length > 0
-                                            ? (mode === 'IMPORT'
-                                                ? 'bg-linear-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer active:scale-[0.98]'
-                                                : 'bg-linear-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 shadow-[0_0_15px_rgba(217,70,239,0.4)] cursor-pointer active:scale-[0.98]')
-                                            : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/60'}`}
-                                >
-                                    <FaPlay className="text-xs" /> {loading ? "Syncing..." : `Confirm & Execute Magic (${mode})`}
-                                </button>
-                            </div>
-
                         </div>
                     </div>
                 </div>
-            </div>
-            </>
+            ) : mainTab === 'SYNC' ? (
+                /* ==================== AUTO-SYNC EPISODES UI ==================== */
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    {/* LEFT: Controls & Settings */}
+                    <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
+                        <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(16, 185, 129, 0.25), rgba(20, 184, 166, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
+                            <div className='table-container p-5' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+                                <h2 className='text-emerald-400 font-bold mb-4 uppercase tracking-wider text-sm flex items-center gap-2'>
+                                    <FaSyncAlt className={`text-xl ${syncStatus === 'running' ? 'animate-spin' : ''}`} /> Auto-Sync Tập Mới
+                                </h2>
+
+                                {/* Scope of sync */}
+                                <div className="mb-4">
+                                    <label className="text-[10px] uppercase tracking-wider text-gray-400 font-bold block mb-1">Số trang quét (Phim Mới Cập Nhật)</label>
+                                    <select
+                                        value={syncPages}
+                                        onChange={e => setSyncPages(Number(e.target.value))}
+                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
+                                    >
+                                        <option value={1} className="bg-slate-900">1 Trang (~24 phim mới nhất)</option>
+                                        <option value={2} className="bg-slate-900">2 Trang (~48 phim mới nhất)</option>
+                                        <option value={3} className="bg-slate-900">3 Trang (~72 phim mới nhất - Khuyến nghị)</option>
+                                        <option value={5} className="bg-slate-900">5 Trang (~120 phim mới nhất)</option>
+                                    </select>
+                                </div>
+
+                                {/* Auto Cron Background Timer */}
+                                <div className="mb-4 p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <label className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                                            <FaClock className="text-sm" /> Tự động quét ngầm định kỳ
+                                        </label>
+                                        {autoCronInterval > 0 && (
+                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                                                Đang bật
+                                            </span>
+                                        )}
+                                    </div>
+                                    <select
+                                        value={autoCronInterval}
+                                        onChange={e => handleSetAutoCron(Number(e.target.value))}
+                                        className="w-full bg-black/40 border border-emerald-500/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
+                                    >
+                                        <option value={0} className="bg-slate-900">Tắt (Chỉ quét khi bấm nút)</option>
+                                        <option value={15} className="bg-slate-900">Mỗi 15 phút (Cập nhật siêu tốc)</option>
+                                        <option value={30} className="bg-slate-900">Mỗi 30 phút (Khuyến nghị)</option>
+                                        <option value={60} className="bg-slate-900">Mỗi 60 phút (1 tiếng)</option>
+                                    </select>
+                                    <p className="text-[10px] text-gray-400 mt-2">
+                                        Khi bật, hệ thống sẽ tự động định kỳ quét KKPhim và chèn các tập mới nhất vào phim mà không cần thao tác tay.
+                                    </p>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex flex-col gap-2 mb-4">
+                                    {syncStatus !== 'running' ? (
+                                        <button
+                                            onClick={handleStartSync}
+                                            className="w-full py-3 rounded-xl bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all"
+                                        >
+                                            <FaPlay /> Quét & Cập nhật tập mới ngay
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={handleStopSync}
+                                            className="w-full py-3 rounded-xl bg-red-600/80 hover:bg-red-600 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all"
+                                        >
+                                            <FaStop /> Dừng đồng bộ
+                                        </button>
+                                    )}
+                                </div>
+
+                                {/* Last Sync Info */}
+                                {lastSyncTime && (
+                                    <div className="text-[11px] text-gray-400 flex items-center justify-between border-t border-white/5 pt-3">
+                                        <span>Lần cập nhật gần nhất:</span>
+                                        <span className="font-semibold text-emerald-300">{lastSyncTime}</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* RIGHT: Live Monitor & Logs */}
+                    <div className="col-span-1 lg:col-span-8 flex flex-col gap-4">
+                        <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
+                            <div className='table-container p-5 flex flex-col h-full' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+                                {/* Stats Counters */}
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                                    <div className="bg-black/30 border border-white/10 rounded-xl p-3 text-center">
+                                        <div className="text-xl font-bold text-gray-200">{syncStats.checked}</div>
+                                        <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Phim đã quét</div>
+                                    </div>
+                                    <div className="bg-black/30 border border-emerald-500/30 rounded-xl p-3 text-center bg-emerald-500/5">
+                                        <div className="text-xl font-bold text-emerald-400">{syncStats.moviesUpdated}</div>
+                                        <div className="text-[10px] text-emerald-300 uppercase tracking-wider mt-0.5">Phim có tập mới</div>
+                                    </div>
+                                    <div className="bg-black/30 border border-teal-500/30 rounded-xl p-3 text-center bg-teal-500/5">
+                                        <div className="text-xl font-bold text-teal-400">{syncStats.newEpisodes}</div>
+                                        <div className="text-[10px] text-teal-300 uppercase tracking-wider mt-0.5">Tập mới đã thêm</div>
+                                    </div>
+                                    <div className="bg-black/30 border border-red-500/30 rounded-xl p-3 text-center">
+                                        <div className="text-xl font-bold text-red-400">{syncStats.errors}</div>
+                                        <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Lỗi</div>
+                                    </div>
+                                </div>
+
+                                {/* Progress Bar */}
+                                {syncStatus === 'running' && (
+                                    <div className="mb-3">
+                                        <div className="flex justify-between text-xs font-bold text-emerald-400 mb-1">
+                                            <span>⏳ Đang đồng bộ tập mới...</span>
+                                            <span>{syncProgress}%</span>
+                                        </div>
+                                        <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
+                                            <div className="bg-linear-to-r from-emerald-400 via-teal-500 to-cyan-500 h-full rounded-full transition-[width] duration-500 ease-out"
+                                                style={{ width: `${syncProgress}%` }} />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Log Console */}
+                                <div className="flex-1 bg-black/30 border border-white/10 rounded-xl overflow-hidden flex flex-col">
+                                    <div className="flex items-center justify-between px-3 py-2 bg-white/5 border-b border-white/10 text-xs font-bold text-gray-300">
+                                        <span className="flex items-center gap-1.5">
+                                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                                            Nhật ký Đồng bộ (Live Sync Log)
+                                        </span>
+                                        {syncLogs.length > 0 && (
+                                            <button
+                                                onClick={() => setSyncLogs([])}
+                                                className="text-[10px] text-gray-400 hover:text-white px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 cursor-pointer"
+                                            >
+                                                Xóa log
+                                            </button>
+                                        )}
+                                    </div>
+                                    <div className="h-[450px] overflow-y-auto custom-scrollbar p-3 font-mono text-xs space-y-1">
+                                        {syncLogs.length === 0 ? (
+                                            <div className="flex flex-col items-center justify-center h-full text-gray-500 opacity-60">
+                                                <FaSyncAlt className="text-4xl mb-3 text-emerald-400 opacity-40" />
+                                                <p className="text-center">Bấm "Quét & Cập nhật tập mới ngay" hoặc bật chế độ tự động ngầm để bắt đầu.</p>
+                                            </div>
+                                        ) : (
+                                            syncLogs.map((log, idx) => (
+                                                <div key={idx} className={`py-1 px-2 rounded transition-all
+                                                ${log.type === 'error' ? 'text-red-400 bg-red-500/5' :
+                                                        log.type === 'success' ? 'text-emerald-400 bg-emerald-500/10 font-semibold' :
+                                                            log.type === 'warning' ? 'text-yellow-400 bg-yellow-500/5' :
+                                                                'text-gray-400'}`}>
+                                                    <span className="text-gray-600 mr-2">[{log.time}]</span>{log.message}
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                /* ==================== MANUAL IMPORT UI (existing) ==================== */
+                <>
+                    <div className='magic-header flex items-center justify-between gap-4 mb-6 py-3 px-5 rounded-2xl'>
+                        <div className='flex items-center gap-4'>
+                            <div className='w-12 h-12 rounded-xl bg-linear-to-br from-cyan-400 to-purple-500 flex justify-center items-center shadow-[0_0_15px_rgba(34,211,238,0.5)]'>
+                                <FaMagic className='text-2xl text-white' />
+                            </div>
+                            <div>
+                                <h1 className='text-2xl font-black tracking-wide glow-text uppercase'>Magic Import</h1>
+                                <p className='text-gray-400 text-xs mt-0.5'>Copy table from Excel to automatically sync Movies, Episodes & Showtimes.</p>
+                            </div>
+                        </div>
+
+                        {/* CLEAR BUTTON */}
+                        <div className='flex items-center gap-4'>
+                            <button
+                                onClick={handleClearAll}
+                                title="Clear all inputs and tables"
+                                className="flex hover:scale-105 cursor-pointer items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition-all shadow-[0_0_15px_rgba(239,68,68,0.15)] hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
+                            >
+                                <FaEraser className="text-sm" />
+                                <p className="text-xs font-bold uppercase tracking-wider hidden sm:block">Clear</p>
+                            </button>
+
+                            {/* AI PROMPT CONTROL BAR */}
+                            <div className='flex items-stretch rounded-xl overflow-hidden'
+                                style={{
+                                    background: 'rgba(10, 15, 25, 0.6)',
+                                    backdropFilter: 'blur(10px)',
+                                    WebkitBackdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(0, 242, 254, 0.2)',
+                                    boxShadow: '0 0 8px rgba(0, 242, 254, 0.15), 0 0 20px rgba(139, 92, 246, 0.08), inset 0 0 12px rgba(0, 242, 254, 0.03)',
+                                }}
+                            >
+                                {/* AI PROMPT LABEL */}
+                                <div className='flex items-center gap-2 px-3'>
+                                    <FaRobot className="text-pink-400 text-xl" />
+                                    <p className="text-xs font-bold text-pink-300 uppercase tracking-wider hidden xl:block whitespace-nowrap">AI Prompt</p>
+                                </div>
+
+                                {/* SEPARATOR */}
+                                <div className="w-px self-stretch my-1.5 bg-white/10"></div>
+
+                                {/* COUNT INPUT */}
+                                <div className='flex items-center gap-1.5 px-2'>
+                                    <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">SL</p>
+                                    <input
+                                        type="number"
+                                        className="w-12 bg-transparent border-none p-2.5 text-xs text-center text-gray-300 focus:outline-none focus:bg-white/5 transition-all"
+                                        placeholder="Số lượng"
+                                        value={promptCount}
+                                        onChange={(e) => setPromptCount(e.target.value)}
+                                    />
+                                </div>
+
+                                {/* SEPARATOR */}
+                                <div className="w-px self-stretch my-1.5 bg-white/10"></div>
+
+                                {/* THEME INPUT */}
+                                <input
+                                    type="text"
+                                    className="w-44 lg:w-56 bg-transparent border-none p-2.5 text-xs text-gray-300 focus:outline-none focus:bg-white/5 transition-all"
+                                    placeholder="Nhập thể loại (VD: Marvel, Anime...)"
+                                    value={promptTheme}
+                                    onChange={(e) => setPromptTheme(e.target.value)}
+                                />
+
+                                {/* SEPARATOR */}
+                                <div className="w-px self-stretch my-1.5 bg-white/10"></div>
+
+                                {/* COPY BUTTON */}
+                                <button
+                                    onClick={handleCopyPrompt}
+                                    className={`px-4 py-2.5 cursor-pointer hover:scale-105 text-white font-bold text-xs tracking-wider uppercase transition-all flex items-center justify-center gap-2 active:scale-95 ${isCopied ? 'bg-emerald-600/80' : 'bg-pink-600/80 hover:bg-pink-500/80'}`}
+                                >
+                                    {isCopied ? (
+                                        <>
+                                            <FaCheckCircle className="text-sm" /> Copied!
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FaCopy className="text-sm" /> Copy
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className='grid grid-cols-1 lg:grid-cols-12 gap-8'>
+                        <div className='col-span-1 lg:col-span-4 flex flex-col gap-4'>
+                            <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(0, 255, 255, 0.25), rgba(139, 92, 246, 0.25))', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.08)' }}>
+                                <div className='table-container p-5 relative group transition-all' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+
+                                    <div className="flex bg-slate-800/50 rounded-xl p-1 mb-5 border border-white/10 relative">
+                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-yellow-600/60 p-2 flex justify-center items-center rounded-full z-10">
+                                            <FaExchangeAlt className="text-yellow-300 text-xs " />
+                                        </div>
+                                        <button
+                                            onClick={() => setMode('IMPORT')}
+                                            className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
+                                    ${mode === 'IMPORT' ? 'bg-cyan-500 text-white shadow-[0_0_15px_rgba(6,182,212,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                                        >
+                                            Import Only
+                                        </button>
+                                        <button
+                                            onClick={() => setMode('UPDATE')}
+                                            className={`flex-1 py-2.5 hover:scale-105 cursor-pointer rounded-lg font-bold text-xs uppercase tracking-wider transition-all duration-300 z-0
+                                    ${mode === 'UPDATE' ? 'bg-fuchsia-500 text-white shadow-[0_0_15px_rgba(217,70,239,0.4)]' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}
+                                        >
+                                            Smart Update
+                                        </button>
+                                    </div>
+
+                                    <h2 className='text-cyan-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
+                                        <FaCloudUploadAlt className="text-xl" /> Data Input Area
+                                    </h2>
+                                    <textarea
+                                        className='w-full h-56 bg-black/20 border border-white/10 rounded-xl p-4 text-sm text-gray-300 font-mono focus:outline-none focus:border-cyan-400 focus:shadow-[0_0_15px_rgba(34,211,238,0.2)] custom-scrollbar'
+                                        placeholder='Paste data table here...'
+                                        value={inputText}
+                                        onChange={(e) => setInputText(e.target.value)}
+                                    />
+
+                                    <div className="flex flex-col gap-3 mt-4">
+                                        {errorMsg && (
+                                            <div className="text-red-400 bg-red-500/10 border border-red-500/30 p-2.5 rounded-lg text-xs font-bold text-center shadow-[0_0_10px_rgba(239,68,68,0.1)]">
+                                                {errorMsg}
+                                            </div>
+                                        )}
+
+                                        <button
+                                            onClick={handleParse}
+                                            className={`w-full cursor-pointer hover:scale-105 py-3 rounded-xl text-white font-bold tracking-wider uppercase transition-all active:scale-95
+                                    ${mode === 'IMPORT' ? 'bg-cyan-600 hover:bg-cyan-500 shadow-[0_0_15px_rgba(8,145,178,0.4)]' : 'bg-fuchsia-600 hover:bg-fuchsia-500 shadow-[0_0_15px_rgba(192,38,211,0.4)]'}`}
+                                        >
+                                            Parse Data ({mode})
+                                        </button>
+
+                                        <label className='w-full  hover:scale-105 py-3 flex items-center justify-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold tracking-wider uppercase transition-all cursor-pointer shadow-[0_0_15px_rgba(5,150,105,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] active:scale-95'>
+                                            <FaFileExcel className="text-xl" /> Upload Excel
+                                            <input type="file" accept=".xlsx, .xls, .csv" onChange={handleFileUpload} className="hidden" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className='col-span-1 lg:col-span-8 flex flex-col gap-4'>
+                            <div className='table-wrapper h-full' style={{ background: 'linear-gradient(120deg, rgba(0, 255, 255, 0.25), rgba(139, 92, 246, 0.25))', boxShadow: '0 8px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.08)' }}>
+                                <div className='table-container p-5 h-full flex flex-col justify-between transition-all duration-300' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
+                                    <div>
+                                        <h2 className={`font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between transition-colors
+                                ${mode === 'IMPORT' ? 'text-cyan-400' : 'text-fuchsia-400'}`}>
+                                            <p className="inline">Preview Table ({mode === 'UPDATE' ? 'Update Mode' : 'Import Mode'})</p>
+                                            <p className={`px-3 py-1 rounded-full text-xs border transition-colors
+                                    ${mode === 'IMPORT' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/30' : 'bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30'} inline`}>
+                                                {previewData.length} items
+                                            </p>
+                                        </h2>
+
+                                        <div className='border border-white/10 rounded-xl overflow-hidden mt-4'>
+                                            <div className='h-72 flex flex-col relative'>
+                                                {previewData.length > 0 ? (
+                                                    <div className='overflow-auto h-full custom-scrollbar'>
+                                                        <table className='w-full whitespace-nowrap text-xs min-w-max text-left border-collapse'>
+                                                            <thead className='table-header border-b border-white/20 sticky top-0 z-10'>
+                                                                <tr>
+                                                                    <th className='p-3 text-center align-middle'>STT</th>
+                                                                    <th className='p-3 text-center align-middle'>ACTION</th>
+                                                                    <th className='p-3 text-center align-middle'>NAME (INTL / SELECT)</th>
+                                                                    <th className='p-3 text-center align-middle'>NAME (VN)</th>
+                                                                    <th className='p-3 text-center align-middle'>MOVIE DESC</th>
+                                                                    <th className='p-3 text-center align-middle'>TYPE</th>
+                                                                    <th className='p-3 text-center align-middle'>CATEGORIES</th>
+                                                                    <th className='p-3 text-center align-middle'>CAT DESC</th>
+                                                                    <th className='p-3 text-center align-middle'>DIRECTOR</th>
+                                                                    <th className='p-3 text-center align-middle'>DIR DESC</th>
+                                                                    <th className='p-3 text-center align-middle'>ACTORS</th>
+                                                                    <th className='p-3 text-center align-middle'>ACTOR DESC</th>
+                                                                    <th className='p-3 text-center align-middle'>CHARACTERS</th>
+                                                                    <th className='p-3 text-center align-middle'>CHAR DESC</th>
+                                                                    <th className='p-3 text-center align-middle'>GENDER</th>
+                                                                    <th className='p-3 text-center align-middle'>CHAR GENDER</th>
+                                                                    <th className='p-3 text-center align-middle'>INFO (YEAR/AGE/PLAN)</th>
+                                                                    <th className='p-3 text-center align-middle'>DURATION</th>
+                                                                    <th className='p-3 text-center align-middle'>RENT PRICE</th>
+                                                                    <th className='p-3 text-center align-middle'>COUNTRY</th>
+                                                                    <th className='p-3 text-center align-middle'>EPISODES</th>
+                                                                    <th className='p-3 text-center align-middle'>EP DATA (NUM/URL)</th>
+                                                                    <th className='p-3 text-center align-middle'>SHOWTIME (ROOM/TIME)</th>
+                                                                    <th className='p-3 text-center align-middle'>STATUS</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {previewData.map((row, idx) => {
+                                                                    const isDuplicated = existingMovies.some(m => m?.name && row?.name && m.name.toLowerCase() === row.name.toLowerCase());
+
+                                                                    let rowClass = "border-b border-white/5 transition-all duration-300 text-gray-200 ";
+                                                                    if (rowStatuses[idx] === 'processing') {
+                                                                        rowClass += "bg-cyan-500/15 border-l-4 border-l-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.2)] animate-pulse text-cyan-300";
+                                                                    } else if (rowStatuses[idx] === 'success') {
+                                                                        rowClass += "bg-emerald-500/15 border-l-4 border-l-emerald-500 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]";
+                                                                    } else if (isDuplicated) {
+                                                                        rowClass += mode === 'UPDATE' ? 'bg-fuchsia-500/10 hover:bg-fuchsia-500/20' : 'bg-indigo-500/10 hover:bg-indigo-500/20';
+                                                                    } else {
+                                                                        rowClass += "hover:bg-white/5";
+                                                                    }
+
+                                                                    return (
+                                                                        <tr key={idx} className={rowClass}>
+                                                                            <td className='p-3 text-center align-middle font-bold text-gray-400'>
+                                                                                {idx + 1}
+                                                                            </td>
+                                                                            <td className='p-3 text-center align-middle'>
+                                                                                <button onClick={() => handleRemoveRow(idx)} className="p-1.5 bg-red-500/20 text-red-400 hover:bg-red-500 hover:text-white rounded-lg transition-all" title="Remove row"><FaTrash size={14} /></button>
+                                                                            </td>
+
+                                                                            <td className='p-3 text-center align-middle font-bold text-cyan-300 min-w-45'>
+                                                                                <div className="flex flex-col gap-1">
+                                                                                    <p className="inline">{row.name}</p>
+                                                                                    {mode === 'UPDATE' && (
+                                                                                        <select
+                                                                                            value={row.matchedMovieId || ""}
+                                                                                            onChange={(e) => {
+                                                                                                const val = e.target.value;
+                                                                                                setPreviewData(prev => prev.map((item, i) => i === idx ? { ...item, matchedMovieId: val } : item));
+                                                                                            }}
+                                                                                            className="bg-slate-800 border border-white/10 rounded px-2 py-1.5 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 w-full font-sans cursor-pointer mt-1"
+                                                                                        >
+                                                                                            <option value="">-- Manual Link Select --</option>
+                                                                                            {existingMovies.map(m => (
+                                                                                                <option key={m.id} value={m.id} className="bg-slate-800 text-gray-200 py-1">{m.name}</option>
+                                                                                            ))}
+                                                                                        </select>
+                                                                                    )}
+                                                                                    {rowStatuses[idx] === 'processing' && <div className="text-[10px] text-cyan-400 font-normal mt-1">Syncing Data...</div>}
+                                                                                    {rowStatuses[idx] === 'success' && <div className="text-[10px] text-emerald-400 font-bold mt-1">✓ Completed</div>}
+                                                                                    {!rowStatuses[idx] && isDuplicated && (
+                                                                                        mode === 'UPDATE' ? (
+                                                                                            <div className="text-[9px] bg-fuchsia-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Will Update</div>
+                                                                                        ) : (
+                                                                                            <div className="text-[9px] bg-indigo-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Append Eps</div>
+                                                                                        )
+                                                                                    )}
+                                                                                    {!rowStatuses[idx] && !isDuplicated && <div className="text-[9px] bg-emerald-500 text-white px-1.5 py-0.5 rounded uppercase inline-block mx-auto mt-1">Create New</div>}
+                                                                                </div>
+                                                                            </td>
+
+                                                                            <td className='p-3 text-center align-middle text-emerald-300 font-semibold'>{row.otherName}</td>
+                                                                            <td className='p-3 text-center align-middle text-gray-300 truncate max-w-40' title={row.description}>{row.description}</td>
+                                                                            <td className='p-3 text-center align-middle text-purple-300'>{row.rawCategoryType}</td>
+                                                                            <td className='p-3 text-center align-middle text-pink-300'>{row.rawCategories}</td>
+                                                                            <td className='p-3 text-center align-middle text-pink-200 truncate max-w-40' title={row.rawCategoryDesc}>{row.rawCategoryDesc}</td>
+                                                                            <td className='p-3 text-center align-middle text-green-300'>{row.rawAuthor}</td>
+                                                                            <td className='p-3 text-center align-middle text-green-200 truncate max-w-40' title={row.rawAuthorDesc}>{row.rawAuthorDesc}</td>
+                                                                            <td className='p-3 text-center align-middle text-blue-300 truncate max-w-30' title={row.rawActors}>{row.rawActors}</td>
+                                                                            <td className='p-3 text-center align-middle text-blue-200 truncate max-w-40' title={row.rawActorDesc}>{row.rawActorDesc}</td>
+                                                                            <td className='p-3 text-center align-middle text-orange-300 truncate max-w-30' title={row.rawCharacters}>{row.rawCharacters}</td>
+                                                                            <td className='p-3 text-center align-middle text-orange-200 truncate max-w-40' title={row.rawCharacterDesc}>{row.rawCharacterDesc}</td>
+                                                                            <td className='p-3 text-center align-middle text-pink-300 truncate max-w-20' title={row.gender}>{row.gender}</td>
+                                                                            <td className='p-3 text-center align-middle text-pink-300 truncate max-w-20' title={row.charGender}>{row.charGender}</td>
+                                                                            <td className='p-3 text-center align-middle'>
+                                                                                <div className="flex flex-col gap-1 items-center">
+                                                                                    <p className="text-yellow-400 font-bold inline">{row.releaseYear}</p>
+                                                                                    <p className="bg-red-500/20 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.ageRating}</p>
+                                                                                    <p className="bg-fuchsia-500/20 text-fuchsia-400 border border-fuchsia-500/30 px-2 py-0.5 rounded text-[10px] uppercase font-bold inline">{row.rawPlan || "Free"}</p>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td className='p-3 text-center align-middle font-mono'>{row.duration}m</td>
+                                                                            <td className='p-3 text-center align-middle font-mono text-green-400'>{row.rent.toLocaleString()}</td>
+                                                                            <td className='p-3 text-center align-middle'><p className="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2 py-1 rounded text-[11px] font-bold inline">{row.countriesID}</p></td>
+                                                                            <td className='p-3 text-center align-middle'>
+                                                                                <div className="flex flex-col gap-1 items-center bg-purple-500/10 border border-purple-500/20 p-1.5 rounded-lg">
+                                                                                    <p className="text-purple-300 font-bold text-[13px] inline">Total: {row.endEpisode}</p>
+                                                                                    <p className="text-[10px] text-purple-400 inline">S:{row.episodeSub} | D:{row.episodeDub}</p>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td className='p-3 text-center align-middle'>
+                                                                                <div className="flex flex-col gap-1 items-center">
+                                                                                    {row.epNumber ? <p className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">Ep: {row.epNumber}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                                    {row.epUrl ? <p className="text-blue-400 text-[10px] truncate w-16 inline" title={row.epUrl}>URL OK</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                                </div>
+                                                                            </td>
+                                                                            <td className='p-3 text-center align-middle'>
+                                                                                <div className="flex flex-col gap-1 items-center">
+                                                                                    {row.roomName ? <p className="bg-cyan-500/20 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded text-[10px] font-bold inline">{row.roomName}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                                    {row.rawShowtimes ? <p className="text-cyan-200 text-[10px] truncate w-16 inline" title={row.rawShowtimes}>{row.rawShowtimes}</p> : <p className="text-gray-500 text-[10px] inline">-</p>}
+                                                                                </div>
+                                                                            </td>
+                                                                            <td className='p-3 text-center align-middle'>
+                                                                                <p className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)} inline`}>{row.status}</p>
+                                                                            </td>
+                                                                        </tr>
+                                                                    );
+                                                                })}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                ) : (
+                                                    <div className='absolute inset-0 flex flex-col items-center justify-center text-gray-500 opacity-50'>
+                                                        <FaMagic className='text-5xl mb-3' />
+                                                        <p>Data will appear here after parsing</p>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-4 p-4">
+                                        {loading && (
+                                            <div className="mb-4">
+                                                <div className="flex justify-between text-xs font-bold text-cyan-400 mb-1.5 uppercase tracking-wider">
+                                                    <p className="animate-pulse inline">Syncing Cloud Database...</p>
+                                                    <p className="inline">{parseFloat(Number(visualProgress).toFixed(2))}%</p>
+                                                </div>
+                                                <div className="w-full bg-black/40 rounded-full h-3.5 overflow-hidden p-0.5 border border-white/10 shadow-[0_0_15px_rgba(6,182,212,0.15)]">
+                                                    <div
+                                                        className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-[width] duration-1500 ease-out shadow-[0_0_20px_rgba(217,70,239,0.7)]"
+                                                        style={{ width: `${visualProgress}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {successMsg && (
+                                            <div className="mb-3 p-2.5 border rounded-lg flex items-center justify-center gap-2 text-xs font-bold bg-green-500/10 border-green-500/20 text-green-400 shadow-[0_0_10px_rgba(16,185,129,0.1)]">
+                                                <FaCheckCircle className="text-base" /> {successMsg}
+                                            </div>
+                                        )}
+
+                                        <button
+                                            onClick={handleExecuteImport}
+                                            disabled={loading || previewData.length === 0}
+                                            className={`w-full py-3.5 rounded-xl font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 text-xs text-white
+                                    ${previewData.length > 0
+                                                    ? (mode === 'IMPORT'
+                                                        ? 'bg-linear-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-[0_0_15px_rgba(6,182,212,0.4)] cursor-pointer active:scale-[0.98]'
+                                                        : 'bg-linear-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-500 hover:to-pink-500 shadow-[0_0_15px_rgba(217,70,239,0.4)] cursor-pointer active:scale-[0.98]')
+                                                    : 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/60'}`}
+                                        >
+                                            <FaPlay className="text-xs" /> {loading ? "Syncing..." : `Confirm & Execute Magic (${mode})`}
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </>
             )}
         </div>
     );

@@ -19,14 +19,10 @@ function FilmHongKong() {
     const hkMovies = useMemo(() => {
         if (!movies) return [];
         let filtered = movies.filter(m => m.countriesID?.toLowerCase() === 'hồng kông' || m.countriesID?.toLowerCase() === 'hong kong' || m.countriesID?.toLowerCase() === 'hongkong');
-        if (filtered.length < 15) {
-            const others = movies.filter(m => !(m.countriesID?.toLowerCase() === 'hồng kông' || m.countriesID?.toLowerCase() === 'hong kong' || m.countriesID?.toLowerCase() === 'hongkong'));
-            filtered = [...filtered, ...others].slice(0, 15);
-        } else {
-            filtered = filtered.slice(0, 15);
-        }
-        return filtered;
+        return filtered.slice(0, 15);
     }, [movies]);
+
+    if (hkMovies.length === 0) return null;
 
     return (
         <div className='bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden'>

@@ -6,11 +6,14 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import Swal from 'sweetalert2';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
+import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
+import { isSingleMovie, formatEpisodeName } from '../../../../utils/appUtils';
 import ModalDelete from '../ModalDelete';
 
 function ContinueFilm(props) {
     const { isLogin } = useContext(AuthContext);
     const moviesData = useMovies() || [];
+    const categoryTypes = useContext(CategoryTypeContext);
     const [viewMode, setViewMode] = useState('grid');
     const [searchQuery, setSearchQuery] = useState('');
     const [resumeData, setResumeData] = useState({});
@@ -151,7 +154,7 @@ function ContinueFilm(props) {
                                         <span className="text-blue-400 text-xs font-bold">Tiếp tục xem</span>
                                     </div>
                                     <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-blue-500/50 flex items-center gap-1.5 shadow-[0_4px_10px_rgba(0,0,0,0.5)] group-hover:opacity-0 transition-opacity duration-300">
-                                        <span className="text-blue-400 text-[10px] font-bold">Tập {movie.latestEpisodeNumber}</span>
+                                        <span className="text-blue-400 text-[10px] font-bold">{formatEpisodeName(movie.latestEpisodeNumber, isSingleMovie(movie, categoryTypes))}</span>
                                     </div>
                                     <button onClick={(e) => handleRemoveContinue(movie.id, e)} className="absolute top-3 right-3 bg-red-500/80 hover:bg-red-500 text-white p-2 rounded-xl backdrop-blur-md opacity-0 group-hover:opacity-100 transition duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.5)] z-10" title="Xóa lịch sử">
                                         <FaTrash size={12} />
@@ -188,7 +191,7 @@ function ContinueFilm(props) {
                                     </Link>
                                     <div className="flex flex-wrap gap-2 mt-0.5">
                                         <span className="px-2 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-bold rounded border border-blue-500/30 uppercase tracking-wider">
-                                            Đang xem Tập {movie.latestEpisodeNumber}
+                                            Đang xem {formatEpisodeName(movie.latestEpisodeNumber, isSingleMovie(movie, categoryTypes)).toLowerCase()}
                                         </span>
                                     </div>
                                 </div>

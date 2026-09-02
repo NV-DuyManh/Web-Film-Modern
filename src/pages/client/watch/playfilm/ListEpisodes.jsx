@@ -3,9 +3,10 @@ import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/us
 import { FaPlay, FaLock } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
-import { getExpiryDate, getUserPlanInfo } from '../../../../utils/appUtils';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
+import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
+import { getExpiryDate, getUserPlanInfo, isSingleMovie, formatEpisodeName } from '../../../../utils/appUtils';
 import ModalDetail from '../detailFilm/ModalDetail';
 
 function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
@@ -30,6 +31,10 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
         }
         return found;
     }, [movies, episodeShow, slug]);
+
+    const categoryTypes = useContext(CategoryTypeContext);
+    const isSingle = isSingleMovie(movie, categoryTypes);
+
     const levelUser = useMemo(() => {
         if (!plans || !movie) return false;
         const moviePlan = getObjectById(plans, movie.planID);
@@ -187,7 +192,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                             ) : (
                                 <FaLock className="text-[10px] sm:text-xs shrink-0 transition duration-300 text-rose-500 group-hover:text-rose-400 group-hover:scale-110 drop-shadow-[0_0_5px_rgba(244,63,94,0.5)]" />
                             )}
-                            <p className="relative inline truncate"><span className="hidden sm:inline">Tập </span>{e.numberEpisode}</p>
+                            <p className="relative inline truncate">{formatEpisodeName(e.numberEpisode, isSingle)}</p>
                         </button>
                     );
                 })}

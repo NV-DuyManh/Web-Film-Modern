@@ -11,6 +11,8 @@ import ListEpisodes from './ListEpisodes';
 import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../../../utils/watchHistory';
 import VideoPlayer from './VideoPlayer';
 import { AuthContext } from '../../../../contexts/AuthProvider';
+import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
+import { isSingleMovie, formatEpisodeName } from '../../../../utils/appUtils';
 import Comment from '../detailFilm/Comment';
 import SEO from '../../../../components/SEO';
 import { syncSingleMovieEpisodes } from '../../../../services/autoEpisodeSyncService';
@@ -34,6 +36,8 @@ function PlayFilm({ handleOpenLogin }) {
 
     const movie = useMemo(() => movies.find(m => m.slug === slug || m.id === slug) || {}, [movies, slug]);
     const realMovieId = movie?.id;
+    const categoryTypes = useContext(CategoryTypeContext);
+    const isSingle = isSingleMovie(movie, categoryTypes);
 
     useEffect(() => {
         if (!realMovieId) return;
@@ -182,6 +186,8 @@ function PlayFilm({ handleOpenLogin }) {
         }, 300);
     };
 
+
+
     if (!realMovieId && movies.length === 0) {
         return (
             <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 pt-20">
@@ -193,8 +199,8 @@ function PlayFilm({ handleOpenLogin }) {
     return (
         <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25 relative overflow-hidden">
             <SEO 
-                title={`Xem ${movie?.otherName || movie?.name || 'Phim'}${playEpisodes?.numberEpisode ? ` - Tập ${playEpisodes.numberEpisode}` : ''}`}
-                description={`Xem phim ${movie?.otherName || movie?.name || ''} tập ${playEpisodes?.numberEpisode || 1} vietsub, thuyết minh chất lượng cao tại MFILM.`}
+                title={`Xem ${movie?.otherName || movie?.name || 'Phim'}${playEpisodes?.numberEpisode ? ` - ${formatEpisodeName(playEpisodes.numberEpisode, isSingle)}` : ''}`}
+                description={`Xem phim ${movie?.otherName || movie?.name || ''} ${formatEpisodeName(playEpisodes?.numberEpisode || 1, isSingle).toLowerCase()} vietsub, thuyết minh chất lượng cao tại MFILM.`}
                 image={movie?.bannerUrl || movie?.imgUrl}
                 url={`/xem-phim/${slug}${tap ? `?tap=${tap}` : ''}`}
                 type="video.episode"
@@ -217,7 +223,7 @@ function PlayFilm({ handleOpenLogin }) {
                                 <>
                                     <p className="text-slate-500 inline">•</p>
                                     <p className="px-2.5 py-0.5 bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 rounded-lg text-xs sm:text-sm font-extrabold shadow-sm inline">
-                                        Tập {playEpisodes.numberEpisode}
+                                        {formatEpisodeName(playEpisodes.numberEpisode, isSingle)}
                                     </p>
                                 </>
                             )}
@@ -232,7 +238,7 @@ function PlayFilm({ handleOpenLogin }) {
                         >
                             <FaHistory className="text-[13px]" />
                             <p className="text-[13.5px] font-medium">
-                                Bạn vừa xem tập {resumeData.latestEpisodeNumber} lúc {timeAgo(resumeData.updatedAt)}
+                                Bạn vừa xem {formatEpisodeName(resumeData.latestEpisodeNumber, isSingle).toLowerCase()} lúc {timeAgo(resumeData.updatedAt)}
                             </p>
                         </div>
                     )}
