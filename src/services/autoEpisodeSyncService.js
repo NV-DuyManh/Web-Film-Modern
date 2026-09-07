@@ -172,11 +172,17 @@ export const syncSingleMovieEpisodes = async (movie, existingEpisodes = [], forc
         if (newEpsCount > 0 || updatedEpsCount > 0) {
             const movieRef = doc(db, "Movies", movie.id);
             const newStatus = movieData?.status ? mapMovieStatus(movieData.status) : (movie.status || 'Đang chiếu');
-            await updateDoc(movieRef, {
+            
+            const updateData = {
                 endEpisode: Math.max(highestEp, movie.endEpisode || 1),
-                status: newStatus,
-                updatedAt: new Date().toISOString()
-            });
+                status: newStatus
+            };
+
+            if (newEpsCount > 0) {
+                updateData.updatedAt = new Date().toISOString();
+            }
+
+            await updateDoc(movieRef, updateData);
             console.log(`[AutoEpisodeSync] 🎬 Đã cập nhật phim "${movie.otherName || movie.name}": +${newEpsCount} tập mới, sửa lại ${updatedEpsCount} link tập.`);
             return { updated: true, newEpsCount, updatedEpsCount };
         }
