@@ -133,7 +133,7 @@ function PlayFilm({ handleOpenLogin }) {
 
 
     const lastProgressTimeRef = useRef(0);
-    const handleTimeUpdate = useCallback((currentSeconds) => {
+    const handleTimeUpdate = useCallback((currentSeconds, playerDurationSeconds) => {
         if (playEpisodes?.id && realMovieId && currentSeconds > 0) {
             saveResume(realMovieId, {
                 episodeId: playEpisodes.id,
@@ -146,11 +146,21 @@ function PlayFilm({ handleOpenLogin }) {
             // Only send if delta >= 10 to match the 10s throttle, and avoid double counting
             if (delta >= 10 || delta < 0) { // delta < 0 handles seeks backwards
                 const sendDelta = delta < 0 ? 10 : Math.floor(delta);
+                
+                // Defensive normalizations to prevent data quality bugs (e.g. percent > 100)
+                let finalDuration = Number.isFinite(playerDurationSeconds) && playerDurationSeconds > 0 
+                    ? playerDurationSeconds 
+                    : (playerRef.current?.getDuration?.() || (Number(movie?.duration) * 60) || 3600);
+                
+                let finalPosition = Math.max(0, Math.min(currentSeconds, finalDuration));
+                let finalPercent = Math.round((finalPosition / finalDuration) * 100);
+                finalPercent = Math.min(100, Math.max(0, finalPercent));
+
                 trackEvent('watch_progress', realMovieId, playEpisodes.id, {
                     progress: sendDelta,
-                    positionSeconds: currentSeconds,
-                    durationSeconds: Number(movie?.duration) || 3600,
-                    percent: Math.round((currentSeconds / (Number(movie?.duration) || 3600)) * 100),
+                    positionSeconds: Math.floor(finalPosition),
+                    durationSeconds: Math.floor(finalDuration),
+                    percent: finalPercent,
                 });
                 lastProgressTimeRef.current = currentSeconds;
             }
@@ -177,7 +187,8 @@ function PlayFilm({ handleOpenLogin }) {
 
     const handleEnded = useCallback(() => {
         if (realMovieId && playEpisodes?.id) {
-            trackEvent('complete', realMovieId, playEpisodes.id, { durationSeconds: Number(movie?.duration) || 3600 });
+            const finalDuration = playerRef.current?.getDuration?.() || (Number(movie?.duration) * 60) || 3600;
+            trackEvent('complete', realMovieId, playEpisodes.id, { durationSeconds: Math.floor(finalDuration) });
         }
     }, [realMovieId, playEpisodes?.id, movie?.duration]);
 

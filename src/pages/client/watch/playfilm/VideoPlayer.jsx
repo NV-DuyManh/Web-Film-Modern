@@ -38,6 +38,9 @@ const VideoPlayer = forwardRef(({
         getTime() {
             return artRef.current ? artRef.current.currentTime : 0;
         },
+        getDuration() {
+            return artRef.current ? (artRef.current.duration || 0) : 0;
+        },
     }));
 
     useEffect(() => {
@@ -148,9 +151,10 @@ const VideoPlayer = forwardRef(({
         art.on('video:timeupdate', () => {
             if (onTimeUpdate) {
                 const now = Math.floor(art.currentTime);
+                const dur = Math.floor(art.duration || 0);
                 if (now - lastReported >= 3) {
                     lastReported = now;
-                    onTimeUpdate(now);
+                    onTimeUpdate(now, dur);
                 }
             }
         });

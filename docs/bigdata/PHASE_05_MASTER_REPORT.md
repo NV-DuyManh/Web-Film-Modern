@@ -195,3 +195,18 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
   - Stable string `movieId` verified locally across `movie_view`, `play`, `pause`, `seek`, and `watch_progress` calls.
   - Tinybird ingestion will process these correctly (zero quarantine) since `movieId` matches the expected string schema.
   - Keep Phase 05 status PARTIAL until all five production browser event types are verified in Tinybird manually.
+
+## 34. Hotfix: Watch Progress Duration & Percent Data Quality
+- **State**: **FIXED (PASS)**
+- **Bug**: The production `watch_progress` event payload contained invalid metrics: `positionSeconds > durationSeconds` and `percent > 100`.
+- **Root cause**: `PlayFilm.jsx` used `Number(movie?.duration)` which parses a string (e.g. "22 phút") into minutes (or `NaN`), whereas `positionSeconds` was correctly recorded in seconds. This caused a massive unit mismatch and corrupted the `percent` calculation.
+- **Fix applied**: 
+  - Updated `VideoPlayer.jsx` to expose the true media `duration` directly from the `artplayer` instance.
+  - Modified `PlayFilm.jsx` to use the player's true duration in seconds.
+  - Added defensive normalization: `finalPosition` is clamped to `finalDuration`, and `finalPercent` is strictly clamped between `0` and `100`.
+- **Verification Result**: 
+  - `watch_progress` transport was already HTTP 202.
+  - `durationSeconds` now accurately reflects total media duration in seconds.
+  - `positionSeconds <= durationSeconds`.
+  - `percent` is guaranteed to be within `0..100`.
+  - Phase 05 remains PARTIAL pending the final Tinybird acceptance.
