@@ -1,4 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
 
 export interface MovieContentProfile {
@@ -38,9 +39,17 @@ export class ContentSimilarityService implements OnModuleInit {
   private invertedIndex = new Map<string, Array<{ movieId: string; weight: number }>>();
   private isInitialized = false;
 
-  constructor(private readonly db: DatabaseService) {}
+  constructor(
+    private readonly db: DatabaseService,
+    private readonly configService: ConfigService,
+  ) {}
 
   async onModuleInit() {
+    const isRecommendationsEnabled = this.configService.get<string>('RECOMMENDATIONS_ENABLED') !== 'false';
+    if (!isRecommendationsEnabled) {
+      this.logger.log('[ContentSimilarity] Recommendations disabled. Skipping PostgreSQL catalog index refresh.');
+      return;
+    }
     await this.refreshCatalogIndex();
   }
 

@@ -12,15 +12,18 @@ export class HealthService {
   ) {}
 
   async check() {
+    const isDbEnabled = process.env.POSTGRES_CATALOG_ENABLED !== 'false';
+    const isValkeyEnabled = process.env.RECOMMENDATIONS_ENABLED !== 'false';
+
     const [dbHealth, redisHealth, kafkaHealth] = await Promise.all([
-      this.dbService.isHealthy(),
-      this.redisService.isHealthy(),
+      isDbEnabled ? this.dbService.isHealthy() : Promise.resolve({ status: 'disabled', message: 'Disabled via POSTGRES_CATALOG_ENABLED=false' }),
+      isValkeyEnabled ? this.redisService.isHealthy() : Promise.resolve({ status: 'disabled', message: 'Disabled via RECOMMENDATIONS_ENABLED=false' }),
       this.kafkaService.isHealthy(),
     ]);
 
     const isSystemHealthy =
-      (process.env.POSTGRES_CATALOG_ENABLED === 'false' || dbHealth.status === 'healthy') &&
-      (process.env.RECOMMENDATIONS_ENABLED === 'false' || redisHealth.status === 'healthy') &&
+      (dbHealth.status === 'healthy' || dbHealth.status === 'disabled') &&
+      (redisHealth.status === 'healthy' || redisHealth.status === 'disabled') &&
       kafkaHealth.status === 'healthy';
 
     const memoryUsage = process.memoryUsage();

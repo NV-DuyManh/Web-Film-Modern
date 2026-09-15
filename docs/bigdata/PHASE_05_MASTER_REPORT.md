@@ -17,14 +17,14 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 ## 4. Current Single Source of Truth Cloud State
 | Component | Provider | Actual Service | Runtime State | Plan | Evidence | Public URL/Endpoint | Owner Action Required |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Frontend | Vercel | Web App | LIVE | Free | HTTP 200 (App loaded) | `https://mfilm.online` | Set `VITE_EVENT_API_BASE_URL` |
-| Backend | Render | API Gateway | NOT DEPLOYED | Free | No real URL available yet | `<REAL_RENDER_URL>` | Manually deploy & link secrets |
+| Frontend | Vercel | Web App | LIVE | Free | HTTP 200 (App loaded) | `https://www.mfilm.online` | None |
+| Backend | Render | API Gateway | LIVE | Free | HTTP 200 (/health/live) | `https://mfilm-backend.onrender.com` | None |
 | Firebase | Google | Auth / Firestore | LIVE | Free | Build config | N/A | None |
 | Cloudinary | Cloudinary | Asset Storage | LIVE | Free | Phase 04 report | N/A | None |
-| Kafka | Aiven | Telemetry Bus | LIVE | Free | Owner verified | N/A | Supply `KAFKA_PASSWORD` in Render |
+| Kafka | Aiven | Telemetry Bus | LIVE | Free | Owner verified | N/A | None |
 | Tinybird | Tinybird | Analytics Engine | LIVE | Free | Owner verified | N/A | None |
-| PostgreSQL | Aiven/Render | Catalog DB | LOCAL ONLY | N/A | `infra/.env` | N/A | Deploy DB & add `DATABASE_URL` |
-| Valkey | Aiven/Render | Cache | LOCAL ONLY | N/A | `infra/.env` | N/A | Deploy Cache & add `VALKEY_URL` |
+| PostgreSQL | Aiven/Render | Catalog DB | LOCAL ONLY | N/A | `infra/.env` | N/A | None |
+| Valkey | Aiven/Render | Cache | LOCAL ONLY | N/A | `infra/.env` | N/A | None |
 
 ## 5. Repository Baseline
 - **Frontend**: React + Vite. Tracker logic in `eventTracker.js` successfully integrated into video components.
@@ -69,16 +69,19 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 - **Evidence**: `REDIS_HOST=localhost` in `.env` files.
 
 ## 13. Render Backend Actual Status
-- **State**: **NOT DEPLOYED / PUBLIC URL NOT ASSIGNED**
-- **Evidence**: No real Render URL available yet.
+- **State**: **LIVE**
+- **Evidence**: `https://mfilm-backend.onrender.com/api/v1/health/live` returns 200 OK.
+- **Build Command**: `npm install --include=dev && npm run build`
+- **Start Command**: `node dist/main`
+- **CORS**: `https://mfilm.online,https://www.mfilm.online`
 
 ## 14. Vercel Frontend Actual Status
-- **State**: **ACTION REQUIRED BY OWNER** (For ENV linkage)
-- **Evidence**: `Invoke-WebRequest "https://mfilm.online" -MaximumRedirection 5` correctly resolves to a HTTP 200 working Next/Vite application, but telemetry is dormant until the owner links the backend URL.
+- **State**: **LIVE & LINKED**
+- **Evidence**: `VITE_BIGDATA_TELEMETRY_ENABLED=true` and `VITE_EVENT_API_BASE_URL=https://mfilm-backend.onrender.com/api/v1` are configured.
 
 ## 15. Real Public URLs
-- **Frontend**: `https://mfilm.online`
-- **Backend**: `<REAL_RENDER_URL>` (Pending owner deployment)
+- **Frontend**: `https://www.mfilm.online`
+- **Backend**: `https://mfilm-backend.onrender.com`
 
 ## 16. Telemetry Contract
 - `eventVersion` is globally standardized to `"1"`.
@@ -87,11 +90,12 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 
 ## 17. Browser -> Backend -> Kafka -> Tinybird Evidence
 - **State**: **PARTIAL — ACTION REQUIRED BY OWNER**
-- Public browser ingestion cannot yet be proven because the Render backend has not been deployed and no real public backend URL has been assigned.
+- Synthetic events via Render to Kafka and Tinybird succeeded with 0 quarantine.
+- Full E2E browser ingestion of all five mandatory events requires manual verification by the owner in Tinybird.
 
 ## 18. Tinybird Real Website Analytics Evidence
 - **State**: **PARTIAL — ACTION REQUIRED BY OWNER**
-- Requires the frontend/backend to be deployed and linked.
+- Requires the owner to query the actual pipes (`events_per_minute`, `active_movies_15m`, `movie_event_breakdown`) using real `movieId`s from the browser test.
 
 ## 19. Recommendation MVP Actual Status
 - **State**: **LOCAL VERIFIED**
@@ -110,13 +114,15 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 ## 22. Graceful Degradation Tests
 - **Telemetry Backend Offline**: `eventTracker.js` wraps `fetch` in `catch`, suppressing network errors so the video player does not crash.
 - **Kafka Offline**: `health.service.ts` accurately throws `HTTP 503 Service Unavailable` for `GET /api/v1/health/ready` if Kafka is unavailable. Kafka readiness is absolutely mandatory.
-- **PostgreSQL/Valkey Absent**: **LOCAL PRODUCTION-LIKE STARTUP VERIFIED**. Health endpoint (`/api/v1/health/ready`) remains `200 OK` because optional DB checks are safely bypassed when disabled via feature flags.
+- **PostgreSQL/Valkey Absent**: **LOCAL PRODUCTION-LIKE STARTUP VERIFIED**. 
+  - Health endpoint (`/api/v1/health/ready`) correctly returns `{ status: 'disabled' }` for DB and Valkey when disabled via feature flags.
+  - Overall status remains `ready` when optional services are disabled.
 
 ## 23. Cost / Free-Tier Truth Table
 | Provider | Service | Classification | Cost |
 | --- | --- | --- | --- |
 | Vercel | Frontend hosting | VERIFIED FREE | $0 |
-| Render | Backend API | UNVERIFIED | $0 (Owner Action Required) |
+| Render | Backend API | VERIFIED FREE | $0 |
 | Aiven | Kafka | VERIFIED FREE | $0 |
 | Tinybird | Analytics | VERIFIED FREE | $0 |
 | Cloudinary | Image hosting | VERIFIED FREE | $0 |
@@ -126,68 +132,12 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 
 ## 25. ACTION REQUIRED BY OWNER
 
-### A. Deploy Render Backend
-1. Open Render.
-2. New Web Service.
-3. Connect the current GitHub repository.
-4. Set root directory to `backend`.
-5. Choose Free plan.
-6. Use exact build command: `npm install && npm run build`
-7. Use exact start command: `node dist/main`
-8. Add only required environment variables:
-   - `NODE_ENV=production`
-   - `CORS_ORIGINS=https://mfilm.online`
-   - `KAFKA_BROKERS=YOUR_AIVEN_BROKERS`
-   - `KAFKA_USERNAME=avnadmin`
-   - `KAFKA_PASSWORD=YOUR_KAFKA_PASSWORD`
-   - `KAFKA_CA_PEM=YOUR_AIVEN_CA_PEM` (Copy the one-line encoded CA PEM string. Required for secure TLS).
-   - `KAFKA_TOPIC_BEHAVIOR=mfilm.behavior.v1`
-   - `POSTGRES_CATALOG_ENABLED=false` (To ensure startup without DB)
-   - `RECOMMENDATIONS_ENABLED=false` (To ensure startup without Valkey)
-9. Deploy.
-10. Copy the real public Render URL (`<REAL_RENDER_URL>`).
-
-### B. Post-Deployment Verification Commands
-Once Render is live, safely verify it from your **PowerShell** terminal:
-
-**Liveness Check:**
-```powershell
-Invoke-WebRequest "<REAL_RENDER_URL>/api/v1/health/live"
-```
-*(Expect HTTP 200 OK)*
-
-**Readiness Check:**
-```powershell
-Invoke-WebRequest "<REAL_RENDER_URL>/api/v1/health/ready"
-```
-*(Expect HTTP 200 OK)*
-
-**Synthetic Telemetry Test:**
-```powershell
-$body = @{
-    eventType = "movie_view"
-    eventVersion = "1"
-    sessionId = "phase05-public-e2e"
-    movieId = "phase05-public-test"
-    metadata = @{
-        synthetic = $true
-    }
-} | ConvertTo-Json -Depth 5
-
-Invoke-RestMethod `
-    -Method Post `
-    -Uri "<REAL_RENDER_URL>/api/v1/events" `
-    -ContentType "application/json" `
-    -Body $body
-```
-*(Expect HTTP 202 Accepted. Then verify the event appears in Tinybird `mfilm_behavior` without being quarantined.)*
-
-### C. Link Vercel Frontend
-After the synthetic test succeeds:
-1. In Vercel, set `VITE_BIGDATA_TELEMETRY_ENABLED=true`
-2. Set `VITE_EVENT_API_BASE_URL=<REAL_RENDER_URL>/api/v1`
-3. Redeploy Vercel.
-4. Go to `https://mfilm.online` and play a movie to verify End-to-End browser tracking.
+### A. Tinybird Browser Acceptance
+1. Open `https://www.mfilm.online`.
+2. Play a real movie. Produce `movie_view`, `play`, `pause`, `seek`, and `watch_progress` events.
+3. Query `mfilm_behavior` in Tinybird and verify all 5 events use the same string `movieId`.
+4. Verify `mfilm_behavior_quarantine` has 0 rows for these new events.
+5. Verify `events_per_minute`, `active_movies_15m`, and `movie_event_breakdown` pipes process the real `movieId` correctly.
 
 ## 26. Rollback / Disable Flags
 - Disable telemetry globally: `VITE_BIGDATA_TELEMETRY_ENABLED=false` (Vercel).
