@@ -1,4 +1,4 @@
-﻿import React, { useState, useContext, useMemo } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import { useComments, useSubscriptions } from '../../../../hooks/useCollections';
 import { FaComment, FaPaperPlane, FaRegCommentDots } from 'react-icons/fa';
 import { UserContext } from '../../../../contexts/UserProvider';
@@ -7,6 +7,7 @@ import { getObjectById } from '../../../../services/firebaseResponse';
 import { addDocument } from '../../../../services/firebaseService';
 import { timeAgo } from '../../../../utils/watchHistory';
 import { getUserPlanInfo, getThemeColorStyle } from '../../../../utils/appUtils';
+import { trackEvent } from '../../../../services/eventTracker';
 function CommentItem({ comment, users, subscriptions, plans }) {
     const user = getObjectById(users, comment.userID);
     const planInfo = useMemo(() => {
@@ -72,6 +73,7 @@ function Comment({ isLogin, onOpenLogin, movieId }) {
                 createdAt: new Date().toISOString()
             };
             await addDocument('Comments', newComment);
+            trackEvent('comment', movieId, '', { length: commentText.trim().length });
             setCommentText('');
         } catch (error) {
             console.error("Error adding comment: ", error);

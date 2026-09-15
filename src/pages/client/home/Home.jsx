@@ -20,6 +20,7 @@ const lazyRetry = (importFn, retries = 3) =>
         })
     );
 
+const ForYou = lazyRetry(() => import('./forYou/ForYou'));
 const FilmCountry = lazyRetry(() => import('./filmCountry/FilmCountry'));
 const TopFilm = lazyRetry(() => import('./topFilm/TopFilm'));
 const Cinema = lazyRetry(() => import('./cinema/Cinema'));
@@ -41,6 +42,7 @@ function Home(props) {
             <Banner />
             <CategoriesFilm />
             <FilmNew />
+            <LazySection minHeight="450px"><ForYou /></LazySection>
             <LazySection minHeight="900px">
                 <div className="bg-[#111827] px-6 md:px-10 py-3">
                     <div className="rounded-xl border border-white/10 shadow-[0_0_30px_rgba(96,165,250,0.06)]">

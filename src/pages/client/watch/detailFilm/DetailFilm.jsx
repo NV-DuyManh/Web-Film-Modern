@@ -17,9 +17,7 @@ import ListEpisodes from '../playfilm/ListEpisodes';
 import Comment from './Comment';
 import SEO from '../../../../components/SEO';
 import { syncSingleMovieEpisodes } from '../../../../services/autoEpisodeSyncService';
-
-
-function DetailFilm() {
+import { trackEvent } from '../../../../services/eventTracker';function DetailFilm() {
     const { slug } = useParams();
     const [activeTab, setActiveTab] = useState('episodes');
     const [showListDropdown, setShowListDropdown] = useState(false);
@@ -50,6 +48,7 @@ function DetailFilm() {
     }, [movies, slug]);
 
     const id = movie?.id;
+    const realMovieId = movie?.id || id;
 
     useEffect(() => {
         if (!id) return;
@@ -66,6 +65,11 @@ function DetailFilm() {
         }
     }, [movie?.id, movie?.slug]);
 
+    useEffect(() => {
+        if (realMovieId) {
+            trackEvent('movie_view', { userId: isLogin?.id, movieId: realMovieId });
+        }
+    }, [realMovieId, isLogin?.id]);
 
     useEffect(() => {
         if (!movie) return;
@@ -131,8 +135,6 @@ function DetailFilm() {
     }, [levelUser, checkRent])
 
     const topMovies = movies?.slice(0, 10) || [];
-
-    const realMovieId = movie?.id || id;
 
     const episodeShow = useMemo(() => {
         const list = episodes.filter(e => e.movieID == realMovieId);
@@ -220,8 +222,10 @@ function DetailFilm() {
             let newFavorites;
             if (currentFavorites.includes(realMovieId)) {
                 newFavorites = currentFavorites.filter(id => id !== realMovieId);
+                trackEvent('unfavorite', { userId: isLogin.id, movieId: realMovieId });
             } else {
                 newFavorites = [...currentFavorites, realMovieId];
+                trackEvent('favorite', { userId: isLogin.id, movieId: realMovieId });
             }
             await updateDocument("Users", { id: isLogin.id, listFavorite: newFavorites });
         } catch (error) {

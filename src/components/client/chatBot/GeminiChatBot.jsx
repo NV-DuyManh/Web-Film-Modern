@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -336,90 +335,47 @@ export default function GeminiChatBot() {
                 userPlanInfo
             });
 
-            const apiKeyString = import.meta.env.VITE_GEMINI_API_KEYS || import.meta.env.VITE_GEMINI_API_KEY;
-            const apiKeys = apiKeyString
-                ? apiKeyString.split(',').map(k => k.trim().replace(/[\r\n\\"]/g, '')).filter(Boolean)
-                : [];
-            const randomApiKey = apiKeys.length > 0
-                ? apiKeys[Math.floor(Math.random() * apiKeys.length)]
-                : '';
-
-            const genAI = new GoogleGenerativeAI(randomApiKey);
-            const model = genAI.getGenerativeModel({
-                model: "gemini-2.5-flash",
-                systemInstruction: systemInstruction,
-                tools: GEMINI_TOOLS
-            });
-
+            const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
             const recentMessages = currentSessionMessages
                 .slice(-6)
                 .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi'));
-            const history = recentMessages.map(m => ({
-                role: m.sender === 'user' ? 'user' : 'model',
-                parts: [{ text: m.text }]
-            }));
 
-            const chat = model.startChat({ history });
-
-            let result = await chat.sendMessage(userMsg.text);
-            if (isCancelledRef.current) return;
-
-            let response = await result.response;
             let finalAiMsgText = "";
+            let backendSuccess = false;
 
-            let loopCount = 0;
-            while (loopCount < 4) {
-                if (isCancelledRef.current) return;
-                loopCount++;
-                const calls = response.functionCalls();
-                if (calls && calls.length > 0) {
-                    const call = calls[0];
-                    if (call.name === "dieu_khien_website") {
-                        finalAiMsgText = executeWebsiteControl({ args: call.args, movies, characters, actors, authors, navigate });
-                        if (window.innerWidth < 768) {
-                            setIsChatOpen(false);
-                        }
-                        break;
-                    } else if (call.name === "tra_cuu_phim") {
-                        const suggestedSlugs = [];
-                        for (const msg of currentSessionMessages) {
-                            if (msg.sender === 'ai' && msg.text) {
-                                const matches = msg.text.matchAll(/\/phim\/([a-zA-Z0-9_-]+)/gi);
-                                for (const match of matches) {
-                                    if (match[1]) suggestedSlugs.push(match[1].toLowerCase().trim());
-                                }
-                            }
-                        }
+            try {
+                const proxyRes = await fetch(`${API_BASE_URL.replace(/\/+$/, '')}/ai/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: userMsg.text,
+                        history: recentMessages.map(m => ({
+                            role: m.sender === 'user' ? 'user' : 'model',
+                            text: m.text
+                        })),
+                        preferredProvider: 'gemini',
+                        systemInstruction
+                    }),
+                    signal: AbortSignal.timeout ? AbortSignal.timeout(15000) : undefined
+                });
 
-                        const topMatches = executeMovieLookup({
-                            args: call.args,
-                            movies,
-                            authors,
-                            actors,
-                            characters,
-                            categories,
-                            plans,
-                            userPlanInfo,
-                            excludeSlugs: suggestedSlugs,
-                            rawUserQuery: textToSend
-                        });
-                        if (isCancelledRef.current) return;
-                        result = await chat.sendMessage([{
-                            functionResponse: {
-                                name: 'tra_cuu_phim',
-                                response: { movies: topMatches }
-                            }
-                        }]);
-                        response = await result.response;
-                        continue;
+                if (proxyRes.ok) {
+                    const proxyData = await proxyRes.json();
+                    if (proxyData && proxyData.text) {
+                        finalAiMsgText = proxyData.text;
+                        backendSuccess = true;
                     }
-                } else {
-                    finalAiMsgText = response.text();
-                    break;
                 }
+            } catch (proxyErr) {
+                // Backend proxy unavailable or failed; check for dev fallback
+            }
+
+            if (!backendSuccess) {
+                finalAiMsgText = "Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿";
             }
 
             if (isCancelledRef.current) return;
+
 
             const newAiId = Date.now() + 1;
             setLastAiMsgId(newAiId);

@@ -1,0 +1,44 @@
+name: Cloud Load Benchmark (k6)
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: 'Target Event Ingestion URL'
+        required: true
+        default: 'https://mfilm-backend-api.onrender.com/api/v1/events'
+        type: string
+      notes:
+        description: 'Benchmark Run Notes / Purpose'
+        required: false
+        default: 'Routine Cloud Free-Tier Stress Benchmark'
+        type: string
+
+jobs:
+  k6-benchmark:
+    name: Run Cloud k6 Benchmark
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Run k6 Cloud Benchmark
+        run: |
+          echo "Starting Cloud k6 Benchmark..."
+          echo "Target URL: ${{ github.event.inputs.target_url }}"
+          echo "Notes: ${{ github.event.inputs.notes }}"
+          k6 run \
+            --env TARGET_URL="${{ github.event.inputs.target_url }}" \
+            --summary-export=k6-summary.json \
+            load-tests/k6-cloud-benchmark.js
+
+      - name: Upload Benchmark Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: k6-cloud-benchmark-summary
+          path: k6-summary.json
+          retention-days: 14

@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -13,9 +13,38 @@ import { Link } from 'react-router-dom';
 
 function TopFilm() {
     const movies = useMovies();
+    const [realtimeTrending, setRealtimeTrending] = useState(null);
+    const REALTIME_TRENDING_ENABLED = import.meta.env?.VITE_REALTIME_TRENDING_ENABLED === 'true';
+    const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
+
+    useEffect(() => {
+        if (!REALTIME_TRENDING_ENABLED) return;
+
+        let isMounted = true;
+        fetch(`${API_BASE_URL.replace(/\/+$/, '')}/analytics/trending?limit=10`)
+            .then(res => res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`)))
+            .then(json => {
+                if (isMounted && Array.isArray(json.data) && json.data.length > 0) {
+                    setRealtimeTrending(json.data);
+                }
+            })
+            .catch(() => {
+                // Silently fallback to local score calculation
+            });
+
+        return () => { isMounted = false; };
+    }, [REALTIME_TRENDING_ENABLED, API_BASE_URL]);
 
     const topMovies = useMemo(() => {
         if (!movies) return [];
+
+        // If real-time trending is active and returned data, map and preserve full movie objects
+        if (realtimeTrending && realtimeTrending.length > 0) {
+            const mapped = realtimeTrending
+                .map(item => movies.find(m => m.id === item.movieId || m.slug === item.slug) || item)
+                .filter(Boolean);
+            if (mapped.length > 0) return mapped;
+        }
 
         const calculateTrendingScore = (movie) => {
             const views = Number(movie.views) || 0;
@@ -31,15 +60,22 @@ function TopFilm() {
         };
 
         return [...movies].sort((a, b) => calculateTrendingScore(b) - calculateTrendingScore(a)).slice(0, 10);
-    }, [movies]);
+    }, [movies, realtimeTrending]);
 
     const plans = useContext(PlanContext);
 
     return (
         <div className='bg-[#111827] w-full text-white py-10 px-6 md:px-10 overflow-hidden'>
-            <div className='mb-2'>
+            <div className='mb-2 flex items-center justify-between'>
                 <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>Top 10 phim bộ hôm nay</h2>
+                {realtimeTrending && (
+                    <span className='hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold'>
+                        <span className='w-2 h-2 rounded-full bg-green-400 animate-pulse'></span>
+                        Real-Time Stream
+                    </span>
+                )}
             </div>
+
 
             <div className="movie-slider-wrapper relative group/slider">
                 <button aria-label="Previous" className="movie-nav-btn movie-nav-btn--prev top-prev-btn" draggable="false">

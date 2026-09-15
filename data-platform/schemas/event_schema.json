@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MfilmStreamingEvent",
+  "type": "object",
+  "required": [
+    "eventId",
+    "eventType",
+    "eventVersion",
+    "occurredAt",
+    "receivedAt",
+    "userId",
+    "sessionId",
+    "movieId"
+  ],
+  "properties": {
+    "eventId": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Globally unique event identifier"
+    },
+    "eventType": {
+      "type": "string",
+      "enum": [
+        "search",
+        "movie_view",
+        "play",
+        "pause",
+        "seek",
+        "watch_progress",
+        "complete",
+        "favorite",
+        "rating",
+        "comment",
+        "recommendation_view",
+        "recommendation_click",
+        "buffer_start",
+        "buffer_end"
+      ]
+    },
+    "eventVersion": {
+      "type": "string",
+      "default": "1"
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "receivedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "sessionId": {
+      "type": "string"
+    },
+    "movieId": {
+      "type": "string"
+    },
+    "episodeId": {
+      "type": "string"
+    },
+    "metadata": {
+      "type": "object"
+    },
+    "clientIp": {
+      "type": "string"
+    },
+    "userAgent": {
+      "type": "string"
+    }
+  }
+}

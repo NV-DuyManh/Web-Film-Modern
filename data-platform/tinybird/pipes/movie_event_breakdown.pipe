@@ -1,0 +1,16 @@
+DESCRIPTION >
+    Breakdown playback engagement metrics for a specific movie.
+
+NODE endpoint
+SQL >
+    %
+    SELECT
+        movieId,
+        eventType,
+        count() AS total_count,
+        uniqExact(userId) AS unique_users
+    FROM mfilm_behavior
+    WHERE movieId = {{ String(movie_id, 'one-piece-dao-hai-tac', description="Target Movie ID or Slug") }}
+      AND occurredAt >= now() - INTERVAL 7 DAY
+    GROUP BY movieId, eventType
+    ORDER BY total_count DESC

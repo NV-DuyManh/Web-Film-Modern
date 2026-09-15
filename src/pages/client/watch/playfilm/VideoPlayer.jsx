@@ -13,7 +13,18 @@ function extractStreamUrl(embedUrl) {
     return embedUrl;
 }
 
-const VideoPlayer = forwardRef(({ src, onTimeUpdate, autoPlay = false, hideControls = false }, ref) => {
+const VideoPlayer = forwardRef(({
+    src,
+    onTimeUpdate,
+    onPlay,
+    onPause,
+    onSeek,
+    onEnded,
+    onBufferStart,
+    onBufferEnd,
+    autoPlay = false,
+    hideControls = false
+}, ref) => {
     const artRef = useRef(null);
     const containerRef = useRef(null);
 
@@ -143,6 +154,14 @@ const VideoPlayer = forwardRef(({ src, onTimeUpdate, autoPlay = false, hideContr
                 }
             }
         });
+
+        art.on('video:play', () => { if (onPlay) onPlay(art.currentTime); });
+        art.on('video:pause', () => { if (onPause) onPause(art.currentTime); });
+        art.on('video:seeked', () => { if (onSeek) onSeek(art.currentTime); });
+        art.on('video:ended', () => { if (onEnded) onEnded(); });
+        art.on('video:waiting', () => { if (onBufferStart) onBufferStart(art.currentTime); });
+        art.on('video:playing', () => { if (onBufferEnd) onBufferEnd(art.currentTime); });
+
 
         const handleKeyDown = (e) => {
             const activeTag = document.activeElement?.tagName?.toLowerCase();

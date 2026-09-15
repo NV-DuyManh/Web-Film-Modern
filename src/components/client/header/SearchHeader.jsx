@@ -6,6 +6,7 @@ import { PlanContext } from '../../../contexts/PlanProvider';
 import { searchTV } from '../../../components/admin/search/SearchTV';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { FaFilm } from 'react-icons/fa';
+import { trackEvent } from '../../../services/eventTracker';
 
 function SearchHeader({ searchQuery, isOpen, onClose }) {
     const navigate = useNavigate();
@@ -30,6 +31,7 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
     }, [searchQuery, movies]);
 
     const handleSelect = (movieId) => {
+        trackEvent('search', movieId, '', { queryLength: searchQuery.length, query: searchQuery });
         onClose();
         navigate(`/phim/${movieId}`);
     };

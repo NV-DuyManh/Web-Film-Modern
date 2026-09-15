@@ -76,7 +76,6 @@ function Banner() {
                 speed={800}
                 navigation={false}
                 loop={hotMovies.length >= 7}
-                {...(hotMovies.length >= 7 ? { loopedSlides: hotMovies.length } : {})}
                 effect={'fade'}
                 fadeEffect={{ crossFade: true }}
                 thumbs={{
@@ -193,7 +192,6 @@ function Banner() {
                     grabCursor={true}
                     allowTouchMove={true}
                     loop={hotMovies.length >= 7}
-                    {...(hotMovies.length >= 7 ? { loopedSlides: hotMovies.length } : {})}
                     slideToClickedSlide={true}
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="thumb-swiper"

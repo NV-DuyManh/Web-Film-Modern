@@ -17,6 +17,8 @@ import Comment from '../detailFilm/Comment';
 import SEO from '../../../../components/SEO';
 import { syncSingleMovieEpisodes } from '../../../../services/autoEpisodeSyncService';
 import PageLoadingSpinner from '../../../../components/common/PageLoadingSpinner';
+import { trackEvent } from '../../../../services/eventTracker';
+
 
 function PlayFilm({ handleOpenLogin }) {
     const { slug } = useParams();
@@ -98,6 +100,13 @@ function PlayFilm({ handleOpenLogin }) {
 
         const currentViews = movie?.views || 0;
         updateDocument("Movies", { id: realMovieId, views: currentViews + 1 }, true).catch(e => console.error(e));
+
+        // Big Data Telemetry: Emit movie_view event
+        trackEvent('movie_view', realMovieId, playEpisodes?.id, {
+            title: movie?.name,
+            episodeNumber: playEpisodes?.numberEpisode,
+            slug: movie?.slug,
+        });
     }, [realMovieId, playEpisodes?.id]);
 
 
@@ -123,6 +132,7 @@ function PlayFilm({ handleOpenLogin }) {
     }, [slug, tap, realMovieId, playEpisodes?.id]);
 
 
+    const lastProgressTimeRef = useRef(0);
     const handleTimeUpdate = useCallback((currentSeconds) => {
         if (playEpisodes?.id && realMovieId && currentSeconds > 0) {
             saveResume(realMovieId, {
@@ -130,8 +140,59 @@ function PlayFilm({ handleOpenLogin }) {
                 episodeNumber: playEpisodes.numberEpisode,
                 seconds: currentSeconds,
             });
+
+            // Big Data Telemetry: Calculate delta for correct sum in Tinybird
+            const delta = currentSeconds - lastProgressTimeRef.current;
+            // Only send if delta >= 10 to match the 10s throttle, and avoid double counting
+            if (delta >= 10 || delta < 0) { // delta < 0 handles seeks backwards
+                const sendDelta = delta < 0 ? 10 : Math.floor(delta);
+                trackEvent('watch_progress', realMovieId, playEpisodes.id, {
+                    progress: sendDelta,
+                    positionSeconds: currentSeconds,
+                    durationSeconds: Number(movie?.duration) || 3600,
+                    percent: Math.round((currentSeconds / (Number(movie?.duration) || 3600)) * 100),
+                });
+                lastProgressTimeRef.current = currentSeconds;
+            }
         }
-    }, [playEpisodes?.id, realMovieId]);
+    }, [playEpisodes?.id, realMovieId, movie?.duration]);
+
+    const handlePlay = useCallback((seconds) => {
+        if (realMovieId && playEpisodes?.id) {
+            trackEvent('play', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
+        }
+    }, [realMovieId, playEpisodes?.id]);
+
+    const handlePause = useCallback((seconds) => {
+        if (realMovieId && playEpisodes?.id) {
+            trackEvent('pause', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
+        }
+    }, [realMovieId, playEpisodes?.id]);
+
+    const handleSeek = useCallback((seconds) => {
+        if (realMovieId && playEpisodes?.id) {
+            trackEvent('seek', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
+        }
+    }, [realMovieId, playEpisodes?.id]);
+
+    const handleEnded = useCallback(() => {
+        if (realMovieId && playEpisodes?.id) {
+            trackEvent('complete', realMovieId, playEpisodes.id, { durationSeconds: Number(movie?.duration) || 3600 });
+        }
+    }, [realMovieId, playEpisodes?.id, movie?.duration]);
+
+    const handleBufferStart = useCallback((seconds) => {
+        if (realMovieId && playEpisodes?.id) {
+            trackEvent('buffer_start', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
+        }
+    }, [realMovieId, playEpisodes?.id]);
+
+    const handleBufferEnd = useCallback((seconds) => {
+        if (realMovieId && playEpisodes?.id) {
+            trackEvent('buffer_end', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
+        }
+    }, [realMovieId, playEpisodes?.id]);
+
 
 
     useEffect(() => {
@@ -250,9 +311,16 @@ function PlayFilm({ handleOpenLogin }) {
                         ref={playerRef}
                         src={activeServer === 2 && playEpisodes?.url2 ? playEpisodes.url2 : playEpisodes?.url}
                         onTimeUpdate={handleTimeUpdate}
+                        onPlay={handlePlay}
+                        onPause={handlePause}
+                        onSeek={handleSeek}
+                        onEnded={handleEnded}
+                        onBufferStart={handleBufferStart}
+                        onBufferEnd={handleBufferEnd}
                         autoPlay={false}
                         hideControls={showModal}
                     />
+
 
 
                     {showModal && resumeData && (

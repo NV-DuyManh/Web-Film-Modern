@@ -1,0 +1,13 @@
+DESCRIPTION >
+    Calculate real-time event ingestion throughput binned per minute for the last hour.
+
+NODE endpoint
+SQL >
+    SELECT
+        toStartOfMinute(occurredAt) AS minute,
+        eventType,
+        count() AS event_count
+    FROM mfilm_behavior
+    WHERE occurredAt >= now() - INTERVAL 1 HOUR
+    GROUP BY minute, eventType
+    ORDER BY minute DESC, event_count DESC

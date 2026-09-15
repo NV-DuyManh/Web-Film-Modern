@@ -1,0 +1,42 @@
+services:
+  - type: web
+    name: mfilm-backend-api
+    runtime: node
+    plan: free
+    region: singapore # Match Aiven cloud region for lowest latency
+    rootDir: backend
+    buildCommand: npm install && npm run build
+    startCommand: node dist/main
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: GLOBAL_PREFIX
+        value: api/v1
+      - key: CORS_ORIGINS
+        value: https://mfilm.online,https://web-film-modern.vercel.app,http://localhost:5173
+      - key: DATABASE_URL
+        sync: false # Set in Render Dashboard from Aiven PostgreSQL
+      - key: DATABASE_SSL
+        value: "true"
+      - key: VALKEY_URL
+        sync: false # Set in Render Dashboard from Aiven Valkey
+      - key: REDIS_TLS
+        value: "true"
+      - key: KAFKA_BROKERS
+        sync: false # Set in Render Dashboard from Aiven Kafka
+      - key: KAFKA_USERNAME
+        sync: false
+      - key: KAFKA_PASSWORD
+        sync: false
+      - key: KAFKA_SSL
+        value: "true"
+      - key: KAFKA_SASL_MECHANISM
+        value: scram-sha-256
+      - key: KAFKA_PARTITIONS
+        value: "2"
+      - key: KAFKA_TOPIC_BEHAVIOR
+        value: mfilm.behavior.v1
+      - key: KAFKA_TOPIC_DLQ
+        value: mfilm.behavior.dlq

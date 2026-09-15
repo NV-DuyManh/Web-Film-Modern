@@ -1,0 +1,22 @@
+SCHEMA >
+    `eventId` UUID `json:$.eventId`,
+    `eventType` LowCardinality(String) `json:$.eventType`,
+    `eventVersion` LowCardinality(String) `json:$.eventVersion`,
+    `occurredAt` DateTime64(3, 'UTC') `json:$.occurredAt`,
+    `receivedAt` DateTime64(3, 'UTC') `json:$.receivedAt`,
+    `userId` LowCardinality(String) `json:$.userId`,
+    `sessionId` String `json:$.sessionId`,
+    `movieId` LowCardinality(String) `json:$.movieId`,
+    `episodeId` LowCardinality(String) `json:$.episodeId`,
+    `metadata` String `json:$.metadata`,
+    `clientIp` String `json:$.clientIp`,
+    `userAgent` String `json:$.userAgent`
+
+ENGINE "MergeTree"
+ENGINE_PARTITION_KEY "toYYYYMM(occurredAt)"
+ENGINE_SORTING_KEY "eventType, toDate(occurredAt), movieId, userId, occurredAt"
+
+KAFKA_CONNECTION_NAME mfilm_kafka
+KAFKA_TOPIC mfilm.behavior.v1
+KAFKA_GROUP_ID mfilm_tinybird_v1
+KAFKA_AUTO_OFFSET_RESET earliest

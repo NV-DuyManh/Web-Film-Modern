@@ -27,3 +27,4 @@ dist-ssr
 .env
 .vercel
 .env*
+.tinyb

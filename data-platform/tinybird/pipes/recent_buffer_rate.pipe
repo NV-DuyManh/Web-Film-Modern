@@ -1,0 +1,14 @@
+DESCRIPTION >
+    Compute player quality of experience (QoE) buffer event rates across the last 30 minutes.
+
+NODE endpoint
+SQL >
+    SELECT
+        toStartOfFiveMinutes(occurredAt) AS time_bucket,
+        countIf(eventType = 'buffer_start') AS buffer_events,
+        countIf(eventType = 'play' OR eventType = 'watch_progress') AS playback_events,
+        round((countIf(eventType = 'buffer_start') * 100.0) / nullIf(countIf(eventType = 'play' OR eventType = 'watch_progress'), 0), 2) AS buffer_ratio_percent
+    FROM mfilm_behavior
+    WHERE occurredAt >= now() - INTERVAL 30 MINUTE
+    GROUP BY time_bucket
+    ORDER BY time_bucket DESC

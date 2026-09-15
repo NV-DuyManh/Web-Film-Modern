@@ -106,7 +106,6 @@ function Anime() {
                         speed={800}
                         navigation={false}
                         loop={filteredMovies?.length >= 7}
-                        {...(filteredMovies?.length >= 7 ? { loopedSlides: filteredMovies.length } : {})}
                         effect={'fade'}
                         fadeEffect={{ crossFade: true }}
                         thumbs={{
@@ -232,7 +231,6 @@ function Anime() {
                         grabCursor={true}
                         allowTouchMove={true}
                         loop={filteredMovies?.length >= 7}
-                        {...(filteredMovies?.length >= 7 ? { loopedSlides: filteredMovies.length } : {})}
                         slideToClickedSlide={true}
                         modules={[FreeMode, Navigation, Thumbs]}
                         className="anime-thumb-swiper"

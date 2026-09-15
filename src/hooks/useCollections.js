@@ -4,15 +4,44 @@ import { subscribeToCollection, getCachedData } from '../utils/appUtils';
 import Logo5 from '../assets/Logo5.png';
 import Logo6 from '../assets/Logo6.png';
 
+const POSTGRES_CATALOG_ENABLED = import.meta.env?.VITE_POSTGRES_CATALOG_ENABLED === 'true';
+const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
+
+const CATALOG_ENDPOINT_MAP = {
+    Movies: '/catalog/movies',
+    Categories: '/catalog/categories',
+    Topics: '/catalog/topics',
+};
+
 function createCollectionHook(cacheKey, collectionName, processData) {
     return function useCollection() {
         const [data, setData] = useState(() => getCachedData(cacheKey) ?? []);
         useEffect(() => {
+            let isMounted = true;
+
+            if (POSTGRES_CATALOG_ENABLED && CATALOG_ENDPOINT_MAP[collectionName]) {
+                const endpoint = `${API_BASE_URL.replace(/\/+$/, '')}${CATALOG_ENDPOINT_MAP[collectionName]}`;
+                fetch(endpoint)
+                    .then(res => res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`)))
+                    .then(json => {
+                        if (!isMounted) return;
+                        const items = Array.isArray(json) ? json : (json.data || []);
+                        const processed = processData ? processData(items) : items;
+                        setData(processed);
+                    })
+                    .catch(err => {
+                        console.warn(`[Catalog Cutover] PostgreSQL read fallback to Firestore for [${collectionName}]:`, err.message);
+                        subscribeToCollection(cacheKey, collectionName, setData, fetchDocumentsRealtime, processData);
+                    });
+                return () => { isMounted = false; };
+            }
+
             return subscribeToCollection(cacheKey, collectionName, setData, fetchDocumentsRealtime, processData);
         }, []);
         return data;
     };
 }
+
 
 function processMovies(movieList) {
     return movieList.map(movie => {

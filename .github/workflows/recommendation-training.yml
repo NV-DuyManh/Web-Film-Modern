@@ -1,0 +1,66 @@
+name: Recommendation Model Batch Training & Benchmarking
+
+on:
+  workflow_dispatch:
+    inputs:
+      dataset_mode:
+        description: 'Dataset Mode: benchmark (MovieLens 100k) or mfilm_audit'
+        required: true
+        default: 'benchmark'
+        type: choice
+        options:
+          - benchmark
+          - mfilm_audit
+  schedule:
+    # Run every Sunday at 04:00 UTC (Batch retraining window)
+    - cron: '0 4 * * 0'
+
+jobs:
+  recommendation-training:
+    name: Train & Benchmark Recommendation Models
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Codebase
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'backend/package-lock.json'
+
+      - name: Install Backend Dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Prepare MovieLens Benchmark Dataset
+        run: |
+          mkdir -p data-platform/datasets/movielens-100k
+          curl -k -s https://files.grouplens.org/datasets/movielens/ml-100k/u.data -o data-platform/datasets/movielens-100k/u.data
+          curl -k -s https://files.grouplens.org/datasets/movielens/ml-100k/u.item -o data-platform/datasets/movielens-100k/u.item
+          ls -lh data-platform/datasets/movielens-100k/
+
+      - name: Run Recommendation Benchmark Suite
+        working-directory: ./backend
+        run: npm run benchmark:recommendations
+
+      - name: Run Interaction Readiness Audit (Sanitized)
+        if: ${{ env.DATABASE_URL != '' }}
+        working-directory: ./backend
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: npm run audit:interactions
+
+      - name: Package Lightweight Recommendation Artifact
+        run: |
+          mkdir -p artifacts/recommendations
+          echo "{\"generatedAt\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\", \"model\": \"hybrid-content-popularity\", \"status\": \"verified\"}" > artifacts/recommendations/recommendation-metadata.json
+
+      - name: Upload Recommendation Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: recommendation-batch-artifacts
+          path: artifacts/recommendations/
+          retention-days: 14

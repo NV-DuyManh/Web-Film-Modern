@@ -1,0 +1,24 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    url: postgres:5432
+    user: mfilm_user
+    secureJsonData:
+      password: mfilm_password
+    jsonData:
+      database: mfilm_db
+      sslmode: disable
+      maxOpenConns: 20
+      maxIdleConns: 5
+      connMaxLifetime: 14400
+    editable: true

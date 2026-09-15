@@ -1,0 +1,18 @@
+DESCRIPTION >
+    Identify the top active trending movies over the rolling 15-minute window.
+
+NODE endpoint
+SQL >
+    SELECT
+        movieId,
+        countIf(eventType = 'movie_view' OR eventType = 'play') AS views_15m,
+        countIf(eventType = 'complete') AS completes_15m,
+        uniqExact(userId) AS active_viewers,
+        sumIf(JSONExtractInt(metadata, 'progress'), eventType = 'watch_progress') AS total_watch_seconds
+    FROM mfilm_behavior
+    WHERE occurredAt >= now() - INTERVAL 15 MINUTE
+      AND movieId != ''
+      AND movieId != 'none'
+    GROUP BY movieId
+    ORDER BY views_15m DESC, active_viewers DESC
+    LIMIT 20

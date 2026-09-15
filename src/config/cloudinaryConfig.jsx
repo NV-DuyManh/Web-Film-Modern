@@ -1,14 +1,13 @@
-import CryptoJS from "crypto-js";
 import { cloud_name } from "../utils/Constants";
 
 export const uploadImageToCloudinary = async (imgFile, folderName) => {
     const formData = new FormData();
     formData.append('file', imgFile);
-    formData.append('upload_preset', 'WebFilm'); // Replace 'vamfilm' with your actual unsigned upload preset name
-    formData.append('cloud_name', cloud_name); // Replace 'dymypfkt4' with your actual Cloudinary cloud name
+    formData.append('upload_preset', 'WebFilm'); // Unsigned upload preset
+    formData.append('cloud_name', cloud_name);
 
     if (folderName) {
-        formData.append('folder', folderName); // Specify folder name for organized storage
+        formData.append('folder', folderName);
     }
 
     try {
@@ -17,36 +16,36 @@ export const uploadImageToCloudinary = async (imgFile, folderName) => {
             body: formData,
         });
         const data = await response.json();
-        return data.secure_url; // Return the image URL from Cloudinary
+        return data.secure_url;
     } catch (error) {
         console.error('Upload failed:', error);
         throw error;
     }
 };
 
-export const deleteImageFromCloudinary = async (publicId) => {
-    const timestamp = Math.round((new Date()).getTime() / 1000);
-    const apiKey = '869215743412731';  // Replace with your actual API key
-    const apiSecret = '59yAfl73ToBobKI4YbH4KxTJMjY';  // Replace with your actual API secret
-    const cloudName = 'dlk5mfjtc'; // Replace with your actual Cloudinary cloud name
-
-    const signature = CryptoJS.SHA1(`public_id=${publicId}&timestamp=${timestamp}${apiSecret}`).toString();
-
-    const formData = new FormData();
-    formData.append('public_id', publicId);
-    formData.append('timestamp', timestamp);
-    formData.append('api_key', apiKey);
-    formData.append('signature', signature);
-
+/**
+ * Privileged Cloudinary asset deletion is routed securely through the NestJS backend.
+ * Browser bundles never possess the Cloudinary API secret.
+ */
+export const deleteImageFromCloudinary = async (publicId, token = null) => {
+    const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
     try {
-        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/destroy`, {
-            method: 'POST',
-            body: formData,
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        const response = await fetch(`${API_BASE_URL.replace(/\/+$/, '')}/media/${encodeURIComponent(publicId)}`, {
+            method: 'DELETE',
+            headers,
         });
-        const result = await response.json();
-        return result; // Returns the result of the deletion operation
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.message || `Media deletion failed with status ${response.status}`);
+        }
+        return await response.json();
     } catch (error) {
         console.error('Delete failed:', error);
         throw error;
     }
 };
+

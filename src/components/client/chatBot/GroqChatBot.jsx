@@ -319,82 +319,6 @@ export default function GroqChatBot() {
         }
     }, [messages, isChatOpen, showHistory, lastAiMsgId]);
 
-    const callGroqWithRetry = async (payload, apiKeysList, signal) => {
-        const fallbackKeys = import.meta.env.VITE_GROQ_API_KEY ? [import.meta.env.VITE_GROQ_API_KEY] : [];
-        const keys = apiKeysList.length > 0 ? apiKeysList : fallbackKeys;
-
-        // Bắt đầu ngẫu nhiên một key để phân tán tải
-        let keyIndex = keys.length > 0 ? Math.floor(Math.random() * keys.length) : 0;
-        const maxAttempts = Math.max(keys.length * 2, 6);
-        let lastError = null;
-
-        for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            if (signal?.aborted) {
-                const err = new Error("Request was aborted");
-                err.name = "AbortError";
-                throw err;
-            }
-
-            const currentApiKey = keys.length > 0 ? keys[keyIndex % keys.length] : '';
-
-            try {
-                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${currentApiKey}`
-                    },
-                    body: JSON.stringify(payload),
-                    signal
-                });
-
-                if (res.status === 429 || res.status >= 500) {
-                    keyIndex++;
-                    if (keys.length > 0 && (attempt + 1) % keys.length === 0 && attempt < maxAttempts - 1) {
-                        await new Promise((resolve, reject) => {
-                            const timer = setTimeout(resolve, 600);
-                            signal?.addEventListener('abort', () => {
-                                clearTimeout(timer);
-                                const abortErr = new Error("Request was aborted");
-                                abortErr.name = "AbortError";
-                                reject(abortErr);
-                            }, { once: true });
-                        });
-                    }
-                    continue;
-                }
-
-                if (!res.ok) {
-                    const err = await res.json().catch(() => ({}));
-                    const errMsg = err.error?.message || `Lỗi API Groq (${res.status})`;
-                    lastError = new Error(errMsg);
-                    keyIndex++;
-                    continue;
-                }
-
-                return await res.json();
-            } catch (err) {
-                if (err.name === 'AbortError' || signal?.aborted) {
-                    throw err;
-                }
-                lastError = err;
-                keyIndex++;
-                if (keys.length > 0 && (attempt + 1) % keys.length === 0 && attempt < maxAttempts - 1) {
-                    await new Promise((resolve, reject) => {
-                        const timer = setTimeout(resolve, 600);
-                        signal?.addEventListener('abort', () => {
-                            clearTimeout(timer);
-                            const abortErr = new Error("Request was aborted");
-                            abortErr.name = "AbortError";
-                            reject(abortErr);
-                        }, { once: true });
-                    });
-                }
-            }
-        }
-
-        throw lastError || new Error("Không thể kết nối đến máy chủ Groq AI sau nhiều lần thử.");
-    };
 
     const handleSend = async (customText) => {
         const textToSend = typeof customText === 'string' ? customText.trim() : message.trim();
@@ -431,107 +355,55 @@ export default function GroqChatBot() {
                 userPlanInfo
             });
 
-            const apiKeyString = import.meta.env.VITE_GROQ_API_KEYS || import.meta.env.VITE_GROQ_API_KEY;
-            const apiKeys = apiKeyString
-                ? apiKeyString.split(',').map(k => k.trim().replace(/[\r\n\\"]/g, '')).filter(Boolean)
-                : [];
-
+            const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
             const recentMessages = currentSessionMessages
                 .slice(-4)
                 .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi'));
-            let groqMessages = [
-                { role: "system", content: systemInstruction },
-                ...recentMessages.map(m => ({
-                    role: m.sender === 'user' ? 'user' : 'assistant',
-                    content: m.text
-                })),
-                { role: "user", content: userMsg.text }
-            ];
 
             let finalAiMsgText = "";
-            let loopCount = 0;
-            let lastLookupResults = "";
+            let backendSuccess = false;
 
-            while (loopCount < 4) {
-                loopCount++;
+            try {
+                const proxyRes = await fetch(`${API_BASE_URL.replace(/\/+$/, '')}/ai/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: userMsg.text,
+                        history: recentMessages.map(m => ({
+                            role: m.sender === 'user' ? 'user' : 'assistant',
+                            text: m.text
+                        })),
+                        preferredProvider: 'groq',
+                        systemInstruction
+                    }),
+                    signal: abortController.signal
+                });
 
-                const data = await callGroqWithRetry({
-                    model: "openai/gpt-oss-20b",
-                    messages: groqMessages,
-                    tools: GROQ_TOOLS,
-                    tool_choice: "auto",
-                    max_tokens: 800
-                }, apiKeys, abortController.signal);
-
-                const responseMessage = data.choices[0].message;
-                groqMessages.push(responseMessage);
-
-                if (responseMessage.tool_calls && responseMessage.tool_calls.length > 0) {
-                    const toolCall = responseMessage.tool_calls[0];
-                    const functionName = toolCall.function.name;
-                    let args = {};
-                    try {
-                        args = JSON.parse(toolCall.function.arguments);
-                    } catch (e) {
-                        console.error("Lỗi parse arguments của Groq:", e);
+                if (proxyRes.ok) {
+                    const proxyData = await proxyRes.json();
+                    if (proxyData && proxyData.text) {
+                        finalAiMsgText = proxyData.text;
+                        backendSuccess = true;
                     }
-
-                    if (functionName === "dieu_khien_website") {
-                        finalAiMsgText = executeWebsiteControl({ args, movies, characters, actors, authors, navigate });
-                        if (window.innerWidth < 768) {
-                            setIsChatOpen(false);
-                        }
-                        break;
-                    } else if (functionName === "tra_cuu_phim") {
-                        const suggestedSlugs = [];
-                        for (const msg of currentSessionMessages) {
-                            if (msg.sender === 'ai' && msg.text) {
-                                const matches = msg.text.matchAll(/\/phim\/([a-zA-Z0-9_-]+)/gi);
-                                for (const match of matches) {
-                                    if (match[1]) suggestedSlugs.push(match[1].toLowerCase().trim());
-                                }
-                            }
-                        }
-
-                        const topMatches = executeMovieLookup({
-                            args,
-                            movies,
-                            authors,
-                            actors,
-                            characters,
-                            categories,
-                            plans,
-                            userPlanInfo,
-                            excludeSlugs: suggestedSlugs,
-                            rawUserQuery: textToSend
-                        });
-                        lastLookupResults = topMatches;
-                        groqMessages.push({
-                            tool_call_id: toolCall.id,
-                            role: "tool",
-                            name: functionName,
-                            content: JSON.stringify({ movies: topMatches })
-                        });
-                        continue;
-                    }
-                } else {
-                    finalAiMsgText = responseMessage.content || "";
-                    break;
                 }
+            } catch (proxyErr) {
+                // Fallback to local keys if present in dev
             }
 
-            if (!finalAiMsgText && lastLookupResults && lastLookupResults !== "Không tìm thấy bộ phim nào phù hợp với yêu cầu.") {
-                finalAiMsgText = `Chào bạn, mình xin gợi ý một số bộ phim rất hấp dẫn đang có trên MFILM để bạn tham khảo nhé! 🍿\n\n${lastLookupResults.split('\n').map(line => `- ${line}`).join('\n')}\n\nChúc bạn xem phim vui vẻ! Nếu bạn cần tìm thể loại nào khác thì cứ nhắn mình nha! 😊`;
+            if (!backendSuccess) {
+                finalAiMsgText = "Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿";
             }
 
-            const newAiId = Date.now() + 1;
-            setLastAiMsgId(newAiId);
-            const aiMsg = {
-                id: newAiId,
-                text: finalAiMsgText || "Dạ chào bạn! Bạn đang tìm kiếm bộ phim hay thể loại nào để mình hỗ trợ gợi ý cho bạn nhé? 😊",
-                sender: 'ai'
-            };
-            updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
+            if (abortController.signal.aborted) return;
+
+        const newAiId = Date.now() + 1;
+        setLastAiMsgId(newAiId);
+        const aiMsg = {
+            id: newAiId,
+            text: finalAiMsgText || "Dạ chào bạn! Bạn đang tìm kiếm bộ phim hay thể loại nào để mình hỗ trợ gợi ý cho bạn nhé? 😊",
+            sender: 'ai'
+        };
+        updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
         } catch (error) {
             // Nếu hủy do người dùng chuyển tab hoặc đóng chat thì không ghi lỗi ra giao diện
             if (error?.name === 'AbortError' || abortController.signal.aborted) {
