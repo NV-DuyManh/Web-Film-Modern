@@ -37,27 +37,72 @@ describe('EventService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should enrich event with defaults and UUID', () => {
+  it('A. authenticated event: trusted auth user -> userId populated', () => {
     const enriched = service.enrichEvent(
       {
         eventType: EventType.PLAY,
-        userId: 'usr_1',
         sessionId: 'sess_1',
         movieId: 'm_1',
       },
       '127.0.0.1',
       'Mozilla/5.0',
+      'auth_user_123'
     );
-
-    expect(enriched.eventId).toBeDefined();
-    expect(enriched.eventType).toBe(EventType.PLAY);
-    expect(enriched.userId).toBe('usr_1');
-    expect(enriched.clientIp).toBe('127.0.0.1');
-    expect(enriched.userAgent).toBe('Mozilla/5.0');
-    expect(enriched.receivedAt).toBeDefined();
+    expect(enriched.userId).toBe('auth_user_123');
+    expect(enriched.eventVersion).toBe('1');
   });
 
-  it('should process single event and call kafka produceEvent', async () => {
+  it('B. anonymous event: userId populated from anonymous identifier', () => {
+    const enriched = service.enrichEvent(
+      {
+        eventType: EventType.PLAY,
+        anonymousId: 'anon_abc',
+        sessionId: 'sess_1',
+        movieId: 'm_1',
+      },
+      '127.0.0.1'
+    );
+    expect(enriched.userId).toBe('anon:anon_abc');
+    expect(enriched.eventVersion).toBe('1');
+  });
+
+  it('C. anonymous event with sessionId only: safe non-null fallback', () => {
+    const enriched = service.enrichEvent(
+      {
+        eventType: EventType.PLAY,
+        sessionId: 'sess_fallback',
+        movieId: 'm_1',
+      }
+    );
+    expect(enriched.userId).toBe('session:sess_fallback');
+  });
+
+  it('D. no PII leakage and H. metadata is stringified', () => {
+    const enriched = service.enrichEvent(
+      {
+        eventType: EventType.PLAY,
+        sessionId: 'sess_1',
+        movieId: 'm_1',
+        metadata: {
+          progress: 10,
+          password: 'secret_password',
+          email: 'test@example.com'
+        }
+      }
+    );
+    expect(typeof enriched.metadata).toBe('string');
+    const parsed = JSON.parse(enriched.metadata);
+    expect(parsed.progress).toBe(10);
+    expect(parsed.password).toBeUndefined();
+    expect(parsed.email).toBeUndefined();
+  });
+
+  it('E. eventVersion remains "1"', () => {
+    const enriched = service.enrichEvent({ eventType: EventType.PLAY, sessionId: 's', movieId: 'm' });
+    expect(enriched.eventVersion).toBe('1');
+  });
+
+  it('F. processSingleEvent should process and call kafka produceEvent', async () => {
     const result = await service.processSingleEvent({
       eventType: EventType.WATCH_PROGRESS,
       userId: 'usr_test',
@@ -70,7 +115,7 @@ describe('EventService', () => {
     expect(kafkaService.produceEvent).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw ServiceUnavailableException if kafka fails', async () => {
+  it('G. should throw ServiceUnavailableException if kafka fails', async () => {
     kafkaService.produceEvent = jest.fn().mockRejectedValue(new Error('Kafka down'));
 
     await expect(

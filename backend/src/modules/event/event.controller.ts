@@ -1,16 +1,18 @@
-import { Controller, Post, Body, Req, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Req, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { Request } from 'express';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { BatchEventDto } from './dto/batch-event.dto';
+import { OptionalFirebaseAuthGuard } from '../auth/optional-auth.guard';
 
 @ApiTags('Streaming Events')
 @Controller('events')
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 
+  @UseGuards(OptionalFirebaseAuthGuard)
   @Post()
   @Throttle({
     short: { limit: 100, ttl: 1000 },
@@ -25,9 +27,11 @@ export class EventController {
   async ingestEvent(@Body() dto: CreateEventDto, @Req() req: Request) {
     const clientIp = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || '';
     const userAgent = (req.headers['user-agent'] as string) || '';
-    return this.eventService.processSingleEvent(dto, clientIp, userAgent);
+    const authUserId = (req as any).user?.uid;
+    return this.eventService.processSingleEvent(dto, clientIp, userAgent, authUserId);
   }
 
+  @UseGuards(OptionalFirebaseAuthGuard)
   @Post('batch')
   @Throttle({
     short: { limit: 120, ttl: 1000 },
@@ -42,6 +46,7 @@ export class EventController {
   async ingestBatch(@Body() dto: BatchEventDto, @Req() req: Request) {
     const clientIp = (req.headers['x-forwarded-for'] as string) || req.socket.remoteAddress || '';
     const userAgent = (req.headers['user-agent'] as string) || '';
-    return this.eventService.processBatchEvents(dto.events, clientIp, userAgent);
+    const authUserId = (req as any).user?.uid;
+    return this.eventService.processBatchEvents(dto.events, clientIp, userAgent, authUserId);
   }
 }

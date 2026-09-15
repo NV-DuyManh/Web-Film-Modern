@@ -10,14 +10,14 @@ export interface EnrichedStreamingEvent {
   eventVersion: string;
   occurredAt: string;
   receivedAt: string;
-  userId?: string;
+  userId: string;
   anonymousId?: string;
   sessionId: string;
   movieId: string;
   episodeId: string;
   deviceType?: string;
   platform?: string;
-  metadata: Record<string, any>;
+  metadata: string;
   clientIp?: string;
   userAgent?: string;
 }
@@ -54,7 +54,7 @@ export class EventService {
     return sanitized;
   }
 
-  enrichEvent(dto: CreateEventDto, clientIp?: string, userAgent?: string): EnrichedStreamingEvent {
+  enrichEvent(dto: CreateEventDto, clientIp?: string, userAgent?: string, authUserId?: string): EnrichedStreamingEvent {
     let occurredAtIso: string;
     if (!dto.occurredAt) {
       occurredAtIso = new Date().toISOString();
@@ -66,27 +66,40 @@ export class EventService {
       occurredAtIso = isNaN(parsed.getTime()) ? new Date().toISOString() : parsed.toISOString();
     }
 
+    let finalUserId = authUserId;
+    if (!finalUserId) {
+      if (dto.userId) {
+        finalUserId = dto.userId;
+      } else if (dto.anonymousId) {
+        finalUserId = dto.anonymousId.startsWith('anon:') ? dto.anonymousId : `anon:${dto.anonymousId}`;
+      } else if (dto.sessionId) {
+        finalUserId = dto.sessionId.startsWith('session:') ? dto.sessionId : `session:${dto.sessionId}`;
+      } else {
+        finalUserId = `anon:unknown`;
+      }
+    }
+
     return {
       eventId: dto.eventId || uuidv4(),
       eventType: dto.eventType,
       eventVersion: dto.eventVersion || '1',
       occurredAt: occurredAtIso,
       receivedAt: new Date().toISOString(),
-      userId: dto.userId,
+      userId: finalUserId,
       anonymousId: dto.anonymousId,
-      sessionId: dto.sessionId,
+      sessionId: dto.sessionId || 'unknown',
       movieId: dto.movieId,
       episodeId: dto.episodeId || '',
       deviceType: dto.deviceType || 'unknown',
       platform: dto.platform || 'web',
-      metadata: this.sanitizeMetadata(dto.metadata),
+      metadata: JSON.stringify(this.sanitizeMetadata(dto.metadata)),
       clientIp: clientIp || '',
       userAgent: userAgent || '',
     };
   }
 
-  async processSingleEvent(dto: CreateEventDto, clientIp?: string, userAgent?: string) {
-    const event = this.enrichEvent(dto, clientIp, userAgent);
+  async processSingleEvent(dto: CreateEventDto, clientIp?: string, userAgent?: string, authUserId?: string) {
+    const event = this.enrichEvent(dto, clientIp, userAgent, authUserId);
     // Key by userId, anonymousId, or sessionId to preserve sequential order across partitions
     const partitionKey = event.userId || event.anonymousId || event.sessionId;
 
@@ -105,8 +118,8 @@ export class EventService {
     };
   }
 
-  async processBatchEvents(dtos: CreateEventDto[], clientIp?: string, userAgent?: string) {
-    const enrichedEvents = dtos.map((dto) => this.enrichEvent(dto, clientIp, userAgent));
+  async processBatchEvents(dtos: CreateEventDto[], clientIp?: string, userAgent?: string, authUserId?: string) {
+    const enrichedEvents = dtos.map((dto) => this.enrichEvent(dto, clientIp, userAgent, authUserId));
 
     const messages = enrichedEvents.map((event) => ({
       key: event.userId || event.anonymousId || event.sessionId,
