@@ -5,7 +5,7 @@ Phase 05 establishes the single source of truth for the MFILM Big Data telemetry
 
 ## 2. Final Phase 05 Status
 **PHASE 05 PARTIAL — ACTION REQUIRED BY OWNER**
-Code changes are complete, configuration drift has been fixed, and unit tests pass. However, public deployment validation and End-to-End browser tracking require the Owner to manually attach the Render and Vercel environments to the real Aiven/Tinybird clusters.
+Code changes are complete, configuration drift has been fixed, and unit tests pass. Render is live, Vercel is linked, remaining owner action is final browser/Tinybird acceptance only.
 
 ## 3. Previous Report Truth Audit
 | Claim | Previous Phase | Evidence Source | Actual Current State | Verdict | Correction Required |
@@ -53,7 +53,7 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 ## 9. Aiven Kafka Verification
 - **Verified**: Canonical topic `mfilm.behavior.v1` and REST endpoints exist (Owner Verified).
 - **Evidence**: Previous manual synthetic tests.
-- **Action Required**: Final E2E tests pending public backend deployment.
+- **Action Required**: Public backend path verified; final five-event production browser acceptance remains.
 
 ## 10. Tinybird Verification
 - **Verified**: Workspace `mfilm_bigdata` and pipes (`events_per_minute`, `active_movies_15m`) exist (Owner Verified).
@@ -102,7 +102,7 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 - Algorithms exist in codebase (`content-similarity.service.ts`) but cache and catalog are local.
 
 ## 20. MFILM Real Interaction Data Readiness
-- **Verdict**: SPARSE. The real MFILM production dataset is currently insufficient for robust collaborative filtering until Phase 02 is publicly deployed and populated.
+- **Verdict**: SPARSE. Production recommendation quality remains limited until sufficient real MFILM interaction data accumulates.
 
 ## 21. MovieLens Benchmark Classification
 - **Environment**: **LOCAL OFFLINE BENCHMARK**.
@@ -142,8 +142,34 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 ## 26. Rollback / Disable Flags
 - Disable telemetry globally: `VITE_BIGDATA_TELEMETRY_ENABLED=false` (Vercel).
 
-## 27. Recommendation for Phase 06
-- DO NOT START PHASE 06 until the owner successfully connects the Render backend to Vercel and tests real telemetry flow.
+## 27. Frontend Secret Exposure Audit
+- **State**: **PASS (SAFE)**
+- **Evidence**: `VITE_GROQ_API_KEYS` and `VITE_GEMINI_API_KEYS` are fully removed from `src/`. Zero occurrences of API keys in the generated `dist/` bundle. All AI requests safely route through the NestJS proxy (`POST /api/v1/ai/chat`). Remaining Vercel environment variables are orphaned and completely harmless.
+
+## 28. PWA / Stale Cache Recovery
+- **Note**: The Vite PWA configuration uses `autoUpdate`, `skipWaiting: true`, `clientsClaim: true`, and `navigateFallback: null`. This correctly forces the browser to discard old cached JS assets when a new build is deployed.
+- **Known Limitation**: Users with extremely stale active sessions might occasionally require one hard refresh if the browser strictly holds the old service worker lock, but general black-screen deadlocks are mitigated.
+
+## 29. Recommendation-Disabled Startup Defect
+- **State**: **FIXED (PASS)**
+- **Evidence**: `ContentSimilarityService` now safely checks `RECOMMENDATIONS_ENABLED=false` and skips PostgreSQL catalog initialization. `/api/v1/health/ready` truthfully returns `{ status: 'disabled' }` without throwing `ECONNREFUSED` crashes.
+
+## 30. Final Production Acceptance (Pending Owner)
+*The following fields must be manually verified and filled by the Owner to officially close Phase 05.*
+
+- **real production movieId**: `[Pending]`
+- **real sessionId**: `[Pending]`
+- **movie_view result**: `[Pending]`
+- **play result**: `[Pending]`
+- **pause result**: `[Pending]`
+- **seek result**: `[Pending]`
+- **watch_progress result**: `[Pending]`
+- **Tinybird ingest result**: `[Pending]`
+- **quarantine result**: `[Pending]`
+- **analytics pipe result**: `[Pending]`
+
+## 31. Recommendation for Phase 06
+- DO NOT START PHASE 06 until all five production browser events are verified in Tinybird, zero new quarantine is confirmed, analytics pipes are verified with a real movieId, and the frontend secret exposure audit passes.
 
 ## 28. Hotfix: DetailFilm Regression
 - **Runtime regression found in DetailFilm**: The movie detail page crashed and triggered the ErrorBoundary.
