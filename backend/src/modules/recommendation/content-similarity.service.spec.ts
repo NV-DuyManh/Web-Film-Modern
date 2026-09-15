@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ContentSimilarityService } from './content-similarity.service';
+import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
 
 describe('ContentSimilarityService', () => {
@@ -80,6 +81,12 @@ describe('ContentSimilarityService', () => {
         {
           provide: DatabaseService,
           useValue: mockDb,
+        },
+        {
+          provide: ConfigService,
+          useValue: {
+            get: jest.fn().mockReturnValue('true'),
+          },
         },
       ],
     }).compile();

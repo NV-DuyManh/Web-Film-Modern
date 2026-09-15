@@ -153,6 +153,8 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 ## 29. Recommendation-Disabled Startup Defect
 - **State**: **FIXED (PASS)**
 - **Evidence**: `ContentSimilarityService` now safely checks `RECOMMENDATIONS_ENABLED=false` and skips PostgreSQL catalog initialization. `/api/v1/health/ready` truthfully returns `{ status: 'disabled' }` without throwing `ECONNREFUSED` crashes.
+- **Disabled Endpoint Protection**: The `GET /api/v1/recommendations/for-you` route is now safely guarded. If `RECOMMENDATIONS_ENABLED=false`, it returns a controlled `503 Service Unavailable` without touching PostgreSQL or Valkey.
+- **Frontend State**: The "Dành cho bạn" section is intentionally hidden by a feature flag in Phase 05.
 
 ## 30. Final Production Acceptance (Pending Owner)
 *The following fields must be manually verified and filled by the Owner to officially close Phase 05.*

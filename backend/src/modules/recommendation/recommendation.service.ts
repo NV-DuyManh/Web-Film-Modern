@@ -1,4 +1,5 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
 import { RedisService } from '../redis/redis.service';
 import { AnalyticsService } from '../analytics/analytics.service';
@@ -34,6 +35,7 @@ export class RecommendationService {
     private readonly redis: RedisService,
     private readonly analytics: AnalyticsService,
     private readonly contentSimilarity: ContentSimilarityService,
+    private readonly configService: ConfigService,
   ) {}
 
   /**
@@ -41,6 +43,11 @@ export class RecommendationService {
    * Caches response in Valkey: mfilm:recommendations:user:<uid || 'anonymous'>.
    */
   async getRecommendations(userId: string | null, limit = 10): Promise<RecommendationResponse> {
+    const isEnabled = this.configService.get<string>('RECOMMENDATIONS_ENABLED');
+    if (isEnabled === 'false') {
+      throw new ServiceUnavailableException('Recommendations are currently disabled');
+    }
+
     const cacheKey = `mfilm:recommendations:user:${userId || 'anonymous'}`;
 
     try {
