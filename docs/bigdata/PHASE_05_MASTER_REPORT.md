@@ -157,6 +157,7 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 ## 30. Final Production Acceptance (Pending Owner)
 *The following fields must be manually verified and filled by the Owner to officially close Phase 05.*
 
+- **Vercel production commit**: `4174423` (or latest)
 - **real production movieId**: `[Pending]`
 - **real sessionId**: `[Pending]`
 - **movie_view result**: `[Pending]`
@@ -166,19 +167,23 @@ Code changes are complete, configuration drift has been fixed, and unit tests pa
 - **watch_progress result**: `[Pending]`
 - **Tinybird ingest result**: `[Pending]`
 - **quarantine result**: `[Pending]`
-- **analytics pipe result**: `[Pending]`
+- **events_per_minute result**: `[Pending]`
+- **active_movies_15m result**: `[Pending]`
+- **movie_event_breakdown result**: `[Pending]`
+- **recommendation-disabled startup result**: PASS (Verified)
+- **frontend secret audit result**: PASS (SAFE)
 
 ## 31. Recommendation for Phase 06
 - DO NOT START PHASE 06 until all five production browser events are verified in Tinybird, zero new quarantine is confirmed, analytics pipes are verified with a real movieId, and the frontend secret exposure audit passes.
 
-## 28. Hotfix: DetailFilm Regression
+## 32. Hotfix: DetailFilm Regression
 - **Runtime regression found in DetailFilm**: The movie detail page crashed and triggered the ErrorBoundary.
 - **Root cause**: `realMovieId` used before initialization (lexical scope block).
 - **Fix applied**: Initialization of `realMovieId` moved safely above hooks.
 - **Recommendation API**: Offline recommendations now degrade gracefully (handled natively without blocking the main render or playback).
 - **Verification Result**: Movie detail pages work again; builds pass; fallback for `ERR_CONNECTION_REFUSED` functions correctly without crashing.
 
-## 29. Hotfix: Telemetry movieId = [object Object]
+## 33. Hotfix: Telemetry movieId = [object Object]
 - **Bug**: Production browser originally sent `movieId="[object Object]"` for `movie_view` and `favorite` events.
 - **Root cause**: `DetailFilm.jsx` was calling `trackEvent('movie_view', { userId, movieId })` instead of passing `movieId` directly. This object was stringified by `eventTracker.js` using `String(movieId || 'none')`, resulting in `[object Object]`.
 - **Fix applied**: 
