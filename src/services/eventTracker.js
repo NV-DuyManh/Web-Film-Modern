@@ -100,6 +100,23 @@ function sanitizeMetadata(metadata = {}) {
 }
 
 /**
+ * Resolves a stable string identifier for a movie from various possible inputs.
+ */
+function resolveId(input, idFields = ['movieId', 'episodeId', 'id', '_id', 'slug']) {
+  if (input === null || input === undefined) return '';
+  if (typeof input === 'string') return input.trim();
+  if (typeof input === 'number') return String(input);
+  if (typeof input === 'object') {
+    for (const field of idFields) {
+      if (input[field] && (typeof input[field] === 'string' || typeof input[field] === 'number')) {
+        return String(input[field]).trim();
+      }
+    }
+  }
+  return '';
+}
+
+/**
  * Core dispatch function
  */
 export async function trackEvent(eventType, movieId = '', episodeId = '', metadata = {}, isExitEvent = false) {
@@ -128,6 +145,9 @@ export async function trackEvent(eventType, movieId = '', episodeId = '', metada
     movieViewThrottleMap.set(key, now);
   }
 
+  const finalMovieId = resolveId(movieId, ['movieId', 'id', '_id', 'slug']) || 'none';
+  const finalEpisodeId = resolveId(episodeId, ['episodeId', 'id', '_id', 'slug']);
+
   const userId = getUserId();
   const payload = {
     eventType,
@@ -136,8 +156,8 @@ export async function trackEvent(eventType, movieId = '', episodeId = '', metada
     userId: userId !== 'anonymous' ? userId : undefined,
     anonymousId: userId === 'anonymous' ? getAnonymousId() : undefined,
     sessionId: getSessionId(),
-    movieId: String(movieId || 'none'),
-    episodeId: String(episodeId || ''),
+    movieId: finalMovieId,
+    episodeId: finalEpisodeId,
     deviceType: getDeviceType(),
     platform: 'web',
     metadata: sanitizeMetadata(metadata),

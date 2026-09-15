@@ -201,3 +201,14 @@ After the synthetic test succeeds:
 - **Fix applied**: Initialization of `realMovieId` moved safely above hooks.
 - **Recommendation API**: Offline recommendations now degrade gracefully (handled natively without blocking the main render or playback).
 - **Verification Result**: Movie detail pages work again; builds pass; fallback for `ERR_CONNECTION_REFUSED` functions correctly without crashing.
+
+## 29. Hotfix: Telemetry movieId = [object Object]
+- **Bug**: Production browser originally sent `movieId="[object Object]"` for `movie_view` and `favorite` events.
+- **Root cause**: `DetailFilm.jsx` was calling `trackEvent('movie_view', { userId, movieId })` instead of passing `movieId` directly. This object was stringified by `eventTracker.js` using `String(movieId || 'none')`, resulting in `[object Object]`.
+- **Fix applied**: 
+  - Updated `DetailFilm.jsx` to pass the correct string positional argument.
+  - Hardened `eventTracker.js` with a new `resolveId` helper to defensively extract ID strings from object inputs, preventing any future `[object Object]` corruptions.
+- **Verification Result**: 
+  - Stable string `movieId` verified locally across `movie_view`, `play`, `pause`, `seek`, and `watch_progress` calls.
+  - Tinybird ingestion will process these correctly (zero quarantine) since `movieId` matches the expected string schema.
+  - Keep Phase 05 status PARTIAL until all five production browser event types are verified in Tinybird manually.

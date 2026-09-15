@@ -67,7 +67,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     useEffect(() => {
         if (realMovieId) {
-            trackEvent('movie_view', { userId: isLogin?.id, movieId: realMovieId });
+            trackEvent('movie_view', realMovieId);
         }
     }, [realMovieId, isLogin?.id]);
 
@@ -222,10 +222,10 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
             let newFavorites;
             if (currentFavorites.includes(realMovieId)) {
                 newFavorites = currentFavorites.filter(id => id !== realMovieId);
-                trackEvent('unfavorite', { userId: isLogin.id, movieId: realMovieId });
+                trackEvent('unfavorite', realMovieId);
             } else {
                 newFavorites = [...currentFavorites, realMovieId];
-                trackEvent('favorite', { userId: isLogin.id, movieId: realMovieId });
+                trackEvent('favorite', realMovieId);
             }
             await updateDocument("Users", { id: isLogin.id, listFavorite: newFavorites });
         } catch (error) {
