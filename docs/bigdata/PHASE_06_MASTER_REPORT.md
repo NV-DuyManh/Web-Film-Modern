@@ -57,7 +57,7 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 
 ### Root Cause B (CRITICAL): Email/password login does NOT create a Firebase Auth session
 - **Mechanism**: Email/password login verifies against Firestore `Users` collection directly and calls `loginByUser()` (stores to `localStorage.isLogin`). Does NOT call Firebase Auth `signInWithEmailAndPassword`. Therefore `getAuth().currentUser = null` for email/password users → `ForYou.jsx` sends no Bearer token → backend sees `authUid = null` → anonymous path only, favorites never consulted.
-- **Resolution** (pragmatic): Email/password users fall to the anonymous path and receive session-based recommendations. Their session events ARE stored under `sessionId` and the recommendation service unions them correctly. Favorites are not reachable without a verified token — this is the correct behavior for now. A full Firebase Auth integration for email/password is a future enhancement.
+- **Resolution** (FIXED in commit `3c3c6af`): `LogIn.jsx` now calls `signInWithEmailAndPassword()` after Firestore lookup. If Firebase Auth account doesn't exist yet, auto-provisions via `createUserWithEmailAndPassword()`. `Register.jsx` also creates Firebase Auth accounts at registration time. All email/password users now have `auth.currentUser` set → Bearer token available → verified `authUid` on backend → personalized recommendations with favorites.
 
 ### Root Cause C (SECONDARY): `listFavorite` entries may be objects, not plain strings
 - **Mechanism**: `getUserFavorites` called `data.listFavorite.map(String)`. If a Firestore entry was `{ id: "abc123", name: "..." }`, `String({id:"abc123"}) = "[object Object]"` — a string that never matches any movie in the content index. Every favorite entry became invalid → `seedIds = []` → `eligible=false`.
@@ -69,6 +69,28 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 
 ---
 
+## 2c. Account Isolation & Session Contamination Root Causes (Commit `3c3c6af`)
+
+### Root Cause E (CRITICAL): Same recommendations for different accounts — session contamination
+- **Mechanism**: Email/password users had no `auth.currentUser` → no Bearer token → fell to anonymous path. All email/password users in the same browser tab shared the same `sessionStorage`-based `mfilm_session_id`. When Account A logged out and Account B logged in on the same tab, both used the same `sess_X` → same anonymous behavior history → identical recommendations.
+- **Resolution**: (1) Email/password login now provisions Firebase Auth (`signInWithEmailAndPassword` / `createUserWithEmailAndPassword`), giving each user a unique verified `authUid`. (2) `rotateSessionId()` exported from `eventTracker.js` clears `mfilm_session_id` from sessionStorage on logout and account switch. Next anonymous session gets a fresh ID.
+
+### Root Cause F (CRITICAL): Crash on logout → re-login
+- **Mechanism**: `ForYou.jsx` had no `AbortController` on in-flight recommendation requests. `onAuthStateChanged` listeners fired asynchronously after effect cleanup, potentially calling `fetchRecommendations()` with stale closures. During rapid auth transitions (logout → login), `Swiper` could crash on stale/null `displayMovies` state. In-flight requests from Account A could resolve after Account B's state was set, overwriting B's cards with A's data.
+- **Resolution**: (1) `AbortController` cancels in-flight requests on cleanup. (2) `authEpoch` (monotonic counter from AuthProvider) captured at fetch-start; stale responses discarded if epoch changed. (3) `ForYouErrorBoundary` wraps the component — any render error fails silently instead of crashing the homepage. (4) Recommendations cleared immediately on epoch change before new fetch.
+
+### Session Rotation Policy (Implemented)
+- **First anonymous visit**: `sessionId = sess_X` (created in `sessionStorage`)
+- **Login A**: Previous guest events under `sess_X` remain in backend session store as supplementary context. Auth identity = `verifiedUidA` from Firebase Auth. Recommendation cache key = `mfilm:rec:auth:<verifiedUidA>:...`
+- **Logout A**: `signOut(auth)` clears Firebase Auth session. `rotateSessionId()` removes `mfilm_session_id` from `sessionStorage`. Frontend recommendation state cleared. `authEpoch` incremented.
+- **Login B**: Fresh `sessionId = sess_Y` (auto-generated on next `getSessionId()` call). Auth identity = `verifiedUidB`. Cache key = `mfilm:rec:auth:<verifiedUidB>:...`. No leakage from Account A.
+
+### Event Attribution
+- Authenticated events: `eventTracker.js` sends `Authorization: Bearer <token>` → backend `EventController` extracts `authUserId` from verified token → events stored under both `userInteractions[authUid]` and `sessionInteractions[sessionId]`.
+- Account A events are stored under `uidA`, Account B under `uidB` — never mixed.
+
+---
+
 ## 3. Final Phase 06 Status
 **PHASE 06 PARTIAL — PRODUCTION ACCEPTANCE REQUIRED**
 
@@ -76,14 +98,17 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 - **Heading-Only Bug Fixed**: **YES (CODE VERIFIED & TESTED)**.
 - **First-Click Unlock**: **CODE VERIFIED (PASS)**.
 - **Anonymous Behavior Personalization**: **CODE VERIFIED (PASS)**.
-- **Authenticated Personalization**: **CODE VERIFIED (PASS)**. Auth path bug fixed in commit `04ee983`.
+- **Authenticated Personalization**: **CODE VERIFIED (PASS)**. Auth path fixed (`04ee983`), account isolation fixed (`3c3c6af`).
+- **Firebase Auth for Email/Password**: **IMPLEMENTED** (`3c3c6af`). All login paths now produce `auth.currentUser`.
+- **Session Rotation**: **IMPLEMENTED** (`3c3c6af`). `rotateSessionId()` on logout/account-switch.
+- **ForYou Crash Fix**: **IMPLEMENTED** (`3c3c6af`). AbortController + authEpoch + ErrorBoundary.
 - **Durable History (Tinybird Fallback)**: **CODE VERIFIED (PASS)**.
 - **Insecure UID Fallback Removed**: **YES**.
-- **Backend Tests**: **11/11 Suites Passed (59/59 Tests)** (5 new auth regression tests added).
+- **Backend Tests**: **11/11 Suites Passed (59/59 Tests)**.
 - **Backend Build**: **PASS** (`nest build`).
 - **Frontend Build**: **PASS** (`vite build`).
-- **Definitive Production Commit**: `04ee983` — auth Bearer token injection, listFavorite normalization, session union, regression tests A-E.
-  - Render: awaiting owner manual deploy of `04ee983`.
+- **Definitive Production Commit**: `3c3c6af` — account isolation, Firebase Auth migration, session rotation, ForYou crash fix.
+  - Render: awaiting owner manual deploy of `3c3c6af`.
   - Vercel: awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true`.
 
 ---
@@ -238,9 +263,13 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | **04ee983** | Auth path fix; pushed to `origin/main`. Includes all prior Phase 06 commits. |
-| **Render Deployed Commit** | **Pending** | Awaiting owner manual deploy of `04ee983`. |
-| **Vercel Deployed Commit** | **Pending** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on `04ee983`. |
+| **Definitive Commit** | **3c3c6af** | Account isolation fix; pushed to `origin/main`. Includes all prior Phase 06 commits. |
+| **Render Deployed Commit** | **Pending** | Awaiting owner manual deploy of `3c3c6af`. |
+| **Vercel Deployed Commit** | **Pending** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on `3c3c6af`. |
+| **Email/password Firebase Auth** | **CODE VERIFIED** | `signInWithEmailAndPassword` + auto-provision at login/register. |
+| **Session rotation on logout** | **CODE VERIFIED** | `rotateSessionId()` clears `mfilm_session_id`, called on logout and account switch. |
+| **ForYou crash fix** | **CODE VERIFIED** | AbortController, authEpoch stale guard, ErrorBoundary. |
+| **Account A ≠ Account B isolation** | **CODE VERIFIED** | Different `verifiedUid`, different cache keys, session rotation prevents contamination. |
 | **Zero-signal user sees no “Dành cho bạn”** | **CODE VERIFIED** | Unit tested in Persona 0 & 3; returns `eligible: false`, `source: "none"`, `total: 0`, UI renders `null`. |
 | **First meaningful movie event unlocks it** | **CODE VERIFIED** | Unit tested in Persona 1; single `movie_view` in `EventService` immediately unlocks recommendations. |
 | **Anonymous recommendations use session events** | **CODE VERIFIED** | Unit tested in Persona 1 & 2; uses `sessionId` event history; excludes seeds; builds similarity. |
