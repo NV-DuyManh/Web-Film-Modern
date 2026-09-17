@@ -56,6 +56,23 @@ export function getSessionId() {
   }
 }
 
+/**
+ * Rotates the anonymous sessionId.
+ * Called on logout and account switch to prevent session history from leaking between accounts.
+ * The next call to getSessionId() will generate a fresh ID.
+ */
+export function rotateSessionId() {
+  try {
+    sessionStorage.removeItem('mfilm_session_id');
+  } catch {
+    // ignore storage errors
+  }
+  // Also reset throttle maps so the new session starts clean
+  progressThrottleMap.clear();
+  movieViewThrottleMap.clear();
+}
+
+
 function getUserId() {
   try {
     const userStr = localStorage.getItem('isLogin');

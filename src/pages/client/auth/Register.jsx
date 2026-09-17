@@ -9,7 +9,7 @@ import { addDocument, updateDocument } from '../../../services/firebaseService';
 import { UserContext } from '../../../contexts/UserProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { ROLES } from '../../../utils/Constants';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../../../config/firebaseConfig';
 
@@ -110,6 +110,19 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
         try {
             const { confirmPassword, ...submitData } = formData;
             const newUser = await addDocument("Users", submitData);
+
+            // Provision Firebase Auth account so the user gets a verified identity
+            // for personalized recommendations from their first session.
+            try {
+                const fbCred = await createUserWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+                // Store Firebase UID back to Firestore profile for future uid-based lookups
+                if (fbCred?.user?.uid && newUser?.id) {
+                    updateDocument('Users', { id: newUser.id, firebaseUid: fbCred.user.uid }).catch(() => {});
+                }
+            } catch {
+                // Firebase Auth provision failed — registration still succeeds via Firestore
+            }
+
             handleCloseRegister();
             loginByUser(newUser);
             showAuthSuccessToast(newUser, 'Đăng ký thành công');

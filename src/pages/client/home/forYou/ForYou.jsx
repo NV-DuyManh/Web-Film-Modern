@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState, useEffect, useRef } from 'react';
+import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -13,20 +13,50 @@ import { Link } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { trackEvent, getSessionId } from '../../../../services/eventTracker';
 
-function ForYou() {
+// ─── Minimal Error Boundary ────────────────────────────────────────────────────
+// Prevents any ForYou render/mapping error from crashing the entire homepage.
+class ForYouErrorBoundary extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { hasError: false };
+    }
+    static getDerivedStateFromError() {
+        return { hasError: true };
+    }
+    render() {
+        if (this.state.hasError) return null; // fail silently
+        return this.props.children;
+    }
+}
+
+function ForYouInner() {
     const movies = useMovies();
     const plans = useContext(PlanContext);
     const authContext = useContext(AuthContext);
     const isLogin = authContext?.isLogin;
+    // authEpoch increments on every login/logout/account-switch (provided by AuthProvider).
+    // Capturing it at fetch-start lets us discard stale responses from previous accounts.
+    const authEpoch = authContext?.authEpoch ?? 0;
+
     const [recommendations, setRecommendations] = useState([]);
     const [loading, setLoading] = useState(true);
     const viewedMoviesRef = useRef(new Set());
+    // Track the abort controller for the current in-flight request
+    const abortControllerRef = useRef(null);
 
     const RECOMMENDATIONS_ENABLED = import.meta.env?.VITE_RECOMMENDATIONS_ENABLED === 'true';
     const API_BASE_URL =
         import.meta.env?.VITE_API_BASE_URL ||
         import.meta.env?.VITE_EVENT_API_BASE_URL ||
         'https://mfilm-backend.onrender.com/api/v1';
+
+    // Clear recommendations and reset viewed set whenever the account changes.
+    // This ensures Account A's cards are never shown briefly under Account B.
+    useEffect(() => {
+        setRecommendations([]);
+        setLoading(true);
+        viewedMoviesRef.current = new Set();
+    }, [authEpoch]);
 
     useEffect(() => {
         if (!RECOMMENDATIONS_ENABLED) {
@@ -35,6 +65,15 @@ function ForYou() {
         }
 
         let isMounted = true;
+        // Capture epoch at effect-start: any response that arrives after epoch changes is stale
+        const epochAtFetchStart = authEpoch;
+
+        // Cancel any previous in-flight request
+        if (abortControllerRef.current) {
+            abortControllerRef.current.abort();
+        }
+        const controller = new AbortController();
+        abortControllerRef.current = controller;
 
         async function fetchRecommendations() {
             try {
@@ -46,8 +85,10 @@ function ForYou() {
                 if (user) {
                     try {
                         const token = await user.getIdToken();
+                        // Guard: if epoch changed during async getIdToken(), discard
+                        if (authContext?.authEpoch !== epochAtFetchStart) return;
                         headers['Authorization'] = `Bearer ${token}`;
-                    } catch (e) {
+                    } catch {
                         // proceed without token
                     }
                 }
@@ -64,44 +105,56 @@ function ForYou() {
                 }
 
                 const url = `${API_BASE_URL.replace(/\/+$/, '')}/recommendations/for-you?${queryParams.toString()}`;
-                const res = await fetch(url, { headers });
+                const res = await fetch(url, { headers, signal: controller.signal });
 
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
                 const data = await res.json();
-                if (isMounted) {
-                    // Zero-Signal Gating: If eligible is false or no items, clear recommendations
-                    if (data.success && data.eligible && Array.isArray(data.items) && data.items.length > 0) {
-                        setRecommendations(data.items);
-                    } else {
-                        setRecommendations([]);
-                    }
+
+                // Stale-response guard: discard if epoch changed since fetch started
+                // (e.g., user logged out or switched accounts while request was in-flight)
+                if (!isMounted) return;
+                if (authContext?.authEpoch !== epochAtFetchStart) return;
+
+                // Zero-Signal Gating: If eligible is false or no items, clear recommendations
+                if (data.success && data.eligible && Array.isArray(data.items) && data.items.length > 0) {
+                    setRecommendations(data.items);
+                } else {
+                    setRecommendations([]);
                 }
             } catch (err) {
-                // On error, clear recommendations (never fallback to generic popularity for "Dành cho bạn")
-                if (isMounted) {
+                if (err?.name === 'AbortError') return; // expected: request was cancelled
+                // On any other error, clear recommendations (never fallback to generic popularity)
+                if (isMounted && authContext?.authEpoch === epochAtFetchStart) {
                     setRecommendations([]);
                 }
             } finally {
-                if (isMounted) setLoading(false);
+                if (isMounted && authContext?.authEpoch === epochAtFetchStart) {
+                    setLoading(false);
+                }
             }
         }
 
         fetchRecommendations();
 
-        // Also listen for Firebase Auth state changes in case credentials hydrate asynchronously
-        const auth = getAuth();
-        const unsubscribe = onAuthStateChanged(auth, () => {
-            if (isMounted) {
+        // Also listen for Firebase Auth state changes in case credentials hydrate asynchronously.
+        // This handles the case where getAuth().currentUser is null when effect first runs
+        // but Firebase resolves the session shortly after (Google SSO restore on page load).
+        const firebaseAuth = getAuth();
+        const unsubscribe = onAuthStateChanged(firebaseAuth, () => {
+            if (isMounted && authContext?.authEpoch === epochAtFetchStart) {
                 fetchRecommendations();
             }
         });
 
         return () => {
             isMounted = false;
+            controller.abort();
             unsubscribe();
         };
-    }, [RECOMMENDATIONS_ENABLED, API_BASE_URL, isLogin?.id, isLogin?.listFavorite?.length]);
+    // Re-run whenever: feature flag, API URL, auth epoch, user id, or favorite count changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [RECOMMENDATIONS_ENABLED, API_BASE_URL, authEpoch, isLogin?.id, isLogin?.listFavorite?.length]);
 
     // Merge recommendation items with full catalog movies for rich presentation
     const displayMovies = useMemo(() => {
@@ -109,95 +162,108 @@ function ForYou() {
             return [];
         }
 
-        const seen = new Set();
-        return recommendations.map((item) => {
-            if (!item) return null;
-            const rawId = item.movieId || item.id;
-            const stableId = (typeof rawId === 'string' || typeof rawId === 'number')
-                ? String(rawId).trim()
-                : '';
-            if (!stableId || stableId === '[object Object]' || stableId === 'none') {
+        try {
+            const seen = new Set();
+            return recommendations.map((item) => {
+                if (!item) return null;
+                const rawId = item.movieId || item.id;
+                const stableId = (typeof rawId === 'string' || typeof rawId === 'number')
+                    ? String(rawId).trim()
+                    : '';
+                if (!stableId || stableId === '[object Object]' || stableId === 'none') {
+                    return null;
+                }
+
+                const itemSlug = typeof item.slug === 'string' ? item.slug.trim() : '';
+
+                // Enrich from catalog if movies from useMovies() are already loaded
+                const catalogMovie = Array.isArray(movies) && movies.length > 0
+                    ? movies.find((m) => {
+                        const mId = String(m?.id || '').trim();
+                        const mSlug = String(m?.slug || '').trim();
+                        return (mId && mId === stableId) || (itemSlug && mSlug && mSlug === itemSlug);
+                    })
+                    : null;
+
+                if (catalogMovie) {
+                    return {
+                        ...catalogMovie,
+                        id: stableId,
+                        slug: itemSlug || catalogMovie.slug,
+                        name: catalogMovie.name || item.name,
+                        otherName: catalogMovie.otherName || item.otherName || item.name,
+                        imgUrl: catalogMovie.imgUrl || item.imgUrl || item.img_url,
+                        bannerUrl: catalogMovie.bannerUrl || item.bannerUrl || item.banner_url || catalogMovie.imgUrl || item.imgUrl,
+                        reason: item.reason || 'Dành cho bạn',
+                        recScore: item.score,
+                        recSource: item.recommendationSource || 'hybrid',
+                    };
+                }
+
+                // Self-sufficient fallback directly from API payload
+                if (item.name && (item.imgUrl || item.img_url)) {
+                    return {
+                        id: stableId,
+                        slug: itemSlug || stableId,
+                        name: item.name,
+                        otherName: item.otherName || item.name,
+                        imgUrl: item.imgUrl || item.img_url,
+                        bannerUrl: item.bannerUrl || item.banner_url || item.imgUrl || item.img_url,
+                        reason: item.reason || 'Dành cho bạn',
+                        recScore: item.score,
+                        recSource: item.recommendationSource || 'hybrid',
+                    };
+                }
+
                 return null;
-            }
-
-            const itemSlug = typeof item.slug === 'string' ? item.slug.trim() : '';
-
-            // Enrich from catalog if movies from useMovies() are already loaded
-            const catalogMovie = Array.isArray(movies) && movies.length > 0
-                ? movies.find((m) => {
-                    const mId = String(m?.id || '').trim();
-                    const mSlug = String(m?.slug || '').trim();
-                    return (mId && mId === stableId) || (itemSlug && mSlug && mSlug === itemSlug);
-                })
-                : null;
-
-            if (catalogMovie) {
-                return {
-                    ...catalogMovie,
-                    id: stableId,
-                    slug: itemSlug || catalogMovie.slug,
-                    name: catalogMovie.name || item.name,
-                    otherName: catalogMovie.otherName || item.otherName || item.name,
-                    imgUrl: catalogMovie.imgUrl || item.imgUrl || item.img_url,
-                    bannerUrl: catalogMovie.bannerUrl || item.bannerUrl || item.banner_url || catalogMovie.imgUrl || item.imgUrl,
-                    reason: item.reason || 'Dành cho bạn',
-                    recScore: item.score,
-                    recSource: item.recommendationSource || 'hybrid',
-                };
-            }
-
-            // Self-sufficient fallback directly from API payload
-            if (item.name && (item.imgUrl || item.img_url)) {
-                return {
-                    id: stableId,
-                    slug: itemSlug || stableId,
-                    name: item.name,
-                    otherName: item.otherName || item.name,
-                    imgUrl: item.imgUrl || item.img_url,
-                    bannerUrl: item.bannerUrl || item.banner_url || item.imgUrl || item.img_url,
-                    reason: item.reason || 'Dành cho bạn',
-                    recScore: item.score,
-                    recSource: item.recommendationSource || 'hybrid',
-                };
-            }
-
-            return null;
-        }).filter((m) => {
-            if (!m) return false;
-            const id = String(m.id || '').trim();
-            if (!id || id === 'none' || seen.has(id)) return false;
-            seen.add(id);
-            return true;
-        });
+            }).filter((m) => {
+                if (!m) return false;
+                const id = String(m.id || '').trim();
+                if (!id || id === 'none' || seen.has(id)) return false;
+                seen.add(id);
+                return true;
+            });
+        } catch {
+            // Defensive: if any mapping error occurs, hide section rather than crash homepage
+            return [];
+        }
     }, [recommendations, movies]);
 
     // Emit recommendation_view telemetry for rendered items
     useEffect(() => {
         if (displayMovies && displayMovies.length > 0) {
             displayMovies.forEach((item) => {
-                const mId = String(item.id || item.movieId || '').trim();
-                if (mId && mId !== 'none' && !viewedMoviesRef.current.has(mId)) {
-                    viewedMoviesRef.current.add(mId);
-                    trackEvent('recommendation_view', mId, '', {
-                        reason: item.reason || 'Dành cho bạn',
-                        score: item.recScore || 0,
-                        source: item.recSource || 'hybrid',
-                    });
+                try {
+                    const mId = String(item.id || item.movieId || '').trim();
+                    if (mId && mId !== 'none' && !viewedMoviesRef.current.has(mId)) {
+                        viewedMoviesRef.current.add(mId);
+                        trackEvent('recommendation_view', mId, '', {
+                            reason: item.reason || 'Dành cho bạn',
+                            score: item.recScore || 0,
+                            source: item.recSource || 'hybrid',
+                        });
+                    }
+                } catch {
+                    // non-fatal telemetry error
                 }
             });
         }
     }, [displayMovies]);
 
-    const handleRecommendationClick = (item) => {
-        const mId = String(item.id || item.movieId || '').trim();
-        if (mId && mId !== 'none') {
-            trackEvent('recommendation_click', mId, '', {
-                reason: item.reason || 'Dành cho bạn',
-                score: item.recScore || 0,
-                source: item.recSource || 'hybrid',
-            });
+    const handleRecommendationClick = useCallback((item) => {
+        try {
+            const mId = String(item.id || item.movieId || '').trim();
+            if (mId && mId !== 'none') {
+                trackEvent('recommendation_click', mId, '', {
+                    reason: item.reason || 'Dành cho bạn',
+                    score: item.recScore || 0,
+                    source: item.recSource || 'hybrid',
+                });
+            }
+        } catch {
+            // non-fatal
         }
-    };
+    }, []);
 
     // Strictly hide the entire section if disabled, still loading, or no items to display
     // Invariant: Heading "Dành Cho Bạn" is NEVER rendered unless displayMovies has items
@@ -341,6 +407,15 @@ function ForYou() {
                 </button>
             </div>
         </div>
+    );
+}
+
+// Wrap in error boundary so any unexpected render error never crashes the homepage
+function ForYou() {
+    return (
+        <ForYouErrorBoundary>
+            <ForYouInner />
+        </ForYouErrorBoundary>
     );
 }
 

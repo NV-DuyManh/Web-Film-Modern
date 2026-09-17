@@ -7,7 +7,7 @@ import Logo2 from '../../../assets/Logo2.png';
 import Logo5 from '../../../assets/Logo5.png';
 import { UserContext } from '../../../contexts/UserProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../../../config/firebaseConfig';
 import { ROLES } from '../../../utils/Constants';
@@ -110,12 +110,29 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
         return false;
     };
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         if (validation()) return;
 
         const userLogin = users.find((e) => e.email === formData.email.trim() && e.password === formData.password);
         
         if (userLogin) {
+            // Establish verified Firebase Auth session so the user gets personalized
+            // recommendations via Bearer token (auth.currentUser will be set).
+            // Silently provision if the Firebase Auth account does not exist yet.
+            try {
+                await signInWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+            } catch (fbErr) {
+                if (fbErr.code === 'auth/user-not-found' || fbErr.code === 'auth/invalid-credential' || fbErr.code === 'auth/invalid-email') {
+                    // Auto-provision Firebase Auth account using existing Firestore credentials
+                    try {
+                        await createUserWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+                    } catch {
+                        // Firebase Auth provision failed — login still works via Firestore session
+                        // but personalized recommendations may fall back to session-based path
+                    }
+                }
+                // Other errors (network, etc.) — continue without Firebase Auth session
+            }
             loginByUser(userLogin);
             handleCloseLogin();
             showAuthSuccessToast(userLogin, 'Đăng nhập thành công');
