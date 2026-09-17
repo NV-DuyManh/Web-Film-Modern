@@ -13,6 +13,7 @@ export interface AppConfig {
     name: string;
   };
   redis: {
+    enabled: boolean;
     url?: string;
     tls: boolean;
     keyPrefix: string;
@@ -75,6 +76,7 @@ export default (): AppConfig => {
       name: process.env.DB_NAME || 'mfilm_db',
     },
     redis: {
+      enabled: process.env.VALKEY_ENABLED === 'true',
       url: process.env.VALKEY_URL || process.env.REDIS_URL,
       tls: process.env.REDIS_TLS === 'true' || Boolean(process.env.VALKEY_URL?.startsWith('rediss://')),
       keyPrefix: 'mfilm:',

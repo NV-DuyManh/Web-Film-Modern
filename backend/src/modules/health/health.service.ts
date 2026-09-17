@@ -13,11 +13,11 @@ export class HealthService {
 
   async check() {
     const isDbEnabled = process.env.POSTGRES_CATALOG_ENABLED !== 'false';
-    const isValkeyEnabled = process.env.RECOMMENDATIONS_ENABLED !== 'false';
+    const isValkeyEnabled = process.env.VALKEY_ENABLED === 'true';
 
     const [dbHealth, redisHealth, kafkaHealth] = await Promise.all([
       isDbEnabled ? this.dbService.isHealthy() : Promise.resolve({ status: 'disabled', message: 'Disabled via POSTGRES_CATALOG_ENABLED=false' }),
-      isValkeyEnabled ? this.redisService.isHealthy() : Promise.resolve({ status: 'disabled', message: 'Disabled via RECOMMENDATIONS_ENABLED=false' }),
+      isValkeyEnabled ? this.redisService.isHealthy() : Promise.resolve({ status: 'disabled', message: 'Disabled via VALKEY_ENABLED=false' }),
       this.kafkaService.isHealthy(),
     ]);
 

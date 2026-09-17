@@ -5,12 +5,19 @@ import Redis, { RedisOptions } from 'ioredis';
 @Injectable()
 export class RedisService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RedisService.name);
-  private client: Redis;
+  private client?: Redis;
+  private enabled = false;
 
   constructor(private readonly configService: ConfigService) {}
 
   onModuleInit() {
     const redisConfig = this.configService.get('redis');
+    this.enabled = redisConfig?.enabled ?? (process.env.VALKEY_ENABLED === 'true');
+
+    if (!this.enabled) {
+      this.logger.log('Valkey/Redis is explicitly disabled (VALKEY_ENABLED!=true). Skipping client connection.');
+      return;
+    }
 
     const redisOptions: RedisOptions = {
       keyPrefix: redisConfig.keyPrefix || 'mfilm:',
@@ -40,11 +47,6 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       this.logger.warn(`Valkey/Redis error: ${err.message}`);
     });
 
-    if (process.env.RECOMMENDATIONS_ENABLED === 'false') {
-      this.logger.log('Recommendations are explicitly disabled via RECOMMENDATIONS_ENABLED=false. Skipping initial Valkey/Redis connection check.');
-      return;
-    }
-
     this.client.connect().then(() => {
       this.logger.log('Connected successfully to Valkey/Redis store.');
     }).catch((err) => {
@@ -59,11 +61,14 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  getClient(): Redis {
+  getClient(): Redis | undefined {
     return this.client;
   }
 
   async get(key: string): Promise<string | null> {
+    if (!this.enabled || !this.client) {
+      return null;
+    }
     try {
       return await this.client.get(key);
     } catch {
@@ -72,6 +77,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   async set(key: string, value: string, ttlSeconds?: number): Promise<void> {
+    if (!this.enabled || !this.client) {
+      return;
+    }
     try {
       if (ttlSeconds) {
         await this.client.set(key, value, 'EX', ttlSeconds);
@@ -84,6 +92,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   }
 
   async del(key: string): Promise<void> {
+    if (!this.enabled || !this.client) {
+      return;
+    }
     try {
       await this.client.del(key);
     } catch (err: any) {
@@ -91,7 +102,10 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  async isHealthy(): Promise<{ status: string; latencyMs?: number; error?: string }> {
+  async isHealthy(): Promise<{ status: string; latencyMs?: number; error?: string; message?: string }> {
+    if (!this.enabled || !this.client) {
+      return { status: 'disabled', message: 'Disabled via VALKEY_ENABLED=false' };
+    }
     const start = Date.now();
     try {
       const pong = await this.client.ping();
