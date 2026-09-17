@@ -10,14 +10,15 @@ This report provides a strict, truth-first audit separating **CODE VERIFIED** co
 ## 2. Final Phase 06 Status
 **PHASE 06 PARTIAL — PRODUCTION ACCEPTANCE REQUIRED**
 
-While all core recommendation code, Firestore catalog indexing, in-process caching, and telemetry tracking are fully implemented and verified with 34/34 passing unit tests and clean production builds, live production acceptance is awaiting deployment:
-- **Render Backend Production Commit**: Currently deployed at `e489732` (Phase 05 commit). Local commit `70657d4` is prepared and ready to push.
-- **Vercel Frontend Production Commit**: Currently deployed at `e489732`. Local commit `70657d4` is prepared and ready to push.
-- **Live Render Recommendation Endpoint**: Currently returns `HTTP 200 {"success":false,"userId":null,"source":"popularity","cached":false,"total":0,"items":[]}` because commit `e489732` still attempts to query offline local PostgreSQL.
+While core recommendation code, Firestore catalog indexing, bounded in-process caching, and telemetry tracking are fully implemented and verified with 43/43 passing unit tests and clean production builds, live production acceptance requires the two final deployment steps:
+- **Render Backend Production Commit**: Currently deployed at `c375370`. Commit `bb96961` (containing Valkey decoupling fix `b232a21` and `8f4f569`) is pushed to `origin/main` and ready for Render manual deploy to silence localhost Redis retries and turn `/health/ready` to `ready`.
+- **Vercel Frontend Production Commit**: Currently deployed at `c375370`. "Dành cho bạn" is dormant until `VITE_RECOMMENDATIONS_ENABLED=true` is set and deployed on Vercel.
+- **Live Render Recommendation Endpoint**: **PRODUCTION VERIFIED (PASS)**. Returns `HTTP 200` with `success: true`, `total: 15`, `source: "popularity"`, and 15 real movies indexed from Firestore catalog.
 - **Live Vercel Frontend UI**: "Dành cho bạn" section remains hidden because `VITE_RECOMMENDATIONS_ENABLED=true` is pending deployment.
-- **Recommendation Telemetry in Live Production**: `recommendation_view` and `recommendation_click` are verified in code and unit tests, but live browser -> Kafka -> Tinybird verification requires production deployment.
+- **Recommendation Telemetry in Live Production**: `recommendation_view` and `recommendation_click` are verified in code and unit tests; live browser and Tinybird validation awaits Vercel deployment.
+- **Authenticated Personalization**: Marked **OWNER VERIFICATION DEFERRED** (non-blocking for practical acceptance).
 
-Full transition to `PHASE 06 COMPLETE` will occur once the owner pushes commit `70657d4` to `origin/main` and validates the live browser telemetry.
+Full transition to `PHASE 06 COMPLETE — PRACTICAL ACCEPTANCE` will occur once the owner triggers the Render deploy of `bb96961` and enables `VITE_RECOMMENDATIONS_ENABLED=true` on Vercel.
 
 ---
 
@@ -51,8 +52,8 @@ Local PostgreSQL and Valkey require running Docker on an owner workstation or pr
 | **User Preferences** | PostgreSQL `user_movie_interactions` & `favorites` | **Firestore `Users/${userId}` (`listFavorite`) + Tinybird events** | CODE VERIFIED | Real user favorites captured in Firestore document; zero additional infrastructure needed. |
 | **Behavioral Trending** | Static SQL views or mock counts | **Tinybird (`active_movies_15m.pipe`)** | CODE VERIFIED / OPTIONAL FALLBACK | Real-time rolling 15-minute behavioral stream. If Tinybird is unreachable, gracefully falls back to catalog popularity. |
 | **Recommendation Cache**| Local Valkey (`localhost:6380`) | **Bounded In-Process LRU Memory Cache (100 entries, 3600s TTL)** | CODE VERIFIED | Fast (<1ms), consumes <1MB RAM on Render Free, zero network latency, gracefully evicts. |
-| **API Runtime** | Local NestJS dev server | **Render NestJS Free Web Service** | LIVE (v e489732) | Public HTTPS endpoint with CORS enabled for `https://www.mfilm.online`. |
-| **Frontend UI** | Hidden section | **Vercel Production Web App** | LIVE (v e489732) | Dynamic Swiper carousel with rich metadata, plan badges, and full telemetry tracking. |
+| **API Runtime** | Local NestJS dev server | **Render NestJS Free Web Service** | LIVE (v c375370) | Public HTTPS endpoint with CORS enabled for `https://www.mfilm.online`. |
+| **Frontend UI** | Hidden section | **Vercel Production Web App** | LIVE (v c375370) | Dynamic Swiper carousel with rich metadata, plan badges, and full telemetry tracking. |
 
 ---
 
@@ -298,26 +299,24 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
 
 ## 18. Exact Owner Actions Required for Final Acceptance
 
-To achieve `PHASE 06 COMPLETE`, the repository owner must execute the following deployment steps:
+To achieve `PHASE 06 COMPLETE — PRACTICAL ACCEPTANCE`, the repository owner must execute the following two deployment steps:
 
-1. **Push & Deploy Step 2C Valkey Fix**:
-   - In terminal, push commit `b232a21`:
-     ```bash
-     git push origin main
-     ```
-   - In [Render Dashboard](https://dashboard.render.com), trigger **Manual Deploy -> Deploy latest commit** for `mfilm-backend` (or wait for auto-deploy).
-   - Once Live, verify `/api/v1/health/ready` returns `valkey: { status: 'disabled' }` and overall status is `ready`. Confirm Render logs have 0 localhost Redis retry warnings.
+1. **Deploy Valkey Cleanup to Render**:
+   - In [Render Dashboard](https://dashboard.render.com), open `mfilm-backend`.
+   - Click **Manual Deploy** -> **Deploy latest commit** (deploys `bb96961` containing the Valkey decoupling fix `b232a21`).
+   - Confirm environment variable `VALKEY_ENABLED=false`.
+   - Wait until deployment status becomes **Live**.
+   - Verify `/api/v1/health/ready` returns `valkey: { status: 'disabled' }` and overall status `ready`. Confirm Render logs show zero localhost:6380 retry warnings.
 
-2. **Vercel Frontend Activation (Step 3)**:
-   - In the [Vercel Dashboard](https://vercel.com), open `mfilm`.
-   - In **Settings** -> **Environment Variables**, set:
+2. **Enable Frontend Recommendations on Vercel**:
+   - In [Vercel Dashboard](https://vercel.com), open `mfilm` / `web-film-modern`.
+   - Go to **Settings** -> **Environment Variables**.
+   - Set for Production:
      `VITE_RECOMMENDATIONS_ENABLED=true`
-   - Trigger a redeployment of the latest `main` branch.
-
-3. **Live Browser Acceptance Verification**:
-   - Open `https://www.mfilm.online`.
-   - Confirm "Dành cho bạn" renders visibly with real movie cards.
-   - Open DevTools -> Network -> filter `events`.
-   - Verify `recommendation_view` fires with `HTTP 202`.
-   - Click a recommended movie card, verify navigation occurs and `recommendation_click` fires with `HTTP 202`.
-   - Check Tinybird `mfilm_behavior` datasource to verify both events appear.
+   - Trigger a redeployment of latest `main` branch.
+   - Once deployment is Ready:
+     - Open `https://www.mfilm.online`.
+     - Confirm "Dành cho bạn" section is visibly rendered with real movie cards.
+     - In DevTools Network tab, verify `recommendation_view` fires with `HTTP 202`.
+     - Click one recommended movie card, verify `recommendation_click` fires with `HTTP 202` and navigates to the movie.
+     - Confirm both events appear in Tinybird `mfilm_behavior`.
