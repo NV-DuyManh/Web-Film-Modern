@@ -1,6 +1,8 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
+import { initializeApp, getApps, getApp } from 'firebase/app';
+import { getFirestore, collection, getDocs, doc, getDoc, Firestore } from 'firebase/firestore';
 
 export interface MovieContentProfile {
   id: string;
@@ -30,6 +32,15 @@ export interface SimilarMovieCandidate {
   sharedActors: string[];
 }
 
+const FIREBASE_CONFIG = {
+  apiKey: process.env.FIREBASE_API_KEY || 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk',
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN || 'manhfilm-105b3.firebaseapp.com',
+  projectId: process.env.FIREBASE_PROJECT_ID || 'manhfilm-105b3',
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'manhfilm-105b3.firebasestorage.app',
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || '812294175210',
+  appId: process.env.FIREBASE_APP_ID || '1:812294175210:web:9f8795c9cbfa2b486ada93',
+};
+
 @Injectable()
 export class ContentSimilarityService implements OnModuleInit {
   private readonly logger = new Logger(ContentSimilarityService.name);
@@ -38,139 +49,278 @@ export class ContentSimilarityService implements OnModuleInit {
   private movieVectorNorms = new Map<string, number>();
   private invertedIndex = new Map<string, Array<{ movieId: string; weight: number }>>();
   private isInitialized = false;
+  private firestoreDb: Firestore | null = null;
 
   constructor(
     private readonly db: DatabaseService,
     private readonly configService: ConfigService,
-  ) {}
+  ) {
+    this.initFirestore();
+  }
+
+  private initFirestore() {
+    try {
+      const app = getApps().length > 0 ? getApp() : initializeApp(FIREBASE_CONFIG);
+      this.firestoreDb = getFirestore(app);
+    } catch (err: any) {
+      this.logger.warn(`Firestore initialization deferred: ${err.message}`);
+    }
+  }
 
   async onModuleInit() {
     const isRecommendationsEnabled = this.configService.get<string>('RECOMMENDATIONS_ENABLED') !== 'false';
     if (!isRecommendationsEnabled) {
-      this.logger.log('[ContentSimilarity] Recommendations disabled. Skipping PostgreSQL catalog index refresh.');
+      this.logger.log('[ContentSimilarity] Recommendations disabled. Skipping catalog index refresh.');
       return;
     }
     await this.refreshCatalogIndex();
   }
 
   /**
-   * Refreshes the in-memory content-based index from PostgreSQL.
+   * Refreshes the in-memory content-based index.
+   * Order:
+   * 1. If POSTGRES_CATALOG_ENABLED=true and DB returns data (local dev / testing), use PostgreSQL.
+   * 2. Otherwise ($0 Production on Render), fetch directly from Firebase Firestore.
    */
   async refreshCatalogIndex(): Promise<number> {
     const t0 = Date.now();
+    const isPostgresEnabled = this.configService.get<string>('POSTGRES_CATALOG_ENABLED') === 'true';
+
+    // Path 1: PostgreSQL (if explicitly enabled)
+    if (isPostgresEnabled) {
+      try {
+        const pgProfiles = await this.fetchFromPostgres();
+        if (pgProfiles.length > 0) {
+          this.buildIndex(pgProfiles);
+          this.logger.log(`[ContentSimilarity] Indexed ${pgProfiles.length} movies from PostgreSQL in ${Date.now() - t0}ms`);
+          return pgProfiles.length;
+        }
+      } catch (err: any) {
+        this.logger.warn(`[ContentSimilarity] PostgreSQL catalog fetch failed: ${err.message}. Falling back to Firestore.`);
+      }
+    }
+
+    // Path 2: Firebase Firestore ($0 Cloud Production Source of Truth)
     try {
-      const query = `
-        SELECT 
-          m.id, 
-          m.name, 
-          m.slug, 
-          m.description, 
-          m.img_url, 
-          m.banner_url, 
-          m.views, 
-          m.rating, 
-          m.is_hot,
-          co.name as country,
-          COALESCE(array_agg(DISTINCT c.name) FILTER (WHERE c.name IS NOT NULL), ARRAY[]::text[]) as categories,
-          COALESCE(array_agg(DISTINCT a.name) FILTER (WHERE a.name IS NOT NULL), ARRAY[]::text[]) as actors,
-          COALESCE(array_agg(DISTINCT au.name) FILTER (WHERE au.name IS NOT NULL), ARRAY[]::text[]) as authors
-        FROM movies m
-        LEFT JOIN countries co ON m.country_id = co.id
-        LEFT JOIN movie_categories mc ON m.id = mc.movie_id
-        LEFT JOIN categories c ON mc.category_id = c.id
-        LEFT JOIN movie_actors ma ON m.id = ma.movie_id
-        LEFT JOIN actors a ON ma.actor_id = a.id
-        LEFT JOIN movie_authors mau ON m.id = mau.movie_id
-        LEFT JOIN authors au ON mau.author_id = au.id
-        GROUP BY m.id, co.name;
-      `;
+      const firestoreProfiles = await this.fetchFromFirestore();
+      if (firestoreProfiles.length > 0) {
+        this.buildIndex(firestoreProfiles);
+        this.logger.log(`[ContentSimilarity] Indexed ${firestoreProfiles.length} movies from Firestore in ${Date.now() - t0}ms`);
+        return firestoreProfiles.length;
+      }
+    } catch (err: any) {
+      this.logger.error(`[ContentSimilarity] Firestore catalog fetch failed: ${err.message}`);
+    }
 
-      const result = await this.db.query(query);
-      const rows = result.rows;
+    this.logger.warn('[ContentSimilarity] No movies indexed from any source.');
+    return 0;
+  }
 
-      this.moviesMap.clear();
-      this.movieVectors.clear();
-      this.movieVectorNorms.clear();
-      this.invertedIndex.clear();
+  private async fetchFromPostgres(): Promise<MovieContentProfile[]> {
+    const query = `
+      SELECT 
+        m.id, 
+        m.name, 
+        m.slug, 
+        m.description, 
+        m.img_url, 
+        m.banner_url, 
+        m.views, 
+        m.rating, 
+        m.is_hot,
+        co.name as country,
+        COALESCE(array_agg(DISTINCT c.name) FILTER (WHERE c.name IS NOT NULL), ARRAY[]::text[]) as categories,
+        COALESCE(array_agg(DISTINCT a.name) FILTER (WHERE a.name IS NOT NULL), ARRAY[]::text[]) as actors,
+        COALESCE(array_agg(DISTINCT au.name) FILTER (WHERE au.name IS NOT NULL), ARRAY[]::text[]) as authors
+      FROM movies m
+      LEFT JOIN countries co ON m.country_id = co.id
+      LEFT JOIN movie_categories mc ON m.id = mc.movie_id
+      LEFT JOIN categories c ON mc.category_id = c.id
+      LEFT JOIN movie_actors ma ON m.id = ma.movie_id
+      LEFT JOIN actors a ON ma.actor_id = a.id
+      LEFT JOIN movie_authors mau ON m.id = mau.movie_id
+      LEFT JOIN authors au ON mau.author_id = au.id
+      GROUP BY m.id, co.name;
+    `;
+    const result = await this.db.query(query);
+    return (result.rows || []).map((r: any) => ({
+      id: r.id,
+      name: r.name,
+      slug: r.slug,
+      imgUrl: r.img_url,
+      bannerUrl: r.banner_url,
+      country: r.country,
+      categories: r.categories || [],
+      actors: r.actors || [],
+      authors: r.authors || [],
+      description: r.description || '',
+      views: parseInt(r.views || '0', 10),
+      rating: parseFloat(r.rating || '0'),
+      isHot: Boolean(r.is_hot),
+    }));
+  }
 
-      for (const r of rows) {
-        const profile: MovieContentProfile = {
-          id: r.id,
-          name: r.name,
-          slug: r.slug,
-          imgUrl: r.img_url,
-          bannerUrl: r.banner_url,
-          country: r.country,
-          categories: r.categories || [],
-          actors: r.actors || [],
-          authors: r.authors || [],
-          description: r.description || '',
-          views: parseInt(r.views || '0', 10),
-          rating: parseFloat(r.rating || '0'),
-          isHot: Boolean(r.is_hot),
-        };
-        this.moviesMap.set(profile.id, profile);
+  private async fetchFromFirestore(): Promise<MovieContentProfile[]> {
+    if (!this.firestoreDb) {
+      this.initFirestore();
+      if (!this.firestoreDb) return [];
+    }
 
-        // Build feature vector
-        const vector = new Map<string, number>();
+    // Parallel fetch for Category, Actor, Author name dictionaries
+    const [catSnap, actorSnap, authorSnap, movieSnap] = await Promise.all([
+      getDocs(collection(this.firestoreDb, 'Categories')).catch(() => null),
+      getDocs(collection(this.firestoreDb, 'Actors')).catch(() => null),
+      getDocs(collection(this.firestoreDb, 'Authors')).catch(() => null),
+      getDocs(collection(this.firestoreDb, 'Movies')),
+    ]);
 
-        // Category features (Weight 3.0)
-        for (const cat of profile.categories) {
-          const key = `cat:${cat.toLowerCase().trim()}`;
-          vector.set(key, (vector.get(key) || 0) + 3.0);
-        }
+    const catMap = new Map<string, string>();
+    if (catSnap) {
+      catSnap.forEach((d) => catMap.set(d.id, d.data().name || d.id));
+    }
 
-        // Actor features (Weight 2.0)
-        for (const actor of profile.actors) {
-          const key = `actor:${actor.toLowerCase().trim()}`;
-          vector.set(key, (vector.get(key) || 0) + 2.0);
-        }
+    const actorMap = new Map<string, string>();
+    if (actorSnap) {
+      actorSnap.forEach((d) => actorMap.set(d.id, d.data().name || d.id));
+    }
 
-        // Author / Director features (Weight 2.5)
-        for (const author of profile.authors) {
-          const key = `author:${author.toLowerCase().trim()}`;
-          vector.set(key, (vector.get(key) || 0) + 2.5);
-        }
+    const authorMap = new Map<string, string>();
+    if (authorSnap) {
+      authorSnap.forEach((d) => authorMap.set(d.id, d.data().name || d.id));
+    }
 
-        // Country feature (Weight 1.5)
-        if (profile.country) {
-          const key = `country:${profile.country.toLowerCase().trim()}`;
-          vector.set(key, (vector.get(key) || 0) + 1.5);
-        }
+    const profiles: MovieContentProfile[] = [];
+    movieSnap.forEach((docSnap) => {
+      const d = docSnap.data();
+      const rawCategories: string[] = Array.isArray(d.listCategory) ? d.listCategory : [];
+      const rawActors: string[] = Array.isArray(d.listActor) ? d.listActor : [];
+      const rawAuthors: string[] = Array.isArray(d.listAuthor) ? d.listAuthor : [];
 
-        // Title token features (Weight 1.0)
-        const tokens = this.tokenizeText(profile.name + ' ' + (profile.description || '').slice(0, 200));
-        for (const token of tokens) {
-          const key = `token:${token}`;
-          vector.set(key, (vector.get(key) || 0) + 1.0);
-        }
+      const categories = rawCategories.map((id) => catMap.get(id) || id).filter(Boolean);
+      const actors = rawActors.map((id) => actorMap.get(id) || id).filter(Boolean);
+      const authors = rawAuthors.map((id) => authorMap.get(id) || id).filter(Boolean);
 
-        // Compute vector L2 norm
-        let sumSq = 0;
-        for (const w of vector.values()) {
-          sumSq += w * w;
-        }
-        const norm = Math.sqrt(sumSq) || 1.0;
+      profiles.push({
+        id: docSnap.id,
+        name: d.name || d.otherName || 'Phim MFILM',
+        slug: d.slug || docSnap.id,
+        imgUrl: d.imgUrl || '',
+        bannerUrl: d.bannerUrl || '',
+        country: d.countriesID || d.country || '',
+        categories: categories.length > 0 ? categories : (d.categories || []),
+        actors: actors.length > 0 ? actors : (d.actors || []),
+        authors: authors.length > 0 ? authors : (d.authors || []),
+        description: d.description || '',
+        views: parseInt(d.views || '0', 10),
+        rating: parseFloat(d.rating || '0'),
+        isHot: Boolean(d.isHot),
+      });
+    });
 
-        this.movieVectors.set(profile.id, vector);
-        this.movieVectorNorms.set(profile.id, norm);
+    return profiles;
+  }
 
-        // Update inverted index for fast candidate retrieval
-        for (const [featKey, w] of vector.entries()) {
-          if (!this.invertedIndex.has(featKey)) {
-            this.invertedIndex.set(featKey, []);
-          }
-          this.invertedIndex.get(featKey)!.push({ movieId: profile.id, weight: w });
-        }
+  /**
+   * Builds TF-IDF style vector representations and inverted postings index.
+   */
+  private buildIndex(profiles: MovieContentProfile[]) {
+    this.moviesMap.clear();
+    this.movieVectors.clear();
+    this.movieVectorNorms.clear();
+    this.invertedIndex.clear();
+
+    for (const profile of profiles) {
+      this.moviesMap.set(profile.id, profile);
+
+      const vector = new Map<string, number>();
+
+      // Category features (Weight 3.0)
+      for (const cat of profile.categories) {
+        const key = `cat:${String(cat).toLowerCase().trim()}`;
+        vector.set(key, (vector.get(key) || 0) + 3.0);
       }
 
-      this.isInitialized = true;
-      this.logger.log(`[ContentSimilarity] Indexed ${rows.length} movies in ${Date.now() - t0}ms`);
-      return rows.length;
-    } catch (err: any) {
-      this.logger.error(`Failed to refresh catalog index: ${err.message}`, err.stack);
-      return 0;
+      // Actor features (Weight 2.0)
+      for (const actor of profile.actors) {
+        const key = `actor:${String(actor).toLowerCase().trim()}`;
+        vector.set(key, (vector.get(key) || 0) + 2.0);
+      }
+
+      // Author / Director features (Weight 2.5)
+      for (const author of profile.authors) {
+        const key = `author:${String(author).toLowerCase().trim()}`;
+        vector.set(key, (vector.get(key) || 0) + 2.5);
+      }
+
+      // Country feature (Weight 1.5)
+      if (profile.country) {
+        const key = `country:${String(profile.country).toLowerCase().trim()}`;
+        vector.set(key, (vector.get(key) || 0) + 1.5);
+      }
+
+      // Title token features (Weight 1.0)
+      const tokens = this.tokenizeText(`${profile.name} ${profile.description || ''}`.slice(0, 300));
+      for (const token of tokens) {
+        const key = `token:${token}`;
+        vector.set(key, (vector.get(key) || 0) + 1.0);
+      }
+
+      let sumSq = 0;
+      for (const w of vector.values()) {
+        sumSq += w * w;
+      }
+      const norm = Math.sqrt(sumSq) || 1.0;
+
+      this.movieVectors.set(profile.id, vector);
+      this.movieVectorNorms.set(profile.id, norm);
+
+      for (const [featKey, w] of vector.entries()) {
+        if (!this.invertedIndex.has(featKey)) {
+          this.invertedIndex.set(featKey, []);
+        }
+        this.invertedIndex.get(featKey)!.push({ movieId: profile.id, weight: w });
+      }
     }
+
+    this.isInitialized = true;
+  }
+
+  /**
+   * Get top movies sorted by popularity (views, rating, hot status), excluding specified IDs.
+   */
+  getTopMoviesByViews(limit = 10, excludeIds: Set<string> = new Set()): MovieContentProfile[] {
+    return Array.from(this.moviesMap.values())
+      .filter((m) => !excludeIds.has(m.id))
+      .sort((a, b) => {
+        const scoreA = (a.views || 0) * 0.5 + (a.rating || 0) * 100 + (a.isHot ? 1000 : 0);
+        const scoreB = (b.views || 0) * 0.5 + (b.rating || 0) * 100 + (b.isHot ? 1000 : 0);
+        return scoreB - scoreA;
+      })
+      .slice(0, limit);
+  }
+
+  /**
+   * Retrieve user favorite movie IDs from Firestore Users collection.
+   */
+  async getUserFavorites(userId: string): Promise<string[]> {
+    if (!this.firestoreDb) {
+      this.initFirestore();
+      if (!this.firestoreDb) return [];
+    }
+
+    try {
+      const userRef = doc(this.firestoreDb, 'Users', userId);
+      const snap = await getDoc(userRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        if (Array.isArray(data?.listFavorite)) {
+          return data.listFavorite.filter(Boolean);
+        }
+      }
+    } catch (err: any) {
+      this.logger.warn(`Could not fetch favorites for user ${userId}: ${err.message}`);
+    }
+    return [];
   }
 
   /**

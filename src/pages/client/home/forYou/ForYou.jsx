@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React, { useContext, useMemo, useState, useEffect, useRef } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
@@ -10,15 +10,20 @@ import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 import { getAuth } from 'firebase/auth';
+import { trackEvent } from '../../../../services/eventTracker';
 
 function ForYou() {
     const movies = useMovies();
     const plans = useContext(PlanContext);
     const [recommendations, setRecommendations] = useState([]);
     const [loading, setLoading] = useState(true);
+    const viewedMoviesRef = useRef(new Set());
 
     const RECOMMENDATIONS_ENABLED = import.meta.env?.VITE_RECOMMENDATIONS_ENABLED === 'true';
-    const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
+    const API_BASE_URL =
+        import.meta.env?.VITE_API_BASE_URL ||
+        import.meta.env?.VITE_EVENT_API_BASE_URL ||
+        'https://mfilm-backend.onrender.com/api/v1';
 
     useEffect(() => {
         if (!RECOMMENDATIONS_ENABLED) {
@@ -74,6 +79,7 @@ function ForYou() {
         if (!movies || movies.length === 0) return [];
 
         if (recommendations.length > 0) {
+            const seen = new Set();
             const mapped = recommendations.map((item) => {
                 const catalogMovie = movies.find((m) => m.id === item.movieId || m.slug === item.slug);
                 if (catalogMovie) {
@@ -81,6 +87,7 @@ function ForYou() {
                         ...catalogMovie,
                         reason: item.reason || 'Dành cho bạn',
                         recScore: item.score,
+                        recSource: item.recommendationSource || 'hybrid',
                     };
                 }
                 if (item.name && (item.imgUrl || item.img_url)) {
@@ -92,10 +99,17 @@ function ForYou() {
                         imgUrl: item.imgUrl || item.img_url,
                         reason: item.reason || 'Dành cho bạn',
                         recScore: item.score,
+                        recSource: item.recommendationSource || 'hybrid',
                     };
                 }
                 return null;
-            }).filter(Boolean);
+            }).filter((m) => {
+                if (!m) return false;
+                const id = String(m.id || m.movieId || '');
+                if (seen.has(id)) return false;
+                seen.add(id);
+                return true;
+            });
 
             if (mapped.length > 0) return mapped;
         }
@@ -107,8 +121,37 @@ function ForYou() {
             .map((m) => ({
                 ...m,
                 reason: 'Phim được yêu thích nhất',
+                recSource: 'popularity',
             }));
     }, [recommendations, movies]);
+
+    // Emit recommendation_view telemetry for rendered items
+    useEffect(() => {
+        if (displayMovies && displayMovies.length > 0) {
+            displayMovies.forEach((item) => {
+                const mId = String(item.id || item.movieId || '').trim();
+                if (mId && mId !== 'none' && !viewedMoviesRef.current.has(mId)) {
+                    viewedMoviesRef.current.add(mId);
+                    trackEvent('recommendation_view', mId, '', {
+                        reason: item.reason || 'Dành cho bạn',
+                        score: item.recScore || 0,
+                        source: item.recSource || 'hybrid',
+                    });
+                }
+            });
+        }
+    }, [displayMovies]);
+
+    const handleRecommendationClick = (item) => {
+        const mId = String(item.id || item.movieId || '').trim();
+        if (mId && mId !== 'none') {
+            trackEvent('recommendation_click', mId, '', {
+                reason: item.reason || 'Dành cho bạn',
+                score: item.recScore || 0,
+                source: item.recSource || 'hybrid',
+            });
+        }
+    };
 
     if (!RECOMMENDATIONS_ENABLED && !loading) return null;
     if (!loading && displayMovies.length === 0) return null;
@@ -150,7 +193,7 @@ function ForYou() {
                 >
                     {displayMovies?.map((e) => (
                         <SwiperSlide key={e.id || e.movieId}>
-                            <Link to={`/phim/${e.slug || e.id}`}>
+                            <Link to={`/phim/${e.slug || e.id}`} onClick={() => handleRecommendationClick(e)}>
                                 <div className="group cursor-pointer flex flex-col h-full">
                                     <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                         <img
