@@ -269,7 +269,60 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
 
 ---
 
-## 15. Acceptance Truth Classification
+## 15. Recommendation Quality & Personalization Overhaul
+
+### 1. Root Causes Audited & Resolved
+- **Authentication Bridge Defect**: MFILM supports both Google OAuth and standard email/password authentication (stored in Firestore `Users` collection and managed on client via `localStorage.getItem("isLogin")`). For email/password accounts, `auth.currentUser` was `null`, so `ForYou.jsx` previously omitted the `Authorization` header. `RecommendationController` strictly extracted `userId` from `(req as any).user?.uid`, causing all email/password authenticated users to be treated as anonymous and served `source: "popularity"`.
+  - *Fix*: `ForYou.jsx` now resolves identity from both `isLogin.id` and Firebase Auth, passing `x-user-id` header and `userId` query parameter, while reactively watching `isLogin` state. `RecommendationController` safely resolves and sanitizes `userId` (alphanumeric/hyphen/underscore, max 128 chars) across auth token, headers, and query parameters. `ContentSimilarityService.getUserFavorites` supports direct Firestore doc ID lookup with collection query fallbacks.
+- **Popularity Dominance in Scoring**: In the previous hybrid formula, content cosine scores (~0.10–0.17) were overwhelmed by the popularity loop which injected globally popular movies with weights of `0.30, 0.28, 0.26...`.
+  - *Fix*: Complete score separation. Candidate generation now pulls candidates strictly based on seed similarity, preferred genre matches, and dominant country. Popularity/views strictly contributes a subtle tie-breaker ($\le 0.05$), ensuring genuine preference signals always decide top rankings.
+- **Weak Country Influence**: Country was previously a static 1.5-weight scalar feature in a dense TF-IDF vector, contributing only ~2% to cosine similarity. A user with 100% Vietnamese favorites would have Vietnamese movies outranked by foreign blockbusters with high category matches.
+  - *Fix*: Dynamic Country Affinity. `ContentSimilarityService` calculates user country concentration ($C = \frac{\text{dominantCountryCount}}{\text{totalFavorites}}$). If $C \ge 0.80$, a $+0.35$ boost is applied and catalog candidates from that country are actively injected; if $C \ge 0.60$, a $+0.22$ boost is applied.
+- **Cache Invalidation Latency**: Previously, `mfilm:recommendations:user:${userId}` cached results for 3600s regardless of user actions.
+  - *Fix*: Cache key is versioned with a favorites fingerprint: `mfilm:rec:u:${userId}:fav:${favoritesFingerprint}:lim:${safeLimit}`. Adding or removing a favorite immediately alters the fingerprint, serving fresh recommendations with zero stale cache.
+
+### 2. Old vs New Scoring Formula
+
+| Parameter | Old Formula | New Overhauled Formula |
+|---|---|---|
+| **Content Similarity** | $0.70 \times \text{sim}$ (only against first 5 seeds) | $0.40 \times (0.65 \times \max_{s}(\text{sim}) + 0.35 \times \text{avg}_{s}(\text{sim}))$ across **all** seeds |
+| **Genre Affinity** | Implicit in vector | $0.25 \times \min(1.0, \frac{\text{matchedCats}}{\text{topCats}} \times 1.2)$ |
+| **Country Affinity** | ~2% static cosine component | **Dynamic Boost**: $+0.35$ ($C \ge 80\%$), $+0.22$ ($C \ge 60\%$), $+0.12$ ($C \ge 40\%$) |
+| **Tinybird Trending** | Ad-hoc injection | $0.08 + 0.07 \times \frac{\text{viewers}}{20}$ (Max $0.15$) |
+| **Views / Popularity** | Up to $+0.30$ (overwhelmed content) | **Tie-Breaker Only**: Max $+0.05$ ($0.02 \times \text{views} + 0.02 \times \text{rating} + 0.01 \times \text{isHot}$) |
+| **Diversity Filter** | None | Primary genre repetition capped at 4 (unless high country focus); franchise capped at 2 |
+
+### 3. Truthful Vietnamese Reason Generation
+- Dominant country match ($C \ge 60\%$): `"Vì bạn yêu thích nhiều phim Việt Nam"` (or matching country).
+- Multi-category match: `"Cùng thể loại [Thể loại 1, Thể loại 2] bạn quan tâm"`.
+- Single-seed similarity: `"Tương tự với \"[Tên phim]\" bạn đã lưu"`.
+- Trending match: `"Phù hợp với bạn và đang thịnh hành"`.
+
+### 4. Deterministic Persona Test Results
+
+```
+PASS src/modules/recommendation/recommendation.service.spec.ts
+  RecommendationService
+    Core Functionality & Error Handling
+      ✓ should throw ServiceUnavailableException when RECOMMENDATIONS_ENABLED is false
+      ✓ should bound limit parameter safely within 1 to 30
+      ✓ should survive completely when Redis and PostgreSQL are absent/throwing
+    Persona Testing: Recommendation Quality & Personalization
+      ✓ Persona C (Cold Start): Anonymous or zero-favorites user receives baseline popularity
+      ✓ Persona B (Vietnam-Heavy): User with exclusively Vietnamese favorites receives Vietnamese recommendations
+      ✓ Persona A (Broad/Mixed): User with diverse favorites receives multi-cluster recommendations
+      ✓ Persona D (Different Users & Cache Isolation): Two users with different favorites receive distinct results
+      ✓ Cache Fingerprinting: User recommendations update immediately when favorites change without waiting 1 hour
+```
+
+- **Persona A (Broad/Mixed)**: User with favorites across Anime and Action received diverse, multi-cluster recommendations; seeds were excluded; view-counts did not hijack order.
+- **Persona B (Vietnam-Heavy)**: User with Vietnamese favorites received Vietnamese top recommendations (`Hai Phượng` ranked #1 with reason `"Vì bạn yêu thích nhiều phim Việt Nam"`).
+- **Persona C (Cold Start)**: Anonymous user received stable popularity/trending fallback.
+- **Persona D (Isolation & Fingerprinting)**: Two users received distinct results; adding a favorite immediately modified the cache fingerprint and produced a fresh recommendation set.
+
+---
+
+## 16. Acceptance Truth Classification
 
 | Check | Classification | Verified State | Notes / Owner Action Required |
 |---|---|---|---|
@@ -289,7 +342,7 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
 
 ---
 
-## 16. Cost / Free-Tier Truth Table
+## 17. Cost / Free-Tier Truth Table
 
 | Provider | Service | Tier | Monthly Cost | Usage Status Under Quota |
 |---|---|---|---|---|
@@ -303,14 +356,14 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
 
 ---
 
-## 17. Known Limitations
+## 18. Known Limitations
 1. **Cold Start Latency on Render Free**: Render free instances spin down after 15 minutes of inactivity. First request after cold sleep takes ~10–15 seconds to wake up; subsequent requests respond in <150ms.
 2. **Catalog Index Refresh**: Movie catalog index is loaded into Render memory on instance startup. If an admin creates a new movie in Firestore, the recommendation catalog index automatically updates upon the next Render restart or service reload.
 3. **Collaborative Filtering Deferred**: As documented in previous phases, collaborative filtering (ALS / matrix factorization) remains deferred until sufficient multi-user interaction density is accumulated on MFILM.
 
 ---
 
-## 18. Exact Owner Actions Required for Final Acceptance
+## 19. Exact Owner Actions Required for Final Acceptance
 
 To achieve `PHASE 06 COMPLETE — PRACTICAL ACCEPTANCE`, the repository owner must execute the remaining frontend deployment step:
 

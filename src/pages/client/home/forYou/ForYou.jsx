@@ -8,13 +8,16 @@ import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaClock, FaEye } from 're
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { PlanContext } from '../../../../contexts/PlanProvider';
+import { AuthContext } from '../../../../contexts/AuthProvider';
 import { Link } from 'react-router-dom';
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { trackEvent } from '../../../../services/eventTracker';
 
 function ForYou() {
     const movies = useMovies();
     const plans = useContext(PlanContext);
+    const authContext = useContext(AuthContext);
+    const isLogin = authContext?.isLogin;
     const [recommendations, setRecommendations] = useState([]);
     const [loading, setLoading] = useState(true);
     const viewedMoviesRef = useRef(new Set());
@@ -48,7 +51,18 @@ function ForYou() {
                     }
                 }
 
-                const url = `${API_BASE_URL.replace(/\/+$/, '')}/recommendations/for-you?limit=15`;
+                // Bridge authenticated user ID from isLogin (Firestore user profile) and Firebase Auth
+                const localUserId = isLogin?.id || isLogin?.uid || user?.uid;
+                if (localUserId) {
+                    headers['x-user-id'] = String(localUserId);
+                }
+
+                const queryParams = new URLSearchParams({ limit: '15' });
+                if (localUserId) {
+                    queryParams.set('userId', String(localUserId));
+                }
+
+                const url = `${API_BASE_URL.replace(/\/+$/, '')}/recommendations/for-you?${queryParams.toString()}`;
                 const res = await fetch(url, { headers });
 
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -69,10 +83,19 @@ function ForYou() {
 
         fetchRecommendations();
 
+        // Also listen for Firebase Auth state changes in case credentials hydrate asynchronously
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, () => {
+            if (isMounted) {
+                fetchRecommendations();
+            }
+        });
+
         return () => {
             isMounted = false;
+            unsubscribe();
         };
-    }, [RECOMMENDATIONS_ENABLED, API_BASE_URL]);
+    }, [RECOMMENDATIONS_ENABLED, API_BASE_URL, isLogin?.id, isLogin?.listFavorite?.length]);
 
     // Merge recommendation items with full catalog movies for rich presentation
     const displayMovies = useMemo(() => {

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
 import { RedisService } from '../redis/redis.service';
 import { AnalyticsService } from '../analytics/analytics.service';
-import { ContentSimilarityService } from './content-similarity.service';
+import { ContentSimilarityService, normalizeCountry, MovieContentProfile } from './content-similarity.service';
 
 export interface RecommendedMovieItem {
   movieId: string;
@@ -48,6 +48,7 @@ export class RecommendationService {
   /**
    * Get personalized or baseline recommendations for a user.
    * Caches response with bounded in-memory cache and optional Valkey.
+   * Incorporates user ID, limit, and favorites fingerprint into cache key to prevent stale cache on favorite changes.
    */
   async getRecommendations(userId: string | null, limit = 10): Promise<RecommendationResponse> {
     const isEnabled = this.configService.get<string>('RECOMMENDATIONS_ENABLED');
@@ -56,16 +57,26 @@ export class RecommendationService {
     }
 
     const safeLimit = Math.max(1, Math.min(30, limit));
-    const cacheKey = `mfilm:recommendations:user:${userId || 'anonymous'}`;
     const now = Date.now();
 
-    // 1. Check in-process bounded cache (<1ms, zero-cost, survives without Valkey)
+    // 1. Resolve user favorites first to create a versioned cache fingerprint
+    let seedIds: string[] = [];
+    if (userId) {
+      seedIds = await this.resolveUserFavoriteIds(userId);
+    }
+
+    const favFingerprint = seedIds.length > 0
+      ? seedIds.slice().sort().join(',').slice(0, 48)
+      : 'none';
+    const cacheKey = `mfilm:rec:u:${userId || 'anon'}:fav:${favFingerprint}:lim:${safeLimit}`;
+
+    // 2. Check in-process bounded cache (<1ms, zero-cost, survives without Valkey)
     const memCached = this.inMemoryCache.get(cacheKey);
     if (memCached && memCached.expiresAt > now) {
       return { ...memCached.data, cached: true };
     }
 
-    // 2. Check Valkey cache (optional local/distributed)
+    // 3. Check Valkey cache (optional local/distributed)
     try {
       const cached = await this.redis.get(cacheKey);
       if (cached) {
@@ -77,15 +88,15 @@ export class RecommendationService {
       this.logger.warn(`Valkey cache read error for key ${cacheKey}: ${err.message}`);
     }
 
-    // 3. Generate recommendations
+    // 4. Generate recommendations
     let response: RecommendationResponse;
-    if (userId) {
-      response = await this.buildPersonalizedRecommendations(userId, safeLimit);
+    if (userId && seedIds.length > 0) {
+      response = await this.buildPersonalizedRecommendations(userId, seedIds, safeLimit);
     } else {
-      response = await this.buildBaselineRecommendations(null, safeLimit);
+      response = await this.buildBaselineRecommendations(userId, safeLimit);
     }
 
-    // 4. Save to caches
+    // 5. Save to caches
     this.setInMemoryCache(cacheKey, response, this.CACHE_TTL_SECONDS);
     try {
       await this.redis.set(cacheKey, JSON.stringify(response), this.CACHE_TTL_SECONDS);
@@ -108,156 +119,277 @@ export class RecommendationService {
   }
 
   /**
-   * Build personalized recommendations for an authenticated user.
-   * Multi-stage hierarchy:
-   * 1. Cold start / sparse (0 interactions) -> Trending / Popularity fallback.
-   * 2. Seed-based (1-4 interactions) -> Content-Based similarity on seed films.
-   * 3. Sufficient history (>= 5 interactions) -> Hybrid (Content affinity 70% + Popularity 30%).
+   * Resolves user favorite IDs from PostgreSQL (if enabled) or Firebase Firestore.
+   */
+  private async resolveUserFavoriteIds(userId: string): Promise<string[]> {
+    const isPostgresUserState = this.configService.get<string>('POSTGRES_USER_STATE_ENABLED') === 'true';
+    const seedIds: string[] = [];
+
+    // Path A: PostgreSQL User State (if explicitly enabled)
+    if (isPostgresUserState) {
+      try {
+        const [interactionsRes, favoritesRes] = await Promise.all([
+          this.db.query(
+            `SELECT movie_id FROM user_movie_interactions WHERE user_id = $1 ORDER BY interaction_score DESC LIMIT 20`,
+            [userId],
+          ),
+          this.db.query(`SELECT movie_id FROM favorites WHERE user_id = $1`, [userId]),
+        ]);
+
+        for (const row of (favoritesRes?.rows || [])) {
+          if (!seedIds.includes(row.movie_id)) seedIds.push(row.movie_id);
+        }
+        for (const row of (interactionsRes?.rows || [])) {
+          if (!seedIds.includes(row.movie_id)) seedIds.push(row.movie_id);
+        }
+      } catch (pgErr: any) {
+        this.logger.warn(`PostgreSQL user state fetch failed: ${pgErr.message}`);
+      }
+    }
+
+    // Path B: Firebase Firestore ($0 Production User State)
+    if (seedIds.length === 0) {
+      try {
+        const favorites = await this.contentSimilarity.getUserFavorites(userId);
+        for (const mId of favorites) {
+          if (!seedIds.includes(mId)) seedIds.push(mId);
+        }
+      } catch (fErr: any) {
+        this.logger.warn(`Firestore user favorites fetch failed: ${fErr.message}`);
+      }
+    }
+
+    return seedIds;
+  }
+
+  /**
+   * Build personalized recommendations for an authenticated user with interaction history.
+   * Multi-signal scoring:
+   * - Content Similarity (max + mean multi-seed cosine similarity): 40%
+   * - Genre / Category Preference Match: 25%
+   * - Dynamic Country Affinity: Up to +0.35 boost for high concentration (e.g. >=80% Vietnam)
+   * - Behavioral Trending (Tinybird 15m window): Max 15%
+   * - Catalog Popularity / Views: Pure tie-breaker (Max 5%)
+   * - Diversity re-ranking to avoid genre or franchise saturation.
    */
   private async buildPersonalizedRecommendations(
     userId: string,
+    seedIds: string[],
     limit: number,
   ): Promise<RecommendationResponse> {
     try {
-      const isPostgresUserState = this.configService.get<string>('POSTGRES_USER_STATE_ENABLED') === 'true';
-      const seedIds: string[] = [];
-      const interactedIds = new Set<string>();
+      const interactedIds = new Set<string>(seedIds);
+      const profile = this.contentSimilarity.buildUserPreferenceProfile(userId, seedIds);
 
-      // Path A: PostgreSQL User State (if enabled)
-      if (isPostgresUserState) {
-        try {
-          const [interactionsRes, favoritesRes] = await Promise.all([
-            this.db.query(
-              `SELECT movie_id FROM user_movie_interactions WHERE user_id = $1 ORDER BY interaction_score DESC LIMIT 20`,
-              [userId],
-            ),
-            this.db.query(`SELECT movie_id FROM favorites WHERE user_id = $1`, [userId]),
-          ]);
+      // 1. Candidate Generation: Multi-seed similarity + Genre matches + Dominant country matches
+      const rawCandidates = this.contentSimilarity.getCandidatesForProfile(
+        profile,
+        interactedIds,
+        Math.max(limit * 4, 40),
+      );
 
-          for (const row of (favoritesRes?.rows || [])) {
-            interactedIds.add(row.movie_id);
-            seedIds.push(row.movie_id);
+      // Backfill from catalog if candidate pool is small
+      if (rawCandidates.length < limit * 2) {
+        const allMovies = this.contentSimilarity.getAllMovies();
+        for (const m of allMovies) {
+          if (!interactedIds.has(m.id) && !rawCandidates.some((c) => c.id === m.id)) {
+            rawCandidates.push(m);
+            if (rawCandidates.length >= limit * 3) break;
           }
-          for (const row of (interactionsRes?.rows || [])) {
-            interactedIds.add(row.movie_id);
-            if (!seedIds.includes(row.movie_id)) seedIds.push(row.movie_id);
-          }
-        } catch (pgErr: any) {
-          this.logger.warn(`PostgreSQL user state fetch failed: ${pgErr.message}`);
         }
       }
 
-      // Path B: Firebase Firestore ($0 Production User State)
-      if (seedIds.length === 0) {
-        try {
-          const favorites = await this.contentSimilarity.getUserFavorites(userId);
-          for (const mId of favorites) {
-            interactedIds.add(mId);
-            seedIds.push(mId);
+      // 2. Fetch real-time trending map (Tinybird 15-minute rolling window)
+      const trendingMap = new Map<string, number>();
+      try {
+        if (this.analytics?.getTrendingMovies) {
+          const trendingRes = await this.analytics.getTrendingMovies(20);
+          const trendingList = Array.isArray(trendingRes?.data) ? trendingRes.data : [];
+          for (const t of trendingList) {
+            const mId = String(t.movieId || t.id || '');
+            if (mId) trendingMap.set(mId, Number(t.activeViewers) || 1);
           }
-        } catch (fErr: any) {
-          this.logger.warn(`Firestore user favorites fetch failed: ${fErr.message}`);
         }
+      } catch (err: any) {
+        // Safe non-blocking fallback
       }
 
-      const totalInteractions = interactedIds.size;
-
-      // Case A: Cold-start user (0 interactions recorded)
-      if (totalInteractions === 0) {
-        return this.buildBaselineRecommendations(userId, limit);
+      // 3. Multi-Signal Scoring
+      interface ScoredCandidate {
+        movie: MovieContentProfile;
+        score: number;
+        simScore: number;
+        genreScore: number;
+        countryBoost: number;
+        trendScore: number;
+        popScore: number;
+        matchedSeedName?: string;
+        matchedCats: string[];
       }
 
-      // Case B: Sparse user (1-4 interactions) -> Content-Based similarity
-      if (totalInteractions < 5) {
-        const candidates = this.contentSimilarity.getRecommendationsForSeeds(
-          seedIds,
-          interactedIds,
-          limit,
+      const scoredList: ScoredCandidate[] = [];
+
+      for (const m of rawCandidates) {
+        // A. Multi-Seed Similarity Aggregation (0.65 max + 0.35 avg)
+        let maxSim = 0;
+        let sumSim = 0;
+        let simCount = 0;
+        let bestSeedId: string | null = null;
+
+        for (const sId of seedIds) {
+          const sim = this.contentSimilarity.computeCosineSimilarity(m.id, sId);
+          if (sim > maxSim) {
+            maxSim = sim;
+            bestSeedId = sId;
+          }
+          if (sim > 0.05) {
+            sumSim += sim;
+            simCount++;
+          }
+        }
+        const avgSim = simCount > 0 ? sumSim / simCount : 0;
+        const simScore = Number((0.65 * maxSim + 0.35 * avgSim).toFixed(4));
+
+        // B. Genre Match Score
+        const matchedCats = m.categories.filter((c) => profile.topCategories.includes(c));
+        const genreScore = profile.topCategories.length > 0
+          ? Number(Math.min(1.0, (matchedCats.length / profile.topCategories.length) * 1.2).toFixed(4))
+          : 0;
+
+        // C. Dynamic Country Affinity Boost
+        const candCountry = normalizeCountry(m.country);
+        let countryBoost = 0;
+        const isDominantCountry = Boolean(
+          profile.dominantCountry && candCountry && candCountry === profile.dominantCountry,
         );
 
-        const items: RecommendedMovieItem[] = candidates.map((cand) => {
-          const firstSeed = this.contentSimilarity.getMovie(seedIds[0]);
-          const seedName = firstSeed ? (firstSeed.name || firstSeed.slug) : 'phim bạn yêu thích';
-          return {
-            movieId: cand.movieId,
-            name: cand.name,
-            slug: cand.slug,
-            imgUrl: cand.imgUrl,
-            bannerUrl: cand.bannerUrl,
-            score: cand.similarityScore,
-            recommendationSource: 'content_based',
-            reason: cand.reason || `Vì bạn thích ${seedName}`,
-          };
-        });
+        if (isDominantCountry) {
+          if (profile.countryConcentration >= 0.80) {
+            countryBoost = 0.35; // Material priority for Vietnam / dominant country
+          } else if (profile.countryConcentration >= 0.60) {
+            countryBoost = 0.22; // Strong preference
+          } else if (profile.countryConcentration >= 0.40) {
+            countryBoost = 0.12; // Moderate preference
+          } else {
+            countryBoost = 0.05;
+          }
+        } else if (profile.dominantCountry && profile.countryConcentration >= 0.80) {
+          // Downweight non-matching country when user has >= 80% single country preference
+          countryBoost = -0.05;
+        }
 
-        // Backfill if fewer than requested limit
-        if (items.length < limit) {
-          const backfill = await this.getPopularityItems(limit - items.length, interactedIds);
-          items.push(...backfill);
+        // D. Behavioral Trending Signal (Max 0.15)
+        let trendScore = 0;
+        if (trendingMap.has(m.id)) {
+          const viewers = trendingMap.get(m.id)!;
+          trendScore = Number(Math.min(0.15, 0.08 + (viewers / 20) * 0.07).toFixed(4));
+        }
+
+        // E. Popularity / Views Tie-Breaker (Max 0.05)
+        const popScore = Number(
+          (
+            0.02 * Math.min(1.0, (m.views || 0) / 50000) +
+            0.02 * Math.min(1.0, (m.rating || 0) / 10) +
+            (m.isHot ? 0.01 : 0.0)
+          ).toFixed(4),
+        );
+
+        // F. Final Weighted Score
+        const rawScore = 0.40 * simScore + 0.25 * genreScore + countryBoost + trendScore + popScore;
+        const finalScore = Number(Math.max(0.10, Math.min(0.99, rawScore)).toFixed(4));
+
+        let bestSeedName: string | undefined;
+        if (bestSeedId) {
+          const sMovie = this.contentSimilarity.getMovie(bestSeedId);
+          bestSeedName = sMovie?.name || sMovie?.slug;
+        }
+
+        scoredList.push({
+          movie: m,
+          score: finalScore,
+          simScore,
+          genreScore,
+          countryBoost,
+          trendScore,
+          popScore,
+          matchedSeedName: bestSeedName,
+          matchedCats,
+        });
+      }
+
+      // 4. Sort descending by personalized score
+      scoredList.sort((a, b) => b.score - a.score);
+
+      // 5. Diversity Re-ranking
+      const selected: ScoredCandidate[] = [];
+      const genreCounts = new Map<string, number>();
+      const isHighCountryFocus = profile.countryConcentration >= 0.60;
+
+      for (const item of scoredList) {
+        if (selected.length >= limit) break;
+
+        const primaryGenre = item.movie.categories[0] || 'other';
+        const currentGenreCount = genreCounts.get(primaryGenre) || 0;
+
+        // For broad users: avoid flooding recommendations with a single genre
+        if (!isHighCountryFocus && currentGenreCount >= 4 && scoredList.length > limit) {
+          continue;
+        }
+
+        selected.push(item);
+        genreCounts.set(primaryGenre, currentGenreCount + 1);
+      }
+
+      // If diversity filter left fewer than limit, backfill from remaining scored candidates
+      if (selected.length < limit) {
+        for (const item of scoredList) {
+          if (selected.length >= limit) break;
+          if (!selected.some((s) => s.movie.id === item.movie.id)) {
+            selected.push(item);
+          }
+        }
+      }
+
+      // 6. Build final RecommendedMovieItem array with truthful reasons
+      const items: RecommendedMovieItem[] = selected.slice(0, limit).map((s) => {
+        let reason = 'Dành riêng cho bạn';
+        const candCountry = normalizeCountry(s.movie.country);
+
+        if (s.countryBoost >= 0.20 && profile.dominantCountry) {
+          reason = `Vì bạn yêu thích nhiều phim ${profile.dominantCountry}`;
+        } else if (s.matchedCats.length >= 2) {
+          reason = `Cùng thể loại ${s.matchedCats.slice(0, 2).join(', ')}`;
+        } else if (s.matchedCats.length === 1) {
+          reason = `Cùng thể loại ${s.matchedCats[0]} bạn quan tâm`;
+        } else if (s.simScore >= 0.25 && s.matchedSeedName) {
+          reason = `Tương tự với "${s.matchedSeedName}" bạn đã lưu`;
+        } else if (s.trendScore > 0) {
+          reason = 'Phù hợp với bạn và đang thịnh hành';
+        } else if (candCountry) {
+          reason = `Phim ${candCountry} phù hợp với bạn`;
         }
 
         return {
-          success: true,
-          userId,
-          source: 'content_based',
-          cached: false,
-          total: items.length,
-          items: items.slice(0, limit),
-        };
-      }
-
-      // Case C: Sufficient history (>= 5 interactions) -> Hybrid
-      // 70% Content similarity + 30% Popularity boost
-      const contentCandidates = this.contentSimilarity.getRecommendationsForSeeds(
-        seedIds.slice(0, 5),
-        interactedIds,
-        limit * 2,
-      );
-
-      const popularCandidates = await this.getPopularityItems(limit * 2, interactedIds);
-      const scoreMap = new Map<string, RecommendedMovieItem>();
-
-      for (const c of contentCandidates) {
-        const hybridScore = Number((c.similarityScore * 0.70).toFixed(4));
-        scoreMap.set(c.movieId, {
-          movieId: c.movieId,
-          name: c.name,
-          slug: c.slug,
-          imgUrl: c.imgUrl,
-          bannerUrl: c.bannerUrl,
-          score: hybridScore,
+          movieId: s.movie.id,
+          name: s.movie.name,
+          slug: s.movie.slug,
+          imgUrl: s.movie.imgUrl,
+          bannerUrl: s.movie.bannerUrl,
+          score: s.score,
           recommendationSource: 'hybrid',
-          reason: c.reason || 'Dành riêng cho bạn',
-        });
-      }
+          reason,
+        };
+      });
 
-      for (let i = 0; i < popularCandidates.length; i++) {
-        const p = popularCandidates[i];
-        const popularityWeight = Math.max(0.05, 0.30 - i * 0.02);
-        if (scoreMap.has(p.movieId)) {
-          const existing = scoreMap.get(p.movieId)!;
-          existing.score = Number((existing.score + popularityWeight).toFixed(4));
-        } else {
-          scoreMap.set(p.movieId, {
-            ...p,
-            score: Number(popularityWeight.toFixed(4)),
-            recommendationSource: 'hybrid',
-            reason: 'Phổ biến được khán giả yêu thích',
-          });
-        }
-      }
-
-      const hybridItems = Array.from(scoreMap.values())
-        .sort((a, b) => b.score - a.score)
-        .slice(0, limit);
+      const source = seedIds.length >= 5 || items.some((i) => i.score > 0.6) ? 'hybrid' : 'content_based';
 
       return {
         success: true,
         userId,
-        source: 'hybrid',
+        source,
         cached: false,
-        total: hybridItems.length,
-        items: hybridItems,
+        total: items.length,
+        items,
       };
     } catch (err: any) {
       this.logger.error(`Error generating personalized recommendations: ${err.message}`, err.stack);

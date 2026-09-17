@@ -2,7 +2,20 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, getDoc, Firestore } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, doc, getDoc, query, where, Firestore } from 'firebase/firestore';
+
+export function normalizeCountry(raw?: string): string {
+  if (!raw) return '';
+  const s = raw.toLowerCase().trim();
+  if (s === 'vietnam' || s === 'việt nam' || s === 'viet nam' || s === 'vn') return 'Việt Nam';
+  if (s === 'japan' || s === 'nhật bản' || s === 'nhat ban' || s === 'jp') return 'Nhật Bản';
+  if (s === 'south korea' || s === 'korea' || s === 'hàn quốc' || s === 'han quoc' || s === 'kr') return 'Hàn Quốc';
+  if (s === 'china' || s === 'trung quốc' || s === 'trung quoc' || s === 'cn') return 'Trung Quốc';
+  if (s === 'united states' || s === 'usa' || s === 'mỹ' || s === 'my' || s === 'us') return 'Âu Mỹ';
+  if (s === 'hong kong' || s === 'hongkong' || s === 'hồng kông') return 'Hồng Kông';
+  if (s === 'thailand' || s === 'thái lan' || s === 'thai lan' || s === 'th') return 'Thái Lan';
+  return raw.trim();
+}
 
 export interface MovieContentProfile {
   id: string;
@@ -18,6 +31,19 @@ export interface MovieContentProfile {
   views: number;
   rating: number;
   isHot: boolean;
+}
+
+export interface UserPreferenceProfile {
+  userId: string;
+  seedIds: string[];
+  categoryWeights: Map<string, number>;
+  countryWeights: Map<string, number>;
+  actorWeights: Map<string, number>;
+  authorWeights: Map<string, number>;
+  topCategories: string[];
+  dominantCountry: string | null;
+  countryConcentration: number;
+  totalFavorites: number;
 }
 
 export interface SimilarMovieCandidate {
@@ -149,7 +175,7 @@ export class ContentSimilarityService implements OnModuleInit {
       slug: r.slug,
       imgUrl: r.img_url,
       bannerUrl: r.banner_url,
-      country: r.country,
+      country: normalizeCountry(r.country || ''),
       categories: r.categories || [],
       actors: r.actors || [],
       authors: r.authors || [],
@@ -206,7 +232,7 @@ export class ContentSimilarityService implements OnModuleInit {
         slug: d.slug || docSnap.id,
         imgUrl: d.imgUrl || '',
         bannerUrl: d.bannerUrl || '',
-        country: d.countriesID || d.country || '',
+        country: normalizeCountry(d.countriesID || d.country || ''),
         categories: categories.length > 0 ? categories : (d.categories || []),
         actors: actors.length > 0 ? actors : (d.actors || []),
         authors: authors.length > 0 ? authors : (d.authors || []),
@@ -301,6 +327,7 @@ export class ContentSimilarityService implements OnModuleInit {
 
   /**
    * Retrieve user favorite movie IDs from Firestore Users collection.
+   * Supports both direct document ID lookup and query fallback (e.g. Firebase Auth UID).
    */
   async getUserFavorites(userId: string): Promise<string[]> {
     if (!this.firestoreDb) {
@@ -309,6 +336,7 @@ export class ContentSimilarityService implements OnModuleInit {
     }
 
     try {
+      // 1. Direct document lookup by doc ID
       const userRef = doc(this.firestoreDb, 'Users', userId);
       const snap = await getDoc(userRef);
       if (snap.exists()) {
@@ -317,10 +345,174 @@ export class ContentSimilarityService implements OnModuleInit {
           return data.listFavorite.filter(Boolean);
         }
       }
+
+      // 2. Query collection if doc ID misses (e.g. Firebase Auth UID)
+      const usersCol = collection(this.firestoreDb, 'Users');
+      const qUid = query(usersCol, where('uid', '==', userId));
+      const snapUid = await getDocs(qUid);
+      if (!snapUid.empty) {
+        const data = snapUid.docs[0].data();
+        if (Array.isArray(data?.listFavorite)) {
+          return data.listFavorite.filter(Boolean);
+        }
+      }
+
+      const qId = query(usersCol, where('id', '==', userId));
+      const snapId = await getDocs(qId);
+      if (!snapId.empty) {
+        const data = snapId.docs[0].data();
+        if (Array.isArray(data?.listFavorite)) {
+          return data.listFavorite.filter(Boolean);
+        }
+      }
     } catch (err: any) {
       this.logger.warn(`Could not fetch favorites for user ${userId}: ${err.message}`);
     }
     return [];
+  }
+
+  /**
+   * Build an interpretable UserPreferenceProfile from favorite movie IDs.
+   * Generates category/country/talent histograms and calculates dynamic country concentration.
+   */
+  buildUserPreferenceProfile(userId: string, seedIds: string[]): UserPreferenceProfile {
+    const categoryWeights = new Map<string, number>();
+    const countryWeights = new Map<string, number>();
+    const actorWeights = new Map<string, number>();
+    const authorWeights = new Map<string, number>();
+
+    let validFavorites = 0;
+
+    for (const seedId of seedIds) {
+      const movie = this.moviesMap.get(seedId);
+      if (!movie) continue;
+      validFavorites++;
+
+      // Category counts
+      for (const cat of movie.categories) {
+        const cKey = String(cat).trim();
+        categoryWeights.set(cKey, (categoryWeights.get(cKey) || 0) + 1);
+      }
+
+      // Country counts
+      const country = normalizeCountry(movie.country);
+      if (country) {
+        countryWeights.set(country, (countryWeights.get(country) || 0) + 1);
+      }
+
+      // Actors
+      for (const actor of movie.actors) {
+        const aKey = String(actor).trim();
+        actorWeights.set(aKey, (actorWeights.get(aKey) || 0) + 1);
+      }
+
+      // Authors
+      for (const author of movie.authors) {
+        const auKey = String(author).trim();
+        authorWeights.set(auKey, (authorWeights.get(auKey) || 0) + 1);
+      }
+    }
+
+    // Top categories (sorted by frequency descending)
+    const topCategories = Array.from(categoryWeights.entries())
+      .sort((a, b) => b[1] - a[1])
+      .map(([cat]) => cat)
+      .slice(0, 4);
+
+    // Dominant country & concentration ratio
+    let dominantCountry: string | null = null;
+    let maxCountryCount = 0;
+    for (const [country, count] of countryWeights.entries()) {
+      if (count > maxCountryCount) {
+        maxCountryCount = count;
+        dominantCountry = country;
+      }
+    }
+
+    const countryConcentration = validFavorites > 0 ? maxCountryCount / validFavorites : 0;
+
+    return {
+      userId,
+      seedIds,
+      categoryWeights,
+      countryWeights,
+      actorWeights,
+      authorWeights,
+      topCategories,
+      dominantCountry,
+      countryConcentration,
+      totalFavorites: validFavorites,
+    };
+  }
+
+  /**
+   * Fast cosine similarity between two indexed movies.
+   */
+  computeCosineSimilarity(movieIdA: string, movieIdB: string): number {
+    if (!this.moviesMap.has(movieIdA) || !this.moviesMap.has(movieIdB)) return 0;
+    const vecA = this.movieVectors.get(movieIdA);
+    const vecB = this.movieVectors.get(movieIdB);
+    if (!vecA || !vecB) return 0;
+
+    let dot = 0;
+    const [smaller, larger] = vecA.size <= vecB.size ? [vecA, vecB] : [vecB, vecA];
+    for (const [key, weightA] of smaller.entries()) {
+      const weightB = larger.get(key);
+      if (weightB) {
+        dot += weightA * weightB;
+      }
+    }
+
+    const normA = this.movieVectorNorms.get(movieIdA) || 1.0;
+    const normB = this.movieVectorNorms.get(movieIdB) || 1.0;
+    return Number((dot / (normA * normB)).toFixed(4));
+  }
+
+  /**
+   * Generates candidate pool for warm users from:
+   * 1. Multi-seed similar movies
+   * 2. Top-genre matches
+   * 3. Dominant country matches (especially if concentration >= 50%)
+   */
+  getCandidatesForProfile(
+    profile: UserPreferenceProfile,
+    excludeIds: Set<string>,
+    limit = 60,
+  ): MovieContentProfile[] {
+    const candidateMap = new Map<string, MovieContentProfile>();
+
+    // 1. Seed-based similarity candidates (up to 20 similar movies per seed)
+    for (const seedId of profile.seedIds) {
+      const similar = this.getSimilarMovies(seedId, 20);
+      for (const s of similar) {
+        if (excludeIds.has(s.movieId) || candidateMap.has(s.movieId)) continue;
+        const m = this.moviesMap.get(s.movieId);
+        if (m) candidateMap.set(s.movieId, m);
+      }
+    }
+
+    // 2. Genre-based candidates matching top categories
+    if (profile.topCategories.length > 0) {
+      for (const m of this.moviesMap.values()) {
+        if (excludeIds.has(m.id) || candidateMap.has(m.id)) continue;
+        const matchesCategory = m.categories.some((c) => profile.topCategories.includes(c));
+        if (matchesCategory) {
+          candidateMap.set(m.id, m);
+        }
+      }
+    }
+
+    // 3. Country-based candidates if dominant country concentration >= 0.50
+    if (profile.dominantCountry && profile.countryConcentration >= 0.50) {
+      for (const m of this.moviesMap.values()) {
+        if (excludeIds.has(m.id) || candidateMap.has(m.id)) continue;
+        if (normalizeCountry(m.country) === profile.dominantCountry) {
+          candidateMap.set(m.id, m);
+        }
+      }
+    }
+
+    return Array.from(candidateMap.values()).slice(0, Math.max(limit, 100));
   }
 
   /**
