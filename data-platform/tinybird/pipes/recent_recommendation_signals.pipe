@@ -1,0 +1,34 @@
+DESCRIPTION >
+    Query recent meaningful movie interactions for an anonymous sessionId or verified userId to seed personalized recommendations.
+
+NODE endpoint
+SQL >
+    %
+    SELECT
+        movieId,
+        eventType,
+        count() AS eventCount,
+        max(occurredAt) AS lastSeen,
+        CASE
+            WHEN eventType = 'complete' THEN 5.0
+            WHEN eventType = 'watch_progress' THEN 3.0
+            WHEN eventType = 'play' THEN 2.5
+            WHEN eventType = 'recommendation_click' THEN 2.0
+            WHEN eventType = 'movie_view' THEN 1.0
+            ELSE 0.5
+        END AS signalWeight
+    FROM mfilm_behavior
+    WHERE
+        eventType IN ('movie_view', 'play', 'watch_progress', 'complete', 'recommendation_click')
+        AND movieId != ''
+        AND movieId != 'none'
+        {% if defined(sessionId) and sessionId != '' %}
+            AND sessionId = {{ String(sessionId) }}
+        {% elif defined(userId) and userId != '' %}
+            AND userId = {{ String(userId) }}
+        {% else %}
+            AND 1 = 0
+        {% end %}
+    GROUP BY movieId, eventType
+    ORDER BY lastSeen DESC
+    LIMIT {{ Int32(limit, 20) }}

@@ -1,8 +1,9 @@
-import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import { Injectable, Logger, Optional, ServiceUnavailableException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
 import { RedisService } from '../redis/redis.service';
 import { AnalyticsService } from '../analytics/analytics.service';
+import { EventService } from '../event/event.service';
 import { ContentSimilarityService, normalizeCountry, MovieContentProfile } from './content-similarity.service';
 
 export interface RecommendedMovieItem {
@@ -12,14 +13,15 @@ export interface RecommendedMovieItem {
   imgUrl?: string;
   bannerUrl?: string;
   score: number;
-  recommendationSource: 'hybrid' | 'content_based' | 'trending' | 'popularity';
+  recommendationSource: 'hybrid' | 'content_based' | 'behavior' | 'trending' | 'popularity';
   reason: string;
 }
 
 export interface RecommendationResponse {
   success: boolean;
+  eligible: boolean;
   userId: string | null;
-  source: 'hybrid' | 'content_based' | 'trending' | 'popularity';
+  source: 'hybrid' | 'content_based' | 'behavior' | 'trending' | 'popularity' | 'none';
   cached: boolean;
   total: number;
   items: RecommendedMovieItem[];
@@ -43,40 +45,160 @@ export class RecommendationService {
     private readonly analytics: AnalyticsService,
     private readonly contentSimilarity: ContentSimilarityService,
     private readonly configService: ConfigService,
+    @Optional() private readonly eventService?: EventService,
   ) {}
 
   /**
-   * Get personalized or baseline recommendations for a user.
-   * Caches response with bounded in-memory cache and optional Valkey.
-   * Incorporates user ID, limit, and favorites fingerprint into cache key to prevent stale cache on favorite changes.
+   * Get personalized recommendations for an authenticated user or anonymous visitor.
+   * Zero-Signal Policy: If no favorites and no meaningful events exist, returns eligible=false, source="none", items=[].
+   * Authenticated: Uses verified uid + favorites + user events (isolated cache: mfilm:rec:auth:...)
+   * Anonymous: Uses pseudonymous sessionId + session events (isolated cache: mfilm:rec:anon:...)
    */
-  async getRecommendations(userId: string | null, limit = 10): Promise<RecommendationResponse> {
+  async getRecommendations(
+    userIdOrAuthUid: string | null = null,
+    sessionIdOrLimit: string | number | null = null,
+    limit = 10,
+  ): Promise<RecommendationResponse> {
     const isEnabled = this.configService.get<string>('RECOMMENDATIONS_ENABLED');
     if (isEnabled === 'false') {
       throw new ServiceUnavailableException('Recommendations are currently disabled');
     }
 
-    const safeLimit = Math.max(1, Math.min(30, limit));
-    const now = Date.now();
+    let authUid: string | null = null;
+    let sessionId: string | null = null;
+    let rawLimit = 10;
 
-    // 1. Resolve user favorites first to create a versioned cache fingerprint
-    let seedIds: string[] = [];
-    if (userId) {
-      seedIds = await this.resolveUserFavoriteIds(userId);
+    if (typeof sessionIdOrLimit === 'number') {
+      authUid = userIdOrAuthUid;
+      rawLimit = sessionIdOrLimit;
+      sessionId = null;
+    } else {
+      authUid = userIdOrAuthUid;
+      sessionId = typeof sessionIdOrLimit === 'string' ? sessionIdOrLimit : null;
+      rawLimit = typeof limit === 'number' ? limit : 10;
     }
 
-    const favFingerprint = seedIds.length > 0
-      ? seedIds.slice().sort().join(',').slice(0, 48)
-      : 'none';
-    const cacheKey = `mfilm:rec:u:${userId || 'anon'}:fav:${favFingerprint}:lim:${safeLimit}`;
+    const safeLimit = Math.max(1, Math.min(30, rawLimit));
+    const now = Date.now();
 
-    // 2. Check in-process bounded cache (<1ms, zero-cost, survives without Valkey)
+    // ==========================================
+    // PATH 1: AUTHENTICATED USER (VERIFIED UID)
+    // ==========================================
+    if (authUid) {
+      const favIds = await this.resolveUserFavoriteIds(authUid);
+      const userEvents = this.eventService
+        ? this.eventService.getRecentInteractions({ userId: authUid, sessionId, limit: 30 })
+        : [];
+
+      // Zero-signal check: 0 favorites AND 0 meaningful events -> HIDE SECTION
+      if (favIds.length === 0 && userEvents.length === 0) {
+        return {
+          success: true,
+          eligible: false,
+          userId: authUid,
+          source: 'none',
+          cached: false,
+          total: 0,
+          items: [],
+        };
+      }
+
+      const favFingerprint =
+        favIds.length > 0 ? favIds.slice().sort().join(',').slice(0, 48) : 'none';
+      const behFingerprint =
+        userEvents.length > 0
+          ? userEvents.map((e) => e.movieId).slice().sort().join(',').slice(0, 48)
+          : 'none';
+      const cacheKey = `mfilm:rec:auth:${authUid}:fav:${favFingerprint}:beh:${behFingerprint}:lim:${safeLimit}`;
+
+      const memCached = this.inMemoryCache.get(cacheKey);
+      if (memCached && memCached.expiresAt > now) {
+        return { ...memCached.data, cached: true };
+      }
+
+      try {
+        const cached = await this.redis.get(cacheKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          this.setInMemoryCache(cacheKey, parsed, this.CACHE_TTL_SECONDS);
+          return { ...parsed, cached: true };
+        }
+      } catch (err: any) {
+        this.logger.warn(`Valkey cache read error for key ${cacheKey}: ${err.message}`);
+      }
+
+      const seedIds = [...favIds];
+      for (const e of userEvents) {
+        if (!seedIds.includes(e.movieId)) {
+          seedIds.push(e.movieId);
+        }
+      }
+
+      const isBehaviorOnly = favIds.length === 0 && userEvents.length > 0;
+      const response = await this.buildPersonalizedRecommendations(
+        authUid,
+        seedIds,
+        safeLimit,
+        isBehaviorOnly,
+      );
+
+      if (response.eligible && response.items.length > 0) {
+        this.setInMemoryCache(cacheKey, response, this.CACHE_TTL_SECONDS);
+        try {
+          await this.redis.set(cacheKey, JSON.stringify(response), this.CACHE_TTL_SECONDS);
+        } catch (err: any) {
+          this.logger.warn(`Valkey cache write error for key ${cacheKey}: ${err.message}`);
+        }
+      }
+
+      return response;
+    }
+
+    // ==========================================
+    // PATH 2: ANONYMOUS VISITOR (SESSION ID)
+    // ==========================================
+    // Mandatory: MUST NEVER access Firestore Users/{uid}
+    if (!sessionId) {
+      return {
+        success: true,
+        eligible: false,
+        userId: null,
+        source: 'none',
+        cached: false,
+        total: 0,
+        items: [],
+      };
+    }
+
+    const sessionEvents = this.eventService
+      ? this.eventService.getRecentInteractions({ sessionId, limit: 30 })
+      : [];
+
+    if (sessionEvents.length === 0) {
+      return {
+        success: true,
+        eligible: false,
+        userId: null,
+        source: 'none',
+        cached: false,
+        total: 0,
+        items: [],
+      };
+    }
+
+    const behFingerprint = sessionEvents
+      .map((e) => e.movieId)
+      .slice()
+      .sort()
+      .join(',')
+      .slice(0, 48);
+    const cacheKey = `mfilm:rec:anon:${sessionId}:beh:${behFingerprint}:lim:${safeLimit}`;
+
     const memCached = this.inMemoryCache.get(cacheKey);
     if (memCached && memCached.expiresAt > now) {
       return { ...memCached.data, cached: true };
     }
 
-    // 3. Check Valkey cache (optional local/distributed)
     try {
       const cached = await this.redis.get(cacheKey);
       if (cached) {
@@ -88,20 +210,27 @@ export class RecommendationService {
       this.logger.warn(`Valkey cache read error for key ${cacheKey}: ${err.message}`);
     }
 
-    // 4. Generate recommendations
-    let response: RecommendationResponse;
-    if (userId && seedIds.length > 0) {
-      response = await this.buildPersonalizedRecommendations(userId, seedIds, safeLimit);
-    } else {
-      response = await this.buildBaselineRecommendations(userId, safeLimit);
+    const seedIds: string[] = [];
+    for (const e of sessionEvents) {
+      if (!seedIds.includes(e.movieId)) {
+        seedIds.push(e.movieId);
+      }
     }
 
-    // 5. Save to caches
-    this.setInMemoryCache(cacheKey, response, this.CACHE_TTL_SECONDS);
-    try {
-      await this.redis.set(cacheKey, JSON.stringify(response), this.CACHE_TTL_SECONDS);
-    } catch (err: any) {
-      this.logger.warn(`Valkey cache write error for key ${cacheKey}: ${err.message}`);
+    const response = await this.buildPersonalizedRecommendations(
+      null,
+      seedIds,
+      safeLimit,
+      true, // isBehaviorOnly
+    );
+
+    if (response.eligible && response.items.length > 0) {
+      this.setInMemoryCache(cacheKey, response, this.CACHE_TTL_SECONDS);
+      try {
+        await this.redis.set(cacheKey, JSON.stringify(response), this.CACHE_TTL_SECONDS);
+      } catch (err: any) {
+        this.logger.warn(`Valkey cache write error for key ${cacheKey}: ${err.message}`);
+      }
     }
 
     return response;
@@ -173,13 +302,14 @@ export class RecommendationService {
    * - Diversity re-ranking to avoid genre or franchise saturation.
    */
   private async buildPersonalizedRecommendations(
-    userId: string,
+    userId: string | null,
     seedIds: string[],
     limit: number,
+    isBehaviorOnly = false,
   ): Promise<RecommendationResponse> {
     try {
       const interactedIds = new Set<string>(seedIds);
-      const profile = this.contentSimilarity.buildUserPreferenceProfile(userId, seedIds);
+      const profile = this.contentSimilarity.buildUserPreferenceProfile(userId || 'anon_session', seedIds);
 
       // 1. Candidate Generation: Multi-seed similarity + Genre matches + Dominant country matches
       const rawCandidates = this.contentSimilarity.getCandidatesForProfile(
@@ -355,18 +485,36 @@ export class RecommendationService {
         let reason = 'Dành riêng cho bạn';
         const candCountry = normalizeCountry(s.movie.country);
 
-        if (s.countryBoost >= 0.20 && profile.dominantCountry) {
-          reason = `Vì bạn yêu thích nhiều phim ${profile.dominantCountry}`;
-        } else if (s.matchedCats.length >= 2) {
-          reason = `Cùng thể loại ${s.matchedCats.slice(0, 2).join(', ')}`;
-        } else if (s.matchedCats.length === 1) {
-          reason = `Cùng thể loại ${s.matchedCats[0]} bạn quan tâm`;
-        } else if (s.simScore >= 0.25 && s.matchedSeedName) {
-          reason = `Tương tự với "${s.matchedSeedName}" bạn đã lưu`;
-        } else if (s.trendScore > 0) {
-          reason = 'Phù hợp với bạn và đang thịnh hành';
-        } else if (candCountry) {
-          reason = `Phim ${candCountry} phù hợp với bạn`;
+        if (isBehaviorOnly) {
+          if (s.simScore >= 0.20 && s.matchedSeedName) {
+            reason = `Vì bạn vừa xem "${s.matchedSeedName}"`;
+          } else if (s.countryBoost >= 0.20 && profile.dominantCountry === 'Việt Nam') {
+            reason = 'Vì bạn thường xem phim Việt Nam';
+          } else if (s.countryBoost >= 0.20 && profile.dominantCountry) {
+            reason = `Vì bạn thường xem phim ${profile.dominantCountry}`;
+          } else if (s.matchedCats.length >= 2) {
+            reason = `Cùng thể loại với các phim bạn thường xem`;
+          } else if (s.matchedCats.length === 1) {
+            reason = `Cùng thể loại với các phim bạn đã xem`;
+          } else if (s.trendScore > 0) {
+            reason = 'Phù hợp với các phim bạn đã xem gần đây và đang thịnh hành';
+          } else {
+            reason = 'Phù hợp với các phim bạn đã xem gần đây';
+          }
+        } else {
+          if (s.countryBoost >= 0.20 && profile.dominantCountry) {
+            reason = `Vì bạn yêu thích nhiều phim ${profile.dominantCountry}`;
+          } else if (s.matchedCats.length >= 2) {
+            reason = `Cùng thể loại ${s.matchedCats.slice(0, 2).join(', ')}`;
+          } else if (s.matchedCats.length === 1) {
+            reason = `Cùng thể loại ${s.matchedCats[0]} bạn quan tâm`;
+          } else if (s.simScore >= 0.25 && s.matchedSeedName) {
+            reason = `Tương tự với "${s.matchedSeedName}" bạn đã lưu`;
+          } else if (s.trendScore > 0) {
+            reason = 'Phù hợp với bạn và đang thịnh hành';
+          } else if (candCountry) {
+            reason = `Phim ${candCountry} phù hợp với bạn`;
+          }
         }
 
         return {
@@ -376,31 +524,45 @@ export class RecommendationService {
           imgUrl: s.movie.imgUrl,
           bannerUrl: s.movie.bannerUrl,
           score: s.score,
-          recommendationSource: 'hybrid',
+          recommendationSource: isBehaviorOnly ? 'behavior' : 'hybrid',
           reason,
         };
       });
 
-      const source = seedIds.length >= 5 || items.some((i) => i.score > 0.6) ? 'hybrid' : 'content_based';
+      let source: 'hybrid' | 'content_based' | 'behavior' = 'content_based';
+      if (isBehaviorOnly) {
+        source = 'behavior';
+      } else if (seedIds.length >= 5 || items.some((i) => i.score > 0.6)) {
+        source = 'hybrid';
+      }
 
       return {
         success: true,
+        eligible: items.length > 0,
         userId,
-        source,
+        source: items.length > 0 ? source : 'none',
         cached: false,
         total: items.length,
         items,
       };
     } catch (err: any) {
       this.logger.error(`Error generating personalized recommendations: ${err.message}`, err.stack);
-      return this.buildBaselineRecommendations(userId, limit);
+      return {
+        success: false,
+        eligible: false,
+        userId,
+        source: 'none',
+        cached: false,
+        total: 0,
+        items: [],
+      };
     }
   }
 
   /**
    * Build baseline recommendations using Real-Time Trending (Tinybird) and Popularity baseline.
    */
-  private async buildBaselineRecommendations(
+  async buildBaselineRecommendations(
     userId: string | null,
     limit: number,
   ): Promise<RecommendationResponse> {
@@ -410,8 +572,9 @@ export class RecommendationService {
 
       return {
         success: true,
+        eligible: items.length > 0,
         userId,
-        source,
+        source: items.length > 0 ? source : 'none',
         cached: false,
         total: items.length,
         items,
@@ -420,8 +583,9 @@ export class RecommendationService {
       this.logger.error(`Error building baseline recommendations: ${err.message}`, err.stack);
       return {
         success: false,
+        eligible: false,
         userId,
-        source: 'popularity',
+        source: 'none',
         cached: false,
         total: 0,
         items: [],

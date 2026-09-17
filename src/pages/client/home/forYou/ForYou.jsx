@@ -11,7 +11,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { Link } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { trackEvent } from '../../../../services/eventTracker';
+import { trackEvent, getSessionId } from '../../../../services/eventTracker';
 
 function ForYou() {
     const movies = useMovies();
@@ -42,6 +42,7 @@ function ForYou() {
                 const user = auth.currentUser;
                 const headers = { 'Content-Type': 'application/json' };
 
+                // 1. Authenticated identity: STRICTLY via cryptographically verified Bearer token
                 if (user) {
                     try {
                         const token = await user.getIdToken();
@@ -51,15 +52,15 @@ function ForYou() {
                     }
                 }
 
-                // Bridge authenticated user ID from isLogin (Firestore user profile) and Firebase Auth
-                const localUserId = isLogin?.id || isLogin?.uid || user?.uid;
-                if (localUserId) {
-                    headers['x-user-id'] = String(localUserId);
+                // 2. Anonymous session correlation key (never treated as user ID)
+                const sessionId = getSessionId();
+                if (sessionId) {
+                    headers['x-session-id'] = sessionId;
                 }
 
                 const queryParams = new URLSearchParams({ limit: '15' });
-                if (localUserId) {
-                    queryParams.set('userId', String(localUserId));
+                if (sessionId) {
+                    queryParams.set('sessionId', sessionId);
                 }
 
                 const url = `${API_BASE_URL.replace(/\/+$/, '')}/recommendations/for-you?${queryParams.toString()}`;
@@ -68,11 +69,16 @@ function ForYou() {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
                 const data = await res.json();
-                if (isMounted && data.success && Array.isArray(data.items) && data.items.length > 0) {
-                    setRecommendations(data.items);
+                if (isMounted) {
+                    // Zero-Signal Gating: If eligible is false or no items, clear recommendations
+                    if (data.success && data.eligible && Array.isArray(data.items) && data.items.length > 0) {
+                        setRecommendations(data.items);
+                    } else {
+                        setRecommendations([]);
+                    }
                 }
             } catch (err) {
-                // Gracefully fallback to catalog popularity
+                // On error, clear recommendations (never fallback to generic popularity for "Dành cho bạn")
                 if (isMounted) {
                     setRecommendations([]);
                 }
@@ -99,53 +105,41 @@ function ForYou() {
 
     // Merge recommendation items with full catalog movies for rich presentation
     const displayMovies = useMemo(() => {
-        if (!movies || movies.length === 0) return [];
-
-        if (recommendations.length > 0) {
-            const seen = new Set();
-            const mapped = recommendations.map((item) => {
-                const catalogMovie = movies.find((m) => m.id === item.movieId || m.slug === item.slug);
-                if (catalogMovie) {
-                    return {
-                        ...catalogMovie,
-                        reason: item.reason || 'Dành cho bạn',
-                        recScore: item.score,
-                        recSource: item.recommendationSource || 'hybrid',
-                    };
-                }
-                if (item.name && (item.imgUrl || item.img_url)) {
-                    return {
-                        id: item.movieId || item.id,
-                        slug: item.slug,
-                        name: item.name,
-                        otherName: item.otherName || item.name,
-                        imgUrl: item.imgUrl || item.img_url,
-                        reason: item.reason || 'Dành cho bạn',
-                        recScore: item.score,
-                        recSource: item.recommendationSource || 'hybrid',
-                    };
-                }
-                return null;
-            }).filter((m) => {
-                if (!m) return false;
-                const id = String(m.id || m.movieId || '');
-                if (seen.has(id)) return false;
-                seen.add(id);
-                return true;
-            });
-
-            if (mapped.length > 0) return mapped;
+        if (!movies || movies.length === 0 || !recommendations || recommendations.length === 0) {
+            return [];
         }
 
-        // Fallback to top catalog movies sorted by views
-        return [...movies]
-            .sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))
-            .slice(0, 15)
-            .map((m) => ({
-                ...m,
-                reason: 'Phim được yêu thích nhất',
-                recSource: 'popularity',
-            }));
+        const seen = new Set();
+        return recommendations.map((item) => {
+            const catalogMovie = movies.find((m) => m.id === item.movieId || m.slug === item.slug);
+            if (catalogMovie) {
+                return {
+                    ...catalogMovie,
+                    reason: item.reason || 'Dành cho bạn',
+                    recScore: item.score,
+                    recSource: item.recommendationSource || 'hybrid',
+                };
+            }
+            if (item.name && (item.imgUrl || item.img_url)) {
+                return {
+                    id: item.movieId || item.id,
+                    slug: item.slug,
+                    name: item.name,
+                    otherName: item.otherName || item.name,
+                    imgUrl: item.imgUrl || item.img_url,
+                    reason: item.reason || 'Dành cho bạn',
+                    recScore: item.score,
+                    recSource: item.recommendationSource || 'hybrid',
+                };
+            }
+            return null;
+        }).filter((m) => {
+            if (!m) return false;
+            const id = String(m.id || m.movieId || '');
+            if (seen.has(id)) return false;
+            seen.add(id);
+            return true;
+        });
     }, [recommendations, movies]);
 
     // Emit recommendation_view telemetry for rendered items

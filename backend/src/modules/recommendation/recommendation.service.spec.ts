@@ -3,6 +3,7 @@ import { RecommendationService } from './recommendation.service';
 import { DatabaseService } from '../database/database.service';
 import { RedisService } from '../redis/redis.service';
 import { AnalyticsService } from '../analytics/analytics.service';
+import { EventService } from '../event/event.service';
 import { ContentSimilarityService, MovieContentProfile, UserPreferenceProfile, normalizeCountry } from './content-similarity.service';
 import { ConfigService } from '@nestjs/config';
 import { ServiceUnavailableException } from '@nestjs/common';
@@ -14,6 +15,7 @@ describe('RecommendationService', () => {
   let dbService: jest.Mocked<DatabaseService>;
   let contentSimilarityService: any;
   let analyticsService: any;
+  let mockEventService: any;
 
   const sampleMovies: MovieContentProfile[] = [
     {
@@ -135,6 +137,12 @@ describe('RecommendationService', () => {
     analyticsService = {
       getTrendingMovies: jest.fn().mockResolvedValue({ data: [] }),
     };
+    mockEventService = {
+      getRecentInteractions: jest.fn().mockReturnValue([]),
+      recordRecentInteraction: jest.fn(),
+      processSingleEvent: jest.fn(),
+      processBatchEvents: jest.fn(),
+    };
 
     contentSimilarityService = {
       getTopMoviesByViews: jest.fn((limit = 10, excludeIds = new Set()) =>
@@ -214,6 +222,7 @@ describe('RecommendationService', () => {
         { provide: DatabaseService, useValue: mockDbService },
         { provide: AnalyticsService, useValue: analyticsService },
         { provide: ContentSimilarityService, useValue: contentSimilarityService },
+        { provide: EventService, useValue: mockEventService },
       ],
     }).compile();
 
@@ -231,7 +240,7 @@ describe('RecommendationService', () => {
     it('should throw ServiceUnavailableException when RECOMMENDATIONS_ENABLED is false', async () => {
       configService.get.mockReturnValue('false');
 
-      await expect(service.getRecommendations('user123', 10)).rejects.toThrow(
+      await expect(service.getRecommendations('user123', null, 10)).rejects.toThrow(
         ServiceUnavailableException,
       );
 
@@ -241,102 +250,188 @@ describe('RecommendationService', () => {
     });
 
     it('should bound limit parameter safely within 1 to 30', async () => {
-      const result = await service.getRecommendations(null, 999);
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['vn_1']);
+      const result = await service.getRecommendations('user_fav', null, 999);
       expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
       expect(result.items.length).toBeLessThanOrEqual(30);
     });
 
     it('should survive completely when Redis and PostgreSQL are absent/throwing', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['vn_1']);
       redisService.get.mockRejectedValue(new Error('Valkey connection refused'));
       redisService.set.mockRejectedValue(new Error('Valkey connection refused'));
       dbService.query.mockRejectedValue(new Error('PostgreSQL connection refused'));
 
-      const result = await service.getRecommendations(null, 5);
+      const result = await service.getRecommendations('user_fav', null, 5);
       expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
       expect(result.items.length).toBeGreaterThan(0);
     });
   });
 
-  describe('Persona Testing: Recommendation Quality & Personalization', () => {
-    it('Persona C (Cold Start): Anonymous or zero-favorites user receives baseline popularity', async () => {
-      contentSimilarityService.getUserFavorites.mockResolvedValue([]);
+  describe('Persona Testing: Personas 0 through 8 Deterministic Validation', () => {
+    it('Persona 0 — Brand-new Anonymous: no session events yields eligible=false, total=0, source="none"', async () => {
+      mockEventService.getRecentInteractions.mockReturnValue([]);
 
-      const result = await service.getRecommendations(null, 5);
+      const result = await service.getRecommendations(null, 'sess_brand_new', 10);
 
       expect(result.success).toBe(true);
+      expect(result.eligible).toBe(false);
       expect(result.userId).toBeNull();
-      expect(result.source).toBe('popularity');
-      expect(result.items.length).toBeGreaterThanOrEqual(1);
-      expect(result.items[0].recommendationSource).toBe('popularity');
+      expect(result.source).toBe('none');
+      expect(result.total).toBe(0);
+      expect(result.items).toEqual([]);
     });
 
-    it('Persona B (Vietnam-Heavy): User with exclusively Vietnamese favorites receives Vietnamese recommendations', async () => {
-      // User favorited 2 Vietnamese films (Mắt Biếc, Bố Già)
-      contentSimilarityService.getUserFavorites.mockResolvedValue(['vn_1', 'vn_2']);
+    it('Persona 1 — Anonymous First Click: one movie_view for movie A yields eligible=true, recommendations related to movie A', async () => {
+      // Visitor viewed Doraemon (jp_1)
+      mockEventService.getRecentInteractions.mockReturnValue([
+        { movieId: 'jp_1', eventType: 'movie_view', timestamp: Date.now(), weight: 1.0 },
+      ]);
 
-      const result = await service.getRecommendations('user_vietnam_lover', 3);
+      const result = await service.getRecommendations(null, 'sess_first_click', 5);
 
       expect(result.success).toBe(true);
-      expect(result.userId).toBe('user_vietnam_lover');
-      expect(result.source).toBe('content_based');
-      expect(result.items.length).toBeGreaterThanOrEqual(1);
+      expect(result.eligible).toBe(true);
+      expect(result.source).toBe('behavior');
+      expect(result.total).toBeGreaterThan(0);
+      // Already viewed seed movie jp_1 must NOT be in recommendations
+      expect(result.items.some((i) => i.movieId === 'jp_1')).toBe(false);
+      // Recommendations must relate to jp_1 (e.g. jp_2: Your Name), not generic views
+      expect(result.items[0].movieId).toBe('jp_2');
+      expect(result.items[0].reason).toContain('Vì bạn vừa xem');
+    });
 
-      // Top candidate must be the remaining Vietnamese movie (Hai Phượng), not foreign high-view movies
-      const topMovie = result.items[0];
-      expect(topMovie.movieId).toBe('vn_3');
-      expect(topMovie.reason).toContain('Vì bạn yêu thích nhiều phim Việt Nam');
-      // Already-favorited movies vn_1 and vn_2 must be excluded
+    it('Persona 2 — Anonymous Vietnam-Heavy: recent events mainly Vietnamese movies visibly favor Vietnamese films', async () => {
+      // Visitor interacted with Mắt Biếc (vn_1) and Bố Già (vn_2)
+      mockEventService.getRecentInteractions.mockReturnValue([
+        { movieId: 'vn_2', eventType: 'play', timestamp: Date.now(), weight: 2.5 },
+        { movieId: 'vn_1', eventType: 'movie_view', timestamp: Date.now() - 3000, weight: 1.0 },
+      ]);
+
+      const result = await service.getRecommendations(null, 'sess_vn_heavy', 3);
+
+      expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
+      expect(result.items.length).toBeGreaterThan(0);
+      // Top candidate must be the remaining Vietnamese movie (Hai Phượng)
+      expect(result.items[0].movieId).toBe('vn_3');
+      expect(result.items[0].reason).toContain('Việt Nam');
       expect(result.items.some((i) => i.movieId === 'vn_1' || i.movieId === 'vn_2')).toBe(false);
     });
 
-    it('Persona A (Broad/Mixed): User with diverse favorites receives multi-cluster recommendations', async () => {
-      // User favorited anime (jp_1) and action (us_1)
-      contentSimilarityService.getUserFavorites.mockResolvedValue(['jp_1', 'us_1']);
+    it('Persona 3 — Authenticated No Data: verified uid with 0 favorites and 0 events yields eligible=false, hidden', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue([]);
+      mockEventService.getRecentInteractions.mockReturnValue([]);
 
-      const result = await service.getRecommendations('user_broad_mixed', 4);
+      const result = await service.getRecommendations('verified_user_no_data', 'sess_123', 10);
 
       expect(result.success).toBe(true);
-      expect(result.userId).toBe('user_broad_mixed');
-      // Should not contain the seeds themselves
-      expect(result.items.some((i) => i.movieId === 'jp_1' || i.movieId === 'us_1')).toBe(false);
-      // Results should contain related anime or action (e.g. jp_2 or vn_3)
-      const movieIds = result.items.map((i) => i.movieId);
-      expect(movieIds).toContain('jp_2');
+      expect(result.eligible).toBe(false);
+      expect(result.userId).toBe('verified_user_no_data');
+      expect(result.source).toBe('none');
+      expect(result.total).toBe(0);
+      expect(result.items).toEqual([]);
     });
 
-    it('Persona D (Different Users & Cache Isolation): Two users with different favorites receive distinct results', async () => {
-      // User 1: Loves Anime
+    it('Persona 4 — Authenticated Favorites: verified uid with favorites yields eligible=true, personalized results', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['jp_1']);
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+
+      const result = await service.getRecommendations('verified_user_favs', null, 3);
+
+      expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
+      expect(result.userId).toBe('verified_user_favs');
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(result.items[0].movieId).toBe('jp_2');
+    });
+
+    it('Persona 5 — Authenticated Behavior Only: verified uid with 0 favorites but viewing events yields eligible=true, behavior-driven', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue([]);
+      mockEventService.getRecentInteractions.mockReturnValue([
+        { movieId: 'vn_1', eventType: 'play', timestamp: Date.now(), weight: 2.5 },
+      ]);
+
+      const result = await service.getRecommendations('verified_user_behavior_only', null, 3);
+
+      expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
+      expect(result.source).toBe('behavior');
+      expect(result.userId).toBe('verified_user_behavior_only');
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(['vn_2', 'vn_3']).toContain(result.items[0].movieId);
+    });
+
+    it('Persona 6 — Isolation: two auth users and two anon sessions have isolated cache keys without cross-profile leakage', async () => {
       contentSimilarityService.getUserFavorites.mockImplementation((uId: string) => {
         if (uId === 'user_anime') return Promise.resolve(['jp_1']);
         if (uId === 'user_vietnam') return Promise.resolve(['vn_1']);
         return Promise.resolve([]);
       });
 
-      const resAnime = await service.getRecommendations('user_anime', 3);
-      const resVietnam = await service.getRecommendations('user_vietnam', 3);
+      mockEventService.getRecentInteractions.mockImplementation((opts: any) => {
+        if (opts.sessionId === 'sess_anime') {
+          return [{ movieId: 'jp_1', eventType: 'movie_view', timestamp: 1, weight: 1 }];
+        }
+        if (opts.sessionId === 'sess_vietnam') {
+          return [{ movieId: 'vn_1', eventType: 'movie_view', timestamp: 1, weight: 1 }];
+        }
+        return [];
+      });
 
-      expect(resAnime.items[0].movieId).not.toBe(resVietnam.items[0].movieId);
-      // Anime lover gets anime top result
-      expect(resAnime.items[0].movieId).toBe('jp_2');
-      // Vietnam lover gets Vietnamese movie top result
-      expect(['vn_2', 'vn_3']).toContain(resVietnam.items[0].movieId);
+      const resAuthA = await service.getRecommendations('user_anime', null, 3);
+      const resAuthB = await service.getRecommendations('user_vietnam', null, 3);
+      const resAnonA = await service.getRecommendations(null, 'sess_anime', 3);
+      const resAnonB = await service.getRecommendations(null, 'sess_vietnam', 3);
+
+      expect(resAuthA.items[0].movieId).toBe('jp_2');
+      expect(['vn_2', 'vn_3']).toContain(resAuthB.items[0].movieId);
+      expect(resAnonA.items[0].movieId).toBe('jp_2');
+      expect(['vn_2', 'vn_3']).toContain(resAnonB.items[0].movieId);
+    });
+
+    it('Persona 7 — Spoofing: anonymous request with forged client identity never accesses protected user favorites', async () => {
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+
+      // Attacker passes a sessionId that tries to look like a userId without Bearer token
+      const result = await service.getRecommendations(null, 'forged_target_user_id', 10);
+
+      // Firestore getUserFavorites must NEVER be called
+      expect(contentSimilarityService.getUserFavorites).not.toHaveBeenCalled();
+      expect(result.eligible).toBe(false);
+      expect(result.userId).toBeNull();
+    });
+
+    it('Persona 8 — Cold Generic Homepage: baseline popularity still works for general catalog, but for-you is zero-signal gated', async () => {
+      // 1. "Dành cho bạn" for cold anonymous user returns eligible=false, hidden
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      const forYouRes = await service.getRecommendations(null, 'sess_cold_visitor', 10);
+      expect(forYouRes.eligible).toBe(false);
+      expect(forYouRes.total).toBe(0);
+
+      // 2. Other homepage sections (trending / popularity baseline) still work normally
+      const baselineRes = await service.buildBaselineRecommendations(null, 5);
+      expect(baselineRes.success).toBe(true);
+      expect(baselineRes.eligible).toBe(true);
+      expect(baselineRes.items.length).toBeGreaterThan(0);
+      expect(baselineRes.source).toBe('popularity');
     });
 
     it('Cache Fingerprinting: User recommendations update immediately when favorites change without waiting 1 hour', async () => {
-      // Step 1: User has 1 favorite
       contentSimilarityService.getUserFavorites.mockResolvedValue(['jp_1']);
-      const res1 = await service.getRecommendations('user_dynamic', 3);
+      const res1 = await service.getRecommendations('user_dynamic', null, 3);
       expect(res1.cached).toBe(false);
       expect(res1.items[0].movieId).toBe('jp_2');
 
       // Second call with same favorites serves from cache
-      const res2 = await service.getRecommendations('user_dynamic', 3);
+      const res2 = await service.getRecommendations('user_dynamic', null, 3);
       expect(res2.cached).toBe(true);
 
-      // Step 2: User adds a new favorite (vn_1) -> fingerprint changes!
+      // User adds a new favorite (vn_1) -> fingerprint changes!
       contentSimilarityService.getUserFavorites.mockResolvedValue(['jp_1', 'vn_1']);
-      const res3 = await service.getRecommendations('user_dynamic', 3);
-      // Must generate fresh result, not return old cached res2!
+      const res3 = await service.getRecommendations('user_dynamic', null, 3);
       expect(res3.cached).toBe(false);
     });
   });

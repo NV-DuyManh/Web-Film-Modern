@@ -37,7 +37,7 @@ const movieViewThrottleMap = new Map();
 const THROTTLE_INTERVAL_MS = 9000; // Max 1 watch_progress event per 9s per episode
 const MOVIE_VIEW_THROTTLE_MS = 2000; // Max 1 movie_view event per 2s per movie
 
-function getSessionId() {
+export function getSessionId() {
   try {
     let sess = sessionStorage.getItem('mfilm_session_id');
     if (!sess) {
