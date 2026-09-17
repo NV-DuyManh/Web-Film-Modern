@@ -107,8 +107,8 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 - **Backend Tests**: **11/11 Suites Passed (59/59 Tests)**.
 - **Backend Build**: **PASS** (`nest build`).
 - **Frontend Build**: **PASS** (`vite build`).
-- **Definitive Production Commit**: `3c3c6af` — account isolation, Firebase Auth migration, session rotation, ForYou crash fix.
-  - Render: awaiting owner manual deploy of `3c3c6af`.
+- **Definitive Production Commit**: `2ac25c7` — account isolation, Firebase Auth migration, session rotation, ForYou crash fix, documentation.
+  - Render: awaiting owner manual deploy of `2ac25c7`.
   - Vercel: awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true`.
 
 ---
@@ -263,9 +263,9 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | **3c3c6af** | Account isolation fix; pushed to `origin/main`. Includes all prior Phase 06 commits. |
-| **Render Deployed Commit** | **Pending** | Awaiting owner manual deploy of `3c3c6af`. |
-| **Vercel Deployed Commit** | **Pending** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on `3c3c6af`. |
+| **Definitive Commit** | **2ac25c7** | Latest Phase 06 commit; pushed to `origin/main`. Includes all prior Phase 06 commits. |
+| **Render Deployed Commit** | **Pending** | Awaiting owner manual deploy of `2ac25c7`. |
+| **Vercel Deployed Commit** | **Pending** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on `2ac25c7`. |
 | **Email/password Firebase Auth** | **CODE VERIFIED** | `signInWithEmailAndPassword` + auto-provision at login/register. |
 | **Session rotation on logout** | **CODE VERIFIED** | `rotateSessionId()` clears `mfilm_session_id`, called on logout and account switch. |
 | **ForYou crash fix** | **CODE VERIFIED** | AbortController, authEpoch stale guard, ErrorBoundary. |
