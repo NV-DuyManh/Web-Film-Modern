@@ -104,12 +104,12 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 - **ForYou Crash Fix**: **IMPLEMENTED** (`3c3c6af`). AbortController + authEpoch + ErrorBoundary.
 - **Durable History (Tinybird Fallback)**: **CODE VERIFIED (PASS)**.
 - **Insecure UID Fallback Removed**: **YES**.
-- **Backend Tests**: **11/11 Suites Passed (59/59 Tests)**.
+- **Backend Tests**: **11/11 Suites Passed (63/63 Tests)**.
 - **Backend Build**: **PASS** (`nest build`).
 - **Frontend Build**: **PASS** (`vite build`).
-- **Definitive Production Commit**: `2ac25c7` — account isolation, Firebase Auth migration, session rotation, ForYou crash fix, documentation.
-  - Render: awaiting owner manual deploy of `2ac25c7`.
-  - Vercel: awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true`.
+- **Definitive Production Commit**: Latest deployable Phase 06 state (commit containing 21d49fb and this documentation cleanup; deploy current origin/main).
+  - Render: pending deployment of latest Phase 06 commit
+  - Vercel: pending deployment of latest Phase 06 commit with `VITE_RECOMMENDATIONS_ENABLED=true`
 
 ---
 
@@ -299,9 +299,9 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | **21d49fb** | Latest Phase 06 commit; pushed to `origin/main`. Includes all prior Phase 06 commits. |
-| **Render Deployed Commit** | **Pending** | Awaiting owner manual deploy of `21d49fb`. |
-| **Vercel Deployed Commit** | **Pending** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on `21d49fb`. |
+| **Definitive Commit** | **Deploy current origin/main** | Latest deployable Phase 06 state: commit containing 21d49fb and this documentation cleanup. |
+| **Render Deployed Commit** | **PENDING PRODUCTION DEPLOYMENT** | Awaiting owner manual deploy of latest Phase 06 commit. |
+| **Vercel Deployed Commit** | **PENDING PRODUCTION DEPLOYMENT** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on latest Phase 06 commit. |
 | **Email/password Firebase Auth** | **CODE VERIFIED** | `signInWithEmailAndPassword` + auto-provision at login/register. |
 | **Session rotation on logout** | **CODE VERIFIED** | `rotateSessionId()` clears `mfilm_session_id`, called on logout and account switch. |
 | **ForYou crash fix** | **CODE VERIFIED** | AbortController, authEpoch stale guard, ErrorBoundary. |
