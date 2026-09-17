@@ -11,14 +11,14 @@ This report provides a strict, truth-first audit separating **CODE VERIFIED** co
 **PHASE 06 PARTIAL — PRODUCTION ACCEPTANCE REQUIRED**
 
 While core recommendation code, Firestore catalog indexing, bounded in-process caching, and telemetry tracking are fully implemented and verified with 43/43 passing unit tests and clean production builds, live production acceptance requires the two final deployment steps:
-- **Render Backend Production Commit**: Currently deployed at `c375370`. Commit `b1839d5` (exact remote `origin/main` HEAD, containing Valkey decoupling fix `b232a21` as verified by `git merge-base`) is ready for Render manual deploy to silence localhost Redis retries and turn `/health/ready` to `ready`.
+- **Render Backend Production Commit**: `87cd84b` (encapsulating `b1839d5` and Valkey fix `b232a21`) — **PRODUCTION VERIFIED LIVE**. `/health/ready` returns `HTTP 200` with `status: "ready"`, `valkey: { status: "disabled" }`, and `kafka: { status: "healthy" }`. Zero localhost Redis retry spam.
 - **Vercel Frontend Production Commit**: Currently deployed at `c375370`. "Dành cho bạn" is dormant until `VITE_RECOMMENDATIONS_ENABLED=true` is set and deployed on Vercel.
 - **Live Render Recommendation Endpoint**: **PRODUCTION VERIFIED (PASS)**. Returns `HTTP 200` with `success: true`, `total: 15`, `source: "popularity"`, and 15 real movies indexed from Firestore catalog.
-- **Live Vercel Frontend UI**: "Dành cho bạn" section remains hidden because `VITE_RECOMMENDATIONS_ENABLED=true` is pending deployment.
+- **Live Vercel Frontend UI**: "Dành cho bạn" section remains hidden because `VITE_RECOMMENDATIONS_ENABLED=true` is pending Vercel deployment.
 - **Recommendation Telemetry in Live Production**: `recommendation_view` and `recommendation_click` are verified in code and unit tests; live browser and Tinybird validation awaits Vercel deployment.
 - **Authenticated Personalization**: Marked **OWNER VERIFICATION DEFERRED** (non-blocking for practical acceptance).
 
-Full transition to `PHASE 06 COMPLETE — PRACTICAL ACCEPTANCE` will occur once the owner triggers the Render deploy of `b1839d5` and enables `VITE_RECOMMENDATIONS_ENABLED=true` on Vercel.
+Full transition to `PHASE 06 COMPLETE — PRACTICAL ACCEPTANCE` will occur once the owner enables `VITE_RECOMMENDATIONS_ENABLED=true` on Vercel and deploys latest `main`.
 
 ---
 
@@ -215,16 +215,27 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
 - **Remote URL**: `https://github.com/NV-DuyManh/ManhFilm.git` (GitHub redirected to `NV-DuyManh/Web-Film-Modern.git`).
 
 ### Render Deployment State
-- **Render Backend Live Commit**: `c375370` — **PRODUCTION VERIFIED LIVE**
-- **Pending Deploy on Render**: `b1839d5` (contains Valkey decoupling fix `b232a21` to eliminate Valkey localhost retry warnings and set `valkey: disabled`).
-- **Render Service Status**: **Live** (serving on `c375370`, uptime ~800s).
+- **Render Backend Live Commit**: `87cd84b` (contains `b1839d5` & `b232a21`) — **PRODUCTION VERIFIED LIVE**
+- **Render Service Status**: **Live** (serving on latest main, verified at 2026-09-17T13:14:21Z).
 - **Environment Flags**: `RECOMMENDATIONS_ENABLED=true`, `POSTGRES_CATALOG_ENABLED=false`, `VALKEY_ENABLED=false`.
-- **Render Startup & Firestore Catalog Logs**:
+- **Render Readiness Probe (`/api/v1/health/ready`)**:
+  ```json
+  {
+    "status": "ready",
+    "services": {
+      "database": { "status": "disabled", "message": "Disabled via POSTGRES_CATALOG_ENABLED=false" },
+      "valkey": { "status": "disabled", "message": "Disabled via VALKEY_ENABLED=false" },
+      "kafka": { "status": "healthy", "latencyMs": 298 }
+    },
+    "timestamp": "2026-09-17T13:14:21.228Z"
+  }
+  ```
+- **Render Startup & Valkey Status**:
   - `Indexed 884 movies from Firestore` — **PRODUCTION VERIFIED**
-  - Nest application starts successfully.
-  - Kafka connectivity: Verified healthy (`health/ready` latency ~114ms).
+  - Nest application started cleanly.
+  - Kafka connectivity: Verified healthy (`health/ready` latency ~298ms).
+  - Valkey localhost retries: **ZERO WARNINGS / ZERO RETRY SPAM** — **PRODUCTION VERIFIED FIXED**.
   - PostgreSQL catalog: Disabled (`POSTGRES_CATALOG_ENABLED=false`).
-  - Valkey status on `c375370`: Returns `valkey: unhealthy` due to localhost connection retries; awaiting deployment of `b1839d5` before enabling frontend.
 
 ### Public Recommendation Endpoint Verification
 - `GET https://mfilm-backend.onrender.com/api/v1/recommendations/for-you?limit=15`:
@@ -269,7 +280,7 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
 | **Anonymous Cold-Start Algorithm** | **PRODUCTION VERIFIED** | `source: popularity`, real movies | Verified live on `c375370`. |
 | **PostgreSQL Production Dependency** | **PRODUCTION VERIFIED: NO** | Disabled via `POSTGRES_CATALOG_ENABLED=false` | Endpoints function with zero DB reliance. |
 | **Valkey Production Dependency** | **PRODUCTION VERIFIED: NO** | Decoupled via `VALKEY_ENABLED=false` | In-process bounded cache handles serving. |
-| **Valkey Retry Warning Spam** | **CODE VERIFIED FIXED** | In `origin/main` (`b1839d5`) | Requires manual deploy on Render to silence logs. |
+| **Valkey Retry Warning Spam** | **PRODUCTION VERIFIED FIXED** | Verified on `87cd84b` (`/health/ready` reports `valkey: disabled`) | Localhost connection loops completely silenced. |
 | **Authenticated Personalization Algorithm** | **OWNER VERIFICATION DEFERRED** | Non-blocking for practical acceptance | Requires real Firebase user auth testing. |
 | **Frontend Carousel Rendering** | **OWNER VERIFICATION REQUIRED** | Hidden on live prod | Requires `VITE_RECOMMENDATIONS_ENABLED=true` on Vercel. |
 | **Recommendation Telemetry (`view`/`click`)** | **OWNER VERIFICATION REQUIRED** | Telemetry handlers tested in code | Requires live browser session after deploy. |
@@ -301,14 +312,10 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
 
 ## 18. Exact Owner Actions Required for Final Acceptance
 
-To achieve `PHASE 06 COMPLETE — PRACTICAL ACCEPTANCE`, the repository owner must execute the following two deployment steps:
+To achieve `PHASE 06 COMPLETE — PRACTICAL ACCEPTANCE`, the repository owner must execute the remaining frontend deployment step:
 
 1. **Deploy Valkey Cleanup to Render**:
-   - In [Render Dashboard](https://dashboard.render.com), open `mfilm-backend`.
-   - Click **Manual Deploy** -> **Deploy latest commit** (deploys `b1839d5` containing the Valkey decoupling fix `b232a21`).
-   - Confirm environment variable `VALKEY_ENABLED=false`.
-   - Wait until deployment status becomes **Live**.
-   - Verify `/api/v1/health/ready` returns `valkey: { status: 'disabled' }` and overall status `ready`. Confirm Render logs show zero localhost:6380 retry warnings.
+   - **STATUS**: **COMPLETED & PRODUCTION VERIFIED** (Commit `87cd84b` deployed, `/health/ready` reports `ready` and `valkey: disabled`, recommendation endpoint verified `HTTP 200` with 15 real movies).
 
 2. **Enable Frontend Recommendations on Vercel**:
    - In [Vercel Dashboard](https://vercel.com), open `mfilm` / `web-film-modern`.
