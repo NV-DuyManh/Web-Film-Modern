@@ -62,10 +62,11 @@ describe('RecommendationController Security & Identity Tests', () => {
       null, // authUid
       'sess_safe_telemetry_abc', // sanitized sessionId
       10, // safeLimit
+      null, // authEmail
     );
   });
 
-  it('Authenticated User: Correctly passes verified req.user.uid from Bearer token', async () => {
+  it('Authenticated User: Correctly passes verified req.user.uid and email from Bearer token', async () => {
     const mockReq = {
       headers: {
         'x-session-id': 'sess_auth_session',
@@ -83,6 +84,7 @@ describe('RecommendationController Security & Identity Tests', () => {
       'verified_firebase_uid_999',
       'sess_auth_session',
       15,
+      'user@example.com',
     );
   });
 });

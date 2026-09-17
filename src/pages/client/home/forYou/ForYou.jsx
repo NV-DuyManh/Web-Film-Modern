@@ -105,38 +105,67 @@ function ForYou() {
 
     // Merge recommendation items with full catalog movies for rich presentation
     const displayMovies = useMemo(() => {
-        if (!movies || movies.length === 0 || !recommendations || recommendations.length === 0) {
+        if (!recommendations || recommendations.length === 0) {
             return [];
         }
 
         const seen = new Set();
         return recommendations.map((item) => {
-            const catalogMovie = movies.find((m) => m.id === item.movieId || m.slug === item.slug);
+            if (!item) return null;
+            const rawId = item.movieId || item.id;
+            const stableId = (typeof rawId === 'string' || typeof rawId === 'number')
+                ? String(rawId).trim()
+                : '';
+            if (!stableId || stableId === '[object Object]' || stableId === 'none') {
+                return null;
+            }
+
+            const itemSlug = typeof item.slug === 'string' ? item.slug.trim() : '';
+
+            // Enrich from catalog if movies from useMovies() are already loaded
+            const catalogMovie = Array.isArray(movies) && movies.length > 0
+                ? movies.find((m) => {
+                    const mId = String(m?.id || '').trim();
+                    const mSlug = String(m?.slug || '').trim();
+                    return (mId && mId === stableId) || (itemSlug && mSlug && mSlug === itemSlug);
+                })
+                : null;
+
             if (catalogMovie) {
                 return {
                     ...catalogMovie,
+                    id: stableId,
+                    slug: itemSlug || catalogMovie.slug,
+                    name: catalogMovie.name || item.name,
+                    otherName: catalogMovie.otherName || item.otherName || item.name,
+                    imgUrl: catalogMovie.imgUrl || item.imgUrl || item.img_url,
+                    bannerUrl: catalogMovie.bannerUrl || item.bannerUrl || item.banner_url || catalogMovie.imgUrl || item.imgUrl,
                     reason: item.reason || 'Dành cho bạn',
                     recScore: item.score,
                     recSource: item.recommendationSource || 'hybrid',
                 };
             }
+
+            // Self-sufficient fallback directly from API payload
             if (item.name && (item.imgUrl || item.img_url)) {
                 return {
-                    id: item.movieId || item.id,
-                    slug: item.slug,
+                    id: stableId,
+                    slug: itemSlug || stableId,
                     name: item.name,
                     otherName: item.otherName || item.name,
                     imgUrl: item.imgUrl || item.img_url,
+                    bannerUrl: item.bannerUrl || item.banner_url || item.imgUrl || item.img_url,
                     reason: item.reason || 'Dành cho bạn',
                     recScore: item.score,
                     recSource: item.recommendationSource || 'hybrid',
                 };
             }
+
             return null;
         }).filter((m) => {
             if (!m) return false;
-            const id = String(m.id || m.movieId || '');
-            if (seen.has(id)) return false;
+            const id = String(m.id || '').trim();
+            if (!id || id === 'none' || seen.has(id)) return false;
             seen.add(id);
             return true;
         });
@@ -170,8 +199,11 @@ function ForYou() {
         }
     };
 
-    if (!RECOMMENDATIONS_ENABLED && !loading) return null;
-    if (!loading && displayMovies.length === 0) return null;
+    // Strictly hide the entire section if disabled, still loading, or no items to display
+    // Invariant: Heading "Dành Cho Bạn" is NEVER rendered unless displayMovies has items
+    if (!RECOMMENDATIONS_ENABLED) return null;
+    if (loading) return null;
+    if (!displayMovies || displayMovies.length === 0) return null;
 
     return (
         <div className="bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden">
@@ -209,7 +241,7 @@ function ForYou() {
                     className="movie-swiper"
                 >
                     {displayMovies?.map((e) => (
-                        <SwiperSlide key={e.id || e.movieId}>
+                        <SwiperSlide key={e.id || e.slug}>
                             <Link to={`/phim/${e.slug || e.id}`} onClick={() => handleRecommendationClick(e)}>
                                 <div className="group cursor-pointer flex flex-col h-full">
                                     <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">

@@ -136,6 +136,7 @@ describe('RecommendationService', () => {
     };
     analyticsService = {
       getTrendingMovies: jest.fn().mockResolvedValue({ data: [] }),
+      getRecentBehaviorSignals: jest.fn().mockResolvedValue([]),
     };
     mockEventService = {
       getRecentInteractions: jest.fn().mockReturnValue([]),
@@ -148,7 +149,11 @@ describe('RecommendationService', () => {
       getTopMoviesByViews: jest.fn((limit = 10, excludeIds = new Set()) =>
         sampleMovies.filter((m) => !excludeIds.has(m.id)).slice(0, limit),
       ),
-      getMovie: jest.fn((id: string) => sampleMovies.find((m) => m.id === id)),
+      getMovie: jest.fn((id: string) => sampleMovies.find((m) => m.id === id || m.slug === id)),
+      getCanonicalMovieId: jest.fn((id: string) => {
+        const m = sampleMovies.find((sm) => sm.id === id || sm.slug === id);
+        return m ? m.id : null;
+      }),
       getAllMovies: jest.fn(() => sampleMovies),
       getUserFavorites: jest.fn().mockResolvedValue([]),
       computeCosineSimilarity: jest.fn((idA: string, idB: string) => {
@@ -433,6 +438,80 @@ describe('RecommendationService', () => {
       contentSimilarityService.getUserFavorites.mockResolvedValue(['jp_1', 'vn_1']);
       const res3 = await service.getRecommendations('user_dynamic', null, 3);
       expect(res3.cached).toBe(false);
+    });
+
+    it('Phase 06 Bug Fix — Favorite-Only User: Authenticated user with favorites in Firestore but empty RAM is eligible immediately', async () => {
+      // Empty RAM in EventService (e.g. after Render restart)
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      // Favorites exist durably in Firestore
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['vn_1']);
+
+      const result = await service.getRecommendations('user_fav_only', null, 5);
+
+      expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
+      expect(result.total).toBeGreaterThan(0);
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(['vn_2', 'vn_3']).toContain(result.items[0].movieId);
+    });
+
+    it('Phase 06 Bug Fix — Verified Email Fallback: Maps verified Firebase Auth identity to Firestore customer document', async () => {
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      // Doc lookup by uid misses, but email lookup finds favorites
+      contentSimilarityService.getUserFavorites.mockImplementation((userId: string, email?: string) => {
+        if (email === 'owner@mfilm.online') return Promise.resolve(['jp_1']);
+        return Promise.resolve([]);
+      });
+
+      const result = await service.getRecommendations(
+        'random_firebase_uid_123',
+        null,
+        5,
+        'owner@mfilm.online',
+      );
+
+      expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(result.items[0].movieId).toBe('jp_2');
+      expect(contentSimilarityService.getUserFavorites).toHaveBeenCalledWith(
+        'random_firebase_uid_123',
+        'owner@mfilm.online',
+      );
+    });
+
+    it('Phase 06 Bug Fix — Durable History: Tinybird historical events unlock recommendations when RAM cache is empty', async () => {
+      // Empty in-memory events (e.g. after Render restart)
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      contentSimilarityService.getUserFavorites.mockResolvedValue([]);
+
+      // Tinybird returns durable historical movie views
+      analyticsService.getRecentBehaviorSignals.mockResolvedValue([
+        { movieId: 'vn_1', score: 3.0 },
+      ]);
+
+      const result = await service.getRecommendations('user_durable_history', null, 5);
+
+      expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
+      expect(result.source).toBe('behavior');
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(analyticsService.getRecentBehaviorSignals).toHaveBeenCalledWith({
+        userId: 'user_durable_history',
+        limit: 30,
+      });
+    });
+
+    it('Phase 06 Bug Fix — Slug Resolution: Seed movie specified by slug correctly resolves to canonical profile', async () => {
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      // Seed movie provided as slug 'mat-biec' instead of doc ID 'vn_1'
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['mat-biec']);
+
+      const result = await service.getRecommendations('user_slug_seed', null, 5);
+
+      expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
+      expect(result.items.length).toBeGreaterThan(0);
     });
   });
 });

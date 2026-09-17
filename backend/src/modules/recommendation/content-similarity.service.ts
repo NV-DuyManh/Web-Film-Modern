@@ -71,6 +71,7 @@ const FIREBASE_CONFIG = {
 export class ContentSimilarityService implements OnModuleInit {
   private readonly logger = new Logger(ContentSimilarityService.name);
   private moviesMap = new Map<string, MovieContentProfile>();
+  private slugToIdMap = new Map<string, string>();
   private movieVectors = new Map<string, Map<string, number>>();
   private movieVectorNorms = new Map<string, number>();
   private invertedIndex = new Map<string, Array<{ movieId: string; weight: number }>>();
@@ -251,12 +252,16 @@ export class ContentSimilarityService implements OnModuleInit {
    */
   private buildIndex(profiles: MovieContentProfile[]) {
     this.moviesMap.clear();
+    this.slugToIdMap.clear();
     this.movieVectors.clear();
     this.movieVectorNorms.clear();
     this.invertedIndex.clear();
 
     for (const profile of profiles) {
       this.moviesMap.set(profile.id, profile);
+      if (profile.slug) {
+        this.slugToIdMap.set(profile.slug.toLowerCase().trim(), profile.id);
+      }
 
       const vector = new Map<string, number>();
 
@@ -326,10 +331,33 @@ export class ContentSimilarityService implements OnModuleInit {
   }
 
   /**
-   * Retrieve user favorite movie IDs from Firestore Users collection.
-   * Supports both direct document ID lookup and query fallback (e.g. Firebase Auth UID).
+   * Get a movie profile by document ID or slug.
    */
-  async getUserFavorites(userId: string): Promise<string[]> {
+  getMovie(idOrSlug: string): MovieContentProfile | undefined {
+    if (!idOrSlug) return undefined;
+    const direct = this.moviesMap.get(idOrSlug);
+    if (direct) return direct;
+    const mappedId = this.slugToIdMap.get(idOrSlug.toLowerCase().trim());
+    if (mappedId) return this.moviesMap.get(mappedId);
+    return undefined;
+  }
+
+  /**
+   * Resolves an ID or slug to the canonical indexed movie ID.
+   */
+  getCanonicalMovieId(idOrSlug: string): string | null {
+    if (!idOrSlug) return null;
+    if (this.moviesMap.has(idOrSlug)) return idOrSlug;
+    const mappedId = this.slugToIdMap.get(idOrSlug.toLowerCase().trim());
+    if (mappedId && this.moviesMap.has(mappedId)) return mappedId;
+    return null;
+  }
+
+  /**
+   * Retrieve user favorite movie IDs from Firestore Users collection.
+   * Supports direct document ID lookup, query fallbacks (uid, id), and verified email matching.
+   */
+  async getUserFavorites(userId: string, email?: string | null): Promise<string[]> {
     if (!this.firestoreDb) {
       this.initFirestore();
       if (!this.firestoreDb) return [];
@@ -341,8 +369,8 @@ export class ContentSimilarityService implements OnModuleInit {
       const snap = await getDoc(userRef);
       if (snap.exists()) {
         const data = snap.data();
-        if (Array.isArray(data?.listFavorite)) {
-          return data.listFavorite.filter(Boolean);
+        if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
+          return data.listFavorite.map(String).filter(Boolean);
         }
       }
 
@@ -352,8 +380,8 @@ export class ContentSimilarityService implements OnModuleInit {
       const snapUid = await getDocs(qUid);
       if (!snapUid.empty) {
         const data = snapUid.docs[0].data();
-        if (Array.isArray(data?.listFavorite)) {
-          return data.listFavorite.filter(Boolean);
+        if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
+          return data.listFavorite.map(String).filter(Boolean);
         }
       }
 
@@ -361,8 +389,21 @@ export class ContentSimilarityService implements OnModuleInit {
       const snapId = await getDocs(qId);
       if (!snapId.empty) {
         const data = snapId.docs[0].data();
-        if (Array.isArray(data?.listFavorite)) {
-          return data.listFavorite.filter(Boolean);
+        if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
+          return data.listFavorite.map(String).filter(Boolean);
+        }
+      }
+
+      // 3. Verified email fallback (safely maps verified Firebase Auth identity to Firestore customer document)
+      if (email && typeof email === 'string' && email.includes('@')) {
+        const targetEmail = email.toLowerCase().trim();
+        const qEmail = query(usersCol, where('email', '==', targetEmail));
+        const snapEmail = await getDocs(qEmail);
+        if (!snapEmail.empty) {
+          const data = snapEmail.docs[0].data();
+          if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
+            return data.listFavorite.map(String).filter(Boolean);
+          }
         }
       }
     } catch (err: any) {
@@ -384,7 +425,7 @@ export class ContentSimilarityService implements OnModuleInit {
     let validFavorites = 0;
 
     for (const seedId of seedIds) {
-      const movie = this.moviesMap.get(seedId);
+      const movie = this.getMovie(seedId);
       if (!movie) continue;
       validFavorites++;
 
@@ -449,9 +490,11 @@ export class ContentSimilarityService implements OnModuleInit {
    * Fast cosine similarity between two indexed movies.
    */
   computeCosineSimilarity(movieIdA: string, movieIdB: string): number {
-    if (!this.moviesMap.has(movieIdA) || !this.moviesMap.has(movieIdB)) return 0;
-    const vecA = this.movieVectors.get(movieIdA);
-    const vecB = this.movieVectors.get(movieIdB);
+    const canonicalA = this.getCanonicalMovieId(movieIdA);
+    const canonicalB = this.getCanonicalMovieId(movieIdB);
+    if (!canonicalA || !canonicalB) return 0;
+    const vecA = this.movieVectors.get(canonicalA);
+    const vecB = this.movieVectors.get(canonicalB);
     if (!vecA || !vecB) return 0;
 
     let dot = 0;
@@ -463,8 +506,8 @@ export class ContentSimilarityService implements OnModuleInit {
       }
     }
 
-    const normA = this.movieVectorNorms.get(movieIdA) || 1.0;
-    const normB = this.movieVectorNorms.get(movieIdB) || 1.0;
+    const normA = this.movieVectorNorms.get(canonicalA) || 1.0;
+    const normB = this.movieVectorNorms.get(canonicalB) || 1.0;
     return Number((dot / (normA * normB)).toFixed(4));
   }
 
@@ -483,7 +526,8 @@ export class ContentSimilarityService implements OnModuleInit {
 
     // 1. Seed-based similarity candidates (up to 20 similar movies per seed)
     for (const seedId of profile.seedIds) {
-      const similar = this.getSimilarMovies(seedId, 20);
+      const canonicalSeed = this.getCanonicalMovieId(seedId) || seedId;
+      const similar = this.getSimilarMovies(canonicalSeed, 20);
       for (const s of similar) {
         if (excludeIds.has(s.movieId) || candidateMap.has(s.movieId)) continue;
         const m = this.moviesMap.get(s.movieId);
@@ -519,13 +563,14 @@ export class ContentSimilarityService implements OnModuleInit {
    * Find Top-K similar movies to a given target movie.
    */
   getSimilarMovies(movieId: string, limit = 10): SimilarMovieCandidate[] {
-    if (!this.isInitialized || !this.moviesMap.has(movieId)) {
+    const canonicalId = this.getCanonicalMovieId(movieId);
+    if (!this.isInitialized || !canonicalId || !this.moviesMap.has(canonicalId)) {
       return [];
     }
 
-    const targetMovie = this.moviesMap.get(movieId)!;
-    const targetVector = this.movieVectors.get(movieId)!;
-    const targetNorm = this.movieVectorNorms.get(movieId)!;
+    const targetMovie = this.moviesMap.get(canonicalId)!;
+    const targetVector = this.movieVectors.get(canonicalId)!;
+    const targetNorm = this.movieVectorNorms.get(canonicalId)!;
 
     // Accumulate dot products across matching features using inverted index
     const dotProducts = new Map<string, number>();
@@ -533,7 +578,7 @@ export class ContentSimilarityService implements OnModuleInit {
     for (const [featKey, targetWeight] of targetVector.entries()) {
       const postings = this.invertedIndex.get(featKey) || [];
       for (const posting of postings) {
-        if (posting.movieId === movieId) continue; // Skip self
+        if (posting.movieId === canonicalId) continue; // Skip self
         dotProducts.set(
           posting.movieId,
           (dotProducts.get(posting.movieId) || 0) + (targetWeight * posting.weight),
@@ -621,10 +666,6 @@ export class ContentSimilarityService implements OnModuleInit {
       .sort((a, b) => b.similarityScore - a.similarityScore);
 
     return results.slice(0, limit);
-  }
-
-  getMovie(movieId: string): MovieContentProfile | undefined {
-    return this.moviesMap.get(movieId);
   }
 
   getAllMovies(): MovieContentProfile[] {

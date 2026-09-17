@@ -58,6 +58,7 @@ export class RecommendationService {
     userIdOrAuthUid: string | null = null,
     sessionIdOrLimit: string | number | null = null,
     limit = 10,
+    authEmail: string | null = null,
   ): Promise<RecommendationResponse> {
     const isEnabled = this.configService.get<string>('RECOMMENDATIONS_ENABLED');
     if (isEnabled === 'false') {
@@ -85,10 +86,26 @@ export class RecommendationService {
     // PATH 1: AUTHENTICATED USER (VERIFIED UID)
     // ==========================================
     if (authUid) {
-      const favIds = await this.resolveUserFavoriteIds(authUid);
-      const userEvents = this.eventService
+      const favIds = await this.resolveUserFavoriteIds(authUid, authEmail);
+      let userEvents = this.eventService
         ? this.eventService.getRecentInteractions({ userId: authUid, sessionId, limit: 30 })
         : [];
+
+      // Durable Fallback: If in-process RAM cache is empty (Render cold start / restart),
+      // query durable Tinybird behavior signals
+      if (userEvents.length === 0 && this.analytics?.getRecentBehaviorSignals) {
+        try {
+          const durableSignals = await this.analytics.getRecentBehaviorSignals({ userId: authUid, limit: 30 });
+          if (durableSignals.length > 0) {
+            userEvents = durableSignals.map((s) => ({
+              movieId: s.movieId,
+              eventType: 'movie_view' as const,
+              timestamp: Date.now(),
+              weight: s.score,
+            }));
+          }
+        } catch {}
+      }
 
       // Zero-signal check: 0 favorites AND 0 meaningful events -> HIDE SECTION
       if (favIds.length === 0 && userEvents.length === 0) {
@@ -170,9 +187,24 @@ export class RecommendationService {
       };
     }
 
-    const sessionEvents = this.eventService
+    let sessionEvents = this.eventService
       ? this.eventService.getRecentInteractions({ sessionId, limit: 30 })
       : [];
+
+    // Durable Fallback for session: If RAM cache is empty, query durable Tinybird
+    if (sessionEvents.length === 0 && this.analytics?.getRecentBehaviorSignals) {
+      try {
+        const durableSignals = await this.analytics.getRecentBehaviorSignals({ sessionId, limit: 30 });
+        if (durableSignals.length > 0) {
+          sessionEvents = durableSignals.map((s) => ({
+            movieId: s.movieId,
+            eventType: 'movie_view' as const,
+            timestamp: Date.now(),
+            weight: s.score,
+          }));
+        }
+      } catch {}
+    }
 
     if (sessionEvents.length === 0) {
       return {
@@ -250,7 +282,7 @@ export class RecommendationService {
   /**
    * Resolves user favorite IDs from PostgreSQL (if enabled) or Firebase Firestore.
    */
-  private async resolveUserFavoriteIds(userId: string): Promise<string[]> {
+  private async resolveUserFavoriteIds(userId: string, email?: string | null): Promise<string[]> {
     const isPostgresUserState = this.configService.get<string>('POSTGRES_USER_STATE_ENABLED') === 'true';
     const seedIds: string[] = [];
 
@@ -279,7 +311,7 @@ export class RecommendationService {
     // Path B: Firebase Firestore ($0 Production User State)
     if (seedIds.length === 0) {
       try {
-        const favorites = await this.contentSimilarity.getUserFavorites(userId);
+        const favorites = await this.contentSimilarity.getUserFavorites(userId, email);
         for (const mId of favorites) {
           if (!seedIds.includes(mId)) seedIds.push(mId);
         }

@@ -33,6 +33,7 @@ export class RecommendationController {
   ): Promise<RecommendationResponse> {
     // 1. Authenticated identity: STRICTLY from cryptographically verified Bearer token
     const authUid = typeof (req as any).user?.uid === 'string' ? (req as any).user.uid.trim() : null;
+    const authEmail = typeof (req as any).user?.email === 'string' ? (req as any).user.email.trim() : null;
 
     // 2. Anonymous session identifier: strictly pseudonymous telemetry correlation key (never an auth identity)
     let rawSessionId = req.headers['x-session-id'] || (req.query as any)?.sessionId || null;
@@ -46,6 +47,6 @@ export class RecommendationController {
 
     const safeLimit = Math.max(1, Math.min(30, limit));
 
-    return this.recommendationService.getRecommendations(authUid, safeSessionId, safeLimit);
+    return this.recommendationService.getRecommendations(authUid, safeSessionId, safeLimit, authEmail);
   }
 }

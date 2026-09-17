@@ -242,4 +242,55 @@ export class AnalyticsService {
     await this.redis.set(cacheKey, JSON.stringify(payload), 900);
     return payload;
   }
+
+  /**
+   * Durable Behavioral Signals
+   * Queries Tinybird recent_recommendation_signals pipe for historical interactions
+   * surviving Render restarts / cold starts.
+   */
+  async getRecentBehaviorSignals(opts: {
+    userId?: string | null;
+    sessionId?: string | null;
+    limit?: number;
+  }): Promise<Array<{ movieId: string; score: number }>> {
+    const apiUrl = this.configService.get<string>('tinybird.apiUrl');
+    const token = this.configService.get<string>('tinybird.token');
+    if (!token || !apiUrl) return [];
+
+    const canQuery = await this.checkAndIncrementBudget();
+    if (!canQuery) return [];
+
+    try {
+      const params = new URLSearchParams({ limit: String(opts.limit || 20) });
+      if (opts.sessionId) {
+        params.set('sessionId', opts.sessionId);
+      } else if (opts.userId) {
+        params.set('userId', opts.userId);
+      } else {
+        return [];
+      }
+
+      const url = `${apiUrl}/v0/pipes/recent_recommendation_signals.json?${params.toString()}`;
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+        signal: AbortSignal.timeout ? AbortSignal.timeout(3000) : undefined,
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (Array.isArray(result.data)) {
+          return result.data
+            .map((r: any) => ({
+              movieId: String(r.movieId || r.movie_id || ''),
+              score: Number(r.signalWeight || 1.0),
+            }))
+            .filter((r: any) => r.movieId && r.movieId !== 'none');
+        }
+      }
+    } catch (err: any) {
+      this.logger.warn(`Failed to fetch durable behavior signals from Tinybird: ${err.message}`);
+    }
+    return [];
+  }
 }
+
