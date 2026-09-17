@@ -208,15 +208,15 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
 ## 14. Step 2 & 2C Backend Production Acceptance & Truth Audit
 
 ### Git & Repository State
-- **Local Branch**: `main` (clean working directory).
-- **Live Deployed Remote Commit on Render**: `c375370` (includes `70657d4 feat: enable production personalized recommendations`).
-- **New Fix Commit Prepared**: `b232a21 fix: disable unused valkey connection in production` (awaiting push to remote).
+- **Local Branch**: `main` (clean working directory, synced with remote).
+- **Latest Remote Commit on `origin/main`**: `8f4f569` (includes `b232a21 fix: disable unused valkey connection in production` and `c375370`).
 - **Remote URL**: `https://github.com/NV-DuyManh/ManhFilm.git` (GitHub redirected to `NV-DuyManh/Web-Film-Modern.git`).
 
 ### Render Deployment State
 - **Render Backend Live Commit**: `c375370` — **PRODUCTION VERIFIED LIVE**
+- **Pending Deploy on Render**: `8f4f569` (contains `b232a21` to eliminate Valkey localhost retry warnings).
 - **Render Service Status**: **Live** (serving on `c375370`, uptime ~500s).
-- **Environment Flags**: `RECOMMENDATIONS_ENABLED=true`, `POSTGRES_CATALOG_ENABLED=false`.
+- **Environment Flags**: `RECOMMENDATIONS_ENABLED=true`, `POSTGRES_CATALOG_ENABLED=false`, `VALKEY_ENABLED=false`.
 - **Render Startup & Firestore Catalog Logs**:
   - `Indexed 884 movies from Firestore` — **PRODUCTION VERIFIED**
   - Nest application starts successfully.
@@ -243,7 +243,7 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
     `[RedisService] Configuring Redis connection using host: localhost:6380`
     `[RedisService] Valkey/Redis error: connect ECONNREFUSED 127.0.0.1:6380`
   - Root cause: `health.service.ts` previously coupled Valkey health to `RECOMMENDATIONS_ENABLED !== 'false'`. When recommendations were enabled, Valkey was checked against localhost. Additionally, `redis.service.ts` created an `ioredis` client on startup even when Valkey was not configured.
-- **Resolution Implemented in Commit `b232a21`**:
+- **Resolution Implemented in Commit `b232a21` & Pushed in `8f4f569`**:
   - Introduced explicit, dedicated feature flag `VALKEY_ENABLED=false` (disabled by default in production).
   - In `redis.service.ts`: If `VALKEY_ENABLED !== 'true'`, `onModuleInit()` completely skips `new Redis(...)` instantiation, connection attempts, error listeners, and retry loops.
   - In `health.service.ts`: Valkey readiness evaluates `process.env.VALKEY_ENABLED === 'true'`. When disabled, it reports `{ status: "disabled", message: "Disabled via VALKEY_ENABLED=false" }`.
@@ -266,8 +266,8 @@ Standardized under `eventVersion: "1"` using `src/services/eventTracker.js`:
 | **Anonymous Cold-Start Algorithm** | **PRODUCTION VERIFIED** | `source: popularity`, real movies | Verified live on `c375370`. |
 | **PostgreSQL Production Dependency** | **PRODUCTION VERIFIED: NO** | Disabled via `POSTGRES_CATALOG_ENABLED=false` | Endpoints function with zero DB reliance. |
 | **Valkey Production Dependency** | **PRODUCTION VERIFIED: NO** | Decoupled via `VALKEY_ENABLED=false` | In-process bounded cache handles serving. |
-| **Valkey Retry Warning Spam** | **CODE VERIFIED FIXED** | Fixed in `b232a21` | Awaits deploy of `b232a21` on Render. |
-| **Authenticated Personalization Algorithm** | **OWNER VERIFICATION REQUIRED** | Code-tested with mock token | Requires live Firebase auth token verification. |
+| **Valkey Retry Warning Spam** | **CODE VERIFIED FIXED** | Pushed in `8f4f569` | Requires manual deploy on Render to silence logs. |
+| **Authenticated Personalization Algorithm** | **OWNER VERIFICATION DEFERRED** | Non-blocking for practical acceptance | Requires real Firebase user auth testing. |
 | **Frontend Carousel Rendering** | **OWNER VERIFICATION REQUIRED** | Hidden on live prod | Requires `VITE_RECOMMENDATIONS_ENABLED=true` on Vercel. |
 | **Recommendation Telemetry (`view`/`click`)** | **OWNER VERIFICATION REQUIRED** | Telemetry handlers tested in code | Requires live browser session after deploy. |
 | **Tinybird Telemetry Ingestion** | **OWNER VERIFICATION REQUIRED** | Pipeline ready | Awaits live telemetry dispatch. |
