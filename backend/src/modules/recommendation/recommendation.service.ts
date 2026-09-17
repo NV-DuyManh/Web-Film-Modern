@@ -107,6 +107,11 @@ export class RecommendationService {
         } catch {}
       }
 
+      // Safe diagnostic logging: counts/booleans only — never logs uid, email, or token
+      this.logger.debug(
+        `[Auth Rec] authPresent=true favCount=${favIds.length} userEventCount=${userEvents.length} sessionId=${sessionId ? 'present' : 'absent'}`,
+      );
+
       // Zero-signal check: 0 favorites AND 0 meaningful events -> HIDE SECTION
       if (favIds.length === 0 && userEvents.length === 0) {
         return {
@@ -119,6 +124,7 @@ export class RecommendationService {
           items: [],
         };
       }
+
 
       const favFingerprint =
         favIds.length > 0 ? favIds.slice().sort().join(',').slice(0, 48) : 'none';

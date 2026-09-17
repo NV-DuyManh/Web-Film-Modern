@@ -2,7 +2,13 @@
  * MFILM Streaming Event Telemetry Client (Hardened & Quota-Safe)
  * Asynchronously captures client-side events and ships to NestJS Event Collector.
  * Adheres to $0 free-tier budget guards: non-blocking, throttled, and sanitized.
+ *
+ * Auth Fix (Phase 06): trackEvent is now async and injects Authorization: Bearer <token>
+ * for Firebase Auth (Google SSO) users so that EventService stores events under authUid.
+ * Email/password-only users have no auth.currentUser → proceed without token (session path).
  */
+
+import { getAuth } from 'firebase/auth';
 
 const API_BASE_URL =
   import.meta.env?.VITE_EVENT_API_BASE_URL || 'http://localhost:4000/api/v1';
@@ -86,6 +92,22 @@ function getDeviceType() {
 }
 
 /**
+ * Attempts to obtain a verified Firebase ID token for the current Firebase Auth session.
+ * Returns null if no Firebase Auth user is present (e.g. email/password-only login path).
+ * Never throws — auth failure must not block event delivery.
+ */
+async function getFirebaseIdToken() {
+  try {
+    const auth = getAuth();
+    const user = auth.currentUser;
+    if (!user) return null;
+    return await user.getIdToken();
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Sanitizes metadata to ensure no sensitive PII, tokens, or passwords can ever leak.
  */
 function sanitizeMetadata(metadata = {}) {
@@ -117,7 +139,8 @@ function resolveId(input, idFields = ['movieId', 'episodeId', 'id', '_id', 'slug
 }
 
 /**
- * Core dispatch function
+ * Core dispatch function — async to support optional Bearer token injection.
+ * Never blocks the UI. Auth failures are silently ignored; event is sent without token.
  */
 export async function trackEvent(eventType, movieId = '', episodeId = '', metadata = {}, isExitEvent = false) {
   if (!TELEMETRY_ENABLED) return;
@@ -165,8 +188,18 @@ export async function trackEvent(eventType, movieId = '', episodeId = '', metada
 
   const payloadStr = JSON.stringify(payload);
 
-  // Use navigator.sendBeacon for page unload/exit if supported
-  if (isExitEvent && typeof navigator !== 'undefined' && navigator.sendBeacon) {
+  // Attempt to get verified Firebase Auth token (Google SSO users).
+  // Email/password-only users have no auth.currentUser → token = null → proceed without token.
+  // Never block event delivery on auth failure.
+  const headers = { 'Content-Type': 'application/json' };
+  const idToken = await getFirebaseIdToken();
+  if (idToken) {
+    headers['Authorization'] = `Bearer ${idToken}`;
+  }
+
+  // Use navigator.sendBeacon for page unload/exit when no auth token is available.
+  // sendBeacon cannot carry custom headers, so exit events with token use fetch instead.
+  if (isExitEvent && !idToken && typeof navigator !== 'undefined' && navigator.sendBeacon) {
     try {
       const blob = new Blob([payloadStr], { type: 'application/json' });
       const sent = navigator.sendBeacon(COLLECTOR_URL, blob);
@@ -183,9 +216,7 @@ export async function trackEvent(eventType, movieId = '', episodeId = '', metada
 
     fetch(COLLECTOR_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: payloadStr,
       keepalive: true,
       signal: controller ? controller.signal : undefined,

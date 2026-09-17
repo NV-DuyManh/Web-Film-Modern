@@ -363,6 +363,30 @@ export class ContentSimilarityService implements OnModuleInit {
       if (!this.firestoreDb) return [];
     }
 
+    /**
+     * Normalize a single listFavorite entry to a canonical movie ID string.
+     * Firestore listFavorite may contain:
+     * - Plain string: "abc123"
+     * - Object reference: { id: "abc123", name: "..." } or { movieId: "abc123" } or { slug: "..." }
+     * Never return "[object Object]" — such entries are silently dropped.
+     */
+    const extractFavoriteId = (entry: unknown): string => {
+      if (!entry) return '';
+      if (typeof entry === 'string') return entry.trim();
+      if (typeof entry === 'number') return String(entry).trim();
+      if (typeof entry === 'object' && entry !== null) {
+        const e = entry as Record<string, unknown>;
+        const raw = e['id'] ?? e['movieId'] ?? e['slug'] ?? e['_id'] ?? '';
+        return typeof raw === 'string' ? raw.trim() : typeof raw === 'number' ? String(raw).trim() : '';
+      }
+      return '';
+    };
+
+    const normalizeList = (raw: unknown[]): string[] =>
+      raw
+        .map(extractFavoriteId)
+        .filter((id) => id.length > 0 && id !== 'none' && id !== '[object Object]');
+
     try {
       // 1. Direct document lookup by doc ID
       const userRef = doc(this.firestoreDb, 'Users', userId);
@@ -370,7 +394,8 @@ export class ContentSimilarityService implements OnModuleInit {
       if (snap.exists()) {
         const data = snap.data();
         if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
-          return data.listFavorite.map(String).filter(Boolean);
+          const ids = normalizeList(data.listFavorite);
+          if (ids.length > 0) return ids;
         }
       }
 
@@ -381,7 +406,8 @@ export class ContentSimilarityService implements OnModuleInit {
       if (!snapUid.empty) {
         const data = snapUid.docs[0].data();
         if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
-          return data.listFavorite.map(String).filter(Boolean);
+          const ids = normalizeList(data.listFavorite);
+          if (ids.length > 0) return ids;
         }
       }
 
@@ -390,7 +416,8 @@ export class ContentSimilarityService implements OnModuleInit {
       if (!snapId.empty) {
         const data = snapId.docs[0].data();
         if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
-          return data.listFavorite.map(String).filter(Boolean);
+          const ids = normalizeList(data.listFavorite);
+          if (ids.length > 0) return ids;
         }
       }
 
@@ -402,7 +429,8 @@ export class ContentSimilarityService implements OnModuleInit {
         if (!snapEmail.empty) {
           const data = snapEmail.docs[0].data();
           if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
-            return data.listFavorite.map(String).filter(Boolean);
+            const ids = normalizeList(data.listFavorite);
+            if (ids.length > 0) return ids;
           }
         }
       }
