@@ -43,6 +43,7 @@ function ForYouInner() {
     const viewedMoviesRef = useRef(new Set());
     // Track the abort controller for the current in-flight request
     const abortControllerRef = useRef(null);
+    const swiperRef = useRef(null);
 
     const RECOMMENDATIONS_ENABLED = import.meta.env?.VITE_RECOMMENDATIONS_ENABLED === 'true';
     const API_BASE_URL =
@@ -287,12 +288,22 @@ function ForYouInner() {
             </div>
 
             <div className="movie-slider-wrapper relative group/slider">
-                <button aria-label="Previous" className="movie-nav-btn movie-nav-btn--prev foryou-prev-btn" draggable="false">
+                <button 
+                    aria-label="Previous" 
+                    className="movie-nav-btn movie-nav-btn--prev foryou-prev-btn" 
+                    draggable="false"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        swiperRef.current?.slidePrev();
+                    }}
+                >
                     <FaChevronLeft />
                 </button>
 
                 <Swiper
                     modules={[Navigation]}
+                    onSwiper={(swiper) => (swiperRef.current = swiper)}
                     navigation={{
                         nextEl: '.foryou-next-btn',
                         prevEl: '.foryou-prev-btn',
@@ -402,7 +413,16 @@ function ForYouInner() {
                     ))}
                 </Swiper>
 
-                <button aria-label="Next" className="movie-nav-btn movie-nav-btn--next foryou-next-btn" draggable="false">
+                <button 
+                    aria-label="Next" 
+                    className="movie-nav-btn movie-nav-btn--next foryou-next-btn" 
+                    draggable="false"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        swiperRef.current?.slideNext();
+                    }}
+                >
                     <FaChevronRight />
                 </button>
             </div>

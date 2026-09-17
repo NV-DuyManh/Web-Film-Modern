@@ -36,6 +36,7 @@ export interface MovieContentProfile {
 export interface UserPreferenceProfile {
   userId: string;
   seedIds: string[];
+  seedWeights: Map<string, number>;
   categoryWeights: Map<string, number>;
   countryWeights: Map<string, number>;
   actorWeights: Map<string, number>;
@@ -444,7 +445,14 @@ export class ContentSimilarityService implements OnModuleInit {
    * Build an interpretable UserPreferenceProfile from favorite movie IDs.
    * Generates category/country/talent histograms and calculates dynamic country concentration.
    */
-  buildUserPreferenceProfile(userId: string, seedIds: string[]): UserPreferenceProfile {
+  buildUserPreferenceProfile(userId: string, seeds: Array<{ movieId: string; weight: number }>): UserPreferenceProfile {
+    const seedIds = seeds.map((s) => s.movieId);
+    const seedWeights = new Map<string, number>();
+    for (const s of seeds) {
+      const existing = seedWeights.get(s.movieId) || 0;
+      seedWeights.set(s.movieId, Math.max(existing, s.weight));
+    }
+
     const categoryWeights = new Map<string, number>();
     const countryWeights = new Map<string, number>();
     const actorWeights = new Map<string, number>();
@@ -452,33 +460,33 @@ export class ContentSimilarityService implements OnModuleInit {
 
     let validFavorites = 0;
 
-    for (const seedId of seedIds) {
+    for (const { movieId: seedId, weight } of seeds) {
       const movie = this.getMovie(seedId);
       if (!movie) continue;
-      validFavorites++;
+      if (weight >= 0.9) validFavorites++; // Treat high-weight seeds as favorites for concentration
 
       // Category counts
       for (const cat of movie.categories) {
         const cKey = String(cat).trim();
-        categoryWeights.set(cKey, (categoryWeights.get(cKey) || 0) + 1);
+        categoryWeights.set(cKey, (categoryWeights.get(cKey) || 0) + weight);
       }
 
       // Country counts
       const country = normalizeCountry(movie.country);
       if (country) {
-        countryWeights.set(country, (countryWeights.get(country) || 0) + 1);
+        countryWeights.set(country, (countryWeights.get(country) || 0) + weight);
       }
 
       // Actors
       for (const actor of movie.actors) {
         const aKey = String(actor).trim();
-        actorWeights.set(aKey, (actorWeights.get(aKey) || 0) + 1);
+        actorWeights.set(aKey, (actorWeights.get(aKey) || 0) + weight);
       }
 
       // Authors
       for (const author of movie.authors) {
         const auKey = String(author).trim();
-        authorWeights.set(auKey, (authorWeights.get(auKey) || 0) + 1);
+        authorWeights.set(auKey, (authorWeights.get(auKey) || 0) + weight);
       }
     }
 
@@ -498,11 +506,17 @@ export class ContentSimilarityService implements OnModuleInit {
       }
     }
 
-    const countryConcentration = validFavorites > 0 ? maxCountryCount / validFavorites : 0;
+    let totalWeight = 0;
+    for (const s of seeds) {
+      totalWeight += s.weight;
+    }
+
+    const countryConcentration = totalWeight > 0 ? maxCountryCount / totalWeight : 0;
 
     return {
       userId,
       seedIds,
+      seedWeights,
       categoryWeights,
       countryWeights,
       actorWeights,

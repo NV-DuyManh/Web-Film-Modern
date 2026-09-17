@@ -151,17 +151,31 @@ flowchart TD
 
 ## 4. Meaningful Signals & Behavioral Profile
 
-### Event Eligibility
-Only meaningful movie interaction events contribute to behavioral recommendations:
+### Event Eligibility & Weighting Model
 
-| Event Type | Weight | Role in Recommendation |
+The system employs a dual-level weighting architecture:
+
+**1. RAW SIGNAL WEIGHT (Event Telemetry):**
+Generated immediately at event capture (`EventService`) and emitted to Kafka/Tinybird.
+| Event Type | Raw Weight |
+|---|---|
+| `complete` | 5.0 |
+| `watch_progress` | 3.0–4.0 |
+| `play` | 2.5 |
+| `recommendation_click` | 2.0 |
+| `movie_view` | 1.0 |
+
+**2. FINAL NORMALIZED RANKING CONTRIBUTION (Recommendation Engine):**
+Recalculated during personalized ranking (`RecommendationService`) to prevent older/weak interactions from overtaking durable preferences.
+| Event Type | Base Ranking Weight | Recency Decay |
 |---|---|---|
-| `complete` | 5.0 | Very strong positive signal (film watched to conclusion) |
-| `watch_progress` | 3.0–4.0 | Strong positive signal ($\ge 70\%$ progress yields weight 4.0) |
-| `play` | 2.5 | Active viewing initiation |
-| `recommendation_click` | 2.0 | Explicit interest in recommended candidate |
-| `movie_view` | 1.0 | Initial engagement (sufficient alone to unlock "Dành Cho Bạn") |
-| `buffer_start` / `buffer_end` | 0.0 | **IGNORED** (technical telemetry only) |
+| `complete` | 0.90 | $\le 24$h: 1.0 |
+| `watch_progress` | 0.65 | $\le 7$d: 0.85 |
+| `play` | 0.40 | $\le 30$d: 0.65 |
+| `recommendation_click` | 0.35 | $> 30$d: 0.45 |
+| `movie_view` | 0.15 | |
+
+*Note: The raw signal weight is stored durably in Tinybird but ranking dynamically applies the normalized weight and decay to prioritize long-term stability over single recent clicks.*
 
 ### Event Bridge Mechanism: Tinybird + In-Process Store
 - **Immediate Bridge**: `EventService` maintains a bounded in-process LRU cache (`sessionInteractions` and `userInteractions`, capped at 500 entities and 30 events each). This guarantees $<1\text{ms}$ zero-latency recommendation updates upon the first click without waiting for Kafka-Tinybird ingestion propagation.
@@ -212,6 +226,13 @@ The multi-stage ranking model preserves quality enhancements:
 4. **Popularity Tie-Breaker**: Capped at $\le 0.05$ so popular movies cannot override true user preference.
 5. **Diversity Re-Ranking**: Primary genre repetition capped at 4 (unless high country focus).
 
+### Long-Term Personalization Stability & Recency Decay
+To ensure one recent click does not dominate long-term profile preferences:
+- **Event Weighting & Recency Decay**: Recent events are weighted by type (`complete`: 0.90, `watch_progress`: 0.65, `play`: 0.40, `recommendation_click`: 0.35, `movie_view`: 0.15) and decayed over time (1.0 for $<24$h, down to 0.45 for $>30$d).
+- **Influence Capping**: The maximum similarity contribution (`maxSim`) of any seed is strictly scaled by its weight. A weak `movie_view` can only contribute a maximum of $0.15 \times 0.65$ to the similarity score, preventing it from overtaking durable high-weight preferences (favorites or completed views).
+- **Durable Fingerprints**: The behavioral cache fingerprint (`behFp`) only incorporates the top 5 most recent signals to prevent excessive cache churn while retaining profile stability.
+- **Tinybird Signal Preservation**: The `getRecentBehaviorSignals` query maps and returns the exact `eventType` and `timestamp` from Tinybird, preventing historical durable signals from being flattened into a monolithic `movie_view` at `Date.now()`.
+
 ### Truthful Vietnamese Reason Generation
 - Behavior single-movie match: `"Vì bạn vừa xem \"[Tên phim]\""`
 - Dominant Vietnam behavior/favorites: `"Vì bạn thường xem phim Việt Nam"`
@@ -221,9 +242,9 @@ The multi-stage ranking model preserves quality enhancements:
 
 ---
 
-## 7. Deterministic Persona Test Results (Personas 0 through 8)
+## 7. Deterministic Persona Test Results
 
-All 9 personas specified in Section 15 were implemented and validated:
+All personas and stability behaviors are strictly verified via deterministic unit tests.
 
 ```
 PASS src/modules/recommendation/content-similarity.service.spec.ts
@@ -231,20 +252,31 @@ PASS src/modules/recommendation/recommendation.controller.spec.ts
 PASS src/modules/recommendation/recommendation.service.spec.ts
   RecommendationService
     Core Functionality & Error Handling
-      ✓ should throw ServiceUnavailableException when RECOMMENDATIONS_ENABLED is false (2 ms)
-      ✓ should bound limit parameter safely within 1 to 30 (1 ms)
-      ✓ should survive completely when Redis and PostgreSQL are absent/throwing (1 ms)
+      ✓ should throw ServiceUnavailableException when RECOMMENDATIONS_ENABLED is false
+      ✓ should bound limit parameter safely within 1 to 30
+      ✓ should survive completely when Redis and PostgreSQL are absent/throwing
     Persona Testing: Personas 0 through 8 Deterministic Validation
-      ✓ Persona 0 — Brand-new Anonymous: no session events yields eligible=false, total=0, source="none" (1 ms)
-      ✓ Persona 1 — Anonymous First Click: one movie_view for movie A yields eligible=true, recommendations related to movie A (1 ms)
-      ✓ Persona 2 — Anonymous Vietnam-Heavy: recent events mainly Vietnamese movies visibly favor Vietnamese films (1 ms)
-      ✓ Persona 3 — Authenticated No Data: verified uid with 0 favorites and 0 events yields eligible=false, hidden (1 ms)
-      ✓ Persona 4 — Authenticated Favorites: verified uid with favorites yields eligible=true, personalized results (1 ms)
-      ✓ Persona 5 — Authenticated Behavior Only: verified uid with 0 favorites but viewing events yields eligible=true, behavior-driven (1 ms)
-      ✓ Persona 6 — Isolation: two auth users and two anon sessions have isolated cache keys without cross-profile leakage (1 ms)
-      ✓ Persona 7 — Spoofing: anonymous request with forged client identity never accesses protected user favorites (1 ms)
-      ✓ Persona 8 — Cold Generic Homepage: baseline popularity still works for general catalog, but for-you is zero-signal gated (1 ms)
-      ✓ Cache Fingerprinting: User recommendations update immediately when favorites change without waiting 1 hour (1 ms)
+      ✓ Persona 0 — Brand-new Anonymous: no session events yields eligible=false, total=0, source="none"
+      ✓ Persona 1 — Anonymous First Click: one movie_view for movie A yields eligible=true, recommendations related to movie A
+      ✓ Persona 2 — Anonymous Vietnam-Heavy: recent events mainly Vietnamese movies visibly favor Vietnamese films
+      ✓ Persona 3 — Authenticated No Data: verified uid with 0 favorites and 0 events yields eligible=false, hidden
+      ✓ Persona 4 — Authenticated Favorites: verified uid with favorites yields eligible=true, personalized results
+      ✓ Persona 5 — Authenticated Behavior Only: verified uid with 0 favorites but viewing events yields eligible=true, behavior-driven
+      ✓ Persona 6 — Isolation: two auth users and two anon sessions have isolated cache keys without cross-profile leakage
+      ✓ Persona 7 — Spoofing: anonymous request with forged client identity never accesses protected user favorites
+      ✓ Persona 8 — Cold Generic Homepage: baseline popularity still works for general catalog, but for-you is zero-signal gated
+      ✓ Cache Fingerprinting: User recommendations update immediately when favorites change without waiting 1 hour
+    Phase 06 Auth Path Fix Regression Tests
+      ✓ Test A — Authenticated, favorites-only (no RAM events): eligible=true, items present
+      ✓ Test B — Authenticated, behavior-only (no favorites, events from session union): eligible=true
+      ✓ Test C — Anonymous-to-Login Continuity: session events visible to authenticated profile
+      ✓ Test D — listFavorite with object entries: IDs correctly extracted, eligible=true
+      ✓ Test E — Spoofing: request without Bearer token cannot invoke authenticated favorite lookup path
+    Phase 06 Long-Term Stability Regression Tests
+      ✓ Test F — Logout/login persistence: long-term profile survives logout/login/new session
+      ✓ Test G — One click must not dominate: historical profile remains dominant over a single new movie_view
+      ✓ Test H — Multi-interest profile: top-N includes recommendations from multiple meaningful profile clusters
+      ✓ Test I — Strong signal > weak signal: favorite/complete > movie_view
 ```
 
 - **Persona 0 (Brand-new Anonymous)**: 0 events $\to$ `eligible: false`, `total: 0`, `source: "none"`, items empty.
@@ -256,6 +288,10 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
 - **Persona 6 (Isolation)**: Distinct cache keys and distinct results across auth users and anon sessions.
 - **Persona 7 (Spoofing)**: Forged `x-user-id` and `?userId=` without Bearer token cannot access protected user favorites.
 - **Persona 8 (Cold Generic Homepage)**: General catalog baseline popularity still works, while "Dành Cho Bạn" remains zero-signal gated.
+- **Test F (Logout/Login Persistence)**: Long-term profile sourced from Firestore/Tinybird survives new session initialization without requiring new movie clicks.
+- **Test G (One-Click Stability)**: Introducing a single new weak `movie_view` to a stable profile does not overwrite the entire recommendation row; historical signals continue to dominate the top results.
+- **Test H (Multi-Interest Profile)**: A user with distinct clusters (e.g. US Action, JP Anime, VN) receives diverse recommendations spanning multiple meaningful profile clusters.
+- **Test I (Signal Strength)**: A strong signal (`complete`) exerts significantly higher ranking influence than a recent weak signal (`movie_view`).
 
 ---
 
@@ -263,9 +299,9 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | **2ac25c7** | Latest Phase 06 commit; pushed to `origin/main`. Includes all prior Phase 06 commits. |
-| **Render Deployed Commit** | **Pending** | Awaiting owner manual deploy of `2ac25c7`. |
-| **Vercel Deployed Commit** | **Pending** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on `2ac25c7`. |
+| **Definitive Commit** | **21d49fb** | Latest Phase 06 commit; pushed to `origin/main`. Includes all prior Phase 06 commits. |
+| **Render Deployed Commit** | **Pending** | Awaiting owner manual deploy of `21d49fb`. |
+| **Vercel Deployed Commit** | **Pending** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on `21d49fb`. |
 | **Email/password Firebase Auth** | **CODE VERIFIED** | `signInWithEmailAndPassword` + auto-provision at login/register. |
 | **Session rotation on logout** | **CODE VERIFIED** | `rotateSessionId()` clears `mfilm_session_id`, called on logout and account switch. |
 | **ForYou crash fix** | **CODE VERIFIED** | AbortController, authEpoch stale guard, ErrorBoundary. |
@@ -281,28 +317,33 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
 | **recommendation_view (HTTP 202)** | **CODE VERIFIED** | Telemetry handler verified in code and unit test. |
 | **recommendation_click (HTTP 202)** | **CODE VERIFIED** | Telemetry handler verified in code and unit test. |
 | **Tinybird Telemetry Ingestion** | **CODE VERIFIED** | `mfilm_behavior` datasource and `recent_recommendation_signals.pipe` ready. |
-| **Durable Behavior Path** | **CODE VERIFIED / PRODUCTION DEFERRED** | Immediate bridge via `EventService` in-process store active; Tinybird durable pipeline configured. |
-| **Backend Tests** | **PRODUCTION VERIFIED** | 11/11 test suites passed, 50/50 tests passed (`npm test`). |
-| **Backend Build** | **PRODUCTION VERIFIED** | `nest build` completed with 0 errors. |
-| **Frontend Build** | **PRODUCTION VERIFIED** | `vite build` completed in 1.27s with 116 assets. |
-| **Render Readiness (`/health/ready`)** | **PRODUCTION VERIFIED** | `HTTP 200`, `status: "ready"`, `kafka: "healthy"`. |
-| **PostgreSQL Disabled in Production** | **PRODUCTION VERIFIED** | `POSTGRES_CATALOG_ENABLED=false`. |
-| **Valkey Disabled in Production** | **PRODUCTION VERIFIED** | `VALKEY_ENABLED=false` (zero retry warnings). |
-| **Zero Added Cost ($0 Budget)** | **PRODUCTION VERIFIED** | All components operate within free-tier limits. |
+| **Durable Behavior Path** | **CODE VERIFIED** | Immediate bridge via `EventService` in-process store active; Tinybird durable pipeline configured. |
+| **Backend Tests** | **LOCAL TEST VERIFIED** | 11/11 test suites passed, 63/63 tests passed (`npm test`). |
+| **Backend Build** | **LOCAL BUILD VERIFIED** | `nest build` completed with 0 errors. |
+| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed successfully. |
+| **Render Readiness (`/health/ready`)** | **CODE VERIFIED** | Healthcheck endpoint returns `HTTP 200`, `status: "ready"`, `kafka: "healthy"`. |
+| **PostgreSQL Disabled in Production** | **CODE VERIFIED** | `POSTGRES_CATALOG_ENABLED=false`. |
+| **Valkey Disabled in Production** | **CODE VERIFIED** | `VALKEY_ENABLED=false` (zero retry warnings). |
+| **Zero Added Cost ($0 Budget)** | **CODE VERIFIED** | All components operate within free-tier limits. |
+| **Long-Term Profile Stability** | **LOCAL TEST VERIFIED** | `seedWeights` scale `maxSim`; Tinybird signals retain `eventType` and `timestamp`. |
+| **Stable Cache Fingerprints** | **LOCAL TEST VERIFIED** | `behFingerprint` constrained to top 5 recent events. |
+| **Carousel Navigation (ForYou)** | **CODE VERIFIED / LOCAL MANUAL VERIFIED** | `swiperRef` used for explicit controlled DOM interaction instead of CSS selectors. |
 
 ---
 
 ## 9. Owner Production Acceptance Steps
-1. **Push latest commit** (if not already): `git push origin main` (definitive commit: `95ccfbf`).
-2. **Deploy on Render**: Open Render Dashboard -> `mfilm-backend` -> **Manual Deploy** -> **Deploy latest commit** (`95ccfbf`).
+1. **Push latest commit** (if not already): `git push origin main`
+2. **Deploy on Render**: Open Render Dashboard -> `mfilm-backend` -> **Manual Deploy** -> **Deploy latest commit**
 3. **Deploy on Vercel**: Open Vercel Dashboard -> `web-film-modern`:
    - Confirm environment variable `VITE_RECOMMENDATIONS_ENABLED=true` is set.
-   - Trigger **Redeploy** on `main` branch (`95ccfbf`).
+   - Trigger **Redeploy** on `main` branch.
 4. **Final Verification Checklist** (once both deployments are live):
    - Open a fresh Incognito browser window to `https://www.mfilm.online`.
    - ✅ Confirm "Dành Cho Bạn" is **completely hidden** (no heading, no blank gap) for a new anonymous visitor.
    - ✅ Click one movie card on the homepage (emits `movie_view` at `POST /api/v1/events`, expect `HTTP 202`).
    - ✅ Return to homepage -> confirm "Dành Cho Bạn" **appears with related movie cards** (first-click unlock).
    - ✅ Click one recommended card -> confirm `recommendation_click` fires with `HTTP 202`.
-   - ✅ Log in as an account with favorites -> confirm personalized "Dành Cho Bạn" cards reflect content preferences.
+   - ✅ Test carousel navigation: Click `>` and `<` arrows; ensure they scroll the list correctly.
+   - ✅ Log in as an account with long-term history/favorites -> confirm "Dành Cho Bạn" reflects accumulated preferences, not just the single most recent click.
+   - ✅ Log out, log into a different account -> confirm recommendations change to match the second account (Isolation).
    - ✅ Log in as an account with NO favorites and NO history -> confirm "Dành Cho Bạn" is hidden.

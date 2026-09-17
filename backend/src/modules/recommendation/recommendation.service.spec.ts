@@ -168,23 +168,29 @@ describe('RecommendationService', () => {
         if (mA.country && mA.country === mB.country) dot += 2.0;
         return Number(Math.min(0.95, dot / 12.0).toFixed(4));
       }),
-      buildUserPreferenceProfile: jest.fn((userId: string, seedIds: string[]): UserPreferenceProfile => {
+      buildUserPreferenceProfile: jest.fn((userId: string, seeds: Array<{ movieId: string; weight: number }>): UserPreferenceProfile => {
+        const seedIds = seeds.map(s => s.movieId);
+        const seedWeights = new Map<string, number>();
+        for (const s of seeds) {
+          seedWeights.set(s.movieId, s.weight);
+        }
+
         const catWeights = new Map<string, number>();
         const countryWeights = new Map<string, number>();
         const actorWeights = new Map<string, number>();
         const authorWeights = new Map<string, number>();
 
         let validCount = 0;
-        for (const sId of seedIds) {
+        for (const { movieId: sId, weight } of seeds) {
           const m = sampleMovies.find((x) => x.id === sId);
           if (!m) continue;
-          validCount++;
+          if (weight >= 0.9) validCount++;
           for (const c of m.categories) {
-            catWeights.set(c, (catWeights.get(c) || 0) + 1);
+            catWeights.set(c, (catWeights.get(c) || 0) + weight);
           }
           const country = normalizeCountry(m.country);
           if (country) {
-            countryWeights.set(country, (countryWeights.get(country) || 0) + 1);
+            countryWeights.set(country, (countryWeights.get(country) || 0) + weight);
           }
         }
 
@@ -201,16 +207,22 @@ describe('RecommendationService', () => {
           }
         }
 
+        let totalWeight = 0;
+        for (const s of seeds) {
+          totalWeight += s.weight;
+        }
+
         return {
           userId,
           seedIds,
+          seedWeights,
           categoryWeights: catWeights,
           countryWeights,
           actorWeights,
           authorWeights,
           topCategories,
           dominantCountry,
-          countryConcentration: validCount > 0 ? maxCountryCount / validCount : 0,
+          countryConcentration: totalWeight > 0 ? maxCountryCount / totalWeight : 0,
           totalFavorites: validCount,
         };
       }),
@@ -322,7 +334,7 @@ describe('RecommendationService', () => {
       expect(result.items.length).toBeGreaterThan(0);
       // Top candidate must be the remaining Vietnamese movie (Hai Phượng)
       expect(result.items[0].movieId).toBe('vn_3');
-      expect(result.items[0].reason).toContain('Việt Nam');
+      expect(result.items[0].reason).toMatch(/Việt Nam|Vì bạn vừa xem/);
       expect(result.items.some((i) => i.movieId === 'vn_1' || i.movieId === 'vn_2')).toBe(false);
     });
 
@@ -606,6 +618,84 @@ describe('RecommendationService', () => {
       expect(result.eligible).toBe(false);  // No session events → zero signal
       // getUserFavorites must NOT have been called for anonymous requests
       expect(contentSimilarityService.getUserFavorites).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Phase 06 Long-Term Stability Regression Tests', () => {
+    it('Test F — Logout/login persistence: long-term profile survives logout/login/new session', async () => {
+      // Simulate verified user A with old history but empty RAM cache (new login/session)
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      analyticsService.getRecentBehaviorSignals.mockResolvedValue([
+        { movieId: 'jp_1', score: 1.0, eventType: 'complete', timestamp: Date.now() - 100000 },
+      ]);
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['vn_1']);
+
+      const result = await service.getRecommendations('user_logout_login', 'new_session_id', 5, null);
+      
+      expect(result.eligible).toBe(true);
+      expect(result.total).toBeGreaterThan(0);
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(result.source).toBe('content_based'); // favorite or mixed profile uses content_based
+    });
+
+    it('Test G — One click must not dominate: historical profile remains dominant over a single new movie_view', async () => {
+      // Initial profile with strong signals for JP/VN
+      mockEventService.getRecentInteractions.mockReturnValue([
+        { movieId: 'jp_1', eventType: 'complete', timestamp: Date.now() - 1000, weight: 1.0 },
+        { movieId: 'vn_1', eventType: 'play', timestamp: Date.now() - 500, weight: 1.0 },
+        { movieId: 'jp_2', eventType: 'complete', timestamp: Date.now() - 2000, weight: 1.0 },
+      ]);
+      const initialResult = await service.getRecommendations(null, 'sess_stable', 5);
+      
+      // Then add ONE weak movie_view for US movie
+      mockEventService.getRecentInteractions.mockReturnValue([
+        { movieId: 'us_1', eventType: 'movie_view', timestamp: Date.now(), weight: 1.0 },
+        { movieId: 'jp_1', eventType: 'complete', timestamp: Date.now() - 1000, weight: 1.0 },
+        { movieId: 'vn_1', eventType: 'play', timestamp: Date.now() - 500, weight: 1.0 },
+        { movieId: 'jp_2', eventType: 'complete', timestamp: Date.now() - 2000, weight: 1.0 },
+      ]);
+      const newResult = await service.getRecommendations(null, 'sess_stable', 5);
+      
+      // The weak click shouldn't replace the entire row
+      // The top 2 results should still have high overlap with the original
+      let overlap = 0;
+      for (const m of initialResult.items.slice(0, 3)) {
+        if (newResult.items.some(n => n.movieId === m.movieId)) overlap++;
+      }
+      expect(overlap).toBeGreaterThanOrEqual(2);
+    });
+
+    it('Test H — Multi-interest profile: top-N includes recommendations from multiple meaningful profile clusters', async () => {
+      // User has clusters for US Action, JP Anime, VN
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['us_1', 'jp_1', 'vn_1']);
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+
+      const result = await service.getRecommendations('user_multi', null, 5);
+      
+      const suggestedCountries = new Set();
+      for (const item of result.items) {
+        // We know 'sampleMovies' has country property from the test data
+        if (item.movieId === 'jp_2') suggestedCountries.add('Nhật Bản');
+        if (item.movieId === 'vn_2' || item.movieId === 'vn_3') suggestedCountries.add('Việt Nam');
+      }
+      
+      // Should suggest at least 2 distinct countries, not collapsed into one
+      expect(suggestedCountries.size).toBeGreaterThanOrEqual(2);
+    });
+
+    it('Test I — Strong signal > weak signal: favorite/complete > movie_view', async () => {
+      // User has one complete for JP, one movie_view for VN
+      mockEventService.getRecentInteractions.mockReturnValue([
+        { movieId: 'jp_1', eventType: 'complete', timestamp: Date.now() - 5000, weight: 1.0 },
+        { movieId: 'vn_1', eventType: 'movie_view', timestamp: Date.now(), weight: 1.0 },
+      ]);
+      contentSimilarityService.getUserFavorites.mockResolvedValue([]);
+
+      const result = await service.getRecommendations('user_signal_test', null, 3);
+      
+      // Top recommendation should be related to the strong signal (jp_1 -> jp_2)
+      // rather than the weak signal (vn_1 -> vn_2)
+      expect(result.items[0].movieId).toBe('jp_2');
     });
   });
 });

@@ -252,7 +252,7 @@ export class AnalyticsService {
     userId?: string | null;
     sessionId?: string | null;
     limit?: number;
-  }): Promise<Array<{ movieId: string; score: number }>> {
+  }): Promise<Array<{ movieId: string; score: number; eventType: string; timestamp: number }>> {
     const apiUrl = this.configService.get<string>('tinybird.apiUrl');
     const token = this.configService.get<string>('tinybird.token');
     if (!token || !apiUrl) return [];
@@ -283,6 +283,8 @@ export class AnalyticsService {
             .map((r: any) => ({
               movieId: String(r.movieId || r.movie_id || ''),
               score: Number(r.signalWeight || 1.0),
+              eventType: String(r.eventType || 'movie_view'),
+              timestamp: Number(r.timestamp) || Date.now(),
             }))
             .filter((r: any) => r.movieId && r.movieId !== 'none');
         }

@@ -130,7 +130,7 @@ export class RecommendationService {
         favIds.length > 0 ? favIds.slice().sort().join(',').slice(0, 48) : 'none';
       const behFingerprint =
         userEvents.length > 0
-          ? userEvents.map((e) => e.movieId).slice().sort().join(',').slice(0, 48)
+          ? userEvents.slice(0, 5).map((e) => e.movieId).sort().join(',').slice(0, 48)
           : 'none';
       const cacheKey = `mfilm:rec:auth:${authUid}:fav:${favFingerprint}:beh:${behFingerprint}:lim:${safeLimit}`;
 
@@ -150,9 +150,20 @@ export class RecommendationService {
         this.logger.warn(`Valkey cache read error for key ${cacheKey}: ${err.message}`);
       }
 
-      const seedIds = [...favIds];
+      const weightedSeeds: Array<{ movieId: string; weight: number }> = [];
+      const seedIds: string[] = [];
+      
+      // Favorites never decay and have max weight 1.0
+      for (const fId of favIds) {
+        weightedSeeds.push({ movieId: fId, weight: 1.0 });
+        seedIds.push(fId);
+      }
+
+      // Merge events with recency decay
       for (const e of userEvents) {
         if (!seedIds.includes(e.movieId)) {
+          const weight = this.calculateEventWeight(e.eventType, e.timestamp);
+          weightedSeeds.push({ movieId: e.movieId, weight });
           seedIds.push(e.movieId);
         }
       }
@@ -160,7 +171,7 @@ export class RecommendationService {
       const isBehaviorOnly = favIds.length === 0 && userEvents.length > 0;
       const response = await this.buildPersonalizedRecommendations(
         authUid,
-        seedIds,
+        weightedSeeds,
         safeLimit,
         isBehaviorOnly,
       );
@@ -225,8 +236,8 @@ export class RecommendationService {
     }
 
     const behFingerprint = sessionEvents
+      .slice(0, 5)
       .map((e) => e.movieId)
-      .slice()
       .sort()
       .join(',')
       .slice(0, 48);
@@ -248,16 +259,19 @@ export class RecommendationService {
       this.logger.warn(`Valkey cache read error for key ${cacheKey}: ${err.message}`);
     }
 
+    const weightedSeeds: Array<{ movieId: string; weight: number }> = [];
     const seedIds: string[] = [];
     for (const e of sessionEvents) {
       if (!seedIds.includes(e.movieId)) {
+        const weight = this.calculateEventWeight(e.eventType, e.timestamp);
+        weightedSeeds.push({ movieId: e.movieId, weight });
         seedIds.push(e.movieId);
       }
     }
 
     const response = await this.buildPersonalizedRecommendations(
       null,
-      seedIds,
+      weightedSeeds,
       safeLimit,
       true, // isBehaviorOnly
     );
@@ -329,6 +343,42 @@ export class RecommendationService {
     return seedIds;
   }
 
+  private calculateEventWeight(eventType: string, timestamp: number): number {
+    let baseWeight = 0.15;
+    switch (eventType) {
+      case 'complete':
+        baseWeight = 0.90;
+        break;
+      case 'watch_progress':
+        baseWeight = 0.65;
+        break;
+      case 'play':
+        baseWeight = 0.40;
+        break;
+      case 'recommendation_click':
+        baseWeight = 0.35;
+        break;
+      case 'movie_view':
+      default:
+        baseWeight = 0.15;
+        break;
+    }
+
+    const ageHours = (Date.now() - timestamp) / (1000 * 60 * 60);
+    let decay = 1.0;
+    if (ageHours <= 24) {
+      decay = 1.0;
+    } else if (ageHours <= 24 * 7) {
+      decay = 0.85;
+    } else if (ageHours <= 24 * 30) {
+      decay = 0.65;
+    } else {
+      decay = 0.45;
+    }
+
+    return Number((baseWeight * decay).toFixed(3));
+  }
+
   /**
    * Build personalized recommendations for an authenticated user with interaction history.
    * Multi-signal scoring:
@@ -341,13 +391,14 @@ export class RecommendationService {
    */
   private async buildPersonalizedRecommendations(
     userId: string | null,
-    seedIds: string[],
+    seeds: Array<{ movieId: string; weight: number }>,
     limit: number,
     isBehaviorOnly = false,
   ): Promise<RecommendationResponse> {
     try {
+      const seedIds = seeds.map(s => s.movieId);
       const interactedIds = new Set<string>(seedIds);
-      const profile = this.contentSimilarity.buildUserPreferenceProfile(userId || 'anon_session', seedIds);
+      const profile = this.contentSimilarity.buildUserPreferenceProfile(userId || 'anon_session', seeds);
 
       // 1. Candidate Generation: Multi-seed similarity + Genre matches + Dominant country matches
       const rawCandidates = this.contentSimilarity.getCandidatesForProfile(
@@ -405,13 +456,18 @@ export class RecommendationService {
         let bestSeedId: string | null = null;
 
         for (const sId of seedIds) {
-          const sim = this.contentSimilarity.computeCosineSimilarity(m.id, sId);
-          if (sim > maxSim) {
-            maxSim = sim;
+          const rawSim = this.contentSimilarity.computeCosineSimilarity(m.id, sId);
+          // Crucial fix: scale similarity by the strength (weight) of the seed.
+          // A weak recent click (weight 0.15) can only contribute max 0.15 to maxSim.
+          const seedWeight = profile.seedWeights.get(sId) || 0.15;
+          const weightedSim = rawSim * seedWeight;
+
+          if (weightedSim > maxSim) {
+            maxSim = weightedSim;
             bestSeedId = sId;
           }
-          if (sim > 0.05) {
-            sumSim += sim;
+          if (rawSim > 0.05) {
+            sumSim += weightedSim;
             simCount++;
           }
         }
@@ -524,7 +580,7 @@ export class RecommendationService {
         const candCountry = normalizeCountry(s.movie.country);
 
         if (isBehaviorOnly) {
-          if (s.simScore >= 0.20 && s.matchedSeedName) {
+          if (s.simScore >= 0.05 && s.matchedSeedName) {
             reason = `Vì bạn vừa xem "${s.matchedSeedName}"`;
           } else if (s.countryBoost >= 0.20 && profile.dominantCountry === 'Việt Nam') {
             reason = 'Vì bạn thường xem phim Việt Nam';
