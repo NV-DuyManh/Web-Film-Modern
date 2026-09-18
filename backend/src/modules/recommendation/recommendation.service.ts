@@ -87,33 +87,53 @@ export class RecommendationService {
     // ==========================================
     if (authUid) {
       const favIds = await this.resolveUserFavoriteIds(authUid, authEmail);
-      let userEvents = this.eventService
-        ? this.eventService.getRecentInteractions({ userId: authUid, sessionId, limit: 30 })
+
+      const ramUserEvents = this.eventService
+        ? this.eventService.getRecentInteractions({ userId: authUid, limit: 30 })
+        : [];
+      const ramSessionEvents = this.eventService && sessionId
+        ? this.eventService.getRecentInteractions({ sessionId, limit: 30 })
         : [];
 
       // Durable Fallback: If in-process RAM cache is empty (Render cold start / restart),
       // query durable Tinybird behavior signals
-      if (userEvents.length === 0 && this.analytics?.getRecentBehaviorSignals) {
+      let durableSignals: any[] = [];
+      if (ramUserEvents.length === 0 && this.analytics?.getRecentBehaviorSignals) {
         try {
-          const durableSignals = await this.analytics.getRecentBehaviorSignals({ userId: authUid, limit: 30 });
-          if (durableSignals.length > 0) {
-            userEvents = durableSignals.map((s) => ({
-              movieId: s.movieId,
-              eventType: 'movie_view' as const,
-              timestamp: Date.now(),
-              weight: s.score,
-            }));
-          }
+          durableSignals = await this.analytics.getRecentBehaviorSignals({ userId: authUid, limit: 30 });
         } catch {}
       }
 
-      // Safe diagnostic logging: counts/booleans only — never logs uid, email, or token
+      let userEvents = [...ramUserEvents];
+      if (userEvents.length === 0 && durableSignals.length > 0) {
+        userEvents = durableSignals.map((s) => ({
+          movieId: s.movieId,
+          eventType: 'movie_view' as const,
+          timestamp: Date.now(),
+          weight: s.score,
+        }));
+      }
+
+      // Merge supplementary session events if present
+      if (ramSessionEvents.length > 0) {
+        const seenMovies = new Set(userEvents.map((e) => e.movieId));
+        for (const se of ramSessionEvents) {
+          if (!seenMovies.has(se.movieId)) {
+            seenMovies.add(se.movieId);
+            userEvents.push(se);
+          }
+        }
+      }
+
+      const isEligible = favIds.length > 0 || userEvents.length > 0;
+
+      // Safe diagnostic logging: counts/booleans only — never logs raw uid, email, or token
       this.logger.debug(
-        `[Auth Rec] authPresent=true favCount=${favIds.length} userEventCount=${userEvents.length} sessionId=${sessionId ? 'present' : 'absent'}`,
+        `[ForYou Initial] authReady=true authPresent=true verifiedUidPresent=true favCount=${favIds.length} durableCount=${durableSignals.length} ramUserCount=${ramUserEvents.length} sessionCount=${ramSessionEvents.length} eligible=${isEligible}`,
       );
 
       // Zero-signal check: 0 favorites AND 0 meaningful events -> HIDE SECTION
-      if (favIds.length === 0 && userEvents.length === 0) {
+      if (!isEligible) {
         return {
           success: true,
           eligible: false,

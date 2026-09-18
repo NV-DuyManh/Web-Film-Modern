@@ -295,55 +295,88 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
 
 ---
 
+## 2d. Initial Authenticated Profile Load Defect & Resolution
+
+### Owner-Observed Defect
+A logged-in account with existing favorites or historical preference data opened or reloaded Home. "Dành cho bạn" was completely absent. Only after the user clicked any random movie did "Dành cho bạn" suddenly appear.
+
+### Exact Root Causes
+1. **Frontend Auth Readiness Race**:
+   - `AuthProvider.jsx` synchronously hydrated `isLogin` from `localStorage`, but Firebase Auth restores credentials asynchronously from IndexedDB (~150–500ms).
+   - `ForYou.jsx` mounted and immediately issued `fetchRecommendations()` while `getAuth().currentUser` was still `null`.
+   - The first request lacked the `Authorization: Bearer <token>` header, routing it to Path 2 (Anonymous session) with 0 session events, returning `eligible: false, items: []`.
+2. **Stale Anonymous Response Race**:
+   - When Firebase Auth restored and fired `onAuthStateChanged`, a second (authenticated) request was launched without cancelling the first request or distinguishing request identities.
+   - If the first anonymous response arrived second, it overwrote the authenticated recommendation list with `[]` because `authEpoch` remained identical.
+3. **Firestore Identity Mapping Gaps**:
+   - Customer documents in Firestore created via `Register.jsx` store `firebaseUid: fbCred.user.uid`, but `getUserFavorites` in `content-similarity.service.ts` only queried `doc(Users, userId)`, `where('uid', '==', userId)`, and `where('id', '==', userId)`.
+   - Firestore's `where('email', '==', targetEmail)` is strictly case-sensitive, missing accounts stored with original mixed-case emails.
+4. **Why Clicking a Movie "Woke It Up"**:
+   - Clicking a movie navigated to `DetailFilm.jsx` and sent `trackEvent('movie_view', realMovieId)` with the by-then resolved Bearer token.
+   - Backend `EventService` stored this event into `this.userInteractions`. When the user returned to Home, `userEvents.length >= 1` in RAM satisfied `favIds.length === 0 && userEvents.length === 0` (false), causing recommendations to suddenly appear based on that clicked movie.
+
+### Complete Resolution
+1. **`firebaseAuthReady` State Introduced (`AuthProvider.jsx`)**:
+   - Added `const [firebaseAuthReady, setFirebaseAuthReady] = useState(false);` and `const [firebaseUser, setFirebaseUser] = useState(null);`.
+   - Registered `onAuthStateChanged(auth, (user) => { setFirebaseUser(user); setFirebaseAuthReady(true); })`.
+   - Exported `firebaseAuthReady` and `firebaseUser` in `AuthContext`.
+   - Updated `loginByUser` to accept the verified `firebaseUser` instance and ensure identity is resolved before advancing `authEpoch`.
+2. **Auth-Gated Recommendation Fetching (`ForYou.jsx`)**:
+   - Component strictly waits for `firebaseAuthReady === true` before making any recommendation request. While `!firebaseAuthReady`, it remains in loading state and returns `null` (zero DOM gap).
+   - If `firebaseUser || isLogin`: initiates an authenticated request with the verified Bearer token.
+   - If `!firebaseUser && !isLogin`: initiates an anonymous session request.
+   - Tagged each in-flight request with `activeRequestRef.current = { epoch: currentEpoch, uid: currentUid }`.
+   - Any late anonymous or out-of-order response whose epoch or uid does not match is immediately discarded.
+   - In-flight requests are cleanly aborted via `AbortController` upon any auth transition.
+3. **Firestore Favorites Bridge Expanded (`content-similarity.service.ts`)**:
+   - Added query for `where('firebaseUid', '==', userId)`.
+   - Added dual query for normalized `email.toLowerCase().trim()` and original `email.trim()`.
+4. **Durable Signal Eligibility Guaranteed (`recommendation.service.ts`)**:
+   - Authenticated user eligibility: `eligible = favIds.length > 0 || userEvents.length > 0` (including RAM interactions and Tinybird durable signals).
+   - Authenticated users with favorites > 0 and 0 current session events are immediately `eligible: true` without requiring any movie click.
+   - Authenticated users with durable history > 0 and 0 current session events are immediately `eligible: true` without requiring any movie click.
+   - Added safe operational diagnostic logs: `[ForYou Initial] authReady=true authPresent=... verifiedUidPresent=... favCount=... durableCount=... ramUserCount=... sessionCount=... eligible=...`.
+
+---
+
 ## 8. Acceptance Truth Classification
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | **Deploy current origin/main** | Latest deployable Phase 06 state: commit containing 21d49fb and this documentation cleanup. |
+| **Definitive Commit** | **Deploy current origin/main** | Latest deployable Phase 06 state with Initial Authenticated Profile Load fix. |
 | **Render Deployed Commit** | **PENDING PRODUCTION DEPLOYMENT** | Awaiting owner manual deploy of latest Phase 06 commit. |
 | **Vercel Deployed Commit** | **PENDING PRODUCTION DEPLOYMENT** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on latest Phase 06 commit. |
-| **Email/password Firebase Auth** | **CODE VERIFIED** | `signInWithEmailAndPassword` + auto-provision at login/register. |
-| **Session rotation on logout** | **CODE VERIFIED** | `rotateSessionId()` clears `mfilm_session_id`, called on logout and account switch. |
-| **ForYou crash fix** | **CODE VERIFIED** | AbortController, authEpoch stale guard, ErrorBoundary. |
-| **Account A ≠ Account B isolation** | **CODE VERIFIED** | Different `verifiedUid`, different cache keys, session rotation prevents contamination. |
-| **Zero-signal user sees no “Dành cho bạn”** | **CODE VERIFIED** | Unit tested in Persona 0 & 3; returns `eligible: false`, `source: "none"`, `total: 0`, UI renders `null`. |
-| **First meaningful movie event unlocks it** | **CODE VERIFIED** | Unit tested in Persona 1; single `movie_view` in `EventService` immediately unlocks recommendations. |
-| **Anonymous recommendations use session events** | **CODE VERIFIED** | Unit tested in Persona 1 & 2; uses `sessionId` event history; excludes seeds; builds similarity. |
-| **Authenticated recommendations use verified identity** | **CODE VERIFIED** | Unit tested in Persona 4 & 5; verified via `OptionalFirebaseAuthGuard` (`req.user.uid`). |
-| **Insecure UID fallback removed** | **CODE VERIFIED** | Tested in Persona 7; `x-user-id` and `query.userId` rejected for auth identity. |
-| **Vietnam-heavy behavior/favorites affect ranking** | **CODE VERIFIED** | Tested in Persona 2; dynamic country boost ($+0.35$ / $+0.22$) elevates Vietnamese candidates. |
-| **Auth/Anon cache isolation** | **CODE VERIFIED** | Tested in Persona 6; separate namespaces `mfilm:rec:auth:...` and `mfilm:rec:anon:...`. |
-| **Cold homepage works normally** | **CODE VERIFIED** | Tested in Persona 8; baseline popularity and other sections operate while "Dành Cho Bạn" is hidden. |
-| **recommendation_view (HTTP 202)** | **CODE VERIFIED** | Telemetry handler verified in code and unit test. |
-| **recommendation_click (HTTP 202)** | **CODE VERIFIED** | Telemetry handler verified in code and unit test. |
-| **Tinybird Telemetry Ingestion** | **CODE VERIFIED** | `mfilm_behavior` datasource and `recent_recommendation_signals.pipe` ready. |
-| **Durable Behavior Path** | **CODE VERIFIED** | Immediate bridge via `EventService` in-process store active; Tinybird durable pipeline configured. |
-| **Backend Tests** | **LOCAL TEST VERIFIED** | 11/11 test suites passed, 63/63 tests passed (`npm test`). |
+| **firebaseAuthReady Implemented** | **CODE VERIFIED** | `firebaseAuthReady` and `firebaseUser` tracked in `AuthProvider` via `onAuthStateChanged`. |
+| **First Request Authorization** | **CODE VERIFIED** | ForYou waits for `firebaseAuthReady`; sends Bearer token on initial authenticated load. |
+| **Authenticated Refetch on Resolution** | **CODE VERIFIED** | `ForYou.jsx` triggers authenticated fetch upon `firebaseAuthReady` transition. |
+| **Favorites-Only Initial Load** | **LOCAL TEST VERIFIED** | Deterministic test: 5 favorites, 0 RAM events, 0 session events $\to$ `eligible=true`, `items.length > 0`. |
+| **Durable-History-Only Initial Load** | **LOCAL TEST VERIFIED** | Deterministic test: 0 favorites, Tinybird durable history, 0 RAM events $\to$ `eligible=true`, `items.length > 0`. |
+| **Stale Anonymous Response Protection** | **CODE VERIFIED** | `activeRequestRef` tags `{ epoch, uid }`; discards mismatched responses; aborts in-flight fetch. |
+| **No Fake Auto Movie View** | **CODE VERIFIED** | Zero click/view events injected; long-term profile initializes directly from durable data. |
+| **One-Click Stability Preserved** | **LOCAL TEST VERIFIED** | Favorites/durable history retain higher weighting over single weak `movie_view`. |
+| **Account Isolation Preserved** | **LOCAL TEST VERIFIED** | Unique `authUid`, separate cache keys, session rotation on logout/login. |
+| **Carousel Navigation Preserved** | **CODE VERIFIED** | `swiperRef.current?.slidePrev()` and `slideNext()` preserved with no card click interference. |
+| **Backend Tests** | **LOCAL TEST VERIFIED** | 11/11 test suites passed, 65/65 tests passed (`npm test`). |
 | **Backend Build** | **LOCAL BUILD VERIFIED** | `nest build` completed with 0 errors. |
-| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed successfully. |
-| **Render Readiness (`/health/ready`)** | **CODE VERIFIED** | Healthcheck endpoint returns `HTTP 200`, `status: "ready"`, `kafka: "healthy"`. |
-| **PostgreSQL Disabled in Production** | **CODE VERIFIED** | `POSTGRES_CATALOG_ENABLED=false`. |
-| **Valkey Disabled in Production** | **CODE VERIFIED** | `VALKEY_ENABLED=false` (zero retry warnings). |
+| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.18s with 0 errors. |
 | **Zero Added Cost ($0 Budget)** | **CODE VERIFIED** | All components operate within free-tier limits. |
-| **Long-Term Profile Stability** | **LOCAL TEST VERIFIED** | `seedWeights` scale `maxSim`; Tinybird signals retain `eventType` and `timestamp`. |
-| **Stable Cache Fingerprints** | **LOCAL TEST VERIFIED** | `behFingerprint` constrained to top 5 recent events. |
-| **Carousel Navigation (ForYou)** | **CODE VERIFIED / LOCAL MANUAL VERIFIED** | `swiperRef` used for explicit controlled DOM interaction instead of CSS selectors. |
 
 ---
 
 ## 9. Owner Production Acceptance Steps
-1. **Push latest commit** (if not already): `git push origin main`
+1. **Push latest commit**: `git push origin main`
 2. **Deploy on Render**: Open Render Dashboard -> `mfilm-backend` -> **Manual Deploy** -> **Deploy latest commit**
 3. **Deploy on Vercel**: Open Vercel Dashboard -> `web-film-modern`:
    - Confirm environment variable `VITE_RECOMMENDATIONS_ENABLED=true` is set.
    - Trigger **Redeploy** on `main` branch.
-4. **Final Verification Checklist** (once both deployments are live):
-   - Open a fresh Incognito browser window to `https://www.mfilm.online`.
-   - ✅ Confirm "Dành Cho Bạn" is **completely hidden** (no heading, no blank gap) for a new anonymous visitor.
-   - ✅ Click one movie card on the homepage (emits `movie_view` at `POST /api/v1/events`, expect `HTTP 202`).
-   - ✅ Return to homepage -> confirm "Dành Cho Bạn" **appears with related movie cards** (first-click unlock).
-   - ✅ Click one recommended card -> confirm `recommendation_click` fires with `HTTP 202`.
-   - ✅ Test carousel navigation: Click `>` and `<` arrows; ensure they scroll the list correctly.
-   - ✅ Log in as an account with long-term history/favorites -> confirm "Dành Cho Bạn" reflects accumulated preferences, not just the single most recent click.
-   - ✅ Log out, log into a different account -> confirm recommendations change to match the second account (Isolation).
-   - ✅ Log in as an account with NO favorites and NO history -> confirm "Dành Cho Bạn" is hidden.
+4. **Final Verification Checklist**:
+   - **Logout completely**.
+   - **Login** with an account that has favorites or viewing history.
+   - Go directly to Home. **DO NOT click any movie**.
+   - ✅ Confirm "Dành Cho Bạn" appears **immediately** after auth resolves.
+   - **Hard reload Home** (`Ctrl+F5` or `Cmd+Shift+R`).
+   - ✅ Confirm "Dành Cho Bạn" appears again after auth resolves without clicking.
+   - **Logout** and **Login same account again**.
+   - ✅ Confirm "Dành Cho Bạn" appears immediately without clicking.
+   - Click one unrelated movie briefly.
+   - ✅ Confirm list may shift slightly but long-term profile remains dominant.

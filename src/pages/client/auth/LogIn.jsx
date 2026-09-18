@@ -119,21 +119,30 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
             // Establish verified Firebase Auth session so the user gets personalized
             // recommendations via Bearer token (auth.currentUser will be set).
             // Silently provision if the Firebase Auth account does not exist yet.
+            let fbUser = null;
             try {
-                await signInWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+                const cred = await signInWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+                fbUser = cred.user;
             } catch (fbErr) {
                 if (fbErr.code === 'auth/user-not-found' || fbErr.code === 'auth/invalid-credential' || fbErr.code === 'auth/invalid-email') {
                     // Auto-provision Firebase Auth account using existing Firestore credentials
                     try {
-                        await createUserWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+                        const newCred = await createUserWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+                        fbUser = newCred.user;
                     } catch {
                         // Firebase Auth provision failed — login still works via Firestore session
-                        // but personalized recommendations may fall back to session-based path
                     }
                 }
-                // Other errors (network, etc.) — continue without Firebase Auth session
             }
-            loginByUser(userLogin);
+            const activeFbUser = fbUser || auth.currentUser;
+            if (activeFbUser) {
+                try {
+                    await activeFbUser.getIdToken();
+                } catch {
+                    // Non-fatal
+                }
+            }
+            loginByUser(userLogin, activeFbUser);
             handleCloseLogin();
             showAuthSuccessToast(userLogin, 'Đăng nhập thành công');
         } else {
@@ -196,7 +205,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
             }
 
             // Đăng nhập và đóng modal ngay lập tức không delay
-            loginByUser(loggedInCustomer);
+            loginByUser(loggedInCustomer, user);
             handleCloseLogin();
             showAuthSuccessToast(loggedInCustomer, 'Đăng nhập thành công');
 

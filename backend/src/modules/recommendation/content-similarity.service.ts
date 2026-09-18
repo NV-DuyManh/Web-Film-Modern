@@ -402,10 +402,22 @@ export class ContentSimilarityService implements OnModuleInit {
 
       // 2. Query collection if doc ID misses (e.g. Firebase Auth UID)
       const usersCol = collection(this.firestoreDb, 'Users');
+
       const qUid = query(usersCol, where('uid', '==', userId));
       const snapUid = await getDocs(qUid);
       if (!snapUid.empty) {
         const data = snapUid.docs[0].data();
+        if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
+          const ids = normalizeList(data.listFavorite);
+          if (ids.length > 0) return ids;
+        }
+      }
+
+      // 2b. Check firebaseUid field (used when customer document was linked to Firebase Auth UID)
+      const qFbUid = query(usersCol, where('firebaseUid', '==', userId));
+      const snapFbUid = await getDocs(qFbUid);
+      if (!snapFbUid.empty) {
+        const data = snapFbUid.docs[0].data();
         if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
           const ids = normalizeList(data.listFavorite);
           if (ids.length > 0) return ids;
@@ -425,6 +437,8 @@ export class ContentSimilarityService implements OnModuleInit {
       // 3. Verified email fallback (safely maps verified Firebase Auth identity to Firestore customer document)
       if (email && typeof email === 'string' && email.includes('@')) {
         const targetEmail = email.toLowerCase().trim();
+        const rawEmail = email.trim();
+
         const qEmail = query(usersCol, where('email', '==', targetEmail));
         const snapEmail = await getDocs(qEmail);
         if (!snapEmail.empty) {
@@ -432,6 +446,19 @@ export class ContentSimilarityService implements OnModuleInit {
           if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
             const ids = normalizeList(data.listFavorite);
             if (ids.length > 0) return ids;
+          }
+        }
+
+        // Check original casing if different from lowercase (Firestore string queries are case-sensitive)
+        if (rawEmail !== targetEmail) {
+          const qRawEmail = query(usersCol, where('email', '==', rawEmail));
+          const snapRawEmail = await getDocs(qRawEmail);
+          if (!snapRawEmail.empty) {
+            const data = snapRawEmail.docs[0].data();
+            if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
+              const ids = normalizeList(data.listFavorite);
+              if (ids.length > 0) return ids;
+            }
           }
         }
       }

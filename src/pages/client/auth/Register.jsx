@@ -124,7 +124,7 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
             }
 
             handleCloseRegister();
-            loginByUser(newUser);
+            loginByUser(newUser, fbCred?.user);
             showAuthSuccessToast(newUser, 'Đăng ký thành công');
         } catch (error) {
             console.error("Register error:", error);
@@ -207,7 +207,7 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
             }
 
             // Đăng nhập và đóng modal ngay lập tức không delay
-            loginByUser(loggedInCustomer);
+            loginByUser(loggedInCustomer, user);
             handleCloseRegister();
             showAuthSuccessToast(loggedInCustomer, 'Đăng nhập thành công');
 

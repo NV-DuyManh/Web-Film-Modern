@@ -697,5 +697,40 @@ describe('RecommendationService', () => {
       // rather than the weak signal (vn_1 -> vn_2)
       expect(result.items[0].movieId).toBe('jp_2');
     });
+
+    it('Section 11 — Favorites-Only Initial Load: verified uid with 5 favorites, 0 RAM events, 0 session events yields eligible=true immediately without any movie_view', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['vn_1', 'vn_2', 'vn_3', 'jp_1', 'jp_2']);
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      analyticsService.getRecentBehaviorSignals.mockResolvedValue([]);
+
+      const result = await service.getRecommendations('verified_uid_fav_only', 'sess_clean_fresh', 5);
+
+      expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
+      expect(result.userId).toBe('verified_uid_fav_only');
+      expect(['hybrid', 'content_based']).toContain(result.source);
+      expect(result.items.length).toBeGreaterThan(0);
+      // Zero movie_view interactions were needed
+      expect(mockEventService.getRecentInteractions).toHaveBeenCalled();
+    });
+
+    it('Section 12 — Durable-History-Only Initial Load: verified uid with 0 favorites, Tinybird durable history, 0 RAM events, fresh session yields eligible=true immediately without any movie_view', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue([]);
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      analyticsService.getRecentBehaviorSignals.mockResolvedValue([
+        { movieId: 'jp_1', score: 2.5, eventType: 'play', timestamp: Date.now() - 86400000 },
+      ]);
+
+      const result = await service.getRecommendations('verified_uid_durable_only', 'sess_new_fresh_cold', 5);
+
+      expect(result.success).toBe(true);
+      expect(result.eligible).toBe(true);
+      expect(result.userId).toBe('verified_uid_durable_only');
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(analyticsService.getRecentBehaviorSignals).toHaveBeenCalledWith({
+        userId: 'verified_uid_durable_only',
+        limit: 30,
+      });
+    });
   });
 });

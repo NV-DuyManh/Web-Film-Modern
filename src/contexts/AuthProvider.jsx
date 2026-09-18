@@ -1,13 +1,15 @@
 import React, { createContext, useEffect, useState, useContext, useCallback, useRef } from 'react';
 import { UserContext } from './UserProvider';
 import { useNavigate } from 'react-router-dom';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { rotateSessionId } from '../services/eventTracker';
 
 export const AuthContext = createContext();
 
 function AuthProvider({ children }) {
     const [isLogin, setIsLogin] = useState(null);
+    const [firebaseUser, setFirebaseUser] = useState(null);
+    const [firebaseAuthReady, setFirebaseAuthReady] = useState(false);
     // authEpoch increments on every login/logout/account-switch.
     // ForYou captures the epoch when it starts a fetch; if epoch has changed by the time
     // the response arrives, the stale response is discarded — prevents Account A data
@@ -16,6 +18,17 @@ function AuthProvider({ children }) {
     const users = useContext(UserContext);
     const navigate = useNavigate();
 
+    // 1. Listen for Firebase Auth initialization & session restoration
+    useEffect(() => {
+        const auth = getAuth();
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setFirebaseUser(user);
+            setFirebaseAuthReady(true);
+        });
+        return () => unsubscribe();
+    }, []);
+
+    // 2. Hydrate custom Firestore user session from localStorage
     useEffect(() => {
         try {
             const user = JSON.parse(localStorage.getItem("isLogin"));
@@ -43,7 +56,7 @@ function AuthProvider({ children }) {
         }
     }, [users, isLogin]);
 
-    const loginByUser = useCallback((data) => {
+    const loginByUser = useCallback((data, fbUser = null) => {
         // If switching accounts (not first login), rotate session so the new user
         // does not inherit the previous user's anonymous behavior history.
         if (isLogin && isLogin.id !== data?.id) {
@@ -53,6 +66,9 @@ function AuthProvider({ children }) {
             localStorage.setItem("isLogin", JSON.stringify(data));
         } catch {
             // ignore storage errors
+        }
+        if (fbUser) {
+            setFirebaseUser(fbUser);
         }
         setIsLogin(data);
         setAuthEpoch(prev => prev + 1);
@@ -80,6 +96,7 @@ function AuthProvider({ children }) {
         rotateSessionId();
 
         // 4. Clear local state and increment epoch (causes ForYou to discard in-flight requests)
+        setFirebaseUser(null);
         setIsLogin(null);
         setAuthEpoch(prev => prev + 1);
 
@@ -91,6 +108,8 @@ function AuthProvider({ children }) {
     return (
         <AuthContext.Provider value={{
             isLogin,
+            firebaseUser,
+            firebaseAuthReady,
             loginByUser,
             handleLogout,
             authEpoch,

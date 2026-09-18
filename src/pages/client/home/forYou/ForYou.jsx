@@ -34,6 +34,8 @@ function ForYouInner() {
     const plans = useContext(PlanContext);
     const authContext = useContext(AuthContext);
     const isLogin = authContext?.isLogin;
+    const firebaseUser = authContext?.firebaseUser;
+    const firebaseAuthReady = authContext?.firebaseAuthReady ?? false;
     // authEpoch increments on every login/logout/account-switch (provided by AuthProvider).
     // Capturing it at fetch-start lets us discard stale responses from previous accounts.
     const authEpoch = authContext?.authEpoch ?? 0;
@@ -44,6 +46,8 @@ function ForYouInner() {
     // Track the abort controller for the current in-flight request
     const abortControllerRef = useRef(null);
     const swiperRef = useRef(null);
+    // Track active request identity to guard against stale out-of-order responses
+    const activeRequestRef = useRef({ epoch: -1, uid: null });
 
     const RECOMMENDATIONS_ENABLED = import.meta.env?.VITE_RECOMMENDATIONS_ENABLED === 'true';
     const API_BASE_URL =
@@ -57,7 +61,7 @@ function ForYouInner() {
         setRecommendations([]);
         setLoading(true);
         viewedMoviesRef.current = new Set();
-    }, [authEpoch]);
+    }, [authEpoch, firebaseUser?.uid]);
 
     useEffect(() => {
         if (!RECOMMENDATIONS_ENABLED) {
@@ -65,9 +69,16 @@ function ForYouInner() {
             return;
         }
 
+        // Section 2 Gating: Never treat currentUser === null as anonymous until
+        // Firebase has completed its initial auth restoration.
+        if (!firebaseAuthReady) {
+            setLoading(true);
+            return;
+        }
+
         let isMounted = true;
-        // Capture epoch at effect-start: any response that arrives after epoch changes is stale
-        const epochAtFetchStart = authEpoch;
+        const currentEpoch = authEpoch;
+        const currentUid = firebaseUser?.uid || (isLogin ? String(isLogin.id) : 'anon');
 
         // Cancel any previous in-flight request
         if (abortControllerRef.current) {
@@ -75,19 +86,23 @@ function ForYouInner() {
         }
         const controller = new AbortController();
         abortControllerRef.current = controller;
+        activeRequestRef.current = { epoch: currentEpoch, uid: currentUid };
 
         async function fetchRecommendations() {
+            setLoading(true);
             try {
                 const auth = getAuth();
-                const user = auth.currentUser;
+                const user = firebaseUser || auth.currentUser;
                 const headers = { 'Content-Type': 'application/json' };
 
                 // 1. Authenticated identity: STRICTLY via cryptographically verified Bearer token
                 if (user) {
                     try {
                         const token = await user.getIdToken();
-                        // Guard: if epoch changed during async getIdToken(), discard
-                        if (authContext?.authEpoch !== epochAtFetchStart) return;
+                        // Guard: if epoch or user identity changed during async getIdToken(), discard
+                        if (!isMounted || activeRequestRef.current.epoch !== currentEpoch || activeRequestRef.current.uid !== currentUid) {
+                            return;
+                        }
                         headers['Authorization'] = `Bearer ${token}`;
                     } catch {
                         // proceed without token
@@ -112,10 +127,12 @@ function ForYouInner() {
 
                 const data = await res.json();
 
-                // Stale-response guard: discard if epoch changed since fetch started
+                // Stale-response guard: discard if epoch or user changed since fetch started
                 // (e.g., user logged out or switched accounts while request was in-flight)
                 if (!isMounted) return;
-                if (authContext?.authEpoch !== epochAtFetchStart) return;
+                if (activeRequestRef.current.epoch !== currentEpoch || activeRequestRef.current.uid !== currentUid) {
+                    return;
+                }
 
                 // Zero-Signal Gating: If eligible is false or no items, clear recommendations
                 if (data.success && data.eligible && Array.isArray(data.items) && data.items.length > 0) {
@@ -126,11 +143,11 @@ function ForYouInner() {
             } catch (err) {
                 if (err?.name === 'AbortError') return; // expected: request was cancelled
                 // On any other error, clear recommendations (never fallback to generic popularity)
-                if (isMounted && authContext?.authEpoch === epochAtFetchStart) {
+                if (isMounted && activeRequestRef.current.epoch === currentEpoch && activeRequestRef.current.uid === currentUid) {
                     setRecommendations([]);
                 }
             } finally {
-                if (isMounted && authContext?.authEpoch === epochAtFetchStart) {
+                if (isMounted && activeRequestRef.current.epoch === currentEpoch && activeRequestRef.current.uid === currentUid) {
                     setLoading(false);
                 }
             }
@@ -138,24 +155,21 @@ function ForYouInner() {
 
         fetchRecommendations();
 
-        // Also listen for Firebase Auth state changes in case credentials hydrate asynchronously.
-        // This handles the case where getAuth().currentUser is null when effect first runs
-        // but Firebase resolves the session shortly after (Google SSO restore on page load).
-        const firebaseAuth = getAuth();
-        const unsubscribe = onAuthStateChanged(firebaseAuth, () => {
-            if (isMounted && authContext?.authEpoch === epochAtFetchStart) {
-                fetchRecommendations();
-            }
-        });
-
         return () => {
             isMounted = false;
             controller.abort();
-            unsubscribe();
         };
-    // Re-run whenever: feature flag, API URL, auth epoch, user id, or favorite count changes
+    // Re-run whenever: feature flag, API URL, auth readiness, user UID, auth epoch, or favorites change
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [RECOMMENDATIONS_ENABLED, API_BASE_URL, authEpoch, isLogin?.id, isLogin?.listFavorite?.length]);
+    }, [
+        RECOMMENDATIONS_ENABLED,
+        API_BASE_URL,
+        firebaseAuthReady,
+        firebaseUser?.uid,
+        authEpoch,
+        isLogin?.id,
+        isLogin?.listFavorite?.length
+    ]);
 
     // Merge recommendation items with full catalog movies for rich presentation
     const displayMovies = useMemo(() => {
@@ -269,7 +283,7 @@ function ForYouInner() {
     // Strictly hide the entire section if disabled, still loading, or no items to display
     // Invariant: Heading "Dành Cho Bạn" is NEVER rendered unless displayMovies has items
     if (!RECOMMENDATIONS_ENABLED) return null;
-    if (loading) return null;
+    if (loading || !firebaseAuthReady) return null;
     if (!displayMovies || displayMovies.length === 0) return null;
 
     return (
