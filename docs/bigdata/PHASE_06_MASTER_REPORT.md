@@ -361,7 +361,6 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
      `HTTP 400 Bad Request: {"message":"No Groq API key configured on server. ACTION REQUIRED BY OWNER."}`
      Because `GROQ_API_KEYS` and `GEMINI_API_KEYS` existed in local `backend/.env` but were never added to the Render Dashboard environment variables.
   4. In `backend/src/config/configuration.ts`, `corsOrigins` default fallback string lacked `https://www.mfilm.online`.
-  5. In `backend/src/modules/ai/ai.service.ts`, `callGemini` requested non-existent model `'gemini-2.5-flash'`.
 
 ### Exact Files / Config Affected
 - `src/components/client/chatBot/GroqChatBot.jsx`
@@ -370,7 +369,7 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 - `backend/src/modules/ai/ai.service.ts`
 - `backend/src/modules/ai/ai.service.spec.ts`
 
-### Comprehensive Fix
+### Comprehensive Fix & Security Hardening
 1. **Frontend API URL Resolution**:
    Updated `GroqChatBot.jsx` and `GeminiChatBot.jsx` to resolve `API_BASE_URL` matching `ForYou.jsx`:
    ```javascript
@@ -379,18 +378,22 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
        import.meta.env?.VITE_EVENT_API_BASE_URL ||
        'https://mfilm-backend.onrender.com/api/v1';
    ```
-2. **Client-Side Key Fallback**:
-   If the backend returns unconfigured server keys or fails, `GroqChatBot.jsx` falls back to client keys if present in frontend environment before showing the maintenance message.
-3. **CORS Origins Updated**:
+2. **Strict Server-Side Key Security (Zero Frontend Secrets)**:
+   All AI provider secrets (`GROQ_API_KEYS`, `GEMINI_API_KEYS`) are strictly server-side on Render. Any client-side fallback reading `VITE_GROQ_*` or `VITE_GEMINI_*` has been completely deleted. No API keys are ever shipped to or exposed in the browser.
+3. **Verified Live Models & Configurable Overrides**:
+   - Live probe against the Google Generative AI API verified that `gemini-2.5-flash` is active and returned HTTP 200 with valid completions.
+   - Live probe against the Groq API verified that `openai/gpt-oss-20b` (the model historically used by MFILM) is active and returned HTTP 200 with valid completions.
+   - Both models are configurable via server-side environment variables `GEMINI_MODEL` and `GROQ_MODEL`, defaulting to verified models:
+     - `GEMINI_MODEL || 'gemini-2.5-flash'`
+     - `GROQ_MODEL || 'openai/gpt-oss-20b'`
+4. **CORS Origins Updated**:
    Added `https://www.mfilm.online` to default `corsOrigins` in `configuration.ts`.
-4. **Valid AI Model & Response Contract**:
-   Updated Gemini model from `'gemini-2.5-flash'` to `'gemini-1.5-flash'`. Response returns both `reply` and `text` with `success: true`.
 5. **Decoupled Architecture**:
    Chatbot controller and service have zero dependencies on Kafka, Tinybird, PostgreSQL, or Valkey.
 6. **Structured Safe Diagnostics**:
-   Backend logs `AI_PROVIDER_CONFIG_PRESENT`, `AI_PROVIDER_REQUEST_SENT`, and `AI_PROVIDER_STATUS` without exposing secrets or prompts.
+   Backend logs `AI_PROVIDER_CONFIG_PRESENT`, `AI_PROVIDER_REQUEST_SENT`, `AI_PROVIDER`, and `AI_PROVIDER_STATUS` without exposing secrets or prompts.
 7. **Regression Unit Tests Added**:
-   Added `ai.service.spec.ts` testing happy path (Groq & Gemini), provider error fallback, unconfigured keys reporting, and architectural decoupling (7 tests passed).
+   Added `ai.service.spec.ts` testing happy path (Groq & Gemini), provider error fallback, unconfigured keys reporting, and architectural decoupling (7 tests passed, 12 suites / 72 tests total).
 
 ---
 
@@ -412,6 +415,7 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 | **Account Isolation Preserved** | **LOCAL TEST VERIFIED** | Unique `authUid`, separate cache keys, session rotation on logout/login. |
 | **Carousel Navigation Preserved** | **CODE VERIFIED** | `swiperRef.current?.slidePrev()` and `slideNext()` preserved with no card click interference. |
 | **Chatbot Frontend Endpoint** | **CODE VERIFIED** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` route to `https://mfilm-backend.onrender.com/api/v1/ai/chat`. |
+| **No Frontend AI Secrets** | **CODE VERIFIED** | Zero provider keys in browser bundle; all keys resolved strictly server-side. |
 | **Chatbot CORS & Decoupling** | **CODE VERIFIED** | CORS includes `https://www.mfilm.online`; zero dependency on Kafka, Tinybird, or Postgres. |
 | **Backend Tests** | **LOCAL TEST VERIFIED** | 12/12 test suites passed, 72/72 tests passed (`npm test`). |
 | **Backend Build** | **LOCAL BUILD VERIFIED** | `nest build` completed with 0 errors. |

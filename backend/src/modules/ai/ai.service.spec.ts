@@ -66,7 +66,7 @@ describe('AiService', () => {
         text: mockReply,
         reply: mockReply,
         provider: 'groq',
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-20b',
       });
 
       const response = await service.processChat({
@@ -87,7 +87,7 @@ describe('AiService', () => {
         text: mockReply,
         reply: mockReply,
         provider: 'groq',
-        model: 'llama-3.3-70b-versatile',
+        model: 'openai/gpt-oss-20b',
       });
 
       const response = await controller.chat({
@@ -108,7 +108,7 @@ describe('AiService', () => {
         text: mockGeminiReply,
         reply: mockGeminiReply,
         provider: 'gemini',
-        model: 'gemini-1.5-flash',
+        model: 'gemini-2.5-flash',
       });
 
       const response = await service.processChat({

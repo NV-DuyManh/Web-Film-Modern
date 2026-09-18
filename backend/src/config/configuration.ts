@@ -42,6 +42,8 @@ export interface AppConfig {
   ai: {
     geminiKeys: string[];
     groqKeys: string[];
+    geminiModel: string;
+    groqModel: string;
   };
   firebase: {
     projectId: string;
@@ -111,6 +113,8 @@ export default (): AppConfig => {
         .split(',')
         .map((k) => k.trim().replace(/[\r\n\\"]/g, ''))
         .filter(Boolean),
+      geminiModel: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+      groqModel: process.env.GROQ_MODEL || 'openai/gpt-oss-20b',
     },
     firebase: {
       projectId: process.env.FIREBASE_PROJECT_ID || 'manhfilm-105b3',

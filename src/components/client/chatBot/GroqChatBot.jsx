@@ -394,48 +394,6 @@ export default function GroqChatBot() {
                 // Backend proxy error or network error
             }
 
-            // Client-side fallback if backend keys unconfigured or proxy unavailable
-            if (!backendSuccess) {
-                const clientGroqKeyStr = import.meta.env?.VITE_GROQ_API_KEYS || import.meta.env?.VITE_GROQ_API_KEY;
-                const clientKeys = clientGroqKeyStr
-                    ? clientGroqKeyStr.split(',').map(k => k.trim().replace(/[\r\n\\"]/g, '')).filter(Boolean)
-                    : [];
-                if (clientKeys.length > 0) {
-                    try {
-                        const directRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                Authorization: `Bearer ${clientKeys[0]}`
-                            },
-                            body: JSON.stringify({
-                                model: 'llama-3.3-70b-versatile',
-                                messages: [
-                                    { role: 'system', content: systemInstruction },
-                                    ...recentMessages.map(m => ({
-                                        role: m.sender === 'user' ? 'user' : 'assistant',
-                                        content: m.text
-                                    })),
-                                    { role: 'user', content: userMsg.text }
-                                ],
-                                max_tokens: 1024
-                            }),
-                            signal: abortController.signal
-                        });
-                        if (directRes.ok) {
-                            const directData = await directRes.json();
-                            const directReply = directData?.choices?.[0]?.message?.content;
-                            if (directReply) {
-                                finalAiMsgText = directReply;
-                                backendSuccess = true;
-                            }
-                        }
-                    } catch {
-                        // ignore client fallback failure
-                    }
-                }
-            }
-
             if (!backendSuccess) {
                 finalAiMsgText = "Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿";
             }

@@ -60,24 +60,24 @@ export class AiService {
         try {
           this.logger.log('[AiService] AI_PROVIDER_REQUEST_SENT: provider=groq');
           const result = await this.callGroq(prompt, history, groqKeys, systemInstruction);
-          this.logger.log('[AiService] AI_PROVIDER_STATUS: provider=groq status=SUCCESS');
+          this.logger.log('[AiService] AI_PROVIDER=groq AI_PROVIDER_STATUS=SUCCESS');
           return result;
         } catch (err: any) {
           lastError = err;
           this.logger.warn(
-            `[AiService] AI_PROVIDER_STATUS: provider=groq status=FAILED message=${err.message}`,
+            `[AiService] AI_PROVIDER=groq AI_PROVIDER_STATUS=FAILED message=${err.message}`,
           );
         }
       } else if (provider === 'gemini' && hasGemini) {
         try {
           this.logger.log('[AiService] AI_PROVIDER_REQUEST_SENT: provider=gemini');
           const result = await this.callGemini(prompt, history, geminiKeys, systemInstruction);
-          this.logger.log('[AiService] AI_PROVIDER_STATUS: provider=gemini status=SUCCESS');
+          this.logger.log('[AiService] AI_PROVIDER=gemini AI_PROVIDER_STATUS=SUCCESS');
           return result;
         } catch (err: any) {
           lastError = err;
           this.logger.warn(
-            `[AiService] AI_PROVIDER_STATUS: provider=gemini status=FAILED message=${err.message}`,
+            `[AiService] AI_PROVIDER=gemini AI_PROVIDER_STATUS=FAILED message=${err.message}`,
           );
         }
       }
@@ -95,9 +95,13 @@ export class AiService {
     systemInstruction?: string,
   ): Promise<AiChatResponse> {
     const randomKey = geminiKeys[Math.floor(Math.random() * geminiKeys.length)];
+    const geminiModel =
+      this.configService.get<string>('ai.geminiModel') ||
+      process.env.GEMINI_MODEL ||
+      'gemini-2.5-flash';
     const genAI = new GoogleGenerativeAI(randomKey);
     const model = genAI.getGenerativeModel({
-      model: 'gemini-1.5-flash',
+      model: geminiModel,
       systemInstruction: systemInstruction || 'Bạn là trợ lý AI chuyên gia điện ảnh của hệ thống MFILM.',
     });
 
@@ -116,7 +120,7 @@ export class AiService {
       text,
       reply: text,
       provider: 'gemini',
-      model: 'gemini-1.5-flash',
+      model: geminiModel,
     };
   }
 
@@ -127,6 +131,10 @@ export class AiService {
     systemInstruction?: string,
   ): Promise<AiChatResponse> {
     const randomKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
+    const groqModel =
+      this.configService.get<string>('ai.groqModel') ||
+      process.env.GROQ_MODEL ||
+      'openai/gpt-oss-20b';
     const messages = [
       {
         role: 'system',
@@ -150,7 +158,7 @@ export class AiService {
           Authorization: `Bearer ${randomKey}`,
         },
         body: JSON.stringify({
-          model: 'llama-3.3-70b-versatile',
+          model: groqModel,
           messages,
           temperature: 0.7,
           max_tokens: 1024,
@@ -184,7 +192,7 @@ export class AiService {
         text,
         reply: text,
         provider: 'groq',
-        model: 'llama-3.3-70b-versatile',
+        model: groqModel,
       };
     } finally {
       clearTimeout(timer);
