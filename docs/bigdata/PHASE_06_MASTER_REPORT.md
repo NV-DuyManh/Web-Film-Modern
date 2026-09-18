@@ -104,10 +104,10 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 - **ForYou Crash Fix**: **IMPLEMENTED** (`3c3c6af`). AbortController + authEpoch + ErrorBoundary.
 - **Durable History (Tinybird Fallback)**: **CODE VERIFIED (PASS)**.
 - **Insecure UID Fallback Removed**: **YES**.
-- **Backend Tests**: **11/11 Suites Passed (63/63 Tests)**.
+- **Backend Tests**: **12/12 Suites Passed (72/72 Tests)**.
 - **Backend Build**: **PASS** (`nest build`).
 - **Frontend Build**: **PASS** (`vite build`).
-- **Definitive Production Commit**: Latest deployable Phase 06 state (commit containing 21d49fb and this documentation cleanup; deploy current origin/main).
+- **Definitive Production Commit**: Latest deployable Phase 06 state (deploy current origin/main).
   - Render: pending deployment of latest Phase 06 commit
   - Vercel: pending deployment of latest Phase 06 commit with `VITE_RECOMMENDATIONS_ENABLED=true`
 
@@ -207,7 +207,7 @@ In `src/pages/client/home/forYou/ForYou.jsx`:
   `setRecommendations([])`.
 - In `displayMovies`: If `recommendations.length === 0`, returns `[]`. Popularity fallback has been **completely eliminated** from this component.
 - If `!loading && displayMovies.length === 0`: Returns `null`.
-- In `Home.jsx`: Wrapped in `<LazySection minHeight="0px"><ForYou /></LazySection>` to ensure zero DOM footprint, no heading, no placeholder, and zero layout gap when hidden.
+- In `Home.jsx`: Mounted eagerly under `<Suspense fallback={null}><ForYou /></Suspense>` so that initial auth resolution and recommendation queries execute immediately upon Home load. `ForYou` itself returns `null` when loading or when `displayMovies` is empty, ensuring zero DOM footprint, no heading, no placeholder, and zero layout gap when hidden (no zero-height `LazySection` blocks initial request).
 
 ### Anonymous Session Reset Behavior
 If an anonymous visitor clears browser cookies/session storage, `sessionStorage.getItem('mfilm_session_id')` is cleared. Upon the next visit, a new `sessionId` is generated with zero history, and “Dành Cho Bạn” cleanly returns to its gated (hidden) state until the visitor interacts with a movie.
