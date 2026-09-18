@@ -107,9 +107,9 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 - **Backend Tests**: **12/12 Suites Passed (72/72 Tests)**.
 - **Backend Build**: **PASS** (`nest build`).
 - **Frontend Build**: **PASS** (`vite build`).
-- **Definitive Production Commit**: Latest deployable Phase 06 state (deploy current origin/main).
-  - Render: pending deployment of latest Phase 06 commit
-  - Vercel: pending deployment of latest Phase 06 commit with `VITE_RECOMMENDATIONS_ENABLED=true`
+- **Definitive Production Commit**: `b0bdad79695605bda1a739dcbe5d60f486dc5f3d` (`b0bdad7`).
+  - Render: pending owner configuring `GROQ_API_KEYS` in Render Environment and triggering manual deploy of `b0bdad7`.
+  - Vercel: pending owner triggering redeploy of `b0bdad7` with `VITE_RECOMMENDATIONS_ENABLED=true`.
 
 ---
 
@@ -401,9 +401,11 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | **Deploy current origin/main** | Latest deployable Phase 06 state with Initial Authenticated Profile Load & AI Chatbot fixes. |
-| **Render Deployed Commit** | **PENDING PRODUCTION DEPLOYMENT** | Awaiting owner manual deploy of latest Phase 06 commit. |
-| **Vercel Deployed Commit** | **PENDING PRODUCTION DEPLOYMENT** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on latest Phase 06 commit. |
+| **Definitive Commit** | `b0bdad79695605bda1a739dcbe5d60f486dc5f3d` (`b0bdad7`) | Latest deployable Phase 06 state on `origin/main` with Initial Authenticated Profile Load & AI Chatbot security fixes. |
+| **Render Deployed Commit** | **PENDING OWNER DEPLOYMENT** | Blocked pending owner setting `GROQ_API_KEYS` in Render Environment and triggering manual deploy of `b0bdad7`. |
+| **Render Backend Health** | **LIVE VERIFIED (PASS)** | `GET /api/v1/health/ready` $\to$ HTTP 200 `ready`, `kafka: healthy`, `database: disabled`, `valkey: disabled`. |
+| **Render AI Provider Config** | **LIVE PROBED (NOT CONFIGURED)** | `POST /api/v1/ai/chat` $\to$ HTTP 400 (`No Groq API key configured on server. ACTION REQUIRED BY OWNER`). |
+| **Vercel Deployed Commit** | **PENDING OWNER DEPLOYMENT** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on commit `b0bdad7`. |
 | **Initial ForYou Eager Mount** | **CODE VERIFIED** | `Home.jsx` mounts `ForYou` directly under `Suspense` without zero-height `LazySection` blocking. |
 | **firebaseAuthReady Implemented** | **CODE VERIFIED** | `firebaseAuthReady` and `firebaseUser` tracked in `AuthProvider` via `onAuthStateChanged`. |
 | **First Request Authorization** | **CODE VERIFIED** | ForYou waits for `firebaseAuthReady`; sends Bearer token on initial authenticated load. |
