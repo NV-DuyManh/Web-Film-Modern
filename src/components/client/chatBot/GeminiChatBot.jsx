@@ -335,7 +335,10 @@ export default function GeminiChatBot() {
                 userPlanInfo
             });
 
-            const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
+            const API_BASE_URL =
+                import.meta.env?.VITE_API_BASE_URL ||
+                import.meta.env?.VITE_EVENT_API_BASE_URL ||
+                'https://mfilm-backend.onrender.com/api/v1';
             const recentMessages = currentSessionMessages
                 .slice(-6)
                 .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi'));
@@ -361,8 +364,9 @@ export default function GeminiChatBot() {
 
                 if (proxyRes.ok) {
                     const proxyData = await proxyRes.json();
-                    if (proxyData && proxyData.text) {
-                        finalAiMsgText = proxyData.text;
+                    const reply = proxyData?.reply || proxyData?.text;
+                    if (reply && typeof reply === 'string') {
+                        finalAiMsgText = reply;
                         backendSuccess = true;
                     }
                 }

@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { lazy, Suspense } from 'react';
 import Banner from './banner/Banner';
 import CategoriesFilm from './categoriesFilm/CategoriesFilm';
 import FilmNew from './filmNew/FilmNew';
@@ -42,7 +42,7 @@ function Home(props) {
             <Banner />
             <CategoriesFilm />
             <FilmNew />
-            <LazySection minHeight="0px"><ForYou /></LazySection>
+            <Suspense fallback={null}><ForYou /></Suspense>
             <LazySection minHeight="900px">
                 <div className="bg-[#111827] px-6 md:px-10 py-3">
                     <div className="rounded-xl border border-white/10 shadow-[0_0_30px_rgba(96,165,250,0.06)]">

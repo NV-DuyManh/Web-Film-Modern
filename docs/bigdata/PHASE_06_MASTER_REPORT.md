@@ -301,37 +301,43 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
 A logged-in account with existing favorites or historical preference data opened or reloaded Home. "Dành cho bạn" was completely absent. Only after the user clicked any random movie did "Dành cho bạn" suddenly appear.
 
 ### Exact Root Causes
-1. **Frontend Auth Readiness Race**:
+1. **Viewport Intersection Failure (`Home.jsx` LazySection)**:
+   - In `Home.jsx`, `<ForYou />` was wrapped in `<LazySection minHeight="0px"><ForYou /></LazySection>`.
+   - Because `minHeight="0px"`, the container had 0px height and sat below `Banner`, `CategoriesFilm`, and `FilmNew` (~1250px below the viewport top).
+   - On initial page load at scroll position 0, the `IntersectionObserver` never intersected with the viewport (`entry.isIntersecting === false`).
+   - Consequently, `<ForYou />` was **NEVER mounted**; its `useEffect` and recommendation query never executed!
+   - When the user scrolled down to click a movie, the scroll motion finally brought the 0px element into the intersection margin, triggering mount and causing the row to appear only after clicking.
+2. **Frontend Auth Readiness Race**:
    - `AuthProvider.jsx` synchronously hydrated `isLogin` from `localStorage`, but Firebase Auth restores credentials asynchronously from IndexedDB (~150–500ms).
    - `ForYou.jsx` mounted and immediately issued `fetchRecommendations()` while `getAuth().currentUser` was still `null`.
    - The first request lacked the `Authorization: Bearer <token>` header, routing it to Path 2 (Anonymous session) with 0 session events, returning `eligible: false, items: []`.
-2. **Stale Anonymous Response Race**:
+3. **Stale Anonymous Response Race**:
    - When Firebase Auth restored and fired `onAuthStateChanged`, a second (authenticated) request was launched without cancelling the first request or distinguishing request identities.
    - If the first anonymous response arrived second, it overwrote the authenticated recommendation list with `[]` because `authEpoch` remained identical.
-3. **Firestore Identity Mapping Gaps**:
+4. **Firestore Identity Mapping Gaps**:
    - Customer documents in Firestore created via `Register.jsx` store `firebaseUid: fbCred.user.uid`, but `getUserFavorites` in `content-similarity.service.ts` only queried `doc(Users, userId)`, `where('uid', '==', userId)`, and `where('id', '==', userId)`.
    - Firestore's `where('email', '==', targetEmail)` is strictly case-sensitive, missing accounts stored with original mixed-case emails.
-4. **Why Clicking a Movie "Woke It Up"**:
-   - Clicking a movie navigated to `DetailFilm.jsx` and sent `trackEvent('movie_view', realMovieId)` with the by-then resolved Bearer token.
-   - Backend `EventService` stored this event into `this.userInteractions`. When the user returned to Home, `userEvents.length >= 1` in RAM satisfied `favIds.length === 0 && userEvents.length === 0` (false), causing recommendations to suddenly appear based on that clicked movie.
 
 ### Complete Resolution
-1. **`firebaseAuthReady` State Introduced (`AuthProvider.jsx`)**:
+1. **Eager Component Mount under Suspense (`Home.jsx`)**:
+   - Replaced `<LazySection minHeight="0px"><ForYou /></LazySection>` with `<Suspense fallback={null}><ForYou /></Suspense>`.
+   - When `ForYou` has no recommendations (`displayMovies.length === 0`), it returns `null` with zero DOM footprint. Eager mounting ensures that the auth check and recommendation query execute immediately upon Home load without requiring any user scrolling or movie clicks.
+2. **`firebaseAuthReady` State Introduced (`AuthProvider.jsx`)**:
    - Added `const [firebaseAuthReady, setFirebaseAuthReady] = useState(false);` and `const [firebaseUser, setFirebaseUser] = useState(null);`.
    - Registered `onAuthStateChanged(auth, (user) => { setFirebaseUser(user); setFirebaseAuthReady(true); })`.
    - Exported `firebaseAuthReady` and `firebaseUser` in `AuthContext`.
-   - Updated `loginByUser` to accept the verified `firebaseUser` instance and ensure identity is resolved before advancing `authEpoch`.
-2. **Auth-Gated Recommendation Fetching (`ForYou.jsx`)**:
+   - Updated `loginByUser` to accept the verified `firebaseUser` instance and set `firebaseAuthReady = true` immediately.
+3. **Auth-Gated Recommendation Fetching (`ForYou.jsx`)**:
    - Component strictly waits for `firebaseAuthReady === true` before making any recommendation request. While `!firebaseAuthReady`, it remains in loading state and returns `null` (zero DOM gap).
    - If `firebaseUser || isLogin`: initiates an authenticated request with the verified Bearer token.
    - If `!firebaseUser && !isLogin`: initiates an anonymous session request.
    - Tagged each in-flight request with `activeRequestRef.current = { epoch: currentEpoch, uid: currentUid }`.
    - Any late anonymous or out-of-order response whose epoch or uid does not match is immediately discarded.
    - In-flight requests are cleanly aborted via `AbortController` upon any auth transition.
-3. **Firestore Favorites Bridge Expanded (`content-similarity.service.ts`)**:
+4. **Firestore Favorites Bridge Expanded (`content-similarity.service.ts`)**:
    - Added query for `where('firebaseUid', '==', userId)`.
    - Added dual query for normalized `email.toLowerCase().trim()` and original `email.trim()`.
-4. **Durable Signal Eligibility Guaranteed (`recommendation.service.ts`)**:
+5. **Durable Signal Eligibility Guaranteed (`recommendation.service.ts`)**:
    - Authenticated user eligibility: `eligible = favIds.length > 0 || userEvents.length > 0` (including RAM interactions and Tinybird durable signals).
    - Authenticated users with favorites > 0 and 0 current session events are immediately `eligible: true` without requiring any movie click.
    - Authenticated users with durable history > 0 and 0 current session events are immediately `eligible: true` without requiring any movie click.
@@ -339,16 +345,65 @@ A logged-in account with existing favorites or historical preference data opened
 
 ---
 
+## 2e. AI Chatbot Regression During Phase 06
+
+### Owner-Observed Defect
+MFILM AI Chatbot suddenly stopped working. Every message returned:
+*“Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿”*
+
+### Big Data Regression Audit
+- **Status**: **BIGDATA_REGRESSION_CONFIRMED**
+- **Root Cause Evidence**:
+  1. Commit `d048708` ("feat: integrate MFILM big data telemetry platform") created `backend/src/modules/ai/` (`AiController`, `AiService`) and switched `GroqChatBot.jsx` from client-side direct Groq calls to the backend proxy:
+     `const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';`
+  2. In Vercel production, `VITE_API_BASE_URL` was not configured. The frontend defaulted to `http://localhost:4000/api/v1/ai/chat`, which failed with mixed content / connection refused errors in the user's browser.
+  3. When querying the production backend directly (`POST https://mfilm-backend.onrender.com/api/v1/ai/chat`), the server responded:
+     `HTTP 400 Bad Request: {"message":"No Groq API key configured on server. ACTION REQUIRED BY OWNER."}`
+     Because `GROQ_API_KEYS` and `GEMINI_API_KEYS` existed in local `backend/.env` but were never added to the Render Dashboard environment variables.
+  4. In `backend/src/config/configuration.ts`, `corsOrigins` default fallback string lacked `https://www.mfilm.online`.
+  5. In `backend/src/modules/ai/ai.service.ts`, `callGemini` requested non-existent model `'gemini-2.5-flash'`.
+
+### Exact Files / Config Affected
+- `src/components/client/chatBot/GroqChatBot.jsx`
+- `src/components/client/chatBot/GeminiChatBot.jsx`
+- `backend/src/config/configuration.ts`
+- `backend/src/modules/ai/ai.service.ts`
+- `backend/src/modules/ai/ai.service.spec.ts`
+
+### Comprehensive Fix
+1. **Frontend API URL Resolution**:
+   Updated `GroqChatBot.jsx` and `GeminiChatBot.jsx` to resolve `API_BASE_URL` matching `ForYou.jsx`:
+   ```javascript
+   const API_BASE_URL =
+       import.meta.env?.VITE_API_BASE_URL ||
+       import.meta.env?.VITE_EVENT_API_BASE_URL ||
+       'https://mfilm-backend.onrender.com/api/v1';
+   ```
+2. **Client-Side Key Fallback**:
+   If the backend returns unconfigured server keys or fails, `GroqChatBot.jsx` falls back to client keys if present in frontend environment before showing the maintenance message.
+3. **CORS Origins Updated**:
+   Added `https://www.mfilm.online` to default `corsOrigins` in `configuration.ts`.
+4. **Valid AI Model & Response Contract**:
+   Updated Gemini model from `'gemini-2.5-flash'` to `'gemini-1.5-flash'`. Response returns both `reply` and `text` with `success: true`.
+5. **Decoupled Architecture**:
+   Chatbot controller and service have zero dependencies on Kafka, Tinybird, PostgreSQL, or Valkey.
+6. **Structured Safe Diagnostics**:
+   Backend logs `AI_PROVIDER_CONFIG_PRESENT`, `AI_PROVIDER_REQUEST_SENT`, and `AI_PROVIDER_STATUS` without exposing secrets or prompts.
+7. **Regression Unit Tests Added**:
+   Added `ai.service.spec.ts` testing happy path (Groq & Gemini), provider error fallback, unconfigured keys reporting, and architectural decoupling (7 tests passed).
+
+---
+
 ## 8. Acceptance Truth Classification
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | **Deploy current origin/main** | Latest deployable Phase 06 state with Initial Authenticated Profile Load fix. |
+| **Definitive Commit** | **Deploy current origin/main** | Latest deployable Phase 06 state with Initial Authenticated Profile Load & AI Chatbot fixes. |
 | **Render Deployed Commit** | **PENDING PRODUCTION DEPLOYMENT** | Awaiting owner manual deploy of latest Phase 06 commit. |
 | **Vercel Deployed Commit** | **PENDING PRODUCTION DEPLOYMENT** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on latest Phase 06 commit. |
+| **Initial ForYou Eager Mount** | **CODE VERIFIED** | `Home.jsx` mounts `ForYou` directly under `Suspense` without zero-height `LazySection` blocking. |
 | **firebaseAuthReady Implemented** | **CODE VERIFIED** | `firebaseAuthReady` and `firebaseUser` tracked in `AuthProvider` via `onAuthStateChanged`. |
 | **First Request Authorization** | **CODE VERIFIED** | ForYou waits for `firebaseAuthReady`; sends Bearer token on initial authenticated load. |
-| **Authenticated Refetch on Resolution** | **CODE VERIFIED** | `ForYou.jsx` triggers authenticated fetch upon `firebaseAuthReady` transition. |
 | **Favorites-Only Initial Load** | **LOCAL TEST VERIFIED** | Deterministic test: 5 favorites, 0 RAM events, 0 session events $\to$ `eligible=true`, `items.length > 0`. |
 | **Durable-History-Only Initial Load** | **LOCAL TEST VERIFIED** | Deterministic test: 0 favorites, Tinybird durable history, 0 RAM events $\to$ `eligible=true`, `items.length > 0`. |
 | **Stale Anonymous Response Protection** | **CODE VERIFIED** | `activeRequestRef` tags `{ epoch, uid }`; discards mismatched responses; aborts in-flight fetch. |
@@ -356,27 +411,39 @@ A logged-in account with existing favorites or historical preference data opened
 | **One-Click Stability Preserved** | **LOCAL TEST VERIFIED** | Favorites/durable history retain higher weighting over single weak `movie_view`. |
 | **Account Isolation Preserved** | **LOCAL TEST VERIFIED** | Unique `authUid`, separate cache keys, session rotation on logout/login. |
 | **Carousel Navigation Preserved** | **CODE VERIFIED** | `swiperRef.current?.slidePrev()` and `slideNext()` preserved with no card click interference. |
-| **Backend Tests** | **LOCAL TEST VERIFIED** | 11/11 test suites passed, 65/65 tests passed (`npm test`). |
+| **Chatbot Frontend Endpoint** | **CODE VERIFIED** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` route to `https://mfilm-backend.onrender.com/api/v1/ai/chat`. |
+| **Chatbot CORS & Decoupling** | **CODE VERIFIED** | CORS includes `https://www.mfilm.online`; zero dependency on Kafka, Tinybird, or Postgres. |
+| **Backend Tests** | **LOCAL TEST VERIFIED** | 12/12 test suites passed, 72/72 tests passed (`npm test`). |
 | **Backend Build** | **LOCAL BUILD VERIFIED** | `nest build` completed with 0 errors. |
-| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.18s with 0 errors. |
+| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.19s with 0 errors. |
 | **Zero Added Cost ($0 Budget)** | **CODE VERIFIED** | All components operate within free-tier limits. |
 
 ---
 
 ## 9. Owner Production Acceptance Steps
 1. **Push latest commit**: `git push origin main`
-2. **Deploy on Render**: Open Render Dashboard -> `mfilm-backend` -> **Manual Deploy** -> **Deploy latest commit**
-3. **Deploy on Vercel**: Open Vercel Dashboard -> `web-film-modern`:
-   - Confirm environment variable `VITE_RECOMMENDATIONS_ENABLED=true` is set.
+2. **Deploy on Render & Configure Chatbot Keys**:
+   - Open [Render Dashboard](https://dashboard.render.com) -> `mfilm-backend`.
+   - Go to **Environment**:
+     - Ensure `GROQ_API_KEYS` is set (copy from local `backend/.env` without sharing publicly).
+     - Keep Big Data variables intact (`RECOMMENDATIONS_ENABLED=true`, `POSTGRES_CATALOG_ENABLED=false`, `VALKEY_ENABLED=false`).
+   - Click **Manual Deploy** -> **Deploy latest commit**.
+3. **Deploy on Vercel**:
+   - Open [Vercel Dashboard](https://vercel.com) -> `web-film-modern`.
+   - Confirm environment variables:
+     - `VITE_RECOMMENDATIONS_ENABLED=true`
+     - `VITE_BIGDATA_TELEMETRY_ENABLED=true`
+     - `VITE_EVENT_API_BASE_URL=https://mfilm-backend.onrender.com/api/v1`
    - Trigger **Redeploy** on `main` branch.
 4. **Final Verification Checklist**:
-   - **Logout completely**.
-   - **Login** with an account that has favorites or viewing history.
-   - Go directly to Home. **DO NOT click any movie**.
-   - ✅ Confirm "Dành Cho Bạn" appears **immediately** after auth resolves.
-   - **Hard reload Home** (`Ctrl+F5` or `Cmd+Shift+R`).
-   - ✅ Confirm "Dành Cho Bạn" appears again after auth resolves without clicking.
-   - **Logout** and **Login same account again**.
-   - ✅ Confirm "Dành Cho Bạn" appears immediately without clicking.
-   - Click one unrelated movie briefly.
-   - ✅ Confirm list may shift slightly but long-term profile remains dominant.
+   - **Recommendation Initial Load**:
+     - Logout completely $\to$ Login with account having favorites/history.
+     - Go directly to Home. **DO NOT click any movie**.
+     - ✅ Confirm "Dành Cho Bạn" appears **immediately** after auth resolves.
+     - **Hard reload Home** (`Ctrl+F5` or `Cmd+Shift+R`) $\to$ ✅ Confirm "Dành Cho Bạn" reappears automatically.
+     - **Logout and re-login same account** $\to$ ✅ Confirm "Dành Cho Bạn" appears automatically.
+     - Click one unrelated movie briefly $\to$ ✅ Confirm long-term profile remains dominant.
+   - **Chatbot Verification**:
+     - Open "Trợ lý MFILM AI".
+     - Send: *"Gợi ý cho tôi một phim hành động."*
+     - ✅ Confirm real AI response renders and maintenance message does NOT appear.

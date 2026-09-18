@@ -63,7 +63,7 @@ export default (): AppConfig => {
     port: parseInt(process.env.PORT || '4000', 10),
     nodeEnv: process.env.NODE_ENV || 'development',
     globalPrefix: process.env.GLOBAL_PREFIX || 'api/v1',
-    corsOrigins: (process.env.CORS_ORIGINS || 'https://mfilm.online,https://web-film-modern.vercel.app,http://localhost:5173')
+    corsOrigins: (process.env.CORS_ORIGINS || 'https://mfilm.online,https://www.mfilm.online,https://web-film-modern.vercel.app,http://localhost:5173')
       .split(',')
       .map((s) => s.trim()),
     database: {

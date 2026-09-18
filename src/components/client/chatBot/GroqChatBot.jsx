@@ -355,7 +355,10 @@ export default function GroqChatBot() {
                 userPlanInfo
             });
 
-            const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
+            const API_BASE_URL =
+                import.meta.env?.VITE_API_BASE_URL ||
+                import.meta.env?.VITE_EVENT_API_BASE_URL ||
+                'https://mfilm-backend.onrender.com/api/v1';
             const recentMessages = currentSessionMessages
                 .slice(-4)
                 .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi'));
@@ -381,13 +384,56 @@ export default function GroqChatBot() {
 
                 if (proxyRes.ok) {
                     const proxyData = await proxyRes.json();
-                    if (proxyData && proxyData.text) {
-                        finalAiMsgText = proxyData.text;
+                    const reply = proxyData?.reply || proxyData?.text || proxyData?.choices?.[0]?.message?.content;
+                    if (reply && typeof reply === 'string') {
+                        finalAiMsgText = reply;
                         backendSuccess = true;
                     }
                 }
             } catch (proxyErr) {
-                // Fallback to local keys if present in dev
+                // Backend proxy error or network error
+            }
+
+            // Client-side fallback if backend keys unconfigured or proxy unavailable
+            if (!backendSuccess) {
+                const clientGroqKeyStr = import.meta.env?.VITE_GROQ_API_KEYS || import.meta.env?.VITE_GROQ_API_KEY;
+                const clientKeys = clientGroqKeyStr
+                    ? clientGroqKeyStr.split(',').map(k => k.trim().replace(/[\r\n\\"]/g, '')).filter(Boolean)
+                    : [];
+                if (clientKeys.length > 0) {
+                    try {
+                        const directRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                Authorization: `Bearer ${clientKeys[0]}`
+                            },
+                            body: JSON.stringify({
+                                model: 'llama-3.3-70b-versatile',
+                                messages: [
+                                    { role: 'system', content: systemInstruction },
+                                    ...recentMessages.map(m => ({
+                                        role: m.sender === 'user' ? 'user' : 'assistant',
+                                        content: m.text
+                                    })),
+                                    { role: 'user', content: userMsg.text }
+                                ],
+                                max_tokens: 1024
+                            }),
+                            signal: abortController.signal
+                        });
+                        if (directRes.ok) {
+                            const directData = await directRes.json();
+                            const directReply = directData?.choices?.[0]?.message?.content;
+                            if (directReply) {
+                                finalAiMsgText = directReply;
+                                backendSuccess = true;
+                            }
+                        }
+                    } catch {
+                        // ignore client fallback failure
+                    }
+                }
             }
 
             if (!backendSuccess) {

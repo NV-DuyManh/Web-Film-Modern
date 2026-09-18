@@ -69,6 +69,7 @@ function AuthProvider({ children }) {
         }
         if (fbUser) {
             setFirebaseUser(fbUser);
+            setFirebaseAuthReady(true);
         }
         setIsLogin(data);
         setAuthEpoch(prev => prev + 1);
