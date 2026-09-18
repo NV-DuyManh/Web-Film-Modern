@@ -20,12 +20,14 @@ function ContinueFilm(props) {
 
     useEffect(() => {
         try {
-            const all = JSON.parse(localStorage.getItem('mfilm_resume') || '{}');
-            setResumeData(all);
+            const userKey = isLogin?.id ? `mfilm_resume_${isLogin.id}` : 'mfilm_resume';
+            const userStore = JSON.parse(localStorage.getItem(userKey) || 'null');
+            const globalStore = JSON.parse(localStorage.getItem('mfilm_resume') || '{}');
+            setResumeData(userStore || globalStore || {});
         } catch (e) {
             console.error(e);
         }
-    }, []);
+    }, [isLogin?.id]);
 
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
@@ -40,10 +42,19 @@ function ContinueFilm(props) {
     const confirmDeleteContinue = () => {
         if (!itemToDelete) return;
         try {
-            const all = JSON.parse(localStorage.getItem('mfilm_resume') || '{}');
-            delete all[itemToDelete];
-            localStorage.setItem('mfilm_resume', JSON.stringify(all));
-            setResumeData(all);
+            const keys = ['mfilm_resume'];
+            if (isLogin?.id) keys.push(`mfilm_resume_${isLogin.id}`);
+
+            let updatedAll = {};
+            for (const key of keys) {
+                const all = JSON.parse(localStorage.getItem(key) || '{}');
+                delete all[itemToDelete];
+                localStorage.setItem(key, JSON.stringify(all));
+                if (key === (isLogin?.id ? `mfilm_resume_${isLogin.id}` : 'mfilm_resume')) {
+                    updatedAll = all;
+                }
+            }
+            setResumeData(updatedAll);
             
             setIsDeleteDialogOpen(false);
             setItemToDelete(null);
@@ -57,6 +68,8 @@ function ContinueFilm(props) {
                 timer: 1500,
                 showConfirmButton: false
             });
+            // Dispatch event so account stats update immediately
+            window.dispatchEvent(new Event('mfilm_resume_updated'));
         } catch (error) {
             console.error("Error removing history", error);
         }

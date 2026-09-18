@@ -139,7 +139,7 @@ function PlayFilm({ handleOpenLogin }) {
                 episodeId: playEpisodes.id,
                 episodeNumber: playEpisodes.numberEpisode,
                 seconds: currentSeconds,
-            });
+            }, isLogin?.id);
 
             // Big Data Telemetry: Calculate delta for correct sum in Tinybird
             const delta = currentSeconds - lastProgressTimeRef.current;
@@ -214,7 +214,7 @@ function PlayFilm({ handleOpenLogin }) {
                     episodeId: playEpisodes.id,
                     episodeNumber: playEpisodes.numberEpisode,
                     seconds: Math.floor(time),
-                });
+                }, isLogin?.id);
             }
         };
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -229,7 +229,7 @@ function PlayFilm({ handleOpenLogin }) {
                 episodeId: playEpisodes.id,
                 episodeNumber: playEpisodes.numberEpisode,
                 seconds: Math.floor(time),
-            });
+            }, isLogin?.id);
         }
         navigate(`/xem-phim/${slug}?tap=${ep.numberEpisode}&server=${activeServer}`);
     };

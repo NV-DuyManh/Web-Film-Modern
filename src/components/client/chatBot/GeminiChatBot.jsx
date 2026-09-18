@@ -11,7 +11,10 @@ import {
     executeMovieLookup,
     renderMessage,
     TypewriterText,
-    GEMINI_TOOLS
+    GEMINI_TOOLS,
+    isPlanAppropriateQuery,
+    filterMoviesByEntitlement,
+    validateAndFilterAiResponse
 } from './ChatBotCore.jsx';
 
 const SESSIONS_STORAGE_KEY = 'mfilm_chatbot_sessions';
@@ -320,9 +323,47 @@ export default function GeminiChatBot() {
         setIsTyping(true);
         isCancelledRef.current = false;
 
+        const isPlanQuery = isPlanAppropriateQuery(textToSend);
+
+        // Kiểm tra đăng nhập và khả năng phân giải gói cước tài khoản cho truy vấn theo gói
+        if (isPlanQuery) {
+            if (!isLogin) {
+                const newAiId = Date.now() + 1;
+                setLastAiMsgId(newAiId);
+                const aiMsg = {
+                    id: newAiId,
+                    text: "Bạn chưa đăng nhập tài khoản. Vui lòng đăng nhập để MFILM AI kiểm tra gói cước và gợi ý các bộ phim phù hợp nhất với gói của bạn nhé! 🍿",
+                    sender: 'ai',
+                    isPlanSpecific: false
+                };
+                updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
+                setIsTyping(false);
+                return;
+            }
+
+            if (!plans || plans.length === 0) {
+                const newAiId = Date.now() + 1;
+                setLastAiMsgId(newAiId);
+                const aiMsg = {
+                    id: newAiId,
+                    text: "Chưa xác định được gói hiện tại của tài khoản. Vui lòng tải lại thông tin tài khoản.",
+                    sender: 'ai',
+                    isPlanSpecific: false
+                };
+                updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
+                setIsTyping(false);
+                return;
+            }
+        }
+
         try {
+            // Lọc trước danh sách ứng viên phim theo quyền truy cập của gói cước người dùng (Pre-AI filtering)
+            const candidateMovies = isPlanQuery
+                ? filterMoviesByEntitlement(movies, plans, userPlanInfo)
+                : movies;
+
             const systemInstruction = buildSystemInstruction({
-                movies,
+                movies: candidateMovies,
                 currentMovie,
                 authors,
                 actors,
@@ -332,7 +373,8 @@ export default function GeminiChatBot() {
                 allReviews,
                 plans,
                 isLogin,
-                userPlanInfo
+                userPlanInfo,
+                isPlanSpecific: isPlanQuery
             });
 
             const recentMessages = currentSessionMessages
@@ -376,13 +418,23 @@ export default function GeminiChatBot() {
 
             if (isCancelledRef.current) return;
 
+            // Hậu kiểm và lọc bỏ phim vượt quyền / sai lệch khỏi câu trả lời của AI (Post-AI validation)
+            const sanitizedAiText = validateAndFilterAiResponse(
+                finalAiMsgText,
+                movies,
+                plans,
+                userPlanInfo,
+                isPlanQuery
+            );
 
             const newAiId = Date.now() + 1;
             setLastAiMsgId(newAiId);
             const aiMsg = {
                 id: newAiId,
-                text: finalAiMsgText,
-                sender: 'ai'
+                text: sanitizedAiText || "Dạ chào bạn! Bạn đang tìm kiếm bộ phim hay thể loại nào để mình hỗ trợ gợi ý cho bạn nhé? 😊",
+                sender: 'ai',
+                isPlanSpecific: isPlanQuery,
+                userPlanInfo
             };
             updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
         } catch (error) {
@@ -569,7 +621,7 @@ export default function GeminiChatBot() {
                                                     ? 'bg-amber-600 text-white font-medium rounded-tr-none'
                                                     : 'bg-white text-black border border-gray-100 rounded-tl-none'
                                                 }`}>
-                                                {renderMessage(msg.text, handleLinkClick, movies, plans)}
+                                                {renderMessage(msg.text, handleLinkClick, movies, plans, msg.userPlanInfo || userPlanInfo, Boolean(msg.isPlanSpecific))}
                                             </div>
                                         </div>
                                     );

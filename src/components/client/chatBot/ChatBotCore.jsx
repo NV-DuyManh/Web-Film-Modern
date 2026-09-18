@@ -340,6 +340,122 @@ export const getMoviePlanInfo = (movie, plans = []) => {
 };
 
 /**
+ * Lấy tên hiển thị chuẩn hóa cho người dùng (Free, Plus, Premium, Admin)
+ */
+export const getHumanPlanName = (userPlanInfo) => {
+    if (!userPlanInfo || !userPlanInfo.name) return 'Free';
+    let name = String(userPlanInfo.name).trim();
+    if (name.toUpperCase() === 'PRENIUM') name = 'Premium';
+    else if (name.toUpperCase() === 'FREE') name = 'Free';
+    else if (name.toUpperCase() === 'PLUS') name = 'Plus';
+    else if (name.toUpperCase() === 'ADMIN') name = 'Admin';
+    return name;
+};
+
+/**
+ * Kiểm tra xem câu truy vấn có phải là yêu cầu xem phim theo gói cước của tài khoản hay không
+ */
+export const isPlanAppropriateQuery = (query) => {
+    if (!query || typeof query !== 'string') return false;
+    const clean = searchTV(query).trim();
+    return (
+        (clean.includes('phu hop') && clean.includes('goi')) ||
+        (clean.includes('hop goi')) ||
+        (clean.includes('goi cua toi')) ||
+        (clean.includes('goi hien tai')) ||
+        (clean.includes('goi tai khoan')) ||
+        (clean.includes('theo goi') && clean.includes('phim'))
+    );
+};
+
+/**
+ * Bộ lọc bản quyền/gói cước tất định (Deterministic Entitlement Filter):
+ * Chỉ giữ lại các phim mà người dùng có quyền xem (movieLevel <= userLevel)
+ */
+export const filterMoviesByEntitlement = (movies = [], plans = [], userPlanInfo = null) => {
+    const userLevel = Number(userPlanInfo?.level) || 0;
+    return (movies || []).filter(movie => {
+        const moviePlan = getMoviePlanInfo(movie, plans);
+        return Number(moviePlan.level) <= userLevel;
+    });
+};
+
+/**
+ * Xác thực và hậu kiểm kết quả trả về từ AI (Post-AI Validation):
+ * 1. Kiểm tra từng phim xuất hiện trong text: slug/id phải tồn tại trong catalog thực tế
+ * 2. Quyền xem của phim phải phù hợp với gói người dùng (movieLevel <= userLevel)
+ * 3. Loại bỏ các phim bị trùng lặp hoặc phim vượt gói
+ * 4. Nếu toàn bộ phim gợi ý bị rớt do AI sinh sai/vượt quyền, cung cấp danh sách phim hợp lệ dự phòng
+ */
+export const validateAndFilterAiResponse = (responseText, movies = [], plans = [], userPlanInfo = null, isPlanSpecific = false) => {
+    if (!responseText || typeof responseText !== 'string') return responseText;
+    if (!isPlanSpecific || !userPlanInfo) return responseText;
+
+    const userLevel = Number(userPlanInfo.level) || 0;
+    const lines = responseText.split('\n');
+    const validLines = [];
+    const seenSlugs = new Set();
+    let validMovieCount = 0;
+
+    for (const line of lines) {
+        const match = line.match(/\/phim\/([a-zA-Z0-9_-]+)/i);
+        if (match) {
+            const slug = match[1].toLowerCase().trim();
+            // Kiểm tra slug có trong danh mục phim thực tế không
+            const movie = (movies || []).find(m => 
+                String(m.slug || '').toLowerCase().trim() === slug || 
+                String(m.id || '').toLowerCase() === slug
+            );
+
+            // Nếu không có trong catalog -> BỎ QUA dòng này (chống AI hallucination)
+            if (!movie) {
+                continue;
+            }
+
+            // Kiểm tra phân quyền gói cước: cấp độ phim không được vượt quá cấp độ người dùng
+            const moviePlan = getMoviePlanInfo(movie, plans);
+            if (moviePlan.level > userLevel) {
+                // BỎ QUA dòng phim vượt quyền (chống phim Plus/Premium lọt vào câu trả lời của user Free)
+                continue;
+            }
+
+            const movieKey = String(movie.id || movie.slug);
+            if (seenSlugs.has(movieKey)) {
+                // BỎ QUA phim trùng lặp trong cùng 1 câu trả lời
+                continue;
+            }
+            seenSlugs.add(movieKey);
+            validMovieCount++;
+        }
+        validLines.push(line);
+    }
+
+    let sanitized = validLines.join('\n').trim();
+
+    // Nếu AI sinh toàn phim vượt quyền hoặc bị loại hết, thay thế bằng danh sách phim hợp lệ thực tế
+    if (validMovieCount === 0) {
+        const allowedList = (movies || [])
+            .filter(m => getMoviePlanInfo(m, plans).level <= userLevel)
+            .sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))
+            .slice(0, 5);
+
+        const planDisplayName = getHumanPlanName(userPlanInfo);
+        if (allowedList.length > 0) {
+            const fallbackMovies = allowedList.map(m => {
+                const title = m.otherName || m.name;
+                const slug = m.slug || m.id;
+                const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
+                return `- [${title}](/phim/${slug}) • ${epStr}`;
+            }).join('\n');
+
+            sanitized = `Với gói ${planDisplayName} hiện tại của bạn, bạn có thể xem các bộ phim hấp dẫn sau đây:\n\n${fallbackMovies}\n\nChúc bạn có những giây phút xem phim thật vui vẻ trên MFILM! 🍿`;
+        }
+    }
+
+    return sanitized;
+};
+
+/**
  * Trích xuất thứ tự phần / mùa phim (Season 1, Phần 4, Movie...) để sắp xếp tự nhiên theo franchise
  */
 export const extractPartOrder = (movie) => {
@@ -447,7 +563,8 @@ export const buildSystemInstruction = ({
     allEpisodes = [],
     plans = [],
     isLogin = null,
-    userPlanInfo = { name: 'FREE', level: 0 }
+    userPlanInfo = { name: 'FREE', level: 0 },
+    isPlanSpecific = false
 }) => {
     const totalMovies = movies?.length || 0;
     const freeMoviesCount = (movies || []).filter(m => getMoviePlanInfo(m, plans).isFree).length;
@@ -476,9 +593,24 @@ export const buildSystemInstruction = ({
     }
 
     const userName = isLogin ? (isLogin.name || 'Người dùng') : 'Khách';
-    const planName = userPlanInfo?.name || 'FREE';
+    const planName = getHumanPlanName(userPlanInfo);
     const planLevel = Number(userPlanInfo?.level) || 0;
     const userContext = `\n\n[USER]: ${userName} | Gói: **${planName}** (Level ${planLevel})${planLevel > 0 ? ' - Đã đăng ký gói VIP' : ' - Gói Free'}`;
+
+    let planSpecificDirective = "";
+    if (isPlanSpecific) {
+        planSpecificDirective = `\n\n[QUY TẮC BẮT BUỘC KHI TRẢ LỜI "PHIM PHÙ HỢP GÓI CỦA TÔI"]:
+- Người dùng vừa hỏi phim phù hợp với gói cước tài khoản của mình.
+- Gói cước thực tế của người dùng: Gói **${planName}** (Level ${planLevel}).
+- BẮT BUỘC mở đầu bằng câu nói nêu rõ tên gói: "Với gói ${planName} hiện tại của bạn, bạn có thể xem các bộ phim sau đây:"
+- TUYỆT ĐỐI KHÔNG dùng từ "Level 0" hay mã kỹ thuật nội bộ trong câu trả lời.
+- BẮT BUỘC CHỈ gợi ý các bộ phim có trong danh mục [DANH SÁCH PHIM TIÊU BIỂU TRÊN MFILM] (toàn bộ phim trong danh mục này đã được lọc hợp lệ với gói ${planName} của bạn).
+- TUYỆT ĐỐI KHÔNG gợi ý bất kỳ phim nào thuộc gói cao hơn mà tài khoản chưa có quyền xem!`;
+    }
+
+    const planRule6 = isPlanSpecific
+        ? `6. GÓI CỦA USER & QUYỀN TRUY CẬP: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). BẮT BUỘC CHỈ gợi ý các phim thuộc gói ${planName} hoặc thấp hơn (Level <= ${planLevel}) trong danh mục. TUYỆT ĐỐI KHÔNG gợi ý phim gói cao hơn.`
+        : `6. GÓI CỦA USER & QUYỀN TRUY CẬP: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Ưu tiên gợi ý phim xem được. Nếu người dùng muốn tìm phim gói cao hơn hoặc thuê phim, hãy tìm và cung cấp thông tin cho họ.`;
 
     return `Bạn là trợ lý AI thông minh, thân thiện của website xem phim MFILM.
 LUÔN TRẢ LỜI BẰNG TIẾNG VIỆT 100%.
@@ -512,7 +644,7 @@ QUY TẮC CỐT LÕI & NGUYÊN TẮC ỨNG BIẾN LINH HOẠT:
 
 5. THỐNG KÊ MFILM: Tổng số phim: ${totalMovies} (Free: ${freeMoviesCount}, Có phí: ${paidMoviesCount}). Tổng số tập phim toàn web: ${totalEpisodes} tập.
 ${planBreakdown}
-6. GÓI CỦA USER & QUYỀN TRUY CẬP: Người dùng đang sở hữu gói **${planName}** (Level ${planLevel}). Ưu tiên gợi ý phim xem được. Nếu người dùng muốn tìm phim gói cao hơn hoặc thuê phim, hãy tìm và cung cấp thông tin cho họ.
+${planRule6}
 7. GIAO TIẾP TỰ NHIÊN, NGẮN GỌN, DỄ HIỂU:
    - Trả lời ngắn gọn, súc tích, đi thẳng vào câu trả lời, dùng emoji nhẹ nhàng 🍿🎬.
    - TUYỆT ĐỐI KHÔNG nói dài dòng, TUYỆT ĐỐI KHÔNG lặp đi lặp lại những câu giải thích rườm rà trong ngoặc đơn (như "(Bạn đang dùng gói Free, nên phim này hiện chưa thể xem được. Bạn có thể nâng cấp...)").
@@ -535,7 +667,7 @@ ${planBreakdown}
 ${allCategoriesList || 'Hành động, Hài, Giả tưởng, Chính kịch, Kinh dị, Khoa học, Kỳ ảo, Tâm lý, Viễn tưởng, Phiêu lưu, Hoạt hình, Anime, Võ thuật, Cổ trang, Tình cảm, Học đường, Gia đình, Thể thao, Âm nhạc, Chiếu rạp, Phim bộ, Phim lẻ'}
 
 [DANH SÁCH PHIM TIÊU BIỂU TRÊN MFILM]:
-${movieCatalog}${currentMovieContext}${userContext}`;
+${movieCatalog}${currentMovieContext}${userContext}${planSpecificDirective}`;
 };
 
 /**
@@ -630,7 +762,7 @@ export const executeMovieLookup = ({
     }
 
     // Lọc theo gói cước
-    if (args.loai_phi === 'user_plan' || args.phu_hop_goi_user) {
+    if (args.loai_phi === 'user_plan' || args.phu_hop_goi_user || isPlanAppropriateQuery(cleanUserQuery)) {
         const userLevel = Number(userPlanInfo?.level) || 0;
         filtered = filtered.filter(m => {
             const planInfo = getMoviePlanInfo(m, plans);
@@ -1129,9 +1261,15 @@ export const getPlanBadgeStyle = (planInfo) => {
 /**
  * Component hiển thị 1 thẻ phim mini trực quan ngay dưới dòng mô tả
  */
-export const SingleMovieCard = ({ movie, plans = [], onLinkClick }) => {
+export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo = null, isPlanSpecific = false }) => {
     if (!movie) return null;
     const planInfo = getMoviePlanInfo(movie, plans);
+    if (isPlanSpecific && userPlanInfo) {
+        const userLevel = Number(userPlanInfo.level) || 0;
+        if (planInfo.level > userLevel) {
+            return null;
+        }
+    }
     const badgeStyle = getPlanBadgeStyle(planInfo);
     const movieSlug = movie.slug || movie.id;
     const posterUrl = movie.imgUrl || movie.poster || movie.image || '/assets/Logo6.png';
@@ -1192,13 +1330,14 @@ export const SingleMovieCard = ({ movie, plans = [], onLinkClick }) => {
 /**
  * Render tin nhắn chat theo từng dòng, nếu dòng nào có link phim thì thẻ phim sẽ nằm NGAY DƯỚI dòng đó!
  */
-export const renderMessage = (text, onLinkClick, movies = [], plans = []) => {
+export const renderMessage = (text, onLinkClick, movies = [], plans = [], userPlanInfo = null, isPlanSpecific = false) => {
     if (!text) return null;
 
     const rawLines = text.split('\n');
     // Lọc bỏ dòng phân cách bảng markdown như |---|---|
     const validLines = rawLines.filter(line => !/^\|?\s*[-:]+[-|\s:]+$/.test(line.trim()));
     const seenMovieIds = new Set();
+    const userLevel = userPlanInfo ? (Number(userPlanInfo.level) || 0) : 0;
 
     return validLines.map((line, i, arr) => {
         let cleanLine = line.trim();
@@ -1236,8 +1375,11 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = []) => {
                 String(m.id || '').toLowerCase() === slug
             );
             if (found && !seenMovieIds.has(found.id)) {
-                seenMovieIds.add(found.id);
-                movieForThisLine = found;
+                const planInfo = getMoviePlanInfo(found, plans);
+                if (!isPlanSpecific || planInfo.level <= userLevel) {
+                    seenMovieIds.add(found.id);
+                    movieForThisLine = found;
+                }
             }
         }
 
@@ -1249,6 +1391,8 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = []) => {
                         movie={movieForThisLine} 
                         plans={plans} 
                         onLinkClick={onLinkClick} 
+                        userPlanInfo={userPlanInfo}
+                        isPlanSpecific={isPlanSpecific}
                     />
                 )}
             </div>
@@ -1259,7 +1403,7 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = []) => {
 /**
  * Component hiệu ứng gõ chữ (Typewriter Effect) mượt mà cho tin nhắn AI
  */
-export const TypewriterText = ({ text, isNew = false, onComplete, onLinkClick, movies = [], plans = [] }) => {
+export const TypewriterText = ({ text, isNew = false, onComplete, onLinkClick, movies = [], plans = [], userPlanInfo = null, isPlanSpecific = false }) => {
     const [displayedLength, setDisplayedLength] = React.useState(() => isNew ? 0 : (text?.length || 0));
 
     React.useEffect(() => {
@@ -1297,7 +1441,7 @@ export const TypewriterText = ({ text, isNew = false, onComplete, onLinkClick, m
 
     return (
         <div onClick={handleSkipTypewriter} className="cursor-text select-text flex flex-col gap-1">
-            {renderMessage(visibleText, onLinkClick, movies, plans)}
+            {renderMessage(visibleText, onLinkClick, movies, plans, userPlanInfo, isPlanSpecific)}
         </div>
     );
 };

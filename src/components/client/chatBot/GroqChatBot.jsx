@@ -11,7 +11,10 @@ import {
     executeMovieLookup,
     renderMessage,
     TypewriterText,
-    GROQ_TOOLS
+    GROQ_TOOLS,
+    isPlanAppropriateQuery,
+    filterMoviesByEntitlement,
+    validateAndFilterAiResponse
 } from './ChatBotCore.jsx';
 
 const SESSIONS_STORAGE_KEY = 'mfilm_chatbot_sessions';
@@ -333,6 +336,39 @@ export default function GroqChatBot() {
         setMessage('');
         setIsTyping(true);
 
+        const isPlanQuery = isPlanAppropriateQuery(textToSend);
+
+        // Kiểm tra đăng nhập và khả năng phân giải gói cước tài khoản cho truy vấn theo gói
+        if (isPlanQuery) {
+            if (!isLogin) {
+                const newAiId = Date.now() + 1;
+                setLastAiMsgId(newAiId);
+                const aiMsg = {
+                    id: newAiId,
+                    text: "Bạn chưa đăng nhập tài khoản. Vui lòng đăng nhập để MFILM AI kiểm tra gói cước và gợi ý các bộ phim phù hợp nhất với gói của bạn nhé! 🍿",
+                    sender: 'ai',
+                    isPlanSpecific: false
+                };
+                updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
+                setIsTyping(false);
+                return;
+            }
+
+            if (!plans || plans.length === 0) {
+                const newAiId = Date.now() + 1;
+                setLastAiMsgId(newAiId);
+                const aiMsg = {
+                    id: newAiId,
+                    text: "Chưa xác định được gói hiện tại của tài khoản. Vui lòng tải lại thông tin tài khoản.",
+                    sender: 'ai',
+                    isPlanSpecific: false
+                };
+                updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
+                setIsTyping(false);
+                return;
+            }
+        }
+
         // Hủy request trước đó nếu còn đang chạy
         if (abortControllerRef.current) {
             abortControllerRef.current.abort();
@@ -341,8 +377,13 @@ export default function GroqChatBot() {
         abortControllerRef.current = abortController;
 
         try {
+            // Lọc trước danh sách ứng viên phim theo quyền truy cập của gói cước người dùng (Pre-AI filtering)
+            const candidateMovies = isPlanQuery
+                ? filterMoviesByEntitlement(movies, plans, userPlanInfo)
+                : movies;
+
             const systemInstruction = buildSystemInstruction({
-                movies,
+                movies: candidateMovies,
                 currentMovie,
                 authors,
                 actors,
@@ -352,7 +393,8 @@ export default function GroqChatBot() {
                 allReviews,
                 plans,
                 isLogin,
-                userPlanInfo
+                userPlanInfo,
+                isPlanSpecific: isPlanQuery
             });
 
             const recentMessages = currentSessionMessages
@@ -396,14 +438,25 @@ export default function GroqChatBot() {
 
             if (abortController.signal.aborted) return;
 
-        const newAiId = Date.now() + 1;
-        setLastAiMsgId(newAiId);
-        const aiMsg = {
-            id: newAiId,
-            text: finalAiMsgText || "Dạ chào bạn! Bạn đang tìm kiếm bộ phim hay thể loại nào để mình hỗ trợ gợi ý cho bạn nhé? 😊",
-            sender: 'ai'
-        };
-        updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
+            // Hậu kiểm và lọc bỏ phim vượt quyền / sai lệch khỏi câu trả lời của AI (Post-AI validation)
+            const sanitizedAiText = validateAndFilterAiResponse(
+                finalAiMsgText,
+                movies,
+                plans,
+                userPlanInfo,
+                isPlanQuery
+            );
+
+            const newAiId = Date.now() + 1;
+            setLastAiMsgId(newAiId);
+            const aiMsg = {
+                id: newAiId,
+                text: sanitizedAiText || "Dạ chào bạn! Bạn đang tìm kiếm bộ phim hay thể loại nào để mình hỗ trợ gợi ý cho bạn nhé? 😊",
+                sender: 'ai',
+                isPlanSpecific: isPlanQuery,
+                userPlanInfo
+            };
+            updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
         } catch (error) {
             // Nếu hủy do người dùng chuyển tab hoặc đóng chat thì không ghi lỗi ra giao diện
             if (error?.name === 'AbortError' || abortController.signal.aborted) {
@@ -594,7 +647,7 @@ export default function GroqChatBot() {
                                                     ? 'bg-amber-600 text-white font-medium rounded-tr-none'
                                                     : 'bg-white text-black border border-gray-100 rounded-tl-none'
                                                 }`}>
-                                                {renderMessage(msg.text, handleLinkClick, movies, plans)}
+                                                {renderMessage(msg.text, handleLinkClick, movies, plans, msg.userPlanInfo || userPlanInfo, Boolean(msg.isPlanSpecific))}
                                             </div>
                                         </div>
                                     );

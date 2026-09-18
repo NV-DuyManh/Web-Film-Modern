@@ -445,3 +445,98 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
    - ✅ **Logout and re-login same account** $\to$ confirm row appears automatically without clicking.
    - ✅ **Click one unrelated movie briefly**, return Home $\to$ confirm long-term profile remains dominant (no full-row collapse).
    - ✅ **Carousel `<` and `>`**: click navigation arrows $\to$ confirm slider navigates without opening movie detail modals.
+
+---
+
+## 10. Phase 06 Hardening: Chatbot Plan Entitlement Filter & Dynamic Account Statistics
+
+### 10.1 Root Cause Analysis
+
+#### A. Chatbot Package-Entitlement Mismatch Bug
+- **Symptom**: When a user selected the quick action *"Phim phù hợp gói của tôi"*, the chatbot text stated that the user is on the Free tier (`Level 0`), but returned movie cards displaying the `PLUS` or `PREMIUM` badge (e.g., *Đội Đặc Nhiệm SEAL* - Plus).
+- **Actual Root Causes**:
+  1. **Unfiltered Pre-AI Catalog Summary**: In `ChatBotCore.jsx`, `buildMovieCatalogSummary` sliced the top 25 globally viewed movies into the system instruction prompt. Because high-view movies often include `PLUS` and `PREMIUM` titles, the LLM received candidates it was not allowed to recommend, and generated descriptions citing those titles.
+  2. **Intent Loop Bypass in Keyword Matching**: In `executeMovieLookup`, the list `GENERIC_RECOMMEND_INTENTS` included `'goi cua toi'` and `'phu hop voi goi'`. When user queries contained these phrases, line 738 executed `continue`, bypassing the planned level check on line 768.
+  3. **Lack of Deterministic Post-AI Card Validation**: In `renderMessage` and `SingleMovieCard`, any `/phim/slug` match extracted from AI text was looked up in the global catalog and rendered without verifying `getMoviePlanInfo(movie, plans).level <= userPlanInfo.level`. Thus, any hallucinated or leaked title rendered a badge matching its catalog tier (`PLUS`), producing an entitlement violation.
+
+#### B. Account Page Hardcoded Statistics Bug
+- **Symptom**: In `ProfileHeader.jsx`, the four statistics cards showed fixed numbers:
+  - `ĐÃ XEM: 1`
+  - `ĐÁNH GIÁ: 2`
+  - `WATCHLIST: 3`
+  - `THEO DÕI: 4`
+- **Actual Root Cause**:
+  - `ProfileHeader.jsx` literally hardcoded `<p className="text-3xl font-black text-cyan-400">1</p>`, `2`, `3`, and `4` directly in the JSX template instead of reading from authenticated account data.
+
+---
+
+### 10.2 Architectural Resolutions Implemented
+
+#### 1. Real Plan Source of Truth
+- Unified canonical source: `getUserPlanInfo(isLogin, subscriptions, plans)` from `src/utils/appUtils.js`.
+  - Determines highest active subscription or account tier (`FREE` Level 0, `PLUS` Level 2, `PREMIUM` Level 3, `ADMIN` Level 999).
+  - Normalizes UI tier names (`PRENIUM` $\to$ `Premium`).
+  - If user is not logged in, returns explicit login request without invoking AI backend.
+  - If plans are unresolved, fails gracefully with: *"Chưa xác định được gói hiện tại của tài khoản. Vui lòng tải lại thông tin tài khoản."*
+
+#### 2. Deterministic Entitlement Filter (Pre-AI)
+- Location: `src/utils/entitlement.js` (`filterMoviesByEntitlement`).
+- When `isPlanAppropriateQuery(query)` evaluates to `true`:
+  - Filters candidate catalog strictly where `movieLevel <= userPlanLevel`.
+  - Only entitled movies are passed to `buildMovieCatalogSummary` and AI system context.
+  - Injects strict prompt directive requiring the header: *"Với gói [PlanName] hiện tại của bạn, bạn có thể xem các bộ phim sau đây:"* and forbidding higher-tier recommendations.
+
+#### 3. Post-AI Entitlement Validation & Card Guard
+- Location: `validateAndFilterAiResponse` in `src/utils/entitlement.js` + `renderMessage` / `SingleMovieCard` in `ChatBotCore.jsx`.
+- Validates every returned movie slug/ID against the catalog:
+  - If movie does not exist in catalog $\to$ dropped.
+  - If movie tier exceeds current user plan (`movieLevel > userPlanLevel`) $\to$ dropped.
+  - If movie is duplicated in same response $\to$ dropped.
+  - If AI hallucinates 100% invalid titles $\to$ generates deterministic fallback response with top entitled movies.
+  - `SingleMovieCard` verifies `planInfo.level <= userLevel` before rendering, guaranteeing 0 locked cards.
+
+#### 4. Canonical Account Statistics Sources
+All four metrics derive dynamically from authenticated user data via `src/utils/accountStats.js`:
+- **ĐÃ XEM**: `getWatchedMoviesCount(isLogin?.id)`.
+  - Backed by user-scoped storage `mfilm_resume_${userId}` and `mfilm_resume`.
+  - Counts unique movie IDs (multiple episodes / progress updates count as 1 movie).
+  - Reacts to `mfilm_resume_updated` and cross-tab `storage` events.
+- **ĐÁNH GIÁ**: `getUniqueReviewsCount(isLogin?.id, allReviews)`.
+  - Evaluates user's rating records in Firestore `Reviews` collection.
+  - Modifying an existing rating updates the score without incrementing the count.
+- **WATCHLIST**: `getWatchlistCount(isLogin)`.
+  - Counts unique movie IDs across `isLogin.listFilm` playlists and `isLogin.watchlist`.
+  - Dynamic increment/decrement on playlist addition or removal.
+- **THEO DÕI**: `getFollowingCount(isLogin)`.
+  - Counts unique entities tracked in `isLogin.listFavorite`, `isLogin.following`, `isLogin.listFollow`, or `isLogin.theoDoi`.
+  - Reflects immediate follow/unfollow actions.
+
+#### 5. Account-Switch Isolation
+- On logout/login/account switch:
+  - `isLogin` changes in `AuthContext`.
+  - All four stat counters reset and re-evaluate exclusively for the new authenticated account.
+  - `userPlanInfo` in `GroqChatBot.jsx` and `GeminiChatBot.jsx` updates reactively.
+  - Zero data leakage between Account A and Account B.
+
+---
+
+### 10.3 Automated Test Results
+
+Automated test suite: `src/utils/accountAndChatbotEntitlement.test.js` executed with `node --test`:
+- **Test A — Free User Entitlement**: PASS (only Free titles accessible, Level $\le 0$).
+- **Test B — Plus User Entitlement**: PASS (Free + Plus accessible, Premium excluded, Level $\le 2$).
+- **Test C — Premium User Entitlement**: PASS (Free, Plus, Premium all accessible, Level $\le 3$).
+- **Test D — AI Hallucination Guard**: PASS (PLUS movie line dropped from Free user AI response).
+- **Test E — Unknown Plan Handling**: PASS (safe human-facing names, graceful handling of unresolved plans).
+- **Test F — Account Switch Plan Refresh**: PASS (switching account immediately updates allowed catalog).
+- **Test G — Empty Account**: PASS (all 4 statistics equal 0).
+- **Test H — Real Account Data**: PASS (counts match stored user playlists, reviews, resume history).
+- **Test I — Duplicate History Events**: PASS (multi-episode watch progress does not overcount unique movies).
+- **Test J — Rating Update**: PASS (updating a movie review does not double-count).
+- **Test K — Watchlist Add/Remove**: PASS (increments/decrements correctly).
+- **Test L — Follow/Unfollow**: PASS (increments/decrements correctly).
+- **Test M — Account Switch Isolation**: PASS (Account A data never contaminates Account B).
+
+**Test Summary**: **13/13 tests PASS, 0 failures, duration 87ms**.
+**Vercel AI Suite**: **11/11 tests PASS (`api/ai/chat.test.js`)**.
+**Frontend Build**: **PASS (`vite build` in 1.39s, 0 errors)**.

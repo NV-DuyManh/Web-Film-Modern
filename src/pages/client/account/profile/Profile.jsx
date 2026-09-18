@@ -1,5 +1,5 @@
-﻿import React, { useContext } from 'react';
-import { useSubscriptions } from '../../../../hooks/useCollections';
+import React, { useContext, useState, useEffect, useMemo } from 'react';
+import { useSubscriptions, useReviews } from '../../../../hooks/useCollections';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
@@ -9,14 +9,45 @@ import { getObjectById } from '../../../../services/firebaseResponse';
 import ProfileHeader from './ProfileHeader';
 import ProfileForm from './ProfileForm';
 import { getUserPlanInfo } from '../../../../utils/appUtils';
+import { getWatchedMoviesCount, getUniqueReviewsCount, getWatchlistCount, getFollowingCount } from '../../../../utils/accountStats';
+
 function Profile() {
     const { isLogin, setGlobalAvatarPreview } = useContext(AuthContext);
     const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
+    const allReviews = useReviews() || [];
 
     const currentPlanInfo = React.useMemo(() => {
         return getUserPlanInfo(isLogin, subscriptions, plans);
     }, [isLogin, subscriptions, plans]);
+
+    // 1. ĐÃ XEM: Unique movies watched in history
+    const [watchedCount, setWatchedCount] = useState(() => getWatchedMoviesCount(isLogin?.id));
+    useEffect(() => {
+        const updateCount = () => setWatchedCount(getWatchedMoviesCount(isLogin?.id));
+        updateCount();
+        window.addEventListener('mfilm_resume_updated', updateCount);
+        window.addEventListener('storage', updateCount);
+        return () => {
+            window.removeEventListener('mfilm_resume_updated', updateCount);
+            window.removeEventListener('storage', updateCount);
+        };
+    }, [isLogin?.id]);
+
+    // 2. ĐÁNH GIÁ: Unique movies reviewed/rated by this user
+    const reviewsCount = useMemo(() => {
+        return getUniqueReviewsCount(isLogin?.id, allReviews);
+    }, [allReviews, isLogin?.id]);
+
+    // 3. WATCHLIST: Unique movies in user's custom lists / watchlist
+    const watchlistCount = useMemo(() => {
+        return getWatchlistCount(isLogin);
+    }, [isLogin]);
+
+    // 4. THEO DÕI: Movies in user's favorite/series follow list
+    const followingCount = useMemo(() => {
+        return getFollowingCount(isLogin);
+    }, [isLogin]);
 
     const AVAILABLE_FRAMES = React.useMemo(() => {
         const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
@@ -97,6 +128,7 @@ function Profile() {
                 AVAILABLE_FRAMES={AVAILABLE_FRAMES}
                 onAvatarChange={handleAvatarChange}
                 onSelectFrame={handleSelectFrame}
+                stats={{ watchedCount, reviewsCount, watchlistCount, followingCount }}
             />
             
             <ProfileForm 

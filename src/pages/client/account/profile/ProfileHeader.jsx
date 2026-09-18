@@ -4,7 +4,7 @@ import Coder from '../../../../assets/Coder.png';
 import { WingedFrame } from '../../../../components/client/header/AvatarFrames';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 
-function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILABLE_FRAMES, onAvatarChange, onSelectFrame }) {
+function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILABLE_FRAMES, onAvatarChange, onSelectFrame, stats }) {
     const [showFrameModal, setShowFrameModal] = useState(false);
     const fileInputRef = useRef(null);
     const { globalAvatarPreview } = React.useContext(AuthContext);
@@ -95,19 +95,19 @@ function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILAB
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
                 <div className="bg-[#1e293b]/60 border border-cyan-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-                    <p className="text-3xl font-black text-cyan-400">1</p>
+                    <p className="text-3xl font-black text-cyan-400">{stats?.watchedCount ?? 0}</p>
                     <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">ĐÃ XEM</p>
                 </div>
                 <div className="bg-[#1e293b]/60 border border-emerald-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(16,185,129,0.2)]">
-                    <p className="text-3xl font-black text-emerald-400">2</p>
+                    <p className="text-3xl font-black text-emerald-400">{stats?.reviewsCount ?? 0}</p>
                     <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">ĐÁNH GIÁ</p>
                 </div>
                 <div className="bg-[#1e293b]/60 border border-purple-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
-                    <p className="text-3xl font-black text-purple-400">3</p>
+                    <p className="text-3xl font-black text-purple-400">{stats?.watchlistCount ?? 0}</p>
                     <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">WATCHLIST</p>
                 </div>
                 <div className="bg-[#1e293b]/60 border border-rose-500/70 rounded-2xl py-3 px-4 flex flex-col items-center justify-center gap-1 shadow-[0_0_10px_rgba(244,63,94,0.2)]">
-                    <p className="text-3xl font-black text-rose-400">4</p>
+                    <p className="text-3xl font-black text-rose-400">{stats?.followingCount ?? 0}</p>
                     <p className="text-[11px] font-bold text-slate-200 uppercase tracking-widest text-center">THEO DÕI</p>
                 </div>
             </div>

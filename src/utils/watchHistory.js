@@ -9,48 +9,84 @@ export function formatTime(totalSeconds) {
     return `${pad(h)}:${pad(m)}:${pad(sec)}`;
 }
 
-export function saveResume(movieId, { episodeId, episodeNumber, seconds }) {
+export function saveResume(movieId, { episodeId, episodeNumber, seconds }, userId = null) {
     if (!movieId || !episodeId || seconds <= 0) return;
     try {
-        const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        if (!all[movieId]) {
-            all[movieId] = { episodes: {} };
-        }
-        all[movieId].latestEpisodeId = episodeId;
-        all[movieId].latestEpisodeNumber = episodeNumber;
-        all[movieId].updatedAt = Date.now();
-        
-        // Đảm bảo có object episodes
-        if (!all[movieId].episodes) all[movieId].episodes = {};
-        all[movieId].episodes[episodeId] = seconds;
+        const keys = [STORAGE_KEY];
+        if (userId) keys.push(`${STORAGE_KEY}_${userId}`);
 
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
+        for (const key of keys) {
+            const all = JSON.parse(localStorage.getItem(key) || '{}');
+            if (!all[movieId]) {
+                all[movieId] = { episodes: {} };
+            }
+            all[movieId].latestEpisodeId = episodeId;
+            all[movieId].latestEpisodeNumber = episodeNumber;
+            all[movieId].updatedAt = Date.now();
+            
+            // Đảm bảo có object episodes
+            if (!all[movieId].episodes) all[movieId].episodes = {};
+            all[movieId].episodes[episodeId] = seconds;
+
+            localStorage.setItem(key, JSON.stringify(all));
+        }
     } catch { /* ignore */ }
 }
 
-export function getResume(movieId) {
+export function getResume(movieId, userId = null) {
     if (!movieId) return null;
     try {
+        if (userId) {
+            const userStore = JSON.parse(localStorage.getItem(`${STORAGE_KEY}_${userId}`) || 'null');
+            if (userStore && userStore[movieId]) return userStore[movieId];
+        }
         const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
         return all[movieId] || null;
     } catch { return null; }
 }
 
-export function clearResume(movieId, episodeId = null) {
+export function clearResume(movieId, episodeId = null, userId = null) {
     if (!movieId) return;
     try {
-        const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-        if (all[movieId]) {
-            if (episodeId && all[movieId].episodes) {
-                // Chỉ xoá thời gian của tập này
-                delete all[movieId].episodes[episodeId];
-            } else {
-                // Xoá cả bộ phim
-                delete all[movieId];
+        const keys = [STORAGE_KEY];
+        if (userId) keys.push(`${STORAGE_KEY}_${userId}`);
+
+        for (const key of keys) {
+            const all = JSON.parse(localStorage.getItem(key) || '{}');
+            if (all[movieId]) {
+                if (episodeId && all[movieId].episodes) {
+                    delete all[movieId].episodes[episodeId];
+                } else {
+                    delete all[movieId];
+                }
+                localStorage.setItem(key, JSON.stringify(all));
             }
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(all));
         }
     } catch { /* ignore */ }
+}
+
+export function getWatchedMoviesCount(userId = null, resumeDataOverride = null) {
+    try {
+        let resumeData = resumeDataOverride;
+        if (!resumeData) {
+            if (userId) {
+                const userStore = JSON.parse(localStorage.getItem(`${STORAGE_KEY}_${userId}`) || 'null');
+                if (userStore) resumeData = userStore;
+            }
+            if (!resumeData) {
+                resumeData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            }
+        }
+        if (!resumeData || typeof resumeData !== 'object') return 0;
+        const movieIds = Object.keys(resumeData).filter(mId => {
+            const entry = resumeData[mId];
+            if (!entry) return false;
+            return entry.episodes ? Object.keys(entry.episodes).length > 0 : true;
+        });
+        return new Set(movieIds).size;
+    } catch {
+        return 0;
+    }
 }
 
 export function timeAgo(ts) {
