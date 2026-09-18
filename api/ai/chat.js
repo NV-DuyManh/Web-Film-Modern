@@ -359,10 +359,14 @@ export default async function handler(req, res) {
       error: 'AI_PROVIDER_UNAVAILABLE',
       message: 'Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿',
       _debug: {
-        errorMessage: error?.message?.slice(0, 300),
+        errorMessage: error?.message?.slice(0, 500),
         errorCode: error?.code,
+        errorStatus: error?.status,
+        errorStack: error?.stack?.split('\n').slice(0, 3).join(' | '),
         hasGroqKeys: !!(process.env.GROQ_API_KEYS || process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEYS),
-        hasGeminiKeys: !!(process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEYS)
+        hasGeminiKeys: !!(process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEYS),
+        groqKeySource: process.env.GROQ_API_KEYS ? 'GROQ_API_KEYS' : process.env.GROQ_API_KEY ? 'GROQ_API_KEY' : process.env.VITE_GROQ_API_KEYS ? 'VITE_GROQ_API_KEYS' : 'none',
+        geminiKeySource: process.env.GEMINI_API_KEYS ? 'GEMINI_API_KEYS' : process.env.GEMINI_API_KEY ? 'GEMINI_API_KEY' : process.env.VITE_GEMINI_API_KEYS ? 'VITE_GEMINI_API_KEYS' : 'none'
       }
     });
   }
