@@ -385,7 +385,7 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | `add55dd48b1d08cb383a9583714796707304b63b` (`add55dd`) | Phase 06 state with Initial Authenticated Profile Load & Vercel AI Chatbot proxy. |
+| **Definitive Commit** | `aec68400b511899c02c8f13376bbd00a370eedf6` (`aec6840`) | Phase 06 state with Initial Authenticated Profile Load & Vercel AI Chatbot proxy. |
 | **Vercel Deployed Commit** | **LIVE ACCEPTED (PASS)** | Deployed on Vercel; `POST https://www.mfilm.online/api/ai/chat` returns HTTP 200 with real AI completions (`openai/gpt-oss-20b`). |
 | **Render Deployed Commit** | **PENDING OWNER DEPLOYMENT** | Awaiting owner manual deploy on `main` for latest recommendation backend. |
 | **Render Backend Health** | **LIVE VERIFIED (PASS)** | `GET /api/v1/health/ready` $\to$ HTTP 200 `ready`, `kafka: healthy`, `database: disabled`, `valkey: disabled`. |
