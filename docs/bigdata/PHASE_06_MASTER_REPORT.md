@@ -385,15 +385,15 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | Latest `origin/main` | Phase 06 state with Initial Authenticated Profile Load & Vercel AI Chatbot proxy. |
-| **Vercel Deployed Commit** | **PENDING OWNER REDEPLOY** | Awaiting owner redeploy on `main` to activate `api/ai/chat.js` with server-only keys. |
+| **Definitive Commit** | `add55dd48b1d08cb383a9583714796707304b63b` (`add55dd`) | Phase 06 state with Initial Authenticated Profile Load & Vercel AI Chatbot proxy. |
+| **Vercel Deployed Commit** | **LIVE ACCEPTED (PASS)** | Deployed on Vercel; `POST https://www.mfilm.online/api/ai/chat` returns HTTP 200 with real AI completions (`openai/gpt-oss-20b`). |
 | **Render Deployed Commit** | **PENDING OWNER DEPLOYMENT** | Awaiting owner manual deploy on `main` for latest recommendation backend. |
 | **Render Backend Health** | **LIVE VERIFIED (PASS)** | `GET /api/v1/health/ready` $\to$ HTTP 200 `ready`, `kafka: healthy`, `database: disabled`, `valkey: disabled`. |
 | **Render AI Provider Key Requirement** | **ELIMINATED (NOT REQUIRED)** | AI keys remain in Vercel; Render does not require AI provider keys. |
-| **Vercel AI Serverless Proxy** | **TEST VERIFIED (PASS)** | `api/ai/chat.js` verified by 11/11 automated tests (`node --test api/ai/chat.test.js`). |
-| **Server-Only Vercel Keys Configured** | **CODE VERIFIED** | Reads `GROQ_API_KEYS` / `GEMINI_API_KEYS` strictly server-side with migration fallback. |
+| **Vercel AI Serverless Proxy** | **LIVE VERIFIED (PASS)** | Serverless function `api/ai/chat.js` live and responsive; 11/11 tests pass. |
+| **Server-Only Vercel Keys Configured** | **CODE & LIVE VERIFIED** | Reads `GROQ_API_KEYS` / `GEMINI_API_KEYS` strictly server-side with migration fallback. |
 | **Zero Frontend AI Secrets** | **CODE VERIFIED** | 0 occurrences of provider keys or direct SDK/REST calls in client bundle (`src/`). |
-| **Chatbot Frontend Endpoint** | **CODE VERIFIED** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` call same-origin `/api/ai/chat`. |
+| **Chatbot Frontend Endpoint** | **LIVE VERIFIED (PASS)** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` call same-origin `/api/ai/chat` (HTTP 200). |
 | **Initial ForYou Eager Mount** | **CODE VERIFIED** | `Home.jsx` mounts `ForYou` directly under `Suspense` without zero-height `LazySection` blocking. |
 | **firebaseAuthReady Implemented** | **CODE VERIFIED** | `firebaseAuthReady` and `firebaseUser` tracked in `AuthProvider` via `onAuthStateChanged`. |
 | **First Request Authorization** | **CODE VERIFIED** | ForYou waits for `firebaseAuthReady`; sends Bearer token on initial authenticated load. |
