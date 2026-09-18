@@ -357,7 +357,13 @@ export default async function handler(req, res) {
     return res.status(500).json({
       success: false,
       error: 'AI_PROVIDER_UNAVAILABLE',
-      message: 'Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿'
+      message: 'Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿',
+      _debug: {
+        errorMessage: error?.message?.slice(0, 300),
+        errorCode: error?.code,
+        hasGroqKeys: !!(process.env.GROQ_API_KEYS || process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEYS),
+        hasGeminiKeys: !!(process.env.GEMINI_API_KEYS || process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEYS)
+      }
     });
   }
 }
