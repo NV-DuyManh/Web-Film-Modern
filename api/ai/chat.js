@@ -281,7 +281,29 @@ export default async function handler(req, res) {
   }
 
   try {
-    let body = req.body;
+    // Vercel's Node runtime may throw "Invalid JSON" when accessing req.body
+    // as a lazy getter. We need to handle this gracefully.
+    let body;
+    try {
+      body = req.body;
+    } catch (bodyErr) {
+      // Fallback: read raw stream and parse manually
+      const chunks = [];
+      for await (const chunk of req) {
+        chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
+      }
+      const rawBody = Buffer.concat(chunks).toString('utf8');
+      try {
+        body = JSON.parse(rawBody);
+      } catch {
+        return res.status(400).json({
+          success: false,
+          error: 'INVALID_JSON',
+          message: 'Request body must be valid JSON.'
+        });
+      }
+    }
+
     if (typeof body === 'string') {
       try {
         body = JSON.parse(body);
