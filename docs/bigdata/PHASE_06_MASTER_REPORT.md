@@ -108,7 +108,7 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 - **Backend Build**: **PASS** (`nest build`).
 - **Frontend Build**: **PASS** (`vite build`).
 - **Definitive Production Commit**: Latest commit on `origin/main`.
-  - Vercel: redeploy latest commit (server-side function `api/ai/chat.js` reuses existing Vercel keys `VITE_GROQ_API_KEYS` / `VITE_GEMINI_API_KEYS`).
+  - Vercel: redeploy latest commit (server-side function `api/ai/chat.js` uses server-only keys `GROQ_API_KEYS` / `GEMINI_API_KEYS`).
   - Render: deploy latest commit for recommendation backend (no Render AI keys required).
 
 ---
@@ -353,23 +353,27 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 
 ### Root Cause & Architecture Evolution
 - **Status**: **RESOLVED VIA VERCEL SERVERLESS FUNCTION PROXY**
-- **Previous Working Configuration**: AI provider keys were stored in Vercel Environment (`VITE_GROQ_API_KEYS`, `VITE_GEMINI_API_KEYS`).
-- **Regression Mechanism**: Big Data hardening switched frontend chatbot components to proxy via Render backend (`POST https://mfilm-backend.onrender.com/api/v1/ai/chat`). However, Render environment lacked server-side AI keys (`GROQ_API_KEYS` / `GEMINI_API_KEYS`). Consequently, production chatbot failed with HTTP 400 even though valid provider keys existed in Vercel.
+- **Previous Working Configuration**: AI provider keys were stored in Vercel Environment (`VITE_GROQ_API_KEYS`, `VITE_GEMINI_API_KEYS`). Keys were NOT deleted.
+- **Regression Mechanism**: Big Data refactor broke compatibility by moving AI calls to Render backend proxy (`POST https://mfilm-backend.onrender.com/api/v1/ai/chat`). However, Render environment lacked server-side AI keys (`GROQ_API_KEYS` / `GEMINI_API_KEYS`), causing HTTP 400 failures despite valid keys existing in Vercel.
 - **Final Vercel Serverless Architecture**:
   1. Frontend chatbot components (`GroqChatBot.jsx`, `GeminiChatBot.jsx`) issue same-origin requests: `POST /api/ai/chat`.
   2. Vercel Serverless Function (`api/ai/chat.js`) runs server-side in Node.js on Vercel.
-  3. Serverless function reads the **existing Vercel environment variables** (`VITE_GROQ_API_KEYS`, `VITE_GEMINI_API_KEYS`, and aliases).
+  3. Serverless function reads the **server-only Vercel environment variables**:
+     - `GROQ_API_KEYS` (primary) / `GROQ_API_KEY` (alias)
+     - `GEMINI_API_KEYS` (primary) / `GEMINI_API_KEY` (alias)
+     - Temporary migration fallback: `VITE_GROQ_API_KEYS`, `VITE_GEMINI_API_KEYS` (to prevent downtime while owner copies keys).
   4. Server-side key parsing supports single strings, comma-separated keys, and JSON arrays with deterministic key rotation.
   5. Primary provider Groq executes model `openai/gpt-oss-20b`; if Groq fails or is rate-limited, automatically falls back to Gemini (`gemini-2.5-flash`).
   6. **Security & Independence**:
      - Zero AI provider keys shipped to or readable by the browser (zero `import.meta.env` key reads in `src/`).
-     - Owner does NOT need to copy or add AI keys to Render.
+     - Render AI provider keys are **NOT required**.
      - Chatbot is completely decoupled from Render uptime, Kafka, Tinybird, PostgreSQL, and Valkey.
      - Operates within $0 free-tier budget with same-origin latency.
+  7. **Key Cleanup Protocol**: After production validation of `GROQ_API_KEYS` and `GEMINI_API_KEYS`, old `VITE_GROQ_API_KEYS` and `VITE_GEMINI_API_KEYS` entries will be deleted from Vercel Environment.
 
 ### Exact Files / Config Affected
-- `api/ai/chat.js` (NEW Vercel Serverless Function proxy)
-- `api/ai/chat.test.js` (NEW automated test suite: 10/10 tests passed)
+- `api/ai/chat.js` (NEW Vercel Serverless Function proxy prioritizing `GROQ_API_KEYS` / `GEMINI_API_KEYS`)
+- `api/ai/chat.test.js` (NEW automated test suite: 11/11 tests passed)
 - `src/components/client/chatBot/GroqChatBot.jsx` (Routes to same-origin `/api/ai/chat`)
 - `src/components/client/chatBot/GeminiChatBot.jsx` (Routes to same-origin `/api/ai/chat`)
 - `vercel.json` (Rewrite updated: SPA index.html rewrite explicitly excludes `/api/*`)
@@ -382,12 +386,12 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 | Check | Status | Verification Detail |
 |---|---|---|
 | **Definitive Commit** | Latest `origin/main` | Phase 06 state with Initial Authenticated Profile Load & Vercel AI Chatbot proxy. |
-| **Vercel Deployed Commit** | **PENDING OWNER REDEPLOY** | Awaiting owner redeploy on `main` to activate `api/ai/chat.js` with existing Vercel keys. |
+| **Vercel Deployed Commit** | **PENDING OWNER REDEPLOY** | Awaiting owner redeploy on `main` to activate `api/ai/chat.js` with server-only keys. |
 | **Render Deployed Commit** | **PENDING OWNER DEPLOYMENT** | Awaiting owner manual deploy on `main` for latest recommendation backend. |
 | **Render Backend Health** | **LIVE VERIFIED (PASS)** | `GET /api/v1/health/ready` $\to$ HTTP 200 `ready`, `kafka: healthy`, `database: disabled`, `valkey: disabled`. |
 | **Render AI Provider Key Requirement** | **ELIMINATED (NOT REQUIRED)** | AI keys remain in Vercel; Render does not require AI provider keys. |
-| **Vercel AI Serverless Proxy** | **TEST VERIFIED (PASS)** | `api/ai/chat.js` verified by 10/10 automated tests (`node --test api/ai/chat.test.js`). |
-| **Existing Vercel Keys Reused** | **CODE VERIFIED** | Reuses existing `VITE_GROQ_API_KEYS` and `VITE_GEMINI_API_KEYS` strictly server-side. |
+| **Vercel AI Serverless Proxy** | **TEST VERIFIED (PASS)** | `api/ai/chat.js` verified by 11/11 automated tests (`node --test api/ai/chat.test.js`). |
+| **Server-Only Vercel Keys Configured** | **CODE VERIFIED** | Reads `GROQ_API_KEYS` / `GEMINI_API_KEYS` strictly server-side with migration fallback. |
 | **Zero Frontend AI Secrets** | **CODE VERIFIED** | 0 occurrences of provider keys or direct SDK/REST calls in client bundle (`src/`). |
 | **Chatbot Frontend Endpoint** | **CODE VERIFIED** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` call same-origin `/api/ai/chat`. |
 | **Initial ForYou Eager Mount** | **CODE VERIFIED** | `Home.jsx` mounts `ForYou` directly under `Suspense` without zero-height `LazySection` blocking. |
@@ -402,32 +406,39 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 | **Carousel Navigation Preserved** | **CODE VERIFIED** | `swiperRef.current?.slidePrev()` and `slideNext()` preserved with no card click interference. |
 | **Backend Tests** | **LOCAL TEST VERIFIED** | 12/12 test suites passed, 72/72 tests passed (`npm test`). |
 | **Backend Build** | **LOCAL BUILD VERIFIED** | `nest build` completed with 0 errors. |
-| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.35s with 0 errors. |
+| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.16s with 0 errors. |
 | **Zero Added Cost ($0 Budget)** | **CODE VERIFIED** | Operates entirely within Vercel & Render free tier limits. |
 
 ---
 
 ## 9. Owner Production Acceptance Steps
 1. **Push latest commit**: `git push origin main`
-2. **Deploy on Vercel**:
-   - Open [Vercel Dashboard](https://vercel.com) -> `web-film-modern`.
-   - Confirm existing environment variables are intact:
-     - `VITE_GROQ_API_KEYS`
-     - `VITE_GEMINI_API_KEYS`
+2. **Owner Vercel Environment Migration (REQUIRED)**:
+   - Open [Vercel Dashboard](https://vercel.com) -> `web-film-modern` -> **Settings** -> **Environment Variables**.
+   - Create new variable `GROQ_API_KEYS` with the private value copied from `VITE_GROQ_API_KEYS`.
+   - Create new variable `GEMINI_API_KEYS` with the private value copied from `VITE_GEMINI_API_KEYS`.
+   - Save environment changes.
+3. **Deploy on Vercel**:
+   - Confirm environment variables are set:
+     - `GROQ_API_KEYS` (server-side secret)
+     - `GEMINI_API_KEYS` (server-side secret)
      - `VITE_RECOMMENDATIONS_ENABLED=true`
      - `VITE_BIGDATA_TELEMETRY_ENABLED=true`
      - `VITE_EVENT_API_BASE_URL=https://mfilm-backend.onrender.com/api/v1`
    - Trigger **Redeploy** on `main` branch.
-3. **Deploy on Render**:
+4. **Deploy on Render**:
    - Open [Render Dashboard](https://dashboard.render.com) -> `mfilm-backend`.
    - Keep Big Data variables intact (`RECOMMENDATIONS_ENABLED=true`, `POSTGRES_CATALOG_ENABLED=false`, `VALKEY_ENABLED=false`).
-   - Click **Manual Deploy** -> **Deploy latest commit**. (No AI provider keys required on Render).
-4. **Final Verification Checklist**:
+   - Click **Manual Deploy** -> **Deploy latest commit** (no AI provider keys required on Render).
+5. **Final Verification Checklist**:
    - **Chatbot Verification**:
      - Open "Trợ lý MFILM AI" on `https://www.mfilm.online`.
      - Send: *"Gợi ý cho tôi một phim hành động."*
      - ✅ Confirm network request goes to `POST /api/ai/chat` (HTTP 200).
      - ✅ Confirm real AI response renders and maintenance message does NOT appear.
+   - **Delete Old VITE Keys**:
+     - In Vercel Environment Variables, delete `VITE_GROQ_API_KEYS` and `VITE_GEMINI_API_KEYS`.
+     - Trigger one final Redeploy on Vercel to confirm chatbot functions without any VITE-prefixed secrets.
    - **Recommendation Initial Load**:
      - Logout completely $\to$ Login with account having favorites/history.
      - Go directly to Home. **DO NOT click any movie**.

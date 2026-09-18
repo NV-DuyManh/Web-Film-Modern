@@ -2,9 +2,9 @@
  * Vercel Serverless Function: MFILM AI Chatbot Proxy
  * Route: POST /api/ai/chat
  * 
- * Reuses existing Vercel environment variables:
- * - VITE_GROQ_API_KEYS (or VITE_GROQ_API_KEY, GROQ_API_KEYS, GROQ_API_KEY)
- * - VITE_GEMINI_API_KEYS (or VITE_GEMINI_API_KEY, GEMINI_API_KEYS, GEMINI_API_KEY)
+ * Target server-side Vercel environment variables:
+ * - GROQ_API_KEYS (primary) or GROQ_API_KEY (alias), with VITE_GROQ_API_KEYS (migration fallback)
+ * - GEMINI_API_KEYS (primary) or GEMINI_API_KEY (alias), with VITE_GEMINI_API_KEYS (migration fallback)
  * 
  * Secure server-side execution:
  * - Zero secrets exposed to browser/bundle
@@ -313,17 +313,19 @@ export default async function handler(req, res) {
     }
 
     // Read provider keys exclusively from server-side environment
+    // Priority: GROQ_API_KEYS (final) -> GROQ_API_KEY (alias) -> VITE_GROQ_API_KEYS (migration fallback)
     const rawGroq =
-      process.env.VITE_GROQ_API_KEYS ||
-      process.env.VITE_GROQ_API_KEY ||
       process.env.GROQ_API_KEYS ||
-      process.env.GROQ_API_KEY;
+      process.env.GROQ_API_KEY ||
+      process.env.VITE_GROQ_API_KEYS ||
+      process.env.VITE_GROQ_API_KEY;
 
+    // Priority: GEMINI_API_KEYS (final) -> GEMINI_API_KEY (alias) -> VITE_GEMINI_API_KEYS (migration fallback)
     const rawGemini =
-      process.env.VITE_GEMINI_API_KEYS ||
-      process.env.VITE_GEMINI_API_KEY ||
       process.env.GEMINI_API_KEYS ||
-      process.env.GEMINI_API_KEY;
+      process.env.GEMINI_API_KEY ||
+      process.env.VITE_GEMINI_API_KEYS ||
+      process.env.VITE_GEMINI_API_KEY;
 
     const groqKeys = parseApiKeys(rawGroq);
     const geminiKeys = parseApiKeys(rawGemini);

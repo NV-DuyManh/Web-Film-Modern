@@ -138,7 +138,9 @@ describe('Vercel AI Serverless Function: api/ai/chat', () => {
 
     test('E. provider error -> sanitized failure response', async () => {
       // Mock process.env with a key that fails
-      process.env.VITE_GROQ_API_KEYS = 'test_key';
+      process.env.GROQ_API_KEYS = 'test_key';
+      delete process.env.GEMINI_API_KEYS;
+      delete process.env.VITE_GROQ_API_KEYS;
       delete process.env.VITE_GEMINI_API_KEYS;
 
       // We test handler with mock failing fetch
@@ -177,7 +179,7 @@ describe('Vercel AI Serverless Function: api/ai/chat', () => {
         assert.ok(!JSON.stringify(responseBody).includes('test_key'));
       } finally {
         globalThis.fetch = originalFetch;
-        delete process.env.VITE_GROQ_API_KEYS;
+        delete process.env.GROQ_API_KEYS;
       }
     });
 
@@ -201,6 +203,55 @@ describe('Vercel AI Serverless Function: api/ai/chat', () => {
       assert.equal(typeof res.text, 'string');
       assert.equal(typeof res.provider, 'string');
       assert.equal(typeof res.model, 'string');
+    });
+
+    test('G. server-side env variable priority: GROQ_API_KEYS takes priority over migration fallback', async () => {
+      process.env.GROQ_API_KEYS = 'primary_server_key';
+      process.env.VITE_GROQ_API_KEYS = 'fallback_key';
+
+      let receivedAuthHeader = '';
+      const originalFetch = globalThis.fetch;
+      globalThis.fetch = async (url, opts) => {
+        receivedAuthHeader = opts?.headers?.Authorization || '';
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            choices: [{ message: { content: 'Success with primary key' } }]
+          })
+        };
+      };
+
+      try {
+        const mockReq = {
+          method: 'POST',
+          body: { prompt: 'Check key priority' }
+        };
+
+        let statusCode = 0;
+        let responseBody = null;
+
+        const mockRes = {
+          setHeader: () => {},
+          status: (code) => {
+            statusCode = code;
+            return {
+              json: (data) => {
+                responseBody = data;
+              }
+            };
+          }
+        };
+
+        await handler(mockReq, mockRes);
+        assert.equal(statusCode, 200);
+        assert.equal(responseBody?.success, true);
+        assert.equal(receivedAuthHeader, 'Bearer primary_server_key');
+      } finally {
+        globalThis.fetch = originalFetch;
+        delete process.env.GROQ_API_KEYS;
+        delete process.env.VITE_GROQ_API_KEYS;
+      }
     });
   });
 });
