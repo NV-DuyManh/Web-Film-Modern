@@ -335,10 +335,6 @@ export default function GeminiChatBot() {
                 userPlanInfo
             });
 
-            const API_BASE_URL =
-                import.meta.env?.VITE_API_BASE_URL ||
-                import.meta.env?.VITE_EVENT_API_BASE_URL ||
-                'https://mfilm-backend.onrender.com/api/v1';
             const recentMessages = currentSessionMessages
                 .slice(-6)
                 .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi'));
@@ -347,7 +343,7 @@ export default function GeminiChatBot() {
             let backendSuccess = false;
 
             try {
-                const proxyRes = await fetch(`${API_BASE_URL.replace(/\/+$/, '')}/ai/chat`, {
+                const proxyRes = await fetch('/api/ai/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({

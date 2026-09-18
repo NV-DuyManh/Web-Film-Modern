@@ -107,9 +107,9 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 - **Backend Tests**: **12/12 Suites Passed (72/72 Tests)**.
 - **Backend Build**: **PASS** (`nest build`).
 - **Frontend Build**: **PASS** (`vite build`).
-- **Definitive Production Commit**: `b0bdad79695605bda1a739dcbe5d60f486dc5f3d` (`b0bdad7`).
-  - Render: pending owner configuring `GROQ_API_KEYS` in Render Environment and triggering manual deploy of `b0bdad7`.
-  - Vercel: pending owner triggering redeploy of `b0bdad7` with `VITE_RECOMMENDATIONS_ENABLED=true`.
+- **Definitive Production Commit**: Latest commit on `origin/main`.
+  - Vercel: redeploy latest commit (server-side function `api/ai/chat.js` reuses existing Vercel keys `VITE_GROQ_API_KEYS` / `VITE_GEMINI_API_KEYS`).
+  - Render: deploy latest commit for recommendation backend (no Render AI keys required).
 
 ---
 
@@ -351,49 +351,29 @@ A logged-in account with existing favorites or historical preference data opened
 MFILM AI Chatbot suddenly stopped working. Every message returned:
 *“Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿”*
 
-### Big Data Regression Audit
-- **Status**: **BIGDATA_REGRESSION_CONFIRMED**
-- **Root Cause Evidence**:
-  1. Commit `d048708` ("feat: integrate MFILM big data telemetry platform") created `backend/src/modules/ai/` (`AiController`, `AiService`) and switched `GroqChatBot.jsx` from client-side direct Groq calls to the backend proxy:
-     `const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';`
-  2. In Vercel production, `VITE_API_BASE_URL` was not configured. The frontend defaulted to `http://localhost:4000/api/v1/ai/chat`, which failed with mixed content / connection refused errors in the user's browser.
-  3. When querying the production backend directly (`POST https://mfilm-backend.onrender.com/api/v1/ai/chat`), the server responded:
-     `HTTP 400 Bad Request: {"message":"No Groq API key configured on server. ACTION REQUIRED BY OWNER."}`
-     Because `GROQ_API_KEYS` and `GEMINI_API_KEYS` existed in local `backend/.env` but were never added to the Render Dashboard environment variables.
-  4. In `backend/src/config/configuration.ts`, `corsOrigins` default fallback string lacked `https://www.mfilm.online`.
+### Root Cause & Architecture Evolution
+- **Status**: **RESOLVED VIA VERCEL SERVERLESS FUNCTION PROXY**
+- **Previous Working Configuration**: AI provider keys were stored in Vercel Environment (`VITE_GROQ_API_KEYS`, `VITE_GEMINI_API_KEYS`).
+- **Regression Mechanism**: Big Data hardening switched frontend chatbot components to proxy via Render backend (`POST https://mfilm-backend.onrender.com/api/v1/ai/chat`). However, Render environment lacked server-side AI keys (`GROQ_API_KEYS` / `GEMINI_API_KEYS`). Consequently, production chatbot failed with HTTP 400 even though valid provider keys existed in Vercel.
+- **Final Vercel Serverless Architecture**:
+  1. Frontend chatbot components (`GroqChatBot.jsx`, `GeminiChatBot.jsx`) issue same-origin requests: `POST /api/ai/chat`.
+  2. Vercel Serverless Function (`api/ai/chat.js`) runs server-side in Node.js on Vercel.
+  3. Serverless function reads the **existing Vercel environment variables** (`VITE_GROQ_API_KEYS`, `VITE_GEMINI_API_KEYS`, and aliases).
+  4. Server-side key parsing supports single strings, comma-separated keys, and JSON arrays with deterministic key rotation.
+  5. Primary provider Groq executes model `openai/gpt-oss-20b`; if Groq fails or is rate-limited, automatically falls back to Gemini (`gemini-2.5-flash`).
+  6. **Security & Independence**:
+     - Zero AI provider keys shipped to or readable by the browser (zero `import.meta.env` key reads in `src/`).
+     - Owner does NOT need to copy or add AI keys to Render.
+     - Chatbot is completely decoupled from Render uptime, Kafka, Tinybird, PostgreSQL, and Valkey.
+     - Operates within $0 free-tier budget with same-origin latency.
 
 ### Exact Files / Config Affected
-- `src/components/client/chatBot/GroqChatBot.jsx`
-- `src/components/client/chatBot/GeminiChatBot.jsx`
-- `backend/src/config/configuration.ts`
-- `backend/src/modules/ai/ai.service.ts`
-- `backend/src/modules/ai/ai.service.spec.ts`
-
-### Comprehensive Fix & Security Hardening
-1. **Frontend API URL Resolution**:
-   Updated `GroqChatBot.jsx` and `GeminiChatBot.jsx` to resolve `API_BASE_URL` matching `ForYou.jsx`:
-   ```javascript
-   const API_BASE_URL =
-       import.meta.env?.VITE_API_BASE_URL ||
-       import.meta.env?.VITE_EVENT_API_BASE_URL ||
-       'https://mfilm-backend.onrender.com/api/v1';
-   ```
-2. **Strict Server-Side Key Security (Zero Frontend Secrets)**:
-   All AI provider secrets (`GROQ_API_KEYS`, `GEMINI_API_KEYS`) are strictly server-side on Render. Any client-side fallback reading `VITE_GROQ_*` or `VITE_GEMINI_*` has been completely deleted. No API keys are ever shipped to or exposed in the browser.
-3. **Verified Live Models & Configurable Overrides**:
-   - Live probe against the Google Generative AI API verified that `gemini-2.5-flash` is active and returned HTTP 200 with valid completions.
-   - Live probe against the Groq API verified that `openai/gpt-oss-20b` (the model historically used by MFILM) is active and returned HTTP 200 with valid completions.
-   - Both models are configurable via server-side environment variables `GEMINI_MODEL` and `GROQ_MODEL`, defaulting to verified models:
-     - `GEMINI_MODEL || 'gemini-2.5-flash'`
-     - `GROQ_MODEL || 'openai/gpt-oss-20b'`
-4. **CORS Origins Updated**:
-   Added `https://www.mfilm.online` to default `corsOrigins` in `configuration.ts`.
-5. **Decoupled Architecture**:
-   Chatbot controller and service have zero dependencies on Kafka, Tinybird, PostgreSQL, or Valkey.
-6. **Structured Safe Diagnostics**:
-   Backend logs `AI_PROVIDER_CONFIG_PRESENT`, `AI_PROVIDER_REQUEST_SENT`, `AI_PROVIDER`, and `AI_PROVIDER_STATUS` without exposing secrets or prompts.
-7. **Regression Unit Tests Added**:
-   Added `ai.service.spec.ts` testing happy path (Groq & Gemini), provider error fallback, unconfigured keys reporting, and architectural decoupling (7 tests passed, 12 suites / 72 tests total).
+- `api/ai/chat.js` (NEW Vercel Serverless Function proxy)
+- `api/ai/chat.test.js` (NEW automated test suite: 10/10 tests passed)
+- `src/components/client/chatBot/GroqChatBot.jsx` (Routes to same-origin `/api/ai/chat`)
+- `src/components/client/chatBot/GeminiChatBot.jsx` (Routes to same-origin `/api/ai/chat`)
+- `vercel.json` (Rewrite updated: SPA index.html rewrite explicitly excludes `/api/*`)
+- `vite.config.js` (Added `vercelAiDevPlugin` to serve `/api/ai/chat` locally during `npm run dev`)
 
 ---
 
@@ -401,11 +381,15 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | `b0bdad79695605bda1a739dcbe5d60f486dc5f3d` (`b0bdad7`) | Latest deployable Phase 06 state on `origin/main` with Initial Authenticated Profile Load & AI Chatbot security fixes. |
-| **Render Deployed Commit** | **PENDING OWNER DEPLOYMENT** | Blocked pending owner setting `GROQ_API_KEYS` in Render Environment and triggering manual deploy of `b0bdad7`. |
+| **Definitive Commit** | Latest `origin/main` | Phase 06 state with Initial Authenticated Profile Load & Vercel AI Chatbot proxy. |
+| **Vercel Deployed Commit** | **PENDING OWNER REDEPLOY** | Awaiting owner redeploy on `main` to activate `api/ai/chat.js` with existing Vercel keys. |
+| **Render Deployed Commit** | **PENDING OWNER DEPLOYMENT** | Awaiting owner manual deploy on `main` for latest recommendation backend. |
 | **Render Backend Health** | **LIVE VERIFIED (PASS)** | `GET /api/v1/health/ready` $\to$ HTTP 200 `ready`, `kafka: healthy`, `database: disabled`, `valkey: disabled`. |
-| **Render AI Provider Config** | **LIVE PROBED (NOT CONFIGURED)** | `POST /api/v1/ai/chat` $\to$ HTTP 400 (`No Groq API key configured on server. ACTION REQUIRED BY OWNER`). |
-| **Vercel Deployed Commit** | **PENDING OWNER DEPLOYMENT** | Awaiting owner redeploy with `VITE_RECOMMENDATIONS_ENABLED=true` on commit `b0bdad7`. |
+| **Render AI Provider Key Requirement** | **ELIMINATED (NOT REQUIRED)** | AI keys remain in Vercel; Render does not require AI provider keys. |
+| **Vercel AI Serverless Proxy** | **TEST VERIFIED (PASS)** | `api/ai/chat.js` verified by 10/10 automated tests (`node --test api/ai/chat.test.js`). |
+| **Existing Vercel Keys Reused** | **CODE VERIFIED** | Reuses existing `VITE_GROQ_API_KEYS` and `VITE_GEMINI_API_KEYS` strictly server-side. |
+| **Zero Frontend AI Secrets** | **CODE VERIFIED** | 0 occurrences of provider keys or direct SDK/REST calls in client bundle (`src/`). |
+| **Chatbot Frontend Endpoint** | **CODE VERIFIED** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` call same-origin `/api/ai/chat`. |
 | **Initial ForYou Eager Mount** | **CODE VERIFIED** | `Home.jsx` mounts `ForYou` directly under `Suspense` without zero-height `LazySection` blocking. |
 | **firebaseAuthReady Implemented** | **CODE VERIFIED** | `firebaseAuthReady` and `firebaseUser` tracked in `AuthProvider` via `onAuthStateChanged`. |
 | **First Request Authorization** | **CODE VERIFIED** | ForYou waits for `firebaseAuthReady`; sends Bearer token on initial authenticated load. |
@@ -416,32 +400,34 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 | **One-Click Stability Preserved** | **LOCAL TEST VERIFIED** | Favorites/durable history retain higher weighting over single weak `movie_view`. |
 | **Account Isolation Preserved** | **LOCAL TEST VERIFIED** | Unique `authUid`, separate cache keys, session rotation on logout/login. |
 | **Carousel Navigation Preserved** | **CODE VERIFIED** | `swiperRef.current?.slidePrev()` and `slideNext()` preserved with no card click interference. |
-| **Chatbot Frontend Endpoint** | **CODE VERIFIED** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` route to `https://mfilm-backend.onrender.com/api/v1/ai/chat`. |
-| **No Frontend AI Secrets** | **CODE VERIFIED** | Zero provider keys in browser bundle; all keys resolved strictly server-side. |
-| **Chatbot CORS & Decoupling** | **CODE VERIFIED** | CORS includes `https://www.mfilm.online`; zero dependency on Kafka, Tinybird, or Postgres. |
 | **Backend Tests** | **LOCAL TEST VERIFIED** | 12/12 test suites passed, 72/72 tests passed (`npm test`). |
 | **Backend Build** | **LOCAL BUILD VERIFIED** | `nest build` completed with 0 errors. |
-| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.19s with 0 errors. |
-| **Zero Added Cost ($0 Budget)** | **CODE VERIFIED** | All components operate within free-tier limits. |
+| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.35s with 0 errors. |
+| **Zero Added Cost ($0 Budget)** | **CODE VERIFIED** | Operates entirely within Vercel & Render free tier limits. |
 
 ---
 
 ## 9. Owner Production Acceptance Steps
 1. **Push latest commit**: `git push origin main`
-2. **Deploy on Render & Configure Chatbot Keys**:
-   - Open [Render Dashboard](https://dashboard.render.com) -> `mfilm-backend`.
-   - Go to **Environment**:
-     - Ensure `GROQ_API_KEYS` is set (copy from local `backend/.env` without sharing publicly).
-     - Keep Big Data variables intact (`RECOMMENDATIONS_ENABLED=true`, `POSTGRES_CATALOG_ENABLED=false`, `VALKEY_ENABLED=false`).
-   - Click **Manual Deploy** -> **Deploy latest commit**.
-3. **Deploy on Vercel**:
+2. **Deploy on Vercel**:
    - Open [Vercel Dashboard](https://vercel.com) -> `web-film-modern`.
-   - Confirm environment variables:
+   - Confirm existing environment variables are intact:
+     - `VITE_GROQ_API_KEYS`
+     - `VITE_GEMINI_API_KEYS`
      - `VITE_RECOMMENDATIONS_ENABLED=true`
      - `VITE_BIGDATA_TELEMETRY_ENABLED=true`
      - `VITE_EVENT_API_BASE_URL=https://mfilm-backend.onrender.com/api/v1`
    - Trigger **Redeploy** on `main` branch.
+3. **Deploy on Render**:
+   - Open [Render Dashboard](https://dashboard.render.com) -> `mfilm-backend`.
+   - Keep Big Data variables intact (`RECOMMENDATIONS_ENABLED=true`, `POSTGRES_CATALOG_ENABLED=false`, `VALKEY_ENABLED=false`).
+   - Click **Manual Deploy** -> **Deploy latest commit**. (No AI provider keys required on Render).
 4. **Final Verification Checklist**:
+   - **Chatbot Verification**:
+     - Open "Trợ lý MFILM AI" on `https://www.mfilm.online`.
+     - Send: *"Gợi ý cho tôi một phim hành động."*
+     - ✅ Confirm network request goes to `POST /api/ai/chat` (HTTP 200).
+     - ✅ Confirm real AI response renders and maintenance message does NOT appear.
    - **Recommendation Initial Load**:
      - Logout completely $\to$ Login with account having favorites/history.
      - Go directly to Home. **DO NOT click any movie**.
@@ -449,7 +435,3 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
      - **Hard reload Home** (`Ctrl+F5` or `Cmd+Shift+R`) $\to$ ✅ Confirm "Dành Cho Bạn" reappears automatically.
      - **Logout and re-login same account** $\to$ ✅ Confirm "Dành Cho Bạn" appears automatically.
      - Click one unrelated movie briefly $\to$ ✅ Confirm long-term profile remains dominant.
-   - **Chatbot Verification**:
-     - Open "Trợ lý MFILM AI".
-     - Send: *"Gợi ý cho tôi một phim hành động."*
-     - ✅ Confirm real AI response renders and maintenance message does NOT appear.

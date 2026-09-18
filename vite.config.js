@@ -3,10 +3,54 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
+function vercelAiDevPlugin() {
+    return {
+        name: 'vercel-ai-dev-plugin',
+        configureServer(server) {
+            server.middlewares.use('/api/ai/chat', async (req, res) => {
+                if (req.method === 'POST') {
+                    let body = '';
+                    req.on('data', chunk => { body += chunk; });
+                    req.on('end', async () => {
+                        try {
+                            const { default: handler } = await import('./api/ai/chat.js');
+                            const parsedBody = body ? JSON.parse(body) : {};
+                            const mockReq = { method: 'POST', body: parsedBody };
+                            const mockRes = {
+                                statusCode: 200,
+                                setHeader: (k, v) => res.setHeader(k, v),
+                                status: function(code) { this.statusCode = code; return this; },
+                                json: function(data) {
+                                    res.statusCode = this.statusCode;
+                                    res.setHeader('Content-Type', 'application/json');
+                                    res.end(JSON.stringify(data));
+                                },
+                                end: (data) => res.end(data)
+                            };
+                            await handler(mockReq, mockRes);
+                        } catch (err) {
+                            res.statusCode = 500;
+                            res.setHeader('Content-Type', 'application/json');
+                            res.end(JSON.stringify({ success: false, error: err.message }));
+                        }
+                    });
+                } else if (req.method === 'OPTIONS') {
+                    res.statusCode = 200;
+                    res.end();
+                } else {
+                    res.statusCode = 405;
+                    res.end();
+                }
+            });
+        }
+    };
+}
+
 export default defineConfig({
     plugins: [
         tailwindcss(), 
         react(),
+        vercelAiDevPlugin(),
         VitePWA({
             registerType: 'autoUpdate',
             includeAssets: ['favicon.svg', 'robots.txt', 'sitemap.xml'],
