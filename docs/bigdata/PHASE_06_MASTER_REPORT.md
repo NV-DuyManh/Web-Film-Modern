@@ -385,15 +385,15 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | `698d38717b6dd9be96d1b2d168b97fa9c1d031ce` (`698d387`) | Phase 06 state with Initial Authenticated Profile Load & Vercel AI Chatbot proxy. |
-| **Vercel Deployed Commit** | **LIVE ACCEPTED (PASS)** | Deployed on Vercel; `POST https://www.mfilm.online/api/ai/chat` returns HTTP 200 with real AI completions (`openai/gpt-oss-20b`). |
-| **Render Deployed Commit** | **PENDING OWNER DEPLOYMENT** | Awaiting owner manual deploy on `main` for latest recommendation backend. |
+| **Definitive Commit** | `a4fb8157aafeba28b88064506645adc1d39945f6` (`a4fb815`) | Phase 06 state with Initial Authenticated Profile Load & Vercel AI Chatbot proxy. |
+| **Vercel Deployed Commit** | **DEPLOYED — SMOKE CHECK ATTENTION** | Deployed on Vercel; `/api/ai/chat` live; latest smoke check returned HTTP 500 `AI_PROVIDER_UNAVAILABLE` (keys present in env, but provider call rejected; requires Vercel env formatting check & redeploy). |
+| **Render Deployed Commit** | **LIVE DEPLOYED (`a4fb815`)** | Owner manual deploy confirmed active on Render (`mfilm-backend`); uptime and endpoints verified. |
 | **Render Backend Health** | **LIVE VERIFIED (PASS)** | `GET /api/v1/health/ready` $\to$ HTTP 200 `ready`, `kafka: healthy`, `database: disabled`, `valkey: disabled`. |
 | **Render AI Provider Key Requirement** | **ELIMINATED (NOT REQUIRED)** | AI keys remain in Vercel; Render does not require AI provider keys. |
-| **Vercel AI Serverless Proxy** | **LIVE VERIFIED (PASS)** | Serverless function `api/ai/chat.js` live and responsive; 11/11 tests pass. |
-| **Server-Only Vercel Keys Configured** | **CODE & LIVE VERIFIED** | Reads `GROQ_API_KEYS` / `GEMINI_API_KEYS` strictly server-side with migration fallback. |
+| **Vercel AI Serverless Proxy** | **TEST & ROUTE VERIFIED (PASS)** | Serverless function `api/ai/chat.js` live and responsive; 11/11 automated tests pass. |
+| **Server-Only Vercel Keys Configured** | **ENV CONFIGURED** | Key variables detected in serverless runtime; keys verified functional directly outside Vercel sandbox. |
 | **Zero Frontend AI Secrets** | **CODE VERIFIED** | 0 occurrences of provider keys or direct SDK/REST calls in client bundle (`src/`). |
-| **Chatbot Frontend Endpoint** | **LIVE VERIFIED (PASS)** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` call same-origin `/api/ai/chat` (HTTP 200). |
+| **Chatbot Frontend Endpoint** | **CODE VERIFIED** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` call same-origin `/api/ai/chat`. |
 | **Initial ForYou Eager Mount** | **CODE VERIFIED** | `Home.jsx` mounts `ForYou` directly under `Suspense` without zero-height `LazySection` blocking. |
 | **firebaseAuthReady Implemented** | **CODE VERIFIED** | `firebaseAuthReady` and `firebaseUser` tracked in `AuthProvider` via `onAuthStateChanged`. |
 | **First Request Authorization** | **CODE VERIFIED** | ForYou waits for `firebaseAuthReady`; sends Bearer token on initial authenticated load. |
@@ -408,41 +408,40 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 | **Backend Build** | **LOCAL BUILD VERIFIED** | `nest build` completed with 0 errors. |
 | **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.16s with 0 errors. |
 | **Zero Added Cost ($0 Budget)** | **CODE VERIFIED** | Operates entirely within Vercel & Render free tier limits. |
+| **Zero-Signal Live Gating** | **LIVE VERIFIED (PASS)** | Unauthenticated home page on `https://www.mfilm.online` renders 0 empty banners / 0 layout gaps. |
 
 ---
 
-## 9. Owner Production Acceptance Steps
-1. **Push latest commit**: `git push origin main`
-2. **Owner Vercel Environment Migration (REQUIRED)**:
-   - Open [Vercel Dashboard](https://vercel.com) -> `web-film-modern` -> **Settings** -> **Environment Variables**.
-   - Create new variable `GROQ_API_KEYS` with the private value copied from `VITE_GROQ_API_KEYS`.
-   - Create new variable `GEMINI_API_KEYS` with the private value copied from `VITE_GEMINI_API_KEYS`.
-   - Save environment changes.
-3. **Deploy on Vercel**:
-   - Confirm environment variables are set:
-     - `GROQ_API_KEYS` (server-side secret)
-     - `GEMINI_API_KEYS` (server-side secret)
-     - `VITE_RECOMMENDATIONS_ENABLED=true`
-     - `VITE_BIGDATA_TELEMETRY_ENABLED=true`
-     - `VITE_EVENT_API_BASE_URL=https://mfilm-backend.onrender.com/api/v1`
-   - Trigger **Redeploy** on `main` branch.
-4. **Deploy on Render**:
-   - Open [Render Dashboard](https://dashboard.render.com) -> `mfilm-backend`.
-   - Keep Big Data variables intact (`RECOMMENDATIONS_ENABLED=true`, `POSTGRES_CATALOG_ENABLED=false`, `VALKEY_ENABLED=false`).
-   - Click **Manual Deploy** -> **Deploy latest commit** (no AI provider keys required on Render).
-5. **Final Verification Checklist**:
-   - **Chatbot Verification**:
-     - Open "Trợ lý MFILM AI" on `https://www.mfilm.online`.
-     - Send: *"Gợi ý cho tôi một phim hành động."*
-     - ✅ Confirm network request goes to `POST /api/ai/chat` (HTTP 200).
-     - ✅ Confirm real AI response renders and maintenance message does NOT appear.
-   - **Delete Old VITE Keys**:
-     - In Vercel Environment Variables, delete `VITE_GROQ_API_KEYS` and `VITE_GEMINI_API_KEYS`.
-     - Trigger one final Redeploy on Vercel to confirm chatbot functions without any VITE-prefixed secrets.
-   - **Recommendation Initial Load**:
-     - Logout completely $\to$ Login with account having favorites/history.
-     - Go directly to Home. **DO NOT click any movie**.
-     - ✅ Confirm "Dành Cho Bạn" appears **immediately** after auth resolves.
-     - **Hard reload Home** (`Ctrl+F5` or `Cmd+Shift+R`) $\to$ ✅ Confirm "Dành Cho Bạn" reappears automatically.
-     - **Logout and re-login same account** $\to$ ✅ Confirm "Dành Cho Bạn" appears automatically.
-     - Click one unrelated movie briefly $\to$ ✅ Confirm long-term profile remains dominant.
+## 9. Current Phase Status & Owner Acceptance Steps
+
+**Phase Status**: **PHASE 06 PARTIAL — PRODUCTION ACCEPTANCE REQUIRED**
+
+### Completed Milestone Items:
+1. ✅ **Render Deployment**: Live on `a4fb815` with HTTP 200 ready status (`kafka: healthy`, `database: disabled`, `valkey: disabled`).
+2. ✅ **Client Security**: 0 client-side secrets in Vite build; direct external API calls eliminated.
+3. ✅ **Zero-Signal Gating**: Unauthenticated visitors see no "Dành Cho Bạn" heading or empty carousel.
+
+### Remaining Owner Production Acceptance Actions:
+
+1. **Vercel AI Environment Review & Redeploy**:
+   - In [Vercel Dashboard](https://vercel.com) -> `web-film-modern` -> **Settings** -> **Environment Variables**:
+     - Check `GROQ_API_KEYS`: ensure it is a clean raw API key string (or comma-separated list) without single quotes `'...'` or brackets `[...]`.
+     - Check `GEMINI_API_KEYS`: ensure raw key string without quotes.
+     - Check if `GROQ_MODEL` is defined: if present, ensure it is set to `openai/gpt-oss-20b` (or removed to use the default).
+     - Ensure the variables are assigned to the **Production** environment.
+     - Trigger **Redeploy** on `main` branch.
+   - Test smoke check:
+     ```bash
+     curl -s -i -X POST "https://www.mfilm.online/api/ai/chat" -H "Content-Type: application/json" -d '{"prompt":"Gợi ý cho tôi một phim hành động."}'
+     ```
+     Confirm HTTP 200 with real AI completion.
+
+2. **Personalized "Dành Cho Bạn" Live User Acceptance**:
+   - Open `https://www.mfilm.online`.
+   - Log in using a personal account with existing favorites / viewing history.
+   - Go directly to Home without clicking any movie.
+   - ✅ Confirm "Dành Cho Bạn" appears **immediately** after auth resolves.
+   - ✅ **Hard reload Home** (`Ctrl+F5` / `Cmd+Shift+R`) $\to$ confirm row reappears automatically without clicking.
+   - ✅ **Logout and re-login same account** $\to$ confirm row appears automatically without clicking.
+   - ✅ **Click one unrelated movie briefly**, return Home $\to$ confirm long-term profile remains dominant (no full-row collapse).
+   - ✅ **Carousel `<` and `>`**: click navigation arrows $\to$ confirm slider navigates without opening movie detail modals.
