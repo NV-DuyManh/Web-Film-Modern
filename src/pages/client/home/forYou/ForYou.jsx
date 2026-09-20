@@ -325,11 +325,50 @@ function ForYouInner() {
     return (
         <div className="bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden">
             <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2 sm:gap-3 pt-10 group cursor-pointer">
+                <div 
+                    className="flex items-center gap-2 sm:gap-3 pt-10 group cursor-pointer select-none z-20 pointer-events-auto"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (swiperRef.current?.isEnd) {
+                            swiperRef.current.slideTo(0);
+                        } else {
+                            swiperRef.current?.slideNext();
+                        }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label="Xem tiếp phim đề xuất"
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            if (swiperRef.current?.isEnd) {
+                                swiperRef.current.slideTo(0);
+                            } else {
+                                swiperRef.current?.slideNext();
+                            }
+                        }
+                    }}
+                >
                     <h2 className="font-bold text-2xl md:text-3xl glow-text-multi group-hover:text-[#facc15] transition-colors duration-300">
                         Dành Cho Bạn
                     </h2>
-                    <FaChevronRight className="border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full group-hover:bg-yellow-400 group-hover:text-black transition-colors duration-300" />
+                    <button
+                        type="button"
+                        aria-label="Chuyển tiếp phim đề xuất"
+                        className="border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full group-hover:bg-yellow-400 group-hover:text-black transition-colors duration-300 flex items-center justify-center pointer-events-auto cursor-pointer focus:outline-none z-20"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            if (swiperRef.current?.isEnd) {
+                                swiperRef.current.slideTo(0);
+                            } else {
+                                swiperRef.current?.slideNext();
+                            }
+                        }}
+                    >
+                        <FaChevronRight className="w-full h-full" />
+                    </button>
                 </div>
                 <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold">
                     <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
@@ -339,8 +378,9 @@ function ForYouInner() {
 
             <div className="movie-slider-wrapper relative group/slider">
                 <button 
+                    type="button"
                     aria-label="Previous" 
-                    className="movie-nav-btn movie-nav-btn--prev foryou-prev-btn" 
+                    className="movie-nav-btn movie-nav-btn--prev foryou-prev-btn z-20 pointer-events-auto cursor-pointer" 
                     draggable="false"
                     onClick={(e) => {
                         e.preventDefault();
@@ -464,13 +504,18 @@ function ForYouInner() {
                 </Swiper>
 
                 <button 
+                    type="button"
                     aria-label="Next" 
-                    className="movie-nav-btn movie-nav-btn--next foryou-next-btn" 
+                    className="movie-nav-btn movie-nav-btn--next foryou-next-btn z-20 pointer-events-auto cursor-pointer" 
                     draggable="false"
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
-                        swiperRef.current?.slideNext();
+                        if (swiperRef.current?.isEnd) {
+                            swiperRef.current.slideTo(0);
+                        } else {
+                            swiperRef.current?.slideNext();
+                        }
                     }}
                 >
                     <FaChevronRight />
