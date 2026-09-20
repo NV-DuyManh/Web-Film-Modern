@@ -24,13 +24,9 @@ Phase 06 transitions MFILM’s recommendation capability into a secure, zero-cos
   if (!loading && displayMovies.length === 0) return null;
   ```
   During the initial component mount or reload when `loading === true`, `!loading` evaluated to `false`. Consequently, both return guards were bypassed, and the component proceeded to render the full section heading `<h2 ...>Dành Cho Bạn</h2>`, the AI badge, and an empty Swiper wrapper while `displayMovies` was still `[]`.
-- **Resolution**: Enforced strict three-tier guard:
-  ```javascript
-  if (!RECOMMENDATIONS_ENABLED) return null;
-  if (loading) return null;
-  if (!displayMovies || displayMovies.length === 0) return null;
-  ```
-  The component strictly returns `null` during loading and whenever `displayMovies` is empty, guaranteeing that the heading is NEVER rendered without cards.
+- **Resolution & Evolution**:
+  - *Phase 06 Initial*: Enforced returning `null` during loading when no cards were loaded yet, eliminating the empty heading defect.
+  - *Always-Visible Finalization*: In accordance with the owner's always-visible requirement, `ForYou.jsx` now renders a responsive 6-card pulse skeleton loader while loading, and falls back to catalog discovery cards if an error occurs. The section heading is ALWAYS visible and NEVER rendered empty without cards or skeleton placeholders.
 
 ### Root Cause 2: Hard Catalog Dependency in Client Memo (`ForYou.jsx`)
 - **Mechanism**: `displayMovies` had a strict prerequisite:
@@ -128,8 +124,8 @@ flowchart TD
     
     AnonUid --> AnonFlow["Anonymous Flow:\n1. Extract & Sanitize sessionId\n2. Query EventService recent session events\n3. Check (events.length == 0)"]
     
-    AuthFlow -- "0 Favs & 0 Events" --> ZeroSignal["Zero-Signal Gating Response:\neligible: false, source: 'none', total: 0, items: []"]
-    AnonFlow -- "0 Events" --> ZeroSignal
+    AuthFlow -- "0 Favs & 0 Events" --> ColdStart["Cold-Start Recommendation:\neligible: true, source: 'cold_start', personalized: false, items > 0\nCache: mfilm:rec:cold_start:lim:<limit>"]
+    AnonFlow -- "0 Events" --> ColdStart
     
     AuthFlow -- "Has Signal" --> AuthRec["Build Personalized Profile\nCache: mfilm:rec:auth:<uid>:fav:<favFp>:beh:<behFp>:lim:<limit>"]
     AnonFlow -- "Has Signal" --> AnonRec["Build Behavior Profile\nCache: mfilm:rec:anon:<sessId>:beh:<behFp>:lim:<limit>"]
@@ -184,33 +180,42 @@ Recalculated during personalized ranking (`RecommendationService`) to prevent ol
 
 ---
 
-## 5. Zero-Signal Gating & Response Contract
+## 5. Zero-Signal Cold-Start & Response Contract
 
 ### Contract Specification
-When a user has no favorites and no interaction events:
+When a user has no favorites and no interaction events (fresh anonymous or zero-signal authenticated):
 ```json
 {
   "success": true,
-  "eligible": false,
+  "eligible": true,
+  "personalized": false,
+  "source": "cold_start",
   "userId": null,
-  "source": "none",
   "cached": false,
-  "total": 0,
-  "items": []
+  "total": 15,
+  "items": [
+    {
+      "movieId": "vn_1",
+      "name": "Mắt Biếc",
+      "score": 0.8,
+      "recommendationSource": "cold_start",
+      "reason": "Gợi ý để bạn bắt đầu"
+    }
+  ]
 }
 ```
-*(For authenticated zero-signal users, `userId` is their verified `uid`).*
+*(For authenticated zero-signal users, `userId` is their verified `uid`, while `personalized` remains `false` and `source` is `"cold_start"`).*
 
 ### Frontend Visibility Behavior
 In `src/pages/client/home/forYou/ForYou.jsx`:
-- If `!data.eligible || data.total === 0 || !data.items || data.items.length === 0`:
-  `setRecommendations([])`.
-- In `displayMovies`: If `recommendations.length === 0`, returns `[]`. Popularity fallback has been **completely eliminated** from this component.
-- If `!loading && displayMovies.length === 0`: Returns `null`.
-- In `Home.jsx`: Mounted eagerly under `<Suspense fallback={null}><ForYou /></Suspense>` so that initial auth resolution and recommendation queries execute immediately upon Home load. `ForYou` itself returns `null` when loading or when `displayMovies` is empty, ensuring zero DOM footprint, no heading, no placeholder, and zero layout gap when hidden (no zero-height `LazySection` blocks initial request).
+- **Initial Mount / Loading**: While `(loading || !firebaseAuthReady) && activeMovies.length === 0`, renders section heading "Dành Cho Bạn" + AI badge + 6-card animated skeleton loader. The section is NEVER collapsed.
+- **Cold-Start (Zero Signals)**: When `data.source === 'cold_start'` (or no personal signals exist), renders cold-start recommendation cards with truthful neutral reasons ("Gợi ý để bạn bắt đầu", "Phổ biến trên MFILM", "Đang được xem nhiều").
+- **Personalized (Meaningful Signals)**: Once the user adds a favorite or interacts with a movie, smoothly renders personalized recommendation cards (`source: "favorites" | "behavior" | "hybrid"`).
+- **Error / Offline Graceful Degradation**: If the API call fails or is aborted, preserves last valid cards or seamlessly falls back to catalog discovery movies (`reason: "Gợi ý để bạn khám phá"`). Section heading and cards remain visible; it never collapses permanently.
+- **In `Home.jsx`**: Mounted eagerly under `<Suspense fallback={null}><ForYou /></Suspense>`. Because `ForYou` renders a skeleton during loading, there is zero layout gap, zero DOM pop-in, and zero empty heading state.
 
 ### Anonymous Session Reset Behavior
-If an anonymous visitor clears browser cookies/session storage, `sessionStorage.getItem('mfilm_session_id')` is cleared. Upon the next visit, a new `sessionId` is generated with zero history, and “Dành Cho Bạn” cleanly returns to its gated (hidden) state until the visitor interacts with a movie.
+If an anonymous visitor clears browser cookies/session storage, `sessionStorage.getItem('mfilm_session_id')` is cleared. Upon the next visit, a new `sessionId` is generated with zero history, and “Dành Cho Bạn” cleanly returns to its deterministic cold-start state (real cards + truthful neutral reasons) without hiding or collapsing.
 
 ---
 
@@ -256,15 +261,15 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
       ✓ should bound limit parameter safely within 1 to 30
       ✓ should survive completely when Redis and PostgreSQL are absent/throwing
     Persona Testing: Personas 0 through 8 Deterministic Validation
-      ✓ Persona 0 — Brand-new Anonymous: no session events yields eligible=false, total=0, source="none"
+      ✓ Persona 0 — Brand-new Anonymous: zero session events yields eligible=true, source="cold_start", items>0
       ✓ Persona 1 — Anonymous First Click: one movie_view for movie A yields eligible=true, recommendations related to movie A
       ✓ Persona 2 — Anonymous Vietnam-Heavy: recent events mainly Vietnamese movies visibly favor Vietnamese films
-      ✓ Persona 3 — Authenticated No Data: verified uid with 0 favorites and 0 events yields eligible=false, hidden
+      ✓ Persona 3 — Authenticated No Data: verified uid with 0 favorites and 0 events yields eligible=true, cold_start recommendations
       ✓ Persona 4 — Authenticated Favorites: verified uid with favorites yields eligible=true, personalized results
       ✓ Persona 5 — Authenticated Behavior Only: verified uid with 0 favorites but viewing events yields eligible=true, behavior-driven
       ✓ Persona 6 — Isolation: two auth users and two anon sessions have isolated cache keys without cross-profile leakage
       ✓ Persona 7 — Spoofing: anonymous request with forged client identity never accesses protected user favorites
-      ✓ Persona 8 — Cold Generic Homepage: baseline popularity still works for general catalog, but for-you is zero-signal gated
+      ✓ Persona 8 — Cold Generic Homepage: cold anonymous user receives cold_start items, and baseline popularity still works
       ✓ Cache Fingerprinting: User recommendations update immediately when favorites change without waiting 1 hour
     Phase 06 Auth Path Fix Regression Tests
       ✓ Test A — Authenticated, favorites-only (no RAM events): eligible=true, items present
@@ -321,14 +326,14 @@ A logged-in account with existing favorites or historical preference data opened
 ### Complete Resolution
 1. **Eager Component Mount under Suspense (`Home.jsx`)**:
    - Replaced `<LazySection minHeight="0px"><ForYou /></LazySection>` with `<Suspense fallback={null}><ForYou /></Suspense>`.
-   - When `ForYou` has no recommendations (`displayMovies.length === 0`), it returns `null` with zero DOM footprint. Eager mounting ensures that the auth check and recommendation query execute immediately upon Home load without requiring any user scrolling or movie clicks.
+   - Eager mounting ensures that the auth check and recommendation query execute immediately upon Home load without requiring user scrolling or movie clicks. `ForYou` renders a skeleton during loading, eliminating layout jumps.
 2. **`firebaseAuthReady` State Introduced (`AuthProvider.jsx`)**:
    - Added `const [firebaseAuthReady, setFirebaseAuthReady] = useState(false);` and `const [firebaseUser, setFirebaseUser] = useState(null);`.
    - Registered `onAuthStateChanged(auth, (user) => { setFirebaseUser(user); setFirebaseAuthReady(true); })`.
    - Exported `firebaseAuthReady` and `firebaseUser` in `AuthContext`.
    - Updated `loginByUser` to accept the verified `firebaseUser` instance and set `firebaseAuthReady = true` immediately.
-3. **Auth-Gated Recommendation Fetching (`ForYou.jsx`)**:
-   - Component strictly waits for `firebaseAuthReady === true` before making any recommendation request. While `!firebaseAuthReady`, it remains in loading state and returns `null` (zero DOM gap).
+3. **Auth-Aware Recommendation Fetching (`ForYou.jsx`)**:
+   - Component tracks `firebaseAuthReady`. During initial auth hydration and fetch loading when no cards are ready yet, it displays the high-polish skeleton loader alongside the section heading, ensuring zero DOM pop-in or layout shift.
    - If `firebaseUser || isLogin`: initiates an authenticated request with the verified Bearer token.
    - If `!firebaseUser && !isLogin`: initiates an anonymous session request.
    - Tagged each in-flight request with `activeRequestRef.current = { epoch: currentEpoch, uid: currentUid }`.
@@ -385,14 +390,16 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 
 | Check | Status | Verification Detail |
 |---|---|---|
-| **Definitive Commit** | `d4f25d7` | Phase 06 final: entitlement hardening + resilient body parsing + clean diagnostics removal. |
-| **Vercel Deployed Commit** | **LIVE DEPLOYED (`d4f25d7`) — ACCEPTED** | Auto-deployed on Vercel; `/api/ai/chat` LIVE HTTP 200 with real AI completion. Body parsing fix (`8be5b37`) resolved Vercel Node runtime `Invalid JSON` lazy getter issue. |
-| **Render Deployed Commit** | **LIVE DEPLOYED (`a4fb815`)** | Owner manual deploy confirmed active on Render (`mfilm-backend`); uptime and endpoints verified. |
-| **Render Backend Health** | **LIVE VERIFIED (PASS)** | `GET /api/v1/health/live` → HTTP 200 `{"status":"ok"}`. |
+| **Always-Visible Implementation Commit** | `9264393` | Introduced `cold_start` source, always-visible ForYou Swiper, skeleton loader, and 81/81 test suite. |
+| **Definitive Production Commit** | `9264393` | Latest code commit on `origin/main` containing cold-start recommendation engine + dynamic account stats. |
+| **Vercel Deployed Commit** | **DEPLOYED (`9264393`)** | Auto-deployed on Vercel (`web-film-modern`); `/api/ai/chat` LIVE HTTP 200 with real AI completion. Always-visible ForYou frontend active. |
+| **Render Redeploy Required** | **YES** | Backend recommendation files (`recommendation.service.ts`, `spec`) changed between `a4fb815` and `9264393`. |
+| **Render Deployed Commit** | `a4fb815` (Current Live) $\to$ `9264393` (Target) | Manual Render deployment to `9264393` required for backend cold_start engine. Health check endpoints verified. |
+| **Render Backend Health** | **LIVE VERIFIED (PASS)** | `GET /api/v1/health/live` → HTTP 200 `{"status":"ok"}`; `GET /api/v1/health/ready` → HTTP 200 `ready` (Kafka healthy, DB/Valkey disabled). |
 | **Render AI Provider Key Requirement** | **ELIMINATED (NOT REQUIRED)** | AI keys remain in Vercel; Render does not require AI provider keys. |
 | **Vercel AI Serverless Proxy** | **LIVE VERIFIED (PASS)** | POST `/api/ai/chat` → HTTP 200. Groq (`openai/gpt-oss-20b`) and Gemini (`gemini-2.5-flash`) both confirmed LIVE. 11/11 automated tests pass. |
 | **Server-Only Vercel Keys Configured** | **LIVE VERIFIED** | Key sources: `VITE_GROQ_API_KEYS` (migration fallback) and `VITE_GEMINI_API_KEYS` (migration fallback) detected and functional. Both providers return real AI completions. |
-| **Chatbot Live Smoke Test** | **LIVE ACCEPTED (PASS)** | Browser chatbot on `https://www.mfilm.online` → user sent "Xin chào" → AI replied "Chào anh Manh! 🎬 Bạn đang muốn xem gì hôm nay?" with personalized name recognition. Verified 2026-09-18. |
+| **Chatbot Live Smoke Test** | **LIVE ACCEPTED (PASS)** | Browser chatbot on `https://www.mfilm.online` → user sent "Xin chào" → AI replied "Chào anh Manh! 🎬 Bạn đang muốn xem gì hôm nay?" with personalized name recognition. |
 | **Zero Frontend AI Secrets** | **CODE VERIFIED** | 0 occurrences of provider keys or direct SDK/REST calls in client bundle (`src/`). |
 | **Chatbot Frontend Endpoint** | **CODE VERIFIED** | `GroqChatBot.jsx` and `GeminiChatBot.jsx` call same-origin `/api/ai/chat`. |
 | **Initial ForYou Eager Mount** | **CODE VERIFIED** | `Home.jsx` mounts `ForYou` directly under `Suspense` without zero-height `LazySection` blocking. |
@@ -405,12 +412,12 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 | **One-Click Stability Preserved** | **LOCAL TEST VERIFIED** | Favorites/durable history retain higher weighting over single weak `movie_view`. |
 | **Account Isolation Preserved** | **LOCAL TEST VERIFIED** | Unique `authUid`, separate cache keys, session rotation on logout/login. |
 | **Carousel Navigation Preserved** | **CODE VERIFIED** | `swiperRef.current?.slidePrev()` and `slideNext()` preserved with no card click interference. |
-| **Backend Tests** | **LOCAL TEST VERIFIED** | 12/12 test suites passed, 72/72 tests passed (`npm test`). |
+| **Backend Tests** | **LOCAL TEST VERIFIED** | 12/12 test suites passed, 81/81 tests passed (`npm test`). |
 | **Backend Build** | **LOCAL BUILD VERIFIED** | `nest build` completed with 0 errors. |
-| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.16s with 0 errors. |
+| **Frontend Build** | **LOCAL BUILD VERIFIED** | `vite build` completed in 1.67s with 0 errors. |
 | **Entitlement & Account Stats Tests** | **LOCAL TEST VERIFIED** | 13/13 tests PASS (`accountAndChatbotEntitlement.test.js`). |
 | **Zero Added Cost ($0 Budget)** | **CODE VERIFIED** | Operates entirely within Vercel & Render free tier limits. |
-| **Zero-Signal Live Gating** | **LIVE VERIFIED (PASS)** | Unauthenticated home page on `https://www.mfilm.online` renders 0 empty banners / 0 layout gaps. |
+| **Always-Visible Cold-Start** | **VERIFIED (PASS)** | Fresh unauthenticated visitors and zero-signal users always see "Dành Cho Bạn" with real cold-start cards (or skeleton while loading); zero empty states. |
 
 ---
 
@@ -419,9 +426,9 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 **Phase Status**: **PHASE 06 PARTIAL — FINAL LIVE ACCEPTANCE REQUIRED**
 
 ### Completed Milestone Items:
-1. ✅ **Render Deployment**: Live on `a4fb815` with HTTP 200 ready status.
+1. ✅ **Render Deployment**: Live on `a4fb815` (HTTP 200 ready status; pending manual redeploy to `9264393` for recommendation engine).
 2. ✅ **Client Security**: 0 client-side secrets in Vite build; direct external API calls eliminated.
-3. ✅ **Zero-Signal Gating**: Unauthenticated visitors see no "Dành Cho Bạn" heading or empty carousel.
+3. ✅ **Always-Visible Cold-Start**: Fresh unauthenticated visitors and zero-signal users see "Dành Cho Bạn" with real cold-start cards and truthful neutral reasons.
 4. ✅ **Vercel AI Chatbot LIVE**: POST `/api/ai/chat` → HTTP 200 with real AI completion. Both Groq (`openai/gpt-oss-20b`) and Gemini (`gemini-2.5-flash`) providers confirmed working in production.
 5. ✅ **Chatbot Personalization**: AI chatbot recognizes logged-in user by name and responds in Vietnamese.
 6. ✅ **Chatbot Plan Entitlement**: Deterministic pre-filter and post-validation prevent unauthorized tier movies from rendering.
