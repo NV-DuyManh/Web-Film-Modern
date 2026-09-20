@@ -19,12 +19,13 @@ describe('RecommendationController Security & Identity Tests', () => {
     recommendationService = {
       getRecommendations: jest.fn().mockResolvedValue({
         success: true,
-        eligible: false,
+        eligible: true,
+        personalized: false,
         userId: null,
-        source: 'none',
+        source: 'cold_start',
         cached: false,
-        total: 0,
-        items: [],
+        total: 1,
+        items: [{ movieId: 'vn_1', name: 'Mắt Biếc', score: 0.8, recommendationSource: 'cold_start', reason: 'Gợi ý để bạn bắt đầu' }],
       }),
     };
 

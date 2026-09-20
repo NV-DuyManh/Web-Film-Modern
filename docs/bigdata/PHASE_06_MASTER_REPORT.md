@@ -1,16 +1,17 @@
 # Phase 06: Production Personalized Recommendation / “Dành Cho Bạn” — Master Report
 
 ## 1. Executive Summary
-Phase 06 transitions MFILM’s recommendation capability from **LOCAL VERIFIED** into a secure, zero-cost, event-driven personalized recommendation experience on `https://www.mfilm.online`.
+Phase 06 transitions MFILM’s recommendation capability into a secure, zero-cost, event-driven personalized recommendation experience on `https://www.mfilm.online`.
 
-Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic popularity carousel**:
-1. **Zero-Signal Gating**: Any visitor or authenticated user with NO meaningful preference data (0 favorites and 0 interaction events) sees **no “Dành Cho Bạn” section** (`eligible: false`, `source: "none"`, `total: 0`, `items: []`). The component renders `null` with zero DOM footprint and zero layout gap. Generic popularity remains in other homepage sections (e.g. Top Phim, Phim Mới).
-2. **First-Click / Event-Driven Unlock**: Once a visitor interacts with at least one movie (via `movie_view`, `play`, `watch_progress`, `complete`, or `recommendation_click`), “Dành Cho Bạn” unlocks and recommends candidates dynamically derived from that interaction history.
-3. **No Heading-Only Empty State**: The component strictly returns `null` while loading and when no movie cards are present (`if (loading || !displayMovies || displayMovies.length === 0) return null;`). The section heading "Dành Cho Bạn" is **NEVER** rendered without movie cards.
-4. **Decoupled Client Rendering**: Recommendation cards render directly from API response items without waiting for the separate full Firestore catalog hook (`useMovies()`). If the catalog is loaded, items are enriched seamlessly.
-5. **Durable Behavior & Verified Identity Mapping**: Authenticated users with favorites in Firestore or durable viewing history in Tinybird remain eligible across Render cold starts/restarts. Verified Firebase Auth identity maps safely to customer Firestore documents via `uid` and verified `email`.
-6. **Zero Added Cost ($0 Budget)**: Architecture A utilizes Firestore catalog (884 movies), Aiven Kafka, Tinybird telemetry, and bounded in-process LRU caches on Render without requiring PostgreSQL or Valkey in production.
-7. **Authenticated Path Fixed** (commit `04ee983`): Resolved four root causes that prevented logged-in users from receiving personalized recommendations even when they had favorites and viewing history.
+> [!IMPORTANT]
+> **Product Requirement Change: Always-Visible “Dành Cho Bạn”**:
+> The previous requirement (“zero-signal visitors/users see no Dành Cho Bạn section”) has been **officially superseded by owner directive**. “Dành Cho Bạn” is now **ALWAYS VISIBLE** on Home:
+> 1. **Meaningful Signals Present**: True personalized recommendations derived from favorites, watch history, and real telemetry events (`source: "favorites" | "behavior" | "hybrid"`, `personalized: true`).
+> 2. **Zero Signals (Logged-in or Anonymous)**: Deterministic, truthful cold-start recommendations (`source: "cold_start"`, `personalized: false`).
+> 3. **Seamless Transition**: As soon as a user adds a favorite or interacts with a movie, the section automatically transitions from cold-start to personalized without requiring logout/login.
+> 4. **Truthful Reasons**: Cold-start cards never make fake history claims (no "Vì bạn vừa xem..." or "Dựa trên lịch sử..."). They strictly display truthful neutral reasons ("Gợi ý để bạn bắt đầu", "Phổ biến trên MFILM", "Đang được xem nhiều", "Gợi ý để bạn khám phá").
+> 5. **No Heading-Only Empty State**: A lightweight animated skeleton is rendered during initial loading when no cards are ready yet, guaranteeing zero layout shift and zero heading-only empty state.
+> 6. **Zero Added Cost ($0 Budget)**: Architecture A utilizes Firestore catalog (884 movies), Aiven Kafka, Tinybird telemetry, and bounded in-process LRU caches on Render without requiring PostgreSQL or Valkey in production.
 
 ---
 
@@ -92,24 +93,23 @@ Under the updated Product Requirements, **“Dành Cho Bạn” is NOT a generic
 ---
 
 ## 3. Final Phase 06 Status
-**PHASE 06 PARTIAL — PRODUCTION ACCEPTANCE REQUIRED**
+**PHASE 06 PARTIAL — FINAL LIVE ACCEPTANCE REQUIRED**
 
-- **Zero-Signal Gating**: **CODE VERIFIED (PASS)**.
-- **Heading-Only Bug Fixed**: **YES (CODE VERIFIED & TESTED)**.
-- **First-Click Unlock**: **CODE VERIFIED (PASS)**.
-- **Anonymous Behavior Personalization**: **CODE VERIFIED (PASS)**.
-- **Authenticated Personalization**: **CODE VERIFIED (PASS)**. Auth path fixed (`04ee983`), account isolation fixed (`3c3c6af`).
-- **Firebase Auth for Email/Password**: **IMPLEMENTED** (`3c3c6af`). All login paths now produce `auth.currentUser`.
-- **Session Rotation**: **IMPLEMENTED** (`3c3c6af`). `rotateSessionId()` on logout/account-switch.
-- **ForYou Crash Fix**: **IMPLEMENTED** (`3c3c6af`). AbortController + authEpoch + ErrorBoundary.
-- **Durable History (Tinybird Fallback)**: **CODE VERIFIED (PASS)**.
-- **Insecure UID Fallback Removed**: **YES**.
-- **Backend Tests**: **12/12 Suites Passed (72/72 Tests)**.
+- **Always-Visible "Dành Cho Bạn"**: **IMPLEMENTED & VERIFIED**.
+- **Cold-Start Recommendations**: **IMPLEMENTED & TESTED (PASS)**.
+- **Truthful Reasons (No Fake Claims)**: **IMPLEMENTED & VERIFIED**.
+- **Seamless Transition to Personalized**: **VERIFIED**.
+- **Heading-Only Bug Fixed**: **YES (Skeleton loader guarantees cards or placeholders always present)**.
+- **Authenticated Personalization**: **CODE VERIFIED (PASS)**.
+- **Firebase Auth for Email/Password**: **IMPLEMENTED**.
+- **Session Rotation & History Isolation**: **IMPLEMENTED & VERIFIED** (`mfilm_resume_${userId}` strictly user-scoped).
+- **Following Metric Canonical Source**: **IMPLEMENTED & VERIFIED** (`listFavorite` removed from follow count).
+- **Backend Tests**: **12/12 Suites Passed (81/81 Tests)**.
 - **Backend Build**: **PASS** (`nest build`).
 - **Frontend Build**: **PASS** (`vite build`).
 - **Definitive Production Commit**: Latest commit on `origin/main`.
   - Vercel: redeploy latest commit (server-side function `api/ai/chat.js` uses server-only keys `GROQ_API_KEYS` / `GEMINI_API_KEYS`).
-  - Render: deploy latest commit for recommendation backend (no Render AI keys required).
+  - Render: deploy latest commit for recommendation backend (includes always-visible cold-start engine).
 
 ---
 
@@ -279,15 +279,15 @@ PASS src/modules/recommendation/recommendation.service.spec.ts
       ✓ Test I — Strong signal > weak signal: favorite/complete > movie_view
 ```
 
-- **Persona 0 (Brand-new Anonymous)**: 0 events $\to$ `eligible: false`, `total: 0`, `source: "none"`, items empty.
-- **Persona 1 (Anonymous First Click)**: 1 `movie_view` on `jp_1` $\to$ `eligible: true`, `source: "behavior"`, top result is `jp_2` with reason `"Vì bạn vừa xem \"Doraemon: Stand By Me\""`.
+- **Persona 0 (Brand-new Anonymous)**: 0 events $\to$ `eligible: true`, `personalized: false`, `source: "cold_start"`, items > 0 (truthful neutral reasons, e.g. "Gợi ý để bạn bắt đầu", "Phổ biến trên MFILM").
+- **Persona 1 (Anonymous First Click)**: 1 `movie_view` on `jp_1` $\to$ transitions away from cold_start $\to$ `eligible: true`, `source: "behavior"`, top result is `jp_2` with reason `"Vì bạn vừa xem \"Doraemon: Stand By Me\""`.
 - **Persona 2 (Anonymous Vietnam-Heavy)**: Interacted with `vn_1` and `vn_2` $\to$ top recommendation is `vn_3` (Hai Phượng) with reason `"Vì bạn thường xem phim Việt Nam"`.
-- **Persona 3 (Authenticated No Data)**: Verified uid with 0 favorites and 0 events $\to$ `eligible: false`, `source: "none"`, `total: 0`.
+- **Persona 3 (Authenticated No Data)**: Verified uid with 0 favorites and 0 events $\to$ `eligible: true`, `personalized: false`, `source: "cold_start"`, items > 0.
 - **Persona 4 (Authenticated Favorites)**: Verified uid with favorites $\to$ `eligible: true`, personalized results.
 - **Persona 5 (Authenticated Behavior Only)**: Verified uid with 0 favorites and viewing events $\to$ `eligible: true`, `source: "behavior"`.
 - **Persona 6 (Isolation)**: Distinct cache keys and distinct results across auth users and anon sessions.
-- **Persona 7 (Spoofing)**: Forged `x-user-id` and `?userId=` without Bearer token cannot access protected user favorites.
-- **Persona 8 (Cold Generic Homepage)**: General catalog baseline popularity still works, while "Dành Cho Bạn" remains zero-signal gated.
+- **Persona 7 (Spoofing)**: Forged `x-user-id` and `?userId=` without Bearer token returns safe cold_start and never accesses protected user favorites.
+- **Persona 8 (Cold Generic Homepage)**: General catalog baseline popularity still works, and "Dành Cho Bạn" returns deterministic cold_start recommendations.
 - **Test F (Logout/Login Persistence)**: Long-term profile sourced from Firestore/Tinybird survives new session initialization without requiring new movie clicks.
 - **Test G (One-Click Stability)**: Introducing a single new weak `movie_view` to a stable profile does not overwrite the entire recommendation row; historical signals continue to dominate the top results.
 - **Test H (Multi-Interest Profile)**: A user with distinct clusters (e.g. US Action, JP Anime, VN) receives diverse recommendations spanning multiple meaningful profile clusters.
@@ -416,7 +416,7 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 
 ## 9. Current Phase Status & Owner Acceptance Steps
 
-**Phase Status**: **PHASE 06 COMPLETE — PRODUCTION ACCEPTED** ✅
+**Phase Status**: **PHASE 06 PARTIAL — FINAL LIVE ACCEPTANCE REQUIRED**
 
 ### Completed Milestone Items:
 1. ✅ **Render Deployment**: Live on `a4fb815` with HTTP 200 ready status.
@@ -491,7 +491,8 @@ MFILM AI Chatbot suddenly stopped working. Every message returned:
 #### 4. Canonical Account Statistics Sources
 All four metrics derive dynamically from authenticated user data via `src/utils/accountStats.js`:
 - **ĐÃ XEM**: `getWatchedMoviesCount(isLogin?.id)`.
-  - Backed by user-scoped storage `mfilm_resume_${userId}` and `mfilm_resume`.
+  - Backed strictly by user-scoped storage `mfilm_resume_${userId}` for authenticated users.
+  - Generic `mfilm_resume` is used only for legacy/anonymous guest sessions, strictly preventing cross-account history pollution.
   - Counts unique movie IDs (multiple episodes / progress updates count as 1 movie).
   - Reacts to `mfilm_resume_updated` and cross-tab `storage` events.
 - **ĐÁNH GIÁ**: `getUniqueReviewsCount(isLogin?.id, allReviews)`.
@@ -501,8 +502,8 @@ All four metrics derive dynamically from authenticated user data via `src/utils/
   - Counts unique movie IDs across `isLogin.listFilm` playlists and `isLogin.watchlist`.
   - Dynamic increment/decrement on playlist addition or removal.
 - **THEO DÕI**: `getFollowingCount(isLogin)`.
-  - Counts unique entities tracked in `isLogin.listFavorite`, `isLogin.following`, `isLogin.listFollow`, or `isLogin.theoDoi`.
-  - Reflects immediate follow/unfollow actions.
+  - Counts unique followed entities across canonical follow fields (`isLogin.following`, `isLogin.listFollow`, or `isLogin.theoDoi`).
+  - Strictly excludes `isLogin.listFavorite` to preserve semantic integrity between Favorites and Following (returns 0 when no follow entity exists).
 
 #### 5. Account-Switch Isolation
 - On logout/login/account switch:
@@ -523,13 +524,69 @@ Automated test suite: `src/utils/accountAndChatbotEntitlement.test.js` executed 
 - **Test E — Unknown Plan Handling**: PASS (safe human-facing names, graceful handling of unresolved plans).
 - **Test F — Account Switch Plan Refresh**: PASS (switching account immediately updates allowed catalog).
 - **Test G — Empty Account**: PASS (all 4 statistics equal 0).
-- **Test H — Real Account Data**: PASS (counts match stored user playlists, reviews, resume history).
+- **Test H — Real Account Data**: PASS (counts match stored user playlists, reviews, resume history; favorite-only does not inflate follow count).
 - **Test I — Duplicate History Events**: PASS (multi-episode watch progress does not overcount unique movies).
 - **Test J — Rating Update**: PASS (updating a movie review does not double-count).
 - **Test K — Watchlist Add/Remove**: PASS (increments/decrements correctly).
-- **Test L — Follow/Unfollow**: PASS (increments/decrements correctly).
-- **Test M — Account Switch Isolation**: PASS (Account A data never contaminates Account B).
+- **Test L — Follow/Unfollow**: PASS (increments/decrements correctly; favorites do not inflate follow count).
+- **Test M — Account Switch Isolation**: PASS (Account A stats & watch history never contaminate Account B).
 
-**Test Summary**: **13/13 tests PASS, 0 failures, duration 87ms**.
+**Test Summary**: **13/13 tests PASS, 0 failures, duration 76ms**.
 **Vercel AI Suite**: **11/11 tests PASS (`api/ai/chat.test.js`)**.
-**Frontend Build**: **PASS (`vite build` in 1.39s, 0 errors)**.
+**Frontend Build**: **PASS (`vite build` in 1.29s, 0 errors)**.
+
+---
+
+## 11. Phase 06 Product Change: Always-Visible “Dành Cho Bạn” & Cold-Start Engine
+
+### 11.1 Requirement Shift Context
+Per owner directive, the previous rule (*"zero-signal visitors/users see no Dành Cho Bạn section"*) was intentionally replaced by an **always-visible** cold-start recommendation experience. The section now never collapses or hides on Home.
+
+### 11.2 Response Contract
+1. **Cold-Start (Zero Signals)**:
+   ```json
+   {
+     "success": true,
+     "eligible": true,
+     "personalized": false,
+     "source": "cold_start",
+     "total": 15,
+     "items": [...]
+   }
+   ```
+2. **Personalized (Signals Present)**:
+   ```json
+   {
+     "success": true,
+     "eligible": true,
+     "personalized": true,
+     "source": "favorites" | "behavior" | "hybrid",
+     "total": 15,
+     "items": [...]
+   }
+   ```
+
+### 11.3 Cold-Start Source Hierarchy & Truthful Reasons
+1. **Tinybird Real-Time Trending**: Rolling 15-minute active viewers window (`reason: "Đang được xem nhiều"`).
+2. **Catalog Popularity**: High view counts and hot status from Firestore catalog (`reason: "Phổ biến trên MFILM"`, `"Đánh giá cao (8.5⭐)"`, `"Phim Việt Nam nổi bật"`).
+3. **High-Quality Catalog Fallback**: Deterministic top movies from in-memory content index (`reason: "Gợi ý để bạn khám phá"` or `"Gợi ý để bạn bắt đầu"`).
+4. **Strict Truthfulness**: Zero-signal cards never claim *"Vì bạn vừa xem..."*, *"Dựa trên lịch sử của bạn..."*, or *"Vì bạn thường xem..."*.
+
+### 11.4 Cache Isolation
+- Cold-start recommendations use a dedicated cache namespace: `mfilm:rec:cold_start:lim:${limit}`.
+- Zero-signal responses are never cached under authenticated or anonymous session keys, ensuring that the first favorite or interaction immediately unlocks personalized results.
+
+### 11.5 Frontend Implementation (`ForYou.jsx`)
+- **Initial Mount / Loading**: Renders section heading + lightweight animated skeleton (6 pulse cards) if no cards are loaded yet, eliminating layout jumps.
+- **Valid Data Available**: Seamlessly renders full interactive Swiper with navigation arrows preserved.
+- **Error / Offline**: Preserves last valid cards or falls back to top catalog movies so cards are always shown.
+- **Zero Heading-Only Empty State**: Heading is never rendered without either real cards or skeleton placeholders.
+
+### 11.6 Automated Verification Results
+- **Backend Test Suite**: **12/12 suites passed, 81/81 tests passed** (`npm test` in `backend`).
+  - Includes dedicated Step 12 contract tests (12.A through 12.I).
+- **Backend Build**: **PASS (`nest build`)**.
+- **Frontend Test Suite**: **13/13 tests passed (`accountAndChatbotEntitlement.test.js`)**.
+- **Vercel AI Suite**: **11/11 tests passed (`api/ai/chat.test.js`)**.
+- **Frontend Build**: **PASS (`vite build`)**.
+

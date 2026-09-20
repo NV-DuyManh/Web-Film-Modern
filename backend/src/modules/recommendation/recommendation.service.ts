@@ -13,15 +13,16 @@ export interface RecommendedMovieItem {
   imgUrl?: string;
   bannerUrl?: string;
   score: number;
-  recommendationSource: 'hybrid' | 'content_based' | 'behavior' | 'trending' | 'popularity';
+  recommendationSource: 'hybrid' | 'content_based' | 'behavior' | 'trending' | 'popularity' | 'cold_start';
   reason: string;
 }
 
 export interface RecommendationResponse {
   success: boolean;
   eligible: boolean;
+  personalized?: boolean;
   userId: string | null;
-  source: 'hybrid' | 'content_based' | 'behavior' | 'trending' | 'popularity' | 'none';
+  source: 'hybrid' | 'content_based' | 'favorites' | 'behavior' | 'trending' | 'popularity' | 'cold_start' | 'none';
   cached: boolean;
   total: number;
   items: RecommendedMovieItem[];
@@ -132,17 +133,9 @@ export class RecommendationService {
         `[ForYou Initial] authReady=true authPresent=true verifiedUidPresent=true favCount=${favIds.length} durableCount=${durableSignals.length} ramUserCount=${ramUserEvents.length} sessionCount=${ramSessionEvents.length} eligible=${isEligible}`,
       );
 
-      // Zero-signal check: 0 favorites AND 0 meaningful events -> HIDE SECTION
+      // Zero-signal check: 0 favorites AND 0 meaningful events -> Cold-start recommendations
       if (!isEligible) {
-        return {
-          success: true,
-          eligible: false,
-          userId: authUid,
-          source: 'none',
-          cached: false,
-          total: 0,
-          items: [],
-        };
+        return await this.buildColdStartRecommendations(authUid, safeLimit);
       }
 
 
@@ -213,15 +206,7 @@ export class RecommendationService {
     // ==========================================
     // Mandatory: MUST NEVER access Firestore Users/{uid}
     if (!sessionId) {
-      return {
-        success: true,
-        eligible: false,
-        userId: null,
-        source: 'none',
-        cached: false,
-        total: 0,
-        items: [],
-      };
+      return await this.buildColdStartRecommendations(null, safeLimit);
     }
 
     let sessionEvents = this.eventService
@@ -244,15 +229,7 @@ export class RecommendationService {
     }
 
     if (sessionEvents.length === 0) {
-      return {
-        success: true,
-        eligible: false,
-        userId: null,
-        source: 'none',
-        cached: false,
-        total: 0,
-        items: [],
-      };
+      return await this.buildColdStartRecommendations(null, safeLimit);
     }
 
     const behFingerprint = sessionEvents
@@ -650,25 +627,114 @@ export class RecommendationService {
         source = 'hybrid';
       }
 
+      if (items.length === 0) {
+        return await this.buildColdStartRecommendations(userId, limit);
+      }
+
       return {
         success: true,
-        eligible: items.length > 0,
+        eligible: true,
+        personalized: true,
         userId,
-        source: items.length > 0 ? source : 'none',
+        source,
         cached: false,
         total: items.length,
         items,
       };
     } catch (err: any) {
       this.logger.error(`Error generating personalized recommendations: ${err.message}`, err.stack);
-      return {
-        success: false,
-        eligible: false,
+      return await this.buildColdStartRecommendations(userId, limit);
+    }
+  }
+
+  /**
+   * Build deterministic cold-start recommendations for zero-signal visitors/users.
+   * Priority order:
+   * 1. Tinybird real-time trending (rolling 15m) if healthy
+   * 2. Catalog popularity / view metrics
+   * 3. High-quality catalog fallback
+   * Uses separate cold-start cache key: mfilm:rec:cold_start:lim:${limit}
+   */
+  async buildColdStartRecommendations(
+    userId: string | null,
+    limit: number,
+  ): Promise<RecommendationResponse> {
+    const safeLimit = Math.max(1, Math.min(30, Number(limit) || 15));
+    const cacheKey = `mfilm:rec:cold_start:lim:${safeLimit}`;
+    const now = Date.now();
+
+    const memCached = this.inMemoryCache.get(cacheKey);
+    if (memCached && memCached.expiresAt > now) {
+      return { ...memCached.data, userId, cached: true };
+    }
+
+    try {
+      const cached = await this.redis.get(cacheKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        this.setInMemoryCache(cacheKey, parsed, this.CACHE_TTL_SECONDS);
+        return { ...parsed, userId, cached: true };
+      }
+    } catch (err: any) {
+      this.logger.warn(`Valkey cache read error for cold_start: ${err.message}`);
+    }
+
+    try {
+      const rawItems = await this.getTrendingAndPopularityItems(safeLimit);
+      const items = rawItems.map((item) => ({
+        ...item,
+        recommendationSource: 'cold_start' as const,
+        reason: item.reason && !item.reason.includes('Vì bạn')
+          ? item.reason
+          : 'Gợi ý để bạn bắt đầu',
+      }));
+
+      const response: RecommendationResponse = {
+        success: true,
+        eligible: true,
+        personalized: false,
         userId,
-        source: 'none',
+        source: 'cold_start',
         cached: false,
-        total: 0,
-        items: [],
+        total: items.length,
+        items,
+      };
+
+      if (items.length > 0) {
+        this.setInMemoryCache(cacheKey, response, this.CACHE_TTL_SECONDS);
+        try {
+          await this.redis.set(cacheKey, JSON.stringify(response), this.CACHE_TTL_SECONDS);
+        } catch (err: any) {
+          this.logger.warn(`Valkey cache write error for cold_start: ${err.message}`);
+        }
+      }
+
+      return response;
+    } catch (err: any) {
+      this.logger.error(`Error building cold start recommendations: ${err.message}`, err.stack);
+      const topMovies = this.contentSimilarity?.getTopMoviesByViews
+        ? this.contentSimilarity.getTopMoviesByViews(safeLimit)
+        : [];
+      const fallbackItems: RecommendedMovieItem[] = topMovies.map((m) => ({
+        movieId: m.id,
+        name: m.name,
+        slug: m.slug,
+        imgUrl: m.imgUrl,
+        bannerUrl: m.bannerUrl,
+        score: 0.5,
+        recommendationSource: 'cold_start' as const,
+        reason: 'Gợi ý để bạn khám phá',
+      }));
+
+      return {
+        success: true,
+        eligible: true,
+        personalized: false,
+        userId,
+        source: 'cold_start',
+        cached: false,
+        total: fallbackItems.length,
+        items: fallbackItems,
       };
     }
   }
@@ -738,7 +804,7 @@ export class RecommendationService {
             bannerUrl: movie?.bannerUrl || t.bannerUrl || '',
             score: Number(Math.min(0.99, 0.75 + (t.activeViewers || 1) * 0.05).toFixed(4)),
             recommendationSource: 'trending',
-            reason: 'Đang được xem nhiều gần đây',
+            reason: 'Đang được xem nhiều',
           });
 
           if (items.length >= limit) break;
@@ -798,8 +864,8 @@ export class RecommendationService {
           const rating = parseFloat(r.rating || '0');
           const score = Number(Math.min(0.99, 0.5 + (views / 20000) * 0.3 + (rating / 10) * 0.2).toFixed(4));
 
-          let reason = 'Phim thịnh hành';
-          if (r.is_hot) reason = 'Phim hot được xem nhiều';
+          let reason = 'Phổ biến trên MFILM';
+          if (r.is_hot) reason = 'Phổ biến trên MFILM';
           else if (rating >= 8.5) reason = `Đánh giá cao (${rating}⭐)`;
           else if (r.country) reason = `Phim ${r.country} nổi bật`;
 
@@ -834,8 +900,8 @@ export class RecommendationService {
       const rating = m.rating || 0;
       const score = Number(Math.min(0.99, 0.5 + (views / 20000) * 0.3 + (rating / 10) * 0.2).toFixed(4));
 
-      let reason = 'Phim thịnh hành';
-      if (m.isHot) reason = 'Phim hot được xem nhiều';
+      let reason = 'Phổ biến trên MFILM';
+      if (m.isHot) reason = 'Phổ biến trên MFILM';
       else if (rating >= 8.5) reason = `Đánh giá cao (${rating}⭐)`;
       else if (m.country) reason = `Phim ${m.country} nổi bật`;
 

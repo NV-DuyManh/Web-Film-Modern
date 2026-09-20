@@ -288,17 +288,20 @@ describe('RecommendationService', () => {
   });
 
   describe('Persona Testing: Personas 0 through 8 Deterministic Validation', () => {
-    it('Persona 0 — Brand-new Anonymous: no session events yields eligible=false, total=0, source="none"', async () => {
+    it('Persona 0 — Brand-new Anonymous: zero session events yields eligible=true, source="cold_start", items>0', async () => {
       mockEventService.getRecentInteractions.mockReturnValue([]);
 
       const result = await service.getRecommendations(null, 'sess_brand_new', 10);
 
       expect(result.success).toBe(true);
-      expect(result.eligible).toBe(false);
+      expect(result.eligible).toBe(true);
+      expect(result.personalized).toBe(false);
       expect(result.userId).toBeNull();
-      expect(result.source).toBe('none');
-      expect(result.total).toBe(0);
-      expect(result.items).toEqual([]);
+      expect(result.source).toBe('cold_start');
+      expect(result.total).toBeGreaterThan(0);
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(sampleMovies.some((m) => m.id === result.items[0].movieId)).toBe(true);
+      expect(result.items.every((i) => !i.reason.includes('Vì bạn') && !i.reason.includes('lịch sử'))).toBe(true);
     });
 
     it('Persona 1 — Anonymous First Click: one movie_view for movie A yields eligible=true, recommendations related to movie A', async () => {
@@ -338,18 +341,20 @@ describe('RecommendationService', () => {
       expect(result.items.some((i) => i.movieId === 'vn_1' || i.movieId === 'vn_2')).toBe(false);
     });
 
-    it('Persona 3 — Authenticated No Data: verified uid with 0 favorites and 0 events yields eligible=false, hidden', async () => {
+    it('Persona 3 — Authenticated No Data: verified uid with 0 favorites and 0 events yields eligible=true, cold_start recommendations', async () => {
       contentSimilarityService.getUserFavorites.mockResolvedValue([]);
       mockEventService.getRecentInteractions.mockReturnValue([]);
 
       const result = await service.getRecommendations('verified_user_no_data', 'sess_123', 10);
 
       expect(result.success).toBe(true);
-      expect(result.eligible).toBe(false);
+      expect(result.eligible).toBe(true);
+      expect(result.personalized).toBe(false);
       expect(result.userId).toBe('verified_user_no_data');
-      expect(result.source).toBe('none');
-      expect(result.total).toBe(0);
-      expect(result.items).toEqual([]);
+      expect(result.source).toBe('cold_start');
+      expect(result.total).toBeGreaterThan(0);
+      expect(result.items.length).toBeGreaterThan(0);
+      expect(result.items.every((i) => !i.reason.includes('Vì bạn') && !i.reason.includes('lịch sử'))).toBe(true);
     });
 
     it('Persona 4 — Authenticated Favorites: verified uid with favorites yields eligible=true, personalized results', async () => {
@@ -417,16 +422,19 @@ describe('RecommendationService', () => {
 
       // Firestore getUserFavorites must NEVER be called
       expect(contentSimilarityService.getUserFavorites).not.toHaveBeenCalled();
-      expect(result.eligible).toBe(false);
+      expect(result.eligible).toBe(true);
+      expect(result.personalized).toBe(false);
+      expect(result.source).toBe('cold_start');
       expect(result.userId).toBeNull();
     });
 
-    it('Persona 8 — Cold Generic Homepage: baseline popularity still works for general catalog, but for-you is zero-signal gated', async () => {
-      // 1. "Dành cho bạn" for cold anonymous user returns eligible=false, hidden
+    it('Persona 8 — Cold Generic Homepage: cold anonymous user receives cold_start items, and baseline popularity still works', async () => {
+      // 1. "Dành cho bạn" for cold anonymous user returns eligible=true, source="cold_start"
       mockEventService.getRecentInteractions.mockReturnValue([]);
       const forYouRes = await service.getRecommendations(null, 'sess_cold_visitor', 10);
-      expect(forYouRes.eligible).toBe(false);
-      expect(forYouRes.total).toBe(0);
+      expect(forYouRes.eligible).toBe(true);
+      expect(forYouRes.source).toBe('cold_start');
+      expect(forYouRes.total).toBeGreaterThan(0);
 
       // 2. Other homepage sections (trending / popularity baseline) still work normally
       const baselineRes = await service.buildBaselineRecommendations(null, 5);
@@ -615,7 +623,9 @@ describe('RecommendationService', () => {
       // authUid = null → anonymous path
       const result = await service.getRecommendations(null, 'spoofed_session', 5, null);
 
-      expect(result.eligible).toBe(false);  // No session events → zero signal
+      expect(result.eligible).toBe(true);  // Under always-visible, zero-signal returns cold-start
+      expect(result.source).toBe('cold_start');
+      expect(result.personalized).toBe(false);
       // getUserFavorites must NOT have been called for anonymous requests
       expect(contentSimilarityService.getUserFavorites).not.toHaveBeenCalled();
     });
@@ -731,6 +741,109 @@ describe('RecommendationService', () => {
         userId: 'verified_uid_durable_only',
         limit: 30,
       });
+    });
+  });
+
+  describe('Phase 06 Product Change: Always-Visible ForYou & Cold-Start Contract (A-I)', () => {
+    it('12.A — New anonymous zero signal -> eligible=true, source=cold_start, items>0', async () => {
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      const res = await service.getRecommendations(null, 'sess_zero_anon', 10);
+      expect(res.success).toBe(true);
+      expect(res.eligible).toBe(true);
+      expect(res.personalized).toBe(false);
+      expect(res.source).toBe('cold_start');
+      expect(res.items.length).toBeGreaterThan(0);
+    });
+
+    it('12.B — New authenticated zero signal -> eligible=true, source=cold_start, items>0', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue([]);
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      const res = await service.getRecommendations('user_zero_auth', 'sess_zero_auth', 10);
+      expect(res.success).toBe(true);
+      expect(res.eligible).toBe(true);
+      expect(res.personalized).toBe(false);
+      expect(res.source).toBe('cold_start');
+      expect(res.items.length).toBeGreaterThan(0);
+    });
+
+    it('12.C — Anonymous first movie_view -> source changes away from cold_start to behavior', async () => {
+      mockEventService.getRecentInteractions.mockReturnValue([
+        { movieId: 'vn_1', eventType: 'movie_view', timestamp: Date.now(), weight: 1.0 },
+      ]);
+      const res = await service.getRecommendations(null, 'sess_first_click', 5);
+      expect(res.eligible).toBe(true);
+      expect(res.personalized).toBe(true);
+      expect(res.source).toBe('behavior');
+      expect(res.source).not.toBe('cold_start');
+    });
+
+    it('12.D — Auth first favorite -> source changes away from cold_start', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['jp_1']);
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      const res = await service.getRecommendations('user_first_fav', null, 5);
+      expect(res.eligible).toBe(true);
+      expect(res.personalized).toBe(true);
+      expect(['content_based', 'hybrid', 'favorites']).toContain(res.source);
+      expect(res.source).not.toBe('cold_start');
+    });
+
+    it('12.E — Existing-profile path unchanged', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue(['jp_1', 'vn_1']);
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      const res = await service.getRecommendations('user_existing', null, 5);
+      expect(res.eligible).toBe(true);
+      expect(res.personalized).toBe(true);
+      expect(res.items.length).toBeGreaterThan(0);
+    });
+
+    it('12.F — Account A personalized -> B zero signal -> B cold_start, no A cards', async () => {
+      contentSimilarityService.getUserFavorites.mockImplementation(async (uid) => {
+        if (uid === 'user_A') return ['jp_1'];
+        return [];
+      });
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+
+      const resA = await service.getRecommendations('user_A', 'sess_A', 3);
+      expect(resA.personalized).toBe(true);
+      expect(resA.items[0].movieId).toBe('jp_2');
+
+      const resB = await service.getRecommendations('user_B', 'sess_B', 3);
+      expect(resB.personalized).toBe(false);
+      expect(resB.source).toBe('cold_start');
+    });
+
+    it('12.G — Cold-start reasons contain no fake history claims', async () => {
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      const res = await service.getRecommendations(null, 'sess_test_reasons', 10);
+      for (const item of res.items) {
+        expect(item.reason).not.toMatch(/Vì bạn|lịch sử|thường xem/);
+      }
+    });
+
+    it('12.H — Cold-start item IDs all exist in real catalog', async () => {
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      const res = await service.getRecommendations(null, 'sess_test_catalog', 10);
+      for (const item of res.items) {
+        expect(sampleMovies.some((m) => m.id === item.movieId)).toBe(true);
+      }
+    });
+
+    it('12.I — Carousel response contract remains valid with expected fields', async () => {
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+      const res = await service.getRecommendations(null, 'sess_carousel', 5);
+      expect(res).toHaveProperty('success', true);
+      expect(res).toHaveProperty('eligible', true);
+      expect(res).toHaveProperty('personalized');
+      expect(res).toHaveProperty('source');
+      expect(res).toHaveProperty('items');
+      expect(Array.isArray(res.items)).toBe(true);
+      for (const item of res.items) {
+        expect(item).toHaveProperty('movieId');
+        expect(item).toHaveProperty('name');
+        expect(item).toHaveProperty('slug');
+        expect(item).toHaveProperty('score');
+        expect(item).toHaveProperty('reason');
+      }
     });
   });
 });

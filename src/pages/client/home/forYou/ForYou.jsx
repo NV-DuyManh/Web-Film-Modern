@@ -134,18 +134,13 @@ function ForYouInner() {
                     return;
                 }
 
-                // Zero-Signal Gating: If eligible is false or no items, clear recommendations
-                if (data.success && data.eligible && Array.isArray(data.items) && data.items.length > 0) {
+                // Always set recommendations whenever valid items are returned
+                if (data.success && Array.isArray(data.items) && data.items.length > 0) {
                     setRecommendations(data.items);
-                } else {
-                    setRecommendations([]);
                 }
             } catch (err) {
                 if (err?.name === 'AbortError') return; // expected: request was cancelled
-                // On any other error, clear recommendations (never fallback to generic popularity)
-                if (isMounted && activeRequestRef.current.epoch === currentEpoch && activeRequestRef.current.uid === currentUid) {
-                    setRecommendations([]);
-                }
+                // On any other error, keep last valid cards if already present
             } finally {
                 if (isMounted && activeRequestRef.current.epoch === currentEpoch && activeRequestRef.current.uid === currentUid) {
                     setLoading(false);
@@ -244,10 +239,23 @@ function ForYouInner() {
         }
     }, [recommendations, movies]);
 
+    const activeMovies = useMemo(() => {
+        if (displayMovies && displayMovies.length > 0) return displayMovies;
+        if (Array.isArray(movies) && movies.length > 0) {
+            return movies.slice(0, 15).map((m) => ({
+                ...m,
+                reason: 'Gợi ý để bạn khám phá',
+                recScore: 0.5,
+                recSource: 'cold_start',
+            }));
+        }
+        return [];
+    }, [displayMovies, movies]);
+
     // Emit recommendation_view telemetry for rendered items
     useEffect(() => {
-        if (displayMovies && displayMovies.length > 0) {
-            displayMovies.forEach((item) => {
+        if (activeMovies && activeMovies.length > 0) {
+            activeMovies.forEach((item) => {
                 try {
                     const mId = String(item.id || item.movieId || '').trim();
                     if (mId && mId !== 'none' && !viewedMoviesRef.current.has(mId)) {
@@ -263,7 +271,7 @@ function ForYouInner() {
                 }
             });
         }
-    }, [displayMovies]);
+    }, [activeMovies]);
 
     const handleRecommendationClick = useCallback((item) => {
         try {
@@ -280,11 +288,39 @@ function ForYouInner() {
         }
     }, []);
 
-    // Strictly hide the entire section if disabled, still loading, or no items to display
-    // Invariant: Heading "Dành Cho Bạn" is NEVER rendered unless displayMovies has items
+    // Section is ALWAYS visible: if disabled entirely via flag, return null
     if (!RECOMMENDATIONS_ENABLED) return null;
-    if (loading || !firebaseAuthReady) return null;
-    if (!displayMovies || displayMovies.length === 0) return null;
+
+    const isInitialLoading = (loading || !firebaseAuthReady) && activeMovies.length === 0;
+
+    // Render skeleton loader during initial loading when no cards are ready yet.
+    // Invariant: Section heading "Dành Cho Bạn" is ALWAYS visible and never empty.
+    if (isInitialLoading || activeMovies.length === 0) {
+        return (
+            <div className="bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden">
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2 sm:gap-3 pt-10">
+                        <h2 className="font-bold text-2xl md:text-3xl glow-text-multi">
+                            Dành Cho Bạn
+                        </h2>
+                        <FaChevronRight className="border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full" />
+                    </div>
+                    <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold">
+                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                        AI Đề Xuất
+                    </span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 mt-5">
+                    {[...Array(6)].map((_, i) => (
+                        <div key={i} className="animate-pulse bg-[#1f293d] rounded-xl overflow-hidden aspect-2/3 flex flex-col justify-end p-3 border border-slate-700/30">
+                            <div className="h-4 bg-slate-700/60 rounded w-3/4 mb-2"></div>
+                            <div className="h-3 bg-slate-700/40 rounded w-1/2"></div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden">
@@ -331,7 +367,7 @@ function ForYouInner() {
                     }}
                     className="movie-swiper"
                 >
-                    {displayMovies?.map((e) => (
+                    {activeMovies.map((e) => (
                         <SwiperSlide key={e.id || e.slug}>
                             <Link to={`/phim/${e.slug || e.id}`} onClick={() => handleRecommendationClick(e)}>
                                 <div className="group cursor-pointer flex flex-col h-full">
