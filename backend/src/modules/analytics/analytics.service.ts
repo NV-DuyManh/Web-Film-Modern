@@ -262,10 +262,10 @@ export class AnalyticsService {
 
     try {
       const params = new URLSearchParams({ limit: String(opts.limit || 20) });
-      if (opts.sessionId) {
-        params.set('sessionId', opts.sessionId);
-      } else if (opts.userId) {
+      if (opts.userId) {
         params.set('userId', opts.userId);
+      } else if (opts.sessionId) {
+        params.set('sessionId', opts.sessionId);
       } else {
         return [];
       }

@@ -142,6 +142,10 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
                     // Non-fatal
                 }
             }
+            if (activeFbUser?.uid && userLogin?.id) {
+                userLogin.firebaseUid = activeFbUser.uid;
+                updateDocument('Users', { id: userLogin.id, firebaseUid: activeFbUser.uid }).catch(() => {});
+            }
             loginByUser(userLogin, activeFbUser);
             handleCloseLogin();
             showAuthSuccessToast(userLogin, 'Đăng nhập thành công');
@@ -202,6 +206,11 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
                     updateDocument('Users', { id: existingCustomer.id, avatarUrl: user.photoURL }).catch(() => {});
                 }
                 loggedInCustomer = existingCustomer;
+            }
+
+            if (user?.uid && loggedInCustomer?.id) {
+                loggedInCustomer.firebaseUid = user.uid;
+                updateDocument('Users', { id: loggedInCustomer.id, firebaseUid: user.uid }).catch(() => {});
             }
 
             // Đăng nhập và đóng modal ngay lập tức không delay

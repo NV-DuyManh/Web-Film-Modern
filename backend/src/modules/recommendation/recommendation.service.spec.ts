@@ -846,4 +846,72 @@ describe('RecommendationService', () => {
       }
     });
   });
+
+  describe('Phase 06 Combined Final Fix: Account Personalization & Isolation Tests', () => {
+    it('Test A — Account A (Action/Vietnam) and Account B (Anime/Japan) receive distinct personalized recommendations', async () => {
+      contentSimilarityService.getUserFavorites.mockImplementation(async (uid: string) => {
+        if (uid === 'uid_action_user') return ['vn_1'];
+        if (uid === 'uid_anime_user') return ['jp_1'];
+        return [];
+      });
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+
+      const resA = await service.getRecommendations('uid_action_user', 'sess_1', 5);
+      const resB = await service.getRecommendations('uid_anime_user', 'sess_2', 5);
+
+      expect(resA.personalized).toBe(true);
+      expect(resB.personalized).toBe(true);
+      expect(resA.items[0].movieId).not.toBe(resB.items[0].movieId);
+      expect(resA.items[0].movieId).toMatch(/vn_/);
+      expect(resB.items[0].movieId).toBe('jp_2');
+    });
+
+    it('Test B — Account A (profiled) receives personalized, Account B (zero-signal) receives cold_start', async () => {
+      contentSimilarityService.getUserFavorites.mockImplementation(async (uid: string) => {
+        if (uid === 'uid_profiled') return ['jp_1'];
+        return [];
+      });
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+
+      const resA = await service.getRecommendations('uid_profiled', 'sess_1', 5);
+      const resB = await service.getRecommendations('uid_zero_signal', 'sess_2', 5);
+
+      expect(resA.personalized).toBe(true);
+      expect(resA.source).not.toBe('cold_start');
+
+      expect(resB.personalized).toBe(false);
+      expect(resB.source).toBe('cold_start');
+      expect(resB.eligible).toBe(true);
+      expect(resB.items.length).toBeGreaterThan(0);
+    });
+
+    it('Test C — Two legitimately zero-signal accounts receive valid identical cold-start items', async () => {
+      contentSimilarityService.getUserFavorites.mockResolvedValue([]);
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+
+      const resX = await service.getRecommendations('uid_zero_1', 'sess_x', 5);
+      const resY = await service.getRecommendations('uid_zero_2', 'sess_y', 5);
+
+      expect(resX.personalized).toBe(false);
+      expect(resX.source).toBe('cold_start');
+      expect(resY.personalized).toBe(false);
+      expect(resY.source).toBe('cold_start');
+      expect(resX.items.map((i) => i.movieId)).toEqual(resY.items.map((i) => i.movieId));
+    });
+
+    it('Test D — Cache keys isolate accounts: Account A cache never reused for Account B', async () => {
+      contentSimilarityService.getUserFavorites.mockImplementation(async (uid: string) => {
+        if (uid === 'uid_user_alpha') return ['vn_1'];
+        if (uid === 'uid_user_beta') return ['jp_1'];
+        return [];
+      });
+      mockEventService.getRecentInteractions.mockReturnValue([]);
+
+      const resAlpha = await service.getRecommendations('uid_user_alpha', 'sess_alpha', 5);
+      expect(resAlpha.items[0].movieId).toMatch(/vn_/);
+
+      const resBeta = await service.getRecommendations('uid_user_beta', 'sess_beta', 5);
+      expect(resBeta.items[0].movieId).toBe('jp_2');
+    });
+  });
 });

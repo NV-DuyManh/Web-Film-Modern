@@ -115,7 +115,7 @@ export class RecommendationService {
         }));
       }
 
-      // Merge supplementary session events if present
+      // Merge supplementary session events if present (supports anonymous-to-login continuity)
       if (ramSessionEvents.length > 0) {
         const seenMovies = new Set(userEvents.map((e) => e.movieId));
         for (const se of ramSessionEvents) {

@@ -57,28 +57,52 @@ function AuthProvider({ children }) {
     }, [users, isLogin]);
 
     const loginByUser = useCallback((data, fbUser = null) => {
-        // If switching accounts (not first login), rotate session so the new user
-        // does not inherit the previous user's anonymous behavior history.
-        if (isLogin && isLogin.id !== data?.id) {
-            rotateSessionId();
+        // Retrieve last login fingerprint (UI-only state to detect account switch)
+        let previousUid = null;
+        try {
+            previousUid = localStorage.getItem("mfilm_last_auth_uid");
+        } catch {
+            // ignore
         }
+
+        const currentUid = fbUser?.uid || data?.firebaseUid || data?.uid || (data?.id ? String(data.id) : null);
+
+        // Always rotate anonymous session so new user never inherits previous user's session events
+        rotateSessionId();
+
         try {
             localStorage.setItem("isLogin", JSON.stringify(data));
+            if (currentUid) {
+                localStorage.setItem("mfilm_last_auth_uid", currentUid);
+            }
         } catch {
             // ignore storage errors
         }
+
         if (fbUser) {
             setFirebaseUser(fbUser);
             setFirebaseAuthReady(true);
         }
         setIsLogin(data);
         setAuthEpoch(prev => prev + 1);
-    }, [isLogin]);
+
+        // Section 10 UX Requirement: When a DIFFERENT account logs in,
+        // perform hard reset to Home top: reload page and start at scroll 0.
+        // If this is the same account relogin or first login, do NOT trigger hard reload loop.
+        if (previousUid && currentUid && previousUid !== currentUid) {
+            if (typeof window !== 'undefined' && window.location) {
+                window.location.assign('/');
+                return;
+            }
+        }
+    }, []);
 
     const handleLogout = useCallback(async () => {
         // 1. Clear persisted session
         try {
             localStorage.removeItem("isLogin");
+            // NOTE (Prompt Section 11): Do NOT delete the UI-only 'mfilm_last_auth_uid'
+            // fingerprint on logout so that the subsequent login can detect A -> B switch.
         } catch {
             // ignore
         }
@@ -102,6 +126,9 @@ function AuthProvider({ children }) {
         setAuthEpoch(prev => prev + 1);
 
         navigate("/");
+        if (typeof window !== 'undefined') {
+            window.scrollTo(0, 0);
+        }
     }, [navigate]);
 
     const [globalAvatarPreview, setGlobalAvatarPreview] = useState(null);

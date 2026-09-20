@@ -400,39 +400,37 @@ export class ContentSimilarityService implements OnModuleInit {
         }
       }
 
+      const findFavoritesInSnapshot = (snapDocs: any[]): string[] | null => {
+        for (const docSnap of snapDocs) {
+          const data = docSnap?.data?.() ?? docSnap?.data;
+          if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
+            const ids = normalizeList(data.listFavorite);
+            if (ids.length > 0) return ids;
+          }
+        }
+        return null;
+      };
+
       // 2. Query collection if doc ID misses (e.g. Firebase Auth UID)
       const usersCol = collection(this.firestoreDb, 'Users');
 
-      const qUid = query(usersCol, where('uid', '==', userId));
-      const snapUid = await getDocs(qUid);
-      if (!snapUid.empty) {
-        const data = snapUid.docs[0].data();
-        if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
-          const ids = normalizeList(data.listFavorite);
-          if (ids.length > 0) return ids;
-        }
-      }
-
-      // 2b. Check firebaseUid field (used when customer document was linked to Firebase Auth UID)
+      // 2a. Check firebaseUid field (used when customer document was linked to Firebase Auth UID)
       const qFbUid = query(usersCol, where('firebaseUid', '==', userId));
       const snapFbUid = await getDocs(qFbUid);
-      if (!snapFbUid.empty) {
-        const data = snapFbUid.docs[0].data();
-        if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
-          const ids = normalizeList(data.listFavorite);
-          if (ids.length > 0) return ids;
-        }
-      }
+      const fbIds = findFavoritesInSnapshot(snapFbUid.docs);
+      if (fbIds) return fbIds;
 
+      // 2b. Check uid field
+      const qUid = query(usersCol, where('uid', '==', userId));
+      const snapUid = await getDocs(qUid);
+      const uidIds = findFavoritesInSnapshot(snapUid.docs);
+      if (uidIds) return uidIds;
+
+      // 2c. Check legacy id field
       const qId = query(usersCol, where('id', '==', userId));
       const snapId = await getDocs(qId);
-      if (!snapId.empty) {
-        const data = snapId.docs[0].data();
-        if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
-          const ids = normalizeList(data.listFavorite);
-          if (ids.length > 0) return ids;
-        }
-      }
+      const idIds = findFavoritesInSnapshot(snapId.docs);
+      if (idIds) return idIds;
 
       // 3. Verified email fallback (safely maps verified Firebase Auth identity to Firestore customer document)
       if (email && typeof email === 'string' && email.includes('@')) {
@@ -441,25 +439,15 @@ export class ContentSimilarityService implements OnModuleInit {
 
         const qEmail = query(usersCol, where('email', '==', targetEmail));
         const snapEmail = await getDocs(qEmail);
-        if (!snapEmail.empty) {
-          const data = snapEmail.docs[0].data();
-          if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
-            const ids = normalizeList(data.listFavorite);
-            if (ids.length > 0) return ids;
-          }
-        }
+        const emailIds = findFavoritesInSnapshot(snapEmail.docs);
+        if (emailIds) return emailIds;
 
         // Check original casing if different from lowercase (Firestore string queries are case-sensitive)
         if (rawEmail !== targetEmail) {
           const qRawEmail = query(usersCol, where('email', '==', rawEmail));
           const snapRawEmail = await getDocs(qRawEmail);
-          if (!snapRawEmail.empty) {
-            const data = snapRawEmail.docs[0].data();
-            if (Array.isArray(data?.listFavorite) && data.listFavorite.length > 0) {
-              const ids = normalizeList(data.listFavorite);
-              if (ids.length > 0) return ids;
-            }
-          }
+          const rawEmailIds = findFavoritesInSnapshot(snapRawEmail.docs);
+          if (rawEmailIds) return rawEmailIds;
         }
       }
     } catch (err: any) {

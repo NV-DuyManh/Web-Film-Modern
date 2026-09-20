@@ -607,3 +607,37 @@ Per owner directive, the previous rule (*"zero-signal visitors/users see no Dàn
 - **Account Isolation**: Honors `authEpoch` and `firebaseAuthReady`, clearing previous state on account switch with zero cross-account leakage.
 - **Routing & SEO**: Integrated under `ClientRouters.jsx` with full SPA rewrite compatibility and descriptive SEO metadata.
 
+### 11.8 Account Personalization Differentiation & Account Switch UX Resolution
+#### 1. Root Cause Analysis: Why Different Accounts Previously Showed Identical Recommendations
+Through end-to-end tracing across Render production, Vercel frontend, and Firestore mapping, four primary drivers were confirmed:
+1. **Render Deployment Lag**: Render production was lagging on commit `a4fb815` (older code returning `eligible: false, items: []` for zero-signal / unlinked accounts). When `items: []` arrived, `ForYou.jsx` fell back to `movies.slice(0, 15)`, causing all accounts to display the exact same first 15 catalog movies.
+2. **Missing `firebaseUid` Link & Single-Document Lookup**: During login (`LogIn.jsx`), Firestore customer records were not populated with `firebaseUid: activeFbUser.uid`. In `content-similarity.service.ts`, `getUserFavorites` looked only at `docs[0]`; if duplicate records existed for that email, favorites resolved to `[]`, incorrectly classifying profiled accounts as zero-signal cold-start.
+3. **Session Interaction Contamination**: `sessionId` was previously not rotated on logout/login if `isLogin` was null, causing Account B to inherit Account A's session watch interactions.
+4. **Legitimate Cold-Start Identity**: When two accounts genuinely possess zero signals (0 favorites, 0 history), returning identical deterministic cold-start items is valid and expected per system contract; however, profiled accounts must never silently fall back to that list.
+
+#### 2. Exact Technical Fixes
+1. **Firestore Multi-Document Inspection (`content-similarity.service.ts`)**: `getUserFavorites` now iterates all documents across `snapFbUid.docs`, `snapUid.docs`, `snapId.docs`, `snapEmail.docs`, and `snapRawEmail.docs`, guaranteeing that if any matching document holds a non-empty `listFavorite`, it is successfully loaded.
+2. **Firestore `firebaseUid` Sync (`LogIn.jsx`)**: Synchronously links `firebaseUid: activeFbUser.uid` to the Firestore customer document upon successful email/password and Google login.
+3. **Tinybird Parameter Prioritization (`analytics.service.ts`)**: `userId` is strictly prioritized over `sessionId` when querying durable telemetry signals, preventing accidental session fallbacks.
+4. **Account Switch Hard Reset UX (`AuthProvider.jsx`)**:
+   - Stores UI-only transition fingerprint `mfilm_last_auth_uid` in `localStorage` (preserved across logout).
+   - On `loginByUser`: if `previousUid && currentUid && previousUid !== currentUid`, performs `window.location.assign('/')`, triggering a hard browser reload to Home at scroll position 0, completely clearing stale React state and in-flight promises.
+   - Same-account relogins (`previousUid === currentUid`) and first logins do not reload, preventing any infinite navigation loops.
+   - Session ID is forcefully rotated via `rotateSessionId()` on every login and logout.
+5. **Cache Isolation (`recommendation.service.ts`)**:
+   - Cache keys are strictly namespaced by verified UID: `mfilm:rec:auth:${authUid}:fav:...:beh:...:lim:${limit}`.
+   - Cold-start cache is globally separated: `mfilm:rec:cold_start:lim:${limit}`.
+   - Stale response guard in `ForYou.jsx` and `ForYouPage.jsx` checks `{ epoch, uid }` against `activeRequestRef`, immediately discarding out-of-order responses.
+
+#### 3. Updated Test Totals
+- **Backend Test Suite**: **12/12 suites passed, 85/85 tests passed** (`npm test` in `backend`), including:
+  - Test A: Account A (Action/Vietnam) and Account B (Anime/Japan) receive distinct personalized recommendations.
+  - Test B: Account A (profiled) receives personalized, Account B (zero-signal) receives cold_start.
+  - Test C: Two legitimately zero-signal accounts receive valid identical cold-start items.
+  - Test D: Cache keys isolate accounts: Account A cache never reused for Account B.
+- **Backend Build**: **PASS (`nest build`)**.
+- **Frontend Test Suite**: **19/19 tests passed** (13/13 `accountAndChatbotEntitlement.test.js` + 6/6 `accountSwitchAndIsolation.test.js`).
+- **Vercel AI Suite**: **11/11 tests passed (`api/ai/chat.test.js`)**.
+- **Frontend Build**: **PASS (`vite build`)**.
+
+
