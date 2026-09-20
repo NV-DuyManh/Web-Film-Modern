@@ -597,3 +597,13 @@ Per owner directive, the previous rule (*"zero-signal visitors/users see no Dàn
 - **Vercel AI Suite**: **11/11 tests passed (`api/ai/chat.test.js`)**.
 - **Frontend Build**: **PASS (`vite build`)**.
 
+### 11.7 Dedicated "Dành Cho Bạn" Browse Page (`/for-you`)
+- **Navigation Architecture**: The `>` arrow beside the "Dành Cho Bạn" heading on Home is a **"Xem Thêm" (View More) link** navigating to `/for-you`, adhering to the standard pattern used in `/film-new`, `/cinema-movies`, and `/anime` (NOT a carousel next control).
+- **Dedicated Route**: `/for-you` renders `ForYouPage.jsx`, providing an expanded grid view (`grid-cols-2` to `xl:grid-cols-7`).
+- **Unified Recommendation Engine**: Consumes the exact same recommendation API (`/recommendations/for-you?limit=30`):
+  - Meaningful-signal accounts receive true personalized rankings (`source: "favorites" | "behavior" | "hybrid"`).
+  - Zero-signal visitors and unauthenticated users receive deterministic cold-start recommendations (`source: "cold_start"`).
+- **In-Page Search**: Includes a real-time title search box utilizing `searchTV` accent-insensitive filtering, scoped strictly within the recommendation result set.
+- **Account Isolation**: Honors `authEpoch` and `firebaseAuthReady`, clearing previous state on account switch with zero cross-account leakage.
+- **Routing & SEO**: Integrated under `ClientRouters.jsx` with full SPA rewrite compatibility and descriptive SEO metadata.
+

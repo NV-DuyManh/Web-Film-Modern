@@ -23,6 +23,7 @@ const PayVIP = lazyRetry(() => import('../pages/client/pay/payvip/PayVIP'));
 const PayMovie = lazyRetry(() => import('../pages/client/pay/paymovie/PayMovie'));
 const MenuAccount = lazyRetry(() => import('../components/client/menuAccount/MenuAccount'));
 
+const ForYouPage = lazyRetry(() => import('../pages/client/home/forYou/ForYouPage'));
 const FilmNewPage = lazyRetry(() => import('../pages/client/home/filmNew/FilmNewPage'));
 const CinemaPage = lazyRetry(() => import('../pages/client/home/cinema/CinemaPage'));
 const FilmComingPage = lazyRetry(() => import('../pages/client/home/filmComing/FilmComingPage'));
@@ -103,6 +104,10 @@ function ClientRouters(props) {
         {
             path: "/account/:tab",
             element: <MenuAccount />
+        },
+        {
+            path: "/for-you",
+            element: <ForYouPage />
         },
         {
             path: "/film-new",
