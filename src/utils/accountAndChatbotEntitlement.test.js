@@ -142,7 +142,8 @@ describe('PHASE 06 FIX: CHATBOT ENTITLEMENT & DYNAMIC ACCOUNT STATS', () => {
                 { id: 'list1', movies: ['m1', 'm2'] },
                 { id: 'list2', movies: ['m2', 'm3'] } // m2 is in both, unique = 3 (m1, m2, m3)
             ],
-            listFavorite: ['m1', 'm4', 'm5'] // 3 unique
+            following: ['actor_1', 'creator_2', 'series_3'], // 3 canonical follows
+            listFavorite: ['m1', 'm4', 'm5'] // Yêu thích, not follow
         };
 
         const mockResume = {
@@ -160,6 +161,10 @@ describe('PHASE 06 FIX: CHATBOT ENTITLEMENT & DYNAMIC ACCOUNT STATS', () => {
         assert.equal(getUniqueReviewsCount('u_real', mockReviews), 2);
         assert.equal(getWatchlistCount(realUser), 3);
         assert.equal(getFollowingCount(realUser), 3);
+
+        // Verify listFavorite alone produces 0 following count
+        const favOnlyUser = { id: 'u_fav', listFavorite: ['m1', 'm2'] };
+        assert.equal(getFollowingCount(favOnlyUser), 0);
     });
 
     test('Test I — Duplicate History Events: watched count does not overcount episodes/events', () => {
@@ -206,33 +211,42 @@ describe('PHASE 06 FIX: CHATBOT ENTITLEMENT & DYNAMIC ACCOUNT STATS', () => {
     });
 
     test('Test L — Follow/Unfollow: count increments and decrements correctly', () => {
-        let user = { id: 'u1', listFavorite: ['actor_1', 'series_2'] };
+        let user = { id: 'u1', following: ['actor_1', 'series_2'] };
         assert.equal(getFollowingCount(user), 2);
 
         // Add actor_3
-        user = { id: 'u1', listFavorite: ['actor_1', 'series_2', 'actor_3'] };
+        user = { id: 'u1', following: ['actor_1', 'series_2', 'actor_3'] };
         assert.equal(getFollowingCount(user), 3);
 
         // Unfollow series_2
-        user = { id: 'u1', listFavorite: ['actor_1', 'actor_3'] };
+        user = { id: 'u1', following: ['actor_1', 'actor_3'] };
+        assert.equal(getFollowingCount(user), 2);
+
+        // Ensure listFavorite does not inflate follow count
+        user.listFavorite = ['movie_a', 'movie_b', 'movie_c'];
         assert.equal(getFollowingCount(user), 2);
     });
 
     test('Test M — Account Switch Isolation: Account A stats never remain on Account B', () => {
-        const userA = { id: 'user_a', listFilm: [{ movies: ['m1', 'm2', 'm3'] }], listFavorite: ['f1', 'f2'] };
-        const userB = { id: 'user_b', listFilm: [], listFavorite: [] };
+        const userA = { id: 'user_a', listFilm: [{ movies: ['m1', 'm2', 'm3'] }], following: ['f1', 'f2'] };
+        const userB = { id: 'user_b', listFilm: [], following: [] };
 
         const allReviews = [
             { userID: 'user_a', movieID: 'm1' },
             { userID: 'user_a', movieID: 'm2' }
         ];
 
+        const userAResume = { m1: { episodes: { ep1: 100 } } };
+        const userBResume = {};
+
         // Verify User A stats
+        assert.equal(getWatchedMoviesCount(userA.id, userAResume), 1);
         assert.equal(getUniqueReviewsCount(userA.id, allReviews), 2);
         assert.equal(getWatchlistCount(userA), 3);
         assert.equal(getFollowingCount(userA), 2);
 
         // On switch to User B: all stats are strictly isolated
+        assert.equal(getWatchedMoviesCount(userB.id, userBResume), 0);
         assert.equal(getUniqueReviewsCount(userB.id, allReviews), 0);
         assert.equal(getWatchlistCount(userB), 0);
         assert.equal(getFollowingCount(userB), 0);

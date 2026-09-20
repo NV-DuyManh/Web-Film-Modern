@@ -43,6 +43,8 @@ export function getWatchlistCount(user) {
 
 export function getFollowingCount(user) {
     if (!user) return 0;
+    // Strictly count actual follow/following entities only.
+    // Do NOT count listFavorite here because listFavorite represents "Yêu thích", not "Theo dõi".
     if (Array.isArray(user.following)) {
         return new Set(user.following.filter(Boolean).map(String)).size;
     }
@@ -51,9 +53,6 @@ export function getFollowingCount(user) {
     }
     if (Array.isArray(user.theoDoi)) {
         return new Set(user.theoDoi.filter(Boolean).map(String)).size;
-    }
-    if (Array.isArray(user.listFavorite)) {
-        return new Set(user.listFavorite.filter(Boolean).map(String)).size;
     }
     return 0;
 }

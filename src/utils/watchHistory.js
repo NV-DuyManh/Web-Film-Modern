@@ -12,24 +12,20 @@ export function formatTime(totalSeconds) {
 export function saveResume(movieId, { episodeId, episodeNumber, seconds }, userId = null) {
     if (!movieId || !episodeId || seconds <= 0) return;
     try {
-        const keys = [STORAGE_KEY];
-        if (userId) keys.push(`${STORAGE_KEY}_${userId}`);
-
-        for (const key of keys) {
-            const all = JSON.parse(localStorage.getItem(key) || '{}');
-            if (!all[movieId]) {
-                all[movieId] = { episodes: {} };
-            }
-            all[movieId].latestEpisodeId = episodeId;
-            all[movieId].latestEpisodeNumber = episodeNumber;
-            all[movieId].updatedAt = Date.now();
-            
-            // Đảm bảo có object episodes
-            if (!all[movieId].episodes) all[movieId].episodes = {};
-            all[movieId].episodes[episodeId] = seconds;
-
-            localStorage.setItem(key, JSON.stringify(all));
+        const key = userId ? `${STORAGE_KEY}_${userId}` : STORAGE_KEY;
+        const all = JSON.parse(localStorage.getItem(key) || '{}');
+        if (!all[movieId]) {
+            all[movieId] = { episodes: {} };
         }
+        all[movieId].latestEpisodeId = episodeId;
+        all[movieId].latestEpisodeNumber = episodeNumber;
+        all[movieId].updatedAt = Date.now();
+        
+        // Đảm bảo có object episodes
+        if (!all[movieId].episodes) all[movieId].episodes = {};
+        all[movieId].episodes[episodeId] = seconds;
+
+        localStorage.setItem(key, JSON.stringify(all));
     } catch { /* ignore */ }
 }
 
@@ -38,7 +34,7 @@ export function getResume(movieId, userId = null) {
     try {
         if (userId) {
             const userStore = JSON.parse(localStorage.getItem(`${STORAGE_KEY}_${userId}`) || 'null');
-            if (userStore && userStore[movieId]) return userStore[movieId];
+            return userStore?.[movieId] || null;
         }
         const all = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
         return all[movieId] || null;
@@ -48,19 +44,15 @@ export function getResume(movieId, userId = null) {
 export function clearResume(movieId, episodeId = null, userId = null) {
     if (!movieId) return;
     try {
-        const keys = [STORAGE_KEY];
-        if (userId) keys.push(`${STORAGE_KEY}_${userId}`);
-
-        for (const key of keys) {
-            const all = JSON.parse(localStorage.getItem(key) || '{}');
-            if (all[movieId]) {
-                if (episodeId && all[movieId].episodes) {
-                    delete all[movieId].episodes[episodeId];
-                } else {
-                    delete all[movieId];
-                }
-                localStorage.setItem(key, JSON.stringify(all));
+        const key = userId ? `${STORAGE_KEY}_${userId}` : STORAGE_KEY;
+        const all = JSON.parse(localStorage.getItem(key) || '{}');
+        if (all[movieId]) {
+            if (episodeId && all[movieId].episodes) {
+                delete all[movieId].episodes[episodeId];
+            } else {
+                delete all[movieId];
             }
+            localStorage.setItem(key, JSON.stringify(all));
         }
     } catch { /* ignore */ }
 }
@@ -71,9 +63,10 @@ export function getWatchedMoviesCount(userId = null, resumeDataOverride = null) 
         if (!resumeData) {
             if (userId) {
                 const userStore = JSON.parse(localStorage.getItem(`${STORAGE_KEY}_${userId}`) || 'null');
-                if (userStore) resumeData = userStore;
-            }
-            if (!resumeData) {
+                // Authenticated users strictly use user-scoped store; no fallback to generic key
+                resumeData = userStore || {};
+            } else {
+                // Generic key is only used for legacy/anonymous guest sessions
                 resumeData = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
             }
         }
