@@ -1,8 +1,9 @@
-name: Auto Sync Episodes 24/7
+name: Daily Movie Catalog Maintenance
 
 on:
   schedule:
-    - cron: '17,47 * * * *'
+    # 02:23 Vietnam time, once each day.
+    - cron: '23 19 * * *'
   workflow_dispatch:
     inputs:
       dry_run:
@@ -10,12 +11,12 @@ on:
         type: boolean
         default: false
       force:
-        description: 'Bỏ qua thời gian chờ giữa hai lần chạy'
+        description: 'Chạy lại dù đã kiểm tra hôm nay'
         type: boolean
         default: false
 
 jobs:
-  sync-episodes:
+  maintain-catalog:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     concurrency:
@@ -24,22 +25,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-
       - name: Install dependencies
         run: npm ci
-
-      - name: Run Episode Cloud Sync
-        if: ${{ !cancelled() }}
+      - name: Maintain Movie Catalog
         env:
           DRY_RUN: ${{ inputs.dry_run }}
           FORCE: ${{ inputs.force }}
         run: |
           args=()
-          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          if [ "$DRY_RUN" != "true" ]; then args+=(--apply); fi
           if [ "$FORCE" = "true" ]; then args+=(--force); fi
-          node scripts/cloudSync.mjs "${args[@]}"
+          node scripts/maintainMovieCatalog.mjs "${args[@]}"

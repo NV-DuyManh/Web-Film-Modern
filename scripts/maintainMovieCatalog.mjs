@@ -24,8 +24,9 @@ async function hasReferences(movieID) {
 
 async function maintain() {
     const settings = (await getDocFromServer(settingsRef)).data() || {};
-    const interval = 6 * 60 * 60 * 1000;
-    if (!force && Date.now() - Number(settings.lastSuccessAt || 0) < interval) {
+    const vietnamDay = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' });
+    const lastSuccessAt = Number(settings.lastSuccessAt || 0);
+    if (!force && lastSuccessAt > 0 && vietnamDay.format(lastSuccessAt) === vietnamDay.format(Date.now())) {
         console.log('[CatalogMaintenance] Chưa đến lần kiểm tra tiếp theo.');
         return;
     }
