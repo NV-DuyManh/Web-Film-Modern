@@ -16,7 +16,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const rangeSelectId = useId();
     const [chosenRange, setChosenRange] = useState(null);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
-    const CHUNK_SIZE = 80;
+    const CHUNK_SIZE = 120;
     const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
     const subscriptions = useSubscriptions();
