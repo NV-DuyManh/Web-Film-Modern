@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaMobileAlt, FaFacebookF, FaPlay, FaLinkedinIn, FaStar } from 'react-icons/fa';
+import { FaApple, FaFacebookF, FaGooglePlay, FaLinkedinIn, FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Logo from '../../../assets/Logo.png';
 import Logo2 from '../../../assets/Logo2.png';
@@ -72,25 +72,25 @@ function FooterClient() {
                 <div className='w-full min-[1150px]:justify-self-end'>
                     <div className='w-full max-w-140 rounded-3xl border border-white/10 bg-white/3 p-7 text-center shadow-[0_20px_70px_rgba(0,0,0,0.35)] backdrop-blur-sm'>
                         <h2 className='text-xl font-black uppercase leading-snug tracking-wide text-gray-200 md:text-2xl'>
-                            Xem MFILM trên máy tính và điện thoại
+                            Tải ứng dụng MFILM trên thiết bị di động để trải nghiệm mượt mà hơn
                         </h2>
 
                         <div className='mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row'>
-                            <Link to="/ho-tro#thiet-bi" className='flex min-h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 py-3 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
-                                <FaMobileAlt className='shrink-0 text-3xl text-cyan-400' />
+                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
+                                <FaApple className='text-4xl' />
                                 <div className='text-left leading-none'>
-                                    <p className='text-xs font-semibold text-gray-400'>Truy cập nhanh</p>
-                                    <h3 className='mt-1 text-base font-bold'>Thêm vào màn hình</h3>
+                                    <p className='text-xs font-semibold'>Download on the</p>
+                                    <h3 className='text-2xl font-bold'>App Store</h3>
                                 </div>
-                            </Link>
+                            </div>
 
-                            <Link to="/film-new" className='flex min-h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 py-3 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
-                                <FaPlay className='shrink-0 text-2xl text-yellow-400' />
+                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
+                                <FaGooglePlay className='text-3xl text-green-400' />
                                 <div className='text-left leading-none'>
-                                    <p className='text-xs font-semibold text-gray-400'>Khám phá ngay</p>
-                                    <h3 className='mt-1 text-base font-bold'>Phim mới cập nhật</h3>
+                                    <p className='text-xs font-semibold'>GET IT ON</p>
+                                    <h3 className='text-2xl font-bold'>Google Play</h3>
                                 </div>
-                            </Link>
+                            </div>
                         </div>
 
                         <div className='mt-8 flex w-full items-center justify-center'>
