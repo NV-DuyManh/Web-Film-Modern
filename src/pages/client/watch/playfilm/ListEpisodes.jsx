@@ -1,8 +1,8 @@
 import { normalizeEpisodes, episodeInfo, episodeKey, episodeLabel } from '../../../../utils/episodes';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState, useId } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
-import { FaLock } from 'react-icons/fa';
+import { FaLock, FaChevronLeft, FaChevronRight, FaChevronDown } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
@@ -13,6 +13,7 @@ import ModalDetail from '../detailFilm/ModalDetail';
 
 function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const { slug } = useParams();
+    const rangeSelectId = useId();
     const [chosenRange, setChosenRange] = useState(null);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
     const CHUNK_SIZE = 80;
@@ -79,6 +80,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const requestedRange = chosenRange?.movieId === movie?.id && chosenRange?.activeKey === activeKey ? chosenRange.index : activeRange;
     const selectedRange = Math.min(requestedRange, Math.max(0, ranges.length - 1));
     const currentEpisodes = hasRanges ? ranges[selectedRange] : uniqueEpisodes;
+    const chooseRange = index => setChosenRange({ index, movieId: movie?.id, activeKey });
 
     if (!episodeShow || episodeShow.length === 0 || uniqueEpisodes.length === 0) {
         return (
@@ -92,30 +94,31 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
         <div className="flex flex-col gap-4 py-1">
 
             {hasRanges && (
-                <div className="flex flex-col sm:flex-row sm:items-start gap-3 pb-3 border-b border-slate-700/60 w-full min-w-0">
-                    <p className="text-xs font-black bg-linear-to-r from-amber-400 to-yellow-500 text-transparent bg-clip-text uppercase tracking-widest shrink-0 inline drop-shadow-[0_0_8px_rgba(251,191,36,0.4)] mr-1 sm:pt-2">
-                        Chọn phần:
-                    </p>
-                    <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0" role="group" aria-label="Chọn khoảng tập phim">
-                        {ranges.map((chunk, idx) => {
-                            const startEp = episodeInfo(chunk[0])?.number ?? (idx * CHUNK_SIZE + 1);
-                            const endEp = episodeInfo(chunk[chunk.length - 1])?.end ?? Math.min((idx + 1) * CHUNK_SIZE, uniqueEpisodes.length);
-                            const isSelected = selectedRange === idx;
-                            return (
-                                <button
-                                    key={idx}
-                                    onClick={() => setChosenRange({ index: idx, movieId: movie?.id, activeKey })}
-                                    aria-pressed={isSelected}
-                                    aria-label={`Tập ${startEp} đến ${endEp}`}
-                                    className={`px-4 py-1.5 rounded-xl text-xs font-extrabold transition duration-300 cursor-pointer whitespace-nowrap border ${isSelected
-                                        ? "bg-linear-to-r from-amber-400 to-yellow-500 text-slate-950 border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.4)]"
-                                        : "bg-[#0d121f] text-slate-300 hover:text-white hover:bg-[#161d30] border-slate-700/80"
-                                        }`}
-                                >
-                                    {startEp}–{endEp}
-                                </button>
-                            );
-                        })}
+                <div className="flex flex-wrap items-end gap-3 pb-4 border-b border-slate-700/60 w-full min-w-0" role="group" aria-label="Chọn khoảng tập phim">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 min-w-0 grow basis-40">
+                        <label htmlFor={rangeSelectId} className="text-[11px] font-bold uppercase tracking-wider text-slate-400 shrink-0">Khoảng tập</label>
+                        <div className="relative w-full sm:max-w-56 min-w-0">
+                            <select id={rangeSelectId} value={selectedRange} onChange={event => chooseRange(Number(event.target.value))}
+                                className="w-full h-10 appearance-none rounded-xl border border-amber-400/35 bg-[#0d121f] pl-3 pr-8 text-sm font-bold tabular-nums text-amber-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 hover:border-amber-400/70 transition-colors">
+                                {ranges.map((chunk, index) => <option key={index} value={index}>
+                                    {episodeInfo(chunk[0])?.number}–{episodeInfo(chunk.at(-1))?.end}
+                                </option>)}
+                            </select>
+                            <FaChevronDown aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-amber-300/70" />
+                        </div>
+                    </div>
+                    <div className="flex items-center gap-1 sm:gap-2 ml-auto shrink-0">
+                        <button type="button" aria-label="Khoảng tập trước" title="Khoảng tập trước" disabled={selectedRange === 0} onClick={() => chooseRange(selectedRange - 1)}
+                            className="flex h-10 w-9 items-center justify-center rounded-xl border border-slate-600/60 bg-slate-800/60 text-slate-300 hover:border-amber-400/60 hover:text-amber-300 disabled:opacity-30 disabled:cursor-default transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-yellow-400">
+                            <FaChevronLeft aria-hidden="true" className="text-xs" />
+                        </button>
+                        <span aria-live="polite" aria-label={`Nhóm tập ${selectedRange + 1} trên ${ranges.length}`} className="min-w-10 text-center text-xs tabular-nums font-semibold text-slate-200">
+                            {selectedRange + 1}<span className="text-slate-500"> / {ranges.length}</span>
+                        </span>
+                        <button type="button" aria-label="Khoảng tập tiếp theo" title="Khoảng tập tiếp theo" disabled={selectedRange === ranges.length - 1} onClick={() => chooseRange(selectedRange + 1)}
+                            className="flex h-10 w-9 items-center justify-center rounded-xl border border-slate-600/60 bg-slate-800/60 text-slate-300 hover:border-amber-400/60 hover:text-amber-300 disabled:opacity-30 disabled:cursor-default transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-yellow-400">
+                            <FaChevronRight aria-hidden="true" className="text-xs" />
+                        </button>
                     </div>
                 </div>
             )}
