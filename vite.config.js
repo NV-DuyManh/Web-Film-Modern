@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
+import { assetCachePlugin } from './src/utils/assetCache.js'
 
 function vercelAiDevPlugin() {
     return {
@@ -61,13 +62,15 @@ export default defineConfig({
                 skipWaiting: true,
                 // Không cache navigation requests (index.html) - luôn lấy từ network
                 navigateFallback: null,
+                globIgnores: ['**/index.html', '**/app-recovery.js'],
                 runtimeCaching: [
                     {
                         // Cache các file assets có hash (JS, CSS) - immutable
-                        urlPattern: /\/assets\/.*\.(js|css|woff2?|ttf|eot)$/i,
+                        urlPattern: ({ url, sameOrigin }) => sameOrigin && /^\/assets\/.*\.(js|css|woff2?|ttf|eot)$/i.test(url.pathname),
                         handler: 'CacheFirst',
                         options: {
                             cacheName: 'assets-cache',
+                            plugins: [assetCachePlugin],
                             expiration: {
                                 maxEntries: 100,
                                 maxAgeSeconds: 60 * 60 * 24 * 365, // 1 năm
