@@ -1,5 +1,6 @@
+import { extendedKnowledge } from './extendedKnowledge.js';
 // Reviewed MFILM knowledge. Variants train retrieval, never change model weights.
-export const KNOWLEDGE_VERSION = '2026-10-08.1';
+export const KNOWLEDGE_VERSION = '2026-10-08.2';
 const item = (id, questions, answer, tags = []) => ({ id, questions, answer, tags });
 export const knowledgeBase = [
     item('identity', ['Bạn là ai?', 'MFILM AI là gì?', 'Bạn làm được gì?', 'Bạn giúp được gì cho tôi?'], 'Mình là trợ lý MFILM. Mình có thể tìm phim trong kho, gợi ý theo thể loại hoặc gói xem, giải thích thông tin phim và hướng dẫn sử dụng web. Bạn muốn tìm phim hay cần hỗ trợ việc gì?'),
@@ -23,7 +24,7 @@ export const knowledgeBase = [
     item('watchlist', ['Tạo danh sách phim thế nào?', 'Watchlist là gì?', 'Thêm vào danh sách ở đâu?'], 'Danh sách giúp bạn gom các phim muốn xem. Đăng nhập, dùng nút **Thêm vào** ở trang phim rồi chọn danh sách. Quản lý tại Tài khoản → Danh Sách.'),
     item('search', ['Tìm phim ở đâu?', 'Cách tìm kiếm phim', 'Tìm phim bằng tên tiếng Anh được không?'], 'Dùng ô tìm kiếm ở đầu trang với tên phim tiếng Việt hoặc tên khác. Bạn cũng có thể nói tên phim cho mình, hoặc lọc theo thể loại, quốc gia, diễn viên và chủ đề.'),
     item('login', ['Đăng nhập ở đâu?', 'Làm sao đăng nhập?', 'Tạo tài khoản thế nào?', 'Đăng ký tài khoản ở đâu?'], 'Bấm **Thành viên** ở đầu trang để mở đăng nhập hoặc đăng ký. Dùng cùng tài khoản nếu bạn muốn đồng bộ lịch sử xem giữa các thiết bị.'),
-    item('password', ['Quên mật khẩu thì làm sao?', 'Lấy lại mật khẩu ở đâu?'], 'Mở cửa sổ đăng nhập và chọn **Quên mật khẩu** nếu lựa chọn này hiển thị. Với đăng nhập Google, khôi phục quyền truy cập qua Google. Nếu còn vướng, liên hệ MFILM tại [Hỗ trợ](/ho-tro). Không gửi mật khẩu trong chat.'),
+    item('password', ['Quên mật khẩu thì làm sao?', 'Lấy lại mật khẩu ở đâu?'], 'Với tài khoản Google, khôi phục quyền truy cập qua Google rồi đăng nhập lại. Nếu dùng email/mật khẩu hoặc nút Quên mật khẩu chưa hoạt động, liên hệ MFILM tại [Hỗ trợ](/ho-tro) để được hướng dẫn xác minh tài khoản. Không gửi mật khẩu trong chat.'),
     item('profile', ['Sửa tên tài khoản ở đâu?', 'Đổi ảnh đại diện thế nào?', 'Sửa thông tin cá nhân thế nào?'], 'Mở Tài khoản → **Tài Khoản**, dùng nút **Chỉnh sửa** để cập nhật thông tin. Bấm biểu tượng máy ảnh trên ảnh đại diện để thay ảnh nếu tính năng hiển thị.'),
     item('contact', ['Liên hệ hỗ trợ ở đâu?', 'Zalo của MFILM là gì?', 'Báo lỗi phim ở đâu?', 'Tôi cần hỗ trợ'], 'Bạn có thể liên hệ MFILM qua nút **Liên hệ MFILM** trên [trang Hỗ trợ](/ho-tro). Khi báo lỗi, gửi tên phim, tập, server và thao tác gặp lỗi.'),
     item('mobile', ['Có ứng dụng điện thoại không?', 'Cài MFILM thế nào?', 'Thêm web vào màn hình chính', 'Xem trên iPhone thế nào?', 'Xem phim trên Android thế nào?'], 'Mở mfilm.online trong trình duyệt điện thoại. iPhone/iPad: Safari → Chia sẻ → Thêm vào Màn hình chính. Android: Chrome → menu ⋮ → Thêm vào màn hình chính hoặc Cài đặt ứng dụng nếu có. Xem [hướng dẫn](/ho-tro#thiet-bi).'),
@@ -49,4 +50,5 @@ export const knowledgeBase = [
     item('rating', ['Giới hạn tuổi phim là gì?', 'T13 T16 T18 là gì?', 'Phân loại độ tuổi là gì?'], 'Các nhãn độ tuổi giúp chọn nội dung phù hợp, ví dụ T13, T16, T18 dành cho người đạt độ tuổi tương ứng. Hãy đọc phân loại và mô tả từng phim; nội dung hoạt hình cũng có thể dành cho người lớn.'),
     item('history-memory', ['Bạn có nhớ câu trả lời không?', 'Bạn có học từ câu trả lời không?', 'AI có bộ nhớ không?'], 'Mình ưu tiên kiến thức MFILM và dữ liệu phim hiện tại. Với câu chưa biết, mình nhờ mô hình hỗ trợ và ghi nhớ câu trả lời phù hợp trong bộ nhớ dùng chung. Các câu liên quan tài khoản cá nhân, ngữ cảnh riêng hoặc dữ liệu thay đổi theo thời gian không đưa vào bộ nhớ chung.'),
     item('privacy-memory', ['Xóa bộ nhớ AI thế nào?', 'Xóa câu trả lời đã học', 'Câu trả lời này sai'], 'Bấm **Quên câu trả lời** dưới câu được học để xóa bản trên máy và yêu cầu xóa bản đã học dùng chung. Dòng trạng thái dưới câu trả lời cho biết bản nào đã được xóa. Kiến thức MFILM được biên soạn sẵn vẫn được giữ.'),
+    ...extendedKnowledge,
 ];

@@ -1,7 +1,20 @@
 {
-  "version": "2026-10-08.1",
-  "topics": 47,
-  "uniqueQuestions": 147,
-  "samples": 441,
-  "retrievalPassed": 441
+  "version": "2026-10-08.2",
+  "topics": 297,
+  "newlyAuthoredTopics": 250,
+  "uniqueQuestions": 397,
+  "samples": 1191,
+  "retrievalPassed": 1191,
+  "categories": [
+    "Khám phá MFILM",
+    "Tài khoản và danh sách",
+    "Thuê phim và gói thành viên",
+    "Xem phim và khắc phục lỗi",
+    "Tập phim, tiến độ và phụ đề",
+    "Hình ảnh, âm thanh và trình duyệt",
+    "Thể loại và cách chọn phim",
+    "Kể chuyện và sản xuất phim",
+    "Anime và thuật ngữ của người xem",
+    "Trợ lý AI và kiến thức phổ thông"
+  ]
 }

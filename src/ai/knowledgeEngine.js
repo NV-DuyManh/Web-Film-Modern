@@ -10,6 +10,7 @@ const filler = new Set('ban toi minh cho giup nhe nha a oi voi xin lam on cach n
 export const questionTokens = value => normalizeQuestion(value).split(' ').filter(token => token && !filler.has(token));
 const discriminators = /\b(khong|chua|co|mua|thue|gia|xoa|doi|bao|may|tai|mat|dang|tien|truyen|hau|fps|4k|1080p|anime|manga|ova|ona|oad|vietsub|thuyet|long)\b/g;
 const indexed = knowledgeBase.map(entry => ({ ...entry, variants: entry.questions.map(q => ({ normalized: normalizeQuestion(q), tokens: questionTokens(q) })) }));
+const exactQuestions = new Map(indexed.flatMap(entry => entry.variants.map(variant => [variant.normalized, entry])));
 
 // Confidence is lexical coverage, not a claim that an external model answer is true.
 export function retrieveKnowledge(prompt) {
@@ -17,6 +18,10 @@ export function retrieveKnowledge(prompt) {
     if (!q || q.length > 500) return null;
     if (/^(xin chao|chao|hello|hi|hey|alo)( ban| ai| mfilm)?$/.test(q)) return { reply: 'Chào bạn! Bạn muốn tìm phim, gợi ý theo tâm trạng hay cần hướng dẫn sử dụng MFILM?', source: 'knowledge', confidence: 1, knowledgeId: 'greeting' };
     if (/^(cam on|thank you|thanks)( ban| nhe| nha)?$/.test(q)) return { reply: 'Rất vui được giúp bạn! Khi cần tìm phim hoặc hỗ trợ, cứ nhắn mình nhé. 🍿', source: 'knowledge', confidence: 1, knowledgeId: 'thanks' };
+    // Strip a conversational request only when its remainder is a complete known question.
+    const unwrapped = q.replace(/^(?:(?:toi|minh) )?(?:muon biet|can biet|muon hoi|can hoi|cho toi biet|cho minh biet|hay giai thich|giai thich)(?: cho (?:toi|minh))? /, '');
+    const exact = exactQuestions.get(q) || exactQuestions.get(unwrapped);
+    if (exact) return { reply: exact.answer, source: 'knowledge', confidence: 1, knowledgeId: exact.id };
     const tokens = questionTokens(q);
     let best;
     let runner = 0;

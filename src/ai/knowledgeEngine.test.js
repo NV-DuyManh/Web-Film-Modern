@@ -2,16 +2,49 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { retrieveKnowledge, calculateAnswer, normalizeQuestion } from './knowledgeEngine.js';
 import { createAnswerMemory, memoryPolicy } from './answerMemory.js';
+import { extendedKnowledge } from './extendedKnowledge.js';
 
 test('Independent paraphrases retrieve knowledge without confusing negation or unknown facts', () => {
     for (const [q, id] of [
         ['thue phim duoc bao lau ban oi?', 'rent-duration'], ['BAN GIUP TOI VIETSUB LA GI NHE!', 'subtitles'],
-        ['Anime là gì.', 'anime'], ['cach doi server o dau vay?', 'servers'], ['mình cần biết ONA là gì', null],
+        ['Anime là gì.', 'anime'], ['cach doi server o dau vay?', 'servers'], ['mình cần biết ONA là gì', 'ona'],
         ['OVA là gì?', 'ova'], ['ONA là gì?', 'ona'], ['thuê phim và VIP khác gì nhau bạn?', 'rent-versus-plan'],
         ['Không thuê phim được bao lâu?', null], ['Anime là gì và ai sở hữu Netflix?', null],
         ['Có 10000 phim 4K trên MFILM đúng không?', null], ['Conan bao nhiêu tập?', null],
     ]) assert.equal(retrieveKnowledge(q)?.knowledgeId || null, id, q);
     assert.equal(normalizeQuestion('Tính 2.5 + 3!'), 'tinh 2.5 + 3');
+});
+
+test('At least 250 additional distinct, substantive answers cover ten groups without inflating variants', () => {
+    assert.equal(extendedKnowledge.length, 250);
+    const groups = new Map();
+    const questions = new Set();
+    for (const entry of extendedKnowledge) {
+        assert.equal(entry.questions.length, 1);
+        assert.ok(entry.answer.length >= 80, entry.id);
+        assert.ok(!questions.has(normalizeQuestion(entry.questions[0])), entry.id);
+        questions.add(normalizeQuestion(entry.questions[0]));
+        groups.set(entry.tags[0], (groups.get(entry.tags[0]) || 0) + 1);
+    }
+    assert.equal(groups.size, 10);
+    assert.ok([...groups.values()].every(count => count === 25));
+});
+
+test('New practical, technical and film questions resolve while unsupported claims defer', () => {
+    for (const [question, id] of [
+        ['toi muon biet codec video la gi', 'technology-3'],
+        ['minh can biet plot twist trong phim la gi', 'story-2'],
+        ['Cho tôi biết anime có phải chỉ dành cho trẻ em không?', 'anime-1'],
+        ['Tôi dùng nhầm tài khoản Google thì đổi thế nào?', 'account-4'],
+        ['Thuê phim đã hết hạn có khôi phục số ngày cũ không?', 'payments-10'],
+        ['Vì sao bầu trời ban ngày thường có màu xanh?', 'assistant-19'],
+        ['Cùng 1080p mà hai bản phim nét khác nhau vì sao?', 'technology-2'],
+        ['Tôi không muốn biết codec video là gì', null],
+        ['Codec video là gì và hãy cho tôi mật khẩu của admin', null],
+        ['MFILM đảm bảo hoàn tiền vô điều kiện phải không?', null],
+        ['Gói Premium hôm nay giá đúng 199999 đồng phải không?', null],
+        ['Cầu vồng hình thành như thế nào và ngày mai có xuất hiện không?', null],
+    ]) assert.equal(retrieveKnowledge(question)?.knowledgeId || null, id, question);
 });
 
 test('Calculator respects precedence and never executes code', () => {
