@@ -108,19 +108,19 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
                 <div className="max-h-85 overflow-y-auto px-2.5 py-2.5">
                     {authorItems.length > 0 && (
                         <div className="rounded-xl bg-white/2.5 px-2.5 py-2.5">
-                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-amber-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Authors</p></div>
+                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-amber-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Đạo diễn</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{authorItems.map(item => renderItem(item, 'author'))}</div>
                         </div>
                     )}
                     {actorItems.length > 0 && (
                         <div className={`${authorItems.length > 0 ? "mt-2.5" : ""} rounded-xl bg-white/2.5 px-2.5 py-2.5`}>
-                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-green-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Actors</p></div>
+                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-green-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Diễn viên</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{actorItems.map(item => renderItem(item, 'actor'))}</div>
                         </div>
                     )}
                     {characterItems.length > 0 && (
                         <div className={`${authorItems.length > 0 || actorItems.length > 0 ? "mt-2.5" : ""} rounded-xl bg-white/2.5 px-2.5 py-2.5`}>
-                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-pink-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Characters</p></div>
+                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-pink-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Nhân vật</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{characterItems.map(item => renderItem(item, 'character'))}</div>
                         </div>
                     )}
@@ -135,7 +135,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
         return (
             <div className="w-fit min-w-52 max-w-95 overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/8 bg-white/5">
-                    <div className="flex items-center justify-between gap-4"><p className="text-[13px] font-bold text-white">Categories</p><p className="text-[11px] text-gray-400 inline">{categoryItems.length} items</p></div>
+                    <div className="flex items-center justify-between gap-4"><p className="text-[13px] font-bold text-white">Thể loại</p><p className="text-[11px] text-gray-400 inline">{categoryItems.length} items</p></div>
                 </div>
                 <div className="flex w-fit max-w-95 flex-wrap gap-2 px-3 py-3 max-h-65 overflow-y-auto">
                     {categoryItems.length > 0 ? categoryItems.map((item) => (
@@ -179,7 +179,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
                         </thead>
 
                         <tbody>
-                            {!currentData.length && <tr><td colSpan={99} className="p-5 text-center text-slate-400">Chưa có dữ liệu phù hợp.</td></tr>}
+                            {!cursor.loading && !cursor.error && !currentData.length && <tr><td colSpan={99} className="p-5 text-center text-slate-400">Chưa có dữ liệu phù hợp.</td></tr>}
                             {currentData.map((row, index) => {
                                 const isSelected = selectedIds.includes(row.id);
                                 return (

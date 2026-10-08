@@ -22,7 +22,7 @@ function ModalCategory({open, onChangeInput, handleClose, addCategory, error, lo
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
-                    {category.id  ? "Update Category" : "Add New Category"}
+                    {category.id  ? "CẬP NHẬT THỂ LOẠI" : "THÊM THỂ LOẠI"}
                 </p>
                 <button
                     onClick={handleClose}
@@ -38,7 +38,7 @@ function ModalCategory({open, onChangeInput, handleClose, addCategory, error, lo
                     name="name"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Name"
+                    label="Tên"
                     variant="outlined"
                     value={category.name}
                     helperText={error.name}

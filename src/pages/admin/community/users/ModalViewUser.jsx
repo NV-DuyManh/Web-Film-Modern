@@ -146,7 +146,7 @@ function ModalViewUser({ open, handleClose, user }) {
                             <p className="text-slate-200 font-medium">{user.phone || <EmptyText />}</p>
                         </GlowCard>
 
-                        <GlowCard title="Address" icon={FaMapMarkerAlt} color="purple">
+                        <GlowCard title="Địa chỉ" icon={FaMapMarkerAlt} color="purple">
                             <p className="text-slate-200 font-medium truncate">{user.address || <EmptyText />}</p>
                         </GlowCard>
 
@@ -154,7 +154,7 @@ function ModalViewUser({ open, handleClose, user }) {
                             <p className="text-slate-200 font-medium">{user.dateOfBirth || <EmptyText />}</p>
                         </GlowCard>
 
-                        <GlowCard title="Gender" icon={FaVenusMars} color="yellow">
+                        <GlowCard title="Giới tính" icon={FaVenusMars} color="yellow">
                             <p className="text-slate-200 font-medium">
                                 {user.sexID === 'Male' ? 'Male' : user.sexID === 'Female' ? 'Female' : user.sexID === 'Other' ? 'Other' : <EmptyText />}
                             </p>

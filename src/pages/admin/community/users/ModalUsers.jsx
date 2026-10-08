@@ -134,7 +134,7 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
 
                     <FormControl className="gender-box-wrapper" error={!!error.sexID}>
                         <div className={`gender-box ${!!error.sexID ? 'error' : ''}`}>
-                            <p className="gender-label inline">Gender</p>
+                            <p className="gender-label inline">Giới tính</p>
                             <RadioGroup
                                 name="sexID"
                                 sx={{ flexDirection: "row", width: '100%', justifyContent: 'space-around' }}
@@ -151,7 +151,7 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
 
                     <FormControl className="gender-box-wrapper" error={!!error.role}>
                         <div className={`gender-box ${!!error.role ? 'error' : ''}`}>
-                            <p className="gender-label inline">Role</p>
+                            <p className="gender-label inline">Vai trò</p>
                             <RadioGroup
                                 name="role"
                                 sx={{ flexDirection: "row", width: '100%', justifyContent: 'space-around' }}
@@ -261,7 +261,7 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                                         <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
                                         <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                             <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-2" />
-                                            <p className="text-xs text-cyan-300 font-bold uppercase tracking-widest inline">Upload</p>
+                                            <p className="text-xs text-cyan-300 font-bold uppercase tracking-widest inline">Tải ảnh lên</p>
                                         </div>
                                     </Button>
                                 </div>

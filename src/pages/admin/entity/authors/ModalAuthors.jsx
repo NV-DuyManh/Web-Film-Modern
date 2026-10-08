@@ -59,7 +59,7 @@ function ModalAuthors({ open, onChangeInput, handleClose, addauthor, error, load
                     name="name"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Name"
+                    label="Tên"
                     variant="outlined"
                     value={author.name}
                     helperText={error?.name}
@@ -99,7 +99,7 @@ function ModalAuthors({ open, onChangeInput, handleClose, addauthor, error, load
 
                 <FormControl className="gender-box-wrapper" error={!!error?.sexID}>
                     <div className={`gender-box ${!!error?.sexID ? 'error' : ''}`}>
-                        <p className="gender-label inline">Gender</p>
+                        <p className="gender-label inline">Giới tính</p>
                         <RadioGroup
                             row
                             name="sexID"
@@ -140,7 +140,7 @@ function ModalAuthors({ open, onChangeInput, handleClose, addauthor, error, load
                                     <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
                                     <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-1" />
-                                        <p className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider inline">Upload</p>
+                                        <p className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider inline">Tải ảnh lên</p>
                                     </div>
                                 </Button>
                             </div>

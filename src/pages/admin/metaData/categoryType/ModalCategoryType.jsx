@@ -38,7 +38,7 @@ function ModalCategoryType({ open, onChangeInput, handleClose, addCategoryType, 
                     name="name"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Name"
+                    label="Tên"
                     variant="outlined"
                     value={categoryType.name}
                     helperText={error.name}

@@ -177,16 +177,16 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                     <div className="relative bg-white/2 p-5 rounded-2xl border border-cyan-500/20 overflow-hidden shadow-[0_0_15px_rgba(6,182,212,0.05)]">
                         <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-cyan-400 to-blue-500 rounded-l-full"></div>
                         <div className="flex justify-between items-center h-4 relative z-10 pr-2">
-                            <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest pl-3 m-0">Task 1: General Info</p>
+                            <p className="text-cyan-400 text-xs font-bold uppercase tracking-widest pl-3 m-0">1. Thông tin chung</p>
                             <FormControlLabel
                                 control={<Checkbox checked={movie.isHot || false} onChange={onCheckboxChange} name="isHot" sx={{ color: '#ef4444', '&.Mui-checked': { color: '#f87171' }, padding: '4px' }} />}
-                                label={<p className="text-gray-300 text-sm font-semibold ml-1 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] leading-none mt-0.5">🔥 Hot Movie</p>}
+                                label={<p className="text-gray-300 text-sm font-semibold ml-1 flex items-center gap-1 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)] leading-none mt-0.5">🔥 Phim nổi bật</p>}
                                 sx={{ margin: 0 }}
                             />
                         </div>
                         <div className="grid grid-cols-2 gap-4">
-                            <TextField variant="outlined" className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Movie Name" value={movie.name} error={!!error?.name} helperText={error?.name} />
-                            <TextField variant="outlined" className="modal-input-x" name="otherName" onChange={onChangeInput} fullWidth label="Other/Original Name" value={movie.otherName} error={!!error?.otherName} helperText={error?.otherName} />
+                            <TextField variant="outlined" className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Tên phim" value={movie.name} error={!!error?.name} helperText={error?.name} />
+                            <TextField variant="outlined" className="modal-input-x" name="otherName" onChange={onChangeInput} fullWidth label="Tên khác / tên gốc" value={movie.otherName} error={!!error?.otherName} helperText={error?.otherName} />
                         </div>
                         <TextField variant="outlined" className="modal-input-x" name="description" onChange={onChangeInput} fullWidth multiline rows={3} label="Giới thiệu" value={movie.description} error={!!error?.description} helperText={error?.description} />
                         <div className="grid grid-cols-2 gap-4">
@@ -202,7 +202,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
 
                     <div className="relative bg-white/2 p-5 rounded-2xl border border-purple-500/20 overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.05)]">
                         <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-purple-400 to-pink-500 rounded-l-full"></div>
-                        <p className="text-purple-400 text-xs font-bold uppercase tracking-widest pl-3">Task 2: Specification</p>
+                        <p className="text-purple-400 text-xs font-bold uppercase tracking-widest pl-3">2. Thông số phim</p>
                         <div className="grid grid-cols-3 gap-4">
                             <Autocomplete
                                 options={STATUS_OPTIONS} getOptionLabel={(opt) => opt?.name || ""} value={STATUS_OPTIONS.find(s => s.id === movie.status) || null}
@@ -221,29 +221,29 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
 
                         <div className="border border-white/10 rounded-xl p-4 bg-slate-900/30">
                             <div className="grid grid-cols-2 gap-4">
-                                <TextField variant="outlined" className="modal-input-x" name="duration" onChange={handleNumberChange} label="Duration (Mins)" value={movie.duration} error={!!error?.duration} helperText={error?.duration} />
-                                <TextField variant="outlined" className="modal-input-x" name="endEpisode" onChange={handleEndEpisodeChange} label="Total Episodes (Max)" value={movie.endEpisode} error={!!error?.endEpisode} helperText={error?.endEpisode} />
+                                <TextField variant="outlined" className="modal-input-x" name="duration" onChange={handleNumberChange} label="Thời lượng (phút)" value={movie.duration} error={!!error?.duration} helperText={error?.duration} />
+                                <TextField variant="outlined" className="modal-input-x" name="endEpisode" onChange={handleEndEpisodeChange} label="Tổng số tập dự kiến" value={movie.endEpisode} error={!!error?.endEpisode} helperText={error?.endEpisode} />
                             </div>
 
                             <div className="grid grid-cols-3 gap-4 mt-6 mb-2">
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasSub || false} onChange={onCheckboxChange} name="hasSub" sx={{ color: '#06b6d4', '&.Mui-checked': { color: '#22d3ee' }, padding: '4px' }} />}
-                                        label={<p className="text-gray-300 text-sm font-semibold ml-1 inline">Subtitled</p>}
+                                        label={<p className="text-gray-300 text-sm font-semibold ml-1 inline">Phụ đề</p>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasDub || false} onChange={onCheckboxChange} name="hasDub" sx={{ color: '#ec4899', '&.Mui-checked': { color: '#f472b6' }, padding: '4px' }} />}
-                                        label={<p className="text-gray-300 text-sm font-semibold ml-1 inline">Dubbed</p>}
+                                        label={<p className="text-gray-300 text-sm font-semibold ml-1 inline">Lồng tiếng</p>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
                                 <div className="flex justify-center items-center pl-2">
                                     <FormControlLabel
                                         control={<Checkbox checked={movie.hasVoice || false} onChange={onCheckboxChange} name="hasVoice" sx={{ color: '#f97316', '&.Mui-checked': { color: '#fb923c' }, padding: '4px' }} />}
-                                        label={<p className="text-gray-300 text-sm font-semibold ml-1 inline">Voiceover</p>}
+                                        label={<p className="text-gray-300 text-sm font-semibold ml-1 inline">Thuyết minh</p>}
                                         sx={{ margin: 0 }}
                                     />
                                 </div>
@@ -270,7 +270,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
 
                         <div className="grid grid-cols-2 gap-4 mt-2">
                             <Autocomplete options={plansList ? [...plansList].sort((a, b) => a.level - b.level) : []} getOptionLabel={(opt) => opt?.name || ""} value={plansList?.find(p => p.id === movie.planID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Gói phim" error={!!error?.planID} helperText={error?.planID} className="modal-input-x" />} />
-                            <Autocomplete options={categoryTypes || []} getOptionLabel={(opt) => opt?.name || ""} value={categoryTypes?.find(c => c.id === movie.categoryTypeID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "categoryTypeID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Category Type" error={!!error?.categoryTypeID} helperText={error?.categoryTypeID} className="modal-input-x" />} />
+                            <Autocomplete options={categoryTypes || []} getOptionLabel={(opt) => opt?.name || ""} value={categoryTypes?.find(c => c.id === movie.categoryTypeID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "categoryTypeID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Loại phim" error={!!error?.categoryTypeID} helperText={error?.categoryTypeID} className="modal-input-x" />} />
                         </div>
                     </div>
                 </div>
@@ -278,10 +278,10 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                 <div className="col-span-12 lg:col-span-5 space-y-6 mt-5">
                     <div className="relative bg-white/2 p-5 rounded-2xl border border-emerald-500/20 space-y-4 overflow-hidden shadow-[0_0_15px_rgba(16,185,129,0.05)]">
                         <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-emerald-400 to-teal-500 rounded-l-full"></div>
-                        <p className="text-green-400 text-xs font-bold uppercase tracking-widest pl-3">Task 3: Classifications</p>
+                        <p className="text-green-400 text-xs font-bold uppercase tracking-widest pl-3">3. Phân loại</p>
 
                         <div className='flex items-center text-white gap-2'>
-                            <label className="font-medium">Categories</label>
+                            <label className="font-medium">Thể loại</label>
                             <TbCategoryFilled onClick={() => handleClickOpenChoose("categories")} className='cursor-pointer text-2xl text-cyan-400 hover:scale-110 transition-transform' />
                             {error?.listCategory && <p className="text-red-500 text-xs italic inline">{error.listCategory}</p>}
                         </div>
@@ -298,7 +298,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                         </div>
 
                         <div className='flex items-center text-white gap-2 mt-4'>
-                            <label className="font-medium">Authors</label>
+                            <label className="font-medium">Đạo diễn</label>
                             <FaUserTie onClick={() => handleClickOpenChoose("authors")} className='cursor-pointer text-2xl text-yellow-400 hover:scale-110 transition-transform' />
                             {error?.listAuthor && <p className="text-red-500 text-xs italic inline">{error.listAuthor}</p>}
                         </div>
@@ -318,7 +318,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                         </div>
 
                         <div className='flex items-center text-white gap-2 mt-4'>
-                            <label className="font-medium">Actors</label>
+                            <label className="font-medium">Diễn viên</label>
                             <FaUsers onClick={() => handleClickOpenChoose("actors")} className='cursor-pointer text-2xl text-pink-400 hover:scale-110 transition-transform' />
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
@@ -337,7 +337,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                         </div>
 
                         <div className='flex items-center text-white gap-2 mt-4'>
-                            <label className="font-medium">Characters</label>
+                            <label className="font-medium">Nhân vật</label>
                             <FaUserNinja onClick={() => handleClickOpenChoose("characters")} className='cursor-pointer text-2xl text-green-400 hover:scale-110 transition-transform' />
                         </div>
                         <div className='text-white flex gap-2 flex-wrap'>
@@ -358,7 +358,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
 
                     <div className="relative bg-white/2 p-5 rounded-2xl border border-pink-500/20 flex flex-col gap-5 overflow-hidden shadow-[0_0_15px_rgba(236,72,153,0.05)]">
                         <div className="absolute top-0 left-0 w-1 h-full bg-linear-to- from-pink-400 to-rose-500 rounded-l-full"></div>
-                        <p className="text-pink-400 text-xs font-bold uppercase tracking-widest text-center pl-3">Task 4: Media Uploads</p>
+                        <p className="text-pink-400 text-xs font-bold uppercase tracking-widest text-center pl-3">4. Hình ảnh</p>
 
                         <div className="flex gap-4">
                             <div className="flex flex-col items-center w-1/3">
@@ -376,7 +376,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                         <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
                                         <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                             <FaCloudUploadAlt className="text-3xl text-pink-400 mb-1" />
-                                            <p className="text-white text-xs font-bold inline">Upload</p>
+                                            <p className="text-white text-xs font-bold inline">Tải ảnh lên</p>
                                             <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
                                         </label>
                                     </div>
@@ -411,7 +411,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                         <img src={bannerPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Banner" />
                                         <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                             <FaCloudUploadAlt className="text-4xl text-yellow-400 mb-1" />
-                                            <p className="text-white text-xs font-bold inline">Upload</p>
+                                            <p className="text-white text-xs font-bold inline">Tải ảnh lên</p>
                                             <VisuallyHiddenInput type="file" onChange={handleBannerChange} accept="image/*" />
                                         </label>
                                     </div>

@@ -3,7 +3,7 @@ import { getCatalogStatus, subscribeCatalogStatus } from '../../../utils/catalog
 import { BsSearch } from 'react-icons/bs';
 import { FaPlus } from 'react-icons/fa';
 
-const labels = { Actor: 'diễn viên', Author: 'đạo diễn', Character: 'nhân vật', Category: 'thể loại', Plan: 'gói', Topic: 'chủ đề', Feature: 'quyền lợi', Package: 'gói dịch vụ', Review: 'đánh giá', Comment: 'bình luận', User: 'người dùng', Movies: 'phim', Users: 'người dùng', Actors: 'diễn viên', Authors: 'đạo diễn', Characters: 'nhân vật', Categories: 'thể loại', Topics: 'chủ đề', Plans: 'gói', Features: 'quyền lợi', Packages: 'gói dịch vụ', Reviews: 'đánh giá', Comments: 'bình luận', RentMovies: 'lượt thuê', Subscriptions: 'đăng ký gói', ShowTimes: 'lịch chiếu', CategoryTypes: 'loại phim' };
+const labels = { Movie: 'phim', Actor: 'diễn viên', Author: 'đạo diễn', Character: 'nhân vật', Category: 'thể loại', Plan: 'gói', Topic: 'chủ đề', Feature: 'quyền lợi', Package: 'gói dịch vụ', Review: 'đánh giá', Comment: 'bình luận', User: 'người dùng', Movies: 'phim', Users: 'người dùng', Actors: 'diễn viên', Authors: 'đạo diễn', Characters: 'nhân vật', Categories: 'thể loại', Topics: 'chủ đề', Plans: 'gói', Features: 'quyền lợi', Packages: 'gói dịch vụ', Reviews: 'đánh giá', Comments: 'bình luận', RentMovies: 'lượt thuê', Subscriptions: 'đăng ký gói', ShowTimes: 'lịch chiếu', CategoryTypes: 'loại phim' };
 const translate = text => {
     if (!text) return text;
     const title = text.match(/^List (.*)$/);

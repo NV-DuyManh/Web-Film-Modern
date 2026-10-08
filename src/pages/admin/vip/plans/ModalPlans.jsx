@@ -34,7 +34,7 @@ function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading,
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
-                    {plan.id  ? "Update Plan" : "Add New Plan"}
+                    {plan.id  ? "CẬP NHẬT GÓI" : "THÊM GÓI"}
                 </p>
                 <button
                     onClick={handleClose}
@@ -50,7 +50,7 @@ function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading,
                     name="name"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Plan Name"
+                    label="Tên gói"
                     variant="outlined"
                     value={plan.name}
                     helperText={error.name}

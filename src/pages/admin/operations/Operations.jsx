@@ -25,6 +25,7 @@ function JobCard({ name, document, schedule }) {
         <h3 className="font-bold text-cyan-300">{name}</h3><p className="text-sm text-slate-400 mt-1">{schedule} · Giờ Việt Nam</p>
         <p role={state.error || failed ? 'alert' : 'status'} className={`mt-3 ${state.error || failed ? 'text-red-300' : 'text-emerald-300'}`}>{state.loading ? 'Đang tải...' : state.error || (running ? 'Đang chạy' : failed ? 'Lần chạy gần nhất có lỗi' : data.lastSuccessAt ? 'Lần chạy gần nhất thành công' : 'Chưa có kết quả được ghi nhận')}</p>
         <p className="text-sm text-slate-400 mt-2">Lần tiếp theo dự kiến: {time(next)}</p>
+        <p className="text-sm text-slate-300 mt-2">Bắt đầu gần nhất: {time(data.lastStartedAt)}</p>
         <p className="text-sm text-slate-300 mt-2">Thành công gần nhất: {time(data.lastSuccessAt)}</p>
         {data.lastErrorAt && <p className="text-sm text-amber-300 mt-1">Lỗi gần nhất: {time(data.lastErrorAt)} · {data.lastError || 'Chưa có chi tiết'}</p>}
         {data.lastSummary && <div className="flex flex-wrap gap-3 text-sm text-slate-300 mt-3">{Object.entries(data.lastSummary).map(([key, value]) => <span key={key}>{({ checked: 'Đã kiểm tra', repaired: 'Đã bổ sung gói/giá', archivedDuplicates: 'Bản trùng đã lưu', protectedDuplicates: 'Bản trùng giữ lại', movies: 'Phim cập nhật', added: 'Tập mới', fixed: 'Link đã sửa' })[key] || key}: <b className="text-amber-300">{value}</b></span>)}</div>}

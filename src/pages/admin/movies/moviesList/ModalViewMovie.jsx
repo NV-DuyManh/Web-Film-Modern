@@ -258,7 +258,7 @@ function ModalViewMovie({ open, handleClose, movie, onEdit }) {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <GlowCard title="Categories" icon={BiSolidCategoryAlt} color="purple">
+                            <GlowCard title="Thể loại" icon={BiSolidCategoryAlt} color="purple">
                                 <div className="flex flex-wrap gap-2">
                                     {movie.listCategory?.map((catId, idx) => {
                                         const cat = categoriesList?.find(c => c.id === catId);
@@ -298,10 +298,10 @@ function ModalViewMovie({ open, handleClose, movie, onEdit }) {
                             <GlowCard title="Directors" icon={FaUserTie} color="yellow">
                                 <AvatarRow items={movie.listAuthor} list={authors} fallback={Logo5} color="yellow" entityType="authors" handleClose={handleClose} />
                             </GlowCard>
-                            <GlowCard title="Actors" icon={FaUsers} color="pink">
+                            <GlowCard title="Diễn viên" icon={FaUsers} color="pink">
                                 <AvatarRow items={movie.listActor} list={actors} fallback={Logo5} color="pink" entityType="actors" handleClose={handleClose} />
                             </GlowCard>
-                            <GlowCard title="Characters" icon={FaUserNinja} color="green">
+                            <GlowCard title="Nhân vật" icon={FaUserNinja} color="green">
                                 <AvatarRow items={movie.listCharacter} list={characters} fallback={Logo5} color="green" entityType="characters" handleClose={handleClose} />
                             </GlowCard>
                         </div>
