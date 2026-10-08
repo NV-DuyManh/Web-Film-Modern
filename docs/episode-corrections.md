@@ -1,0 +1,11 @@
+# Episode numbers and responsive controls
+
+The former import parser removed every non-digit character, so `603-604-605` became `603604605`, `1076.5` became `10765` and `100 OVA2` became `1002`. All automatic sync paths, catalog import and administrator episode entry now use the same parser in `src/utils/episodes.js`. Decimal specials, combined ranges, zero, letter suffixes and OVA variants retain their source identity; unrecognized source labels are skipped instead of becoming episode 1.
+
+The shared episode controls display the number/meaningful suffix without the repeated word “Tập”. An adaptive grid gives every button the same width and height, while the range picker wraps instead of clipping. The current playing episode selects its range automatically. Range and OVA keys also drive navigation and auto-next; a combined 1–6 video advances beyond episode 6. Legacy number aliases keep existing bookmarked player URLs working.
+
+On 2026-10-08, the entire live catalog was audited: 884 movies and 24,514 episode documents. The repair compared existing video URLs and source labels, then changed 63 episode metadata documents across six movies and four corrupted movie totals. All 67 writes were verified against full originals; IDs, stream URLs and unrelated fields remained unchanged. Corrected totals are Conan 1,215, One Piece 1,180, Battle Through the Heavens season 5 213 and Dongda High Martial Academy 12. Combined videos and duplicate database rows are retained; the client deduplicates the same source episode identity.
+
+Local audit and recovery files are excluded from Git: `episodes-audit.local.json`, `episode-sources.local.json`, `episode-repair-plan.local.json` and `episode-repair-backup.local.json`. The reusable repair script requires explicit snapshot/source paths and previews without writing by default. `--apply` saves originals, checks live fields against the audit and commits metadata patches together through a Firestore write batch. It never deletes episodes or replaces video links.
+
+Validation covers source parsing, duplicate/variant selection, legacy URL aliases, sync idempotency, combined-video auto-next and URL-verified repairs. UI checks cover 320, 390, 768, 1024 and 1440 pixel widths, including long decimal/range/OVA labels.

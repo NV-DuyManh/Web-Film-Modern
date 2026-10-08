@@ -1,3 +1,4 @@
+import { parseEpisode, episodeKey, highestEpisode } from '../utils/episodes';
 import { db } from '../config/firebaseConfig';
 import { collection, doc, setDoc, updateDoc, getDocs, query, where } from 'firebase/firestore';
 import { fetchMovieDetails, mapMovieStatus, searchMovies } from './kkphimService';
@@ -107,7 +108,7 @@ export const syncSingleMovieEpisodes = async (movie, existingEpisodes = [], forc
         // Lấy danh sách số tập hiện có trong database của phim này
         let currentEpMap = new Map();
         existingEpisodes.forEach(e => {
-            if (e.numberEpisode) currentEpMap.set(Number(e.numberEpisode), e);
+            if (e.numberEpisode != null) currentEpMap.set(episodeKey(e), e);
         });
 
         // Nếu danh sách tập hiện có chưa được truyền vào, query từ Firestore
@@ -115,22 +116,24 @@ export const syncSingleMovieEpisodes = async (movie, existingEpisodes = [], forc
             const epSnap = await getDocs(query(collection(db, "Episodes"), where("movieID", "==", movie.id)));
             epSnap.forEach(docSnap => {
                 const data = docSnap.data();
-                if (data.numberEpisode) currentEpMap.set(Number(data.numberEpisode), { id: docSnap.id, ...data });
+                if (data.numberEpisode != null) currentEpMap.set(episodeKey(data), { id: docSnap.id, ...data });
             });
         }
 
         let newEpsCount = 0;
         let updatedEpsCount = 0;
-        let highestEp = movie.endEpisode || 0;
+        let highestEp = highestEpisode([...currentEpMap.values()]);
 
         const firstServer = episodesData[0];
         const serverData = firstServer?.server_data || [];
 
         for (const ep of serverData) {
-            const epNum = parseInt(ep.name.replace(/[^0-9]/g, '')) || 1;
-            if (epNum > highestEp) highestEp = epNum;
+            const parsedEpisode = parseEpisode(ep.name);
+            if (!parsedEpisode) continue;
+            const epNum = parsedEpisode.number;
+            highestEp = Math.max(highestEp, parsedEpisode.end);
 
-            const existingEp = currentEpMap.get(epNum);
+            const existingEp = currentEpMap.get(parsedEpisode.key);
 
             if (!existingEp) {
                 // 1. Tập chưa có -> Thêm tập mới với link chuẩn từ KKPhim
@@ -146,11 +149,11 @@ export const syncSingleMovieEpisodes = async (movie, existingEpisodes = [], forc
                     description: "Đang cập nhật...",
                     createdAt: new Date().toISOString(),
                 });
-                currentEpMap.set(epNum, { id: epRef.id, numberEpisode: epNum, url: ep.link_embed, urlM3u8: ep.link_m3u8 });
+                currentEpMap.set(parsedEpisode.key, { id: epRef.id, numberEpisode: epNum, nameEpisode: ep.name, url: ep.link_embed, urlM3u8: ep.link_m3u8 });
                 newEpsCount++;
             } else {
                 // 2. Tập ĐÃ CÓ nhưng URL bị sai, link rác/placeholder ("vdvdfv") hoặc khác link chuẩn KKPhim -> SỬA LẠI LINK CHUẨN!
-                const isDummyOrBroken = !existingEp.url || 
+                const isDummyOrBroken = Number(existingEp.numberEpisode) !== epNum || !existingEp.url ||
                                         !existingEp.url.startsWith('http') || 
                                         existingEp.url !== ep.link_embed || 
                                         existingEp.urlM3u8 !== ep.link_m3u8;
@@ -158,6 +161,7 @@ export const syncSingleMovieEpisodes = async (movie, existingEpisodes = [], forc
                 if (isDummyOrBroken && (ep.link_embed || ep.link_m3u8)) {
                     const epRef = doc(db, "Episodes", existingEp.id);
                     await updateDoc(epRef, {
+                        numberEpisode: epNum,
                         url: ep.link_embed || existingEp.url || '',
                         urlM3u8: ep.link_m3u8 || existingEp.urlM3u8 || '',
                         nameEpisode: ep.name || existingEp.nameEpisode || `Tập ${epNum}`,
@@ -174,7 +178,7 @@ export const syncSingleMovieEpisodes = async (movie, existingEpisodes = [], forc
             const newStatus = movieData?.status ? mapMovieStatus(movieData.status) : (movie.status || 'Đang chiếu');
             
             const updateData = {
-                endEpisode: Math.max(highestEp, movie.endEpisode || 1),
+                endEpisode: Math.max(highestEp, Number(movie.endEpisode) || 1),
                 status: newStatus
             };
 

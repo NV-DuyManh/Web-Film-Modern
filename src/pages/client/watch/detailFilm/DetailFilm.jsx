@@ -1,3 +1,4 @@
+import { normalizeEpisodes, episodeKey } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
@@ -133,22 +134,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     const topMovies = movies?.slice(0, 10) || [];
 
-    const episodeShow = useMemo(() => {
-        const list = episodes.filter(e => e.movieID == realMovieId);
-        const map = new Map();
-        list.sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0)).forEach(e => {
-            const num = Number(e.numberEpisode);
-            if (!map.has(num)) {
-                map.set(num, e);
-            } else {
-                const prev = map.get(num);
-                if ((!prev.url || !prev.url.startsWith('http')) && e.url?.startsWith('http')) {
-                    map.set(num, e);
-                }
-            }
-        });
-        return Array.from(map.values()).sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0));
-    }, [realMovieId, episodes]);
+    const episodeShow = useMemo(() => normalizeEpisodes(episodes.filter(e => e.movieID === realMovieId)), [realMovieId, episodes]);
 
     const movieAuthors = useMemo(() => {
         if (!movie) return [];
@@ -197,7 +183,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
     }, [movie]);
 
     const handleClickEpisodes = (ep) => {
-        navigate(`/xem-phim/${routeSegment(movie)}?tap=${ep.numberEpisode}`);
+        navigate(`/xem-phim/${routeSegment(movie)}?tap=${episodeKey(ep)}`);
     }
 
     const isFavorite = useMemo(() => {

@@ -1,3 +1,4 @@
+import { parseEpisode, episodeKey } from '../../../../utils/episodes';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
@@ -96,13 +97,14 @@ function Episodes() {
     };
 
     const onChangeInput = (e) => {
-        setEpisode(prev => ({ ...prev, [e.target.name]: e.target.value }));
+        setEpisode(prev => ({ ...prev, [e.target.name]: e.target.value,
+            ...(e.target.name === 'numberEpisode' ? { nameEpisode: e.target.value } : {}) }));
         setError(prev => ({ ...prev, [e.target.name]: "" }));
     };
 
     const validation = () => {
         const newError = {};
-        newError.numberEpisode = episode.numberEpisode !== "" ? "" : "Please enter episode number";
+        newError.numberEpisode = parseEpisode(episode.numberEpisode) ? "" : "Vui lòng nhập số tập hợp lệ (ví dụ: 12, 12.5 hoặc 39-40)";
         newError.movieID = episode.movieID ? "" : "Please select a movie";
         newError.url = episode.url ? "" : "Please enter episode url";
 
@@ -117,11 +119,14 @@ function Episodes() {
 
         try {
             let submitData = { ...episode };
-            submitData.numberEpisode = parseInt(submitData.numberEpisode) || 0;
+            const label = submitData.nameEpisode || String(submitData.numberEpisode);
+            const parsedEpisode = parseEpisode(label);
+            submitData.nameEpisode = label;
+            submitData.numberEpisode = parsedEpisode.number;
             setProgress(50);
 
             if (!episode.id) {
-                const existingEp = episodes?.find(e => e.movieID === submitData.movieID && Number(e.numberEpisode) === Number(submitData.numberEpisode));
+                const existingEp = episodes?.find(e => e.movieID === submitData.movieID && episodeKey(e) === episodeKey(submitData));
                 if (existingEp) {
                     submitData.id = existingEp.id;
                     await updateDocument("Episodes", submitData);
@@ -197,15 +202,17 @@ function Episodes() {
                         url2 = parts[2]?.trim() || '';
                     }
 
-                    const numMatch = epName.match(/\d+/);
-                    const numberEpisode = numMatch ? parseInt(numMatch[0]) : (i + 1);
+                    const parsedEpisode = parseEpisode(epName);
+                    if (!parsedEpisode) throw new Error(`Số tập không hợp lệ ở dòng ${i + 1}: ${epName}`);
+                    const numberEpisode = parsedEpisode.number;
 
-                    const existingEp = episodes?.find(e => e.movieID === episode.movieID && Number(e.numberEpisode) === Number(numberEpisode));
+                    const existingEp = episodes?.find(e => e.movieID === episode.movieID && episodeKey(e) === parsedEpisode.key);
 
                     const submitData = {
                         movieID: episode.movieID,
                         title: selectedMovie?.name || "",
                         numberEpisode: numberEpisode,
+                        nameEpisode: epName,
                     };
 
                     if (bulkTarget === '1' || bulkTarget === 'both') {

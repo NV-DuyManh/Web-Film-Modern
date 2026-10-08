@@ -1,3 +1,4 @@
+import { parseEpisode } from '../../../utils/episodes';
 import { slugify } from '../../../utils/appUtils';
 
 export const parseTSV = (text) => {
@@ -47,7 +48,8 @@ export const mapMovieData = (parsedData) => {
             charGender: row["char gender"] || row["giới tính nhân vật"] || "Other",
             rawPlan: row["plan"] || row["gói"] || "",
             roomName: row["room"] || row["phòng chiếu"] || "",
-            epNumber: parseInt(row["episode number"] || row["tập số"]) || "",
+            epNumber: parseEpisode(row["episode number"] || row["tập số"])?.number ?? "",
+            epName: row["episode number"] || row["tập số"] || "",
             epUrl: row["url"] || row["link"] || "",
 
             countriesID: row["country"] || row["quốc gia"] || "Japan",

@@ -102,11 +102,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
 
     const handleEndEpisodeChange = (e) => {
         let val = e.target.value;
-        if (val.includes('?')) {
-            val = '?';
-        } else {
-            val = val.replace(/[^0-9]/g, '');
-        }
+        if (val !== '?' && !/^\d*$/.test(val)) return;
         onChangeInput({ target: { name: 'endEpisode', value: val } });
     };
 

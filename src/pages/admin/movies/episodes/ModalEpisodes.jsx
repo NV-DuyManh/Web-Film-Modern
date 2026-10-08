@@ -9,7 +9,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEpisodes, error, loading, progress, episode, setEpisode, isBulkMode, setIsBulkMode, bulkTarget, setBulkTarget, bulkText, setBulkText, selectedMovie }) {
 
     const handleNumberChange = (e) => {
-        const onlyNums = e.target.value.replace(/[^0-9]/g, '');
+        const onlyNums = e.target.value;
         onChangeInput({ target: { name: e.target.name, value: onlyNums } });
     };
 
@@ -90,7 +90,7 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
                             fullWidth
                             label="Episode Number"
                             variant="outlined"
-                            value={episode.numberEpisode}
+                            value={episode.nameEpisode || episode.numberEpisode}
                             helperText={error.numberEpisode}
                             error={!!error.numberEpisode}
                         />

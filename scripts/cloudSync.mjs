@@ -106,7 +106,7 @@ async function runCloudSync() {
                 if (movieNewEps > 0 || movieFixedEps > 0 || movie.status !== newStatus || highestEp !== Number(movie.endEpisode)) {
                     const movieRef = doc(db, "Movies", movie.id);
                     if (!dryRun) await updateDoc(movieRef, {
-                        endEpisode: Math.max(highestEp, movie.endEpisode || 1),
+                        endEpisode: Math.max(highestEp, Number(movie.endEpisode) || 1),
                         status: newStatus,
                         slug: activeSlug,
                         updatedAt: new Date().toISOString()

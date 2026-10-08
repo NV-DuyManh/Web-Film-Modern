@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { episodeLabel } from '../../../../utils/episodes';
+import React, { useMemo, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
@@ -9,12 +10,12 @@ import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar
 
 function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedMovie, episodes }) {
     const [open, setOpen] = useState(false);
-    const [page, setPage] = useState(1);
+    const [pagination, setPagination] = useState({ value: 1, search, movieId: selectedMovie?.id });
+    const page = pagination.search === search && pagination.movieId === selectedMovie?.id ? pagination.value : 1;
+    const setPage = value => setPagination({ value: typeof value === 'function' ? value(page) : value, search, movieId: selectedMovie?.id });
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     const start = (page - 1) * rowsPerPage;
-
-    useEffect(() => { setPage(1); }, [search, selectedMovie]);
 
     const dataSearch = useMemo(() => {
         if (!episodes || episodes.length === 0) return [];
@@ -24,7 +25,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                 if (!search) return true;
                 const keyword = search.toLowerCase();
                 return (
-                    String(ep.numberEpisode).toLowerCase().includes(keyword) ||
+                    episodeLabel(ep).toLowerCase().includes(keyword) ||
                     ep.url?.toLowerCase().includes(keyword)
                 );
             })
@@ -105,7 +106,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                                                 />
                                             </td>
                                             <td className="table-cell text-center font-black text-cyan-400 text-lg">
-                                                Episode {row.numberEpisode}
+                                                {episodeLabel(row)}
                                             </td>
                                             <td className="table-cell text-center px-4 max-w-50 md:max-w-100 lg:max-w-150">
                                                 <a href={row.url} target="_blank" rel="noopener noreferrer"
@@ -148,7 +149,7 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                 handleClose={handleClose}
                 handleDeleted={handleDeleted}
                 titleDelete={"DELETE EPISODE"}
-                contentDelete={`Are you sure you want to delete episode ${episode?.numberEpisode}?`}
+                contentDelete={`Are you sure you want to delete episode ${episodeLabel(episode)}?`}
             />
 
             <ModalDelete

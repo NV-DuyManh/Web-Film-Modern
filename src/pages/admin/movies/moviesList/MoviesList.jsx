@@ -159,7 +159,7 @@ function MoviesList() {
 
             submitData.releaseYear = Number(submitData.releaseYear);
             submitData.duration = Number(submitData.duration);
-            submitData.endEpisode = Number(submitData.endEpisode);
+            submitData.endEpisode = submitData.endEpisode === '?' ? '?' : Number(submitData.endEpisode);
             submitData.rent = Number(submitData.rent);
             submitData.episodeSub = submitData.hasSub ? Number(submitData.episodeSub) : 0;
             submitData.episodeDub = submitData.hasDub ? Number(submitData.episodeDub) : 0;

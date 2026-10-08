@@ -1,3 +1,4 @@
+import { parseEpisode, episodeKey, highestEpisode } from '../src/utils/episodes.js';
 import admin from 'firebase-admin';
 
 // Initialize Firebase Admin SDK
@@ -190,20 +191,22 @@ export default async function handler(req, res) {
                 const currentMovieEpsSnapshot = await db.collection("Episodes").where("movieID", "==", matchedMovie.id).get();
                 const currentMovieEps = [];
                 currentMovieEpsSnapshot.forEach(doc => currentMovieEps.push({ id: doc.id, ...doc.data() }));
-                const currentEpMap = new Map(currentMovieEps.map(e => [Number(e.numberEpisode), e]));
+                const currentEpMap = new Map(currentMovieEps.map(e => [episodeKey(e), e]));
 
                 let newEpsCountForThisMovie = 0;
                 let fixedEpsCountForThisMovie = 0;
-                let highestEp = matchedMovie.endEpisode || 0;
+                let highestEp = highestEpisode(currentMovieEps);
 
                 const firstServer = episodesData[0];
                 const serverData = firstServer?.server_data || [];
 
                 for (const ep of serverData) {
-                    const epNum = parseInt(ep.name.replace(/[^0-9]/g, '')) || 1;
-                    if (epNum > highestEp) highestEp = epNum;
+                    const parsedEpisode = parseEpisode(ep.name);
+                    if (!parsedEpisode) continue;
+                    const epNum = parsedEpisode.number;
+                    highestEp = Math.max(highestEp, parsedEpisode.end);
 
-                    const existingEp = currentEpMap.get(epNum);
+                    const existingEp = currentEpMap.get(parsedEpisode.key);
 
                     if (!existingEp) {
                         const epRef = db.collection("Episodes").doc();
@@ -218,11 +221,11 @@ export default async function handler(req, res) {
                             description: "Đang cập nhật...",
                             createdAt: new Date().toISOString(),
                         });
-                        currentEpMap.set(epNum, { id: epRef.id, numberEpisode: epNum, url: ep.link_embed, urlM3u8: ep.link_m3u8 });
+                        currentEpMap.set(parsedEpisode.key, { id: epRef.id, numberEpisode: epNum, nameEpisode: ep.name, url: ep.link_embed, urlM3u8: ep.link_m3u8 });
                         newEpsCountForThisMovie++;
                         stats.newEpisodes++;
                     } else {
-                        const isDummyOrBroken = !existingEp.url ||
+                        const isDummyOrBroken = Number(existingEp.numberEpisode) !== epNum || !existingEp.url ||
                             !existingEp.url.startsWith('http') ||
                             existingEp.url !== ep.link_embed ||
                             existingEp.urlM3u8 !== ep.link_m3u8;
@@ -230,6 +233,7 @@ export default async function handler(req, res) {
                         if (isDummyOrBroken && (ep.link_embed || ep.link_m3u8)) {
                             const epRef = db.collection("Episodes").doc(existingEp.id);
                             await epRef.update({
+                                numberEpisode: epNum,
                                 url: ep.link_embed || existingEp.url || '',
                                 urlM3u8: ep.link_m3u8 || existingEp.urlM3u8 || '',
                                 nameEpisode: ep.name || existingEp.nameEpisode || `Tập ${epNum}`,
@@ -244,7 +248,7 @@ export default async function handler(req, res) {
                 if (newEpsCountForThisMovie > 0 || fixedEpsCountForThisMovie > 0) {
                     const movieRef = db.collection("Movies").doc(matchedMovie.id);
                     await movieRef.update({
-                        endEpisode: Math.max(highestEp, matchedMovie.endEpisode || 1),
+                        endEpisode: Math.max(highestEp, Number(matchedMovie.endEpisode) || 1),
                         status: movieData?.status ? mapMovieStatus(movieData.status) : (matchedMovie.status || 'Đang chiếu'),
                         updatedAt: new Date().toISOString()
                     });

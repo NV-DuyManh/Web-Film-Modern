@@ -1,18 +1,19 @@
+import { normalizeEpisodes, episodeInfo, episodeKey, episodeLabel } from '../../../../utils/episodes';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
-import React, { useContext, useMemo, useState, useRef } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
-import { FaPlay, FaLock } from 'react-icons/fa';
+import { FaLock } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
-import { getExpiryDate, getUserPlanInfo, isSingleMovie, formatEpisodeName } from '../../../../utils/appUtils';
+import { getExpiryDate, getUserPlanInfo, isSingleMovie } from '../../../../utils/appUtils';
 import ModalDetail from '../detailFilm/ModalDetail';
 
 function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const { slug } = useParams();
-    const [rangeIndex, setRangeIndex] = useState(0);
+    const [chosenRange, setChosenRange] = useState(null);
     const [openLoginDialog, setOpenLoginDialog] = useState(false);
     const CHUNK_SIZE = 80;
     const navigate = useNavigate();
@@ -61,62 +62,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
         return levelUser || checkRent
     }, [levelUser, checkRent])
 
-    const scrollRef = useRef(null);
-    const isDown = useRef(false);
-    const startX = useRef(0);
-    const scrollLeft = useRef(0);
-
-    const handleMouseDown = (e) => {
-        isDown.current = true;
-        if (scrollRef.current) {
-            scrollRef.current.classList.add('cursor-grabbing');
-            scrollRef.current.classList.remove('cursor-grab');
-            startX.current = e.pageX - scrollRef.current.offsetLeft;
-            scrollLeft.current = scrollRef.current.scrollLeft;
-        }
-    };
-
-    const handleMouseLeave = () => {
-        isDown.current = false;
-        if (scrollRef.current) {
-            scrollRef.current.classList.remove('cursor-grabbing');
-            scrollRef.current.classList.add('cursor-grab');
-        }
-    };
-
-    const handleMouseUp = () => {
-        isDown.current = false;
-        if (scrollRef.current) {
-            scrollRef.current.classList.remove('cursor-grabbing');
-            scrollRef.current.classList.add('cursor-grab');
-        }
-    };
-
-    const handleMouseMove = (e) => {
-        if (!isDown.current || !scrollRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - scrollRef.current.offsetLeft;
-        const walk = (x - startX.current) * 2;
-        scrollRef.current.scrollLeft = scrollLeft.current - walk;
-    };
-
-    const uniqueEpisodes = useMemo(() => {
-        if (!episodeShow || episodeShow.length === 0) return [];
-        const map = new Map();
-        const sorted = [...episodeShow].sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0));
-        sorted.forEach(ep => {
-            const epNum = Number(ep.numberEpisode);
-            if (!map.has(epNum)) {
-                map.set(epNum, ep);
-            } else {
-                const prev = map.get(epNum);
-                if ((!prev.url || !prev.url.startsWith('http')) && ep.url?.startsWith('http')) {
-                    map.set(epNum, ep);
-                }
-            }
-        });
-        return Array.from(map.values()).sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0));
-    }, [episodeShow]);
+    const uniqueEpisodes = useMemo(() => normalizeEpisodes(episodeShow), [episodeShow]);
 
     const hasRanges = uniqueEpisodes.length > CHUNK_SIZE;
     const ranges = useMemo(() => {
@@ -128,7 +74,11 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
         return r;
     }, [uniqueEpisodes, hasRanges, CHUNK_SIZE]);
 
-    const currentEpisodes = hasRanges ? (ranges[rangeIndex] || uniqueEpisodes) : uniqueEpisodes;
+    const activeKey = episodeKey(playEpisodes);
+    const activeRange = Math.max(0, ranges.findIndex(chunk => chunk.some(ep => episodeKey(ep) === activeKey)));
+    const requestedRange = chosenRange?.movieId === movie?.id && chosenRange?.activeKey === activeKey ? chosenRange.index : activeRange;
+    const selectedRange = Math.min(requestedRange, Math.max(0, ranges.length - 1));
+    const currentEpisodes = hasRanges ? ranges[selectedRange] : uniqueEpisodes;
 
     if (!episodeShow || episodeShow.length === 0 || uniqueEpisodes.length === 0) {
         return (
@@ -142,32 +92,27 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
         <div className="flex flex-col gap-4 py-1">
 
             {hasRanges && (
-                <div className="flex items-center gap-2 pb-3 border-b border-slate-700/60 w-full overflow-hidden">
-                    <p className="text-xs font-black bg-linear-to-r from-amber-400 to-yellow-500 text-transparent bg-clip-text uppercase tracking-widest shrink-0 inline drop-shadow-[0_0_8px_rgba(251,191,36,0.4)] mr-1">
+                <div className="flex flex-col sm:flex-row sm:items-start gap-3 pb-3 border-b border-slate-700/60 w-full min-w-0">
+                    <p className="text-xs font-black bg-linear-to-r from-amber-400 to-yellow-500 text-transparent bg-clip-text uppercase tracking-widest shrink-0 inline drop-shadow-[0_0_8px_rgba(251,191,36,0.4)] mr-1 sm:pt-2">
                         Chọn phần:
                     </p>
-                    <div 
-                        ref={scrollRef}
-                        onMouseDown={handleMouseDown}
-                        onMouseLeave={handleMouseLeave}
-                        onMouseUp={handleMouseUp}
-                        onMouseMove={handleMouseMove}
-                        className="flex items-center gap-2 overflow-x-auto scrollbar-hide cursor-grab flex-1"
-                    >
+                    <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0" role="group" aria-label="Chọn khoảng tập phim">
                         {ranges.map((chunk, idx) => {
-                            const startEp = chunk[0]?.numberEpisode || (idx * CHUNK_SIZE + 1);
-                            const endEp = chunk[chunk.length - 1]?.numberEpisode || Math.min((idx + 1) * CHUNK_SIZE, uniqueEpisodes.length);
-                            const isSelected = rangeIndex === idx;
+                            const startEp = episodeInfo(chunk[0])?.number ?? (idx * CHUNK_SIZE + 1);
+                            const endEp = episodeInfo(chunk[chunk.length - 1])?.end ?? Math.min((idx + 1) * CHUNK_SIZE, uniqueEpisodes.length);
+                            const isSelected = selectedRange === idx;
                             return (
                                 <button
                                     key={idx}
-                                    onClick={() => setRangeIndex(idx)}
+                                    onClick={() => setChosenRange({ index: idx, movieId: movie?.id, activeKey })}
+                                    aria-pressed={isSelected}
+                                    aria-label={`Tập ${startEp} đến ${endEp}`}
                                     className={`px-4 py-1.5 rounded-xl text-xs font-extrabold transition duration-300 cursor-pointer whitespace-nowrap border ${isSelected
                                         ? "bg-linear-to-r from-amber-400 to-yellow-500 text-slate-950 border-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.4)]"
                                         : "bg-[#0d121f] text-slate-300 hover:text-white hover:bg-[#161d30] border-slate-700/80"
                                         }`}
                                 >
-                                    Tập {startEp} - {endEp}
+                                    {startEp}–{endEp}
                                 </button>
                             );
                         })}
@@ -176,31 +121,24 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
             )}
 
 
-            <div className="grid grid-cols-5 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-2 sm:gap-4">
+            <div className="grid gap-2 sm:gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 5.5rem), 1fr))" }}>
                 {currentEpisodes.map((e) => {
-                    const isActive = playEpisodes?.id == e.id;
+                    const isActive = episodeKey(playEpisodes) === episodeKey(e);
+                    const label = episodeLabel(e, isSingle);
                     return (
                         <button
                             key={e.id}
                             onClick={() => checkShow ? handleClickEpisodes(e) : (!isLogin ? setOpenLoginDialog(true) : navigate(`/pay/${routeSegment(movie)}`))}
-                            className={`group relative flex w-full h-10 sm:h-11 items-center justify-center gap-2 px-2 rounded-xl text-xs sm:text-sm font-bold transition duration-300 cursor-pointer border whitespace-nowrap overflow-hidden ${isActive
-                                ? "ep-btn-active bg-linear-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 border-amber-300 font-black scale-105 ring-2 ring-amber-400/50 ring-offset-2 ring-offset-[#0d0f14] z-10 shadow-[0_0_20px_rgba(251,191,36,0.4)]"
-                                : "bg-slate-800/80 text-slate-200 border-slate-600/50 hover:border-cyan-400 hover:bg-linear-to-r hover:from-cyan-900/40 hover:to-blue-900/40 hover:text-cyan-300 hover:-translate-y-1 hover:shadow-[0_6px_20px_rgba(34,211,238,0.25)] hover:scale-[1.04] active:scale-95"
+                            aria-label={label === 'Full' ? 'Xem phim đầy đủ' : `Tập ${label}`}
+                            aria-current={isActive ? 'true' : undefined}
+                            title={label === 'Full' ? 'Full' : `Tập ${label}`}
+                            className={`group relative flex w-full min-w-0 h-10 sm:h-11 items-center justify-center px-2 rounded-xl text-xs sm:text-sm font-bold tabular-nums transition-colors cursor-pointer border whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 ${isActive
+                                ? "ep-btn-active bg-linear-to-r from-amber-400 to-yellow-400 text-slate-950 border-amber-300 ring-2 ring-amber-400/40"
+                                : "bg-slate-800/80 text-slate-200 border-slate-600/50 hover:border-amber-400/70 hover:bg-amber-400/10 hover:text-amber-300"
                                 }`}
                         >
-                            {checkShow ? (
-                                <FaPlay className={`text-[10px] sm:text-xs shrink-0 transition duration-300 ${isActive ? "text-slate-950 drop-shadow-sm" : "text-amber-400/80 group-hover:text-cyan-400 group-hover:scale-110"}`} />
-                            ) : (
-                                <FaLock className="text-[10px] sm:text-xs shrink-0 transition duration-300 text-rose-500 group-hover:text-rose-400 group-hover:scale-110 drop-shadow-[0_0_5px_rgba(244,63,94,0.5)]" />
-                            )}
-                            <p className="relative inline truncate">
-                                <span className="hidden sm:inline">
-                                    {(isSingle && Number(e.numberEpisode) === 1) ? '' : 'Tập '}
-                                </span>
-                                <span>
-                                    {(isSingle && Number(e.numberEpisode) === 1) ? 'Full' : e.numberEpisode}
-                                </span>
-                            </p>
+                            {!checkShow && <FaLock aria-hidden="true" className="absolute top-1 right-1 text-[8px] text-rose-400" />}
+                            <span>{label}</span>
                         </button>
                     );
                 })}

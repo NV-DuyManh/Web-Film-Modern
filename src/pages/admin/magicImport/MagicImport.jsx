@@ -1,3 +1,4 @@
+import { parseEpisode, episodeKey, highestEpisode } from '../../../utils/episodes';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
 import { useShowTimes, useMovies, useEpisodes } from '../../../hooks/useCollections';
 import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
@@ -488,7 +489,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             categoryTypeID, planID: finalPlanID, createdAt: new Date().toISOString()
                         };
                         Object.keys(submitMovie).forEach(key => {
-                            if (key.startsWith('raw') || ['gender', 'charGender', 'roomName', 'epNumber', 'epUrl', 'matchedMovieId'].includes(key)) {
+                            if (key.startsWith('raw') || ['gender', 'charGender', 'roomName', 'epNumber', 'epName', 'epUrl', 'matchedMovieId'].includes(key)) {
                                 delete submitMovie[key];
                             }
                         });
@@ -498,8 +499,8 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     }
                 }
 
-                if (movie.epNumber && movie.epUrl) {
-                    const epExists = localEpisodes.find(e => e.movieID === currentMovieId && e.numberEpisode === Number(movie.epNumber));
+                if (movie.epNumber !== '' && movie.epNumber != null && movie.epUrl) {
+                    const epExists = localEpisodes.find(e => e.movieID === currentMovieId && episodeKey(e) === episodeKey({ numberEpisode: movie.epNumber, nameEpisode: movie.epName }));
                     if (!epExists) {
                         const epRef = doc(collection(db, "Episodes"));
                         await setDoc(epRef, {
@@ -507,9 +508,10 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             movieID: currentMovieId,
                             title: movie.name,
                             numberEpisode: Number(movie.epNumber),
+                            nameEpisode: movie.epName || String(movie.epNumber),
                             url: movie.epUrl
                         });
-                        localEpisodes.push({ movieID: currentMovieId, numberEpisode: Number(movie.epNumber) });
+                        localEpisodes.push({ movieID: currentMovieId, numberEpisode: Number(movie.epNumber), nameEpisode: movie.epName });
                         epsAdded++;
                     }
                 }
@@ -747,7 +749,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         rent: 0,
                         status: mapMovieStatus(movieData.status),
                         ageRating: 'T13',
-                        endEpisode: movieData.episode_total || 1,
+                        endEpisode: parseEpisode(movieData.episode_total)?.end ?? 1,
                         hasSub: movieData.lang?.includes('Vietsub') || false,
                         hasDub: movieData.lang?.includes('Thuyết Minh') || false,
                         hasVoice: movieData.lang?.includes('Lồng Tiếng') || false,
@@ -774,8 +776,9 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         const firstServer = episodesData[0];
                         const serverData = firstServer?.server_data || [];
                         for (const ep of serverData) {
-                            const epNumMatch = ep.name?.match(/(\d+)/);
-                            const epNum = epNumMatch ? parseInt(epNumMatch[1]) : 1;
+                            const parsedEpisode = parseEpisode(ep.name);
+                            if (!parsedEpisode) continue;
+                            const epNum = parsedEpisode.number;
                             const epUrl = ep.link_m3u8 || ep.link_embed || '';
                             const epUrl2 = ep.link_embed || '';
                             if (!epUrl) continue;
@@ -785,6 +788,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 movieID: newMovieId,
                                 title: submitMovie.name,
                                 numberEpisode: epNum,
+                                nameEpisode: ep.name,
                                 url: epUrl,
                                 url2: epUrl2 !== epUrl ? epUrl2 : '',
                             });
@@ -1083,20 +1087,22 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
 
                     // Lấy danh sách tập hiện có của phim trong database
                     const currentMovieEps = existingEpisodes.filter(e => e.movieID === matchedMovie.id);
-                    const currentEpMap = new Map(currentMovieEps.map(e => [Number(e.numberEpisode), e]));
+                    const currentEpMap = new Map(currentMovieEps.map(e => [episodeKey(e), e]));
 
                     let newEpsCountForThisMovie = 0;
                     let fixedEpsCountForThisMovie = 0;
-                    let highestEp = matchedMovie.endEpisode || 0;
+                    let highestEp = highestEpisode(currentMovieEps);
 
                     const firstServer = episodesData[0];
                     const serverData = firstServer?.server_data || [];
 
                     for (const ep of serverData) {
-                        const epNum = parseInt(ep.name.replace(/[^0-9]/g, '')) || 1;
-                        if (epNum > highestEp) highestEp = epNum;
+                        const parsedEpisode = parseEpisode(ep.name);
+                        if (!parsedEpisode) continue;
+                        const epNum = parsedEpisode.number;
+                        highestEp = Math.max(highestEp, parsedEpisode.end);
 
-                        const existingEp = currentEpMap.get(epNum);
+                        const existingEp = currentEpMap.get(parsedEpisode.key);
 
                         if (!existingEp) {
                             // 1. Thêm tập mới chưa có
@@ -1112,13 +1118,13 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 description: "Đang cập nhật...",
                                 createdAt: new Date().toISOString(),
                             });
-                            currentEpMap.set(epNum, { id: epRef.id, numberEpisode: epNum, url: ep.link_embed, urlM3u8: ep.link_m3u8 });
+                            currentEpMap.set(parsedEpisode.key, { id: epRef.id, numberEpisode: epNum, nameEpisode: ep.name, url: ep.link_embed, urlM3u8: ep.link_m3u8 });
                             newEpsCountForThisMovie++;
                             stats.newEpisodes++;
                             setSyncStats({ ...stats });
                         } else {
                             // 2. Sửa lại link nếu link cũ bị sai, rác ("vdvdfv") hoặc không chuẩn
-                            const isDummyOrBroken = !existingEp.url ||
+                            const isDummyOrBroken = Number(existingEp.numberEpisode) !== epNum || !existingEp.url ||
                                 !existingEp.url.startsWith('http') ||
                                 existingEp.url !== ep.link_embed ||
                                 existingEp.urlM3u8 !== ep.link_m3u8;
@@ -1126,6 +1132,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             if (isDummyOrBroken && (ep.link_embed || ep.link_m3u8)) {
                                 const epRef = doc(db, "Episodes", existingEp.id);
                                 await updateDoc(epRef, {
+                                    numberEpisode: epNum,
                                     url: ep.link_embed || existingEp.url || '',
                                     urlM3u8: ep.link_m3u8 || existingEp.urlM3u8 || '',
                                     nameEpisode: ep.name || existingEp.nameEpisode || `Tập ${epNum}`,
@@ -1141,7 +1148,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         // Cập nhật trạng thái và số tập của phim
                         const movieRef = doc(db, "Movies", matchedMovie.id);
                         const updatePayload = {
-                            endEpisode: Math.max(highestEp, matchedMovie.endEpisode || 1),
+                            endEpisode: Math.max(highestEp, Number(matchedMovie.endEpisode) || 1),
                             status: movieData?.status ? mapMovieStatus(movieData.status) : (matchedMovie.status || 'Đang chiếu'),
                             updatedAt: new Date().toISOString()
                         };

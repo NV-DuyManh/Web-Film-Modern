@@ -1,3 +1,4 @@
+import { normalizeEpisodes, episodeKey, episodeLabel, findEpisode } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
@@ -65,25 +66,11 @@ function PlayFilm() {
     }, [realMovieId]);
 
 
-    const episodeShow = useMemo(() => {
-        if (!realMovieId) return [];
-        const list = episodes.filter(e => e.movieID == realMovieId);
-        const map = new Map();
-        list.sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0)).forEach(e => {
-            const num = Number(e.numberEpisode);
-            if (!map.has(num)) {
-                map.set(num, e);
-            } else {
-                const prev = map.get(num);
-                if ((!prev.url || !prev.url.startsWith('http')) && e.url?.startsWith('http')) {
-                    map.set(num, e);
-                }
-            }
-        });
-        return Array.from(map.values()).sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0));
-    }, [realMovieId, episodes]);
+    const episodeShow = useMemo(() => normalizeEpisodes(episodes.filter(e => e.movieID === realMovieId)), [realMovieId, episodes]);
 
-    const playEpisodes = useMemo(() => episodeShow.find(ep => String(ep.numberEpisode) === String(tap)) || episodeShow[0] || {}, [episodeShow, tap]);
+    const playEpisodes = useMemo(() => findEpisode(episodeShow, tap) || episodeShow[0] || {}, [episodeShow, tap]);
+    const playingLabel = episodeLabel(playEpisodes, isSingle);
+    const playingTitle = playingLabel === 'Full' ? 'Full' : `Tập ${playingLabel}`;
     const activeServer = serverParam === '2' && playEpisodes.url2 ? 2 : 1;
     const nextPrompt = pendingNext?.fromEpisodeId === playEpisodes.id ? pendingNext : null;
     useEffect(() => { lastProgressTimeRef.current = 0; completedEpisodeRef.current = null; }, [realMovieId, playEpisodes?.id]);
@@ -219,7 +206,7 @@ function PlayFilm() {
                 seconds: Math.floor(time),
             }, isLogin?.id);
         }
-        navigate(`/xem-phim/${routeSegment(movie)}?tap=${ep.numberEpisode}&server=${activeServer}`);
+        navigate(`/xem-phim/${routeSegment(movie)}?tap=${episodeKey(ep)}&server=${activeServer}`);
     };
 
     const handleResume = () => {
@@ -259,8 +246,8 @@ function PlayFilm() {
     return (
         <div className="min-h-screen bg-[#0d0f14] text-gray-300 font-sans pb-10 py-25 relative overflow-hidden">
             <SEO 
-                title={`Xem ${movie?.otherName || movie?.name || 'Phim'}${playEpisodes?.numberEpisode ? ` - ${formatEpisodeName(playEpisodes.numberEpisode, isSingle)}` : ''}`}
-                description={`Xem phim ${movie?.otherName || movie?.name || ''} ${formatEpisodeName(playEpisodes?.numberEpisode || 1, isSingle).toLowerCase()} vietsub, thuyết minh chất lượng cao tại MFILM.`}
+                title={`Xem ${movie?.otherName || movie?.name || 'Phim'}${playEpisodes?.id ? ` - ${playingTitle}` : ''}`}
+                description={`Xem phim ${movie?.otherName || movie?.name || ''} ${playingTitle.toLowerCase()} vietsub, thuyết minh chất lượng cao tại MFILM.`}
                 image={movie?.bannerUrl || movie?.imgUrl}
                 url={`/xem-phim/${routeSegment(movie)}${tap ? `?tap=${tap}` : ''}`}
                 type="video.episode"
@@ -279,11 +266,11 @@ function PlayFilm() {
                         </button>
                         <h1 className="text-lg sm:text-xl font-bold text-white flex flex-wrap items-center gap-2">
                             <span className="inline">Xem phim <span className="text-yellow-400 inline">{movie?.otherName || movie?.name}</span></span>
-                            {playEpisodes?.numberEpisode && (
+                            {playEpisodes?.id && (
                                 <>
                                     <p className="text-slate-500 inline">•</p>
                                     <p className="px-2.5 py-0.5 bg-yellow-400/20 text-yellow-300 border border-yellow-400/40 rounded-lg text-xs sm:text-sm font-extrabold shadow-sm inline">
-                                        {formatEpisodeName(playEpisodes.numberEpisode, isSingle)}
+                                        {playingTitle}
                                     </p>
                                 </>
                             )}
@@ -321,7 +308,7 @@ function PlayFilm() {
                         canSwitchServer={!!playEpisodes?.url2 && !!(playEpisodes?.url || playEpisodes?.urlM3u8)}
                         onSwitchServer={() => {
                             const server = activeServer === 1 ? 2 : 1;
-                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${playEpisodes.numberEpisode}&server=${server}`, { replace: true });
+                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${episodeKey(playEpisodes)}&server=${server}`, { replace: true });
                         }}
                         onError={message => trackEvent('playback_error', realMovieId, playEpisodes?.id, { message, server: activeServer })}
                     />
@@ -332,7 +319,7 @@ function PlayFilm() {
                             setAutoStartEpisodeId(nextPrompt.id);
                             setNextPrompt(null);
                             const server = activeServer === 2 && nextPrompt.url2 ? 2 : 1;
-                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${nextPrompt.numberEpisode}&server=${server}`);
+                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${episodeKey(nextPrompt)}&server=${server}`);
                         }} />}
 
 
@@ -412,7 +399,7 @@ function PlayFilm() {
                                 {playEpisodes?.url && (
                                     <button 
                                         onClick={() => {
-                                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${playEpisodes.numberEpisode || tap || 1}&server=1`, { replace: true });
+                                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${episodeKey(playEpisodes) || tap || 1}&server=1`, { replace: true });
                                         }} 
                                         className={`px-4 py-1.5 rounded-lg text-xs transition cursor-pointer border ${activeServer === 1 ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46] font-bold'}`}
                                     >SVR 1</button>
@@ -420,7 +407,7 @@ function PlayFilm() {
                                 {playEpisodes?.url2 && (
                                     <button 
                                         onClick={() => {
-                                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${playEpisodes.numberEpisode || tap || 1}&server=2`, { replace: true });
+                                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${episodeKey(playEpisodes) || tap || 1}&server=2`, { replace: true });
                                         }} 
                                         className={`px-4 py-1.5 rounded-lg text-xs transition cursor-pointer border ${activeServer === 2 ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46] font-bold'}`}
                                     >SVR 2</button>
