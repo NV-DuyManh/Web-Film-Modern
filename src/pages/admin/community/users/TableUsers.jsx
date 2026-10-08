@@ -91,7 +91,7 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
             ...row,
             name: row.name || "",
             email: row.email || "",
-            password: row.password || "",
+            password: "",
             phone: row.phone || "",
             avatarUrl: row.avatarUrl || "",
             sexID: row.sexID || "",

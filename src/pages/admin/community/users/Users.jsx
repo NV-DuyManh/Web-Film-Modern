@@ -6,6 +6,7 @@ import ModalViewUser from './ModalViewUser';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import LOGO from "../../../../assets/Logo.png";
+import { adminUserPasswordError, adminUserSubmitData } from '../../../../utils/adminUserForm';
 
 const inner = { name: "", email: "", password: "", phone: "", avatarUrl: LOGO, sexID: "", role: "user" };
 const innerError = { name: "", email: "", password: "", phone: "", avatarUrl: "", sexID: "", role: "" };
@@ -69,7 +70,7 @@ function Users() {
         const newError = {};
         newError.name = user.name ? "" : "Please enter name";
         newError.email = user.email ? "" : "Please enter email";
-        newError.password = user.password ? "" : "Please enter password";
+        newError.password = adminUserPasswordError(user);
         newError.role = user.role ? "" : "Please select role";
         
         setError(newError);
@@ -85,7 +86,7 @@ function Users() {
         setProgress(20);
 
         try {
-            let submitData = { ...user };
+            let submitData = adminUserSubmitData(user);
 
             setProgress(50);
 

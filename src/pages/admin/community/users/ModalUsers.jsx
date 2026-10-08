@@ -83,13 +83,14 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                     <TextField
                         className="modal-input-x"
                         name="password"
-                        type="text"
+                        type="password"
                         onChange={onChangeInput}
                         fullWidth
-                        label="Password"
+                        label={user.id ? "Password (optional)" : "Password"}
+                        autoComplete="new-password"
                         variant="outlined"
                         value={user.password || ''}
-                        helperText={error.password}
+                        helperText={error.password || (user.id ? 'Để trống để giữ nguyên mật khẩu hiện tại.' : '')}
                         error={!!error.password}
                     />
                     
