@@ -1,4 +1,4 @@
-﻿import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import { useSubscriptions } from '../../../../hooks/useCollections';
 import { Dialog, Slide } from '@mui/material';
 import { FaTimesCircle, FaUser, FaEnvelope, FaPhone, FaMapMarkerAlt, FaBirthdayCake, FaVenusMars, FaCrown, FaKey, FaShieldAlt, FaEye, FaEyeSlash, FaIdBadge } from 'react-icons/fa';
@@ -63,7 +63,7 @@ function ModalViewUser({ open, handleClose, user }) {
     const plans = useContext(PlanContext) || [];
     const [showPassword, setShowPassword] = useState(false);
 
-    const EmptyText = () => <span className="text-slate-500 italic text-[13px] font-normal tracking-wide">Not provided</span>;
+    const EmptyText = () => <span className="text-slate-500 italic text-[13px] font-normal tracking-wide">Chưa cung cấp</span>;
 
     const currentPlanInfo = useMemo(() => {
         return getUserPlanInfo(user, subscriptions, plans);
@@ -127,7 +127,7 @@ function ModalViewUser({ open, handleClose, user }) {
 
                         <div className="flex-1 pb-2">
                             <h2 className="text-3xl font-black text-white tracking-tight mb-2 flex items-center gap-3">
-                                {user.name || "Unknown User"}
+                                {user.name || "Người dùng"}
                                 {user.role === 'admin' && <FaCrown className="text-amber-400 text-xl animate-pulse" title="Admin" />}
                             </h2>
                             <div className="flex flex-wrap gap-2">
@@ -138,11 +138,11 @@ function ModalViewUser({ open, handleClose, user }) {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <GlowCard title="Email Address" icon={FaEnvelope} color="cyan">
+                        <GlowCard title="Địa chỉ email" icon={FaEnvelope} color="cyan">
                             <p className="text-slate-200 font-medium truncate">{user.email || <EmptyText />}</p>
                         </GlowCard>
 
-                        <GlowCard title="Phone Number" icon={FaPhone} color="emerald">
+                        <GlowCard title="Số điện thoại" icon={FaPhone} color="emerald">
                             <p className="text-slate-200 font-medium">{user.phone || <EmptyText />}</p>
                         </GlowCard>
 
@@ -150,7 +150,7 @@ function ModalViewUser({ open, handleClose, user }) {
                             <p className="text-slate-200 font-medium truncate">{user.address || <EmptyText />}</p>
                         </GlowCard>
 
-                        <GlowCard title="Date of Birth" icon={FaBirthdayCake} color="pink">
+                        <GlowCard title="Ngày sinh" icon={FaBirthdayCake} color="pink">
                             <p className="text-slate-200 font-medium">{user.dateOfBirth || <EmptyText />}</p>
                         </GlowCard>
 

@@ -74,7 +74,8 @@ async function maintain() {
     console.log('[CatalogMaintenance]', JSON.stringify({ ...summary, apply }));
 }
 
-maintain().catch(error => {
+maintain().catch(async error => {
+    if (apply) await setDoc(settingsRef, { lastErrorAt: Date.now(), lastError: String(error.code || error.message).slice(0, 300) }, { merge: true }).catch(() => {});
     console.error('[CatalogMaintenance]', error.code || '', error.message);
     process.exitCode = 1;
 }).finally(() => terminate(db));

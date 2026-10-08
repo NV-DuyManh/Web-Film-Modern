@@ -1,3 +1,4 @@
+import { adminAlert } from '../../../../services/adminOperations';
 import React, { useState } from 'react';
 import Search from '../../../../components/admin/search/Search';
 import ModalPackages from './ModalPackages';
@@ -36,7 +37,7 @@ function Packages() {
 
     const validation = () => {
         const newError = {};
-        newError.planID = packageItem.planID ? "" : "Please select plan";
+        newError.planID = packageItem.planID ? "" : "Vui lòng chọn gói";
         newError.discount = packageItem.discount !== "" ? "" : "Please enter discount";
         newError.time = packageItem.time !== "" ? "" : "Please enter time";
 
@@ -68,7 +69,7 @@ function Packages() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            adminAlert("Có lỗi xảy ra, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);
         }

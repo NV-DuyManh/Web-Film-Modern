@@ -87,10 +87,11 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                                 </th>
                                 <th className="w-[12%] text-center">EPISODE</th>
                                 <th className="w-[80%] text-center">URL</th>
-                                <th className="w-[8%] text-center">ACTIONS</th>
+                                <th className="w-[8%] text-center">THAO TÁC</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {!currentData.length && <tr><td colSpan={99} className="p-5 text-center text-slate-400">Chưa có dữ liệu phù hợp.</td></tr>}
                             {currentData.map((row) => {
                                 const isSelected = selectedIds.includes(row.id);
 
@@ -117,10 +118,10 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                                             </td>
                                             <td className="table-cell text-center">
                                                 <div className="flex justify-center! gap-2">
-                                                    <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
+                                                    <button onClick={() => handleEdit(row)} title="Chỉnh sửa" aria-label="Chỉnh sửa" className="action-btn btn-edit">
                                                         <CiEdit />
                                                     </button>
-                                                    <button onClick={() => handleClickOpenDele(row)} className="action-btn btn-delete">
+                                                    <button onClick={() => handleClickOpenDele(row)} title="Chuyển vào thùng rác" aria-label="Chuyển vào thùng rác" className="action-btn btn-delete">
                                                         <RiDeleteBin6Fill />
                                                     </button>
                                                 </div>
@@ -148,16 +149,16 @@ function TableEpisodes({ handleClickOpen, setEpisode, episode, search, selectedM
                 open={open}
                 handleClose={handleClose}
                 handleDeleted={handleDeleted}
-                titleDelete={"DELETE EPISODE"}
-                contentDelete={`Are you sure you want to delete episode ${episodeLabel(episode)}?`}
+                titleDelete={"CHUYỂN VÀO THÙNG RÁC"}
+                contentDelete={`Chuyển mục đã chọn vào thùng rác? Bạn có thể khôi phục trong mục Vận hành.`}
             />
 
             <ModalDelete
                 open={openBulk}
                 handleClose={() => setOpenBulk(false)}
                 handleDeleted={handleBulkDeleted}
-                titleDelete={"DELETE SELECTED"}
-                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected episode${selectedIds.length > 1 ? 's' : ''}?`}
+                titleDelete={"CHUYỂN CÁC MỤC ĐÃ CHỌN VÀO THÙNG RÁC"}
+                contentDelete={`Chuyển mục đã chọn vào thùng rác? Bạn có thể khôi phục trong mục Vận hành.`}
             />
         </div>
     );

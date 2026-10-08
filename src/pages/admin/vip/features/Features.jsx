@@ -1,3 +1,4 @@
+import { adminAlert } from '../../../../services/adminOperations';
 import React, { useState } from 'react';
 import Search from '../../../../components/admin/search/Search';
 import ModalFeatures from './ModalFeatures';
@@ -36,8 +37,8 @@ function Features() {
 
     const validation = () => {
         const newError = {};
-        newError.planID = feature.planID ? "" : "Please select plan";
-        newError.description = feature.description ? "" : "Please enter description";
+        newError.planID = feature.planID ? "" : "Vui lòng chọn gói";
+        newError.description = feature.description ? "" : "Vui lòng nhập mô tả";
         newError.available = feature.available !== "" ? "" : "Please select available";
 
         setError(newError);
@@ -67,7 +68,7 @@ function Features() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            adminAlert("Có lỗi xảy ra, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);
         }

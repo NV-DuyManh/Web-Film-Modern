@@ -1,8 +1,11 @@
+import { adminActor, moveToAdminTrash, notifyAdmin, recordAdminAction } from './adminOperations';
 import { stripRouteMetadata } from '../utils/nameRoutes';
 import { reportCatalogStatus } from '../utils/catalogStatus';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, setDoc, query, where, limit, orderBy } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { uploadImageToCloudinary } from "../config/cloudinaryConfig";
+
+const ADMIN_MANAGED_COLLECTIONS = new Set(['Movies', 'Users', 'Actors', 'Authors', 'Characters', 'Categories', 'CategoryTypes', 'Topics', 'Plans', 'Features', 'Packages', 'Episodes', 'ShowTimes', 'Reviews', 'Comments', 'RentMovies', 'Subscriptions']);
 
 const CREATED_AT_COLLECTIONS = ["Movies", "Users", "Reviews", "Comments", "Favorites", "Folders", "MoviesSave", "WatchHistory"];
 
@@ -21,7 +24,7 @@ export const addDocument = async (collectionName, values) => {
     try {
         if (values.imgUrl) values.imgUrl = await uploadIfNeeded(values.imgUrl, collectionName);
         if (values.avatarUrl) values.avatarUrl = await uploadIfNeeded(values.avatarUrl, collectionName);
-        
+
         const docRef = doc(collection(db, collectionName));
         const finalData = {
             ...stripRouteMetadata(values),
@@ -29,6 +32,10 @@ export const addDocument = async (collectionName, values) => {
             ...(CREATED_AT_COLLECTIONS.includes(collectionName) ? { createdAt: Date.now() } : {})
         };
         await setDoc(docRef, finalData);
+        if (adminActor()) {
+            await recordAdminAction('create', collectionName, finalData);
+            notifyAdmin('Đã thêm dữ liệu thành công.');
+        }
         return finalData;
     } catch (error) {
         throw error;
@@ -64,10 +71,15 @@ export const updateDocument = async (collectionName, values, skipUpdatedAt = fal
         updatedValues.updatedAt = Date.now();
     }
     await updateDoc(doc(db, collectionName, id), updatedValues);
+    if (adminActor()) {
+        await recordAdminAction('update', collectionName, { id, ...updatedValues });
+        notifyAdmin('Đã lưu thay đổi thành công.');
+    }
 };
 
 export const deleteDocument = async (collectionName, values) => {
-    const id = values.id;
+    if (adminActor() && ADMIN_MANAGED_COLLECTIONS.has(collectionName)) return moveToAdminTrash(collectionName, typeof values === "string" ? { id: values } : values);
+    const id = typeof values === "string" ? values : values.id;
 
     if (collectionName === "Movies") {
         const relatedCollections = ["Episodes", "ShowTimes", "Comments", "Reviews"];

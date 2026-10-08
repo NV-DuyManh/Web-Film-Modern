@@ -1,3 +1,4 @@
+import { formatAdminMoney } from '../../../utils/adminData';
 import React from 'react';
 
 import {
@@ -12,7 +13,7 @@ import {
 } from 'recharts';
 
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, currency = "USD" }) => {
     if (!active || !payload || !payload.length) return null;
     if (payload[0].payload.date === "") return null;
 
@@ -49,26 +50,26 @@ const CustomTooltip = ({ active, payload, label }) => {
                         gap: '8px',
                     }}
                 >
-                    <div 
-                        style={{ 
-                            width: '8px', 
-                            height: '8px', 
-                            borderRadius: '50%', 
+                    <div
+                        style={{
+                            width: '8px',
+                            height: '8px',
+                            borderRadius: '50%',
                             background: '#38bdf8',
                             boxShadow: `0 0 8px #38bdf888`
-                        }} 
+                        }}
                     />
                     <span style={{ color: '#cbd5e1', fontSize: '14px', fontWeight: 500 }}>
-                        Revenue:
+                        Doanh thu:
                     </span>
-                    <span style={{ 
-                        fontSize: '15px', 
+                    <span style={{
+                        fontSize: '15px',
                         fontWeight: 700,
                         background: 'linear-gradient(90deg, #FF6B6B, #FECA57, #48DBFB)',
                         WebkitBackgroundClip: 'text',
                         WebkitTextFillColor: 'transparent',
                     }}>
-                        ${Number(entry.value).toFixed(2)}
+                        {formatAdminMoney(entry.value, currency)}
                     </span>
                 </div>
             ))}
@@ -80,7 +81,7 @@ const CustomTooltip = ({ active, payload, label }) => {
 const CustomDot = (props) => {
     const { cx, cy, index, payload } = props;
 
-    if (index === 0 || (payload && payload.date === "")) return null;
+    if (payload && payload.date === "") return null;
 
     const colors = [
         '#FF6B6B', '#FECA57', '#48DBFB',
@@ -121,7 +122,7 @@ const CustomDot = (props) => {
 const CustomActiveDot = (props) => {
     const { cx, cy, index, payload } = props;
 
-    if (index === 0 || (payload && payload.date === "")) return null;
+    if (payload && payload.date === "") return null;
 
     const colors = [
         '#FF6B6B', '#FECA57', '#48DBFB',
@@ -178,7 +179,7 @@ const CustomCursor = (props) => {
 
 
 
-function RevenueChart({ data = [] }) {
+function RevenueChart({ currency = "USD", data = [] }) {
 
     return (
 
@@ -192,12 +193,12 @@ function RevenueChart({ data = [] }) {
                     <span style={{ fontSize: '22px' }}>💹</span>
 
                     <h2 className="text-xl font-semibold text-gray-100">
-                        Revenue Overview
+                        Doanh thu gói
                     </h2>
                 </div>
 
                 <p className="text-sm text-gray-400 mt-1">
-                    Revenue generated over time
+                    Doanh thu theo ngày
                 </p>
 
             </div>
@@ -209,7 +210,7 @@ function RevenueChart({ data = [] }) {
 
                     <div className="h-full flex items-center justify-center text-gray-500">
 
-                        No revenue data available
+                        Chưa có doanh thu trong khoảng thời gian này
 
                     </div>
 
@@ -285,7 +286,7 @@ function RevenueChart({ data = [] }) {
                             <YAxis
 
                                 tickFormatter={(value) =>
-                                    `$${value}`
+                                    formatAdminMoney(value, currency)
                                 }
 
                                 tick={{
@@ -301,7 +302,7 @@ function RevenueChart({ data = [] }) {
 
 
                             <Tooltip
-                                content={<CustomTooltip />}
+                                content={<CustomTooltip currency={currency} />}
                                 cursor={<CustomCursor />}
                             />
 

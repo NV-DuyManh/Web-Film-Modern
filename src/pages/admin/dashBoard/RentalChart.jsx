@@ -1,3 +1,4 @@
+import { formatAdminMoney, completedPayments, dailyRevenue } from '../../../utils/adminData';
 import React, { useMemo } from 'react';
 import {
     ResponsiveContainer,
@@ -37,7 +38,7 @@ const CustomCursor = (props) => {
 const CustomDot = (props) => {
     const { cx, cy, index, payload } = props;
 
-    if (index === 0 || (payload && payload.date === "")) return null;
+    if (payload && payload.date === "") return null;
 
     const colors = [
         '#FF9FF3', '#54A0FF', '#48DBFB',
@@ -58,7 +59,7 @@ const CustomDot = (props) => {
 const CustomActiveDot = (props) => {
     const { cx, cy, index, payload } = props;
 
-    if (index === 0 || (payload && payload.date === "")) return null;
+    if (payload && payload.date === "") return null;
 
     const colors = [
         '#FF9FF3', '#54A0FF', '#48DBFB',
@@ -76,7 +77,7 @@ const CustomActiveDot = (props) => {
     );
 };
 
-const CustomTooltip = ({ active, payload, label }) => {
+const CustomTooltip = ({ active, payload, label, currency = "USD" }) => {
     if (active && payload && payload.length) {
         if (payload[0].payload.date === "") return null;
         return (
@@ -112,19 +113,19 @@ const CustomTooltip = ({ active, payload, label }) => {
                             gap: '8px',
                         }}
                     >
-                        <div 
-                            style={{ 
-                                width: '8px', 
-                                height: '8px', 
-                                borderRadius: '50%', 
+                        <div
+                            style={{
+                                width: '8px',
+                                height: '8px',
+                                borderRadius: '50%',
                                 background: entry.color,
-                            }} 
+                            }}
                         />
                         <span style={{ color: '#cbd5e1', fontSize: '14px', fontWeight: 500 }}>
                             {entry.name}:
                         </span>
                         <span style={{ color: '#fff', fontSize: '15px', fontWeight: 700 }}>
-                            ${Number(entry.value).toFixed(2)}
+                            {formatAdminMoney(entry.value, currency)}
                         </span>
                     </div>
                 ))}
@@ -134,46 +135,8 @@ const CustomTooltip = ({ active, payload, label }) => {
     return null;
 };
 
-function RentalChart({ rentMovies = [] }) {
-    const data = useMemo(() => {
-        const mergedData = {};
-
-        const processItem = (item, type) => {
-            let rawDate = item.startDate || item.createdAt;
-            if (!rawDate) return;
-            
-            let date;
-            if (rawDate && typeof rawDate.toDate === "function") {
-                date = rawDate.toDate();
-            } else if (rawDate instanceof Date) {
-                date = rawDate;
-            } else {
-                date = new Date(rawDate);
-            }
-
-            if (isNaN(date.getTime())) return;
-            
-            const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-            const price = parseFloat(item.price) || 0;
-
-            if (!mergedData[dateKey]) {
-                mergedData[dateKey] = { date: dateKey, rents: 0 };
-            }
-            mergedData[dateKey][type] += price;
-        };
-
-        if (Array.isArray(rentMovies)) {
-            rentMovies.forEach(rent => processItem(rent, 'rents'));
-        }
-
-        const sortedData = Object.values(mergedData).sort((a, b) => new Date(a.date) - new Date(b.date));
-        
-        if (sortedData.length > 0) {
-            sortedData.unshift({ date: "", rents: 0 });
-        }
-
-        return sortedData;
-    }, [rentMovies]);
+function RentalChart({ rentMovies = [], currency = "USD" }) {
+    const data = useMemo(() => dailyRevenue(completedPayments(rentMovies, { currency }), 'rents'), [rentMovies, currency]);
 
     return (
         <div className="rounded-[14px] p-5 relative overflow-hidden h-full border border-white/5" style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
@@ -181,18 +144,18 @@ function RentalChart({ rentMovies = [] }) {
                 <div className="flex items-center gap-2">
                     <span style={{ fontSize: '22px' }}>💰</span>
                     <h2 className="text-xl font-semibold text-gray-100">
-                        Rental Revenue
+                        Doanh thu thuê phim
                     </h2>
                 </div>
                 <p className="text-sm text-gray-400 mt-1">
-                    Revenue from rented movies
+                    Doanh thu thuê theo ngày
                 </p>
             </div>
 
             <div className="w-full h-56 [&_*]:outline-none!">
                 {data.length === 0 ? (
                     <div className="h-full flex items-center justify-center text-gray-500">
-                        No revenue data available
+                        Chưa có doanh thu trong khoảng thời gian này
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">
@@ -226,29 +189,29 @@ function RentalChart({ rentMovies = [] }) {
                             </defs>
 
                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" vertical={false} />
-                            
-                            <XAxis 
-                                dataKey="date" 
+
+                            <XAxis
+                                dataKey="date"
                                 tick={{ fontSize: 12, fill: '#94a3b8', fontWeight: 500 }}
                                 axisLine={{ stroke: 'rgba(255,255,255,0.1)' }}
                                 tickLine={false}
                             />
-                            
-                            <YAxis 
-                                tickFormatter={(value) => `$${value}`}
+
+                            <YAxis
+                                tickFormatter={(value) => formatAdminMoney(value, currency)}
                                 tick={{ fontSize: 12, fill: '#64748b' }}
                                 axisLine={false}
                                 tickLine={false}
                                 domain={[0, dataMax => Math.ceil(dataMax * 1.15)]}
                             />
-                            
-                            <Tooltip content={<CustomTooltip />} cursor={<CustomCursor />} />
-                            
-                            
-                            <Area 
+
+                            <Tooltip content={<CustomTooltip currency={currency} />} cursor={<CustomCursor />} />
+
+
+                            <Area
                                 type="monotone"
-                                dataKey="rents" 
-                                name="Rentals" 
+                                dataKey="rents"
+                                name="Rentals"
                                 stroke="url(#rentRainbowLine)"
                                 strokeWidth={4}
                                 fill="url(#rentRainbowFill)"

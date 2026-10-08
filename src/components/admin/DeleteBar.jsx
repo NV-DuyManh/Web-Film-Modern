@@ -45,7 +45,7 @@ function DeleteBar({ count, onDelete }) {
             borderRadius: '10px',
         }}>
             <p className="inline" style={{ fontSize: '13px', fontWeight: 600, color: '#fca5a5' }}>
-                {count} item{count > 1 ? 's' : ''} selected
+                {count} mục đã chọn
             </p>
             <button
                 onClick={onDelete}
@@ -66,7 +66,7 @@ function DeleteBar({ count, onDelete }) {
                 }}
             >
                 <MdDeleteSweep style={{ fontSize: '16px' }} />
-                Delete Selected
+                Chuyển vào thùng rác
             </button>
         </div>
     );

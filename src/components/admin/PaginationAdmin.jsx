@@ -18,8 +18,8 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
         const pageNumber = parseInt(jumpValue, 10);
 
         if (isNaN(pageNumber) || pageNumber < 1 || pageNumber > totalPages) {
-            setErrorMsg(`Please enter 1 - ${totalPages}`);
-            
+            setErrorMsg(`Nhập trang từ 1 đến ${totalPages}`);
+
             setTimeout(() => {
                 setErrorMsg('');
             }, 3000);
@@ -38,9 +38,9 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
     };
 
     return (
-        <div className="flex w-full items-center justify-between rounded-xl border border-white/10 bg-[rgba(15,23,42,0.1)] px-6 py-2 backdrop-blur-[2px]">            
+        <div className="flex w-full flex-wrap gap-3 items-center justify-between rounded-xl border border-white/10 bg-[rgba(15,23,42,0.1)] px-6 py-2 backdrop-blur-[2px]">
             <div className="flex items-center gap-3">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 inline">Rows</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 inline">Số dòng</p>
                 <Select
                     labelId="rows-per-page-label"
                     id="rows-per-page-select"
@@ -93,21 +93,21 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
             </div>
 
             <div className="flex items-center gap-2">
-                <p 
-                    aria-hidden="true" 
-                    className="w-6 inline" 
+                <p
+                    aria-hidden="true"
+                    className="w-6 inline"
                     style={{ height: '1px', background: 'linear-gradient(to right, transparent, rgba(251, 191, 36, 0.5))' }}
                 />
                 <p className="text-xs font-medium tracking-tight text-gray-300">
-                    Showing <p className="font-bold text-amber-400 inline">{from}</p> 
-                    <p className="mx-1 text-gray-500 inline">to</p> 
-                    <p className="font-bold text-amber-400 inline">{to}</p> 
-                    <p className="mx-1 text-gray-500 inline">of</p> 
+                    Hiển thị <p className="font-bold text-amber-400 inline">{from}</p>
+                    <p className="mx-1 text-gray-500 inline">đến</p>
+                    <p className="font-bold text-amber-400 inline">{to}</p>
+                    <p className="mx-1 text-gray-500 inline">trên</p>
                     <p className="font-bold text-white inline">{totalItems}</p>
                 </p>
-                <p 
-                    aria-hidden="true" 
-                    className="w-6 inline" 
+                <p
+                    aria-hidden="true"
+                    className="w-6 inline"
                     style={{ height: '1px', background: 'linear-gradient(to left, transparent, rgba(251, 191, 36, 0.5))' }}
                 />
             </div>
@@ -120,7 +120,7 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
                         onChange={(e, value) => setPage(value)}
                         shape="rounded"
                         siblingCount={1}
-                        boundaryCount={1} 
+                        boundaryCount={1}
                         sx={{
                             "& .MuiPaginationItem-root": {
                                 color: "rgba(255, 255, 255, 0.6)",
@@ -163,9 +163,9 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
                 </Stack>
 
                 <div className="flex items-center gap-2 pl-4 border-l border-white/10 relative">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 inline">Page</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 inline">Trang</p>
                     <div className="flex gap-1 relative">
-                        
+
                         {errorMsg && (
                             <div className="absolute -top-10 right-0 z-10 whitespace-nowrap rounded border border-red-500/30 bg-red-500/10 px-3 py-1 text-[11px] font-bold text-red-400 shadow-[0_0_10px_rgba(239,68,68,0.2)] backdrop-blur-md animate-bounce">
                                 {errorMsg}
@@ -190,7 +190,7 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
                             onClick={executeJump}
                             className="flex h-7 items-center justify-center rounded-md border border-amber-400/30 bg-amber-400/10 px-2 text-[10px] font-bold uppercase tracking-wider text-amber-400 transition hover:border-amber-400 hover:bg-amber-400/20 active:scale-95 cursor-pointer"
                         >
-                            GO
+                            ĐI
                         </button>
                     </div>
                 </div>

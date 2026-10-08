@@ -14,9 +14,9 @@ function HeaderAdmin() {
 
     const getGreeting = () => {
         const hour = new Date().getHours();
-        if (hour < 12) return 'Good Morning';
-        if (hour < 18) return 'Good Afternoon';
-        return 'Good Evening';
+        if (hour < 12) return 'Chào buổi sáng';
+        if (hour < 18) return 'Chào buổi chiều';
+        return 'Chào buổi tối';
     };
 
     React.useEffect(() => {
@@ -37,16 +37,16 @@ function HeaderAdmin() {
                 <div className='flex justify-between items-center text-gray-200 ml-8 mr-4 md:ml-10 md:mr-6 lg:mx-4'>
                     <h1 className='text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold tracking-wide flex items-center gap-1.5 md:gap-3 flex-wrap'>
                         <span className="glow-text2 inline">{getGreeting()},</span>
-                        <span className="glow-text inline">{isLogin?.name || 'Admin'}</span> 
+                        <span className="glow-text inline">{isLogin?.name || 'Admin'}</span>
                         <span className="animate-wave ml-1 inline-block">👋</span>
                     </h1>
 
                     <div className="flex items-center gap-3 md:gap-5 lg:gap-8 text-xl lg:text-2xl shrink-0">
-                        <button className="text-cyan-400 cursor-pointer drop-shadow-[0_0_4px_rgba(34,211,238,0.6)] transition duration-300 hover:-translate-y-1 hover:scale-125 hover:text-cyan-300 hover:drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
+                        <button title="Tìm kiếm (biểu tượng trang trí)" aria-label="Tìm kiếm (biểu tượng trang trí)" className="text-cyan-400 cursor-pointer drop-shadow-[0_0_4px_rgba(34,211,238,0.6)] transition duration-300 hover:-translate-y-1 hover:scale-125 hover:text-cyan-300 hover:drop-shadow-[0_0_15px_rgba(34,211,238,1)]">
                             <FiSearch />
                         </button>
 
-                        <button className="relative text-yellow-400 cursor-pointer drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition duration-300 hover:-translate-y-1 hover:scale-125 hover:text-yellow-300 hover:drop-shadow-[0_0_15px_rgba(250,204,21,1)] group">
+                        <button title="Thông báo (biểu tượng trang trí)" aria-label="Thông báo (biểu tượng trang trí)" className="relative text-yellow-400 cursor-pointer drop-shadow-[0_0_4px_rgba(250,204,21,0.6)] transition duration-300 hover:-translate-y-1 hover:scale-125 hover:text-yellow-300 hover:drop-shadow-[0_0_15px_rgba(250,204,21,1)] group">
                             <IoIosNotifications className="animate-bell" />
                             <span className="absolute top-0 right-0.5 flex h-2.5 w-2.5 -mt-0.5 -mr-0.5">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
@@ -54,7 +54,7 @@ function HeaderAdmin() {
                             </span>
                         </button>
 
-                        <button className="relative text-purple-400 cursor-pointer drop-shadow-[0_0_4px_rgba(192,132,252,0.6)] transition duration-300 hover:-translate-y-1 hover:scale-125 hover:text-purple-300 hover:drop-shadow-[0_0_15px_rgba(192,132,252,1)] group">
+                        <button title="Thư (biểu tượng trang trí)" aria-label="Thư (biểu tượng trang trí)" className="relative text-purple-400 cursor-pointer drop-shadow-[0_0_4px_rgba(192,132,252,0.6)] transition duration-300 hover:-translate-y-1 hover:scale-125 hover:text-purple-300 hover:drop-shadow-[0_0_15px_rgba(192,132,252,1)] group">
                             <MdEmail className="animate-envelope" />
                             <span className="absolute top-0 right-0 flex h-2.5 w-2.5 -mt-0.5 -mr-1">
                                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75" style={{ animationDuration: '2s' }}></span>
@@ -68,7 +68,7 @@ function HeaderAdmin() {
                                 className="relative flex items-center justify-center text-green-400 cursor-pointer transition duration-300 group"
                             >
                                 <div className="absolute inset-0 rounded-full bg-green-400 opacity-20 blur-sm group-hover:opacity-60 group-hover:animate-pulse transition-opacity duration-300"></div>
-                                
+
                                 <WingedFrame theme={isLogin?.selectedFrame || 'admin'} size={40}>
                                     <img src={globalAvatarPreview || isLogin?.avatarUrl} alt="avatar" className="w-full h-full rounded-full object-cover" />
                                 </WingedFrame>

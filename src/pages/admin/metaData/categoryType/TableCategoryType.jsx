@@ -75,13 +75,14 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th>ID</th>
-                                <th className="text-center px-4 w-48">NAME</th>
-                                <th className="text-center px-4">DESCRIPTION</th>
-                                <th className="w-[10%] text-center">ACTIONS</th>
+                                <th>STT</th>
+                                <th className="text-center px-4 w-48">TÊN</th>
+                                <th className="text-center px-4">GIỚI THIỆU</th>
+                                <th className="w-[10%] text-center">THAO TÁC</th>
                             </tr>
                         </thead>
                         <tbody>
+                            {!currentData.length && <tr><td colSpan={99} className="p-5 text-center text-slate-400">Chưa có dữ liệu phù hợp.</td></tr>}
                             {currentData.map((row, index) => {
                                 const isSelected = selectedIds.includes(row.id);
                                 return (
@@ -103,10 +104,10 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                                         <td className="table-cell text-left px-4">{row.description}</td>
                                         <td className="table-cell text-center">
                                             <div className="flex justify-center! gap-2">
-                                                <button onClick={() => handleEdit(row)} className="action-btn btn-edit">
+                                                <button onClick={() => handleEdit(row)} title="Chỉnh sửa" aria-label="Chỉnh sửa" className="action-btn btn-edit">
                                                     <CiEdit />
                                                 </button>
-                                                <button onClick={() => handleClickOpenDele(row)} className="action-btn btn-delete">
+                                                <button onClick={() => handleClickOpenDele(row)} title="Chuyển vào thùng rác" aria-label="Chuyển vào thùng rác" className="action-btn btn-delete">
                                                     <RiDeleteBin6Fill />
                                                 </button>
                                             </div>
@@ -133,7 +134,7 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
-                titleDelete={"DELETE CATEGORY TYPE"}
+                titleDelete={"CHUYỂN VÀO THÙNG RÁC"}
                 contentDelete={"Are you sure you want to delete this category type?"}
             />
 
@@ -141,8 +142,8 @@ function TableCategoryType({ handleClickOpen, setCategoryType, categoryType, sea
                 handleClose={() => setOpenBulk(false)}
                 open={openBulk}
                 handleDeleted={handleBulkDeleted}
-                titleDelete={"DELETE SELECTED"}
-                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected categor${selectedIds.length > 1 ? 'ies' : 'y'}?`}
+                titleDelete={"CHUYỂN CÁC MỤC ĐÃ CHỌN VÀO THÙNG RÁC"}
+                contentDelete={`Chuyển mục đã chọn vào thùng rác? Bạn có thể khôi phục trong mục Vận hành.`}
             />
         </div>
     );

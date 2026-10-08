@@ -1,3 +1,4 @@
+import { adminAlert } from '../../../../services/adminOperations';
 import React, { useContext, useState } from "react";
 import Search from '../../../../components/admin/search/Search';
 import ModalSubscriptions from "./ModalSubscriptions";
@@ -68,7 +69,7 @@ function Subscriptions() {
             setProgress(50);
 
             let isNew = !subscription.id;
-            
+
             if (isNew) {
                 submitData.createdAt = new Date().toISOString();
                 await addDocument("Subscriptions", submitData);
@@ -84,7 +85,7 @@ function Subscriptions() {
             }, 500);
         } catch (err) {
             console.error(err);
-            alert("Đã xảy ra lỗi, vui lòng thử lại!");
+            adminAlert("Đã xảy ra lỗi, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);
         }

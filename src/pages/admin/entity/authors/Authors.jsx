@@ -1,3 +1,4 @@
+import { adminAlert } from '../../../../services/adminOperations';
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Search from '../../../../components/admin/search/Search';
@@ -37,10 +38,10 @@ function Authors() {
 
     const validation = () => {
         const newError = {};
-        newError.name = author.name ? "" : "Please enter your name";
-        newError.description = author.description ? "" : "Please enter your description";
-        newError.countriesID = author.countriesID ? "" : "Please select your country";
-        newError.sexID = author.sexID ? "" : "Please select your gender";
+        newError.name = author.name ? "" : "Vui lòng nhập tên";
+        newError.description = author.description ? "" : "Vui lòng nhập giới thiệu";
+        newError.countriesID = author.countriesID ? "" : "Vui lòng chọn quốc gia";
+        newError.sexID = author.sexID ? "" : "Vui lòng chọn giới tính";
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     }
@@ -79,7 +80,7 @@ function Authors() {
             }, 500);
 
         } catch (err) {
-            alert("An error occurred, please try again!");
+            adminAlert("Không lưu được dữ liệu. Vui lòng thử lại!");
             setLoading(false);
             setProgress(0);
         }

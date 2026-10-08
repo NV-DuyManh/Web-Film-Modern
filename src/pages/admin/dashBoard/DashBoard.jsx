@@ -1,29 +1,22 @@
+import { completedPayments, dailyRevenue, formatAdminMoney } from '../../../utils/adminData';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import PlanChart from './PlanChart';
 import RevenueChart from './RevenueChart';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
-import { PlanContext } from '../../../contexts/PlanProvider';
-import { getObjectById } from '../../../services/firebaseResponse';
-import { useMovies, useRentMovies } from '../../../hooks/useCollections';
+import { useRentMovies } from '../../../hooks/useCollections';
 import { getTop5Films, getTop5RentedFilms } from '../../../services/firebaseService';
 import TopFilms from "./TopFilms";
 import TopRents from "./TopRents";
-import { UserContext } from '../../../contexts/UserProvider';
-import DemographicChart from './DemographicChart';
 import RentalChart from './RentalChart';
-import CategoryChart from './CategoryChart';
-import { CategoryContext } from '../../../contexts/CategoryProvider';
 
 function DashBoard() {
 
-    const subscriptions = useContext(SubscriptionContext);
-    const plans = useContext(PlanContext);
-    const users = useContext(UserContext);
-    const categories = useContext(CategoryContext);
-    
-    const rentMovies = useRentMovies();
-    const movies = useMovies();
+    const allSubscriptions = useContext(SubscriptionContext);
+    const [period, setPeriod] = useState({ from: "", to: "", currency: "USD" });
+    const subscriptions = useMemo(() => completedPayments(allSubscriptions, period), [allSubscriptions, period]);
+
+    const allRents = useRentMovies();
+    const rentMovies = useMemo(() => completedPayments(allRents, period), [allRents, period]);
 
     const [topFilms, setTopFilms] = useState([]);
     const [topRents, setTopRents] = useState([]);
@@ -65,145 +58,10 @@ function DashBoard() {
 
 
 
-    const total = useMemo(() => {
-
-        const data = [];
-
-        if (!subscriptions || !Array.isArray(subscriptions)) {
-            return data;
-        }
-
-        subscriptions.forEach((element) => {
-
-            const price = parseFloat(element.price) || 0;
-
-            const index = data.findIndex(
-                (item) => item.planID === element.planID
-            );
-
-            if (index === -1) {
-
-                data.push({
-                    planID: element.planID,
-                    count: 1,
-                    total: price
-                });
-
-            } else {
-
-                data[index].count += 1;
-                data[index].total += price;
-
-            }
-
-        });
-
-        return data.map(p => {
-            p.planID = getObjectById(plans, p.planID)?.name;
-            return p;
-        });
-
-    }, [subscriptions]);
 
 
-    const chartData = useMemo(() => {
 
-        if (!subscriptions || !Array.isArray(subscriptions)) {
-            return [];
-        }
-
-        const data = {};
-
-        subscriptions.forEach((element) => {
-
-            if (!element.startDate) {
-                return;
-            }
-
-
-            let date;
-
-            if (
-                element.startDate &&
-                typeof element.startDate.toDate === "function"
-            ) {
-
-                date = element.startDate.toDate();
-
-            }
-
-            else if (element.startDate instanceof Date) {
-
-                date = element.startDate;
-
-            }
-
-            else {
-
-                date = new Date(element.startDate);
-
-            }
-
-
-            if (isNaN(date.getTime())) {
-                return;
-            }
-
-
-            const year = date.getFullYear();
-
-            const month = String(
-                date.getMonth() + 1
-            ).padStart(2, "0");
-
-            const day = String(
-                date.getDate()
-            ).padStart(2, "0");
-
-
-            const dateKey =
-                `${year}-${month}-${day}`;
-
-
-            const price =
-                parseFloat(element.price) || 0;
-
-
-            if (!data[dateKey]) {
-
-                data[dateKey] = {
-
-                    date: dateKey,
-
-                    revenue: 0
-
-                };
-
-            }
-
-
-            data[dateKey].revenue += price;
-
-        });
-
-
-        const sortedData = Object.values(data).sort(
-            (a, b) =>
-                new Date(a.date) -
-                new Date(b.date)
-        );
-
-        if (sortedData.length > 0) {
-            sortedData.unshift({ 
-                date: "", 
-                revenue: 0 
-            });
-        }
-
-        return sortedData;
-
-    }, [subscriptions]);
-
+    const chartData = useMemo(() => dailyRevenue(subscriptions), [subscriptions]);
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -230,20 +88,30 @@ function DashBoard() {
     };
 
     return (
-        <motion.div 
+        <motion.div
             className="flex flex-col gap-4 p-4"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
         >
-            
 
+
+            <section className="rounded-2xl border border-cyan-500/20 bg-slate-900/80 p-4">
+                <h2 className="font-bold text-cyan-300 mb-3">Doanh thu thanh toán thành công</h2>
+                <div className="flex flex-wrap gap-4 items-end">
+                    {['from', 'to'].map(key => <label key={key} className="text-sm text-slate-300">{key === 'from' ? 'Từ ngày' : 'Đến ngày'}<input type="date" value={period[key]} onChange={e => setPeriod(p => ({ ...p, [key]: e.target.value }))} className="block rounded-lg bg-slate-800 border border-slate-600 p-2 mt-1 text-white" /></label>)}
+                    <label className="text-sm text-slate-300">Đơn vị<select value={period.currency} onChange={e => setPeriod(p => ({ ...p, currency: e.target.value }))} className="block rounded-lg bg-slate-800 border border-slate-600 p-2 mt-1"><option>USD</option><option>VND</option></select></label>
+                    <button className="text-amber-300 p-2" onClick={() => setPeriod({ from: '', to: '', currency: 'USD' })}>Toàn bộ thời gian</button>
+                </div>
+                {period.from && period.to && period.from > period.to ? <p role="alert" className="text-red-300 mt-3">Ngày bắt đầu phải trước ngày kết thúc.</p> : <p className="text-xl font-bold text-amber-300 mt-3">{formatAdminMoney([...subscriptions, ...rentMovies].reduce((sum, row) => sum + Number(row.price), 0), period.currency)} <span className="text-sm font-normal text-slate-400">· {subscriptions.length + rentMovies.length} giao dịch</span></p>}
+                <p className="text-xs text-slate-400 mt-2">Chỉ tính đơn đã thanh toán. USD và VND được thống kê riêng, không tự quy đổi.</p>
+            </section>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <motion.div variants={itemVariants}>
-                    <RevenueChart data={chartData} />
+                    <RevenueChart data={chartData} currency={period.currency} />
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                    <RentalChart rentMovies={rentMovies} />
+                    <RentalChart rentMovies={rentMovies} currency={period.currency} />
                 </motion.div>
             </div>
 

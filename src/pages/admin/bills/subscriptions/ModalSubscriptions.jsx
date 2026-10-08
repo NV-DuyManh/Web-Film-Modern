@@ -1,7 +1,8 @@
-﻿import { FaTimes } from 'react-icons/fa';
+import Dialog from '../../../../components/admin/AdminDialog';
+import { FaTimes } from 'react-icons/fa';
 import { useSubscriptions } from '../../../../hooks/useCollections';
 import React, { useContext } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import { Button, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import { PlanContext } from "../../../../contexts/PlanProvider";
 import { UserContext } from "../../../../contexts/UserProvider";
 
@@ -15,6 +16,7 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
 
     return (
         <Dialog
+            formValues={subscription}
             open={open}
             TransitionComponent={Transition}
             keepMounted
@@ -29,7 +31,7 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
                     {subscription.id  ? "Update Subscription" : "Add New Subscription"}
                 </p>
-                <button 
+                <button
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
@@ -43,7 +45,7 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                     name="transactionID"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Transaction ID"
+                    label="Mã giao dịch"
                     variant="outlined"
                     value={subscription.transactionID}
                     helperText={error?.transactionID}
@@ -77,7 +79,7 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                         setSubscription(prev => ({ ...prev, planID: value ? value.id : "" }));
                         setError(prev => ({ ...prev, planID: "" }));
                     }}
-                    renderInput={(params) => <TextField {...params} label="Plan" helperText={error?.planID} error={!!error?.planID} />}
+                    renderInput={(params) => <TextField {...params} label="Gói phim" helperText={error?.planID} error={!!error?.planID} />}
                 />
 
                 <div className="grid grid-cols-2 gap-4">
@@ -87,7 +89,7 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                         type="number"
                         onChange={onChangeInput}
                         fullWidth
-                        label="Price"
+                        label="Giá"
                         variant="outlined"
                         value={subscription.price}
                         helperText={error?.price}
@@ -118,7 +120,7 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                         type="datetime-local"
                         onChange={onChangeInput}
                         fullWidth
-                        label="Start Date"
+                        label="Ngày bắt đầu"
                         variant="outlined"
                         InputLabelProps={{ shrink: true }}
                         value={subscription.startDate}
@@ -131,7 +133,7 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                         type="datetime-local"
                         onChange={onChangeInput}
                         fullWidth
-                        label="Expiry Date"
+                        label="Ngày hết hạn"
                         variant="outlined"
                         InputLabelProps={{ shrink: true }}
                         value={subscription.expiryDate}
@@ -145,13 +147,13 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                     <Select
                         name="status"
                         value={subscription.status}
-                        label="Status"
+                        label="Trạng thái"
                         onChange={onChangeInput}
                         MenuProps={{ classes: { paper: "neon-paper" } }}
                     >
                         <MenuItem value="success" className="neon-option">Success</MenuItem>
                         <MenuItem value="pending" className="neon-option">Pending</MenuItem>
-                        <MenuItem value="cancel" className="neon-option">Cancel</MenuItem>
+                        <MenuItem value="cancel" className="neon-option">Hủy</MenuItem>
                     </Select>
                         {error?.status && <p className="text-red-500 text-xs ml-4 mt-1 inline">{error.status}</p>}
                 </FormControl>
@@ -165,7 +167,7 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                             <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div 
+                            <div
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -173,9 +175,9 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
+                        <Button onClick={handleClose} className="btn-cancel-x">Hủy</Button>
                         <Button disabled={loading} onClick={addSubscription} className="btn-submit-x">
-                            {subscription.id ? "Save Changes" : "Add Subscription"}
+                            {subscription.id ? "LƯU THAY ĐỔI" : "Add Subscription"}
                         </Button>
                     </div>
                 )}

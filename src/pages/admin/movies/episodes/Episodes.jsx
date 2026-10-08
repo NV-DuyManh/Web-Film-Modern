@@ -1,3 +1,4 @@
+import { adminAlert } from '../../../../services/adminOperations';
 import { parseEpisode, episodeKey } from '../../../../utils/episodes';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import React, { useState, useContext, useEffect, useMemo } from 'react';
@@ -23,7 +24,7 @@ const inner = { numberEpisode: "", title: "", movieID: "", url: "" };
 function Episodes() {
     const users = useContext(UserContext);
     const movies = useMovies() || [];
-    
+
     const [searchParams, setSearchParams] = useSearchParams();
     const [selectedMovie, setSelectedMovie] = useState(null);
 
@@ -80,7 +81,7 @@ function Episodes() {
 
     const handleClickOpen = () => {
         if (!selectedMovie) {
-            alert("Please select a movie first.");
+            adminAlert("Please select a movie first.");
             return;
         }
         setOpen(true);
@@ -131,10 +132,10 @@ function Episodes() {
                     submitData.id = existingEp.id;
                     await updateDocument("Episodes", submitData);
                 } else {
-                    await addDocument("Episodes", submitData);       
+                    await addDocument("Episodes", submitData);
                     const listUser = users.filter(t => t?.listFavorite?.some(p => p == submitData.movieID));
                     const movie = getObjectById(movies, submitData.movieID);
-                    
+
                     listUser.forEach(p => {
                         const templateParams = {
                             to_email: p.email,
@@ -145,7 +146,7 @@ function Episodes() {
                             movie_banner: movie?.bannerUrl || movie?.imgUrl || movie?.thumbUrl || 'https://via.placeholder.com/480x270',
                             watch_url: `https://mfilm.online/phim/${routeSegment(movie)}`
                         };
-                        
+
                         emailjs.send(YOUR_SERVICE_ID, NEW_EPISODE, templateParams, YOUR_USER_ID);
                     });
                 }
@@ -160,7 +161,7 @@ function Episodes() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            adminAlert("Có lỗi xảy ra, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);
         }
@@ -172,7 +173,7 @@ function Episodes() {
             return;
         }
         if (!bulkText.trim()) {
-            alert("Vui lòng nhập nội dung!");
+            adminAlert("Vui lòng nhập nội dung!");
             return;
         }
 
@@ -264,7 +265,7 @@ function Episodes() {
 
         } catch (err) {
 
-            alert("Có lỗi xảy ra trong quá trình thêm hàng loạt!");
+            adminAlert("Có lỗi xảy ra trong quá trình thêm hàng loạt!");
             setLoading(false);
             setProgress(0);
         }

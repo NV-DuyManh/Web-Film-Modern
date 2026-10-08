@@ -23,9 +23,11 @@ const RentMovies = lazyRetry(() => import('../pages/admin/bills/rentMovies/RentM
 const Subscriptions = lazyRetry(() => import('../pages/admin/bills/subscriptions/Subscriptions'));
 const MagicImport = lazyRetry(() => import('../pages/admin/magicImport/MagicImport'));
 const ProfileAdmin = lazyRetry(() => import('../pages/admin/profile/ProfileAdmin'));
+const Operations = lazyRetry(() => import('../pages/admin/operations/Operations'));
 
 function AdminRouters(props) {
     const adminRouter = [
+        { path: '/operations', element: <Operations /> },
         {
             path: "/",
             element: <DashBoard />

@@ -145,7 +145,8 @@ async function runCloudSync() {
     }
 }
 
-runCloudSync().catch(err => {
+runCloudSync().catch(async err => {
+    if (!process.argv.includes('--dry-run')) await setDoc(doc(db, 'Settings', 'CloudEpisodeSync'), { lastErrorAt: Date.now(), lastError: String(err.code || err.message).slice(0, 300) }, { merge: true }).catch(() => {});
     console.error("[CloudSync] Fatal error:", err);
     process.exitCode = 1;
 }).finally(() => terminate(db));

@@ -1,6 +1,7 @@
+import Dialog from '../../../../components/admin/AdminDialog';
 import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import React, { useEffect,  useContext, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel, IconButton } from '@mui/material';
+import { Button, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel, IconButton } from '@mui/material';
 import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja, FaUserTie, FaTimes } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
 import ModalChoose from '../../../../components/admin/ModalChoose';
@@ -33,20 +34,20 @@ const AGE_RATING_OPTIONS = [
 
 function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, progress, setMovie, error, setError }) {
     const [actors, setActors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
+    useEffect(() => { if (!open) return; const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, [open]);
     const [authors, setAuthors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
+    useEffect(() => { if (!open) return; const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, [open]);
     const [characters, setCharacters] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
+    useEffect(() => { if (!open) return; const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, [open]);
 
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);
 
     const categoryTypes = useContext(CategoryTypeContext);
-    
+
     const categories = useContext(CategoryContext);
-    
-    
+
+
     const plansList = useContext(PlanContext);
     const [type, setType] = useState("");
     const [posterMode, setPosterMode] = useState("file");
@@ -153,6 +154,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
 
     return (
         <Dialog
+            formValues={movie}
             open={open} TransitionComponent={Transition} keepMounted onClose={handleClose}
             maxWidth="lg" fullWidth
             PaperProps={{ className: "modal-inner" }}
@@ -160,7 +162,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
-                    {movie.id ? "Update Movie" : "Add New Movie"}
+                    {movie.id ? "Sửa phim" : "Thêm phim"}
                 </p>
                 <button
                     onClick={handleClose}
@@ -186,15 +188,15 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                             <TextField variant="outlined" className="modal-input-x" name="name" onChange={onChangeInput} fullWidth label="Movie Name" value={movie.name} error={!!error?.name} helperText={error?.name} />
                             <TextField variant="outlined" className="modal-input-x" name="otherName" onChange={onChangeInput} fullWidth label="Other/Original Name" value={movie.otherName} error={!!error?.otherName} helperText={error?.otherName} />
                         </div>
-                        <TextField variant="outlined" className="modal-input-x" name="description" onChange={onChangeInput} fullWidth multiline rows={3} label="Description" value={movie.description} error={!!error?.description} helperText={error?.description} />
+                        <TextField variant="outlined" className="modal-input-x" name="description" onChange={onChangeInput} fullWidth multiline rows={3} label="Giới thiệu" value={movie.description} error={!!error?.description} helperText={error?.description} />
                         <div className="grid grid-cols-2 gap-4">
                             <Autocomplete
                                 options={COUNTRIES || []} value={movie.countriesID || null}
                                 classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                                 onChange={(e, newValue) => onChangeInput({ target: { name: "countriesID", value: newValue || "" } })}
-                                renderInput={(params) => <TextField {...params} label="Country" error={!!error?.countriesID} helperText={error?.countriesID} className="modal-input-x" />}
+                                renderInput={(params) => <TextField {...params} label="Quốc gia" error={!!error?.countriesID} helperText={error?.countriesID} className="modal-input-x" />}
                             />
-                            <TextField variant="outlined" className="modal-input-x" name="releaseYear" onChange={handleNumberChange} label="Release Year" value={movie.releaseYear} error={!!error?.releaseYear} helperText={error?.releaseYear} />
+                            <TextField variant="outlined" className="modal-input-x" name="releaseYear" onChange={handleNumberChange} label="Năm phát hành" value={movie.releaseYear} error={!!error?.releaseYear} helperText={error?.releaseYear} />
                         </div>
                     </div>
 
@@ -206,15 +208,15 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                 options={STATUS_OPTIONS} getOptionLabel={(opt) => opt?.name || ""} value={STATUS_OPTIONS.find(s => s.id === movie.status) || null}
                                 classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                                 onChange={(e, val) => onChangeInput({ target: { name: "status", value: val?.id || "" } })}
-                                renderInput={(params) => <TextField {...params} label="Status" error={!!error?.status} helperText={error?.status} className="modal-input-x" />}
+                                renderInput={(params) => <TextField {...params} label="Trạng thái" error={!!error?.status} helperText={error?.status} className="modal-input-x" />}
                             />
                             <Autocomplete
                                 options={AGE_RATING_OPTIONS} getOptionLabel={(opt) => opt?.name || ""} value={AGE_RATING_OPTIONS.find(a => a.id === movie.ageRating) || null}
                                 classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                                 onChange={(e, val) => onChangeInput({ target: { name: "ageRating", value: val?.id || "" } })}
-                                renderInput={(params) => <TextField {...params} label="Age Rating" error={!!error?.ageRating} helperText={error?.ageRating} className="modal-input-x" />}
+                                renderInput={(params) => <TextField {...params} label="Độ tuổi" error={!!error?.ageRating} helperText={error?.ageRating} className="modal-input-x" />}
                             />
-                            <TextField variant="outlined" className="modal-input-x" name="rent" onChange={handleNumberChange} label="Rent Price" value={movie.rent} error={!!error?.rent} helperText={error?.rent} />
+                            <TextField variant="outlined" className="modal-input-x" name="rent" onChange={handleNumberChange} label="Giá thuê" value={movie.rent} error={!!error?.rent} helperText={error?.rent} />
                         </div>
 
                         <div className="border border-white/10 rounded-xl p-4 bg-slate-900/30">
@@ -267,7 +269,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                         </div>
 
                         <div className="grid grid-cols-2 gap-4 mt-2">
-                            <Autocomplete options={plansList ? [...plansList].sort((a, b) => a.level - b.level) : []} getOptionLabel={(opt) => opt?.name || ""} value={plansList?.find(p => p.id === movie.planID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Plan" error={!!error?.planID} helperText={error?.planID} className="modal-input-x" />} />
+                            <Autocomplete options={plansList ? [...plansList].sort((a, b) => a.level - b.level) : []} getOptionLabel={(opt) => opt?.name || ""} value={plansList?.find(p => p.id === movie.planID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Gói phim" error={!!error?.planID} helperText={error?.planID} className="modal-input-x" />} />
                             <Autocomplete options={categoryTypes || []} getOptionLabel={(opt) => opt?.name || ""} value={categoryTypes?.find(c => c.id === movie.categoryTypeID) || null} classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }} onChange={(e, val) => onChangeInput({ target: { name: "categoryTypeID", value: val?.id || "" } })} renderInput={(params) => <TextField {...params} label="Category Type" error={!!error?.categoryTypeID} helperText={error?.categoryTypeID} className="modal-input-x" />} />
                         </div>
                     </div>
@@ -439,7 +441,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <p className="animate-pulse inline">Syncing to Cloud Database...</p>
+                            <p className="animate-pulse inline">Đang lưu dữ liệu...</p>
                             <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
@@ -452,10 +454,10 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                 ) : (
                     <div className="w-full flex justify-end gap-3">
                         <Button onClick={handleClose} className="btn-cancel-x">
-                            Cancel
+                            Hủy
                         </Button>
                         <Button onClick={addOrUpdateMovie} disabled={loading} className="btn-submit-x">
-                            {movie.id ? 'Update Movie' : 'Create Movie'}
+                            {movie.id ? 'Sửa phim' : 'Create Movie'}
                         </Button>
                     </div>
                 )}
