@@ -1,7 +1,7 @@
 import React, { useContext, useState, useMemo, useEffect } from 'react';
 import ModalDetail from '../../watch/detailFilm/ModalDetail';
 import { useMovies } from '../../../../hooks/useCollections';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';

@@ -6,6 +6,7 @@ import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { PlanContext } from "../../../../contexts/PlanProvider";
 import { Link } from 'react-router-dom';
 import { observeVisibleAnimation } from '../../../../utils/visibleAnimation';
+import { COUNTRY_OVERSCAN, countryCardLayout, countryCycleCount, countryWindow, countryWindowStart, wrapCountryPosition } from '../../../../utils/countryCarousel';
 
 function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, index }) {
     const movies = useMovies();
@@ -17,8 +18,12 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
     const trackRef = useRef(null);
     const posRef = useRef(0);
     const halfWidthRef = useRef(0);
-    const [cardWidth, setCardWidth] = useState(0);
-    const [gap, setGap] = useState(20);
+    const [layout, setLayout] = useState(() => countryCardLayout(1120));
+    const layoutRef = useRef(layout);
+    const [windowStart, setWindowStart] = useState(-COUNTRY_OVERSCAN);
+    const renderedStartRef = useRef(windowStart);
+    const requestedStartRef = useRef(windowStart);
+    const cycleCountRef = useRef(0);
 
     const isHoveredRef = useRef(false);
     const isInteracting = useRef(false);
@@ -41,98 +46,79 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
         return (movies || []).filter(m => m.countriesID?.toLowerCase() === countryName.toLowerCase());
     }, [movies, countryName]);
 
-    // Ensure enough items so duplicating creates a seamless infinite loop (12+ items for wide screens)
-    const duplicatedMovies = useMemo(() => {
-        if (!filteredMovies || filteredMovies.length === 0) return [];
-        let list = [...filteredMovies];
-        while (list.length < 12) {
-            list = [...list, ...filteredMovies];
+    const visibleCount = Math.ceil(layout.width / layout.step);
+    const visibleMovies = useMemo(() => countryWindow(filteredMovies, windowStart, visibleCount),
+        [filteredMovies, windowStart, visibleCount]);
+
+    // Translate a short window, not a layer containing the entire catalog.
+    const paintPosition = useCallback(() => {
+        const step = layoutRef.current.step;
+        const start = countryWindowStart(posRef.current, step);
+        if (requestedStartRef.current !== start) {
+            requestedStartRef.current = start;
+            setWindowStart(start);
         }
-        return [...list, ...list].map((m, idx) => ({
-            ...m,
-            _slideKey: `${m.id}-${idx}`
-        }));
-    }, [filteredMovies]);
+        if (trackRef.current) {
+            // A large drag or loop wrap needs new cards before moving the short track.
+            if (Math.abs(start - renderedStartRef.current) > COUNTRY_OVERSCAN) return;
+            const offset = renderedStartRef.current * step - posRef.current;
+            trackRef.current.style.transform = `translate3d(${offset}px, 0, 0)`;
+        }
+    }, []);
 
     // Calculate exact pixel dimensions for responsive breakpoints (matching original Swiper)
     useLayoutEffect(() => {
-        const updateSizes = () => {
-            if (!containerRef.current) return;
-            const width = containerRef.current.clientWidth;
+        const updateSizes = (width) => {
             if (!width) return;
-            let count = 4;
-            let g = 20;
-            if (width < 400) {
-                count = 1;
-                g = 10;
-            } else if (width < 900) {
-                count = 2;
-                g = 12;
-            } else if (width < 1280) {
-                count = 3;
-                g = 15;
-            } else {
-                count = 4;
-                g = 20;
-            }
-            setGap(g);
-            setCardWidth(Math.max(100, (width - (count - 1) * g) / count));
-        };
-
-        let resizeTimer;
-        const debouncedUpdateSizes = () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                updateSizes();
-            }, 150);
-        };
-
-        updateSizes();
-        const observer = new ResizeObserver(debouncedUpdateSizes);
-        if (containerRef.current) observer.observe(containerRef.current);
-        window.addEventListener('resize', debouncedUpdateSizes);
-
-        return () => {
-            clearTimeout(resizeTimer);
-            observer.disconnect();
-            window.removeEventListener('resize', debouncedUpdateSizes);
-        };
-    }, [duplicatedMovies.length]);
-
-    // Read layout once after card sizes change, instead of on every animation frame.
-    useLayoutEffect(() => {
-        const halfWidth = (trackRef.current?.scrollWidth || 0) / 2;
-        const previousWidth = halfWidthRef.current;
-        if (previousWidth > 0 && halfWidth > 0 && previousWidth !== halfWidth) {
-            const ratio = halfWidth / previousWidth;
+            const next = countryCardLayout(width);
+            if (next.width === layoutRef.current.width) return;
+            const ratio = next.step / layoutRef.current.step;
             posRef.current *= ratio;
             startPos.current *= ratio;
             targetPos.current *= ratio;
             dragStartPos.current *= ratio;
-        }
-        halfWidthRef.current = halfWidth;
-        if (trackRef.current) {
-            trackRef.current.style.transform = `translate3d(-${posRef.current}px, 0, 0)`;
-        }
-    }, [duplicatedMovies.length, cardWidth, gap]);
+            layoutRef.current = next;
+            halfWidthRef.current = cycleCountRef.current * next.step;
+            setLayout(next);
+            paintPosition();
+        };
 
-    // Set initial position for reverse direction
-    useEffect(() => {
-        if (isReverse && trackRef.current && posRef.current === 0) {
-            const halfWidth = halfWidthRef.current;
-            if (halfWidth > 0) {
-                posRef.current = halfWidth;
-                trackRef.current.style.transform = `translate3d(-${halfWidth}px, 0, 0)`;
-            }
-        }
-    }, [isReverse, cardWidth]);
+        let resizeFrame;
+        let pendingWidth;
+        const scheduleSize = (width) => {
+            pendingWidth = width;
+            if (resizeFrame !== undefined) return;
+            resizeFrame = requestAnimationFrame(() => {
+                resizeFrame = undefined;
+                updateSizes(pendingWidth);
+            });
+        };
+
+        updateSizes(containerRef.current?.clientWidth);
+        const observer = new ResizeObserver(entries => scheduleSize(entries[0].contentRect.width));
+        if (containerRef.current) observer.observe(containerRef.current);
+
+        return () => {
+            if (resizeFrame !== undefined) cancelAnimationFrame(resizeFrame);
+            observer.disconnect();
+        };
+    }, [filteredMovies.length, paintPosition]);
+
+    // Cycle geometry is arithmetic; no scrollWidth read forces layout during resize.
+    useLayoutEffect(() => {
+        cycleCountRef.current = countryCycleCount(filteredMovies.length);
+        halfWidthRef.current = cycleCountRef.current * layoutRef.current.step;
+        posRef.current = wrapCountryPosition(posRef.current, halfWidthRef.current);
+        renderedStartRef.current = windowStart;
+        paintPosition();
+    }, [filteredMovies.length, windowStart, layout, paintPosition]);
 
     const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
     // Keep the same speed while visible; resume without jumping after a pause.
     useEffect(() => {
         const track = trackRef.current;
-        if (!track || duplicatedMovies.length === 0) return;
+        if (!track || filteredMovies.length === 0) return;
 
         const tick = (currentTime, deltaTime) => {
             const halfWidth = halfWidthRef.current;
@@ -158,32 +144,18 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                 }
             }
             if (halfWidth > 0) {
-                while (posRef.current >= halfWidth) posRef.current -= halfWidth;
-                while (posRef.current < 0) posRef.current += halfWidth;
-                const transform = `translate3d(-${posRef.current}px, 0, 0)`;
-                if (track.style.transform !== transform) track.style.transform = transform;
+                posRef.current = wrapCountryPosition(posRef.current, halfWidth);
+                paintPosition();
             }
         };
 
         return observeVisibleAnimation(containerRef.current, tick, pausedDuration => {
             if (isAnimatingBtn.current) animStartTime.current += pausedDuration;
         });
-    }, [duplicatedMovies, speed, isReverse]);
+    }, [filteredMovies.length, speed, isReverse, paintPosition]);
 
     const getStep = () => {
-        if (containerRef.current) {
-            const width = containerRef.current.clientWidth;
-            if (width > 0) {
-                let count = 4;
-                let g = 20;
-                if (width < 400) { count = 1; g = 10; }
-                else if (width < 900) { count = 2; g = 12; }
-                else if (width < 1280) { count = 3; g = 15; }
-                else { count = 4; g = 20; }
-                return Math.max(100, (width - (count - 1) * g) / count) + g;
-            }
-        }
-        return (cardWidth || 280) + gap;
+        return layoutRef.current.step;
     };
 
     // Smooth button click handlers (no stutter, no snapback)
@@ -229,7 +201,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
             while (newPos < 0) newPos += halfWidth;
         }
         posRef.current = newPos;
-        trackRef.current.style.transform = `translate3d(-${newPos}px, 0, 0)`;
+        paintPosition();
     };
 
     const onMouseUp = () => {
@@ -250,7 +222,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
 
     // Reuse the card tree during resize; CSS updates their widths without rebuilding it.
     const movieCards = useMemo(() => (
-        duplicatedMovies.map((e) => (
+        visibleMovies.map((e) => (
             <div
                 key={e._slideKey}
                 className="shrink-0"
@@ -354,7 +326,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                 </Link>
             </div>
         ))
-    ), [duplicatedMovies, plans, handleClickCard]);
+    ), [visibleMovies, plans, handleClickCard]);
 
     if (countryName && filteredMovies.length === 0) return null;
 
@@ -370,7 +342,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
             </div>
 
             <div className="country-slider flex-1 min-w-0" ref={containerRef}
-                style={{ '--country-card-width': cardWidth ? `${cardWidth}px` : '280px' }}>
+                style={{ '--country-card-width': `${layout.cardWidth}px` }}>
                 <div
                     className="movie-slider-wrapper relative group/slider py-3"
                     onMouseEnter={() => { isHoveredRef.current = true; }}
@@ -416,7 +388,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                                 while (newPos < 0) newPos += halfWidth;
                             }
                             posRef.current = newPos;
-                            trackRef.current.style.transform = `translate3d(-${newPos}px, 0, 0)`;
+                            paintPosition();
                         }}
                         onTouchEnd={onMouseUp}
                         className="overflow-hidden select-none cursor-grab active:cursor-grabbing w-full"
@@ -425,8 +397,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                             ref={trackRef}
                             className="flex w-max will-change-transform py-3"
                             style={{
-                                gap: `${gap}px`,
-                                transform: 'translate3d(0, 0, 0)'
+                                gap: `${layout.gap}px`
                             }}
                         >
                             {movieCards}
