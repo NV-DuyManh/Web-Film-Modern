@@ -22,6 +22,7 @@ const VisuallyHiddenInput = styled('input')({
 
 function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading, progress, user, handleImageChange, setUser, plans }) {
     const [uploadMode, setUploadMode] = React.useState('file');
+    const sortedPlans = React.useMemo(() => [...(plans || [])].sort((a, b) => Number(a.level) - Number(b.level)), [plans]);
 
     const handleUrlChange = (e) => {
         const url = e.target.value;
@@ -224,7 +225,7 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                                         }
                                     }}
                                 >
-                                    {plans?.map((plan) => (
+                                    {sortedPlans.map((plan) => (
                                         <MenuItem key={plan.id} value={plan.id}>{plan.name}</MenuItem>
                                     ))}
                                 </Select>
