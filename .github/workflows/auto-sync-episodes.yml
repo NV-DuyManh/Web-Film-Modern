@@ -33,7 +33,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Maintain Movie Plans, Rental Prices and Duplicate Imports
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          args=()
+          if [ "$DRY_RUN" != "true" ]; then args+=(--apply); fi
+          if [ "$FORCE" = "true" ]; then args+=(--force); fi
+          node scripts/maintainMovieCatalog.mjs "${args[@]}"
+
       - name: Run Episode Cloud Sync
+        if: ${{ !cancelled() }}
         env:
           DRY_RUN: ${{ inputs.dry_run }}
           FORCE: ${{ inputs.force }}
