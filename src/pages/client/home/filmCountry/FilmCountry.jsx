@@ -7,6 +7,7 @@ import { PlanContext } from "../../../../contexts/PlanProvider";
 import { Link } from 'react-router-dom';
 import { observeVisibleAnimation } from '../../../../utils/visibleAnimation';
 import { COUNTRY_OVERSCAN, countryCardLayout, countryCycleCount, countryWindow, countryWindowStart, wrapCountryPosition } from '../../../../utils/countryCarousel';
+import { observeMovieNavigation } from '../../../../utils/movieNavigation';
 
 function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, index }) {
     const movies = useMovies();
@@ -16,6 +17,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
 
     const containerRef = useRef(null);
     const trackRef = useRef(null);
+    const sliderWrapperRef = useRef(null);
     const posRef = useRef(0);
     const halfWidthRef = useRef(0);
     const [layout, setLayout] = useState(() => countryCardLayout(1120));
@@ -47,6 +49,8 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
     }, [movies, countryName]);
 
     const visibleCount = Math.ceil(layout.width / layout.step);
+    const hasMovies = filteredMovies.length > 0;
+    useLayoutEffect(() => observeMovieNavigation(sliderWrapperRef.current), [hasMovies]);
     const visibleMovies = useMemo(() => countryWindow(filteredMovies, windowStart, visibleCount),
         [filteredMovies, windowStart, visibleCount]);
 
@@ -344,6 +348,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
             <div className="country-slider flex-1 min-w-0" ref={containerRef}
                 style={{ '--country-card-width': `${layout.cardWidth}px` }}>
                 <div
+                    ref={sliderWrapperRef}
                     className="movie-slider-wrapper relative group/slider py-3"
                     onMouseEnter={() => { isHoveredRef.current = true; }}
                     onMouseLeave={() => {

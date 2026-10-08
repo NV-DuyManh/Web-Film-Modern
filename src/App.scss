@@ -1449,38 +1449,7 @@ td:last-child {
 
 .movie-nav-btn {
     position: absolute;
-    top: 40%;
-
-    &.filmcoming-prev-btn,
-    &.filmcoming-next-btn {
-        top: calc(50% - 46px);
-    }
-
-    &.cinema-prev-btn,
-    &.cinema-next-btn {
-        top: calc(50% - 57px);
-    }
-
-    &.filmnew-prev-btn,
-    &.filmnew-next-btn {
-        top: calc(50% - 46px);
-    }
-
-    &.filmcountry-prev-btn,
-    &.filmcountry-next-btn,
-    &[class*="filmcountry-"] {
-        top: calc(50% - 38px);
-    }
-
-    &.hk-prev-btn,
-    &.hk-next-btn {
-        top: calc(50% - 42px);
-    }
-
-    &.top-prev-btn,
-    &.top-next-btn {
-        top: calc(50% - 38px);
-    }
+    top: var(--movie-nav-center, 50%);
 
     z-index: 40;
     background: rgba(17, 24, 39, 0.85);
@@ -1490,7 +1459,12 @@ td:last-child {
     width: 44px;
     height: 44px;
     color: #ffffff;
-    font-size: 16px;
+    font-size: 18px;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    line-height: 1;
+    flex-shrink: 0;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -1506,6 +1480,29 @@ td:last-child {
     outline: none;
     -webkit-tap-highlight-color: transparent;
     transform: translateY(-50%);
+
+    svg {
+        display: block;
+        width: 1em;
+        height: 1em;
+        flex-shrink: 0;
+    }
+
+    // A 44px minimum hit area keeps the smaller circles comfortable on touch screens.
+    &::before {
+        content: '';
+        position: absolute;
+        width: max(100%, 44px);
+        height: max(100%, 44px);
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    &:focus-visible {
+        outline: 2px solid #22d3ee;
+        outline-offset: 3px;
+    }
 
     &--prev {
         left: 0;
@@ -1541,19 +1538,19 @@ td:last-child {
 }
 
 
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
     .movie-nav-btn {
-        width: 36px;
-        height: 36px;
-        font-size: 13px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .movie-nav-btn {
-        width: 30px;
-        height: 30px;
-        font-size: 11px;
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
     }
 }
 
