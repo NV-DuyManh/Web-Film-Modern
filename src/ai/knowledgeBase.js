@@ -1,7 +1,7 @@
 import { extendedKnowledge } from './extendedKnowledge.js';
 import { largeKnowledge } from './largeKnowledge.js';
 // Reviewed MFILM knowledge. Variants train retrieval, never change model weights.
-export const KNOWLEDGE_VERSION = '2026-10-08.3';
+export const KNOWLEDGE_VERSION = '2026-10-08.4';
 const item = (id, questions, answer, tags = []) => ({ id, questions, answer, tags });
 export const knowledgeBase = [
     item('identity', ['Bạn là ai?', 'MFILM AI là gì?', 'Bạn làm được gì?', 'Bạn giúp được gì cho tôi?'], 'Mình là trợ lý MFILM. Mình có thể tìm phim trong kho, gợi ý theo thể loại hoặc gói xem, giải thích thông tin phim và hướng dẫn sử dụng web. Bạn muốn tìm phim hay cần hỗ trợ việc gì?'),
@@ -50,7 +50,7 @@ export const knowledgeBase = [
     item('aspect', ['Tỉ lệ khung hình là gì?', 'Tại sao phim có viền đen?', 'Phim có thanh đen trên dưới'], 'Tỉ lệ khung hình là quan hệ giữa chiều rộng và chiều cao. Khi tỉ lệ phim khác màn hình, viền đen giúp giữ trọn khung hình; kéo giãn hoặc cắt ảnh có thể làm mất nội dung.'),
     item('rating', ['Giới hạn tuổi phim là gì?', 'T13 T16 T18 là gì?', 'Phân loại độ tuổi là gì?'], 'Các nhãn độ tuổi giúp chọn nội dung phù hợp, ví dụ T13, T16, T18 dành cho người đạt độ tuổi tương ứng. Hãy đọc phân loại và mô tả từng phim; nội dung hoạt hình cũng có thể dành cho người lớn.'),
     item('history-memory', ['Bạn có nhớ câu trả lời không?', 'Bạn có học từ câu trả lời không?', 'AI có bộ nhớ không?'], 'Mình ưu tiên kiến thức MFILM và dữ liệu phim hiện tại. Với câu chưa biết, mình nhờ mô hình hỗ trợ và ghi nhớ câu trả lời phù hợp trong bộ nhớ dùng chung. Các câu liên quan tài khoản cá nhân, ngữ cảnh riêng hoặc dữ liệu thay đổi theo thời gian không đưa vào bộ nhớ chung.'),
-    item('privacy-memory', ['Xóa bộ nhớ AI thế nào?', 'Xóa câu trả lời đã học', 'Câu trả lời này sai'], 'Bấm **Quên câu trả lời** dưới câu được học để xóa bản trên máy và yêu cầu xóa bản đã học dùng chung. Dòng trạng thái dưới câu trả lời cho biết bản nào đã được xóa. Kiến thức MFILM được biên soạn sẵn vẫn được giữ.'),
+    item('privacy-memory', ['Xóa bộ nhớ AI thế nào?', 'Xóa câu trả lời đã học', 'Câu trả lời này sai'], 'Nếu đáp án sai hoặc cần xem xét bỏ một đáp án đã học, gửi câu hỏi và nội dung đáp án cho MFILM qua [Hỗ trợ](/ho-tro) để kiểm tra. Xóa lịch sử chat chỉ xóa hội thoại trên trình duyệt, không tự xóa bộ nhớ đáp án dùng chung.'),
     ...extendedKnowledge,
     ...largeKnowledge,
 ];

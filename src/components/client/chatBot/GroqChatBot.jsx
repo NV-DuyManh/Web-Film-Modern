@@ -271,18 +271,6 @@ export default function GroqChatBot({ initiallyOpen = false }) {
     const memoryContext = useMemo(() => catalogContext(movies, plans, userPlanInfo, currentMovie), [movies, plans, userPlanInfo, currentMovie]);
     useEffect(() => () => { abortControllerRef.current?.abort(); recognitionRef.current?.stop(); }, []);
 
-    const handleForgetAnswer = async (msg) => {
-        answerMemory.forget(msg.question, msg.memoryContext);
-        let removedShared = false;
-        if (msg.memoryReceipt) {
-            try {
-                const response = await fetch('/api/ai/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'forget', prompt: msg.question, forgetReceipt: msg.memoryReceipt }) });
-                removedShared = response.ok && (await response.json()).forgotten;
-            } catch { /* The local record was removed even while offline. */ }
-        }
-        updateSessionMessages(activeSessionId, prev => prev.map(item => item.id === msg.id ? { ...item, forgotten: true, removedShared } : item));
-    };
-
     // Tính năng nhận diện giọng nói (Web Speech API)
     const handleVoiceInput = () => {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -681,10 +669,6 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                                                     : 'bg-white text-black border border-gray-100 rounded-tl-none'
                                                 }`}>
                                                 {renderMessage(msg.text, handleLinkClick, movies, plans, msg.userPlanInfo || userPlanInfo, Boolean(msg.isPlanSpecific))}
-                                                {msg.source && msg.sender === 'ai' && <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-2 text-[10px] text-slate-500">
-                                                    <span>{({ knowledge: 'Kiến thức MFILM', calculation: 'Tính toán', catalog: 'Kho phim MFILM', memory: 'Bộ nhớ đã học', 'owned-model': 'MFILM AI', provider: 'AI hỗ trợ' })[msg.source] || 'MFILM AI'}</span>
-                                                    {['memory', 'provider', 'owned-model'].includes(msg.source) && <button type="button" disabled={msg.forgotten} onClick={() => handleForgetAnswer(msg)} className="cursor-pointer text-amber-700 hover:underline disabled:cursor-default disabled:text-slate-400">{msg.forgotten ? (msg.removedShared ? 'Đã xóa bản đã học' : 'Đã xóa bản trên máy') : 'Quên câu trả lời'}</button>}
-                                                </div>}
                                             </div>
                                         </div>
                                     );

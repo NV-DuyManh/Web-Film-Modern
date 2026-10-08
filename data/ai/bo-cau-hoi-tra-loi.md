@@ -1,6 +1,6 @@
 # Bộ câu hỏi và câu trả lời MFILM AI
 
-Phiên bản: 2026-10-08.3. **1000 cặp hỏi đáp bổ sung ở đợt mới nhất**, cộng 250 cặp đã biên soạn trước đó; tổng 1297 mục kiến thức và 1397 câu hỏi độc nhất.
+Phiên bản: 2026-10-08.4. **1000 cặp hỏi đáp bổ sung ở đợt mới nhất**, cộng 250 cặp đã biên soạn trước đó; tổng 1297 mục kiến thức và 1397 câu hỏi độc nhất.
 
 Danh sách dưới đây chứa tất cả câu hỏi đã lưu và đáp án tương ứng. Các mẫu bỏ dấu hoặc thêm lời lịch sự trong tệp JSONL không được tính thành câu hỏi mới.
 
@@ -586,15 +586,15 @@ Mình ưu tiên kiến thức MFILM và dữ liệu phim hiện tại. Với câ
 
 ### 145. Xóa bộ nhớ AI thế nào?
 
-Bấm **Quên câu trả lời** dưới câu được học để xóa bản trên máy và yêu cầu xóa bản đã học dùng chung. Dòng trạng thái dưới câu trả lời cho biết bản nào đã được xóa. Kiến thức MFILM được biên soạn sẵn vẫn được giữ.
+Nếu đáp án sai hoặc cần xem xét bỏ một đáp án đã học, gửi câu hỏi và nội dung đáp án cho MFILM qua [Hỗ trợ](/ho-tro) để kiểm tra. Xóa lịch sử chat chỉ xóa hội thoại trên trình duyệt, không tự xóa bộ nhớ đáp án dùng chung.
 
 ### 146. Xóa câu trả lời đã học
 
-Bấm **Quên câu trả lời** dưới câu được học để xóa bản trên máy và yêu cầu xóa bản đã học dùng chung. Dòng trạng thái dưới câu trả lời cho biết bản nào đã được xóa. Kiến thức MFILM được biên soạn sẵn vẫn được giữ.
+Nếu đáp án sai hoặc cần xem xét bỏ một đáp án đã học, gửi câu hỏi và nội dung đáp án cho MFILM qua [Hỗ trợ](/ho-tro) để kiểm tra. Xóa lịch sử chat chỉ xóa hội thoại trên trình duyệt, không tự xóa bộ nhớ đáp án dùng chung.
 
 ### 147. Câu trả lời này sai
 
-Bấm **Quên câu trả lời** dưới câu được học để xóa bản trên máy và yêu cầu xóa bản đã học dùng chung. Dòng trạng thái dưới câu trả lời cho biết bản nào đã được xóa. Kiến thức MFILM được biên soạn sẵn vẫn được giữ.
+Nếu đáp án sai hoặc cần xem xét bỏ một đáp án đã học, gửi câu hỏi và nội dung đáp án cho MFILM qua [Hỗ trợ](/ho-tro) để kiểm tra. Xóa lịch sử chat chỉ xóa hội thoại trên trình duyệt, không tự xóa bộ nhớ đáp án dùng chung.
 
 ## Khám phá MFILM
 
@@ -1544,7 +1544,7 @@ Có, nhất là phim trùng tên hoặc có nhiều bản làm lại. Tên gốc
 
 ### 375. Chatbot có thể trả lời sai không?
 
-Có. Câu trả lời từ mô hình hoặc dữ liệu chưa đầy đủ có thể sai. Hãy kiểm tra thông tin quan trọng và dùng Quên câu trả lời với đáp án học tự động cần bỏ.
+Có. Câu trả lời từ mô hình hoặc dữ liệu chưa đầy đủ có thể sai. Hãy kiểm tra thông tin quan trọng; nếu gặp đáp án sai, gửi câu hỏi và nội dung cho MFILM qua [Hỗ trợ](/ho-tro).
 
 ### 376. Dòng Kiến thức MFILM dưới câu trả lời nghĩa là gì?
 
@@ -1576,11 +1576,11 @@ Không. Bộ nhớ tự động có thời hạn để tránh dùng mãi đáp �
 
 ### 383. Quên câu trả lời có xóa luôn đoạn hội thoại không?
 
-Không. Nút này bỏ bản đáp án đã học hoặc yêu cầu bỏ bản dùng chung, tùy dữ liệu còn hiệu lực. Nội dung cuộc trò chuyện đã hiển thị vẫn nằm trong lịch sử chat.
+Giao diện chat hiện không có nút Quên câu trả lời. Bộ nhớ đáp án được quản lý tách với lịch sử hội thoại; nếu gặp đáp án sai, gửi câu hỏi và nội dung cho MFILM qua [Hỗ trợ](/ho-tro).
 
 ### 384. Xóa lịch sử chat có đồng nghĩa xóa bộ nhớ chung không?
 
-Không. Lịch sử là các đoạn trao đổi trên trình duyệt; bộ nhớ chung là các đáp án được hệ thống dùng lại. Muốn bỏ một đáp án học tự động, dùng nút Quên câu trả lời của đáp án đó.
+Không. Lịch sử là các đoạn trao đổi trên trình duyệt; bộ nhớ chung là các đáp án hệ thống dùng lại. Nếu một đáp án học tự động cần được kiểm tra, báo MFILM qua [Hỗ trợ](/ho-tro).
 
 ### 385. Tại sao AI không nhớ tên riêng của tôi cho người khác?
 

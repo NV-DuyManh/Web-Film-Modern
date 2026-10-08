@@ -29,7 +29,8 @@ Tất cả khách dùng chung đáp án của câu hỏi độc lập. Câu hỏ
 - Câu chứa thông tin cá nhân, khóa API, mật khẩu, câu phụ thuộc hội thoại, tin tức hoặc thông tin biến động không đưa vào bộ nhớ chung.
 - Dữ liệu phim và quyền xem luôn dựa trên danh mục/tài khoản hiện tại. Đáp án riêng của phiên này có thể được lưu cục bộ cùng mã kiểm tra danh mục, không chia sẻ quyền xem của tài khoản khác.
 - Câu trả lời lỗi hoặc chứa dữ liệu nhạy cảm không được học. Hướng dẫn hệ thống và lịch sử do trình duyệt gửi không được dùng để tạo đáp án chung.
-- Bộ lọc là biện pháp giảm rủi ro, không phải bộ kiểm chứng sự thật. Bấm **Quên câu trả lời** để bỏ bản học sai. Lịch sử chat vẫn giữ nguyên nội dung đã trao đổi.
+- Bộ lọc là biện pháp giảm rủi ro, không phải bộ kiểm chứng sự thật. Người dùng có thể báo đáp án sai qua trang Hỗ trợ; API quản lý bộ nhớ vẫn giữ cơ chế bỏ đáp án với receipt hợp lệ.
+- Theo yêu cầu giao diện, chat chỉ hiển thị nội dung đáp án, không có nhãn nguồn, trạng thái lưu hay nút Quên câu trả lời. Thông tin nguồn và receipt vẫn được xử lý nội bộ; lịch sử chat không bị ảnh hưởng.
 - Bộ nhớ chung được đọc lại trên mỗi lượt hỏi để việc xóa có hiệu lực giữa các phiên. Bản cục bộ chỉ làm dự phòng khi máy chủ không trả lời được; bản trên máy khác không thể bị xóa từ xa khi thiết bị đó mất mạng.
 
 Firestore lưu tại `AIAnswerMemory`. Nội dung được mã hóa AES-256-GCM và xác thực trước khi đọc; ID tài liệu dùng HMAC. Không lưu khóa mã hóa trong trình duyệt. Thời hạn được kiểm tra khi đọc; các tài liệu hết hạn chưa tự xóa vật lý. Có thể cấu hình quy trình dọn dữ liệu riêng nếu dung lượng tăng.
