@@ -2,6 +2,32 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlay, FaInfoCircle } from 'react-icons/fa';
 
+// Recover catalog references copied by the AI without inventing movie routes.
+export const normalizeMovieLinks = (text, movies = []) => {
+    if (!text || typeof text !== 'string' || !movies?.length) return text;
+
+    const movieByReference = new Map();
+    for (const movie of movies) {
+        for (const reference of [movie.slug, movie.id]) {
+            if (reference) movieByReference.set(String(reference).toLowerCase(), movie);
+        }
+    }
+
+    return text.replace(
+        /\[([^\]\n]+)\](?:[ \t]*\(([^)\n]+)\)|(?:[ \t]+["“]([^"”\n]+)["”])?)/g,
+        (original, label, url) => {
+            const reference = url
+                ? url.trim().match(/^\/?(?:phim\/)?([a-zA-Z0-9_-]+)$/i)?.[1]
+                : label.trim();
+            const movie = reference && movieByReference.get(reference.toLowerCase());
+            if (!movie) return original;
+
+            const title = url ? label : (movie.otherName || movie.name || reference);
+            return `[${title}](/phim/${movie.slug || movie.id})`;
+        }
+    );
+};
+
 export const STOP_WORDS = new Set([
     'phim', 'bo', 'tap', 'xem', 'mo', 'cho', 'toi', 'co', 'nay', 'va', 'la', 'nhung', 'cac', 'the',
     'nhan', 'vat', 'dien', 'vien', 'tac', 'gia', 'dao', 'dien', 'k', 'ko', 'khong', 'chua', 'nao',
@@ -389,6 +415,7 @@ export const filterMoviesByEntitlement = (movies = [], plans = [], userPlanInfo 
  */
 export const validateAndFilterAiResponse = (responseText, movies = [], plans = [], userPlanInfo = null, isPlanSpecific = false) => {
     if (!responseText || typeof responseText !== 'string') return responseText;
+    responseText = normalizeMovieLinks(responseText, movies);
     if (!isPlanSpecific || !userPlanInfo) return responseText;
 
     const userLevel = Number(userPlanInfo.level) || 0;
@@ -536,7 +563,7 @@ export const buildMovieCatalogSummary = (movies = [], categories = [], plans = [
         const slug = m.slug || m.id;
         const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
         const country = m.countriesID || m.country || 'Khác';
-        return `- [${slug}] "${title}" | QG: ${country} | [Gói ${planInfo.planName} L${planInfo.level}] | ${epStr} | ${catNames}`;
+        return `- [${title}](/phim/${slug}) | QG: ${country} | [Gói ${planInfo.planName} L${planInfo.level}] | ${epStr} | ${catNames}`;
     }).join('\n');
 
     // Thống kê các series nhiều phần nhất thực tế trên MFILM
@@ -650,6 +677,7 @@ ${planRule6}
    - TUYỆT ĐỐI KHÔNG nói dài dòng, TUYỆT ĐỐI KHÔNG lặp đi lặp lại những câu giải thích rườm rà trong ngoặc đơn (như "(Bạn đang dùng gói Free, nên phim này hiện chưa thể xem được. Bạn có thể nâng cấp...)").
    - Khi giới thiệu phim: Chỉ cần tên phim, số tập, thể loại ngắn gọn (1 dòng).
    - TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Khi liệt kê dùng dấu gạch ngang "-" duy nhất. Dùng cú pháp [Tên Phim](/phim/slug-chinh-xac).
+   - BẮT BUỘC giữ đường dẫn /phim/ trong mọi gợi ý phim. KHÔNG trả về mã phim dạng [slug] "Tên Phim" hoặc chỉ [slug].
 8. ĐIỀU KHIỂN WEB: Dùng tool \`dieu_khien_website\` khi người dùng yêu cầu mở phim, tìm kiếm, đăng nhập hoặc nâng cấp VIP.
 9. QUY TẮC BẢO ĐẢM ĐÚNG QUỐC GIA & NGỮ CẢNH HỘI THOẠI:
    - Khi đang trò chuyện về một quốc gia (ví dụ: Việt Nam, Trung Quốc, Nhật Bản...) mà người dùng hỏi tiếp về gói cước ("còn loại xịn nhất thì sao", "gói VIP thì sao", "phim có phí"): BẮT BUỘC duy trì ngữ cảnh quốc gia đó khi tra cứu.
@@ -1333,7 +1361,8 @@ export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo =
 export const renderMessage = (text, onLinkClick, movies = [], plans = [], userPlanInfo = null, isPlanSpecific = false) => {
     if (!text) return null;
 
-    const rawLines = text.split('\n');
+    // Also repair saved chat messages once the catalog has loaded.
+    const rawLines = normalizeMovieLinks(text, movies).split('\n');
     // Lọc bỏ dòng phân cách bảng markdown như |---|---|
     const validLines = rawLines.filter(line => !/^\|?\s*[-:]+[-|\s:]+$/.test(line.trim()));
     const seenMovieIds = new Set();
@@ -1374,10 +1403,11 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = [], userPl
                 String(m.slug || '').toLowerCase() === slug || 
                 String(m.id || '').toLowerCase() === slug
             );
-            if (found && !seenMovieIds.has(found.id)) {
+            const movieKey = found && String(found.id || found.slug);
+            if (found && !seenMovieIds.has(movieKey)) {
                 const planInfo = getMoviePlanInfo(found, plans);
                 if (!isPlanSpecific || planInfo.level <= userLevel) {
-                    seenMovieIds.add(found.id);
+                    seenMovieIds.add(movieKey);
                     movieForThisLine = found;
                 }
             }
@@ -1567,4 +1597,3 @@ export const GEMINI_TOOLS = [
         ]
     }
 ];
-
