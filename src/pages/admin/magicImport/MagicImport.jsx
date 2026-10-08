@@ -1,12 +1,13 @@
 import { parseEpisode, episodeKey, highestEpisode } from '../../../utils/episodes';
+import { rentalPriceRange, randomRentalPrice, missingRentalPricePatch } from '../../../utils/importRentalPricing';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
 import { useShowTimes, useMovies, useEpisodes } from '../../../hooks/useCollections';
 import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
-import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser, FaPause, FaStop, FaGlobe, FaDatabase, FaSpider, FaBroom, FaSyncAlt, FaClock } from 'react-icons/fa';
+import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser, FaPause, FaStop, FaGlobe, FaDatabase, FaSpider, FaBroom, FaSyncAlt, FaClock, FaCoins } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
-import { collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, getDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, getDoc, serverTimestamp, runTransaction } from 'firebase/firestore';
 
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -130,8 +131,53 @@ function MagicImport() {
     const [dedupMsg, setDedupMsg] = useState("");
 
     const [isRandomizingPlans, setIsRandomizingPlans] = useState(false);
+    const [isFillingRentalPrices, setIsFillingRentalPrices] = useState(false);
+    const [rentalPriceMsg, setRentalPriceMsg] = useState('');
+    const handleFillRentalPrices = async () => {
+        if (isFillingRentalPrices || isRandomizingPlans || isDeduplicating || loading || crawlStatus === 'running' || crawlStatus === 'paused') return;
+        const candidates = existingMovies.filter(movie => missingRentalPricePatch(movie, plans, () => 0));
+        if (!candidates.length) {
+            setRentalPriceMsg('Không có phim cần bổ sung giá thuê. Phim chưa có gói hợp lệ sẽ được bỏ qua.');
+            return;
+        }
+        const ranges = plans.map(plan => {
+            const count = candidates.filter(movie => movie.planID === plan.id).length;
+            const range = rentalPriceRange(plan);
+            if (!count || !range) return null;
+            return `${plan.name}: ${count} phim — ${range.max === 0 ? 'miễn phí (0đ)' : `${range.min.toLocaleString('vi-VN')}–${range.max.toLocaleString('vi-VN')}đ`}`;
+        }).filter(Boolean).join('\n');
+        if (!window.confirm(`Bổ sung giá thuê cho ${candidates.length} phim cần cập nhật?\n\n${ranges}\n\nGiữ nguyên gói và giá thuê hợp lệ của phim trả phí. Phim Free đưa về 0đ. Thời hạn thuê vẫn là 30 ngày.`)) return;
+        setIsFillingRentalPrices(true);
+        setRentalPriceMsg('Đang bổ sung giá thuê...');
+        let updatedCount = 0;
+        try {
+            for (const movie of candidates) {
+                const changed = await runTransaction(db, async transaction => {
+                    const movieRef = doc(db, 'Movies', movie.id);
+                    const snapshot = await transaction.get(movieRef);
+                    if (!snapshot.exists()) return false;
+                    const patch = missingRentalPricePatch(snapshot.data(), plans);
+                    if (!patch) return false;
+                    transaction.update(movieRef, patch);
+                    return true;
+                });
+                if (changed) updatedCount++;
+                setRentalPriceMsg(`Đã bổ sung giá thuê cho ${updatedCount} phim...`);
+            }
+            setRentalPriceMsg(`Hoàn tất: đã cập nhật giá thuê cho ${updatedCount} phim. Free không thu phí.`);
+        } catch (err) {
+            setRentalPriceMsg(`Đã cập nhật ${updatedCount} phim; lỗi: ${err.message}. Có thể bấm lại để bổ sung phần còn thiếu.`);
+        } finally {
+            setIsFillingRentalPrices(false);
+        }
+    };
     const handleRandomizePlans = async () => {
-        if (!window.confirm("Bạn có chắc muốn random lại gói (Plan) cho TẤT CẢ các phim hiện có?")) return;
+        if (isRandomizingPlans || isFillingRentalPrices || isDeduplicating || loading || crawlStatus === 'running' || crawlStatus === 'paused') return;
+        if (!plans.length || plans.some(plan => !rentalPriceRange(plan))) {
+            setErrorMsg('Vui lòng kiểm tra gói và giá gói trước khi random.');
+            return;
+        }
+        if (!window.confirm("Bạn có chắc muốn random lại gói (Plan) cho TẤT CẢ các phim hiện có?\nPhim trả phí chưa có giá thuê sẽ được bổ sung theo gói mới; giữ giá thuê hợp lệ đã có. Phim chuyển sang Free sẽ có giá thuê 0đ.")) return;
         setIsRandomizingPlans(true);
         setSuccessMsg("");
         setErrorMsg("");
@@ -140,8 +186,16 @@ function MagicImport() {
             for (const movie of existingMovies) {
                 const newPlanID = getRandomPlanID(plans);
                 if (movie.planID !== newPlanID) {
-                    await updateDoc(doc(db, "Movies", movie.id), { planID: newPlanID });
-                    updatedCount++;
+                    const changed = await runTransaction(db, async transaction => {
+                        const movieRef = doc(db, 'Movies', movie.id);
+                        const snapshot = await transaction.get(movieRef);
+                        if (!snapshot.exists()) return false;
+                        const currentMovie = snapshot.data();
+                        const rentalPatch = missingRentalPricePatch({ ...currentMovie, planID: newPlanID }, plans);
+                        transaction.update(movieRef, { planID: newPlanID, ...rentalPatch });
+                        return true;
+                    });
+                    if (changed) updatedCount++;
                 }
             }
             setSuccessMsg(`Đã random thành công gói cho ${updatedCount} bộ phim!`);
@@ -566,7 +620,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     const handleStartCrawl = async () => {
-        if (crawlStatus === 'running') return;
+        if (crawlStatus === 'running' || isFillingRentalPrices || isRandomizingPlans) return;
+        if (!plans.length || plans.some(plan => !rentalPriceRange(plan))) {
+            addCrawlLog('Vui lòng kiểm tra gói và giá gói trước khi crawl; gói trả phí phải có giá lớn hơn 0.', 'error');
+            return;
+        }
         crawlAbortRef.current = false;
         crawlPauseRef.current = false;
         setCrawlStatus('running');
@@ -729,6 +787,8 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     const newMovieId = movieRef.id;
                     const posterUrl = getFullImageUrl(movieData.poster_url);
                     const thumbUrl = getFullImageUrl(movieData.thumb_url);
+                    const moviePlanID = getRandomPlanID(plans);
+                    const moviePlan = plans.find(plan => plan.id === moviePlanID);
                     const submitMovie = {
                         id: newMovieId,
                         slug: slugify(movieData.name || movieData.origin_name || item.name),
@@ -742,11 +802,13 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         listCharacter: [],
                         listAuthor,
                         categoryTypeID,
-                        planID: getRandomPlanID(plans),
+                        planID: moviePlanID,
+                        importSource: 'kkphim',
+                        sourceSlug: slug,
                         countriesID: mapCountryName(movieData.country),
                         releaseYear: movieData.year || new Date().getFullYear(),
                         duration: parseDuration(movieData.time),
-                        rent: 0,
+                        rent: randomRentalPrice(moviePlan),
                         status: mapMovieStatus(movieData.status),
                         ageRating: 'T13',
                         endEpisode: parseEpisode(movieData.episode_total)?.end ?? 1,
@@ -1220,7 +1282,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     </button>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                     {dedupMsg && (
                         <span className="text-xs font-semibold text-cyan-300 bg-cyan-950/70 border border-cyan-500/30 px-3 py-1.5 rounded-lg animate-pulse">
                             {dedupMsg}
@@ -1228,7 +1290,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     )}
                     <button
                         onClick={handleDeduplicateMovies}
-                        disabled={isDeduplicating}
+                        disabled={isDeduplicating || isFillingRentalPrices || isRandomizingPlans}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-white border border-red-500/40 shadow-xs active:scale-95 disabled:opacity-50"
                         title="Quét và xóa tự động các phim bị trùng lặp tên/slug"
                     >
@@ -1237,15 +1299,25 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     </button>
                     <button
                         onClick={handleRandomizePlans}
-                        disabled={isRandomizingPlans}
+                        disabled={isRandomizingPlans || isFillingRentalPrices || isDeduplicating || loading || crawlStatus === 'running' || crawlStatus === 'paused'}
                         className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer bg-fuchsia-500/20 hover:bg-fuchsia-500/30 text-fuchsia-300 hover:text-white border border-fuchsia-500/40 shadow-xs active:scale-95 disabled:opacity-50"
                         title="Randomize lại plan (gói VIP) cho tất cả phim theo tỉ lệ chuẩn"
                     >
                         <FaMagic className={isRandomizingPlans ? "animate-spin" : ""} />
                         <span>{isRandomizingPlans ? "Đang random..." : "Random Gói (Tất cả phim)"}</span>
                     </button>
+                    <button
+                        onClick={handleFillRentalPrices}
+                        disabled={isFillingRentalPrices || isRandomizingPlans || isDeduplicating || loading || crawlStatus === 'running' || crawlStatus === 'paused' || !plans.length}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 hover:text-white border border-amber-500/40 shadow-xs active:scale-95 disabled:opacity-50"
+                        title="Bổ sung giá thuê còn thiếu theo 10–20% giá gói; Free không thu phí"
+                    >
+                        <FaCoins />
+                        <span>{isFillingRentalPrices ? 'Đang bổ sung giá...' : 'Bổ sung giá thuê'}</span>
+                    </button>
                 </div>
             </div>
+            {rentalPriceMsg && <p role="status" className="mb-4 text-sm text-amber-200">{rentalPriceMsg}</p>}
 
             {mainTab === 'CRAWLER' ? (
                 /* ==================== CRAWLER UI ==================== */
@@ -1290,7 +1362,8 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 <div className="flex flex-col gap-2">
                                     {crawlStatus === 'idle' || crawlStatus === 'done' ? (
                                         <button onClick={handleStartCrawl}
-                                            className="w-full py-3 rounded-xl bg-linear-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all">
+                                            disabled={isFillingRentalPrices || isRandomizingPlans}
+                                            className="w-full py-3 rounded-xl bg-linear-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all disabled:opacity-50">
                                             <FaPlay /> Bắt đầu Crawl
                                         </button>
                                     ) : (
