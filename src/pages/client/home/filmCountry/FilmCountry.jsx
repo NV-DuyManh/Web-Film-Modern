@@ -1,10 +1,11 @@
-import React, { useContext, useMemo, useRef, useState, useEffect, useLayoutEffect } from "react";
+import React, { useContext, useMemo, useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
 import { useMovies } from '../../../../hooks/useCollections';
 import { FaChevronLeft, FaChevronRight, FaClock, FaCalendarAlt, FaEye } from "react-icons/fa";
 import { getObjectById } from "../../../../services/firebaseResponse";
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { PlanContext } from "../../../../contexts/PlanProvider";
 import { Link } from 'react-router-dom';
+import { observeVisibleAnimation } from '../../../../utils/visibleAnimation';
 
 function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, index }) {
     const movies = useMovies();
@@ -15,6 +16,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
     const containerRef = useRef(null);
     const trackRef = useRef(null);
     const posRef = useRef(0);
+    const halfWidthRef = useRef(0);
     const [cardWidth, setCardWidth] = useState(0);
     const [gap, setGap] = useState(20);
 
@@ -97,10 +99,27 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
         };
     }, [duplicatedMovies.length]);
 
+    // Read layout once after card sizes change, instead of on every animation frame.
+    useLayoutEffect(() => {
+        const halfWidth = (trackRef.current?.scrollWidth || 0) / 2;
+        const previousWidth = halfWidthRef.current;
+        if (previousWidth > 0 && halfWidth > 0 && previousWidth !== halfWidth) {
+            const ratio = halfWidth / previousWidth;
+            posRef.current *= ratio;
+            startPos.current *= ratio;
+            targetPos.current *= ratio;
+            dragStartPos.current *= ratio;
+        }
+        halfWidthRef.current = halfWidth;
+        if (trackRef.current) {
+            trackRef.current.style.transform = `translate3d(-${posRef.current}px, 0, 0)`;
+        }
+    }, [duplicatedMovies.length, cardWidth, gap]);
+
     // Set initial position for reverse direction
     useEffect(() => {
         if (isReverse && trackRef.current && posRef.current === 0) {
-            const halfWidth = trackRef.current.scrollWidth / 2;
+            const halfWidth = halfWidthRef.current;
             if (halfWidth > 0) {
                 posRef.current = halfWidth;
                 trackRef.current.style.transform = `translate3d(-${halfWidth}px, 0, 0)`;
@@ -110,21 +129,13 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
 
     const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
-    // 60/120fps GPU hardware-accelerated continuous animation loop (zero jerk, zero pause)
+    // Keep the same speed while visible; resume without jumping after a pause.
     useEffect(() => {
         const track = trackRef.current;
         if (!track || duplicatedMovies.length === 0) return;
 
-        let animationFrameId;
-        let lastTime = performance.now();
-
-        const tick = (currentTime) => {
-            if (!trackRef.current) {
-                animationFrameId = requestAnimationFrame(tick);
-                return;
-            }
-
-            const halfWidth = trackRef.current.scrollWidth / 2;
+        const tick = (currentTime, deltaTime) => {
+            const halfWidth = halfWidthRef.current;
 
             if (isAnimatingBtn.current) {
                 const elapsed = currentTime - animStartTime.current;
@@ -138,7 +149,6 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                     posRef.current = targetPos.current;
                 }
             } else if (!isHoveredRef.current && !isInteracting.current) {
-                const deltaTime = currentTime - lastTime;
                 const distance = (speed * deltaTime) / 1000;
 
                 if (isReverse) {
@@ -147,23 +157,18 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                     posRef.current += distance;
                 }
             }
-            lastTime = currentTime;
-
             if (halfWidth > 0) {
                 while (posRef.current >= halfWidth) posRef.current -= halfWidth;
                 while (posRef.current < 0) posRef.current += halfWidth;
-                trackRef.current.style.transform = `translate3d(-${posRef.current}px, 0, 0)`;
+                const transform = `translate3d(-${posRef.current}px, 0, 0)`;
+                if (track.style.transform !== transform) track.style.transform = transform;
             }
-
-            animationFrameId = requestAnimationFrame(tick);
         };
 
-        animationFrameId = requestAnimationFrame(tick);
-
-        return () => {
-            cancelAnimationFrame(animationFrameId);
-        };
-    }, [duplicatedMovies, speed, isReverse, cardWidth]);
+        return observeVisibleAnimation(containerRef.current, tick, pausedDuration => {
+            if (isAnimatingBtn.current) animStartTime.current += pausedDuration;
+        });
+    }, [duplicatedMovies, speed, isReverse]);
 
     const getStep = () => {
         if (containerRef.current) {
@@ -217,7 +222,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
         if (!isDragging.current || !trackRef.current) return;
         const diff = e.pageX - startX.current;
         if (Math.abs(diff) > 5) dragMoved.current = true;
-        const halfWidth = trackRef.current.scrollWidth / 2;
+        const halfWidth = halfWidthRef.current;
         let newPos = dragStartPos.current - diff;
         if (halfWidth > 0) {
             while (newPos >= halfWidth) newPos -= halfWidth;
@@ -237,11 +242,119 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
         }
     };
 
-    const handleClickCard = (e) => {
+    const handleClickCard = useCallback((e) => {
         if (dragMoved.current) {
             e.preventDefault();
         }
-    };
+    }, []);
+
+    // Reuse the card tree during resize; CSS updates their widths without rebuilding it.
+    const movieCards = useMemo(() => (
+        duplicatedMovies.map((e) => (
+            <div
+                key={e._slideKey}
+                className="shrink-0"
+                style={{
+                    width: 'var(--country-card-width)'
+                }}
+            >
+                <Link
+                    to={`/phim/${e.slug || e.id}`}
+                    onClick={handleClickCard}
+                    draggable="false"
+                    className="block select-none"
+                >
+                    <div className="group cursor-pointer flex flex-col h-full">
+                        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
+                            <img
+                                src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')}
+                                alt=""
+                                draggable="false"
+                                className="w-full h-full object-cover pointer-events-none"
+                                width={480}
+                                height={270}
+                                loading="lazy"
+                                decoding="async"
+                            />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40 pointer-events-none"></div>
+
+                            {e.planID && (() => {
+                                const plan = getObjectById(plans, e.planID);
+                                if (!plan) return null;
+                                const level = Number(plan.level) || 0;
+                                let cls = "bg-slate-600 border-slate-500 text-white";
+                                let text = plan.name;
+
+                                if (level >= 3) {
+                                    cls = "bg-linear-to-r from-fuchsia-600 via-pink-400 to-rose-500 border-pink-300 text-white shadow-[0_0_15px_rgba(236,72,153,0.8)] premium-laser";
+                                } else if (level === 2) {
+                                    cls = "bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
+                                } else if (level === 1) {
+                                    cls = "bg-linear-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
+                                }
+
+                                return (
+                                    <div className="absolute top-2 right-2 flex gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">
+                                        <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} uppercase tracking-wider`}>
+                                            {text}
+                                        </p>
+                                    </div>
+                                );
+                            })()}
+
+                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20 w-max pointer-events-none">
+                                {(() => {
+                                    const cId = (e.countriesID || '').toLowerCase();
+                                    let bgCls = "from-indigo-500 to-purple-600 border-indigo-400 shadow-[0_2px_4px_rgba(99,102,241,0.4)]";
+                                    if (cId.includes('korea') || cId.includes('hàn')) {
+                                        bgCls = "from-cyan-500 to-blue-600 border-cyan-400 shadow-[0_2px_4px_rgba(6,182,212,0.4)]";
+                                    } else if (cId.includes('china') || cId.includes('trung')) {
+                                        bgCls = "from-red-500 to-rose-600 border-red-400 shadow-[0_2px_4px_rgba(239,68,68,0.4)]";
+                                    } else if (cId.includes('japan') || cId.includes('nhật')) {
+                                        bgCls = "from-pink-500 to-rose-500 border-pink-400 shadow-[0_2px_4px_rgba(236,72,153,0.4)]";
+                                    } else if (cId.includes('thai') || cId.includes('thái')) {
+                                        bgCls = "from-emerald-500 to-teal-600 border-emerald-400 shadow-[0_2px_4px_rgba(16,185,129,0.4)]";
+                                    } else if (cId.includes('vietnam') || cId.includes('việt')) {
+                                        bgCls = "from-yellow-400 to-orange-500 border-yellow-300 text-black shadow-[0_2px_4px_rgba(250,204,21,0.4)]";
+                                    } else if (cId.includes('us') || cId.includes('mỹ') || cId.includes('u.s') || cId.includes('america')) {
+                                        bgCls = "from-blue-600 to-indigo-700 border-blue-400 shadow-[0_2px_4px_rgba(37,99,235,0.4)]";
+                                    }
+
+                                    const textCls = cId.includes('vietnam') || cId.includes('việt') ? 'text-black' : 'text-white';
+
+                                    return (
+                                        <p className={`bg-linear-to-r ${bgCls} ${textCls} border text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider`}>
+                                            {e.countriesID}
+                                        </p>
+                                    );
+                                })()}
+                                {e.duration && (
+                                    <span className="flex items-center gap-1 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-1.5 py-0.5 rounded shadow-md text-[8px] md:text-[9px] font-bold whitespace-nowrap">
+                                        <FaClock /> {e.duration} phút
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                        <div className="pt-2 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
+                            <h3 className="m-0 text-base font-bold text-white truncate w-full transition-colors group-hover:text-[#facc15]">{e.otherName}</h3>
+                            <p className="m-0 mt-1 text-[#8c909e] text-[10px] md:text-[11px] truncate w-full transition-colors group-hover:text-slate-300">{e.name}</p>
+                            <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5 w-full font-bold">
+                                {e.releaseYear && (
+                                    <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                        <FaCalendarAlt /> {e.releaseYear}
+                                    </span>
+                                )}
+
+                                <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
+                                    <FaEye /> {(Number(e.views) || 0) + 100}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
+            </div>
+        ))
+    ), [duplicatedMovies, plans, handleClickCard]);
 
     if (countryName && filteredMovies.length === 0) return null;
 
@@ -256,7 +369,8 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                 </Link>
             </div>
 
-            <div className="country-slider flex-1 min-w-0" ref={containerRef}>
+            <div className="country-slider flex-1 min-w-0" ref={containerRef}
+                style={{ '--country-card-width': cardWidth ? `${cardWidth}px` : '280px' }}>
                 <div
                     className="movie-slider-wrapper relative group/slider py-3"
                     onMouseEnter={() => { isHoveredRef.current = true; }}
@@ -295,7 +409,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                             if (!isDragging.current || !trackRef.current) return;
                             const diff = e.touches[0].pageX - startX.current;
                             if (Math.abs(diff) > 5) dragMoved.current = true;
-                            const halfWidth = trackRef.current.scrollWidth / 2;
+                            const halfWidth = halfWidthRef.current;
                             let newPos = dragStartPos.current - diff;
                             if (halfWidth > 0) {
                                 while (newPos >= halfWidth) newPos -= halfWidth;
@@ -315,110 +429,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                                 transform: 'translate3d(0, 0, 0)'
                             }}
                         >
-                            {duplicatedMovies.map((e) => (
-                                <div
-                                    key={e._slideKey}
-                                    className="shrink-0"
-                                    style={{
-                                        width: cardWidth ? `${cardWidth}px` : '280px'
-                                    }}
-                                >
-                                    <Link
-                                        to={`/phim/${e.slug || e.id}`}
-                                        onClick={handleClickCard}
-                                        draggable="false"
-                                        className="block select-none"
-                                    >
-                                        <div className="group cursor-pointer flex flex-col h-full">
-                                            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                                <img
-                                                    src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')}
-                                                    alt=""
-                                                    draggable="false"
-                                                    className="w-full h-full object-cover pointer-events-none"
-                                                    width={480}
-                                                    height={270}
-                                                    loading="lazy"
-                                                    decoding="async"
-                                                />
-                                                <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40 pointer-events-none"></div>
-
-                                                {e.planID && (() => {
-                                                    const plan = getObjectById(plans, e.planID);
-                                                    if (!plan) return null;
-                                                    const level = Number(plan.level) || 0;
-                                                    let cls = "bg-slate-600 border-slate-500 text-white";
-                                                    let text = plan.name;
-
-                                                    if (level >= 3) {
-                                                        cls = "bg-linear-to-r from-fuchsia-600 via-pink-400 to-rose-500 border-pink-300 text-white shadow-[0_0_15px_rgba(236,72,153,0.8)] premium-laser";
-                                                    } else if (level === 2) {
-                                                        cls = "bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
-                                                    } else if (level === 1) {
-                                                        cls = "bg-linear-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
-                                                    }
-
-                                                    return (
-                                                        <div className="absolute top-2 right-2 flex gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">
-                                                            <p className={`text-[9px] md:text-[10px] font-extrabold px-2.5 py-0.5 rounded-md border ${cls} uppercase tracking-wider`}>
-                                                                {text}
-                                                            </p>
-                                                        </div>
-                                                    );
-                                                })()}
-
-                                                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20 w-max pointer-events-none">
-                                                    {(() => {
-                                                        const cId = (e.countriesID || '').toLowerCase();
-                                                        let bgCls = "from-indigo-500 to-purple-600 border-indigo-400 shadow-[0_2px_4px_rgba(99,102,241,0.4)]";
-                                                        if (cId.includes('korea') || cId.includes('hàn')) {
-                                                            bgCls = "from-cyan-500 to-blue-600 border-cyan-400 shadow-[0_2px_4px_rgba(6,182,212,0.4)]";
-                                                        } else if (cId.includes('china') || cId.includes('trung')) {
-                                                            bgCls = "from-red-500 to-rose-600 border-red-400 shadow-[0_2px_4px_rgba(239,68,68,0.4)]";
-                                                        } else if (cId.includes('japan') || cId.includes('nhật')) {
-                                                            bgCls = "from-pink-500 to-rose-500 border-pink-400 shadow-[0_2px_4px_rgba(236,72,153,0.4)]";
-                                                        } else if (cId.includes('thai') || cId.includes('thái')) {
-                                                            bgCls = "from-emerald-500 to-teal-600 border-emerald-400 shadow-[0_2px_4px_rgba(16,185,129,0.4)]";
-                                                        } else if (cId.includes('vietnam') || cId.includes('việt')) {
-                                                            bgCls = "from-yellow-400 to-orange-500 border-yellow-300 text-black shadow-[0_2px_4px_rgba(250,204,21,0.4)]";
-                                                        } else if (cId.includes('us') || cId.includes('mỹ') || cId.includes('u.s') || cId.includes('america')) {
-                                                            bgCls = "from-blue-600 to-indigo-700 border-blue-400 shadow-[0_2px_4px_rgba(37,99,235,0.4)]";
-                                                        }
-
-                                                        const textCls = cId.includes('vietnam') || cId.includes('việt') ? 'text-black' : 'text-white';
-
-                                                        return (
-                                                            <p className={`bg-linear-to-r ${bgCls} ${textCls} border text-[8px] md:text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider`}>
-                                                                {e.countriesID}
-                                                            </p>
-                                                        );
-                                                    })()}
-                                                    {e.duration && (
-                                                        <span className="flex items-center gap-1 text-black bg-linear-to-r from-yellow-300 to-yellow-500 px-1.5 py-0.5 rounded shadow-md text-[8px] md:text-[9px] font-bold whitespace-nowrap">
-                                                            <FaClock /> {e.duration} phút
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div className="pt-2 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
-                                                <h3 className="m-0 text-base font-bold text-white truncate w-full transition-colors group-hover:text-[#facc15]">{e.otherName}</h3>
-                                                <p className="m-0 mt-1 text-[#8c909e] text-[10px] md:text-[11px] truncate w-full transition-colors group-hover:text-slate-300">{e.name}</p>
-                                                <div className="flex flex-wrap items-center justify-center gap-2 mt-1.5 w-full font-bold">
-                                                    {e.releaseYear && (
-                                                        <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
-                                                            <FaCalendarAlt /> {e.releaseYear}
-                                                        </span>
-                                                    )}
-
-                                                    <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
-                                                        <FaEye /> {(Number(e.views) || 0) + 100}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                </div>
-                            ))}
+                            {movieCards}
                         </div>
                     </div>
 
