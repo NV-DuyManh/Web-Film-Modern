@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useImperativeHandle, forwardRef } from 'react';
+import React, { useEffect, useRef, useState, useImperativeHandle, forwardRef } from 'react';
 import Artplayer from 'artplayer';
 import Hls from 'hls.js';
 
@@ -8,7 +8,7 @@ function extractStreamUrl(embedUrl) {
         const urlObj = new URL(embedUrl);
         const streamUrl = urlObj.searchParams.get('url');
         if (streamUrl) return streamUrl;
-    } catch { }
+    } catch { /* Direct stream URLs are also accepted. */ }
     if (embedUrl.includes('.m3u8') || embedUrl.includes('.mp4')) return embedUrl;
     return embedUrl;
 }
@@ -22,11 +22,20 @@ const VideoPlayer = forwardRef(({
     onEnded,
     onBufferStart,
     onBufferEnd,
+    onError,
+    onSwitchServer,
+    canSwitchServer = false,
     autoPlay = false,
     hideControls = false
 }, ref) => {
     const artRef = useRef(null);
     const containerRef = useRef(null);
+    const callbacks = useRef({});
+    callbacks.current = { onTimeUpdate, onPlay, onPause, onSeek, onEnded, onBufferStart, onBufferEnd, onError, autoPlay };
+    const [failure, setFailure] = useState(null);
+    const [retry, setRetry] = useState(0);
+    const retryPosition = useRef(0);
+    const previousSource = useRef(src);
 
     useImperativeHandle(ref, () => ({
         seek(seconds) {
@@ -46,7 +55,17 @@ const VideoPlayer = forwardRef(({
     useEffect(() => {
         if (!src || !containerRef.current) return;
 
+        if (previousSource.current !== src) {
+            retryPosition.current = 0;
+            previousSource.current = src;
+        }
+
         const streamUrl = extractStreamUrl(src);
+        setFailure(null);
+        const reportError = message => {
+            setFailure(message);
+            callbacks.current.onError?.(message);
+        };
 
         const art = new Artplayer({
             container: containerRef.current,
@@ -55,7 +74,7 @@ const VideoPlayer = forwardRef(({
             volume: 1,
             isLive: false,
             muted: false,
-            autoplay: autoPlay,
+            autoplay: callbacks.current.autoPlay,
             pip: true,
             autoSize: false,
             autoMini: false,
@@ -89,6 +108,15 @@ const VideoPlayer = forwardRef(({
                         hls.loadSource(url);
                         hls.attachMedia(video);
                         art.hls = hls;
+                        let mediaRecoveries = 0;
+                        hls.on(Hls.Events.ERROR, (_, data) => {
+                            if (!data.fatal) return;
+                            if (data.type === Hls.ErrorTypes.MEDIA_ERROR && mediaRecoveries++ < 1) {
+                                hls.recoverMediaError();
+                                return;
+                            }
+                            reportError('Không tải được video. Kiểm tra kết nối hoặc thử server khác.');
+                        });
 
                         hls.on(Hls.Events.MANIFEST_PARSED, function () {
                             const levels = hls.levels;
@@ -119,7 +147,7 @@ const VideoPlayer = forwardRef(({
                     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                         video.src = url;
                     } else {
-                        art.notice.show = 'Unsupported playback format: m3u8';
+                        reportError('Trình duyệt chưa hỗ trợ định dạng video này.');
                     }
                 }
             },
@@ -146,25 +174,32 @@ const VideoPlayer = forwardRef(({
         });
 
         artRef.current = art;
+        art.on('ready', () => {
+            if (retryPosition.current > 0) {
+                art.currentTime = retryPosition.current;
+                retryPosition.current = 0;
+            }
+        });
+        art.on('video:error', () => reportError('Không phát được video. Bạn có thể thử lại hoặc đổi server.'));
 
         let lastReported = 0;
         art.on('video:timeupdate', () => {
-            if (onTimeUpdate) {
+            if (callbacks.current.onTimeUpdate) {
                 const now = Math.floor(art.currentTime);
                 const dur = Math.floor(art.duration || 0);
-                if (now - lastReported >= 3) {
+                if (Math.abs(now - lastReported) >= 3) {
                     lastReported = now;
-                    onTimeUpdate(now, dur);
+                    callbacks.current.onTimeUpdate(now, dur);
                 }
             }
         });
 
-        art.on('video:play', () => { if (onPlay) onPlay(art.currentTime); });
-        art.on('video:pause', () => { if (onPause) onPause(art.currentTime); });
-        art.on('video:seeked', () => { if (onSeek) onSeek(art.currentTime); });
-        art.on('video:ended', () => { if (onEnded) onEnded(); });
-        art.on('video:waiting', () => { if (onBufferStart) onBufferStart(art.currentTime); });
-        art.on('video:playing', () => { if (onBufferEnd) onBufferEnd(art.currentTime); });
+        art.on('video:play', () => callbacks.current.onPlay?.(art.currentTime));
+        art.on('video:pause', () => callbacks.current.onPause?.(art.currentTime));
+        art.on('video:seeked', () => callbacks.current.onSeek?.(art.currentTime));
+        art.on('video:ended', () => callbacks.current.onEnded?.());
+        art.on('video:waiting', () => callbacks.current.onBufferStart?.(art.currentTime));
+        art.on('video:playing', () => { setFailure(null); callbacks.current.onBufferEnd?.(art.currentTime); });
 
 
         const handleKeyDown = (e) => {
@@ -183,8 +218,9 @@ const VideoPlayer = forwardRef(({
             if (art && art.destroy) {
                 art.destroy(false);
             }
+            artRef.current = null;
         };
-    }, [src]);
+    }, [src, retry]);
 
     return (
         <>
@@ -224,6 +260,19 @@ const VideoPlayer = forwardRef(({
                 ref={containerRef}
                 className={`w-full h-[60vh] sm:h-[75vh] md:h-[80vh] bg-black ${hideControls ? 'art-hide-controls' : ''}`}
             />
+            {failure && !hideControls && <div role="alert" className="absolute inset-0 z-40 bg-black/85 flex items-center justify-center p-4">
+                <div className="max-w-sm w-full rounded-2xl bg-[#141a24] border border-yellow-400/40 p-5 text-center">
+                    <p className="text-white font-bold">Video gặp sự cố</p>
+                    <p className="mt-2 text-sm text-slate-300">{failure}</p>
+                    <div className="mt-4 flex justify-center flex-wrap gap-3">
+                        <button className="bg-yellow-400 rounded-lg px-4 py-2 text-black font-bold" onClick={() => {
+                            retryPosition.current = artRef.current?.currentTime || 0;
+                            setRetry(value => value + 1);
+                        }}>Thử lại</button>
+                        {canSwitchServer && <button onClick={onSwitchServer} className="border border-slate-600 rounded-lg px-4 py-2 text-white">Đổi server</button>}
+                    </div>
+                </div>
+            </div>}
         </>
     );
 });

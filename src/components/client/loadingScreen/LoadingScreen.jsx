@@ -3,6 +3,7 @@ import { useMovies } from '../../../hooks/useCollections';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import Logo from '../../../assets/Icon.png';
 import './LoadingScreen.css';
+import useCatalogStatus from '../../../hooks/useCatalogStatus';
 
 function generateParticles(count) {
     return Array.from({ length: count }, (_, i) => ({
@@ -38,12 +39,15 @@ function LoadingScreen({ onFinished }) {
 
     const movies = useMovies();
     const categories = useContext(CategoryContext);
+    const movieStatus = useCatalogStatus('Movies');
+    const categoryStatus = useCatalogStatus('Categories');
+    const dataError = movieStatus.error || categoryStatus.error;
 
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     const particles = useMemo(() => generateParticles(isMobile ? 10 : 35), [isMobile]);
     const filmStrips = useMemo(() => generateFilmStrips(isMobile ? 2 : 6), [isMobile]);
 
-    const isDataReady = movies?.length > 0 && categories?.length > 0;
+    const isDataReady = (movies?.length > 0 || movieStatus.status === 'ready') && (categories?.length > 0 || categoryStatus.status === 'ready');
 
     useEffect(() => {
         const t1 = setTimeout(() => setLogoReady(true), 150);
@@ -76,6 +80,13 @@ function LoadingScreen({ onFinished }) {
     }, [isDataReady]);
 
     if (hidden) return null;
+    if (dataError && !isDataReady) return <div className="loading-screen flex items-center justify-center p-6">
+        <div role="alert" className="max-w-sm text-center rounded-2xl border border-yellow-400/40 bg-[#141a24] p-6">
+            <h2 className="text-white text-xl font-bold">Chưa tải được dữ liệu phim</h2>
+            <p className="mt-3 text-slate-300 text-sm">{dataError.code === 'resource-exhausted' ? 'Dữ liệu phim đang tạm thời quá tải. Vui lòng quay lại sau ít phút.' : 'Kiểm tra kết nối mạng rồi thử lại.'}</p>
+            <button onClick={() => window.location.reload()} className="mt-4 rounded-lg bg-yellow-400 px-5 py-2 text-black font-bold">Thử lại</button>
+        </div>
+    </div>;
 
     const brandText = 'MFILM';
     const tagline = 'Unlimited Entertainment';

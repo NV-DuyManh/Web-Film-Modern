@@ -1,8 +1,9 @@
+import { findMovieReference } from '../../../utils/nameRoutes';
 import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { useMovies, useAuthors, useActors, useCharacters, useCategories, useComments, useReviews, useSubscriptions } from '../../../hooks/useCollections';
+import { useMovies, useCharacters, useCategories, useSubscriptions } from '../../../hooks/useCollections';
 import { getUserPlanInfo } from '../../../utils/appUtils';
 import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots, FaMicrophone, FaStop, FaPaperPlane } from 'react-icons/fa';
 import {
@@ -31,19 +32,22 @@ const createNewSession = () => ({
     ]
 });
 
-export default function GroqChatBot() {
+export default function GroqChatBot({ initiallyOpen = false }) {
     const navigate = useNavigate();
     const location = useLocation();
     const { isLogin } = useContext(AuthContext);
-    const subscriptions = useSubscriptions() || [];
+    const [isChatOpen, setIsChatOpen] = useState(() => {
+        try {
+            return initiallyOpen || sessionStorage.getItem(CHAT_OPEN_KEY) === 'true';
+        } catch (e) {
+            return initiallyOpen;
+        }
+    });
+    const subscriptions = useSubscriptions(isChatOpen) || [];
     const plans = useContext(PlanContext) || [];
-    const movies = useMovies() || [];
-    const authors = useAuthors() || [];
-    const actors = useActors() || [];
-    const characters = useCharacters() || [];
-    const categories = useCategories() || [];
-    const allComments = useComments() || [];
-    const allReviews = useReviews() || [];
+    const movies = useMovies(isChatOpen) || [];
+    const characters = useCharacters(isChatOpen) || [];
+    const categories = useCategories(isChatOpen) || [];
 
     const userPlanInfo = useMemo(() => {
         return getUserPlanInfo(isLogin, subscriptions, plans);
@@ -95,14 +99,6 @@ export default function GroqChatBot() {
             if (savedSessionId) return savedSessionId;
         } catch (e) { }
         return sessions[0]?.id || `session_${Date.now()}`;
-    });
-
-    const [isChatOpen, setIsChatOpen] = useState(() => {
-        try {
-            return sessionStorage.getItem(CHAT_OPEN_KEY) === 'true';
-        } catch (e) {
-            return false;
-        }
     });
 
     const [showHistory, setShowHistory] = useState(false);
@@ -263,7 +259,7 @@ export default function GroqChatBot() {
             : null;
     const cleanSlug = currentSlug ? decodeURIComponent(currentSlug).replace(/\/$/, '') : null;
     const currentMovie = cleanSlug
-        ? movies.find(m => m.slug === cleanSlug || m.id === cleanSlug || m.slug === currentSlug || m.id === currentSlug)
+        ? (findMovieReference(movies, cleanSlug) || findMovieReference(movies, currentSlug))
         : null;
 
     // Tính năng nhận diện giọng nói (Web Speech API)
@@ -385,12 +381,8 @@ export default function GroqChatBot() {
             const systemInstruction = buildSystemInstruction({
                 movies: candidateMovies,
                 currentMovie,
-                authors,
-                actors,
                 characters,
                 categories,
-                allComments,
-                allReviews,
                 plans,
                 isLogin,
                 userPlanInfo,

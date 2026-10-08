@@ -1,8 +1,10 @@
+import { routeSegment } from '../../../utils/nameRoutes';
 import { useEffect, useMemo } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useActors, useAuthors, useCharacters, useMovies } from '../../../hooks/useCollections';
 import { getDefaultAvatar, getSafeEntityAvatar } from '../../../utils/appUtils';
 import { getOptimizedUrl } from '../../../utils/cloudinary';
+import { createNameRouteIndex } from '../../../utils/nameRoutes';
 import SEO from '../../../components/SEO';
 import { FaGlobe, FaVenusMars, FaInfoCircle, FaPlay, FaFilm } from 'react-icons/fa';
 import './ActorDetail.css';
@@ -12,12 +14,14 @@ const EMPTY_ENTITIES = [];
 function ActorDetail({ type }) {
     const { slug } = useParams();
     const navigate = useNavigate();
+    const location = useLocation();
     const actors = useActors();
     const authors = useAuthors();
     const characters = useCharacters();
     const movies = useMovies();
     const entityList = type === 'actor' ? actors : type === 'author' ? authors : type === 'character' ? characters : EMPTY_ENTITIES;
     const entityTitle = type === 'actor' ? 'Diễn viên' : type === 'author' ? 'Tác giả' : type === 'character' ? 'Nhân vật' : '';
+    const entityRoutes = useMemo(() => createNameRouteIndex(entityList), [entityList]);
 
     useEffect(() => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -25,8 +29,16 @@ function ActorDetail({ type }) {
 
     const entity = useMemo(() => {
         if (!entityList || entityList.length === 0) return null;
-        return entityList.find(e => e.slug === slug || e.id === slug);
-    }, [entityList, slug]);
+        return entityRoutes.find(slug);
+    }, [entityList, slug, entityRoutes]);
+
+    const prefix = type === 'actor' ? '/dien-vien' : type === 'author' ? '/tac-gia' : '/nhan-vat';
+    const canonicalPath = entity ? entityRoutes.path(prefix, entity) : '';
+    useEffect(() => {
+        if (canonicalPath && location.pathname !== canonicalPath) {
+            navigate({ pathname: canonicalPath, search: location.search, hash: location.hash }, { replace: true });
+        }
+    }, [canonicalPath, location.pathname, location.search, location.hash, navigate]);
 
     const entityMovies = useMemo(() => {
         if (!entity || !movies) return [];
@@ -68,7 +80,7 @@ function ActorDetail({ type }) {
             <SEO 
                 title={`${entity.name} - ${entityTitle} | MFILM`}
                 description={`Thông tin chi tiết và danh sách phim của ${entityTitle.toLowerCase()} ${entity.name}.`}
-                url={`/${type === 'actor' ? 'dien-vien' : type === 'author' ? 'tac-gia' : 'nhan-vat'}/${slug}`}
+                url={canonicalPath}
             />
             <div className="entity-detail__container">
                 
@@ -123,7 +135,7 @@ function ActorDetail({ type }) {
                             {entityMovies.map((m, idx) => (
                                 <Link
                                     key={m.id || m.slug || idx}
-                                    to={`/phim/${m.slug || m.id}`}
+                                    to={`/phim/${routeSegment(m)}`}
                                     className="entity-detail__movie group cursor-pointer flex flex-col h-full min-w-0"
                                 >
                                     <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">

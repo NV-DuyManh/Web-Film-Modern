@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
@@ -114,7 +115,7 @@ function TopFilm() {
                 >
                     {topMovies.map((e, index) => (
                         <SwiperSlide key={e.id}>
-                            <Link to={`/phim/${e.slug || e.id}`}>
+                            <Link to={`/phim/${routeSegment(e)}`}>
                                 <div className="group cursor-pointer flex flex-col h-full">
 
                                     <div

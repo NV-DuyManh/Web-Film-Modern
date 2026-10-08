@@ -15,6 +15,11 @@ class ErrorBoundary extends React.Component {
     }
 
     handleRetry = () => {
+        // React.lazy caches rejected imports. A reload creates a fresh import.
+        if (this.state.error?.message?.match(/dynamically imported module|Loading chunk|Failed to fetch|module script/i)) {
+            window.location.reload();
+            return;
+        }
         this.setState({ hasError: false, error: null });
     };
 

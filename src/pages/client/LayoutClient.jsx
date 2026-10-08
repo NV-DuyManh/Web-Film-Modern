@@ -4,35 +4,14 @@ import HeaderClient from '../../components/client/header/HeaderClient';
 import ClientRouters from '../../routers/ClientRouters';
 import FooterClient from '../../components/client/footer/FooterClient';
 import LoadingScreen from '../../components/client/loadingScreen/LoadingScreen';
-import GroqChatBot from '../../components/client/chatBot/GroqChatBot';
+import ChatLauncher from '../../components/client/chatBot/ChatLauncher';
 // import GeminiChatBot from '../../components/client/chatBot/GeminiChatBot';
-import { useMovies } from '../../hooks/useCollections';
-import { autoSyncAllOngoingMovies } from '../../services/autoEpisodeSyncService';
 
 function LayoutClient() {
     const location = useLocation();
     const navigate = useNavigate();
     const scrollMap = useRef({});
     const prevPath = useRef(location.pathname);
-    const movies = useMovies() || [];
-    const hasSyncedRef = useRef(false);
-
-    // Tự động kiểm tra và đồng bộ tập mới định kỳ (chỉ chạy khi có danh sách phim)
-    useEffect(() => {
-        if (movies.length > 0 && !hasSyncedRef.current) {
-            hasSyncedRef.current = true;
-            autoSyncAllOngoingMovies(movies);
-        }
-
-        // Định kỳ kiểm tra ngầm mỗi 30 phút
-        const timer = setInterval(() => {
-            if (movies.length > 0) {
-                autoSyncAllOngoingMovies(movies);
-            }
-        }, 30 * 60 * 1000);
-
-        return () => clearInterval(timer);
-    }, [movies.length]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -68,7 +47,7 @@ function LayoutClient() {
                 <FooterClient />
             </div>
 
-            <GroqChatBot />
+            <ChatLauncher />
             {/* <GeminiChatBot /> */}
         </>
     );

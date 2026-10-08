@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
 import { useMovies } from '../../../../hooks/useCollections';
 import { FaChevronLeft, FaChevronRight, FaClock, FaCalendarAlt, FaEye } from "react-icons/fa";
@@ -235,7 +236,7 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                 }}
             >
                 <Link
-                    to={`/phim/${e.slug || e.id}`}
+                    to={`/phim/${routeSegment(e)}`}
                     onClick={handleClickCard}
                     draggable="false"
                     className="block select-none"

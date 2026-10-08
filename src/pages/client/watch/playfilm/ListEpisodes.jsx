@@ -1,3 +1,4 @@
+import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useRef } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
 import { FaPlay, FaLock } from 'react-icons/fa';
@@ -22,7 +23,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const allRent = useRentMovies();
 
     const movie = useMemo(() => {
-        let found = movies.find(m => m.slug === slug || m.id === slug);
+        let found = findRouteEntity(movies, slug);
         if (!found) {
             const ep = episodeShow?.find(e => e.id == slug);
             if (ep) {
@@ -181,7 +182,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                     return (
                         <button
                             key={e.id}
-                            onClick={() => checkShow ? handleClickEpisodes(e) : (!isLogin ? setOpenLoginDialog(true) : navigate(`/pay/${movie?.id || slug}`))}
+                            onClick={() => checkShow ? handleClickEpisodes(e) : (!isLogin ? setOpenLoginDialog(true) : navigate(`/pay/${routeSegment(movie)}`))}
                             className={`group relative flex w-full h-10 sm:h-11 items-center justify-center gap-2 px-2 rounded-xl text-xs sm:text-sm font-bold transition duration-300 cursor-pointer border whitespace-nowrap overflow-hidden ${isActive
                                 ? "ep-btn-active bg-linear-to-r from-amber-400 via-yellow-300 to-amber-500 text-slate-950 border-amber-300 font-black scale-105 ring-2 ring-amber-400/50 ring-offset-2 ring-offset-[#0d0f14] z-10 shadow-[0_0_20px_rgba(251,191,36,0.4)]"
                                 : "bg-slate-800/80 text-slate-200 border-slate-600/50 hover:border-cyan-400 hover:bg-linear-to-r hover:from-cyan-900/40 hover:to-blue-900/40 hover:text-cyan-300 hover:-translate-y-1 hover:shadow-[0_6px_20px_rgba(34,211,238,0.25)] hover:scale-[1.04] active:scale-95"

@@ -1,3 +1,5 @@
+import useCanonicalPath from '../../../hooks/useCanonicalPath';
+import { routeSegment, findRouteEntity } from '../../../utils/nameRoutes';
 import { getOptimizedUrl } from '../../../utils/cloudinary';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useTopics, useMovies } from '../../../hooks/useCollections';
@@ -29,13 +31,16 @@ const ITEMS_PER_PAGE = 28;
 
 
 function TopicDetail() {
-    const { id } = useParams();
+    const { slug: id } = useParams();
     const navigate = useNavigate();
     const movies = useMovies() || [];
     const categories = useContext(CategoryContext) || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
-    const customTopics = useTopics() || [];
+    const customTopics = useTopics();
     const plans = useContext(PlanContext) || [];
+    const currentTopic = useMemo(() => findRouteEntity(customTopics, id), [customTopics, id]);
+    const topicPath = currentTopic ? `/topic/${routeSegment(currentTopic)}` : '';
+    useCanonicalPath(topicPath);
 
     const [searchParams, setSearchParams] = useSearchParams();
     const page = parseInt(searchParams.get('page')) || 1;
@@ -56,7 +61,7 @@ function TopicDetail() {
     }, [page, id]);
 
     const collectionData = useMemo(() => {
-        const customCol = customTopics.find(t => t.id === id);
+        const customCol = currentTopic;
         if (customCol) {
             let topicMovies = [];
             if (customCol.isSmart && customCol.smartID && SMART_FILTERS[customCol.smartID]) {
@@ -76,7 +81,7 @@ function TopicDetail() {
         }
 
         return null;
-    }, [id, movies, categoryTypes, categories, customTopics]);
+    }, [currentTopic, movies, categoryTypes, categories]);
 
     const collectionMovies = useMemo(() => {
         let list = collectionData?.movies || [];
@@ -122,7 +127,7 @@ function TopicDetail() {
             <SEO 
                 title={`${collectionData.title} - Chủ Đề Phim`}
                 description={`${collectionData.description}. Xem ${collectionMovies.length} phim trong bộ sưu tập ${collectionData.title} tại MFILM.`}
-                url={`/topic/${id}`}
+                url={topicPath}
                 image={heroBanner}
             />
 
@@ -211,7 +216,7 @@ function TopicDetail() {
                                         animate={{ opacity: 1, y: 0 }}
                                         transition={{ duration: 0.3, delay: i * 0.03 }}
                                     >
-                                        <Link to={`/phim/${movie.slug || movie.id}`} className="group flex flex-col">
+                                        <Link to={`/phim/${routeSegment(movie)}`} className="group flex flex-col">
                                             <div className="relative rounded-xl overflow-hidden aspect-2/3 border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                                 <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>

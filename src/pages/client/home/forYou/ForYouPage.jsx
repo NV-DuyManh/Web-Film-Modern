@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -18,7 +19,7 @@ import { trackEvent, getSessionId } from '../../../../services/eventTracker';
 const MovieCard = React.memo(({ movie, plans, onMovieClick }) => {
     return (
         <Link 
-            to={`/phim/${movie.slug || movie.id}`} 
+            to={`/phim/${routeSegment(movie)}`}
             className="group flex flex-col"
             onClick={() => onMovieClick?.(movie)}
         >

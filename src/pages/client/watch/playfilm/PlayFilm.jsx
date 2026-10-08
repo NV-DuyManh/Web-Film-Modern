@@ -1,26 +1,30 @@
+import useCanonicalPath from '../../../../hooks/useCanonicalPath';
+import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
-import { useMovies } from '../../../../hooks/useCollections';
+import { useMovies, useSubscriptions, useRentMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory, FaBolt } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { fetchDataById, updateDocument } from '../../../../services/firebaseService';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
-import { getResume, saveResume, clearResume, formatTime, timeAgo } from '../../../../utils/watchHistory';
+import { saveResume, clearResume, formatTime, timeAgo } from '../../../../utils/watchHistory';
+import useResumeEntry from '../../../../hooks/useResumeEntry';
 import VideoPlayer from './VideoPlayer';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
-import { isSingleMovie, formatEpisodeName } from '../../../../utils/appUtils';
+import { isSingleMovie, formatEpisodeName, getUserPlanInfo, getExpiryDate } from '../../../../utils/appUtils';
+import { nextPlayableEpisode, episodeSource } from '../../../../utils/playback';
+import NextEpisodePrompt from './NextEpisodePrompt';
 import Comment from '../detailFilm/Comment';
 import SEO from '../../../../components/SEO';
-import { syncSingleMovieEpisodes } from '../../../../services/autoEpisodeSyncService';
 import PageLoadingSpinner from '../../../../components/common/PageLoadingSpinner';
 import { trackEvent } from '../../../../services/eventTracker';
 
 
-function PlayFilm({ handleOpenLogin }) {
+function PlayFilm() {
     const { slug } = useParams();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -28,18 +32,29 @@ function PlayFilm({ handleOpenLogin }) {
     
     const [activeAudio, setActiveAudio] = useState('vietsub');
     const serverParam = searchParams.get('server');
-    const [activeServer, setActiveServer] = useState(serverParam ? parseInt(serverParam) : 1);
     const movies = useMovies();
     const plans = useContext(PlanContext);
     const [episodes, setEpisodes] = useState([]);
-    const [currentEpisode, setCurrentEpisode] = useState(null);
+    const lastProgressTimeRef = useRef(0);
+    const completedEpisodeRef = useRef(null);
     const playerRef = useRef(null);
     const { isLogin } = useContext(AuthContext);
+    const subscriptions = useSubscriptions();
+    const rentals = useRentMovies();
+    const [pendingNext, setNextPrompt] = useState(null);
+    const [autoNext, setAutoNext] = useState(() => {
+        try { return localStorage.getItem('mfilm_auto_next') !== 'false'; } catch { return true; }
+    });
+    const [autoStartEpisodeId, setAutoStartEpisodeId] = useState(null);
 
-    const movie = useMemo(() => movies.find(m => m.slug === slug || m.id === slug) || {}, [movies, slug]);
+    const movie = useMemo(() => findRouteEntity(movies, slug) || {}, [movies, slug]);
+    useCanonicalPath(movie?.id ? `/xem-phim/${routeSegment(movie)}` : '');
     const realMovieId = movie?.id;
     const categoryTypes = useContext(CategoryTypeContext);
     const isSingle = isSingleMovie(movie, categoryTypes);
+    const canWatch = Number(getObjectById(plans, movie?.planID)?.level || 0) === 0 ||
+        (!!isLogin && (getUserPlanInfo(isLogin, subscriptions, plans).level >= Number(getObjectById(plans, movie?.planID)?.level || 0) ||
+            rentals.some(rent => rent.movieID === realMovieId && rent.userID === isLogin.id && getExpiryDate(rent) > new Date())));
 
     useEffect(() => {
         if (!realMovieId) return;
@@ -49,12 +64,6 @@ function PlayFilm({ handleOpenLogin }) {
         return () => unsubscribe();
     }, [realMovieId]);
 
-    // Tự động kiểm tra và thêm tập mới tức thì khi người xem phát phim
-    useEffect(() => {
-        if (movie && movie.slug) {
-            syncSingleMovieEpisodes(movie, episodes);
-        }
-    }, [movie?.id, movie?.slug]);
 
     const episodeShow = useMemo(() => {
         if (!realMovieId) return [];
@@ -74,26 +83,10 @@ function PlayFilm({ handleOpenLogin }) {
         return Array.from(map.values()).sort((a, b) => (Number(a.numberEpisode) || 0) - (Number(b.numberEpisode) || 0));
     }, [realMovieId, episodes]);
 
-    const [playEpisodes, setPlayEpisodes] = useState({});
-
-    useEffect(() => {
-        if (episodeShow.length > 0) {
-            let ep;
-            if (tap) {
-                ep = episodeShow.find(e => String(e.numberEpisode) === String(tap));
-            }
-            if (!ep) ep = episodeShow[0];
-            
-            setPlayEpisodes(ep);
-            setCurrentEpisode(ep);
-        }
-    }, [episodeShow, tap]);
-
-    useEffect(() => {
-        if (playEpisodes && activeServer === 2 && !playEpisodes.url2) {
-            setActiveServer(1);
-        }
-    }, [playEpisodes, activeServer]);
+    const playEpisodes = useMemo(() => episodeShow.find(ep => String(ep.numberEpisode) === String(tap)) || episodeShow[0] || {}, [episodeShow, tap]);
+    const activeServer = serverParam === '2' && playEpisodes.url2 ? 2 : 1;
+    const nextPrompt = pendingNext?.fromEpisodeId === playEpisodes.id ? pendingNext : null;
+    useEffect(() => { lastProgressTimeRef.current = 0; completedEpisodeRef.current = null; }, [realMovieId, playEpisodes?.id]);
 
     useEffect(() => {
         if (!realMovieId) return;
@@ -110,31 +103,18 @@ function PlayFilm({ handleOpenLogin }) {
     }, [realMovieId, playEpisodes?.id]);
 
 
-    const [showModal, setShowModal] = useState(false);
-    const [resumeData, setResumeData] = useState(null);
+    const savedResume = useResumeEntry(realMovieId, isLogin?.id);
+    const [resumeDialog, setResumeDialog] = useState(null);
+    const [startedEpisodeId, setStartedEpisodeId] = useState(null);
+    const resumeData = savedResume?.episodes?.[playEpisodes.id] > 5 ? { ...savedResume, seconds: savedResume.episodes[playEpisodes.id] } : null;
+    const showModal = !!resumeData && (resumeDialog?.episodeId === playEpisodes.id ? resumeDialog.open :
+        startedEpisodeId !== playEpisodes.id && autoStartEpisodeId !== playEpisodes.id);
+    const setShowModal = open => setResumeDialog({ episodeId: playEpisodes.id, open });
+    useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [slug, tap]);
 
 
-    useEffect(() => {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        if (realMovieId && playEpisodes?.id) {
-            const saved = getResume(realMovieId);
-            const epSeconds = saved?.episodes?.[playEpisodes.id] || 0;
-
-            if (epSeconds > 5) {
-                setResumeData({ ...saved, seconds: epSeconds });
-                setShowModal(true);
-            } else {
-                setResumeData(null);
-                setShowModal(false);
-            }
-        }
-    }, [slug, tap, realMovieId, playEpisodes?.id]);
-
-
-    const lastProgressTimeRef = useRef(0);
     const handleTimeUpdate = useCallback((currentSeconds, playerDurationSeconds) => {
-        if (playEpisodes?.id && realMovieId && currentSeconds > 0) {
+        if (playEpisodes?.id && realMovieId && currentSeconds > 0 && completedEpisodeRef.current !== playEpisodes.id) {
             saveResume(realMovieId, {
                 episodeId: playEpisodes.id,
                 episodeNumber: playEpisodes.numberEpisode,
@@ -165,51 +145,57 @@ function PlayFilm({ handleOpenLogin }) {
                 lastProgressTimeRef.current = currentSeconds;
             }
         }
-    }, [playEpisodes?.id, realMovieId, movie?.duration]);
+    }, [playEpisodes, realMovieId, movie?.duration, isLogin?.id]);
 
     const handlePlay = useCallback((seconds) => {
+        setStartedEpisodeId(playEpisodes?.id);
+        if (seconds < (playerRef.current?.getDuration?.() || Infinity) - 1) completedEpisodeRef.current = null;
         if (realMovieId && playEpisodes?.id) {
             trackEvent('play', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
         }
-    }, [realMovieId, playEpisodes?.id]);
+    }, [realMovieId, playEpisodes]);
 
     const handlePause = useCallback((seconds) => {
         if (realMovieId && playEpisodes?.id) {
             trackEvent('pause', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
         }
-    }, [realMovieId, playEpisodes?.id]);
+    }, [realMovieId, playEpisodes]);
 
     const handleSeek = useCallback((seconds) => {
         if (realMovieId && playEpisodes?.id) {
             trackEvent('seek', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
         }
-    }, [realMovieId, playEpisodes?.id]);
+    }, [realMovieId, playEpisodes]);
 
     const handleEnded = useCallback(() => {
         if (realMovieId && playEpisodes?.id) {
             const finalDuration = playerRef.current?.getDuration?.() || (Number(movie?.duration) * 60) || 3600;
             trackEvent('complete', realMovieId, playEpisodes.id, { durationSeconds: Math.floor(finalDuration) });
+            completedEpisodeRef.current = playEpisodes.id;
+            clearResume(realMovieId, playEpisodes.id, isLogin?.id);
+            const next = nextPlayableEpisode(episodeShow, playEpisodes);
+            if (autoNext && canWatch && next) setNextPrompt({ ...next, fromEpisodeId: playEpisodes.id });
         }
-    }, [realMovieId, playEpisodes?.id, movie?.duration]);
+    }, [realMovieId, playEpisodes, movie?.duration, episodeShow, autoNext, canWatch, isLogin?.id]);
 
     const handleBufferStart = useCallback((seconds) => {
         if (realMovieId && playEpisodes?.id) {
             trackEvent('buffer_start', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
         }
-    }, [realMovieId, playEpisodes?.id]);
+    }, [realMovieId, playEpisodes]);
 
     const handleBufferEnd = useCallback((seconds) => {
         if (realMovieId && playEpisodes?.id) {
             trackEvent('buffer_end', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
         }
-    }, [realMovieId, playEpisodes?.id]);
+    }, [realMovieId, playEpisodes]);
 
 
 
     useEffect(() => {
         const handleBeforeUnload = () => {
             const time = playerRef.current?.getTime?.() || 0;
-            if (playEpisodes?.id && realMovieId && time > 0) {
+            if (playEpisodes?.id && realMovieId && time > 0 && completedEpisodeRef.current !== playEpisodes.id) {
                 saveResume(realMovieId, {
                     episodeId: playEpisodes.id,
                     episodeNumber: playEpisodes.numberEpisode,
@@ -219,19 +205,21 @@ function PlayFilm({ handleOpenLogin }) {
         };
         window.addEventListener('beforeunload', handleBeforeUnload);
         return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-    }, [playEpisodes?.id, realMovieId]);
+    }, [playEpisodes?.id, playEpisodes?.numberEpisode, realMovieId, isLogin?.id]);
 
 
     const handleClickEpisodes = (ep) => {
+        setAutoStartEpisodeId(null);
+        setNextPrompt(null);
         const time = playerRef.current?.getTime?.() || 0;
-        if (playEpisodes?.id && realMovieId && time > 0) {
+        if (playEpisodes?.id && realMovieId && time > 0 && completedEpisodeRef.current !== playEpisodes.id) {
             saveResume(realMovieId, {
                 episodeId: playEpisodes.id,
                 episodeNumber: playEpisodes.numberEpisode,
                 seconds: Math.floor(time),
             }, isLogin?.id);
         }
-        navigate(`/xem-phim/${slug}?tap=${ep.numberEpisode}&server=${activeServer}`);
+        navigate(`/xem-phim/${routeSegment(movie)}?tap=${ep.numberEpisode}&server=${activeServer}`);
     };
 
     const handleResume = () => {
@@ -248,7 +236,7 @@ function PlayFilm({ handleOpenLogin }) {
     const handleFromStart = () => {
         setShowModal(false);
         if (realMovieId && playEpisodes?.id) {
-            clearResume(realMovieId, playEpisodes.id);
+            clearResume(realMovieId, playEpisodes.id, isLogin?.id);
         }
         setTimeout(() => {
             if (playerRef.current) {
@@ -274,7 +262,7 @@ function PlayFilm({ handleOpenLogin }) {
                 title={`Xem ${movie?.otherName || movie?.name || 'Phim'}${playEpisodes?.numberEpisode ? ` - ${formatEpisodeName(playEpisodes.numberEpisode, isSingle)}` : ''}`}
                 description={`Xem phim ${movie?.otherName || movie?.name || ''} ${formatEpisodeName(playEpisodes?.numberEpisode || 1, isSingle).toLowerCase()} vietsub, thuyết minh chất lượng cao tại MFILM.`}
                 image={movie?.bannerUrl || movie?.imgUrl}
-                url={`/xem-phim/${slug}${tap ? `?tap=${tap}` : ''}`}
+                url={`/xem-phim/${routeSegment(movie)}${tap ? `?tap=${tap}` : ''}`}
                 type="video.episode"
             />
 
@@ -283,7 +271,7 @@ function PlayFilm({ handleOpenLogin }) {
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <div className="flex items-center gap-3">
                         <button
-                            onClick={() => navigate(`/phim/${movie?.slug || realMovieId}`)}
+                            onClick={() => navigate(`/phim/${routeSegment(movie)}`)}
                             className="flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-800/60 text-slate-300 hover:border-yellow-400 hover:text-yellow-400 hover:bg-yellow-400/10 transition cursor-pointer shadow-sm"
                             title="Quay lại chi tiết phim"
                         >
@@ -320,7 +308,7 @@ function PlayFilm({ handleOpenLogin }) {
                 <div className="relative w-full mb-8 rounded-2xl overflow-hidden border border-slate-800 shadow-2xl bg-black group">
                     <VideoPlayer
                         ref={playerRef}
-                        src={activeServer === 2 && playEpisodes?.url2 ? playEpisodes.url2 : playEpisodes?.url}
+                        src={episodeSource(playEpisodes, activeServer)}
                         onTimeUpdate={handleTimeUpdate}
                         onPlay={handlePlay}
                         onPause={handlePause}
@@ -328,9 +316,24 @@ function PlayFilm({ handleOpenLogin }) {
                         onEnded={handleEnded}
                         onBufferStart={handleBufferStart}
                         onBufferEnd={handleBufferEnd}
-                        autoPlay={false}
+                        autoPlay={autoStartEpisodeId === playEpisodes?.id}
                         hideControls={showModal}
+                        canSwitchServer={!!playEpisodes?.url2 && !!(playEpisodes?.url || playEpisodes?.urlM3u8)}
+                        onSwitchServer={() => {
+                            const server = activeServer === 1 ? 2 : 1;
+                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${playEpisodes.numberEpisode}&server=${server}`, { replace: true });
+                        }}
+                        onError={message => trackEvent('playback_error', realMovieId, playEpisodes?.id, { message, server: activeServer })}
                     />
+                    {nextPrompt && canWatch && <NextEpisodePrompt key={nextPrompt.id} episode={nextPrompt}
+                        onCancel={() => setNextPrompt(null)}
+                        onContinue={() => {
+                            if (!canWatch) return;
+                            setAutoStartEpisodeId(nextPrompt.id);
+                            setNextPrompt(null);
+                            const server = activeServer === 2 && nextPrompt.url2 ? 2 : 1;
+                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${nextPrompt.numberEpisode}&server=${server}`);
+                        }} />}
 
 
 
@@ -363,6 +366,14 @@ function PlayFilm({ handleOpenLogin }) {
                 </div>
 
 
+                {!isSingle && <label className="mb-6 flex items-center justify-end gap-2 text-sm text-slate-300">
+                    <input type="checkbox" className="accent-yellow-400" checked={autoNext} onChange={event => {
+                        const enabled = event.target.checked;
+                        setAutoNext(enabled);
+                        if (!enabled) setNextPrompt(null);
+                        try { localStorage.setItem('mfilm_auto_next', String(enabled)); } catch { /* optional preference */ }
+                    }} /> Tự chuyển tập
+                </label>}
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
                     <div className="flex-1 w-full">
                         <div className="flex flex-col md:flex-row gap-4 justify-between items-start border-b border-gray-800 pb-6">
@@ -372,7 +383,7 @@ function PlayFilm({ handleOpenLogin }) {
                             </div>
                             <div className="md:w-2/3 text-sm text-gray-400 leading-relaxed">
                                 <p>{movie.description || 'Đang cập nhật nội dung giới thiệu cho bộ phim này...'}</p>
-                                <button onClick={() => navigate(`/phim/${movie.slug || movie.id}`)} className="text-yellow-500 mt-2 font-medium hover:underline">Thông tin phim &gt;</button>
+                                <button onClick={() => navigate(`/phim/${routeSegment(movie)}`)} className="text-yellow-500 mt-2 font-medium hover:underline">Thông tin phim &gt;</button>
                             </div>
                         </div>
 
@@ -401,8 +412,7 @@ function PlayFilm({ handleOpenLogin }) {
                                 {playEpisodes?.url && (
                                     <button 
                                         onClick={() => {
-                                            setActiveServer(1);
-                                            navigate(`/xem-phim/${slug}?tap=${playEpisodes.numberEpisode || tap || 1}&server=1`, { replace: true });
+                                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${playEpisodes.numberEpisode || tap || 1}&server=1`, { replace: true });
                                         }} 
                                         className={`px-4 py-1.5 rounded-lg text-xs transition cursor-pointer border ${activeServer === 1 ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46] font-bold'}`}
                                     >SVR 1</button>
@@ -410,8 +420,7 @@ function PlayFilm({ handleOpenLogin }) {
                                 {playEpisodes?.url2 && (
                                     <button 
                                         onClick={() => {
-                                            setActiveServer(2);
-                                            navigate(`/xem-phim/${slug}?tap=${playEpisodes.numberEpisode || tap || 1}&server=2`, { replace: true });
+                                            navigate(`/xem-phim/${routeSegment(movie)}?tap=${playEpisodes.numberEpisode || tap || 1}&server=2`, { replace: true });
                                         }} 
                                         className={`px-4 py-1.5 rounded-lg text-xs transition cursor-pointer border ${activeServer === 2 ? 'bg-yellow-400 text-black border-yellow-400 font-extrabold shadow-sm' : 'bg-[#1b2236] text-slate-300 hover:text-white border-slate-700/60 hover:bg-[#232c46] font-bold'}`}
                                     >SVR 2</button>
@@ -434,7 +443,7 @@ function PlayFilm({ handleOpenLogin }) {
                         <h2 className="text-xl font-bold text-white mb-6">Đề xuất cho bạn</h2>
                         <div className="flex flex-col gap-4">
                             {movies.slice(0, 5).map((e) => (
-                                <div key={e.id} onClick={() => navigate(`/phim/${e.slug || e.id}`)} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
+                                <div key={e.id} onClick={() => navigate(`/phim/${routeSegment(e)}`)} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
                                     <div className="w-18 h-26.25 shrink-0 overflow-hidden rounded-md border border-gray-800 group-hover:border-gray-600">
                                         <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt={e.otherName || e.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                     </div>

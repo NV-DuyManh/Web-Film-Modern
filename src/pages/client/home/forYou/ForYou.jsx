@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
@@ -370,7 +371,7 @@ function ForYouInner() {
                 >
                     {activeMovies.map((e) => (
                         <SwiperSlide key={e.id || e.slug}>
-                            <Link to={`/phim/${e.slug || e.id}`} onClick={() => handleRecommendationClick(e)}>
+                            <Link to={`/phim/${routeSegment(e)}`} onClick={() => handleRecommendationClick(e)}>
                                 <div className="group cursor-pointer flex flex-col h-full">
                                     <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
                                         <img

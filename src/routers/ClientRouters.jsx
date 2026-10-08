@@ -42,7 +42,7 @@ function ClientRouters(props) {
             element: <Topic />
         },
         {
-            path: "/topic/:id",
+            path: "/topic/:slug",
             element: <TopicDetail />
         },
         {
@@ -78,7 +78,7 @@ function ClientRouters(props) {
             element: <DetailFilm />
         },
         {
-            path: "/pay/:id",
+            path: "/pay/:slug",
             element: <Pay />
         },
         {
@@ -94,7 +94,7 @@ function ClientRouters(props) {
             element: <PayVIP />
         },
         {
-            path: "/payMovie/:id",
+            path: "/payMovie/:slug",
             element: <PayMovie />
         },
         {

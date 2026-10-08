@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc, getDocs, setDoc, updateDoc, query, where } from "firebase/firestore";
+import { getFirestore, collection, doc, getDocs, setDoc, updateDoc, query, where, getDoc, runTransaction } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk",
@@ -14,33 +14,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const BASE_URL = 'https://phimapi.com';
+import { episodeSyncChanges } from '../src/utils/episodeSync.js';
+import { nameSlug } from '../src/utils/nameRoutes.js';
 
-const slugify = (text) => {
-    if (!text) return '';
-    const vietnameseMap = {
-        'à':'a','á':'a','ả':'a','ã':'a','ạ':'a','ă':'a','ằ':'a','ắ':'a','ẳ':'a','ẵ':'a','ặ':'a','â':'a','ầ':'a','ấ':'a','ẩ':'a','ẫ':'a','ậ':'a',
-        'è':'e','é':'e','ẻ':'e','ẽ':'e','ẹ':'e','ê':'e','ề':'e','ế':'e','ể':'e','ễ':'e','ệ':'e',
-        'ì':'i','í':'i','ỉ':'i','ĩ':'i','ị':'i',
-        'ò':'o','ó':'o','ỏ':'o','õ':'o','ọ':'o','ô':'o','ồ':'o','ố':'o','ổ':'o','ỗ':'o','ộ':'o','ơ':'o','ờ':'o','ớ':'o','ở':'o','ỡ':'o','ợ':'o',
-        'ù':'u','ú':'u','ủ':'u','ũ':'u','ụ':'u','ư':'u','ừ':'u','ứ':'u','ử':'u','ữ':'u','ự':'u',
-        'ỳ':'y','ý':'y','ỷ':'y','ỹ':'y','ỵ':'y',
-        'đ':'d',
-        'À':'a','Á':'a','Ả':'a','Ã':'a','Ạ':'a','Ă':'a','Ằ':'a','Ắ':'a','Ẳ':'a','Ẵ':'a','Ặ':'a','Â':'a','Ầ':'a','Ấ':'a','Ẩ':'a','Ẫ':'a','Ậ':'a',
-        'È':'e','É':'e','Ẻ':'e','Ẽ':'e','Ẹ':'e','Ê':'e','Ề':'e','Ế':'e','Ể':'e','Ễ':'e','Ệ':'e',
-        'Ì':'i','Í':'i','Ỉ':'i','Ĩ':'i','Ị':'i',
-        'Ò':'o','Ó':'o','Ỏ':'o','Õ':'o','Ọ':'o','Ô':'o','Ồ':'o','Ố':'o','Ổ':'o','Ỗ':'o','Ộ':'o','Ơ':'o','Ờ':'o','Ớ':'o','Ở':'o','Ỡ':'o','Ợ':'o',
-        'Ù':'u','Ú':'u','Ủ':'u','Ũ':'u','Ụ':'u','Ư':'u','Ừ':'u','Ứ':'u','Ử':'u','Ữ':'u','Ự':'u',
-        'Ỳ':'y','Ý':'y','Ỷ':'y','Ỹ':'y','Ỵ':'y',
-        'Đ':'d'
-    };
-    return text.split('').map(c => vietnameseMap[c] || c).join('')
-        .toLowerCase()
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/[\s_]+/g, '-')
-        .replace(/-+/g, '-')
-        .replace(/^-|-$/g, '');
-};
+const BASE_URL = 'https://phimapi.com';
 
 const mapMovieStatus = (status) => {
     if (!status) return "Đang chiếu";
@@ -53,110 +30,107 @@ const mapMovieStatus = (status) => {
 const sleep = (ms) => new Promise(r => setTimeout(r, ms));
 
 async function runCloudSync() {
+    const dryRun = process.argv.includes('--dry-run');
     console.log(`[CloudSync] 🚀 Bắt đầu quét và đồng bộ tập mới trên Cloud...`);
-    const moviesSnap = await getDocs(collection(db, "Movies"));
-    const allMovies = [];
-    moviesSnap.forEach(d => allMovies.push({ id: d.id, ...d.data() }));
-
-    const targetMovies = allMovies.filter(m => {
-        const status = (m.status || '').toLowerCase();
-        return status !== 'hoàn thành' && status !== 'completed';
-    });
-
-    console.log(`[CloudSync] 🔍 Tìm thấy ${targetMovies.length}/${allMovies.length} phim đang chiếu cần kiểm tra.`);
-
-    let totalNew = 0;
-    let totalFixed = 0;
-    let totalUpdatedMovies = 0;
-
-    for (let i = 0; i < targetMovies.length; i++) {
-        const movie = targetMovies[i];
-        let activeSlug = movie.slug || slugify(movie.otherName || movie.name);
-        if (!activeSlug) continue;
-
-        try {
-            const res = await fetch(`${BASE_URL}/phim/${activeSlug}`, { headers: { 'accept': 'application/json' } });
-            if (!res.ok) continue;
-            const detail = await res.json();
-            const movieData = detail?.movie;
-            const episodesData = detail?.episodes || [];
-            if (!episodesData || episodesData.length === 0) continue;
-
-            // Lấy danh sách tập hiện có của phim trong Firestore
-            const epSnap = await getDocs(query(collection(db, "Episodes"), where("movieID", "==", movie.id)));
-            const currentEpMap = new Map();
-            epSnap.forEach(d => {
-                const data = d.data();
-                if (data.numberEpisode) currentEpMap.set(Number(data.numberEpisode), { id: d.id, ...data });
-            });
-
-            const firstServer = episodesData[0];
-            const serverData = firstServer?.server_data || [];
-            let movieNewEps = 0;
-            let movieFixedEps = 0;
-            let highestEp = movie.endEpisode || 0;
-
-            for (const ep of serverData) {
-                const epNum = parseInt(ep.name.replace(/[^0-9]/g, '')) || 1;
-                if (epNum > highestEp) highestEp = epNum;
-
-                const existingEp = currentEpMap.get(epNum);
-
-                if (!existingEp) {
-                    const epRef = doc(collection(db, "Episodes"));
-                    await setDoc(epRef, {
-                        id: epRef.id,
-                        movieID: movie.id,
-                        title: movie.name || movie.otherName || '',
-                        numberEpisode: epNum,
-                        nameEpisode: ep.name || `Tập ${epNum}`,
-                        url: ep.link_embed || '',
-                        urlM3u8: ep.link_m3u8 || '',
-                        description: "Đang cập nhật...",
-                        createdAt: new Date().toISOString(),
-                    });
-                    currentEpMap.set(epNum, { id: epRef.id, numberEpisode: epNum });
-                    movieNewEps++;
-                    totalNew++;
-                } else {
-                    const isDummyOrBroken = !existingEp.url || 
-                                            !existingEp.url.startsWith('http') || 
-                                            existingEp.url !== ep.link_embed || 
-                                            existingEp.urlM3u8 !== ep.link_m3u8;
-                    if (isDummyOrBroken && (ep.link_embed || ep.link_m3u8)) {
-                        const epRef = doc(db, "Episodes", existingEp.id);
-                        await updateDoc(epRef, {
-                            url: ep.link_embed || existingEp.url || '',
-                            urlM3u8: ep.link_m3u8 || existingEp.urlM3u8 || '',
-                            nameEpisode: ep.name || existingEp.nameEpisode || `Tập ${epNum}`,
-                            title: movie.name || movie.otherName || existingEp.title || '',
-                            updatedAt: new Date().toISOString()
-                        });
-                        movieFixedEps++;
-                        totalFixed++;
-                    }
-                }
-            }
-
-            if (movieNewEps > 0 || movieFixedEps > 0) {
-                const movieRef = doc(db, "Movies", movie.id);
-                const newStatus = movieData?.status ? mapMovieStatus(movieData.status) : (movie.status || 'Đang chiếu');
-                await updateDoc(movieRef, {
-                    endEpisode: Math.max(highestEp, movie.endEpisode || 1),
-                    status: newStatus,
-                    slug: activeSlug,
-                    updatedAt: new Date().toISOString()
-                });
-                totalUpdatedMovies++;
-                console.log(`[CloudSync] ✅ "${movie.otherName || movie.name}": +${movieNewEps} tập mới, sửa ${movieFixedEps} link tập.`);
-            }
-        } catch (e) {
-            console.error(`[CloudSync] ❌ Lỗi xử lý "${movie.name}":`, e.message);
-        }
-        await sleep(350);
+    const lock = doc(db, 'Settings', 'CloudEpisodeSync');
+    const settings = (await getDoc(lock)).data() || {};
+    if (settings.enabled === false) {
+        console.log('[CloudSync] Tự động đồng bộ tập phim đang tắt.');
+        return;
     }
+    const runId = `${Date.now()}_${process.env.GITHUB_RUN_ID || 'manual'}`;
+    const acquired = dryRun || await runTransaction(db, async tx => {
+        const state = (await tx.get(lock)).data() || {};
+        const now = Date.now();
+        if (Number(state.lockUntil) > now || now - Number(state.lastSuccessAt || 0) < Math.max(30, Number(settings.intervalMinutes) || 30) * 60000) return false;
+        tx.set(lock, { runId, lockUntil: now + 30 * 60000 }, { merge: true });
+        return true;
+    });
+    if (!acquired) { console.log('[CloudSync] Đã chạy gần đây hoặc đang chạy ở nơi khác.'); return; }
+    try {
+        let targetMovies = [];
+        if (process.argv.includes('--full')) {
+            const snapshot = await getDocs(collection(db, 'Movies'));
+            targetMovies = snapshot.docs.map(item => ({ ...item.data(), id: item.id }))
+                .filter(movie => !['hoàn thành', 'completed'].includes(String(movie.status || '').toLowerCase()));
+        } else {
+            const slugs = new Set();
+            const pages = Math.min(10, Math.max(1, Number(settings?.syncPages) || 2));
+            for (let page = 1; page <= pages; page++) {
+                const response = await fetch(`${BASE_URL}/v1/api/danh-sach/phim-moi-cap-nhat?page=${page}`, { signal: AbortSignal.timeout(15000) });
+                if (!response.ok) throw new Error(`Danh sách cập nhật: HTTP ${response.status}`);
+                const data = await response.json();
+                for (const item of data.data?.items || data.items || []) if (item.slug) slugs.add(item.slug);
+            }
+            const slugList = [...slugs];
+            for (let i = 0; i < slugList.length; i += 10) {
+                const snapshot = await getDocs(query(collection(db, 'Movies'), where('slug', 'in', slugList.slice(i, i + 10))));
+                for (const item of snapshot.docs) targetMovies.push({ ...item.data(), id: item.id });
+            }
+        }
+        console.log(`[CloudSync] 🔍 Tìm thấy ${targetMovies.length} phim đang chiếu cần kiểm tra.`);
 
-    console.log(`[CloudSync] 🏁 Hoàn tất! Cập nhật ${totalUpdatedMovies} phim (+${totalNew} tập mới, sửa ${totalFixed} link).`);
+        let totalNew = 0;
+        let totalFixed = 0;
+        let totalUpdatedMovies = 0;
+        let errors = 0;
+
+        for (let i = 0; i < targetMovies.length; i++) {
+            const movie = targetMovies[i];
+            let activeSlug = movie.slug || nameSlug(movie.otherName || movie.name);
+            if (!activeSlug) continue;
+
+            try {
+                const res = await fetch(`${BASE_URL}/phim/${activeSlug}`, { headers: { 'accept': 'application/json' }, signal: AbortSignal.timeout(15000) });
+                if (!res.ok) throw new Error(`Chi tiết phim: HTTP ${res.status}`);
+                const detail = await res.json();
+                const movieData = detail?.movie;
+                const episodesData = detail?.episodes || [];
+                if (!episodesData || episodesData.length === 0) continue;
+
+                // Lấy danh sách tập hiện có của phim trong Firestore
+                const epSnap = await getDocs(query(collection(db, "Episodes"), where("movieID", "==", movie.id)));
+                const currentEpisodes = epSnap.docs.map(item => ({ ...item.data(), id: item.id }));
+                const changes = episodeSyncChanges(movie, episodesData[0]?.server_data || [], currentEpisodes);
+                const movieNewEps = changes.creates.length;
+                const movieFixedEps = changes.updates.length;
+                const highestEp = changes.highest;
+                for (const ep of changes.creates) if (!dryRun) await setDoc(doc(db, 'Episodes', ep.id), { ...ep, createdAt: new Date().toISOString() });
+                for (const ep of changes.updates) {
+                    const { id, ...values } = ep;
+                    if (!dryRun) await updateDoc(doc(db, 'Episodes', id), { ...values, updatedAt: new Date().toISOString() });
+                }
+                totalNew += movieNewEps;
+                totalFixed += movieFixedEps;
+                const newStatus = movieData?.status ? mapMovieStatus(movieData.status) : movie.status;
+                if (movieNewEps > 0 || movieFixedEps > 0 || movie.status !== newStatus || highestEp !== Number(movie.endEpisode)) {
+                    const movieRef = doc(db, "Movies", movie.id);
+                    if (!dryRun) await updateDoc(movieRef, {
+                        endEpisode: Math.max(highestEp, movie.endEpisode || 1),
+                        status: newStatus,
+                        slug: activeSlug,
+                        updatedAt: new Date().toISOString()
+                    });
+                    totalUpdatedMovies++;
+                    console.log(`[CloudSync] ✅ "${movie.otherName || movie.name}": +${movieNewEps} tập mới, sửa ${movieFixedEps} link tập.`);
+                }
+            } catch (e) {
+                errors++;
+                if (e.code === 'resource-exhausted') throw e;
+                console.error(`[CloudSync] ❌ Lỗi xử lý "${movie.name}":`, e.message);
+            }
+            await sleep(350);
+        }
+
+        if (errors) throw new Error(`Có ${errors} phim chưa đồng bộ được; sẽ thử lại ở lần chạy sau.`);
+        if (!dryRun) await setDoc(lock, { lastSuccessAt: Date.now() }, { merge: true });
+        console.log(`[CloudSync] 🏁 Hoàn tất! Cập nhật ${totalUpdatedMovies} phim (+${totalNew} tập mới, sửa ${totalFixed} link).`);
+    } finally {
+        if (!dryRun) await runTransaction(db, async tx => {
+            const state = (await tx.get(lock)).data();
+            if (state?.runId === runId) tx.set(lock, { lockUntil: 0 }, { merge: true });
+        });
+    }
 }
 
 runCloudSync().catch(err => {

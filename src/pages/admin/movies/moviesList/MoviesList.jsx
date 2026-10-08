@@ -1,3 +1,4 @@
+import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import React, { useState, useContext, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useSearchParams } from 'react-router-dom';
@@ -37,15 +38,21 @@ function MoviesList() {
     useEffect(() => {
         const viewMovieId = searchParams.get("viewMovie");
         if (viewMovieId && movies.length > 0) {
-            const mv = movies.find(m => m.slug === viewMovieId || m.id === viewMovieId || m.otherName === viewMovieId);
+            const mv = findRouteEntity(movies, viewMovieId);
             if (mv) {
+                const canonical = decodeURIComponent(routeSegment(mv));
+                if (viewMovieId !== canonical) {
+                    const params = new URLSearchParams(searchParams);
+                    params.set('viewMovie', canonical);
+                    setSearchParams(params, { replace: true });
+                }
                 setMovieView(mv);
                 setOpenView(true);
             }
         } else {
             setOpenView(false);
         }
-    }, [searchParams, movies]);
+    }, [searchParams, movies, setSearchParams]);
 
 
     const onChangeSearch = (e) => setSearch(e.target.value);
@@ -78,7 +85,7 @@ function MoviesList() {
 
     const handleViewMovie = (row) => {
         const currentParams = new URLSearchParams(searchParams);
-        currentParams.set("viewMovie", row.slug || row.otherName || row.id);
+        currentParams.set("viewMovie", decodeURIComponent(routeSegment(row)));
         setSearchParams(currentParams);
     };
 

@@ -1,3 +1,4 @@
+import { routeSegment, findMovieReference } from '../../../utils/nameRoutes';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlay, FaInfoCircle } from 'react-icons/fa';
@@ -8,7 +9,7 @@ export const normalizeMovieLinks = (text, movies = []) => {
 
     const movieByReference = new Map();
     for (const movie of movies) {
-        for (const reference of [movie.slug, movie.id]) {
+        for (const reference of [movie.routeSlug, movie.slug, movie.id]) {
             if (reference) movieByReference.set(String(reference).toLowerCase(), movie);
         }
     }
@@ -17,13 +18,13 @@ export const normalizeMovieLinks = (text, movies = []) => {
         /\[([^\]\n]+)\](?:[ \t]*\(([^)\n]+)\)|(?:[ \t]+["“]([^"”\n]+)["”])?)/g,
         (original, label, url) => {
             const reference = url
-                ? url.trim().match(/^\/?(?:phim\/)?([a-zA-Z0-9_-]+)$/i)?.[1]
+                ? url.trim().match(/^\/?(?:phim\/)?([^/?#\s)\]]+)$/i)?.[1]
                 : label.trim();
-            const movie = reference && movieByReference.get(reference.toLowerCase());
+            const movie = reference && (movieByReference.get(reference.toLowerCase()) || findMovieReference(movies, reference));
             if (!movie) return original;
 
             const title = url ? label : (movie.otherName || movie.name || reference);
-            return `[${title}](/phim/${movie.slug || movie.id})`;
+            return `[${title}](/phim/${routeSegment(movie)})`;
         }
     );
 };
@@ -310,7 +311,7 @@ export const findTargetMovie = (query, movies = [], characters = [], actors = []
     const clean = String(query).replace(/^\/?phim\//, '').trim();
 
     // 1. Khớp chính xác slug hoặc ID
-    let target = movies.find(m => m.slug === clean || m.id === clean);
+    let target = findMovieReference(movies, clean);
     if (target) return target;
 
     const cleanKw = searchTV(clean)
@@ -425,14 +426,11 @@ export const validateAndFilterAiResponse = (responseText, movies = [], plans = [
     let validMovieCount = 0;
 
     for (const line of lines) {
-        const match = line.match(/\/phim\/([a-zA-Z0-9_-]+)/i);
+        const match = line.match(/\/phim\/([^/?#\s)\]]+)/i);
         if (match) {
             const slug = match[1].toLowerCase().trim();
             // Kiểm tra slug có trong danh mục phim thực tế không
-            const movie = (movies || []).find(m => 
-                String(m.slug || '').toLowerCase().trim() === slug || 
-                String(m.id || '').toLowerCase() === slug
-            );
+            const movie = findMovieReference(movies || [], slug);
 
             // Nếu không có trong catalog -> BỎ QUA dòng này (chống AI hallucination)
             if (!movie) {
@@ -470,7 +468,7 @@ export const validateAndFilterAiResponse = (responseText, movies = [], plans = [
         if (allowedList.length > 0) {
             const fallbackMovies = allowedList.map(m => {
                 const title = m.otherName || m.name;
-                const slug = m.slug || m.id;
+                const slug = routeSegment(m);
                 const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
                 return `- [${title}](/phim/${slug}) • ${epStr}`;
             }).join('\n');
@@ -560,7 +558,7 @@ export const buildMovieCatalogSummary = (movies = [], categories = [], plans = [
             .slice(0, 2)
             .join(', ') || 'Chung';
         const title = m.otherName || m.name || 'Không rõ';
-        const slug = m.slug || m.id;
+        const slug = routeSegment(m);
         const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
         const country = m.countriesID || m.country || 'Khác';
         return `- [${title}](/phim/${slug}) | QG: ${country} | [Gói ${planInfo.planName} L${planInfo.level}] | ${epStr} | ${catNames}`;
@@ -614,7 +612,7 @@ export const buildSystemInstruction = ({
     if (currentMovie) {
         const planInfo = getMoviePlanInfo(currentMovie, plans);
         currentMovieContext = `\n\n[PHIM ĐANG XEM]:
-- Tên: "${currentMovie.otherName || currentMovie.name}" (Slug: ${currentMovie.slug || currentMovie.id})
+- Tên: "${currentMovie.otherName || currentMovie.name}" (Slug: ${routeSegment(currentMovie)})
 - Phí: Gói ${planInfo.planName} (Level ${planInfo.level})
 - Số tập: ${currentMovie.endEpisode || 1} tập | Trạng thái: ${currentMovie.status || 'Đang chiếu'}`;
     }
@@ -714,7 +712,7 @@ export const executeWebsiteControl = ({ args = {}, movies = [], characters = [],
         const rawQuery = args.movieSlug || args.searchQuery;
         const targetMovie = findTargetMovie(rawQuery, movies, characters, actors, authors);
         if (targetMovie) {
-            const finalSlug = targetMovie.slug || targetMovie.id;
+            const finalSlug = routeSegment(targetMovie);
             const movieTitle = targetMovie.otherName || targetMovie.name;
             if (args.episode) {
                 navigate(`/xem-phim/${finalSlug}?tap=${args.episode}`);
@@ -874,7 +872,7 @@ export const executeMovieLookup = ({
             const partsList = topFranchise.movies.map((m, idx) => {
                 const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
                 const planInfo = getMoviePlanInfo(m, plans);
-                return `- Phần ${idx + 1}: [${m.otherName || m.name}](/phim/${m.slug || m.id}) | ${epStr} | Gói ${planInfo.planName} (Level ${planInfo.level})`;
+                return `- Phần ${idx + 1}: [${m.otherName || m.name}](/phim/${routeSegment(m)}) | ${epStr} | Gói ${planInfo.planName} (Level ${planInfo.level})`;
             }).join('\n');
 
             return `Bộ phim hiện có nhiều phần nhất trên hệ thống MFILM là series **"${topFranchise.baseName}"** với tổng cộng **${topFranchise.totalParts} phần**:\n${partsList}`;
@@ -1103,7 +1101,7 @@ export const executeMovieLookup = ({
             if (otherCountryMoviesInPlan.length > 0) {
                 const sampleTitles = otherCountryMoviesInPlan.slice(0, 3).map(m => {
                     const c = m.countriesID || m.country || 'Nước ngoài';
-                    return `[${m.otherName || m.name}](/phim/${m.slug || m.id}) (Phim ${c})`;
+                    return `[${m.otherName || m.name}](/phim/${routeSegment(m)}) (Phim ${c})`;
                 }).join(', ');
                 suggestionText = ` Tuy nhiên MFILM có các phim gói ${requestedPlan.name} của nước khác như: ${sampleTitles}. Hãy hỏi khách xem có muốn tham khảo phim nước khác không.`;
             }
@@ -1128,7 +1126,7 @@ export const executeMovieLookup = ({
         const feeStr = `Gói ${planInfo.planName} (Level ${planInfo.level})`;
         const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
         const countryStr = m.countriesID || m.country || 'Chưa cập nhật';
-        return `Phần/Phim ${idx + 1}: [${m.otherName || m.name}](/phim/${m.slug || m.id}) | Quốc gia: ${countryStr} | Số tập: ${epStr} | Gói xem: ${feeStr} | Thể loại: ${catNames} | Nhân vật: ${charNames} | Lượt xem: ${(Number(m.views) || 0) + 100} | Năm: ${m.releaseYear || m.year || ''}`;
+        return `Phần/Phim ${idx + 1}: [${m.otherName || m.name}](/phim/${routeSegment(m)}) | Quốc gia: ${countryStr} | Số tập: ${epStr} | Gói xem: ${feeStr} | Thể loại: ${catNames} | Nhân vật: ${charNames} | Lượt xem: ${(Number(m.views) || 0) + 100} | Năm: ${m.releaseYear || m.year || ''}`;
     }).join('\n');
 
     let noteMessage = '';
@@ -1299,7 +1297,7 @@ export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo =
         }
     }
     const badgeStyle = getPlanBadgeStyle(planInfo);
-    const movieSlug = movie.slug || movie.id;
+    const movieSlug = routeSegment(movie);
     const posterUrl = movie.imgUrl || movie.poster || movie.image || '/assets/Logo6.png';
     const title = movie.otherName || movie.name;
     const epText = movie.endEpisode ? `${movie.endEpisode} tập` : '1 tập';
@@ -1395,14 +1393,11 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = [], userPl
             .replace(/^[-*]\s+/, '• ');
 
         // Kiểm tra xem dòng này có link /phim/slug không
-        const movieSlugMatch = cleanLine.match(/\/phim\/([a-zA-Z0-9_-]+)/i);
+        const movieSlugMatch = cleanLine.match(/\/phim\/([^/?#\s)\]]+)/i);
         let movieForThisLine = null;
         if (movieSlugMatch && movies && movies.length > 0) {
             const slug = movieSlugMatch[1].toLowerCase();
-            const found = movies.find(m => 
-                String(m.slug || '').toLowerCase() === slug || 
-                String(m.id || '').toLowerCase() === slug
-            );
+            const found = findMovieReference(movies, slug);
             const movieKey = found && String(found.id || found.slug);
             if (found && !seenMovieIds.has(movieKey)) {
                 const planInfo = getMoviePlanInfo(found, plans);

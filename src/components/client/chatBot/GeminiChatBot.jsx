@@ -1,3 +1,4 @@
+import { findMovieReference } from '../../../utils/nameRoutes';
 import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
@@ -250,7 +251,7 @@ export default function GeminiChatBot() {
             : null;
     const cleanSlug = currentSlug ? decodeURIComponent(currentSlug).replace(/\/$/, '') : null;
     const currentMovie = cleanSlug
-        ? movies.find(m => m.slug === cleanSlug || m.id === cleanSlug || m.slug === currentSlug || m.id === currentSlug)
+        ? (findMovieReference(movies, cleanSlug) || findMovieReference(movies, currentSlug))
         : null;
 
     // Tính năng nhận diện giọng nói (Web Speech API)

@@ -28,6 +28,7 @@ const ALLOWED_EVENT_TYPES = new Set([
   'complete',
   'buffer_start',
   'buffer_end',
+  'playback_error',
   'search',
   'favorite',
   'unfavorite',

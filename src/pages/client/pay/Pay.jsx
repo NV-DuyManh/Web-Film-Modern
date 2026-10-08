@@ -1,4 +1,6 @@
-﻿import React, { useState, useContext, useMemo } from 'react';
+import { routeSegment, findRouteEntity } from '../../../utils/nameRoutes';
+import useCanonicalPath from '../../../hooks/useCanonicalPath';
+import React, { useState, useContext, useMemo } from 'react';
 import { useFeatures, useMovies } from '../../../hooks/useCollections';
 import { FaCheckCircle, FaStar, FaCrown } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -7,13 +9,14 @@ import { getObjectById } from '../../../services/firebaseResponse';
 
 function Pay(props) {
     const navigate = useNavigate();
-    const { id } = useParams();
+    const { slug: routeValue } = useParams();
     const [selectedPlan, setSelectedPlan] = useState('rental');
     const plans = useContext(PlanContext) || [];
     const features = useFeatures() || [];
     const movies = useMovies() || [];
 
-    const movie = useMemo(() => getObjectById(movies, id), [movies, id]);
+    const movie = useMemo(() => findRouteEntity(movies, routeValue), [movies, routeValue]);
+    useCanonicalPath(movie ? `/pay/${routeSegment(movie)}` : '');
 
     const moviePlan = useMemo(() => getObjectById(plans, movie?.planID), [plans, movie]);
     const moviePlanLevel = Number(moviePlan?.level) || 0;
@@ -59,7 +62,7 @@ function Pay(props) {
                             <div className="flex flex-col sm:flex-row justify-between sm:items-center relative z-10 gap-4">
                                 <div>
                                     <h3 className={`text-xl font-bold transition-colors ${selectedPlan === 'rental' ? 'text-cyan-400' : 'text-slate-200'}`}>{movie?.name}</h3>
-                                    <p className="text-slate-400 text-sm mt-1">Thuê phim lẻ trong 48 giờ.</p>
+                                    <p className="text-slate-400 text-sm mt-1">Thuê phim lẻ trong 30 ngày.</p>
                                 </div>
                                 <div className="flex items-center justify-between sm:justify-end gap-4">
                                     <p className={`text-2xl font-black ${selectedPlan === 'rental' ? 'text-white' : 'text-slate-300'} inline`}>
@@ -132,16 +135,16 @@ function Pay(props) {
                     <button 
                         onClick={() => {
                             if (selectedPlan === 'rental') {
-                                navigate(`/payMovie/${id}`);
+                                navigate(`/payMovie/${routeSegment(movie)}`);
                             } else {
-                                navigate(`/payVip?id=${selectedPlan}`);
+                                navigate(`/payVip?plan=${routeSegment(plans.find(plan => plan.id === selectedPlan))}`);
                             }
                         }}
                         className="w-full md:w-2/3 bg-linear-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(245,158,11,0.4)] hover:shadow-[0_6px_20px_rgba(245,158,11,0.6)] hover:-translate-y-1 transition duration-300">
                         Tiếp tục thanh toán
                     </button>
                     <button 
-                        onClick={() => navigate(`/phim/${slug || id}`)}
+                        onClick={() => navigate(`/phim/${routeSegment(movie)}`)}
                         className="text-slate-400 hover:text-white text-sm font-medium transition-colors hover:underline underline-offset-4"
                     >
                         Quay lại chi tiết phim

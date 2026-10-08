@@ -1,51 +1,34 @@
 import { lazy } from 'react';
 
-/**
- * lazyRetry - Automatically retries failed dynamic imports (chunks) with backoff.
- * If all retries fail (e.g. after a new deployment with old cache),
- * it performs a one-time automatic page reload to fetch the latest assets
- * without throwing an immediate ErrorBoundary crash screen to the user.
- *
- * @param {Function} componentImport - The dynamic import function, e.g. () => import('./Page')
- * @param {number} retries - Number of retries before falling back (default 3)
- * @param {number} interval - Delay between retries in milliseconds (default 1000)
- */
-export function lazyRetry(componentImport, retries = 3, interval = 1000) {
-    return lazy(() => {
-        return new Promise((resolve, reject) => {
-            const attempt = (retriesLeft) => {
-                componentImport()
-                    .then(resolve)
-                    .catch((error) => {
-                        const isChunkError =
-                            error?.message?.includes('dynamically imported module') ||
-                            error?.message?.includes('Loading chunk') ||
-                            error?.message?.includes('Failed to fetch') ||
-                            error?.name === 'ChunkLoadError';
-
-                        if (retriesLeft > 0) {
-                            setTimeout(() => {
-                                attempt(retriesLeft - 1);
-                            }, interval);
-                        } else {
-                            if (typeof window !== 'undefined' && isChunkError) {
-                                const reloadKey = `chunk_retry_${window.location.pathname}`;
-                                const hasReloaded = sessionStorage.getItem(reloadKey);
-
-                                if (!hasReloaded) {
-                                    sessionStorage.setItem(reloadKey, 'true');
-                                    window.location.reload();
-                                    return;
-                                }
-                            }
-                            reject(error);
-                        }
-                    });
-            };
-
-            attempt(retries);
-        });
-    });
+export function isChunkLoadError(error) {
+    return error?.name === 'ChunkLoadError' || /dynamically imported module|Loading chunk|Failed to fetch|module script/i.test(error?.message || '');
 }
 
+export async function retryImport(componentImport, retries = 3, interval = 1000) {
+    for (let attempt = 0; ; attempt++) {
+        try { return await componentImport(); }
+        catch (error) {
+            if (attempt < retries) {
+                await new Promise(resolve => setTimeout(resolve, interval));
+                continue;
+            }
+            if (typeof window !== 'undefined' && isChunkLoadError(error)) {
+                const reloadKey = `chunk_retry_${window.location.pathname}`;
+                try {
+                    if (!sessionStorage.getItem(reloadKey)) {
+                        sessionStorage.setItem(reloadKey, 'true');
+                        window.location.reload();
+                        // Navigation replaces the document; avoid flashing an error while it loads.
+                        return new Promise(() => {});
+                    }
+                } catch { /* Storage or navigation unavailable: show the retry UI. */ }
+            }
+            throw error;
+        }
+    }
+}
+
+export function lazyRetry(componentImport, retries = 3, interval = 1000) {
+    return lazy(() => retryImport(componentImport, retries, interval));
+}
 export default lazyRetry;

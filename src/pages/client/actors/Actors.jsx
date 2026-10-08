@@ -8,6 +8,7 @@ import { fetchDocumentsRealtime } from '../../../services/firebaseService';
 import { getDefaultAvatar, getSafeEntityAvatar } from '../../../utils/appUtils';
 import { searchTV } from '../../../components/admin/search/SearchTV';
 import SEO from '../../../components/SEO';
+import { createActorRouteIndex } from '../../../utils/actorRoutes';
 
 function Actors() {
     const [searchTerm, setSearchTerm] = useState('');
@@ -24,6 +25,7 @@ function Actors() {
         });
     };
     const itemsPerPage = 36;
+    const actorRoutes = useMemo(() => createActorRouteIndex(actors), [actors]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -105,7 +107,7 @@ function Actors() {
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-3 gap-y-5 sm:gap-x-4 sm:gap-y-6 md:gap-x-5 md:gap-y-6 mb-10 min-h-[50vh]">
                             {currentActors.map((actor) => (
-                                <Link to={`/dien-vien/${actor.slug || actor.id}`} key={actor.id} className="group cursor-pointer flex flex-col items-center">
+                                <Link to={actorRoutes.path(actor)} key={actor.id} className="group cursor-pointer flex flex-col items-center">
                                     <div className="relative mb-2 w-full flex justify-center">
                                         <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 lg:w-38 lg:h-38 xl:w-40 xl:h-40 rounded-full overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                             <img

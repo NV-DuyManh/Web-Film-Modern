@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../utils/nameRoutes';
 import { getOptimizedUrl } from '../../../utils/cloudinary';
 import React, { useMemo, useRef } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
@@ -30,10 +31,11 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
         });
     }, [searchQuery, movies]);
 
-    const handleSelect = (movieId) => {
+    const handleSelect = (movie) => {
+        const movieId = movie.id;
         trackEvent('search', movieId, '', { queryLength: searchQuery.length, query: searchQuery });
         onClose();
-        navigate(`/phim/${movieId}`);
+        navigate(`/phim/${routeSegment(movie)}`);
     };
 
     if (!isOpen || !searchQuery || searchQuery.trim() === "") return null;
@@ -49,7 +51,7 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
                         {dataSearch.map((movie) => (
                             <button
                                 key={movie.id}
-                                onMouseDown={(e) => { e.preventDefault(); handleSelect(movie.slug || movie.id); }}
+                                onMouseDown={(e) => { e.preventDefault(); handleSelect(movie); }}
                                 className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-white/5 transition duration-200 cursor-pointer group/movie text-left"
                             >
                                 <div className="w-13 h-18 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover/movie:border-cyan-500/50 transition-colors duration-300 bg-slate-800">

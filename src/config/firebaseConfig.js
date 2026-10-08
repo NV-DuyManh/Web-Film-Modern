@@ -4,7 +4,7 @@ import { getStorage } from "firebase/storage";
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 // Your Firebase configuration
-const firebaseConfig = {
+export const firebaseConfig = {
     apiKey: "AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk",
     authDomain: "manhfilm-105b3.firebaseapp.com",
     projectId: "manhfilm-105b3",

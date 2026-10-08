@@ -4,6 +4,7 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
 import { createServer } from 'vite';
+import { withNameRoutes, routeSegment } from '../../../utils/nameRoutes.js';
 
 let server;
 let core;
@@ -52,6 +53,24 @@ test('preserves valid links, unrelated brackets and unknown references', () => {
     assert.equal(core.normalizeMovieLinks(input, movies), input);
     assert.equal(core.normalizeMovieLinks(screenshotReply, []), screenshotReply);
     assert.equal(core.normalizeMovieLinks(null, movies), null);
+});
+
+test('chatbot cards use names for movies without slugs, including duplicate and Unicode titles', () => {
+    const catalog = withNameRoutes([
+        { id: 'old-movie-id', name: 'Phim Mới' },
+        { id: 'second-movie-id', name: 'Phim Mới' },
+        { id: 'unicode-movie-id', name: '梁朝偉' },
+    ], { preferSlug: true });
+    const reply = catalog.map(movie => `[${movie.id}]`).join('\n');
+    const html = renderToStaticMarkup(React.createElement(
+        MemoryRouter, null, core.renderMessage(reply, undefined, catalog, [])
+    ));
+    for (const movie of catalog) {
+        assert.ok(html.includes(`href="/phim/${routeSegment(movie)}"`));
+        assert.ok(html.includes(`href="/xem-phim/${routeSegment(movie)}"`));
+        assert.ok(!html.includes(`href="/phim/${movie.id}"`));
+    }
+    assert.equal((html.match(/Xem ngay/g) || []).length, 3);
 });
 
 test('normalizes new responses before checking subscription access', () => {

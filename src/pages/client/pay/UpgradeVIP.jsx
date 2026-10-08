@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../utils/nameRoutes';
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { useFeatures, useSubscriptions } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
@@ -214,7 +215,7 @@ function UpgradeVIP(props) {
                                 window.dispatchEvent(new CustomEvent('OPEN_LOGIN'));
                                 return;
                             }
-                            navigate(`/payVip?id=${selectedPlan}`);
+                            navigate(`/payVip?plan=${routeSegment(plans.find(plan => plan.id === selectedPlan))}`);
                         }}
                         className="w-full md:w-2/3 max-w-md bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-lg py-4 rounded-full shadow-[0_4px_15px_rgba(79,70,229,0.4)] hover:shadow-[0_6px_20px_rgba(79,70,229,0.6)] hover:-translate-y-1 transition duration-300 cursor-pointer"
                     >

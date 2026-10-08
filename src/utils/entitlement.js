@@ -1,3 +1,4 @@
+import { routeSegment, findMovieReference } from './nameRoutes.js';
 /**
  * Module xử lý bản quyền, phân quyền gói cước và hậu kiểm AI cho MFILM
  */
@@ -120,14 +121,11 @@ export const validateAndFilterAiResponse = (responseText, movies = [], plans = [
     let validMovieCount = 0;
 
     for (const line of lines) {
-        const match = line.match(/\/phim\/([a-zA-Z0-9_-]+)/i);
+        const match = line.match(/\/phim\/([^/?#\s)\]]+)/i);
         if (match) {
             const slug = match[1].toLowerCase().trim();
             // Kiểm tra slug có trong danh mục phim thực tế không
-            const movie = (movies || []).find(m => 
-                String(m.slug || '').toLowerCase().trim() === slug || 
-                String(m.id || '').toLowerCase() === slug
-            );
+            const movie = findMovieReference(movies || [], slug);
 
             // Nếu không có trong catalog -> BỎ QUA dòng này (chống AI hallucination)
             if (!movie) {
@@ -165,7 +163,7 @@ export const validateAndFilterAiResponse = (responseText, movies = [], plans = [
         if (allowedList.length > 0) {
             const fallbackMovies = allowedList.map(m => {
                 const title = m.otherName || m.name;
-                const slug = m.slug || m.id;
+                const slug = routeSegment(m);
                 const epStr = m.endEpisode ? `${m.endEpisode} tập` : '1 tập';
                 return `- [${title}](/phim/${slug}) • ${epStr}`;
             }).join('\n');

@@ -1,24 +1,11 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
+import lazyRetry from '../../../utils/lazyRetry';
+import ErrorBoundary from '../../../components/ErrorBoundary';
 import Banner from './banner/Banner';
 import CategoriesFilm from './categoriesFilm/CategoriesFilm';
 import FilmNew from './filmNew/FilmNew';
 import SEO from '../../../components/SEO';
 import LazySection from '../../../components/LazySection';
-
-// Retry wrapper for lazy imports — handles chunk 404 after deployment
-const lazyRetry = (importFn, retries = 3) =>
-    lazy(() =>
-        importFn().catch((err) => {
-            if (retries > 0) {
-                return new Promise((resolve) => setTimeout(resolve, 1000)).then(() =>
-                    lazyRetry(importFn, retries - 1)
-                ).then(mod => ({ default: mod.default }));
-            }
-            // After all retries failed, reload the page to get fresh chunk URLs
-            window.location.reload();
-            throw err;
-        })
-    );
 
 const ForYou = lazyRetry(() => import('./forYou/ForYou'));
 const FilmCountry = lazyRetry(() => import('./filmCountry/FilmCountry'));
@@ -42,7 +29,7 @@ function Home(props) {
             <Banner />
             <CategoriesFilm />
             <FilmNew />
-            <Suspense fallback={null}><ForYou /></Suspense>
+            <ErrorBoundary><Suspense fallback={null}><ForYou /></Suspense></ErrorBoundary>
             <LazySection minHeight="900px">
                 <div className="bg-[#111827] px-6 md:px-10 py-3">
                     <div className="rounded-xl border border-white/10 shadow-[0_0_30px_rgba(96,165,250,0.06)]">

@@ -1,31 +1,37 @@
+import PaymentMethods from '../PaymentMethods';
+import useCanonicalPath from '../../../../hooks/useCanonicalPath';
+import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useState } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
-import { getObjectById } from '../../../../services/firebaseResponse';
 import { updateDocument, addDocument } from '../../../../services/firebaseService';
-import { FaCreditCard } from 'react-icons/fa';
+import PageLoadingSpinner from '../../../../components/common/PageLoadingSpinner';
+import { rentalExpiry, RENTAL_NOTICE, validRentalPrice } from '../../../../utils/rentalPolicy';
+import useCatalogStatus from '../../../../hooks/useCatalogStatus';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { initialOptions } from '../../../../utils/Constants';
 import Swal from 'sweetalert2';
 import ModalPayMovie from './ModalPayMovie';
 
-function PayMovie(props) {
+function PayMovie() {
     const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
-    const { id } = useParams();
+    const { slug: routeValue } = useParams();
     const movies = useMovies() || [];
+    const catalogStatus = useCatalogStatus('Movies');
     const [showModal, setShowModal] = useState(false);
 
-    const movie = useMemo(() => getObjectById(movies, id), [movies, id]);
+    const movie = useMemo(() => findRouteEntity(movies, routeValue), [movies, routeValue]);
+    useCanonicalPath(movie ? `/payMovie/${routeSegment(movie)}` : '');
 
     const rentPrice = Number(movie?.rent) || 0;
-    const formattedPrice = rentPrice.toLocaleString('vi-VN');
+    const formattedPrice = validRentalPrice(rentPrice) ? `${rentPrice.toLocaleString('vi-VN')}đ` : 'Chưa có giá thuê';
 
     const createRent = async (transactionId) => {
         try {
-            const rentDuration = 48 * 60 * 60 * 1000;
+            if (!movie?.id || !isLogin?.id || !validRentalPrice(movie.rent)) throw new Error('Thông tin thuê phim chưa sẵn sàng.');
             const now = Date.now();
             let newExpireDate;
             let updatedRents = [];
@@ -47,7 +53,7 @@ function PayMovie(props) {
                         }
                     }
                     
-                    newExpireDate = new Date(currentExpireDate + rentDuration).toISOString();
+                    newExpireDate = rentalExpiry(currentExpireDate, now);
                     
                     updatedRents = [...isLogin.rentedMovies];
                     updatedRents[existingRentIndex] = {
@@ -57,7 +63,7 @@ function PayMovie(props) {
                         expireDate: newExpireDate,
                     };
                 } else {
-                    newExpireDate = new Date(now + rentDuration).toISOString();
+                    newExpireDate = rentalExpiry(null, now);
                     updatedRents = [
                         ...isLogin.rentedMovies, 
                         {
@@ -69,7 +75,7 @@ function PayMovie(props) {
                     ];
                 }
             } else {
-                newExpireDate = new Date(now + rentDuration).toISOString();
+                newExpireDate = rentalExpiry(null, now);
                 updatedRents = [{
                     movieID: movie.id,
                     transactionId: transactionId,
@@ -106,6 +112,9 @@ function PayMovie(props) {
             });
         }
     };
+
+    if (!movie && movies.length === 0 && catalogStatus.status !== 'ready' && catalogStatus.status !== 'error') return <div className="bg-[#0f1322] pt-28"><PageLoadingSpinner text="Đang tải thông tin thuê phim..." /></div>;
+    if (!movie) return <div className="min-h-[60vh] bg-[#0f1322] pt-28 px-4 text-center text-white"><h1 className="text-xl font-bold">Không tìm thấy phim</h1><button className="mt-4 text-yellow-400" onClick={() => navigate('/')}>Về trang chủ</button></div>;
 
     return (
         <div className="min-h-screen bg-[#0f1322] pt-28 pb-20 px-4">
@@ -161,25 +170,25 @@ function PayMovie(props) {
                                 </div>
                                 <div className="flex justify-between text-sm border-b border-slate-700/50 pb-2">
                                     <p className="text-slate-300 font-medium inline">Đơn giá:</p>
-                                    <p className="text-white font-bold inline">{formattedPrice}đ</p>
+                                    <p className="text-white font-bold inline">{formattedPrice}</p>
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <p className="text-slate-300 font-medium inline">Thời hạn thuê:</p>
-                                    <p className="text-white font-bold inline">48 giờ</p>
+                                    <p className="text-white font-bold inline">30 ngày</p>
                                 </div>
                             </div>
                         </div>
 
                         <div className="border-t border-slate-700 pt-6 flex justify-between items-center mb-6">
                             <p className="text-white font-black text-lg uppercase tracking-wide inline">Tổng cộng</p>
-                            <p className="text-rose-400 font-black text-2xl drop-shadow-[0_0_10px_rgba(244,63,94,0.3)] inline">{formattedPrice}đ</p>
+                            <p className="text-rose-400 font-black text-2xl drop-shadow-[0_0_10px_rgba(244,63,94,0.3)] inline">{formattedPrice}</p>
                         </div>
 
                         <p className="text-slate-400 text-xs mb-6">
-                            * Lưu ý: Thời gian thuê phim là 30 ngày sau khi thuê và còn 48 giờ khi bắt đầu xem phim.
+                            * {RENTAL_NOTICE}
                         </p>
 
-                        <button className="text-rose-400 text-sm hover:underline font-bold">Áp dụng mã ưu đãi</button>
+                        <p className="text-slate-400 text-xs">Mã ưu đãi: chưa hỗ trợ.</p>
                     </div>
 
                     <div className="bg-slate-900/60 backdrop-blur-md rounded-3xl p-6 md:p-8 border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.4)]">
@@ -188,37 +197,17 @@ function PayMovie(props) {
                             Chọn phương thức
                         </h2>
 
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
-                            <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-yellow-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition hover:shadow-[0_0_15px_rgba(250,204,21,0.2)] group">
-                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Thẻ tín dụng</p>
-                                <div className="flex gap-1">
-                                    <div className="w-8 h-5 bg-white rounded flex items-center justify-center text-[8px] text-blue-800 font-black italic">VISA</div>
-                                    <div className="w-8 h-5 bg-white rounded flex items-center justify-center text-[8px] text-red-600 font-black italic">MC</div>
-                                </div>
-                            </div>
-                            <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-pink-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition hover:shadow-[0_0_15px_rgba(244,114,182,0.2)] group">
-                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Ví MoMo</p>
-                                <div className="text-pink-400 font-black tracking-wide bg-white/10 px-2 py-0.5 rounded">MoMo</div>
-                            </div>
-                            <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-blue-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition hover:shadow-[0_0_15px_rgba(96,165,250,0.2)] group">
-                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Ví ZaloPay</p>
-                                <div className="text-blue-400 font-black text-sm tracking-wide">Zalo<p className="text-green-400 inline">Pay</p></div>
-                            </div>
-                            <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-orange-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition hover:shadow-[0_0_15px_rgba(251,146,60,0.2)] group">
-                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">Ví ShopeePay</p>
-                                <div className="w-6 h-6 bg-orange-500 rounded text-white flex items-center justify-center text-xs font-black shadow-md">S</div>
-                            </div>
-                            <div className="h-20 bg-slate-800/80 border-2 border-transparent hover:border-red-400 rounded-2xl cursor-pointer flex flex-col items-center justify-center gap-2 transition hover:shadow-[0_0_15px_rgba(248,113,113,0.2)] group">
-                                <p className="text-xs text-slate-300 group-hover:text-white font-medium inline">VNPAY</p>
-                                <div className="text-red-500 font-black text-sm tracking-widest">VN<p className="text-blue-500 inline">PAY</p></div>
-                            </div>
-                        </div>
+                        <PaymentMethods />
+                        {!isLogin?.id && <button onClick={() => window.dispatchEvent(new CustomEvent('openLoginModal'))} className="mb-4 text-yellow-400 font-bold">Đăng nhập để thuê phim</button>}
+                        {!validRentalPrice(rentPrice) && <p role="status" className="mb-4 text-yellow-400">Phim chưa có giá thuê hợp lệ. Vui lòng chọn phim khác.</p>}
 
                         <div className="space-y-4">
                             <PayPalScriptProvider options={initialOptions}>
                                 <PayPalButtons
+                                    disabled={!isLogin?.id || !validRentalPrice(rentPrice)}
                                     style={{ layout: "vertical" }}
                                     createOrder={(data, actions) => {
+                                        if (!isLogin?.id || !validRentalPrice(rentPrice)) throw new Error('Vui lòng đăng nhập và kiểm tra giá thuê.');
                                         return actions.order.create({
                                             purchase_units: [{
                                                 amount: {
@@ -230,30 +219,22 @@ function PayMovie(props) {
                                     onApprove={(data, actions) => {
                                         return actions.order.capture().then((details) => {
                                             const transactionId = details.id;
-                                            createRent(transactionId);
+                                            return createRent(transactionId);
                                         });
                                     }}
                                     onError={(err) => {
                                         console.error("PayPal error:", err);
+                                        Swal.fire({ title: 'Chưa thanh toán được', text: 'Vui lòng kiểm tra kết nối rồi thử lại qua PayPal.', icon: 'error', background: '#0f1322', color: '#fff' });
                                     }}
                                 />
                             </PayPalScriptProvider>
-
-                            <button className="w-full h-14 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded-xl flex items-center justify-center gap-3 transition-colors">
-                                <FaCreditCard className="text-white text-xl" />
-                                <p className="text-white font-bold inline">Thẻ ghi nợ hoặc tín dụng</p>
-                            </button>
 
                             <div className="text-center pt-2">
                                 <p className="text-slate-400 text-xs italic inline">Thanh toán an toàn được hỗ trợ bởi </p>
                                 <p className="text-blue-400 text-sm font-bold italic inline">PayPal</p>
                             </div>
 
-                            <div className="mt-8 pt-8 border-t border-slate-700/50">
-                                <button className="w-full h-14 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 rounded-xl flex items-center justify-center transition shadow-[0_4px_15px_rgba(225,29,72,0.4)] hover:-translate-y-1">
-                                    <p className="text-white font-black text-lg tracking-wide inline">THANH TOÁN NGAY</p>
-                                </button>
-                            </div>
+
                         </div>
                     </div>
 
@@ -265,12 +246,12 @@ function PayMovie(props) {
                 onClose={() => {
                     setShowModal(false);
                     window.scrollTo(0, 0);
-                    navigate(`/xem-phim/${movie.slug || movie.id}`);
+                    navigate(`/xem-phim/${routeSegment(movie)}`);
                 }} 
                 onGoHome={() => {
                     setShowModal(false);
                     window.scrollTo(0, 0);
-                    navigate(`/phim/${movie.slug || movie.id}`);
+                    navigate(`/phim/${routeSegment(movie)}`);
                 }}
             />
         </div>

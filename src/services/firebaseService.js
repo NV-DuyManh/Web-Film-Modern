@@ -1,3 +1,5 @@
+import { stripRouteMetadata } from '../utils/nameRoutes';
+import { reportCatalogStatus } from '../utils/catalogStatus';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, setDoc, query, where, limit, orderBy } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { uploadImageToCloudinary } from "../config/cloudinaryConfig";
@@ -22,7 +24,7 @@ export const addDocument = async (collectionName, values) => {
         
         const docRef = doc(collection(db, collectionName));
         const finalData = {
-            ...values,
+            ...stripRouteMetadata(values),
             id: docRef.id,
             ...(CREATED_AT_COLLECTIONS.includes(collectionName) ? { createdAt: Date.now() } : {})
         };
@@ -34,10 +36,15 @@ export const addDocument = async (collectionName, values) => {
 };
 
 export const fetchDocumentsRealtime = (collectionName, callback) => {
+    reportCatalogStatus(collectionName, 'loading');
     return onSnapshot(collection(db, collectionName), (snapshot) => {
         const documents = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
         documents.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         callback(documents);
+        reportCatalogStatus(collectionName, 'ready');
+    }, error => {
+        reportCatalogStatus(collectionName, 'error', error);
+        console.warn(`Không tải được ${collectionName}:`, error.code || error.message);
     });
 };
 
@@ -50,7 +57,7 @@ export const fetchDocumentsRealtimePage = (collectionName, pageSize, callback) =
 };
 
 export const updateDocument = async (collectionName, values, skipUpdatedAt = false) => {
-    const { id, ...updatedValues } = values;
+    const { id, ...updatedValues } = stripRouteMetadata(values);
     if (updatedValues.imgUrl) updatedValues.imgUrl = await uploadIfNeeded(updatedValues.imgUrl, collectionName);
     if (updatedValues.avatarUrl) updatedValues.avatarUrl = await uploadIfNeeded(updatedValues.avatarUrl, collectionName);
     if (!skipUpdatedAt) {

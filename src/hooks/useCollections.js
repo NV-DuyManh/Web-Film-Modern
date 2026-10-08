@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { fetchDocumentsRealtime } from '../services/firebaseService';
 import { subscribeToCollection, getCachedData } from '../utils/appUtils';
+import { withNameRoutes } from '../utils/nameRoutes';
+import { reportCatalogStatus } from '../utils/catalogStatus';
 import Logo5 from '../assets/Logo5.png';
 import Logo6 from '../assets/Logo6.png';
 
@@ -14,12 +16,15 @@ const CATALOG_ENDPOINT_MAP = {
 };
 
 function createCollectionHook(cacheKey, collectionName, processData) {
-    return function useCollection() {
+    return function useCollection(enabled = true) {
         const [data, setData] = useState(() => getCachedData(cacheKey) ?? []);
         useEffect(() => {
+            if (!enabled) return;
             let isMounted = true;
+            let fallbackUnsubscribe;
 
             if (POSTGRES_CATALOG_ENABLED && CATALOG_ENDPOINT_MAP[collectionName]) {
+                reportCatalogStatus(collectionName, 'loading');
                 const endpoint = `${API_BASE_URL.replace(/\/+$/, '')}${CATALOG_ENDPOINT_MAP[collectionName]}`;
                 fetch(endpoint)
                     .then(res => res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`)))
@@ -28,23 +33,24 @@ function createCollectionHook(cacheKey, collectionName, processData) {
                         const items = Array.isArray(json) ? json : (json.data || []);
                         const processed = processData ? processData(items) : items;
                         setData(processed);
+                        reportCatalogStatus(collectionName, 'ready');
                     })
                     .catch(err => {
                         console.warn(`[Catalog Cutover] PostgreSQL read fallback to Firestore for [${collectionName}]:`, err.message);
-                        subscribeToCollection(cacheKey, collectionName, setData, fetchDocumentsRealtime, processData);
+                        if (isMounted) fallbackUnsubscribe = subscribeToCollection(cacheKey, collectionName, setData, fetchDocumentsRealtime, processData);
                     });
-                return () => { isMounted = false; };
+                return () => { isMounted = false; fallbackUnsubscribe?.(); };
             }
 
             return subscribeToCollection(cacheKey, collectionName, setData, fetchDocumentsRealtime, processData);
-        }, []);
+        }, [enabled]);
         return data;
     };
 }
 
 
 function processMovies(movieList) {
-    return movieList.map(movie => {
+    return withNameRoutes(movieList, { preferSlug: true }).map(movie => {
         let finalImg = movie.imgUrl;
         let finalBanner = movie.bannerUrl;
         if (!finalImg || finalImg.includes('src/assets') || finalImg.includes('Logo5')) finalImg = Logo6;
@@ -54,12 +60,12 @@ function processMovies(movieList) {
 }
 
 export const useMovies        = createCollectionHook('movies',        'Movies',        processMovies);
-export const useAuthors       = createCollectionHook('authors',       'Authors');
-export const useActors        = createCollectionHook('actors',        'Actors');
-export const useCharacters    = createCollectionHook('characters',    'Characters');
+export const useAuthors       = createCollectionHook('authors',       'Authors', withNameRoutes);
+export const useActors        = createCollectionHook('actors',        'Actors', items => withNameRoutes(items, { fallback: 'dien-vien' }));
+export const useCharacters    = createCollectionHook('characters',    'Characters', withNameRoutes);
 export const useCategories    = createCollectionHook('categories',    'Categories');
 export const useShowTimes     = createCollectionHook('showTimes',     'ShowTimes');
-export const useTopics        = createCollectionHook('topics',        'Topics');
+export const useTopics        = createCollectionHook('topics',        'Topics', withNameRoutes);
 export const useSubscriptions = createCollectionHook('subscriptions', 'Subscriptions');
 export const useRentMovies    = createCollectionHook('rentMovies',    'RentMovies');
 export const useEpisodes      = createCollectionHook('episodes',      'Episodes');

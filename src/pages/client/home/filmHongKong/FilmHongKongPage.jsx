@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { Link , useSearchParams } from 'react-router-dom';
@@ -107,7 +108,7 @@ function FilmHongKongPage() {
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
                             {currentMovies.map(movie => (
-                                <Link to={`/phim/${movie.slug || movie.id}`} key={movie.id} className="group flex flex-col">
+                                <Link to={`/phim/${routeSegment(movie)}`} key={movie.id} className="group flex flex-col">
                                     <div className="relative rounded-xl overflow-hidden aspect-2/3 border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
                                         <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" width={300} height={450} loading="lazy" decoding="async" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>

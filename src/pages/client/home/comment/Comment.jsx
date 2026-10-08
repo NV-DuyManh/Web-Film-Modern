@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../../utils/nameRoutes';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useState } from 'react';
 import { useComments, useMovies } from '../../../../hooks/useCollections';
@@ -79,7 +80,7 @@ function Comment() {
 
                         <div className="flex flex-col gap-5 flex-1">
                             {topCommentedMovies.slice(0, visibleCommented).map((e, index) => (
-                                <div key={e.id || index} onClick={() => navigate(`/phim/${e.slug || e.id}`)} className="flex items-center gap-3 group cursor-pointer">
+                                <div key={e.id || index} onClick={() => navigate(`/phim/${routeSegment(e)}`)} className="flex items-center gap-3 group cursor-pointer">
                                     <p className="w-5 text-gray-500 font-bold text-sm shrink-0 inline">{index + 1}</p>
                                     <FaArrowTrendUp className="w-4 text-green-500 text-sm shrink-0" />
                                     <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt={e.otherName} className="w-11 h-16 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
@@ -117,7 +118,7 @@ function Comment() {
 
                         <div className="flex flex-col gap-5 flex-1">
                             {topLovedMovies.slice(0, visibleLoved).map((e, index) => (
-                                <div key={e.id || index} onClick={() => navigate(`/phim/${e.slug || e.id}`)} className="flex items-center gap-3 group cursor-pointer">
+                                <div key={e.id || index} onClick={() => navigate(`/phim/${routeSegment(e)}`)} className="flex items-center gap-3 group cursor-pointer">
                                     <p className="w-5 text-gray-500 font-bold text-sm shrink-0 inline">{index + 1}</p>
                                     <FaMinus className="w-4 text-yellow-500 text-sm shrink-0" />                                    
                                     <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt={e.otherName} className="w-11 h-16 object-cover rounded shrink-0 border border-gray-800 group-hover:border-gray-600 transition-colors" />
@@ -157,7 +158,7 @@ function Comment() {
                                 const user = getObjectById(users, comment.userID);
                                 const movie = getObjectById(movies, comment.movieID);
                                 return (
-                                    <div key={comment.id || index} onClick={() => navigate(`/phim/${comment.movieID}`)} className="flex gap-3 group cursor-pointer">
+                                    <div key={comment.id || index} onClick={() => navigate(`/phim/${routeSegment(movie)}`)} className="flex gap-3 group cursor-pointer">
                                         <img 
                                             src={user?.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=random`} 
                                             onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=random`; }}

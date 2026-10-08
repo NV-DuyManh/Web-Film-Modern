@@ -1,4 +1,50 @@
 const STORAGE_KEY = 'mfilm_resume';
+let syncTarget = null;
+
+export function configureResumeSync(userId, publish) {
+    const target = { userId, publish };
+    syncTarget = target;
+    return () => { if (syncTarget === target) syncTarget = null; };
+}
+
+export function getResumeStore(userId = null) {
+    try { return JSON.parse(localStorage.getItem(userId ? `${STORAGE_KEY}_${userId}` : STORAGE_KEY) || '{}'); }
+    catch { return {}; }
+}
+
+function notifyResume(userId, movieId, entry, publish = true) {
+    if (typeof window !== 'undefined') window.dispatchEvent(new Event('mfilm_resume_updated'));
+    if (publish && userId && syncTarget?.userId === userId) syncTarget.publish(movieId, entry);
+}
+
+export function mergeResumeEntry(local, remote) {
+    if (!local) return remote;
+    if (!remote) return local;
+    const latest = Number(remote.updatedAt) > Number(local.updatedAt) ? remote : local;
+    const deletedAt = Math.max(Number(local.deletedAt) || 0, Number(remote.deletedAt) || 0);
+    if (deletedAt >= Number(latest.updatedAt)) return { ...latest, deletedAt, episodes: {}, episodeUpdatedAt: {} };
+    const episodes = {};
+    const episodeUpdatedAt = {};
+    for (const id of new Set([...Object.keys(local.episodes || {}), ...Object.keys(remote.episodes || {})])) {
+        const lt = Object.hasOwn(local.episodes || {}, id) ? Number(local.episodeUpdatedAt?.[id] ?? local.updatedAt) || 0 : 0;
+        const rt = Object.hasOwn(remote.episodes || {}, id) ? Number(remote.episodeUpdatedAt?.[id] ?? remote.updatedAt) || 0 : 0;
+        const source = rt > lt ? remote : local;
+        const timestamp = Math.max(lt, rt);
+        if (timestamp <= deletedAt) continue;
+        episodes[id] = source.episodes?.[id] ?? 0;
+        episodeUpdatedAt[id] = timestamp;
+    }
+    return { ...latest, episodes, episodeUpdatedAt, deletedAt };
+}
+
+export function mergeRemoteResume(movieId, remote, userId) {
+    const all = getResumeStore(userId);
+    all[movieId] = mergeResumeEntry(all[movieId], remote);
+    try {
+        localStorage.setItem(`${STORAGE_KEY}_${userId}`, JSON.stringify(all));
+        notifyResume(userId, movieId, all[movieId], false);
+    } catch { /* Storage may be full; playback still works. */ }
+}
 
 export function formatTime(totalSeconds) {
     const s = Math.max(0, Math.floor(totalSeconds || 0));
@@ -24,8 +70,10 @@ export function saveResume(movieId, { episodeId, episodeNumber, seconds }, userI
         // Đảm bảo có object episodes
         if (!all[movieId].episodes) all[movieId].episodes = {};
         all[movieId].episodes[episodeId] = seconds;
+        all[movieId].episodeUpdatedAt = { ...all[movieId].episodeUpdatedAt, [episodeId]: all[movieId].updatedAt };
 
         localStorage.setItem(key, JSON.stringify(all));
+        notifyResume(userId, movieId, all[movieId]);
     } catch { /* ignore */ }
 }
 
@@ -48,11 +96,14 @@ export function clearResume(movieId, episodeId = null, userId = null) {
         const all = JSON.parse(localStorage.getItem(key) || '{}');
         if (all[movieId]) {
             if (episodeId && all[movieId].episodes) {
-                delete all[movieId].episodes[episodeId];
+                all[movieId].episodes[episodeId] = 0;
+                all[movieId].episodeUpdatedAt = { ...all[movieId].episodeUpdatedAt, [episodeId]: Date.now() };
             } else {
-                delete all[movieId];
+                all[movieId] = { episodes: {}, episodeUpdatedAt: {}, deletedAt: Date.now() };
             }
+            all[movieId].updatedAt = Date.now();
             localStorage.setItem(key, JSON.stringify(all));
+            notifyResume(userId, movieId, all[movieId]);
         }
     } catch { /* ignore */ }
 }
@@ -74,7 +125,7 @@ export function getWatchedMoviesCount(userId = null, resumeDataOverride = null) 
         const movieIds = Object.keys(resumeData).filter(mId => {
             const entry = resumeData[mId];
             if (!entry) return false;
-            return entry.episodes ? Object.keys(entry.episodes).length > 0 : true;
+            return entry.episodes ? Object.values(entry.episodes).some(seconds => seconds > 0) : !entry.deletedAt;
         });
         return new Set(movieIds).size;
     } catch {

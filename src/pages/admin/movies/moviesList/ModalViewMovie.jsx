@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../../utils/nameRoutes';
 import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -176,7 +177,7 @@ function ModalViewMovie({ open, handleClose, movie, onEdit }) {
 
                 <div className="absolute top-5 right-5 z-30 flex gap-3">
                     <button
-                        onClick={() => navigate(`/episodes?movie=${movie.slug || movie.otherName || movie.id}`)}
+                        onClick={() => navigate(`/episodes?movie=${routeSegment(movie)}`)}
                         className="w-10 h-10 rounded-full bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20 flex items-center justify-center text-emerald-400 hover:text-emerald-200 hover:border-emerald-400 hover:bg-emerald-500/30 hover:scale-110 hover:shadow-[0_0_20px_rgba(16,185,129,0.6)] transition-all duration-500 cursor-pointer"
                     >
                         <FaTv size={18} />

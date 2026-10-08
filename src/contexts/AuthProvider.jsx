@@ -3,6 +3,7 @@ import { UserContext } from './UserProvider';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { rotateSessionId } from '../services/eventTracker';
+import { startProtectedResumeSync } from '../services/resumeSyncService';
 
 export const AuthContext = createContext();
 
@@ -17,6 +18,10 @@ function AuthProvider({ children }) {
     const [authEpoch, setAuthEpoch] = useState(0);
     const users = useContext(UserContext);
     const navigate = useNavigate();
+    useEffect(() => {
+        if (!isLogin?.id || !firebaseUser?.uid || !firebaseUser.email || firebaseUser.email.toLowerCase() !== isLogin.email?.toLowerCase()) return;
+        return startProtectedResumeSync(isLogin.id, firebaseUser.uid);
+    }, [isLogin?.id, isLogin?.email, firebaseUser?.uid, firebaseUser?.email]);
 
     // 1. Listen for Firebase Auth initialization & session restoration
     useEffect(() => {

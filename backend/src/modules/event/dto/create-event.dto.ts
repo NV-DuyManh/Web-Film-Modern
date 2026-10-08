@@ -16,6 +16,7 @@ export enum EventType {
   RECOMMENDATION_CLICK = 'recommendation_click',
   BUFFER_START = 'buffer_start',
   BUFFER_END = 'buffer_end',
+  PLAYBACK_ERROR = 'playback_error',
 }
 
 export class CreateEventDto {

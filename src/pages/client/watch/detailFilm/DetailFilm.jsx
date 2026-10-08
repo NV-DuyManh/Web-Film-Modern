@@ -1,9 +1,12 @@
+import useCanonicalPath from '../../../../hooks/useCanonicalPath';
+import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
 import ModalDetail from './ModalDetail';
+import ActorCast from './ActorCast';
 import ModalPayMovie from '../../pay/paymovie/ModalPayMovie';
 import { getExpiryDate, getUserPlanInfo } from '../../../../utils/appUtils';
 import { getDefaultAvatar, getSafeEntityAvatar } from '../../../../utils/appUtils';
@@ -16,7 +19,6 @@ import Swal from 'sweetalert2';
 import ListEpisodes from '../playfilm/ListEpisodes';
 import Comment from './Comment';
 import SEO from '../../../../components/SEO';
-import { syncSingleMovieEpisodes } from '../../../../services/autoEpisodeSyncService';
 import { trackEvent } from '../../../../services/eventTracker';function DetailFilm() {
     const { slug } = useParams();
     const [activeTab, setActiveTab] = useState('episodes');
@@ -44,9 +46,10 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
     }, [slug]);
 
     const movie = useMemo(() => {
-        return (movies || []).find(m => m.slug === slug || m.id === slug);
+        return findRouteEntity(movies, slug);
     }, [movies, slug]);
 
+    useCanonicalPath(movie?.id ? `/phim/${routeSegment(movie)}` : '');
     const id = movie?.id;
     const realMovieId = movie?.id || id;
 
@@ -58,12 +61,6 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
         return () => unsubscribe();
     }, [id]);
 
-    // Tự động kiểm tra và thêm tập mới tức thì khi người xem truy cập bộ phim
-    useEffect(() => {
-        if (movie && movie.slug) {
-            syncSingleMovieEpisodes(movie, episodes);
-        }
-    }, [movie?.id, movie?.slug]);
 
     useEffect(() => {
         if (realMovieId) {
@@ -200,7 +197,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
     }, [movie]);
 
     const handleClickEpisodes = (ep) => {
-        navigate(`/xem-phim/${movie?.slug || id}?tap=${ep.numberEpisode}`);
+        navigate(`/xem-phim/${routeSegment(movie)}?tap=${ep.numberEpisode}`);
     }
 
     const isFavorite = useMemo(() => {
@@ -320,7 +317,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                     : `Xem phim ${movie.otherName || movie.name} (${movie.name}) vietsub, thuyết minh full HD tại MFILM.`
                 }
                 image={movie.bannerUrl || movie.imgUrl}
-                url={`/phim/${slug}`}
+                url={`/phim/${routeSegment(movie)}`}
                 type="video.movie"
                 extra={{
                     'video:release_date': movie.year || '',
@@ -473,7 +470,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                             <div className="flex flex-col gap-4">
                                 {topMovies.map((m, index) => (
                                     <div key={index} onClick={() => {
-                                        navigate(`/phim/${m.slug || m.id}`);
+                                        navigate(`/phim/${routeSegment(m)}`);
                                         window.scrollTo({ top: 0, behavior: 'smooth' });
                                     }} className="flex items-center gap-3 group cursor-pointer">
                                         <div
@@ -514,7 +511,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
                             <div className="flex flex-wrap items-center justify-between gap-4">
                                 <div className="flex flex-wrap items-center gap-8">
-                                    {checkShow ? <Link to={`/xem-phim/${movie?.slug || id}`} className="flex items-center gap-2 bg-[#facc15] hover:bg-yellow-500 text-black px-8 py-3 rounded-full font-bold transition-colors shadow-[0_0_15px_rgba(250,204,21,0.3)]">
+                                    {checkShow ? <Link to={`/xem-phim/${routeSegment(movie)}`} className="flex items-center gap-2 bg-[#facc15] hover:bg-yellow-500 text-black px-8 py-3 rounded-full font-bold transition-colors shadow-[0_0_15px_rgba(250,204,21,0.3)]">
                                         <FaPlay className="text-sm" /> Xem Ngay
                                     </Link> : <button onClick={() => {
                                         if (!isLogin) {
@@ -525,7 +522,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                             });
                                             return;
                                         }
-                                        navigate(`/pay/${realMovieId}`);
+                                        navigate(`/pay/${routeSegment(movie)}`);
                                     }} className="flex items-center gap-2 bg-linear-to-r from-rose-500 to-pink-600 hover:from-rose-400 hover:to-pink-500 text-white px-6 py-3 rounded-full font-bold transition shadow-[0_4px_15px_rgba(244,63,94,0.3)] hover:-translate-y-0.5 cursor-pointer">
                                         <FaCrown className="text-sm" /> Mua phim
                                     </button>}
@@ -644,49 +641,14 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                     )}
                                 </div>
                             )}
-                            {activeTab === 'actors' && (
-                                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-6 py-4">
-                                    {movieActors.length > 0 ? (
-                                        movieActors.map((char, idx) => (
-                                            <Link to={`/dien-vien/${char.slug || char.id}`} key={idx} className="flex flex-col items-center gap-2 relative group cursor-pointer">
-                                                <img
-                                                    src={getSafeEntityAvatar(char.imgUrl, char.sexID)}
-                                                    alt={char.name}
-                                                    className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-3 border-slate-700 group-hover:border-[#facc15] group-hover:shadow-[0_0_20px_rgba(250,204,21,0.5)] group-hover:-translate-y-2 transition duration-300"
-                                                    onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(char.sexID); }}
-                                                />
-                                                <p className="text-xs sm:text-sm font-bold text-slate-200 group-hover:text-[#facc15] transition-colors w-full truncate text-center mt-1">
-                                                    {char.name}
-                                                </p>
-                                                {char.role && (
-                                                    <p className="text-[10px] sm:text-xs text-slate-400 text-center truncate w-full">
-                                                        {char.role}
-                                                    </p>
-                                                )}
-
-                                                <div className="absolute -top-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition duration-300 pointer-events-none z-20 flex flex-col items-center">
-                                                    <div className="bg-[#0f1322]/90 backdrop-blur-md text-yellow-400 text-xs font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)] whitespace-nowrap">
-                                                        {char.name}
-                                                    </div>
-                                                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-5 border-r-5 border-t-5 border-l-transparent border-r-transparent border-t-yellow-500/30"></div>
-                                                    <div className="absolute -bottom-0.75 left-1/2 -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-[#0f1322]/90"></div>
-                                                </div>
-                                            </Link>
-                                        ))
-                                    ) : (
-                                        <div className="col-span-full py-12 text-center text-slate-400 text-sm bg-[#131828]/60 rounded-2xl border border-slate-800/60">
-                                            Chưa có thông tin diễn viên cho bộ phim này.
-                                        </div>
-                                    )}
-                                </div>
-                            )}
+                            {activeTab === 'actors' && <ActorCast actors={movieActors} />}
                             {activeTab === 'recommend' && (
                                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 py-2">
                                     {recommendedMovies.map((m, idx) => (
                                         <div
                                             key={idx}
                                             onClick={() => {
-                                                navigate(`/phim/${m.slug || m.id}`);
+                                                navigate(`/phim/${routeSegment(m)}`);
                                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                                             }}
                                             className="group cursor-pointer flex flex-col h-full"
@@ -747,7 +709,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                             </div>
 
                                             <button 
-                                                onClick={() => navigate(`/xem-phim/${movie.slug || movie.id}?server=1`)}
+                                                onClick={() => navigate(`/xem-phim/${routeSegment(movie)}?server=1`)}
                                                 className="bg-white hover:bg-slate-100 text-black px-4 py-2 mt-1 rounded-md font-bold text-[13px] w-fit shadow-md transition-colors cursor-pointer"
                                             >
                                                 Xem bản này
@@ -780,7 +742,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                             </div>
 
                                             <button 
-                                                onClick={() => navigate(`/xem-phim/${movie.slug || movie.id}?server=2`)}
+                                                onClick={() => navigate(`/xem-phim/${routeSegment(movie)}?server=2`)}
                                                 className="bg-white hover:bg-slate-100 text-black px-4 py-2 mt-1 rounded-md font-bold text-[13px] w-fit shadow-md transition-colors cursor-pointer"
                                             >
                                                 Xem bản này

@@ -54,7 +54,7 @@ export default defineConfig({
         vercelAiDevPlugin(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.svg', 'robots.txt', 'sitemap.xml'],
+            includeAssets: ['favicon.svg', 'robots.txt'],
             workbox: {
                 disableDevLogs: true,
                 cleanupOutdatedCaches: true,
@@ -62,7 +62,7 @@ export default defineConfig({
                 skipWaiting: true,
                 // Không cache navigation requests (index.html) - luôn lấy từ network
                 navigateFallback: null,
-                globIgnores: ['**/index.html', '**/app-recovery.js'],
+                globIgnores: ['**/index.html', '**/app-recovery.js', '**/sitemap.xml'],
                 runtimeCaching: [
                     {
                         // Cache các file assets có hash (JS, CSS) - immutable

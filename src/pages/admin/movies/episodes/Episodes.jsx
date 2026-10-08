@@ -1,3 +1,4 @@
+import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useSearchParams } from 'react-router-dom';
@@ -28,10 +29,18 @@ function Episodes() {
     useEffect(() => {
         const movieId = searchParams.get("movie");
         if (movieId && movies.length > 0) {
-            const mv = movies.find(m => m.slug === movieId || m.id === movieId || m.otherName === movieId);
-            if (mv) setSelectedMovie(mv);
+            const mv = findRouteEntity(movies, movieId);
+            if (mv) {
+                setSelectedMovie(mv);
+                const canonical = decodeURIComponent(routeSegment(mv));
+                if (movieId !== canonical) {
+                    const params = new URLSearchParams(searchParams);
+                    params.set('movie', canonical);
+                    setSearchParams(params, { replace: true });
+                }
+            }
         }
-    }, [searchParams, movies]);
+    }, [searchParams, movies, setSearchParams]);
     const [episodes, setEpisodes] = useState([]);
 
     useEffect(() => {
@@ -129,7 +138,7 @@ function Episodes() {
                             episode_number: submitData.numberEpisode,
                             release_date: new Date().toLocaleDateString('vi-VN'),
                             movie_banner: movie?.bannerUrl || movie?.imgUrl || movie?.thumbUrl || 'https://via.placeholder.com/480x270',
-                            watch_url: `https://mfilm.online/phim/${movie?.slug || ''}`
+                            watch_url: `https://mfilm.online/phim/${routeSegment(movie)}`
                         };
                         
                         emailjs.send(YOUR_SERVICE_ID, NEW_EPISODE, templateParams, YOUR_USER_ID);
@@ -274,7 +283,7 @@ function Episodes() {
                         filterOptions={filterOptions}
                         getOptionLabel={(opt) => opt?.otherName || opt?.name || ""}
                         value={selectedMovie}
-                        onChange={(e, val) => { setSelectedMovie(val); if (val) { setSearchParams({ movie: val.slug || val.otherName || val.id }); } else { setSearchParams({}); } }}
+                        onChange={(e, val) => { setSelectedMovie(val); if (val) { setSearchParams({ movie: decodeURIComponent(routeSegment(val)) }); } else { setSearchParams({}); } }}
                         classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                         className="w-full"
                         sx={{

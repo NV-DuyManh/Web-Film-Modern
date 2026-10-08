@@ -1,3 +1,4 @@
+import { routeSegment } from '../../../../utils/nameRoutes';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useState, useContext, useMemo, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
@@ -9,6 +10,7 @@ import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { isSingleMovie, formatEpisodeName } from '../../../../utils/appUtils';
 import ModalDelete from '../ModalDelete';
+import { clearResume, getResumeStore } from '../../../../utils/watchHistory';
 
 function ContinueFilm(props) {
     const { isLogin } = useContext(AuthContext);
@@ -19,14 +21,14 @@ function ContinueFilm(props) {
     const [resumeData, setResumeData] = useState({});
 
     useEffect(() => {
-        try {
-            const userKey = isLogin?.id ? `mfilm_resume_${isLogin.id}` : 'mfilm_resume';
-            const userStore = JSON.parse(localStorage.getItem(userKey) || 'null');
-            const globalStore = JSON.parse(localStorage.getItem('mfilm_resume') || '{}');
-            setResumeData(userStore || globalStore || {});
-        } catch (e) {
-            console.error(e);
-        }
+        const refresh = () => setResumeData(getResumeStore(isLogin?.id));
+        refresh();
+        window.addEventListener('mfilm_resume_updated', refresh);
+        window.addEventListener('storage', refresh);
+        return () => {
+            window.removeEventListener('mfilm_resume_updated', refresh);
+            window.removeEventListener('storage', refresh);
+        };
     }, [isLogin?.id]);
 
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -42,19 +44,8 @@ function ContinueFilm(props) {
     const confirmDeleteContinue = () => {
         if (!itemToDelete) return;
         try {
-            const keys = ['mfilm_resume'];
-            if (isLogin?.id) keys.push(`mfilm_resume_${isLogin.id}`);
-
-            let updatedAll = {};
-            for (const key of keys) {
-                const all = JSON.parse(localStorage.getItem(key) || '{}');
-                delete all[itemToDelete];
-                localStorage.setItem(key, JSON.stringify(all));
-                if (key === (isLogin?.id ? `mfilm_resume_${isLogin.id}` : 'mfilm_resume')) {
-                    updatedAll = all;
-                }
-            }
-            setResumeData(updatedAll);
+            clearResume(itemToDelete, null, isLogin?.id);
+            setResumeData(getResumeStore(isLogin?.id));
             
             setIsDeleteDialogOpen(false);
             setItemToDelete(null);
@@ -78,7 +69,7 @@ function ContinueFilm(props) {
     const continueMovies = useMemo(() => {
         const ids = Object.keys(resumeData);
         return moviesData
-            .filter(m => ids.includes(String(m.id)))
+            .filter(m => ids.includes(String(m.id)) && Object.values(resumeData[m.id]?.episodes || {}).some(seconds => seconds > 0))
             .map(m => {
                 const r = resumeData[m.id] || {};
                 return {
@@ -158,7 +149,7 @@ function ContinueFilm(props) {
                 <div className={`mt-4 ${viewMode === 'grid' ? 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4' : 'flex flex-col gap-4'}`}>
                     {filteredMovies.length > 0 ? filteredMovies.map(movie => (
                         viewMode === 'grid' ? (
-                            <Link to={`/phim/${movie.slug || movie.id}`} key={`grid-${movie.id}`} className="group relative flex flex-col gap-3 cursor-pointer">
+                            <Link to={`/phim/${routeSegment(movie)}`} key={`grid-${movie.id}`} className="group relative flex flex-col gap-3 cursor-pointer">
                                 <div className="relative rounded-2xl overflow-hidden border-3 border-transparent bg-slate-800/40 hover:border-blue-400 transition duration-300 hover:shadow-[0_12px_25px_rgba(59,130,246,0.3)] hover:-translate-y-2 aspect-2/3 w-full">
                                     <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-opacity duration-300 opacity-90 group-hover:opacity-100" />
                                     <div className="absolute inset-0 bg-linear-to-t from-black/90 via-transparent to-transparent opacity-70"></div>
@@ -186,13 +177,13 @@ function ContinueFilm(props) {
                             </Link>
                         ) : (
                             <div key={`list-${movie.id}`} className="flex flex-col sm:flex-row items-center gap-4 p-3 rounded-2xl border border-white/10 bg-slate-800/50 backdrop-blur-md hover:border-blue-500/40 hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition duration-300 group">
-                                <Link to={`/phim/${movie.slug || movie.id}`} className="w-32 sm:w-40 md:w-48 h-auto aspect-video rounded-xl overflow-hidden shrink-0 border-3 border-transparent group-hover:border-blue-400 transition duration-300 relative block">
+                                <Link to={`/phim/${routeSegment(movie)}`} className="w-32 sm:w-40 md:w-48 h-auto aspect-video rounded-xl overflow-hidden shrink-0 border-3 border-transparent group-hover:border-blue-400 transition duration-300 relative block">
                                     <img src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 480, 270, 'thumb')} alt={movie.name} className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300" />
                                     <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-300"></div>
                                 </Link>
 
                                 <div className="flex-1 w-full flex flex-col justify-center py-1 gap-1.5">
-                                    <Link to={`/phim/${movie.slug || movie.id}`}>
+                                    <Link to={`/phim/${routeSegment(movie)}`}>
                                         <h3 className="text-white font-bold text-lg drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] group-hover:text-blue-400 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] transition duration-300 line-clamp-1">
                                             {movie.otherName || movie.name}
                                         </h3>
@@ -210,7 +201,7 @@ function ContinueFilm(props) {
                                 </div>
 
                                 <div className="flex items-center shrink-0 sm:ml-auto w-full sm:w-auto justify-end pr-2 gap-3">
-                                    <Link to={`/xem-phim/${movie.slug || movie.id}`} className="flex items-center gap-2 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-5 py-2 rounded-xl font-bold transition duration-300 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-105 border border-blue-400/50 text-sm">
+                                    <Link to={`/xem-phim/${routeSegment(movie)}`} className="flex items-center gap-2 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-5 py-2 rounded-xl font-bold transition duration-300 hover:shadow-[0_0_20px_rgba(59,130,246,0.5)] hover:scale-105 border border-blue-400/50 text-sm">
                                         <FaPlay size={12} /> Tiếp tục xem
                                     </Link>
                                     <button onClick={(e) => handleRemoveContinue(movie.id, e)} className="p-2.5 rounded-xl bg-slate-700/50 text-slate-400 hover:text-red-500 hover:bg-red-500/10 border border-transparent hover:border-red-500/40 transition duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)]" title="Xóa lịch sử">

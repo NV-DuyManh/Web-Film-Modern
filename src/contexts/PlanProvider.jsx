@@ -1,3 +1,4 @@
+import { withNameRoutes } from '../utils/nameRoutes';
 import React, { createContext, useEffect, useState } from 'react';
 import { fetchDocumentsRealtime } from '../services/firebaseService';
 
@@ -8,7 +9,7 @@ function PlanProvider({ children }) {
 
     useEffect(() => {
         const unsubscribe = fetchDocumentsRealtime("Plans", (planList) => {
-            setPlans(planList);
+            setPlans(withNameRoutes(planList));
         });
         return () => unsubscribe();
     }, []);
