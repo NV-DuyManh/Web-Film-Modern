@@ -2,7 +2,7 @@ import { normalizeEpisodes, episodeInfo, episodeKey, episodeLabel } from '../../
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useId } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
-import { FaLock, FaChevronLeft, FaChevronRight, FaChevronDown } from 'react-icons/fa';
+import { FaLock, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
@@ -10,6 +10,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { getExpiryDate, getUserPlanInfo, isSingleMovie } from '../../../../utils/appUtils';
 import ModalDetail from '../detailFilm/ModalDetail';
+import EpisodeRangeDropdown from './EpisodeRangeDropdown';
 
 function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const { slug } = useParams();
@@ -74,6 +75,8 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
         }
         return r;
     }, [uniqueEpisodes, hasRanges, CHUNK_SIZE]);
+    const rangeOptions = useMemo(() => ranges.map((chunk, index) => ({ index,
+        start: episodeInfo(chunk[0])?.number, end: episodeInfo(chunk.at(-1))?.end })), [ranges]);
 
     const activeKey = episodeKey(playEpisodes);
     const activeRange = Math.max(0, ranges.findIndex(chunk => chunk.some(ep => episodeKey(ep) === activeKey)));
@@ -97,15 +100,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                 <div className="flex flex-wrap items-end gap-3 pb-4 border-b border-slate-700/60 w-full min-w-0" role="group" aria-label="Chọn khoảng tập phim">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 min-w-0 grow basis-40">
                         <label htmlFor={rangeSelectId} className="text-[11px] font-bold uppercase tracking-wider text-slate-400 shrink-0">Khoảng tập</label>
-                        <div className="relative w-full sm:max-w-56 min-w-0">
-                            <select id={rangeSelectId} value={selectedRange} onChange={event => chooseRange(Number(event.target.value))}
-                                className="w-full h-10 appearance-none rounded-xl border border-amber-400/35 bg-[#0d121f] pl-3 pr-8 text-sm font-bold tabular-nums text-amber-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 hover:border-amber-400/70 transition-colors">
-                                {ranges.map((chunk, index) => <option key={index} value={index}>
-                                    {episodeInfo(chunk[0])?.number}–{episodeInfo(chunk.at(-1))?.end}
-                                </option>)}
-                            </select>
-                            <FaChevronDown aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-amber-300/70" />
-                        </div>
+                        <EpisodeRangeDropdown id={rangeSelectId} options={rangeOptions} selectedIndex={selectedRange} onChange={chooseRange} />
                     </div>
                     <div className="flex items-center gap-1 sm:gap-2 ml-auto shrink-0">
                         <button type="button" aria-label="Khoảng tập trước" title="Khoảng tập trước" disabled={selectedRange === 0} onClick={() => chooseRange(selectedRange - 1)}
