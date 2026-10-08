@@ -69,12 +69,12 @@ function TopFilms({ films = [] }) {
                     <span style={{ fontSize: '22px' }}>🏆</span>
 
                     <h2 className="text-xl font-semibold text-gray-100">
-                        Top 5 Films
+                        5 phim được xem nhiều nhất
                     </h2>
                 </div>
 
                 <p className="text-sm text-gray-400 mt-1">
-                    Most watched films
+                    Thống kê lượt xem
                 </p>
 
             </div>
@@ -85,7 +85,7 @@ function TopFilms({ films = [] }) {
                 {films.length === 0 ? (
 
                     <div className="h-50 flex items-center justify-center text-gray-500">
-                        No film data available
+                        Chưa có dữ liệu phim
                     </div>
 
                 ) : (

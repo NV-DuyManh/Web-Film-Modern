@@ -18,13 +18,14 @@ function JobCard({ name, document, schedule }) {
     const data = state.data || {};
     const failed = Number(data.lastErrorAt || 0) > Number(data.lastSuccessAt || 0);
     const running = Number(data.lockUntil || 0) > now;
+    const disabled = document === 'CloudEpisodeSync' && data.enabled === false;
     const next = new Date(now);
     if (document === 'CatalogMaintenance') { next.setUTCHours(19, 23, 0, 0); if (next.getTime() <= now) next.setUTCDate(next.getUTCDate() + 1); }
     else { next.setUTCSeconds(0, 0); const minute = next.getUTCMinutes(); next.setUTCMinutes(minute < 17 ? 17 : minute < 47 ? 47 : 77); }
     return <div className="p-4 bg-slate-900/80 rounded-xl border border-cyan-500/20">
         <h3 className="font-bold text-cyan-300">{name}</h3><p className="text-sm text-slate-400 mt-1">{schedule} · Giờ Việt Nam</p>
-        <p role={state.error || failed ? 'alert' : 'status'} className={`mt-3 ${state.error || failed ? 'text-red-300' : 'text-emerald-300'}`}>{state.loading ? 'Đang tải...' : state.error || (running ? 'Đang chạy' : failed ? 'Lần chạy gần nhất có lỗi' : data.lastSuccessAt ? 'Lần chạy gần nhất thành công' : 'Chưa có kết quả được ghi nhận')}</p>
-        <p className="text-sm text-slate-400 mt-2">Lần tiếp theo dự kiến: {time(next)}</p>
+        <p role={state.error || failed ? 'alert' : 'status'} className={`mt-3 ${state.error || failed ? 'text-red-300' : 'text-emerald-300'}`}>{state.loading ? 'Đang tải...' : state.error || (disabled ? 'Tác vụ đang tắt' : running ? 'Đang chạy' : failed ? 'Lần chạy gần nhất có lỗi' : data.lastSuccessAt ? 'Lần chạy gần nhất thành công' : 'Chưa có kết quả được ghi nhận')}</p>
+        <p className="text-sm text-slate-400 mt-2">Lần tiếp theo dự kiến: {disabled ? 'Chưa lên lịch khi tác vụ đang tắt' : time(next)}</p>
         <p className="text-sm text-slate-300 mt-2">Bắt đầu gần nhất: {time(data.lastStartedAt)}</p>
         <p className="text-sm text-slate-300 mt-2">Thành công gần nhất: {time(data.lastSuccessAt)}</p>
         {data.lastErrorAt && <p className="text-sm text-amber-300 mt-1">Lỗi gần nhất: {time(data.lastErrorAt)} · {data.lastError || 'Chưa có chi tiết'}</p>}
