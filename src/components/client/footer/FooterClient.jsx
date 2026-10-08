@@ -1,5 +1,6 @@
 import React from 'react';
-import { FaApple, FaFacebookF, FaGooglePlay, FaLinkedinIn, FaStar } from 'react-icons/fa';
+import { FaMobileAlt, FaFacebookF, FaPlay, FaLinkedinIn, FaStar } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 import Logo from '../../../assets/Logo.png';
 import Logo2 from '../../../assets/Logo2.png';
 import { SiZalo } from 'react-icons/si';
@@ -29,41 +30,41 @@ function FooterClient() {
                         <div className='hidden h-14 w-px bg-white/10 md:block'></div>
 
                         <div className='flex items-center justify-center gap-4 md:ml-2'>
-                            <a href="https://zalo.me/0779534325" target="_blank" aria-label="Liên hệ qua Zalo" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition duration-300 hover:-translate-y-1 hover:bg-white hover:text-blue-600 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]'><SiZalo className='text-3xl' title='Zalo' /></a>
+                            <a href="https://zalo.me/0779534325" target="_blank" rel="noopener noreferrer" aria-label="Liên hệ qua Zalo" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition duration-300 hover:-translate-y-1 hover:bg-white hover:text-blue-600 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)]'><SiZalo className='text-3xl' title='Zalo' /></a>
 
-                            <a href="https://www.facebook.com/duymanhdev" target="_blank" aria-label="Trang Facebook của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition duration-300 hover:-translate-y-1 hover:border-blue-400/60 hover:bg-blue-600 hover:text-white hover:shadow-[0_0_20px_rgba(37,99,235,0.45)]'><FaFacebookF title='Facebook' /></a>
+                            <a href="https://www.facebook.com/duymanhdev" target="_blank" rel="noopener noreferrer" aria-label="Trang Facebook của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition duration-300 hover:-translate-y-1 hover:border-blue-400/60 hover:bg-blue-600 hover:text-white hover:shadow-[0_0_20px_rgba(37,99,235,0.45)]'><FaFacebookF title='Facebook' /></a>
 
-                            <a href="https://www.linkedin.com/in/duymanhdev/" target="_blank" aria-label="Trang LinkedIn của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition duration-300 hover:-translate-y-1 hover:border-blue-500/60 hover:bg-blue-700 hover:text-white hover:shadow-[0_0_20px_rgba(29,78,216,0.45)]'><FaLinkedinIn title='LinkedIn' /></a>
+                            <a href="https://www.linkedin.com/in/duymanhdev/" target="_blank" rel="noopener noreferrer" aria-label="Trang LinkedIn của chúng tôi" className='flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/8 text-lg text-white/80 transition duration-300 hover:-translate-y-1 hover:border-blue-500/60 hover:bg-blue-700 hover:text-white hover:shadow-[0_0_20px_rgba(29,78,216,0.45)]'><FaLinkedinIn title='LinkedIn' /></a>
                         </div>
                     </div>
 
                     <div className='mt-8 flex flex-wrap justify-center gap-x-10 gap-y-4 text-base font-semibold text-white md:justify-start'>
-                        <a href="" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
+                        <Link to="/ho-tro" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
                             Hỏi Đáp
+                        </Link>
+
+                        <a href="https://zalo.me/0779534325" target="_blank" rel="noopener noreferrer" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
+                            Liên hệ
                         </a>
 
-                        <a href="" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
-                            Chính sách bảo mật
-                        </a>
+                        <Link to="/upgrade-vip" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
+                            Gói thành viên
+                        </Link>
 
-                        <a href="" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
-                            Điều khoản sử dụng
-                        </a>
-
-                        <a href="" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
+                        <Link to="/ho-tro#gioi-thieu" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
                             Giới thiệu
-                        </a>
+                        </Link>
                     </div>
 
                     <div className='mt-6 max-w-195 text-center text-[15px] leading-7 text-gray-300 md:text-left'>
                         <p>
-                            MFILM - Trang xem phim online miễn phí chất lượng cao Vietsub, thuyết minh, lồng tiếng Full HD – 4K. Kho phim mới khổng lồ gồm phim chiếu rạp, phim bộ, phim lẻ từ Việt Nam, Hàn Quốc, Trung Quốc, Thái Lan, Nhật Bản, Âu Mỹ… đa dạng thể loại.
+                            MFILM - Khám phá phim lẻ, phim bộ, anime và nhiều thể loại từ Việt Nam, Hàn Quốc, Trung Quốc, Thái Lan, Nhật Bản, Âu Mỹ…
                             <br />
-                            Dịp Tết Việt Nam, MFILM trở lại với loạt phim xuân hấp dẫn, hài Tết và siêu phẩm mới nhất, mang đến trải nghiệm giải trí trọn vẹn bên gia đình.
+                            Tìm phim yêu thích, tạo danh sách riêng và xem tiếp trên các thiết bị. Chất lượng, phụ đề và bản thuyết minh tùy từng phim.
                         </p>
 
                         <p className='mt-5 text-sm font-medium tracking-wide text-gray-400'>
-                            © 2026 MFILM
+                            © {new Date().getFullYear()} MFILM
                         </p>
                     </div>
                 </div>
@@ -71,25 +72,25 @@ function FooterClient() {
                 <div className='w-full min-[1150px]:justify-self-end'>
                     <div className='w-full max-w-140 rounded-3xl border border-white/10 bg-white/3 p-7 text-center shadow-[0_20px_70px_rgba(0,0,0,0.35)] backdrop-blur-sm'>
                         <h2 className='text-xl font-black uppercase leading-snug tracking-wide text-gray-200 md:text-2xl'>
-                            Tải ứng dụng MFILM trên thiết bị di động để trải nghiệm mượt mà hơn
+                            Xem MFILM trên máy tính và điện thoại
                         </h2>
 
                         <div className='mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row'>
-                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
-                                <FaApple className='text-4xl' />
+                            <Link to="/ho-tro#thiet-bi" className='flex min-h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 py-3 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
+                                <FaMobileAlt className='shrink-0 text-3xl text-cyan-400' />
                                 <div className='text-left leading-none'>
-                                    <p className='text-xs font-semibold'>Download on the</p>
-                                    <h3 className='text-2xl font-bold'>App Store</h3>
+                                    <p className='text-xs font-semibold text-gray-400'>Truy cập nhanh</p>
+                                    <h3 className='mt-1 text-base font-bold'>Thêm vào màn hình</h3>
                                 </div>
-                            </div>
+                            </Link>
 
-                            <div className='flex h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
-                                <FaGooglePlay className='text-3xl text-green-400' />
+                            <Link to="/film-new" className='flex min-h-15 w-full items-center justify-center gap-3 rounded-xl border border-white/50 bg-black px-5 py-3 text-white transition duration-300 hover:-translate-y-1 hover:border-white hover:shadow-[0_0_24px_rgba(255,255,255,0.22)] sm:w-56'>
+                                <FaPlay className='shrink-0 text-2xl text-yellow-400' />
                                 <div className='text-left leading-none'>
-                                    <p className='text-xs font-semibold'>GET IT ON</p>
-                                    <h3 className='text-2xl font-bold'>Google Play</h3>
+                                    <p className='text-xs font-semibold text-gray-400'>Khám phá ngay</p>
+                                    <h3 className='mt-1 text-base font-bold'>Phim mới cập nhật</h3>
                                 </div>
-                            </div>
+                            </Link>
                         </div>
 
                         <div className='mt-8 flex w-full items-center justify-center'>

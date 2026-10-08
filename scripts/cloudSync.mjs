@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc, getDocs, setDoc, updateDoc, query, where, getDoc, runTransaction } from "firebase/firestore";
+import { getFirestore, collection, doc, getDocs, setDoc, updateDoc, query, where, getDoc, runTransaction, terminate } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk",
@@ -39,13 +39,21 @@ async function runCloudSync() {
         return;
     }
     const runId = `${Date.now()}_${process.env.GITHUB_RUN_ID || 'manual'}`;
-    const acquired = dryRun || await runTransaction(db, async tx => {
-        const state = (await tx.get(lock)).data() || {};
+    // GitHub's concurrency group serializes every scheduled/manual workflow run.
+    // Use the SDK stream there: the public transaction RPC currently returns RESOURCE_EXHAUSTED.
+    // Direct local writes still require an atomic transaction; --dry-run never writes.
+    const serializedRunner = process.env.GITHUB_ACTIONS === 'true';
+    const force = process.argv.includes('--force');
+    const claim = async (read, write) => {
+        const state = (await read()).data() || {};
         const now = Date.now();
-        if (Number(state.lockUntil) > now || now - Number(state.lastSuccessAt || 0) < Math.max(30, Number(settings.intervalMinutes) || 30) * 60000) return false;
-        tx.set(lock, { runId, lockUntil: now + 30 * 60000 }, { merge: true });
+        if (Number(state.lockUntil) > now || (!force && now - Number(state.lastStartedAt || state.lastSuccessAt || 0) < Math.max(30, Number(settings.intervalMinutes) || 30) * 60000)) return false;
+        await write({ runId, lastStartedAt: now, lockUntil: now + 30 * 60000 });
         return true;
-    });
+    };
+    const acquired = dryRun || (serializedRunner
+        ? await claim(() => getDoc(lock), values => setDoc(lock, values, { merge: true }))
+        : await runTransaction(db, tx => claim(() => tx.get(lock), values => tx.set(lock, values, { merge: true }))));
     if (!acquired) { console.log('[CloudSync] Đã chạy gần đây hoặc đang chạy ở nơi khác.'); return; }
     try {
         let targetMovies = [];
@@ -103,16 +111,17 @@ async function runCloudSync() {
                 totalNew += movieNewEps;
                 totalFixed += movieFixedEps;
                 const newStatus = movieData?.status ? mapMovieStatus(movieData.status) : movie.status;
-                if (movieNewEps > 0 || movieFixedEps > 0 || movie.status !== newStatus || highestEp !== Number(movie.endEpisode)) {
+                const newEndEpisode = Math.max(highestEp, Number(movie.endEpisode) || 1);
+                if (movieNewEps > 0 || movieFixedEps > 0 || movie.status !== newStatus || newEndEpisode !== Number(movie.endEpisode)) {
                     const movieRef = doc(db, "Movies", movie.id);
                     if (!dryRun) await updateDoc(movieRef, {
-                        endEpisode: Math.max(highestEp, Number(movie.endEpisode) || 1),
+                        endEpisode: newEndEpisode,
                         status: newStatus,
                         slug: activeSlug,
                         updatedAt: new Date().toISOString()
                     });
                     totalUpdatedMovies++;
-                    console.log(`[CloudSync] ✅ "${movie.otherName || movie.name}": +${movieNewEps} tập mới, sửa ${movieFixedEps} link tập.`);
+                    console.log(`[CloudSync] ${dryRun ? 'Dự kiến' : 'Đã cập nhật'} "${movie.otherName || movie.name}": +${movieNewEps} tập mới, sửa ${movieFixedEps} link tập.`);
                 }
             } catch (e) {
                 errors++;
@@ -123,10 +132,13 @@ async function runCloudSync() {
         }
 
         if (errors) throw new Error(`Có ${errors} phim chưa đồng bộ được; sẽ thử lại ở lần chạy sau.`);
-        if (!dryRun) await setDoc(lock, { lastSuccessAt: Date.now() }, { merge: true });
+        if (!dryRun) await setDoc(lock, { lastSuccessAt: Date.now(), lastSummary: { movies: totalUpdatedMovies, added: totalNew, fixed: totalFixed }, commit: process.env.GITHUB_SHA || '' }, { merge: true });
         console.log(`[CloudSync] 🏁 Hoàn tất! Cập nhật ${totalUpdatedMovies} phim (+${totalNew} tập mới, sửa ${totalFixed} link).`);
     } finally {
-        if (!dryRun) await runTransaction(db, async tx => {
+        if (!dryRun && serializedRunner) {
+            const state = (await getDoc(lock)).data();
+            if (state?.runId === runId) await setDoc(lock, { lockUntil: 0 }, { merge: true });
+        } else if (!dryRun) await runTransaction(db, async tx => {
             const state = (await tx.get(lock)).data();
             if (state?.runId === runId) tx.set(lock, { lockUntil: 0 }, { merge: true });
         });
@@ -135,5 +147,5 @@ async function runCloudSync() {
 
 runCloudSync().catch(err => {
     console.error("[CloudSync] Fatal error:", err);
-    process.exit(1);
-});
+    process.exitCode = 1;
+}).finally(() => terminate(db));

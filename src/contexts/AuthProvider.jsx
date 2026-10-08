@@ -3,7 +3,7 @@ import { UserContext } from './UserProvider';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { rotateSessionId } from '../services/eventTracker';
-import { startProtectedResumeSync } from '../services/resumeSyncService';
+import { startProtectedResumeSync, flushActiveResumeSync } from '../services/resumeSyncService';
 
 export const AuthContext = createContext();
 
@@ -103,6 +103,7 @@ function AuthProvider({ children }) {
     }, []);
 
     const handleLogout = useCallback(async () => {
+        await flushActiveResumeSync();
         // 1. Clear persisted session
         try {
             localStorage.removeItem("isLogin");

@@ -23,6 +23,7 @@ import Comment from '../detailFilm/Comment';
 import SEO from '../../../../components/SEO';
 import PageLoadingSpinner from '../../../../components/common/PageLoadingSpinner';
 import { trackEvent } from '../../../../services/eventTracker';
+import { flushActiveResumeSync } from '../../../../services/resumeSyncService';
 
 
 function PlayFilm() {
@@ -143,10 +144,14 @@ function PlayFilm() {
     }, [realMovieId, playEpisodes]);
 
     const handlePause = useCallback((seconds) => {
+        if (playEpisodes?.id && realMovieId && seconds > 0 && completedEpisodeRef.current !== playEpisodes.id) {
+            saveResume(realMovieId, { episodeId: playEpisodes.id, episodeNumber: playEpisodes.numberEpisode, seconds: Math.floor(seconds) }, isLogin?.id);
+            void flushActiveResumeSync();
+        }
         if (realMovieId && playEpisodes?.id) {
             trackEvent('pause', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
         }
-    }, [realMovieId, playEpisodes]);
+    }, [realMovieId, playEpisodes, isLogin?.id]);
 
     const handleSeek = useCallback((seconds) => {
         if (realMovieId && playEpisodes?.id) {
@@ -191,7 +196,14 @@ function PlayFilm() {
             }
         };
         window.addEventListener('beforeunload', handleBeforeUnload);
-        return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+        window.addEventListener('pagehide', handleBeforeUnload);
+        const handleHidden = () => { if (document.visibilityState === 'hidden') handleBeforeUnload(); };
+        document.addEventListener('visibilitychange', handleHidden);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+            window.removeEventListener('pagehide', handleBeforeUnload);
+            document.removeEventListener('visibilitychange', handleHidden);
+        };
     }, [playEpisodes?.id, playEpisodes?.numberEpisode, realMovieId, isLogin?.id]);
 
 
@@ -377,9 +389,8 @@ function PlayFilm() {
                         <div className="mt-6 bg-linear-to-r from-[#4b6cb7] via-[#7b2ff7] to-[#b83280] rounded-lg p-5 flex gap-4 items-start shadow-lg">
                             <div className="mt-1 shrink-0 text-yellow-400"><FaBell className="text-xl" /></div>
                             <div className="text-sm text-white space-y-1 font-medium">
-                                <p>Click chọn SV 1, SV 2 hoặc SV 3 nếu không xem được.</p>
-                                <p>Tham gia <a href="" className="text-yellow-300 hover:underline">nhóm Game Telegram</a></p>
-                                <p>Mời bạn tham gia <a href="#" className="text-yellow-300 hover:underline">nhóm discord của RoPhim</a></p>
+                                <p>Nếu phim không phát, thử đổi giữa Server 1 và Server 2 ở bên dưới.</p>
+                                <p>Cần hỗ trợ? <a href="https://zalo.me/0779534325" target="_blank" rel="noopener noreferrer" className="text-yellow-300 hover:underline">Liên hệ MFILM qua Zalo</a> và gửi tên phim, tập đang gặp lỗi.</p>
                             </div>
                         </div>
 

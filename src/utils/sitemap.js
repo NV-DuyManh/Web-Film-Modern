@@ -3,7 +3,7 @@ import { createNameRouteIndex } from './nameRoutes.js';
 export const SITEMAP_COLLECTIONS = {
     Movies: '/phim', Actors: '/dien-vien', Authors: '/tac-gia', Characters: '/nhan-vat', Topics: '/topic',
 };
-const STATIC_PATHS = ['/', '/singleMovies', '/series', '/actors', '/showtimes', '/topic', '/film-new', '/cinema-movies', '/film-coming', '/film-hongkong', '/anime'];
+const STATIC_PATHS = ['/', '/ho-tro', '/singleMovies', '/series', '/actors', '/showtimes', '/topic', '/film-new', '/cinema-movies', '/film-coming', '/film-hongkong', '/anime'];
 const escapeXml = value => String(value).replace(/[<>&"']/g, char => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&apos;' })[char]);
 
 export function buildSitemap(catalog, origin = 'https://mfilm.online') {

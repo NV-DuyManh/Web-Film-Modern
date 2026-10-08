@@ -65,7 +65,8 @@ export function saveResume(movieId, { episodeId, episodeNumber, seconds }, userI
         }
         all[movieId].latestEpisodeId = episodeId;
         all[movieId].latestEpisodeNumber = episodeNumber;
-        all[movieId].updatedAt = Date.now();
+        // Consecutive saves in the same millisecond must still have a clear order.
+        all[movieId].updatedAt = Math.max(Date.now(), (Number(all[movieId].updatedAt) || 0) + 1);
         
         // Đảm bảo có object episodes
         if (!all[movieId].episodes) all[movieId].episodes = {};
@@ -95,13 +96,14 @@ export function clearResume(movieId, episodeId = null, userId = null) {
         const key = userId ? `${STORAGE_KEY}_${userId}` : STORAGE_KEY;
         const all = JSON.parse(localStorage.getItem(key) || '{}');
         if (all[movieId]) {
+            const updatedAt = Math.max(Date.now(), (Number(all[movieId].updatedAt) || 0) + 1);
             if (episodeId && all[movieId].episodes) {
                 all[movieId].episodes[episodeId] = 0;
-                all[movieId].episodeUpdatedAt = { ...all[movieId].episodeUpdatedAt, [episodeId]: Date.now() };
+                all[movieId].episodeUpdatedAt = { ...all[movieId].episodeUpdatedAt, [episodeId]: updatedAt };
             } else {
-                all[movieId] = { episodes: {}, episodeUpdatedAt: {}, deletedAt: Date.now() };
+                all[movieId] = { episodes: {}, episodeUpdatedAt: {}, deletedAt: updatedAt };
             }
-            all[movieId].updatedAt = Date.now();
+            all[movieId].updatedAt = updatedAt;
             localStorage.setItem(key, JSON.stringify(all));
             notifyResume(userId, movieId, all[movieId]);
         }

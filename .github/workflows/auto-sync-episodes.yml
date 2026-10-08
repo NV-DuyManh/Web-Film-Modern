@@ -2,8 +2,17 @@ name: Auto Sync Episodes 24/7
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
-  workflow_dispatch: # Cho phép bấm nút chạy thủ công trên GitHub Actions nếu muốn
+    - cron: '17,47 * * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Kiểm tra mà không ghi dữ liệu'
+        type: boolean
+        default: false
+      force:
+        description: 'Bỏ qua thời gian chờ giữa hai lần chạy'
+        type: boolean
+        default: false
 
 jobs:
   sync-episodes:
@@ -25,4 +34,11 @@ jobs:
         run: npm ci
 
       - name: Run Episode Cloud Sync
-        run: node scripts/cloudSync.mjs
+        env:
+          DRY_RUN: ${{ inputs.dry_run }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          args=()
+          if [ "$DRY_RUN" = "true" ]; then args+=(--dry-run); fi
+          if [ "$FORCE" = "true" ]; then args+=(--force); fi
+          node scripts/cloudSync.mjs "${args[@]}"
