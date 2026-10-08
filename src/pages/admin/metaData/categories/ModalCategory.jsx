@@ -1,6 +1,5 @@
-import Dialog from '../../../../components/admin/AdminDialog';
 import * as React from 'react';
-import { Button, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { FaTimes,  FaSpinner } from 'react-icons/fa';
 
@@ -11,7 +10,6 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 function ModalCategory({open, onChangeInput, handleClose, addCategory, error, loading, progress, category}) {
     return (
         <Dialog
-            formValues={category}
             open={open}
             slots={{ transition: Transition }}
             keepMounted
@@ -22,9 +20,9 @@ function ModalCategory({open, onChangeInput, handleClose, addCategory, error, lo
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
-                    {category.id  ? "CẬP NHẬT THỂ LOẠI" : "THÊM THỂ LOẠI"}
+                    {category.id  ? "Update Category" : "Add New Category"}
                 </p>
-                <button
+                <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
@@ -38,7 +36,7 @@ function ModalCategory({open, onChangeInput, handleClose, addCategory, error, lo
                     name="name"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Tên"
+                    label="Name"
                     variant="outlined"
                     value={category.name}
                     helperText={error.name}
@@ -51,7 +49,7 @@ function ModalCategory({open, onChangeInput, handleClose, addCategory, error, lo
                     fullWidth
                     multiline
                     rows={3}
-                    label="Giới thiệu"
+                    label="Description"
                     variant="outlined"
                     value={category.description}
                     helperText={error.description}
@@ -63,11 +61,11 @@ function ModalCategory({open, onChangeInput, handleClose, addCategory, error, lo
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <p className="animate-pulse inline">Đang lưu dữ liệu...</p>
+                            <p className="animate-pulse inline">Syncing to Cloud Database...</p>
                             <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div
+                            <div 
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -75,9 +73,9 @@ function ModalCategory({open, onChangeInput, handleClose, addCategory, error, lo
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button onClick={handleClose} className="btn-cancel-x">Hủy</Button>
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
                         <Button disabled={loading} onClick={addCategory} className="btn-submit-x">
-                            {category.id ? "LƯU" : "THÊM"}
+                            {category.id ? "UPDATE" : "ADD"}
                         </Button>
                     </div>
                 )}

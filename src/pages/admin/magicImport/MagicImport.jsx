@@ -1,4 +1,3 @@
-import { adminAlert } from '../../../services/adminOperations';
 import { parseEpisode, episodeKey, highestEpisode } from '../../../utils/episodes';
 import { rentalPriceRange, randomRentalPrice } from '../../../utils/importRentalPricing';
 import { randomMoviePlanID, movieMaintenancePatch, kkphimDocumentID } from '../../../utils/movieMaintenance';
@@ -214,14 +213,14 @@ function MagicImport() {
     };
 
     const handleCopyPrompt = () => {
-        const promptText = `Hãy đóng vai một chuyên gia dữ liệu và một người đam mê điện ảnh/anime. Nhiệm vụ của bạn là tạo ra một bảng dữ liệu định dạng TSV (Tab-Separated Values) cho ${promptCount} bộ phim ${promptTheme}.
+        const promptText = `Hãy đóng vai một chuyên gia dữ liệu và một người đam mê điện ảnh/anime. Nhiệm vụ của bạn là tạo ra một bảng dữ liệu định dạng TSV (Tab-Separated Values) cho ${promptCount} bộ phim ${promptTheme}. 
 
 Bảng dữ liệu phải có ĐÚNG 29 CỘT theo thứ tự sau, cách nhau bằng dấu Tab:
 Name	Original Name	Movie Description	Type	Categories	Cat Desc	Director	Dir Desc	Actors	Actor Desc	Characters	Char Desc	Gender	Char Gender	Plan	Country	Year	Episodes	Ep Sub	Ep Dub	Ep Voice	Episode Number	URL	Room	Time	Status	Age Rating	Duration	Rent Price
 
 BẠN PHẢI TUÂN THỦ NGHIÊM NGẶT CÁC QUY TẮC SAU:
 
-1. QUY TẮC ĐỐI ỨNG 1:1 VÀ DẤU PHÂN CÁCH:
+1. QUY TẮC ĐỐI ỨNG 1:1 VÀ DẤU PHÂN CÁCH: 
 - Cột Name (Director, Actors, Characters, Categories) ngăn cách bằng dấu phẩy (,).
 - Cột Description (Dir Desc, Actor Desc, Char Desc, Cat Desc) và Gender (Gender, Char Gender) BẮT BUỘC dùng dấu gạch đứng ( | ) để ngăn cách.
 - Số lượng phần tử phải khớp nhau tuyệt đối (Số lượng diễn viên/đạo diễn = Số đoạn mô tả tương ứng).
@@ -498,7 +497,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
 
             setSuccessMsg(`Import successful! Created ${moviesAdded} Movies, Updated ${moviesUpdated} Movies/Entities.`);
         } catch (error) {
-            adminAlert("An error occurred! Please check F12 Console for details.");
+            alert("An error occurred! Please check F12 Console for details.");
         } finally {
             setLoading(false);
             setCurrentImportIdx(-1);
@@ -1612,7 +1611,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                                                     <th className='p-3 text-center align-middle'>NAME (VN)</th>
                                                                     <th className='p-3 text-center align-middle'>MOVIE DESC</th>
                                                                     <th className='p-3 text-center align-middle'>TYPE</th>
-                                                                    <th className='p-3 text-center align-middle'>THỂ LOẠI</th>
+                                                                    <th className='p-3 text-center align-middle'>CATEGORIES</th>
                                                                     <th className='p-3 text-center align-middle'>CAT DESC</th>
                                                                     <th className='p-3 text-center align-middle'>DIRECTOR</th>
                                                                     <th className='p-3 text-center align-middle'>DIR DESC</th>
@@ -1620,16 +1619,16 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                                                     <th className='p-3 text-center align-middle'>ACTOR DESC</th>
                                                                     <th className='p-3 text-center align-middle'>CHARACTERS</th>
                                                                     <th className='p-3 text-center align-middle'>CHAR DESC</th>
-                                                                    <th className='p-3 text-center align-middle'>GIỚI TÍNH</th>
+                                                                    <th className='p-3 text-center align-middle'>GENDER</th>
                                                                     <th className='p-3 text-center align-middle'>CHAR GENDER</th>
                                                                     <th className='p-3 text-center align-middle'>INFO (YEAR/AGE/PLAN)</th>
                                                                     <th className='p-3 text-center align-middle'>DURATION</th>
                                                                     <th className='p-3 text-center align-middle'>RENT PRICE</th>
-                                                                    <th className='p-3 text-center align-middle'>QUỐC GIA</th>
-                                                                    <th className='p-3 text-center align-middle'>TẬP</th>
+                                                                    <th className='p-3 text-center align-middle'>COUNTRY</th>
+                                                                    <th className='p-3 text-center align-middle'>EPISODES</th>
                                                                     <th className='p-3 text-center align-middle'>EP DATA (NUM/URL)</th>
                                                                     <th className='p-3 text-center align-middle'>SHOWTIME (ROOM/TIME)</th>
-                                                                    <th className='p-3 text-center align-middle'>TRẠNG THÁI</th>
+                                                                    <th className='p-3 text-center align-middle'>STATUS</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -1674,7 +1673,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                                                                             ))}
                                                                                         </select>
                                                                                     )}
-                                                                                    {rowStatuses[idx] === 'processing' && <div className="text-[10px] text-cyan-400 font-normal mt-1">Đang lưu dữ liệu...</div>}
+                                                                                    {rowStatuses[idx] === 'processing' && <div className="text-[10px] text-cyan-400 font-normal mt-1">Syncing Data...</div>}
                                                                                     {rowStatuses[idx] === 'success' && <div className="text-[10px] text-emerald-400 font-bold mt-1">✓ Completed</div>}
                                                                                     {!rowStatuses[idx] && isDuplicated && (
                                                                                         mode === 'UPDATE' ? (

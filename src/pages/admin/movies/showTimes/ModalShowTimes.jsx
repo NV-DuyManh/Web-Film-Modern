@@ -1,7 +1,6 @@
-import Dialog from '../../../../components/admin/AdminDialog';
 import { FaTimes } from 'react-icons/fa';
 import * as React from 'react';
-import { Button, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
 import { useContext } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 
@@ -33,7 +32,6 @@ function ModalShowTimes({ open, onChangeInput, handleClose, addShowTime, error, 
 
     return (
         <Dialog
-            formValues={showTime}
             open={open}
             slots={{ transition: Transition }}
             keepMounted
@@ -48,7 +46,7 @@ function ModalShowTimes({ open, onChangeInput, handleClose, addShowTime, error, 
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
                     {showTime.id  ? "Update Showtime" : "Add New Showtime"}
                 </p>
-                <button
+                <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
@@ -70,7 +68,7 @@ function ModalShowTimes({ open, onChangeInput, handleClose, addShowTime, error, 
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            label="Phim"
+                            label="Movie"
                             error={!!error.movieID}
                             helperText={error.movieID}
                             className="modal-input-x"
@@ -117,11 +115,11 @@ function ModalShowTimes({ open, onChangeInput, handleClose, addShowTime, error, 
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <p className="animate-pulse inline">Đang lưu dữ liệu...</p>
+                            <p className="animate-pulse inline">Syncing to Cloud Database...</p>
                             <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div
+                            <div 
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -129,9 +127,9 @@ function ModalShowTimes({ open, onChangeInput, handleClose, addShowTime, error, 
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button onClick={handleClose} className="btn-cancel-x">Hủy</Button>
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
                         <Button disabled={loading} onClick={addShowTime} className="btn-submit-x">
-                            {showTime.id ? "LƯU THAY ĐỔI" : "Add ShowTime"}
+                            {showTime.id ? "Save Changes" : "Add ShowTime"}
                         </Button>
                     </div>
                 )}

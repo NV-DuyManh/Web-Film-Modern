@@ -1,7 +1,6 @@
-import { notifyAdmin } from '../../services/adminOperations';
 import * as React from 'react';
 import { FaTimes } from 'react-icons/fa';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, LinearProgress } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { FiAlertTriangle } from 'react-icons/fi';
 
@@ -11,22 +10,39 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 function ModalDelete({ handleClose, open, handleDeleted, titleDelete, contentDelete }) {
     const [isDeleting, setIsDeleting] = React.useState(false);
+    const [progress, setProgress] = React.useState(0);
 
     const onConfirmDelete = async () => {
         setIsDeleting(true);
+        setProgress(65);
 
-
+        const interval = setInterval(() => {
+            setProgress((prev) => (prev < 90 ? prev + 5 : prev));
+        }, 150);
 
         try {
             await handleDeleted();
+            setProgress(100);
         } catch (error) {
-            notifyAdmin(error.message || "Chưa chuyển được vào thùng rác. Vui lòng thử lại.", "error");
+            console.error("Delete failed", error);
         } finally {
-            setIsDeleting(false);
+            clearInterval(interval);
+            setTimeout(() => {
+                setIsDeleting(false);
+                setProgress(0);
+            }, 600);
         }
     };
 
-
+    React.useEffect(() => {
+        if (!open) {
+            const timeout = setTimeout(() => {
+                setIsDeleting(false);
+                setProgress(0);
+            }, 300);
+            return () => clearTimeout(timeout);
+        }
+    }, [open]);
 
     return (
         <Dialog
@@ -62,7 +78,7 @@ function ModalDelete({ handleClose, open, handleDeleted, titleDelete, contentDel
                 </DialogContentText>
                 <DialogContentText style={{ color: '#fca5a5', paddingTop: '24px', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '10px', fontWeight: '600', letterSpacing: '0.5px' }}>
                     <FiAlertTriangle size={20} className="animate-pulse text-red-500 drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]" />
-                    Dữ liệu sẽ được chuyển vào thùng rác và có thể khôi phục trong mục Vận hành.
+                    This action cannot be undone. Are you sure you want to proceed?
                 </DialogContentText>
             </DialogContent>
 
@@ -70,10 +86,15 @@ function ModalDelete({ handleClose, open, handleDeleted, titleDelete, contentDel
                 {isDeleting ? (
                     <div className="w-full bg-slate-900/80 p-4 rounded-xl border border-red-500/50 shadow-[inset_0_0_20px_rgba(239,68,68,0.2)] mt-2 mb-2">
                         <div className="flex justify-between text-xs font-bold text-red-400 mb-2 uppercase tracking-wider drop-shadow-[0_0_5px_rgba(239,68,68,0.8)]">
-                            <p className="animate-pulse inline">Đang chuyển vào thùng rác...</p>
-
+                            <p className="animate-pulse inline">Deleting Data...</p>
+                            <p className="inline">{progress}%</p>
                         </div>
-                        <LinearProgress color="error" aria-label="Đang chuyển vào thùng rác" />
+                        <div className="w-full bg-black/80 rounded-full h-3 overflow-hidden p-0.5 border border-red-500/20">
+                            <div
+                                className="bg-linear-to-r from-red-600 via-rose-500 to-orange-500 h-full rounded-full transition duration-500 ease-out shadow-[0_0_15px_rgba(239,68,68,1)]"
+                                style={{ width: `${progress}%` }}
+                            />
+                        </div>
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
@@ -82,14 +103,14 @@ function ModalDelete({ handleClose, open, handleDeleted, titleDelete, contentDel
                             className="btn-cancel-slate"
                             disabled={isDeleting}
                         >
-                            Hủy
+                            Cancel
                         </Button>
                         <Button
                             onClick={onConfirmDelete}
                             className="btn-submit-danger"
                             disabled={isDeleting}
                         >
-                            Chuyển vào thùng rác
+                            Delete Now
                         </Button>
                     </div>
                 )}

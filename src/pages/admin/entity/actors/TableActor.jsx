@@ -1,13 +1,15 @@
-import useAdminList from '../../../../hooks/useAdminList';
-import AdminCursorFooter from '../../../../components/admin/AdminCursorFooter';
-import React, { useState } from 'react';
+import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument } from '../../../../services/firebaseService';
+import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import LOGO from "../../../../assets/Logo.png";
+import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getDefaultAvatar, getSafeEntityAvatar, OTHER_AVATAR } from '../../../../utils/appUtils';
 
 
@@ -20,13 +22,19 @@ const getSexStyle = (sex) => {
 };
 
 function TableActor({ handleClickOpen, setActor, actor, search }) {
-    const [rowsPerPage, setRowsPerPage] = useState(20);
-    const cursor = useAdminList('Actors', search, rowsPerPage);
-    const actors = cursor.rows;
+    const [actors, setActors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
     const [open, setOpen] = useState(false);
 
-    const page = cursor.page;
-    const currentData = cursor.rows;
+    const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    const start = (page - 1) * rowsPerPage;
+
+    const dataSearch = useMemo(() => actors.filter(e => searchTV(e.name).includes(searchTV(search))), [search, actors])
+    const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
+    
+    useEffect(() => { setPage(1); }, [search]);
 
     const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
 
@@ -44,7 +52,9 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
 
     const handleDeleted = async () => {
         await deleteDocument("Actors", actor);
-
+        if (page > 1 && currentData.length === 1) {
+            setPage(page - 1);
+        }
         handleClose();
     };
 
@@ -55,17 +65,14 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                 return item ? deleteDocument("Actors", item) : Promise.resolve();
             })
         );
-
+        const remaining = currentData.filter(row => !selectedIds.includes(row.id)).length;
+        if (page > 1 && remaining === 0) setPage(page - 1);
         clearSelected();
         setOpenBulk(false);
     };
 
     return (
         <div className="p-5">
-            <label className="text-slate-300 text-sm">Số dòng <select className="bg-slate-900 border border-slate-600 rounded p-1 ml-2" value={rowsPerPage} onChange={e => setRowsPerPage(Number(e.target.value))}>{[5, 10, 20, 50].map(size => <option key={size}>{size}</option>)}</select></label>
-            {cursor.loading && <p role="status" className="text-cyan-300 p-3">Đang tải dữ liệu...</p>}
-            {cursor.error && <p role="alert" className="text-red-300 p-3">{cursor.error}</p>}
-            {!cursor.loading && !cursor.error && !cursor.rows.length && <p className="text-slate-400 p-3">Chưa có dữ liệu phù hợp.</p>}
             <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
             <div className="table-wrapper">
                 <div className="table-container">
@@ -81,13 +88,13 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th>STT</th>
-                                <th className="text-center">ẢNH</th>
-                                <th className="text-center">TÊN</th>
-                                <th className="text-center">GIỚI TÍNH</th>
-                                <th className="text-center">QUỐC GIA</th>
-                                <th className="text-center">GIỚI THIỆU</th>
-                                <th className="w-[10%] text-center">THAO TÁC</th>
+                                <th>ID</th>
+                                <th className="text-center">IMAGE</th>
+                                <th className="text-center">NAME</th>
+                                <th className="text-center">GENDER</th>
+                                <th className="text-center">COUNTRY</th>
+                                <th className="text-center">DESCRIPTION</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,15 +111,15 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                                         />
                                     </td>
                                     <td className="table-cell">
-                                        {(page - 1) * rowsPerPage + index + 1}
+                                        {start + index + 1}
                                     </td>
                                     <td className="table-cell">
                                         <div className="flex justify-center items-center py-2">
                                             <div className="group relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-white/10 cursor-pointer">
-                                                <img
-                                                    src={getSafeEntityAvatar(row.imgUrl, row.sexID)}
-                                                    alt={row.name}
-                                                    className="w-full h-full object-cover transition-all duration-300"
+                                                <img 
+                                                    src={getSafeEntityAvatar(row.imgUrl, row.sexID)} 
+                                                    alt={row.name} 
+                                                    className="w-full h-full object-cover transition-all duration-300" 
                                                     onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(row.sexID); }}
                                                 />
                                             </div>
@@ -138,14 +145,14 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                                         <div className="flex justify-center! gap-2">
                                             <button
                                                 onClick={() => handleEdit(row)}
-                                                title="Chỉnh sửa" aria-label="Chỉnh sửa" className="action-btn btn-edit"
+                                                className="action-btn btn-edit"
                                             >
                                                 <CiEdit size={16} />
                                             </button>
 
                                             <button
                                                 onClick={() => handleClickOpenDele(row)}
-                                                title="Chuyển vào thùng rác" aria-label="Chuyển vào thùng rác" className="action-btn btn-delete"
+                                                className="action-btn btn-delete"
                                             >
                                                 <RiDeleteBin6Fill size={16} />
                                             </button>
@@ -156,7 +163,13 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                         </tbody>
                     </table>
                     <div className="table-footer">
-                        <AdminCursorFooter {...cursor} />
+                        <PaginationAdmin
+                            page={page}
+                            setPage={setPage}
+                            rowsPerPage={rowsPerPage}
+                            setRowsPerPage={setRowsPerPage}
+                            totalItems={dataSearch?.length || 0}
+                        />
                     </div>
                 </div>
             </div>
@@ -164,15 +177,15 @@ function TableActor({ handleClickOpen, setActor, actor, search }) {
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
-                titleDelete={"CHUYỂN VÀO THÙNG RÁC"}
-                contentDelete={`Chuyển mục đã chọn vào thùng rác? Bạn có thể khôi phục trong mục Vận hành.`}
+                titleDelete={"DELETE ACTOR"}
+                contentDelete={`Are you sure you want to delete actor "${actor?.name}"?`}
             />
             <ModalDelete
                 handleClose={() => setOpenBulk(false)}
                 open={openBulk}
                 handleDeleted={handleBulkDeleted}
-                titleDelete={"CHUYỂN CÁC MỤC ĐÃ CHỌN VÀO THÙNG RÁC"}
-                contentDelete={`Chuyển mục đã chọn vào thùng rác? Bạn có thể khôi phục trong mục Vận hành.`}
+                titleDelete={"DELETE SELECTED"}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected actor${selectedIds.length > 1 ? 's' : ''}?`}
             />
         </div>
     );

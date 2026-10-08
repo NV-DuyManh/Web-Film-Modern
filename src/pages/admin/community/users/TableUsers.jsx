@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+﻿import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useSubscriptions } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -20,7 +20,7 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
     const users = useContext(UserContext);
     const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
-
+    
     const avatarGlowMap = {
         cyan: "ring-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.6)]",
         yellow: "ring-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.6)]",
@@ -140,19 +140,18 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th>STT</th>
+                                <th>ID</th>
                                 <th className='text-center'>AVATAR</th>
-                                <th className='text-center'>TÊN</th>
+                                <th className='text-center'>NAME</th>
                                 <th className='text-center'>EMAIL</th>
-                                <th className='text-center'>GIỚI TÍNH</th>
-                                <th className='text-center'>VAI TRÒ</th>
-                                <th className='text-center'>GÓI</th>
-                                <th className="w-[10%] text-center">THAO TÁC</th>
+                                <th className='text-center'>SEX</th>
+                                <th className='text-center'>ROLE</th>
+                                <th className='text-center'>PACKAGE</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {!currentData.length && <tr><td colSpan={99} className="p-5 text-center text-slate-400">Chưa có dữ liệu phù hợp.</td></tr>}
                             {currentData.map((row, index) => {
                                 const isSelected = selectedIds.includes(row.id);
                                 const pInfo = getPlanInfo(row);
@@ -223,21 +222,21 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                             <div className="flex justify-center! gap-2">
                                                 <button
                                                     onClick={() => handleView && handleView({ ...row, tableIndex: start + index + 1 })}
-                                                    title="Xem chi tiết" aria-label="Xem chi tiết" className="action-btn btn-view"
+                                                    className="action-btn btn-view"
                                                 >
                                                     <FaEye size={16} />
                                                 </button>
 
                                                 <button
                                                     onClick={() => handleEdit(row)}
-                                                    title="Chỉnh sửa" aria-label="Chỉnh sửa" className="action-btn btn-edit"
+                                                    className="action-btn btn-edit"
                                                 >
                                                     <CiEdit size={16} />
                                                 </button>
 
                                                 <button
                                                     onClick={() => handleClickOpenDele(row)}
-                                                    title="Chuyển vào thùng rác" aria-label="Chuyển vào thùng rác" className="action-btn btn-delete"
+                                                    className="action-btn btn-delete"
                                                 >
                                                     <RiDeleteBin6Fill size={16} />
                                                 </button>
@@ -265,16 +264,16 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
-                titleDelete={"CHUYỂN VÀO THÙNG RÁC"}
-                contentDelete={`Chuyển mục đã chọn vào thùng rác? Bạn có thể khôi phục trong mục Vận hành.`}
+                titleDelete={"DELETE USER"}
+                contentDelete={`Are you sure you want to delete user "${user?.name}"?`}
             />
 
             <ModalDelete
                 handleClose={() => setOpenBulk(false)}
                 open={openBulk}
                 handleDeleted={handleBulkDeleted}
-                titleDelete={"CHUYỂN CÁC MỤC ĐÃ CHỌN VÀO THÙNG RÁC"}
-                contentDelete={`Chuyển mục đã chọn vào thùng rác? Bạn có thể khôi phục trong mục Vận hành.`}
+                titleDelete={"DELETE SELECTED"}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected user${selectedIds.length > 1 ? 's' : ''}?`}
             />
         </div>
     );

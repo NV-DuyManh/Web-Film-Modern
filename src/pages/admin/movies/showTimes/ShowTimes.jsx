@@ -1,4 +1,3 @@
-import { adminAlert } from '../../../../services/adminOperations';
 import React, { useState } from 'react';
 import Search from '../../../../components/admin/search/Search';
 import ModalShowTimes from './ModalShowTimes';
@@ -67,7 +66,7 @@ function ShowTimes() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            adminAlert("Có lỗi xảy ra, vui lòng thử lại!");
+            alert("Có lỗi xảy ra, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);
         }

@@ -1,8 +1,7 @@
-import useAdminEntities from '../../../../hooks/useAdminEntities';
-import AdminCursorFooter from '../../../../components/admin/AdminCursorFooter';
-import React, { useContext } from 'react';
+import React, { useState, useMemo, useEffect, useContext } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
+import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import { IconButton, Tooltip } from '@mui/material';
 import { FaUsers, FaEye } from 'react-icons/fa';
 
@@ -13,8 +12,9 @@ import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import ModalDelete from '../../../../components/admin/ModalDelete';
-import { deleteDocument } from '../../../../services/firebaseService';
+import { deleteDocument , fetchDocumentsRealtime } from '../../../../services/firebaseService';
 import Logo5 from '../../../../assets/Logo5.png';
+import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 
@@ -39,15 +39,32 @@ const getAgeRatingStyle = (ageRating) => {
     }
 };
 
-function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cursor, size }) {
-    const actors = useAdminEntities('Actors', (movies || []).flatMap(movie => movie.listActor || []));
-    const authors = useAdminEntities('Authors', (movies || []).flatMap(movie => movie.listAuthor || []));
-    const characters = useAdminEntities('Characters', (movies || []).flatMap(movie => movie.listCharacter || []));
+function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
+    const [actors, setActors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
+    const [authors, setAuthors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
+    const [characters, setCharacters] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
 
-    const page = cursor.page;
-    const rowsPerPage = size;
+    const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+
+    
+    
+    
     const categories = useContext(CategoryContext);
-    const currentData = movies || [];
+
+    const dataSearch = useMemo(() =>
+        movies?.filter(e => searchTV(e?.name).includes(searchTV(search)) || searchTV(e?.otherName).includes(searchTV(search))),
+        [search, movies]
+    );
+
+    const currentData = dataSearch?.slice((page - 1) * rowsPerPage, page * rowsPerPage) || [];
+
+    useEffect(() => {
+        setPage(1);
+    }, [search]);
 
     const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
 
@@ -70,7 +87,8 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
                 return item ? deleteDocument("Movies", item) : Promise.resolve();
             })
         );
-
+        const remaining = currentData.filter(row => !selectedIds.includes(row.id)).length;
+        if (page > 1 && remaining === 0) setPage(page - 1);
         clearSelected();
         setOpenBulk(false);
     };
@@ -108,19 +126,19 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
                 <div className="max-h-85 overflow-y-auto px-2.5 py-2.5">
                     {authorItems.length > 0 && (
                         <div className="rounded-xl bg-white/2.5 px-2.5 py-2.5">
-                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-amber-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Đạo diễn</p></div>
+                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-amber-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Authors</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{authorItems.map(item => renderItem(item, 'author'))}</div>
                         </div>
                     )}
                     {actorItems.length > 0 && (
                         <div className={`${authorItems.length > 0 ? "mt-2.5" : ""} rounded-xl bg-white/2.5 px-2.5 py-2.5`}>
-                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-green-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Diễn viên</p></div>
+                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-green-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Actors</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{actorItems.map(item => renderItem(item, 'actor'))}</div>
                         </div>
                     )}
                     {characterItems.length > 0 && (
                         <div className={`${authorItems.length > 0 || actorItems.length > 0 ? "mt-2.5" : ""} rounded-xl bg-white/2.5 px-2.5 py-2.5`}>
-                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-pink-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Nhân vật</p></div>
+                            <div className="mb-2.5 flex items-center gap-2"><p className="h-1.5 w-1.5 rounded-full bg-pink-400 inline"></p><p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">Characters</p></div>
                             <div className="grid grid-cols-[repeat(auto-fit,68px)] justify-center gap-x-2 gap-y-3">{characterItems.map(item => renderItem(item, 'character'))}</div>
                         </div>
                     )}
@@ -135,12 +153,12 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
         return (
             <div className="w-fit min-w-52 max-w-95 overflow-hidden">
                 <div className="px-4 py-3 border-b border-white/8 bg-white/5">
-                    <div className="flex items-center justify-between gap-4"><p className="text-[13px] font-bold text-white">Thể loại</p><p className="text-[11px] text-gray-400 inline">{categoryItems.length} items</p></div>
+                    <div className="flex items-center justify-between gap-4"><p className="text-[13px] font-bold text-white">Categories</p><p className="text-[11px] text-gray-400 inline">{categoryItems.length} items</p></div>
                 </div>
                 <div className="flex w-fit max-w-95 flex-wrap gap-2 px-3 py-3 max-h-65 overflow-y-auto">
                     {categoryItems.length > 0 ? categoryItems.map((item) => (
                         <p key={item.id} className="rounded-full bg-purple-500/12 px-3 py-1.5 text-xs font-semibold text-purple-100 ring-1 ring-purple-300/15 cursor-pointer transition-all duration-300 hover:bg-purple-500/40 hover:text-white hover:ring-purple-400 hover:-translate-y-1 hover:shadow-[0_4px_12px_rgba(168,85,247,0.6)] inline">{item.name}</p>
-                    )) : <p className="text-xs text-gray-500 inline">Chưa có thể loại</p>}
+                    )) : <p className="text-xs text-gray-500 inline">No categories</p>}
                 </div>
             </div>
         );
@@ -148,9 +166,6 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
 
     return (
         <div className="p-5">
-            {cursor.loading && <p role="status" className="py-3 text-cyan-300">Đang tải danh sách phim...</p>}
-            {cursor.error && <p role="alert" className="py-3 text-red-300">{cursor.error}</p>}
-            {!cursor.loading && !cursor.error && !currentData.length && <p className="py-3 text-slate-400">Không có phim phù hợp bộ lọc.</p>}
             <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
             <div className="table-wrapper">
                 <div className="table-container overflow-x-auto">
@@ -166,20 +181,19 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th className="w-[4%] text-center">STT</th>
-                                <th className="w-[8%] text-center">ẢNH PHIM</th>
-                                <th className="w-[18%] text-center">TÊN</th>
-                                <th className="w-[12%] text-center">TRẠNG THÁI / ĐỘ TUỔI</th>
-                                <th className="w-[8%] text-center">NĂM</th>
-                                <th className="w-[12%] text-center">TẬP</th>
-                                <th className="w-[12%] text-center">NHÂN SỰ</th>
-                                <th className="w-[12%] text-center">THỂ LOẠI</th>
-                                <th className="w-[10%] text-center">THAO TÁC</th>
+                                <th className="w-[4%] text-center">ID</th>
+                                <th className="w-[8%] text-center">POSTER</th>
+                                <th className="w-[18%] text-center">NAME</th>
+                                <th className="w-[12%] text-center">STATUS / AGE</th>
+                                <th className="w-[8%] text-center">YEAR</th>
+                                <th className="w-[12%] text-center">EPISODES</th>
+                                <th className="w-[12%] text-center">ENTITY</th>
+                                <th className="w-[12%] text-center">CATEGORIES</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {!cursor.loading && !cursor.error && !currentData.length && <tr><td colSpan={99} className="p-5 text-center text-slate-400">Chưa có dữ liệu phù hợp.</td></tr>}
                             {currentData.map((row, index) => {
                                 const isSelected = selectedIds.includes(row.id);
                                 return (
@@ -270,9 +284,9 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
 
                                         <td className="table-cell text-center">
                                             <div className="flex justify-center! gap-2">
-                                                <button onClick={() => handleView(row)} title="Xem chi tiết" aria-label="Xem chi tiết" className="action-btn btn-view"><FaEye size={16} /></button>
-                                                <button onClick={() => handleEdit(row)} title="Chỉnh sửa" aria-label="Chỉnh sửa" className="action-btn btn-edit"><CiEdit size={16} /></button>
-                                                <button onClick={() => handleDelete(row)} title="Chuyển vào thùng rác" aria-label="Chuyển vào thùng rác" className="action-btn btn-delete"><RiDeleteBin6Fill size={16} /></button>
+                                                <button onClick={() => handleView(row)} className="action-btn btn-view"><FaEye size={16} /></button>
+                                                <button onClick={() => handleEdit(row)} className="action-btn btn-edit"><CiEdit size={16} /></button>
+                                                <button onClick={() => handleDelete(row)} className="action-btn btn-delete"><RiDeleteBin6Fill size={16} /></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -282,7 +296,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
                     </table>
 
                     <div className="table-footer">
-                        <AdminCursorFooter {...cursor} />
+                        <PaginationAdmin page={page} setPage={setPage} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} totalItems={dataSearch?.length || 0} />
                     </div>
                 </div>
             </div>
@@ -291,8 +305,8 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView, cur
                 handleClose={() => setOpenBulk(false)}
                 open={openBulk}
                 handleDeleted={handleBulkDeleted}
-                titleDelete={"CHUYỂN CÁC MỤC ĐÃ CHỌN VÀO THÙNG RÁC"}
-                contentDelete={`Chuyển mục đã chọn vào thùng rác? Bạn có thể khôi phục trong mục Vận hành.`}
+                titleDelete={"DELETE SELECTED"}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected movi${selectedIds.length > 1 ? 'es' : 'e'}?`}
             />
         </div>
     );

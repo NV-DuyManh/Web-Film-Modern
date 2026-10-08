@@ -1,4 +1,3 @@
-import { adminAlert } from '../../../../services/adminOperations';
 import React, { useState } from 'react';
 import Search from '../../../../components/admin/search/Search';
 import ModalUsers from './ModalUsers';
@@ -25,7 +24,7 @@ const getBase64FromUrl = (url) => {
             resolve(canvas.toDataURL("image/png"));
         };
         img.onerror = () => {
-            resolve(url);
+            resolve(url); 
         };
         img.src = url;
     });
@@ -69,11 +68,11 @@ function Users() {
 
     const validation = () => {
         const newError = {};
-        newError.name = user.name ? "" : "Vui lòng nhập tên";
-        newError.email = user.email ? "" : "Vui lòng nhập email";
+        newError.name = user.name ? "" : "Please enter name";
+        newError.email = user.email ? "" : "Please enter email";
         newError.password = adminUserPasswordError(user);
-        newError.role = user.role ? "" : "Vui lòng chọn vai trò";
-
+        newError.role = user.role ? "" : "Please select role";
+        
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     }
@@ -82,7 +81,7 @@ function Users() {
         if (validation()) {
             return;
         }
-
+        
         setLoading(true);
         setProgress(20);
 
@@ -112,7 +111,7 @@ function Users() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            adminAlert("Không lưu được dữ liệu. Vui lòng thử lại!");
+            alert("An error occurred, please try again!");
             setLoading(false);
             setProgress(0);
         }

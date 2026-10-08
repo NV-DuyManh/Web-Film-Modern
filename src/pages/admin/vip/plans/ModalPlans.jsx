@@ -1,7 +1,6 @@
-import Dialog from '../../../../components/admin/AdminDialog';
 import { FaTimes } from 'react-icons/fa';
 import * as React from 'react';
-import { Button, DialogActions, DialogContent, DialogTitle, TextField, Slide, MenuItem } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, MenuItem } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -12,7 +11,7 @@ const menuProps = {
 };
 
 function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading, progress, plan }) {
-
+    
     const handleNumberChange = (e, isFloat = false) => {
         const regex = isFloat ? /[^0-9.]/g : /[^0-9]/g;
         const onlyNums = e.target.value.replace(regex, '');
@@ -21,7 +20,6 @@ function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading,
 
     return (
         <Dialog
-            formValues={plan}
             open={open}
             slots={{ transition: Transition }}
             keepMounted
@@ -34,9 +32,9 @@ function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading,
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
-                    {plan.id  ? "CẬP NHẬT GÓI" : "THÊM GÓI"}
+                    {plan.id  ? "Update Plan" : "Add New Plan"}
                 </p>
-                <button
+                <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
@@ -50,13 +48,13 @@ function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading,
                     name="name"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Tên gói"
+                    label="Plan Name"
                     variant="outlined"
                     value={plan.name}
                     helperText={error.name}
                     error={!!error.name}
                 />
-
+                
                 <div className="grid grid-cols-2 gap-4">
                     <TextField
                         className="modal-input-x"
@@ -69,31 +67,31 @@ function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading,
                         helperText={error.level}
                         error={!!error.level}
                     />
-
+                    
                     <TextField
                         className="modal-input-x"
                         name="price"
                         onChange={(e) => handleNumberChange(e, true)}
                         fullWidth
-                        label="Giá"
+                        label="Price"
                         variant="outlined"
                         value={plan.price}
                         helperText={error.price}
                         error={!!error.price}
                     />
                 </div>
-
+                
             </DialogContent>
-
+            
             <DialogActions className="modal-actions-x p-6 w-full flex flex-col">
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <p className="animate-pulse inline">Đang lưu dữ liệu...</p>
+                            <p className="animate-pulse inline">Syncing to Cloud Database...</p>
                             <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div
+                            <div 
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -101,9 +99,9 @@ function ModalPlans({ open, onChangeInput, handleClose, addPlan, error, loading,
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button onClick={handleClose} className="btn-cancel-x">Hủy</Button>
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
                         <Button disabled={loading} onClick={addPlan} className="btn-submit-x">
-                            {plan.id ? "LƯU THAY ĐỔI" : "Add Plan"}
+                            {plan.id ? "Save Changes" : "Add Plan"}
                         </Button>
                     </div>
                 )}

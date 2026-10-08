@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useMemo } from 'react';
+﻿import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { useFeatures } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -87,16 +87,15 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                                         style={{ accentColor: '#22d3ee', width: '15px', height: '15px', cursor: 'pointer' }}
                                     />
                                 </th>
-                                <th>STT</th>
+                                <th>ID</th>
                                 <th className="text-center">PLAN</th>
-                                <th className="text-center">GIỚI THIỆU</th>
+                                <th className="text-center">DESCRIPTION</th>
                                 <th className="text-center">AVAILABLE</th>
-                                <th className="w-[10%] text-center">THAO TÁC</th>
+                                <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            {!currentData.length && <tr><td colSpan={99} className="p-5 text-center text-slate-400">Chưa có dữ liệu phù hợp.</td></tr>}
                             {currentData.map((row, index) => {
                                 const isSelected = selectedIds.includes(row.id);
                                 return (
@@ -129,14 +128,14 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                                         <div className="flex justify-center! gap-2">
                                             <button
                                                 onClick={() => handleEdit(row)}
-                                                title="Chỉnh sửa" aria-label="Chỉnh sửa" className="action-btn btn-edit"
+                                                className="action-btn btn-edit"
                                             >
                                                 <CiEdit />
                                             </button>
 
                                             <button
                                                 onClick={() => handleClickOpenDele(row)}
-                                                title="Chuyển vào thùng rác" aria-label="Chuyển vào thùng rác" className="action-btn btn-delete"
+                                                className="action-btn btn-delete"
                                             >
                                                 <RiDeleteBin6Fill />
                                             </button>
@@ -161,15 +160,15 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                 handleClose={handleClose}
                 open={open}
                 handleDeleted={handleDeleted}
-                titleDelete={"CHUYỂN VÀO THÙNG RÁC"}
+                titleDelete={"DELETE FEATURE"}
                 contentDelete={"Are you sure you want to delete this feature?"}
             />
             <ModalDelete
                 handleClose={() => setOpenBulk(false)}
                 open={openBulk}
                 handleDeleted={handleBulkDeleted}
-                titleDelete={"CHUYỂN CÁC MỤC ĐÃ CHỌN VÀO THÙNG RÁC"}
-                contentDelete={`Chuyển mục đã chọn vào thùng rác? Bạn có thể khôi phục trong mục Vận hành.`}
+                titleDelete={"DELETE SELECTED"}
+                contentDelete={`Are you sure you want to delete ${selectedIds.length} selected feature${selectedIds.length > 1 ? 's' : ''}?`}
             />
         </div>
     );

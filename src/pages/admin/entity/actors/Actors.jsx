@@ -1,4 +1,3 @@
-import { adminAlert } from '../../../../services/adminOperations';
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Search from '../../../../components/admin/search/Search';
@@ -38,10 +37,10 @@ function Actors() {
 
     const validation = () => {
         const newError = {};
-        newError.name = actor.name ? "" : "Vui lòng nhập tên";
-        newError.description = actor.description ? "" : "Vui lòng nhập giới thiệu";
-        newError.countriesID = actor.countriesID ? "" : "Vui lòng chọn quốc gia";
-        newError.sexID = actor.sexID ? "" : "Vui lòng chọn giới tính";
+        newError.name = actor.name ? "" : "Please enter your name";
+        newError.description = actor.description ? "" : "Please enter your description";
+        newError.countriesID = actor.countriesID ? "" : "Please select your country";
+        newError.sexID = actor.sexID ? "" : "Please select your gender";
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     }
@@ -80,7 +79,7 @@ function Actors() {
             }, 500);
 
         } catch (err) {
-            adminAlert("Không lưu được dữ liệu. Vui lòng thử lại!");
+            alert("An error occurred, please try again!");
             setLoading(false);
             setProgress(0);
         }

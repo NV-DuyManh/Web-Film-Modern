@@ -1,4 +1,3 @@
-import { adminAlert } from '../../../../services/adminOperations';
 import React, { useState } from 'react';
 import Search from '../../../../components/admin/search/Search';
 import ModalReview from './ModalReview';
@@ -74,7 +73,7 @@ function Reviews() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            adminAlert("Đã xảy ra lỗi, vui lòng thử lại!");
+            alert("Đã xảy ra lỗi, vui lòng thử lại!");
             setLoading(false);
             setProgress(0);
         }

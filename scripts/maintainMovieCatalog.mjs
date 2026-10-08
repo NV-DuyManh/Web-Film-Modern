@@ -30,7 +30,6 @@ async function maintain() {
         console.log('[CatalogMaintenance] Chưa đến lần kiểm tra tiếp theo.');
         return;
     }
-    if (apply) await setDoc(settingsRef, { lastStartedAt: Date.now(), lockUntil: Date.now() + 30 * 60000 }, { merge: true });
     const plans = (await getDocs(collection(db, 'Plans'))).docs.map(item => ({ ...item.data(), id: item.id }));
     if (!plans.length) throw new Error('Chưa tải được gói; không cập nhật dữ liệu.');
     const movies = (await getDocs(collection(db, 'Movies'))).docs.map(item => ({ ...item.data(), id: item.id }));
@@ -71,12 +70,11 @@ async function maintain() {
             summary.archivedDuplicates++;
         }
     }
-    if (apply) await setDoc(settingsRef, { lockUntil: 0, lastSuccessAt: Date.now(), lastSummary: summary, commit: process.env.GITHUB_SHA || '' }, { merge: true });
+    if (apply) await setDoc(settingsRef, { lastSuccessAt: Date.now(), lastSummary: summary, commit: process.env.GITHUB_SHA || '' }, { merge: true });
     console.log('[CatalogMaintenance]', JSON.stringify({ ...summary, apply }));
 }
 
-maintain().catch(async error => {
-    if (apply) await setDoc(settingsRef, { lockUntil: 0, lastErrorAt: Date.now(), lastError: String(error.code || error.message).slice(0, 300) }, { merge: true }).catch(() => {});
+maintain().catch(error => {
     console.error('[CatalogMaintenance]', error.code || '', error.message);
     process.exitCode = 1;
 }).finally(() => terminate(db));

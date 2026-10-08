@@ -1,6 +1,6 @@
-import useAdminEntities from '../../../../hooks/useAdminEntities';
 import { routeSegment } from '../../../../utils/nameRoutes';
-import React, { useContext } from 'react';
+import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
+import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, Slide } from '@mui/material';
 import { FaTimesCircle, FaStar, FaGlobe, FaClock, FaCalendarAlt, FaTv, FaCrown, FaFilm, FaUserTie, FaUsers, FaUserNinja, FaMoneyBillWave, FaEdit } from 'react-icons/fa';
@@ -112,10 +112,13 @@ function AvatarRow({ items, list, fallback, color = "cyan", entityType, handleCl
 function ModalViewMovie({ open, handleClose, movie, onEdit }) {
     const navigate = useNavigate();
     const categoryTypes = useContext(CategoryTypeContext);
-    const actors = useAdminEntities('Actors', open ? movie?.listActor || [] : []);
+    const [actors, setActors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
     const categoriesList = useContext(CategoryContext);
-    const authors = useAdminEntities('Authors', open ? movie?.listAuthor || [] : []);
-    const characters = useAdminEntities('Characters', open ? movie?.listCharacter || [] : []);
+    const [authors, setAuthors] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
+    const [characters, setCharacters] = useState([]);
+    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
     const plansList = useContext(PlanContext);
 
     if (!movie) return null;
@@ -258,7 +261,7 @@ function ModalViewMovie({ open, handleClose, movie, onEdit }) {
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <GlowCard title="Thể loại" icon={BiSolidCategoryAlt} color="purple">
+                            <GlowCard title="Categories" icon={BiSolidCategoryAlt} color="purple">
                                 <div className="flex flex-wrap gap-2">
                                     {movie.listCategory?.map((catId, idx) => {
                                         const cat = categoriesList?.find(c => c.id === catId);
@@ -298,10 +301,10 @@ function ModalViewMovie({ open, handleClose, movie, onEdit }) {
                             <GlowCard title="Directors" icon={FaUserTie} color="yellow">
                                 <AvatarRow items={movie.listAuthor} list={authors} fallback={Logo5} color="yellow" entityType="authors" handleClose={handleClose} />
                             </GlowCard>
-                            <GlowCard title="Diễn viên" icon={FaUsers} color="pink">
+                            <GlowCard title="Actors" icon={FaUsers} color="pink">
                                 <AvatarRow items={movie.listActor} list={actors} fallback={Logo5} color="pink" entityType="actors" handleClose={handleClose} />
                             </GlowCard>
-                            <GlowCard title="Nhân vật" icon={FaUserNinja} color="green">
+                            <GlowCard title="Characters" icon={FaUserNinja} color="green">
                                 <AvatarRow items={movie.listCharacter} list={characters} fallback={Logo5} color="green" entityType="characters" handleClose={handleClose} />
                             </GlowCard>
                         </div>

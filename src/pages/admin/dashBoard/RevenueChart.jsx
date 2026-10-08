@@ -1,4 +1,4 @@
-import { formatAdminMoney } from '../../../utils/adminData';
+import { formatAdminMoney } from '../../../utils/adminRevenue';
 import React from 'react';
 
 import {
@@ -60,7 +60,7 @@ const CustomTooltip = ({ active, payload, label, currency = "USD" }) => {
                         }}
                     />
                     <span style={{ color: '#cbd5e1', fontSize: '14px', fontWeight: 500 }}>
-                        Doanh thu:
+                        Revenue:
                     </span>
                     <span style={{
                         fontSize: '15px',
@@ -193,12 +193,12 @@ function RevenueChart({ currency = "USD", data = [] }) {
                     <span style={{ fontSize: '22px' }}>💹</span>
 
                     <h2 className="text-xl font-semibold text-gray-100">
-                        Doanh thu gói
+                        Revenue Overview
                     </h2>
                 </div>
 
                 <p className="text-sm text-gray-400 mt-1">
-                    Doanh thu theo ngày
+                    Revenue by date
                 </p>
 
             </div>
@@ -210,7 +210,7 @@ function RevenueChart({ currency = "USD", data = [] }) {
 
                     <div className="h-full flex items-center justify-center text-gray-500">
 
-                        Chưa có doanh thu trong khoảng thời gian này
+                        No revenue in this date range
 
                     </div>
 

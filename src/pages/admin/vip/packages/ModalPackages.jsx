@@ -1,7 +1,6 @@
-import Dialog from '../../../../components/admin/AdminDialog';
 import { FaTimes } from 'react-icons/fa';
 import * as React from 'react';
-import { Button, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
 import { useContext } from 'react';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 
@@ -10,10 +9,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 });
 
 const TIME_OPTIONS = [
-    { id: 1, label: "1 tháng" },
-    { id: 3, label: "3 tháng" },
-    { id: 6, label: "6 tháng" },
-    { id: 12, label: "12 tháng" }
+    { id: 1, label: "1 Month" },
+    { id: 3, label: "3 Months" },
+    { id: 6, label: "6 Months" },
+    { id: 12, label: "12 Months" }
 ];
 
 function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, loading, progress, packageItem }) {
@@ -28,7 +27,6 @@ function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, lo
     return (
         <Dialog
             open={open}
-            formValues={packageItem}
             slots={{ transition: Transition }}
             keepMounted
             onClose={handleClose}
@@ -40,9 +38,9 @@ function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, lo
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
-                    {packageItem.id  ? "CẬP NHẬT GÓI ĐĂNG KÝ" : "THÊM GÓI ĐĂNG KÝ"}
+                    {packageItem.id  ? "Update Package" : "Add New Package"}
                 </p>
-                <button
+                <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
@@ -58,12 +56,12 @@ function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, lo
                     onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })}
                     classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                     renderInput={(params) => (
-                        <TextField
-                            {...params}
-                            label="Gói phim"
-                            error={!!error.planID}
-                            helperText={error.planID}
-                            className="modal-input-x"
+                        <TextField 
+                            {...params} 
+                            label="Plan" 
+                            error={!!error.planID} 
+                            helperText={error.planID} 
+                            className="modal-input-x" 
                         />
                     )}
                 />
@@ -74,7 +72,7 @@ function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, lo
                         name="discount"
                         onChange={(e) => handleNumberChange(e, true)}
                         fullWidth
-                        label="Giảm giá (%)"
+                        label="Discount (%)"
                         variant="outlined"
                         value={packageItem.discount}
                         helperText={error.discount}
@@ -88,12 +86,12 @@ function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, lo
                         onChange={(e, val) => onChangeInput({ target: { name: "time", value: val ? val.id : "" } })}
                         classes={{ paper: 'neon-paper', listbox: 'neon-listbox', option: 'neon-option' }}
                         renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Thời lượng"
-                                error={!!error.time}
-                                helperText={error.time}
-                                className="modal-input-x"
+                            <TextField 
+                                {...params} 
+                                label="Duration" 
+                                error={!!error.time} 
+                                helperText={error.time} 
+                                className="modal-input-x" 
                             />
                         )}
                     />
@@ -104,11 +102,11 @@ function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, lo
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <p className="animate-pulse inline">Đang lưu dữ liệu...</p>
+                            <p className="animate-pulse inline">Syncing to Cloud Database...</p>
                             <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div
+                            <div 
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -116,9 +114,9 @@ function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, lo
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button onClick={handleClose} className="btn-cancel-x">Hủy</Button>
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
                         <Button disabled={loading} onClick={addPackage} className="btn-submit-x">
-                            {packageItem.id ? "LƯU THAY ĐỔI" : "THÊM GÓI"}
+                            {packageItem.id ? "Save Changes" : "Add Package"}
                         </Button>
                     </div>
                 )}

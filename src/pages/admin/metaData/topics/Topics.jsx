@@ -35,7 +35,7 @@ function Topics(props) {
     const validation = () => {
         const newError = {};
         newError.title = topic.title ? "" : "Please enter topic title";
-        newError.description = topic.description ? "" : "Vui lòng nhập giới thiệu";
+        newError.description = topic.description ? "" : "Please enter your description";
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     }
@@ -52,7 +52,7 @@ function Topics(props) {
                 ...topic,
                 id: topic.id || `topic-${Date.now()}`
             };
-
+            
             !topic.id ? await addDocument("Topics", topicData) : await updateDocument("Topics", topicData);
             setProgress(100);
             setTimeout(() => {
@@ -125,7 +125,7 @@ function Topics(props) {
 
         setLoading(true);
         let addedCount = 0;
-
+        
         try {
             for (const col of SMART_COLLECTIONS) {
                 const exists = topicsList.some(t => t.id === col.id || t.smartID === col.smartID);
@@ -134,7 +134,7 @@ function Topics(props) {
                     addedCount++;
                 }
             }
-
+            
 
         } catch (err) {
             console.error(err);
@@ -145,15 +145,15 @@ function Topics(props) {
 
     return (
         <div className='w-full'>
-            <Search
-                name={"List Topics"}
-                tuKhoa={"Search Topic by Name"}
-                onChangeSearch={onChangeSearch}
-                handleClickOpen={handleClickOpen}
+            <Search 
+                name={"List Topics"} 
+                tuKhoa={"Search Topic by Name"} 
+                onChangeSearch={onChangeSearch} 
+                handleClickOpen={handleClickOpen} 
             />
-
+            
             <div className="px-4 pb-2 flex justify-end">
-                 <button
+                 <button 
                      onClick={handleSeedSmartTopics}
                      disabled={loading}
                      className="px-4 py-2 bg-linear-to-r from-purple-500 to-indigo-600 rounded-lg text-white text-sm font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)] hover:scale-105 transition-transform cursor-pointer"
@@ -162,22 +162,22 @@ function Topics(props) {
                  </button>
             </div>
 
-            <ModalTopic
-                open={open}
-                handleClose={handleClose}
-                topic={topic}
-                error={error}
-                onChangeInput={onChangeInput}
-                addTopic={addTopic}
+            <ModalTopic 
+                open={open} 
+                handleClose={handleClose} 
+                topic={topic} 
+                error={error} 
+                onChangeInput={onChangeInput} 
+                addTopic={addTopic} 
                 loading={loading}
                 progress={progress}
                 onChangeMovieSelection={onChangeMovieSelection}
                 movies={movies}
             />
-            <TableTopic
-                search={search}
-                onEdit={onEdit}
-                onDelete={onDelete}
+            <TableTopic 
+                search={search} 
+                onEdit={onEdit} 
+                onDelete={onDelete} 
             />
         </div>
     );

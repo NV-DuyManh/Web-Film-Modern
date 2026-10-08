@@ -37,9 +37,9 @@ function Characters() {
 
     const validation = () => {
         const newError = {};
-        newError.name = character.name ? "" : "Vui lòng nhập tên";
-        newError.description = character.description ? "" : "Vui lòng nhập mô tả";
-        newError.countriesID = character.countriesID ? "" : "Vui lòng chọn quốc gia";
+        newError.name = character.name ? "" : "Please enter name";
+        newError.description = character.description ? "" : "Please enter description";
+        newError.countriesID = character.countriesID ? "" : "Please select country";
         newError.sexID = character.sexID ? "" : "Please select gender";
         setError(newError);
         return Object.values(newError).some(e => e !== "");

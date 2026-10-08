@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from 'react-icons/ai';
 import { FaCaretSquareDown, FaCaretSquareUp } from 'react-icons/fa';
-import { MdDashboard, MdSettingsBackupRestore } from 'react-icons/md';
+import { MdDashboard } from 'react-icons/md';
 import Logo3 from "../../assets/Logo3.png";
 import { LISTMENU } from '../../utils/Constants';
-
-const menuLabel = name => ({ 'Meta Data': 'Danh mục', Media: 'Phim', Community: 'Cộng đồng', Entity: 'Nhân sự', Vip: 'Gói dịch vụ', Bill: 'Thanh toán', 'Magic Import': 'Nhập phim', Categories: 'Thể loại', 'Category Type': 'Loại phim', Topics: 'Chủ đề', Movies: 'Danh sách phim', Episodes: 'Tập phim', ShowTimes: 'Lịch chiếu', Users: 'Người dùng', Reviews: 'Đánh giá', Comments: 'Bình luận', Actors: 'Diễn viên', Authors: 'Đạo diễn', Characters: 'Nhân vật', Plans: 'Cấp gói', Features: 'Quyền lợi', Packages: 'Gói đăng ký', RentMovies: 'Thuê phim', Subscriptions: 'Đăng ký gói' })[name] || name;
 
 function MenuAdmin() {
     const [show, setShow] = useState(null);
@@ -48,7 +46,6 @@ function MenuAdmin() {
                 </div>
 
                 <button
-                    title="Thu gọn / mở rộng menu" aria-label="Thu gọn / mở rộng menu"
                     onClick={() => setmMenu(!Menu)}
                     className='absolute right-0 sm:-right-3 sm:translate-x-1/2 flex justify-center items-center w-9 h-9 cursor-pointer rounded-full bg-[#0f172a]/20 border border-cyan-400 text-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.5)] hover:bg-cyan-400 hover:text-[#0f172a] hover:shadow-[0_0_20px_rgba(34,211,238,0.9),inset_0_0_5px_rgba(255,255,255,0.4)] hover:scale-110 transition duration-300 z-50'
                 >
@@ -57,16 +54,15 @@ function MenuAdmin() {
             </div>
 
             <ul className={`flex flex-col gap-3 mt-3 ${Menu ? "max-sm:hidden" : ""}`}>
-                <li><Link to="/operations" title="Tác vụ ngầm, thùng rác và lịch sử thao tác" className={`flex items-center gap-3 px-4 py-3 rounded-lg border ${activePath === '/operations' ? 'text-amber-300 border-amber-400/30 bg-amber-400/10' : 'text-gray-300 border-transparent bg-slate-800/90'}`}><MdSettingsBackupRestore className="text-xl shrink-0" /><span className={Menu ? 'sm:hidden' : ''}>Vận hành</span></Link></li>
                 <li>
                     <Link to={"/"} className={`flex items-center gap-3 px-4 py-3 rounded-lg transition duration-300 group border border-transparent cursor-pointer
                         ${activePath === "/"
                             ? "bg-cyan-500/10 border-cyan-500/30 text-cyan-400 shadow-[inset_4px_0_0_0_#22d3ee,0_0_15px_rgba(34,211,238,0.1)]"
-                            : "bg-slate-800/90 text-gray-300 hover:bg-slate-700 hover:border-cyan-500/30 hover:text-cyan-400"}
+                            : "bg-slate-800/90 text-gray-300 hover:bg-slate-700 hover:border-cyan-500/30 hover:text-cyan-400"} 
                         ${Menu ? "sm:justify-center px-0" : "justify-start"}`}>
                         <MdDashboard className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${activePath === "/" ? "drop-shadow-[0_0_5px_#22d3ee]" : ""}`} />
                         <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-36"}`}>
-                            Tổng quan
+                            Dashboard
                         </p>
                     </Link>
                 </li>
@@ -86,7 +82,7 @@ function MenuAdmin() {
                                     <div className="flex items-center gap-3 overflow-hidden">
                                         <p className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${isActive ? "text-cyan-400 drop-shadow-[0_0_5px_#22d3ee]" : ""} inline`}>{item.icon}</p>
                                         <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-32"}`}>
-                                            {menuLabel(item.name)}
+                                            {item.name}
                                         </p>
                                     </div>
                                 </Link>
@@ -110,7 +106,7 @@ function MenuAdmin() {
                                 <div className="flex items-center gap-3 overflow-hidden">
                                     <p className={`text-xl shrink-0 transition-transform duration-300 group-hover:scale-110 ${isParentActive ? "text-cyan-400 drop-shadow-[0_0_5px_#22d3ee]" : ""} inline`}>{item.icon}</p>
                                     <p className={`text-base font-medium whitespace-nowrap overflow-hidden tracking-wide transition duration-300 ${Menu ? "max-sm:block sm:hidden sm:w-0" : "block sm:w-32"}`}>
-                                        {menuLabel(item.name)}
+                                        {item.name}
                                     </p>
                                 </div>
 
@@ -126,14 +122,14 @@ function MenuAdmin() {
                                     <div className="w-48 ml-2 bg-[#0f172a] border border-slate-700 rounded-lg shadow-2xl overflow-hidden relative">
                                         <div className="flex flex-col p-2">
                                             <div className="px-3 py-2 mb-1 text-[11px] font-bold text-gray-400 uppercase tracking-widest border-b border-slate-700">
-                                                {menuLabel(item.name)}
+                                                {item.name}
                                             </div>
                                             {item.subMenu.map((sub, subIdx) => (
                                                 <Link key={subIdx} to={sub.path} className={`px-3 py-2 rounded-md text-sm font-medium transition duration-300 whitespace-nowrap cursor-pointer
                                                     ${activePath === sub.path
                                                         ? "bg-yellow-500/20 text-yellow-400 shadow-[inset_3px_0_0_0_#eab308]"
                                                         : "text-gray-300 hover:bg-slate-800 hover:text-cyan-400 hover:pl-4"}`}>
-                                                    {menuLabel(sub.title)}
+                                                    {sub.title}
                                                 </Link>
                                             ))}
                                         </div>
@@ -148,7 +144,7 @@ function MenuAdmin() {
                                                     ${activePath === sub.path
                                                         ? "bg-yellow-500/20 text-yellow-400 shadow-[inset_3px_0_0_0_#eab308] translate-x-1"
                                                         : "text-gray-400 hover:bg-slate-800 hover:text-yellow-300 hover:translate-x-1"}`}>
-                                                    {menuLabel(sub.title)}
+                                                    {sub.title}
                                                 </Link>
                                             ))}
                                         </div>

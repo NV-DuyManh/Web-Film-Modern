@@ -1,6 +1,5 @@
-import Dialog from '../../../../components/admin/AdminDialog';
 import * as React from 'react';
-import { Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField, Select, MenuItem, InputLabel } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField, Select, MenuItem, InputLabel } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { FaTimes,  FaCloudUploadAlt, FaLink, FaSpinner } from 'react-icons/fa';
 import LOGO from "../../../../assets/Logo.png";
@@ -32,7 +31,6 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
     };
     return (
         <Dialog
-            formValues={user}
             open={open}
             slots={{ transition: Transition }}
             keepMounted
@@ -45,9 +43,9 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
-                    {user.id  ? "Sửa người dùng" : "Thêm người dùng"}
+                    {user.id  ? "Update User" : "Add New User"}
                 </p>
-                <button
+                <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
@@ -56,20 +54,20 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
             </DialogTitle>
 
             <DialogContent className="modal-body-x grid grid-cols-1 lg:grid-cols-3 gap-8 p-6">
-
+                
                 <div className="lg:col-span-2">
                     <TextField
                         className="modal-input-x"
                         name="name"
                         onChange={onChangeInput}
                         fullWidth
-                        label="Họ và tên"
+                        label="Full Name"
                         variant="outlined"
                         value={user.name || ''}
                         helperText={error.name}
                         error={!!error.name}
                     />
-
+                    
                     <TextField
                         className="modal-input-x"
                         name="email"
@@ -82,27 +80,27 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                         helperText={error.email}
                         error={!!error.email}
                     />
-
+                    
                     <TextField
                         className="modal-input-x"
                         name="password"
                         type="password"
                         onChange={onChangeInput}
                         fullWidth
-                        label={user.id ? "Mật khẩu (không bắt buộc)" : "Mật khẩu"}
+                        label={user.id ? "Password (optional)" : "Password"}
                         autoComplete="new-password"
                         variant="outlined"
                         value={user.password || ''}
                         helperText={error.password || (user.id ? 'Để trống để giữ nguyên mật khẩu hiện tại.' : '')}
                         error={!!error.password}
                     />
-
+                    
                     <TextField
                         className="modal-input-x"
                         name="phone"
                         onChange={onChangeInput}
                         fullWidth
-                        label="Số điện thoại"
+                        label="Phone Number"
                         variant="outlined"
                         value={user.phone || ''}
                         helperText={error.phone}
@@ -114,36 +112,36 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                         name="address"
                         onChange={onChangeInput}
                         fullWidth
-                        label="Địa chỉ"
+                        label="Address"
                         variant="outlined"
                         value={user.address || ''}
                     />
-
+                    
                     <TextField
                         className="modal-input-x"
                         name="dateOfBirth"
                         type="date"
                         onChange={onChangeInput}
                         fullWidth
-                        label="Ngày sinh"
+                        label="Date of Birth"
                         variant="outlined"
                         value={user.dateOfBirth || ''}
                         InputLabelProps={{ shrink: true }}
                         inputProps={{ style: { colorScheme: 'dark' } }}
                     />
-
+                    
                     <FormControl className="gender-box-wrapper" error={!!error.sexID}>
                         <div className={`gender-box ${!!error.sexID ? 'error' : ''}`}>
-                            <p className="gender-label inline">Giới tính</p>
+                            <p className="gender-label inline">Gender</p>
                             <RadioGroup
                                 name="sexID"
                                 sx={{ flexDirection: "row", width: '100%', justifyContent: 'space-around' }}
                                 value={user.sexID}
                                 onChange={onChangeInput}
                             >
-                                <FormControlLabel value="Male" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Nam" sx={{ color: '#e5e7eb', margin: 0 }} />
-                                <FormControlLabel value="Female" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Nữ" sx={{ color: '#e5e7eb', margin: 0 }} />
-                                <FormControlLabel value="Other" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Khác" sx={{ color: '#e5e7eb', margin: 0 }} />
+                                <FormControlLabel value="Male" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Male" sx={{ color: '#e5e7eb', margin: 0 }} />
+                                <FormControlLabel value="Female" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Female" sx={{ color: '#e5e7eb', margin: 0 }} />
+                                <FormControlLabel value="Other" control={<Radio sx={{ color: !!error.sexID ? '#ef4444' : '#4ade80', '&.Mui-checked': { color: '#4ade80' } }} />} label="Other" sx={{ color: '#e5e7eb', margin: 0 }} />
                             </RadioGroup>
                         </div>
                         {error.sexID && <p className="gender-error-text inline">{error.sexID}</p>}
@@ -151,14 +149,14 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
 
                     <FormControl className="gender-box-wrapper" error={!!error.role}>
                         <div className={`gender-box ${!!error.role ? 'error' : ''}`}>
-                            <p className="gender-label inline">Vai trò</p>
+                            <p className="gender-label inline">Role</p>
                             <RadioGroup
                                 name="role"
                                 sx={{ flexDirection: "row", width: '100%', justifyContent: 'space-around' }}
                                 value={user.role || 'user'}
                                 onChange={onChangeInput}
                             >
-                                <FormControlLabel value="user" control={<Radio sx={{ color: !!error.role ? '#ef4444' : '#fbbf24', '&.Mui-checked': { color: '#fbbf24' } }} />} label="Khách" sx={{ color: '#e5e7eb', margin: 0 }} />
+                                <FormControlLabel value="user" control={<Radio sx={{ color: !!error.role ? '#ef4444' : '#fbbf24', '&.Mui-checked': { color: '#fbbf24' } }} />} label="Client" sx={{ color: '#e5e7eb', margin: 0 }} />
                                 <FormControlLabel value="admin" control={<Radio sx={{ color: !!error.role ? '#ef4444' : '#fbbf24', '&.Mui-checked': { color: '#fbbf24' } }} />} label="Admin" sx={{ color: '#e5e7eb', margin: 0 }} />
                             </RadioGroup>
                         </div>
@@ -169,7 +167,7 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                         {user.role === 'admin' ? (
                             <TextField
                                 value="ADMIN (Super VIP)"
-                                label="Gói"
+                                label="Package"
                                 disabled
                                 sx={{
                                     '& .MuiInputBase-input.Mui-disabled': {
@@ -193,7 +191,7 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                                     name="planID"
                                     value={user.planID || ""}
                                     onChange={onChangeInput}
-                                    label="Gói"
+                                    label="Package"
                                     sx={{
                                         color: 'white',
                                         '.MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.23)' },
@@ -238,8 +236,8 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
 
                 <div className="lg:col-span-1 flex flex-col items-center justify-start mt-2 border-l border-white/10 pl-6">
                     <div className="upload-container pb-2 w-full flex flex-col items-center justify-start border-none bg-transparent">
-                        <p className="upload-title text-cyan-400 mb-3 inline">Ảnh đại diện</p>
-
+                        <p className="upload-title text-cyan-400 mb-3 inline">User Avatar</p>
+                        
                         <div className="flex bg-slate-900/80 rounded-lg p-0.5 mb-4 w-full max-w-50 border border-white/10 mx-auto">
                             <button type="button" onClick={() => setUploadMode('file')} className={`flex-1 flex items-center justify-center gap-1 py-1 rounded-md text-[10px] font-bold transition-all duration-300 ${uploadMode === 'file' ? 'bg-linear-to-r from-cyan-400 to-blue-500 text-white shadow-[0_0_12px_rgba(34,211,238,0.4)]' : 'text-gray-400 hover:text-white'}`}>
                                 <FaCloudUploadAlt className="text-xs" /> File
@@ -252,16 +250,16 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                         <div className="flex flex-col items-center w-full min-h-40 justify-start">
                             {uploadMode === 'file' ? (
                                 <div className="relative w-44 h-44 rounded-full border-2 border-dashed border-slate-600 hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_20px_rgba(0,0,0,0.6)] bg-slate-900/50 flex items-center justify-center">
-                                    <img
-                                        src={user.imgFile ? URL.createObjectURL(user.imgFile) : (user.avatarUrl || LOGO)}
-                                        alt="Ảnh đại diện"
-                                        className="w-full h-full object-cover transition-all duration-500 group-hover:opacity-30"
+                                    <img 
+                                        src={user.imgFile ? URL.createObjectURL(user.imgFile) : (user.avatarUrl || LOGO)} 
+                                        alt="User Avatar" 
+                                        className="w-full h-full object-cover transition-all duration-500 group-hover:opacity-30" 
                                     />
                                     <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! p-0! rounded-full! cursor-pointer">
                                         <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
                                         <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                             <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-2" />
-                                            <p className="text-xs text-cyan-300 font-bold uppercase tracking-widest inline">Tải ảnh lên</p>
+                                            <p className="text-xs text-cyan-300 font-bold uppercase tracking-widest inline">Upload</p>
                                         </div>
                                     </Button>
                                 </div>
@@ -286,16 +284,16 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                 </div>
 
             </DialogContent>
-
+            
             <DialogActions className="modal-actions-x p-6 w-full flex flex-col">
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <p className="animate-pulse inline">Đang lưu dữ liệu...</p>
+                            <p className="animate-pulse inline">Syncing Data...</p>
                             <p className="inline">{progress || 0}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div
+                            <div 
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress || 0}%` }}
                             />
@@ -304,10 +302,10 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
                         <Button onClick={handleClose} className="btn-cancel-x">
-                            Hủy
+                            Cancel
                         </Button>
                         <Button disabled={loading} onClick={addUser} className="btn-submit-x">
-                            {user.id ? "LƯU" : "THÊM"}
+                            {user.id ? "UPDATE" : "ADD"}
                         </Button>
                     </div>
                 )}

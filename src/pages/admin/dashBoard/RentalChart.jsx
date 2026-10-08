@@ -1,4 +1,4 @@
-import { formatAdminMoney, completedPayments, dailyRevenue } from '../../../utils/adminData';
+import { formatAdminMoney, completedPayments, dailyRevenue } from '../../../utils/adminRevenue';
 import React, { useMemo } from 'react';
 import {
     ResponsiveContainer,
@@ -144,18 +144,18 @@ function RentalChart({ rentMovies = [], currency = "USD" }) {
                 <div className="flex items-center gap-2">
                     <span style={{ fontSize: '22px' }}>💰</span>
                     <h2 className="text-xl font-semibold text-gray-100">
-                        Doanh thu thuê phim
+                        Rental Revenue
                     </h2>
                 </div>
                 <p className="text-sm text-gray-400 mt-1">
-                    Doanh thu thuê theo ngày
+                    Rental revenue by date
                 </p>
             </div>
 
             <div className="w-full h-56 [&_*]:outline-none!">
                 {data.length === 0 ? (
                     <div className="h-full flex items-center justify-center text-gray-500">
-                        Chưa có doanh thu trong khoảng thời gian này
+                        No revenue in this date range
                     </div>
                 ) : (
                     <ResponsiveContainer width="100%" height="100%">

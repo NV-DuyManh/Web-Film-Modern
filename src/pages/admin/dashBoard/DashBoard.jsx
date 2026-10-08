@@ -1,4 +1,4 @@
-import { completedPayments, dailyRevenue, formatAdminMoney } from '../../../utils/adminData';
+import { completedPayments, dailyRevenue, formatAdminMoney } from '../../../utils/adminRevenue';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import RevenueChart from './RevenueChart';
@@ -97,14 +97,14 @@ function DashBoard() {
 
 
             <section className="rounded-2xl border border-cyan-500/20 bg-slate-900/80 p-4">
-                <h2 className="font-bold text-cyan-300 mb-3">Doanh thu thanh toán thành công</h2>
+                <h2 className="font-bold text-cyan-300 mb-3">Successful Payment Revenue</h2>
                 <div className="flex flex-wrap gap-4 items-end">
-                    {['from', 'to'].map(key => <label key={key} className="text-sm text-slate-300">{key === 'from' ? 'Từ ngày' : 'Đến ngày'}<input type="date" value={period[key]} onChange={e => setPeriod(p => ({ ...p, [key]: e.target.value }))} className="block rounded-lg bg-slate-800 border border-slate-600 p-2 mt-1 text-white" /></label>)}
-                    <label className="text-sm text-slate-300">Đơn vị<select value={period.currency} onChange={e => setPeriod(p => ({ ...p, currency: e.target.value }))} className="block rounded-lg bg-slate-800 border border-slate-600 p-2 mt-1"><option>USD</option><option>VND</option></select></label>
-                    <button className="text-amber-300 p-2" onClick={() => setPeriod({ from: '', to: '', currency: 'USD' })}>Toàn bộ thời gian</button>
+                    {['from', 'to'].map(key => <label key={key} className="text-sm text-slate-300">{key === 'from' ? 'From date' : 'To date'}<input type="date" value={period[key]} onChange={e => setPeriod(p => ({ ...p, [key]: e.target.value }))} className="block rounded-lg bg-slate-800 border border-slate-600 p-2 mt-1 text-white" /></label>)}
+                    <label className="text-sm text-slate-300">Currency<select value={period.currency} onChange={e => setPeriod(p => ({ ...p, currency: e.target.value }))} className="block rounded-lg bg-slate-800 border border-slate-600 p-2 mt-1"><option>USD</option><option>VND</option></select></label>
+                    <button className="text-amber-300 p-2" onClick={() => setPeriod({ from: '', to: '', currency: 'USD' })}>All time</button>
                 </div>
-                {period.from && period.to && period.from > period.to ? <p role="alert" className="text-red-300 mt-3">Ngày bắt đầu phải trước ngày kết thúc.</p> : <p className="text-xl font-bold text-amber-300 mt-3">{formatAdminMoney([...subscriptions, ...rentMovies].reduce((sum, row) => sum + Number(row.price), 0), period.currency)} <span className="text-sm font-normal text-slate-400">· {subscriptions.length + rentMovies.length} giao dịch</span></p>}
-                <p className="text-xs text-slate-400 mt-2">Chỉ tính đơn đã thanh toán. USD và VND được thống kê riêng, không tự quy đổi.</p>
+                {period.from && period.to && period.from > period.to ? <p role="alert" className="text-red-300 mt-3">Start date must be on or before end date.</p> : <p className="text-xl font-bold text-amber-300 mt-3">{formatAdminMoney([...subscriptions, ...rentMovies].reduce((sum, row) => sum + Number(row.price), 0), period.currency)} <span className="text-sm font-normal text-slate-400">· {subscriptions.length + rentMovies.length} transactions</span></p>}
+                <p className="text-xs text-slate-400 mt-2">Only successful payments are included. USD and VND are reported separately without automatic conversion.</p>
             </section>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <motion.div variants={itemVariants}>

@@ -1,7 +1,6 @@
-import Dialog from '../../../../components/admin/AdminDialog';
 import { FaTimes } from 'react-icons/fa';
 import * as React from 'react';
-import { Button, DialogActions, DialogContent, DialogTitle, TextField, Slide } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide } from '@mui/material';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -16,7 +15,6 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
 
     return (
         <Dialog
-            formValues={episode}
             open={open}
             slots={{ transition: Transition }}
             keepMounted
@@ -32,7 +30,7 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
                     <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline m-0" style={{ paddingBottom: '0.1em' }}>
                         {episode.id  ? "Update Episode" : "Add New Episode"}
                     </p>
-
+                    
                     {!episode.id && (
                         <div className="flex bg-slate-800/50 p-1 rounded-lg border border-white/10 mt-1 md:mt-0">
                             <button
@@ -51,7 +49,7 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
                     )}
                 </div>
 
-                <button
+                <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer mt-2 md:mt-0"
                 >
@@ -64,7 +62,7 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
                     <span className="text-xs text-cyan-400 font-bold uppercase tracking-wider mb-1">Target Movie</span>
                     <span className="text-white font-medium">{selectedMovie?.name}</span>
                 </div>
-
+                
                 {isBulkMode && !episode.id ? (
                     <div className="mt-4">
                         <div className="flex gap-2 mb-4 items-center">
@@ -126,11 +124,11 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <p className="animate-pulse inline">Đang lưu dữ liệu...</p>
+                            <p className="animate-pulse inline">Syncing to Cloud Database...</p>
                             <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div
+                            <div 
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -138,9 +136,9 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button onClick={handleClose} className="btn-cancel-x">Hủy</Button>
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
                         <Button disabled={loading} onClick={isBulkMode && !episode.id ? addBulkEpisodes : addEpisode} className="btn-submit-x">
-                            {episode.id ? "LƯU THAY ĐỔI" : (isBulkMode ? "Bulk Import" : "Add Episode")}
+                            {episode.id ? "Save Changes" : (isBulkMode ? "Bulk Import" : "Add Episode")}
                         </Button>
                     </div>
                 )}

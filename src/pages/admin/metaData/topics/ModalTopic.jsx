@@ -1,5 +1,4 @@
-import Dialog from '../../../../components/admin/AdminDialog';
-import { Autocomplete, Button, DialogActions, DialogContent, DialogTitle, Slide, TextField, Select, MenuItem, FormControl, InputLabel, Chip } from '@mui/material';
+import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, Slide, TextField, Select, MenuItem, FormControl, InputLabel, Chip } from '@mui/material';
 import { useMovies } from '../../../../hooks/useCollections';
 import React, { useContext } from 'react';
 import { FaTimes } from 'react-icons/fa';
@@ -28,7 +27,6 @@ function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSele
 
     return (
         <Dialog
-            formValues={topic}
             open={open}
             slots={{ transition: Transition }}
             keepMounted
@@ -43,14 +41,14 @@ function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSele
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
                     {topic.id ? 'Update Topic' : 'Add New Topic'}
                 </p>
-                <button
+                <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
                     <FaTimes size={16} className="transition-transform duration-200 group-hover:rotate-180 group-hover:scale-125" style={{ strokeWidth: '1.5', stroke: 'currentColor' }} />
                 </button>
             </DialogTitle>
-
+            
             <DialogContent className="modal-body-x py-8 px-6">
                 <TextField
                     className="modal-input-x"
@@ -71,12 +69,12 @@ function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSele
                     fullWidth
                     multiline
                     rows={3}
-                    label="Giới thiệu"
+                    label="Description"
                     value={topic.description || ""}
                     error={!!error?.description}
                     helperText={error?.description}
                 />
-
+                
                 <div className="mt-4">
                     <TextField
                         select
@@ -120,11 +118,11 @@ function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSele
                             value.map((option, index) => {
                                 const { key, ...tagProps } = getTagProps({ index });
                                 return (
-                                    <Chip
-                                        key={key}
-                                        variant="outlined"
-                                        label={option.name}
-                                        {...tagProps}
+                                    <Chip 
+                                        key={key} 
+                                        variant="outlined" 
+                                        label={option.name} 
+                                        {...tagProps} 
                                         className="text-cyan-400! border-cyan-400!/30 bg-cyan-500!/10 mr-1! mt-1!"
                                         sx={{
                                             '& .MuiChip-deleteIcon': {
@@ -146,11 +144,11 @@ function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSele
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <p className="animate-pulse inline">Đang lưu dữ liệu...</p>
+                            <p className="animate-pulse inline">Syncing to Cloud Database...</p>
                             <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div
+                            <div 
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -158,9 +156,9 @@ function ModalTopic({ open, handleClose, topic, onChangeInput, onChangeMovieSele
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button onClick={handleClose} className="btn-cancel-x">Hủy</Button>
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
                         <Button disabled={loading} onClick={addTopic} className="btn-submit-x">
-                            {topic.id ? "LƯU" : "THÊM"}
+                            {topic.id ? "UPDATE" : "ADD"}
                         </Button>
                     </div>
                 )}

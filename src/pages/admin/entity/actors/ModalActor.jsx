@@ -1,6 +1,5 @@
-import Dialog from '../../../../components/admin/AdminDialog';
 import * as React from 'react';
-import { Autocomplete, Button, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField } from '@mui/material';
+import { Autocomplete, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField } from '@mui/material';
 import Slide from '@mui/material/Slide';
 import { FaTimes,  FaCloudUploadAlt, FaExchangeAlt, FaLink } from 'react-icons/fa';
 import { COUNTRIES } from '../../../../utils/Constants';
@@ -33,7 +32,6 @@ function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading
 
     return (
         <Dialog
-            formValues={actor}
             open={open}
             slots={{ transition: Transition }}
             keepMounted
@@ -44,9 +42,9 @@ function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading
         >
             <DialogTitle className="modal-header-x flex justify-between items-center">
                 <p className="glow-text-gold text-xl md:text-2xl font-black tracking-tight inline" style={{ paddingBottom: '0.1em' }}>
-                    {actor.id  ? "CẬP NHẬT DIỄN VIÊN" : "Add New Actor"}
+                    {actor.id  ? "Update Actor" : "Add New Actor"}
                 </p>
-                <button
+                <button 
                     onClick={handleClose}
                     className="w-8 h-8 shrink-0 rounded-full bg-red-500 flex items-center justify-center text-white hover:bg-red-600 hover:shadow-[0_0_20px_rgba(239,68,68,0.8)] hover:scale-110 transition-all duration-300 group cursor-pointer"
                 >
@@ -60,13 +58,13 @@ function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading
                     name="name"
                     onChange={onChangeInput}
                     fullWidth
-                    label="Tên"
+                    label="Name"
                     variant="outlined"
                     value={actor.name}
                     helperText={error?.name}
                     error={!!error?.name}
                 />
-
+                
                 <TextField
                     className="modal-input-x"
                     name="description"
@@ -74,13 +72,13 @@ function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading
                     fullWidth
                     multiline
                     rows={2}
-                    label="Giới thiệu"
+                    label="Description"
                     variant="outlined"
                     value={actor.description}
                     helperText={error?.description}
                     error={!!error?.description}
                 />
-
+                
                 <Autocomplete
                     className="modal-input-x"
                     disablePortal
@@ -92,15 +90,15 @@ function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading
                     onChange={(e, value) => {
                         onChangeInput({ target: { name: "countriesID", value: value }, });
                     }}
-                    renderInput={(params) => <TextField {...params}
-                        label="Quốc gia"
+                    renderInput={(params) => <TextField {...params} 
+                        label="Country"
                         helperText={error?.countriesID}
                         error={!!error?.countriesID} />}
                 />
-
+                
                 <FormControl className="gender-box-wrapper" error={!!error?.sexID}>
                     <div className={`gender-box ${!!error?.sexID ? 'error' : ''}`}>
-                        <p className="gender-label inline">Giới tính</p>
+                        <p className="gender-label inline">Gender</p>
                         <RadioGroup
                             row
                             name="sexID"
@@ -108,9 +106,9 @@ function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading
                             onChange={onChangeInput}
                             className="gender-radio-group"
                         >
-                            <FormControlLabel value="Male" control={<Radio className="gender-radio" />} label="Nam" />
-                            <FormControlLabel value="Female" control={<Radio className="gender-radio" />} label="Nữ" />
-                            <FormControlLabel value="Other" control={<Radio className="gender-radio" />} label="Khác" />
+                            <FormControlLabel value="Male" control={<Radio className="gender-radio" />} label="Male" />
+                            <FormControlLabel value="Female" control={<Radio className="gender-radio" />} label="Female" />
+                            <FormControlLabel value="Other" control={<Radio className="gender-radio" />} label="Other" />
                         </RadioGroup>
                     </div>
                     {error?.sexID && <p className="gender-error-text inline">{error.sexID}</p>}
@@ -131,17 +129,17 @@ function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading
                     <div className="flex flex-col items-center w-full min-h-40 justify-start">
                         {uploadMode === 'file' ? (
                             <div className="relative w-36 h-36 rounded-full border-2 border-dashed border-slate-600 hover:border-cyan-400 overflow-hidden group transition-all duration-300 shadow-[0_0_15px_rgba(0,0,0,0.5)] bg-slate-900/50 flex items-center justify-center">
-                                <img
-                                    src={actor.imgFile ? URL.createObjectURL(actor.imgFile) : getSafeEntityAvatar(actor.imgUrl, actor.sexID)}
-                                    alt="Actor Avatar"
-                                    className="w-full h-full object-cover transition-all duration-500 group-hover:opacity-30"
+                                <img 
+                                    src={actor.imgFile ? URL.createObjectURL(actor.imgFile) : getSafeEntityAvatar(actor.imgUrl, actor.sexID)} 
+                                    alt="Actor Avatar" 
+                                    className="w-full h-full object-cover transition-all duration-500 group-hover:opacity-30" 
                                     onError={(e) => { e.target.onerror = null; e.target.src = getDefaultAvatar(actor.sexID); }}
                                 />
                                 <Button component="label" className="absolute! inset-0! w-full! h-full! min-w-0! p-0! rounded-full! cursor-pointer">
                                     <VisuallyHiddenInput type="file" onChange={handleImageChange} accept="image/*" />
                                     <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                                         <FaCloudUploadAlt className="text-4xl text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.8)] mb-1" />
-                                        <p className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider inline">Tải ảnh lên</p>
+                                        <p className="text-[10px] text-cyan-300 font-bold uppercase tracking-wider inline">Upload</p>
                                     </div>
                                 </Button>
                             </div>
@@ -164,16 +162,16 @@ function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading
                     </div>
                 </div>
             </DialogContent>
-
+            
             <DialogActions className="modal-actions-x p-6 w-full flex flex-col">
                 {loading ? (
                     <div className="w-full bg-slate-900/40 p-4 rounded-xl border border-white/10 shadow-inner">
                         <div className="flex justify-between text-xs font-bold text-cyan-400 mb-2 uppercase tracking-wider">
-                            <p className="animate-pulse inline">Đang lưu dữ liệu...</p>
+                            <p className="animate-pulse inline">Syncing Data...</p>
                             <p className="inline">{progress}%</p>
                         </div>
                         <div className="w-full bg-black/60 rounded-full h-2.5 overflow-hidden p-0.5 border border-white/10">
-                            <div
+                            <div 
                                 className="bg-linear-to-r from-cyan-400 via-fuchsia-500 to-yellow-400 h-full rounded-full transition-all duration-500 ease-out shadow-[0_0_15px_rgba(6,182,212,0.8)]"
                                 style={{ width: `${progress}%` }}
                             />
@@ -181,9 +179,9 @@ function ModalActor({ open, onChangeInput, handleClose, addactor, error, loading
                     </div>
                 ) : (
                     <div className="w-full flex justify-end gap-3 pt-2">
-                        <Button onClick={handleClose} className="btn-cancel-x">Hủy</Button>
+                        <Button onClick={handleClose} className="btn-cancel-x">Cancel</Button>
                         <Button onClick={addactor} disabled={loading} className="btn-submit-x">
-                            {actor.id ? "LƯU" : "THÊM"}
+                            {actor.id ? "UPDATE" : "ADD"}
                         </Button>
                     </div>
                 )}
