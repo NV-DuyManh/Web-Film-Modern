@@ -1330,7 +1330,7 @@ export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo =
                         </span>
                     )}
                 </div>
-                <div className="flex items-center gap-1.5 mt-1.5 flex-nowrap">
+                <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
                     <Link
                         to={`/xem-phim/${movieSlug}`}
                         onClick={() => onLinkClick && onLinkClick()}

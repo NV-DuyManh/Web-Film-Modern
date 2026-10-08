@@ -1,10 +1,12 @@
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useContext } from 'react';
+import { AuthContext } from '../../../contexts/AuthProvider';
 import lazyRetry from '../../../utils/lazyRetry';
 import ErrorBoundary from '../../ErrorBoundary';
 
 const ChatBot = lazyRetry(() => import('./GroqChatBot'));
 
 export default function ChatLauncher() {
+    const { isLogin } = useContext(AuthContext);
     const [activated, setActivated] = useState(() => {
         try { return sessionStorage.getItem('mfilm_chatbot_is_open') === 'true'; }
         catch { return false; }
@@ -24,5 +26,5 @@ export default function ChatLauncher() {
             <span className="hidden md:inline font-semibold">Chat AI</span>
         </button>
     );
-    return activated ? <ErrorBoundary><Suspense fallback={launcher}><ChatBot initiallyOpen /></Suspense></ErrorBoundary> : launcher;
+    return activated ? <ErrorBoundary><Suspense fallback={launcher}><ChatBot key={isLogin?.id || 'guest'} initiallyOpen /></Suspense></ErrorBoundary> : launcher;
 }

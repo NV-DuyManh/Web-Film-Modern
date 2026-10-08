@@ -1,26 +1,25 @@
 import { findMovieReference } from '../../../utils/nameRoutes';
 import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { useMovies, useCharacters, useCategories, useSubscriptions } from '../../../hooks/useCollections';
+import { useMovies, useCharacters, useCategories, useSubscriptions, useActors, useAuthors } from '../../../hooks/useCollections';
+import { localKnowledgeAnswer } from '../../../ai/knowledgeEngine.js';
+import { createAnswerMemory, memoryPolicy } from '../../../ai/answerMemory.js';
+import { answerFromCatalog, catalogContext } from './localCatalogAnswer.js';
+import { getCatalogStatus } from '../../../utils/catalogStatus.js';
 import { getUserPlanInfo } from '../../../utils/appUtils';
 import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots, FaMicrophone, FaStop, FaPaperPlane } from 'react-icons/fa';
 import {
     buildSystemInstruction,
-    executeWebsiteControl,
-    executeMovieLookup,
     renderMessage,
-    TypewriterText,
-    GROQ_TOOLS,
     isPlanAppropriateQuery,
     filterMoviesByEntitlement,
     validateAndFilterAiResponse
 } from './ChatBotCore.jsx';
 
-const SESSIONS_STORAGE_KEY = 'mfilm_chatbot_sessions';
-const ACTIVE_SESSION_ID_KEY = 'mfilm_chatbot_active_id';
 const CHAT_OPEN_KEY = 'mfilm_chatbot_is_open';
+const EMPTY_MESSAGES = [];
 
 const createNewSession = () => ({
     id: `session_${Date.now()}`,
@@ -33,21 +32,29 @@ const createNewSession = () => ({
 });
 
 export default function GroqChatBot({ initiallyOpen = false }) {
-    const navigate = useNavigate();
     const location = useLocation();
     const { isLogin } = useContext(AuthContext);
+    const memoryScope = isLogin?.id || 'guest';
+    const SESSIONS_STORAGE_KEY = `mfilm_chatbot_sessions_${memoryScope}`;
+    const ACTIVE_SESSION_ID_KEY = `mfilm_chatbot_active_id_${memoryScope}`;
+    const answerMemory = useMemo(() => {
+        try { return createAnswerMemory({ storage: localStorage, scope: memoryScope }); }
+        catch { return createAnswerMemory({ scope: memoryScope }); }
+    }, [memoryScope]);
     const [isChatOpen, setIsChatOpen] = useState(() => {
         try {
             return initiallyOpen || sessionStorage.getItem(CHAT_OPEN_KEY) === 'true';
-        } catch (e) {
+        } catch {
             return initiallyOpen;
         }
     });
-    const subscriptions = useSubscriptions(isChatOpen) || [];
-    const plans = useContext(PlanContext) || [];
-    const movies = useMovies(isChatOpen) || [];
+    const subscriptions = useSubscriptions(isChatOpen);
+    const plans = useContext(PlanContext);
+    const movies = useMovies(isChatOpen);
     const characters = useCharacters(isChatOpen) || [];
     const categories = useCategories(isChatOpen) || [];
+    const actors = useActors(isChatOpen) || [];
+    const authors = useAuthors(isChatOpen) || [];
 
     const userPlanInfo = useMemo(() => {
         return getUserPlanInfo(isLogin, subscriptions, plans);
@@ -97,7 +104,7 @@ export default function GroqChatBot({ initiallyOpen = false }) {
         try {
             const savedSessionId = sessionStorage.getItem(ACTIVE_SESSION_ID_KEY);
             if (savedSessionId) return savedSessionId;
-        } catch (e) { }
+        } catch { /* Optional browser state. */ }
         return sessions[0]?.id || `session_${Date.now()}`;
     });
 
@@ -124,25 +131,25 @@ export default function GroqChatBot({ initiallyOpen = false }) {
         } catch (e) {
             console.error("Error saving sessions:", e);
         }
-    }, [sessions]);
+    }, [sessions, SESSIONS_STORAGE_KEY]);
 
     useEffect(() => {
         try {
             sessionStorage.setItem(ACTIVE_SESSION_ID_KEY, activeSessionId);
             // Xóa active id khỏi localStorage để đảm bảo khi tắt web mở lại sẽ không bị ghim vào đoạn chat cũ
             localStorage.removeItem(ACTIVE_SESSION_ID_KEY);
-        } catch (e) { }
-    }, [activeSessionId]);
+        } catch { /* Optional browser state. */ }
+    }, [activeSessionId, ACTIVE_SESSION_ID_KEY]);
 
     useEffect(() => {
         try {
             sessionStorage.setItem(CHAT_OPEN_KEY, String(isChatOpen));
-        } catch (e) { }
+        } catch { /* Optional browser state. */ }
     }, [isChatOpen]);
 
     // Current active session and messages
     const activeSession = sessions.find(s => s.id === activeSessionId) || sessions[0] || createNewSession();
-    const messages = activeSession.messages || [];
+    const messages = Array.isArray(activeSession.messages) ? activeSession.messages : EMPTY_MESSAGES;
 
     const updateSessionMessages = (sessionId, updater) => {
         setSessions(prevSessions => {
@@ -248,7 +255,7 @@ export default function GroqChatBot({ initiallyOpen = false }) {
             localStorage.removeItem(SESSIONS_STORAGE_KEY);
             sessionStorage.setItem(SESSIONS_STORAGE_KEY, JSON.stringify([fresh]));
             sessionStorage.setItem(ACTIVE_SESSION_ID_KEY, fresh.id);
-        } catch (e) { }
+        } catch { /* Optional browser state. */ }
     };
 
     // Xác định phim đang xem từ URL
@@ -261,6 +268,20 @@ export default function GroqChatBot({ initiallyOpen = false }) {
     const currentMovie = cleanSlug
         ? (findMovieReference(movies, cleanSlug) || findMovieReference(movies, currentSlug))
         : null;
+    const memoryContext = useMemo(() => catalogContext(movies, plans, userPlanInfo, currentMovie), [movies, plans, userPlanInfo, currentMovie]);
+    useEffect(() => () => { abortControllerRef.current?.abort(); recognitionRef.current?.stop(); }, []);
+
+    const handleForgetAnswer = async (msg) => {
+        answerMemory.forget(msg.question, msg.memoryContext);
+        let removedShared = false;
+        if (msg.memoryReceipt) {
+            try {
+                const response = await fetch('/api/ai/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'forget', prompt: msg.question, forgetReceipt: msg.memoryReceipt }) });
+                removedShared = response.ok && (await response.json()).forgotten;
+            } catch { /* The local record was removed even while offline. */ }
+        }
+        updateSessionMessages(activeSessionId, prev => prev.map(item => item.id === msg.id ? { ...item, forgotten: true, removedShared } : item));
+    };
 
     // Tính năng nhận diện giọng nói (Web Speech API)
     const handleVoiceInput = () => {
@@ -272,7 +293,7 @@ export default function GroqChatBot({ initiallyOpen = false }) {
 
         if (isListening) {
             if (recognitionRef.current) {
-                try { recognitionRef.current.stop(); } catch (e) { }
+                try { recognitionRef.current.stop(); } catch { /* Optional browser state. */ }
             }
             setIsListening(false);
             return;
@@ -373,16 +394,24 @@ export default function GroqChatBot({ initiallyOpen = false }) {
         abortControllerRef.current = abortController;
 
         try {
+            const sharedQuestion = memoryPolicy(textToSend)?.shared;
+            const local = localKnowledgeAnswer(textToSend) || answerFromCatalog({
+                prompt: textToSend, movies, categories, actors, authors, characters, plans, currentMovie,
+                history: currentSessionMessages, userPlanInfo, isLogin,
+                catalogReady: movies.length > 0 && getCatalogStatus('Movies').status !== 'loading',
+            }) || (!sharedQuestion && answerMemory.get(textToSend, memoryContext));
             // Lọc trước danh sách ứng viên phim theo quyền truy cập của gói cước người dùng (Pre-AI filtering)
             const candidateMovies = isPlanQuery
                 ? filterMoviesByEntitlement(movies, plans, userPlanInfo)
                 : movies;
 
-            const systemInstruction = buildSystemInstruction({
+            const systemInstruction = local || sharedQuestion ? '' : buildSystemInstruction({
                 movies: candidateMovies,
                 currentMovie,
                 characters,
                 categories,
+                actors,
+                authors,
                 plans,
                 isLogin,
                 userPlanInfo,
@@ -393,16 +422,19 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                 .slice(-4)
                 .filter(m => m.id !== 1 && m.text && !m.text.startsWith('Hệ thống báo lỗi'));
 
-            let finalAiMsgText = "";
-            let backendSuccess = false;
+            let finalAiMsgText = local?.reply || '';
+            let backendSuccess = Boolean(local);
+            let replySource = local?.source;
+            let memoryReceipt = local?.memoryReceipt || local?.receipt;
 
             try {
+                if (!local) {
                 const proxyRes = await fetch('/api/ai/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         prompt: userMsg.text,
-                        history: recentMessages.map(m => ({
+                        history: sharedQuestion ? [] : recentMessages.map(m => ({
                             role: m.sender === 'user' ? 'user' : 'assistant',
                             text: m.text
                         })),
@@ -418,14 +450,23 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                     if (reply && typeof reply === 'string') {
                         finalAiMsgText = reply;
                         backendSuccess = true;
+                        replySource = proxyData.source || 'provider';
+                        memoryReceipt = proxyData.memoryReceipt;
                     }
                 }
-            } catch (proxyErr) {
+                }
+            } catch {
                 // Backend proxy error or network error
             }
 
             if (!backendSuccess) {
-                finalAiMsgText = "Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿";
+                const offline = answerMemory.get(textToSend, memoryContext);
+                if (offline) {
+                    finalAiMsgText = offline.reply;
+                    backendSuccess = true;
+                    replySource = 'memory';
+                    memoryReceipt = offline.receipt;
+                } else finalAiMsgText = "Trợ lý AI MFILM hiện đang bận hoặc đang bảo trì kết nối máy chủ. Bạn vui lòng thử lại sau giây lát nhé! 🍿";
             }
 
             if (abortController.signal.aborted) return;
@@ -438,6 +479,7 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                 userPlanInfo,
                 isPlanQuery
             );
+            if (backendSuccess && !local) answerMemory.remember(textToSend, sanitizedAiText, { context: memoryContext, source: replySource, receipt: memoryReceipt });
 
             const newAiId = Date.now() + 1;
             setLastAiMsgId(newAiId);
@@ -445,6 +487,10 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                 id: newAiId,
                 text: sanitizedAiText || "Dạ chào bạn! Bạn đang tìm kiếm bộ phim hay thể loại nào để mình hỗ trợ gợi ý cho bạn nhé? 😊",
                 sender: 'ai',
+                source: replySource,
+                question: textToSend,
+                memoryContext,
+                memoryReceipt,
                 isPlanSpecific: isPlanQuery,
                 userPlanInfo
             };
@@ -622,12 +668,7 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                     ) : (
                         <>
                             <div className="flex-1 p-4 overflow-y-auto bg-gray-50 flex flex-col gap-4 scroll-smooth">
-                                {messages.map((msg, index) => {
-                                    const isLatestAi = !isTyping && index === messages.length - 1 && msg.sender === 'ai';
-                                    const movieLinkCount = (msg.text?.match(/\/phim\//g) || []).length;
-                                    const hasPromptContinuation = /bấm nút \*\*Xem tiếp\*\*|nhắn \*\*tiếp\*\*|nhắn "tiếp"|xem tiếp các phim sau/i.test(msg.text || '');
-                                    const isMovieList = isLatestAi && (movieLinkCount >= 2 || (movieLinkCount === 1 && hasPromptContinuation));
-
+                                {messages.map((msg) => {
                                     return (
                                         <div key={msg.id} className={`flex items-start gap-2.5 ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                                             {msg.sender === 'ai' && (
@@ -640,6 +681,10 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                                                     : 'bg-white text-black border border-gray-100 rounded-tl-none'
                                                 }`}>
                                                 {renderMessage(msg.text, handleLinkClick, movies, plans, msg.userPlanInfo || userPlanInfo, Boolean(msg.isPlanSpecific))}
+                                                {msg.source && msg.sender === 'ai' && <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-slate-100 pt-2 text-[10px] text-slate-500">
+                                                    <span>{({ knowledge: 'Kiến thức MFILM', calculation: 'Tính toán', catalog: 'Kho phim MFILM', memory: 'Bộ nhớ đã học', 'owned-model': 'MFILM AI', provider: 'AI hỗ trợ' })[msg.source] || 'MFILM AI'}</span>
+                                                    {['memory', 'provider', 'owned-model'].includes(msg.source) && <button type="button" disabled={msg.forgotten} onClick={() => handleForgetAnswer(msg)} className="cursor-pointer text-amber-700 hover:underline disabled:cursor-default disabled:text-slate-400">{msg.forgotten ? (msg.removedShared ? 'Đã xóa bản đã học' : 'Đã xóa bản trên máy') : 'Quên câu trả lời'}</button>}
+                                                </div>}
                                             </div>
                                         </div>
                                     );

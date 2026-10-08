@@ -1,3 +1,8 @@
+import { executeHybridChat } from '../../server/ai/hybridChat.js';
+import { sharedMemory } from '../../server/ai/memoryStore.js';
+
+export const config = { maxDuration: 60 };
+
 /**
  * Vercel Serverless Function: MFILM AI Chatbot Proxy
  * Route: POST /api/ai/chat
@@ -38,7 +43,7 @@ export function parseApiKeys(raw) {
 /**
  * Call Groq chat completions API
  */
-async function callGroq({ prompt, history = [], systemInstruction, key, model, fetchFn = fetch }) {
+async function callGroq({ prompt, history = [], systemInstruction, key, model, fetchFn = fetch, timeoutMs = 12000 }) {
   const messages = [];
   if (systemInstruction) {
     messages.push({ role: 'system', content: String(systemInstruction) });
@@ -61,6 +66,7 @@ async function callGroq({ prompt, history = [], systemInstruction, key, model, f
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${key}`
     },
+    signal: AbortSignal.timeout(timeoutMs),
     body: JSON.stringify({
       model: model || 'openai/gpt-oss-20b',
       messages,
@@ -94,7 +100,7 @@ async function callGroq({ prompt, history = [], systemInstruction, key, model, f
 /**
  * Call Gemini generateContent API
  */
-async function callGemini({ prompt, history = [], systemInstruction, key, model, fetchFn = fetch }) {
+async function callGemini({ prompt, history = [], systemInstruction, key, model, fetchFn = fetch, timeoutMs = 12000 }) {
   const geminiModel = model || 'gemini-2.5-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(geminiModel)}:generateContent?key=${encodeURIComponent(key)}`;
 
@@ -133,7 +139,8 @@ async function callGemini({ prompt, history = [], systemInstruction, key, model,
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify(reqBody)
+    body: JSON.stringify(reqBody),
+    signal: AbortSignal.timeout(timeoutMs)
   });
 
   if (!res.ok) {
@@ -188,12 +195,14 @@ export async function executeAiChat({
       : (hasGroq ? (hasGemini ? ['groq', 'gemini'] : ['groq']) : ['gemini']);
 
   let lastError = null;
+  const deadline = Date.now() + 30000;
 
   for (const provider of providerOrder) {
     if (provider === 'groq' && hasGroq) {
       // Try up to 2 keys if multiple keys exist
       const keysToTry = groqKeys.slice(0, 2);
       for (const key of keysToTry) {
+        if (Date.now() >= deadline - 250) break;
         try {
           const reply = await callGroq({
             prompt,
@@ -201,7 +210,8 @@ export async function executeAiChat({
             systemInstruction,
             key,
             model: groqModel,
-            fetchFn
+            fetchFn,
+            timeoutMs: Math.max(250, Math.min(12000, deadline - Date.now()))
           });
           return {
             success: true,
@@ -224,6 +234,7 @@ export async function executeAiChat({
     if (provider === 'gemini' && hasGemini) {
       const keysToTry = geminiKeys.slice(0, 2);
       for (const key of keysToTry) {
+        if (Date.now() >= deadline - 250) break;
         try {
           const reply = await callGemini({
             prompt,
@@ -231,7 +242,8 @@ export async function executeAiChat({
             systemInstruction,
             key,
             model: geminiModel,
-            fetchFn
+            fetchFn,
+            timeoutMs: Math.max(250, Math.min(12000, deadline - Date.now()))
           });
           return {
             success: true,
@@ -316,7 +328,7 @@ export default async function handler(req, res) {
       }
     }
 
-    const { prompt, history, systemInstruction, preferredProvider } = body || {};
+    const { prompt, history, systemInstruction, preferredProvider, forgetReceipt } = body || {};
 
     if (!prompt || typeof prompt !== 'string' || !prompt.trim()) {
       return res.status(400).json({
@@ -332,6 +344,15 @@ export default async function handler(req, res) {
         error: 'PROMPT_TOO_LONG',
         message: 'Prompt exceeds maximum allowed length (8000 characters).'
       });
+    }
+
+    if ((history != null && (!Array.isArray(history) || history.length > 12 || history.some(item => !item || typeof (item.text ?? item.content) !== 'string' || (item.text ?? item.content).length > 12000))) || (systemInstruction != null && (typeof systemInstruction !== 'string' || systemInstruction.length > 120000))) {
+      return res.status(400).json({ success: false, error: 'INVALID_CONTEXT', message: 'Chat context is invalid or too large.' });
+    }
+    res.setHeader('Cache-Control', 'no-store');
+    if (body.action === 'forget') {
+      const forgotten = await sharedMemory.forget(prompt.trim(), forgetReceipt);
+      return res.status(200).json({ success: true, forgotten });
     }
 
     // Read provider keys exclusively from server-side environment
@@ -355,15 +376,12 @@ export default async function handler(req, res) {
     const groqModel = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
     const geminiModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 
-    const result = await executeAiChat({
+    const result = await executeHybridChat({
       prompt: prompt.trim(),
       history,
       systemInstruction,
-      preferredProvider: preferredProvider || 'groq',
-      groqKeys,
-      geminiKeys,
-      groqModel,
-      geminiModel
+      forgetReceipt,
+      providerChat: input => executeAiChat({ ...input, preferredProvider: preferredProvider || 'groq', groqKeys, geminiKeys, groqModel, geminiModel })
     });
 
     return res.status(200).json(result);
