@@ -12,6 +12,7 @@ const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={r
 
 function NeonBadge({ icon: Icon, text, color = "cyan" }) {
     const colorMap = {
+        admin: "from-amber-500/20 to-yellow-500/10 border-amber-400/60 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.2)] hover:from-amber-500/30 hover:to-yellow-500/20 hover:border-amber-300 hover:text-yellow-200 hover:shadow-[0_0_25px_rgba(245,158,11,0.4)]",
         cyan: "from-cyan-500/10 to-transparent border-cyan-500/30 text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:from-cyan-500/30 hover:to-cyan-500/10 hover:border-cyan-400 hover:text-cyan-100 hover:shadow-[0_0_25px_rgba(6,182,212,0.4)]",
         yellow: "from-yellow-500/10 to-transparent border-yellow-500/30 text-yellow-300 shadow-[0_0_15px_rgba(234,179,8,0.15)] hover:from-yellow-500/30 hover:to-yellow-500/10 hover:border-yellow-400 hover:text-yellow-100 hover:shadow-[0_0_25px_rgba(234,179,8,0.4)]",
         purple: "from-purple-500/10 to-transparent border-purple-500/30 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.15)] hover:from-purple-500/30 hover:to-purple-500/10 hover:border-purple-400 hover:text-purple-100 hover:shadow-[0_0_25px_rgba(168,85,247,0.4)]",
@@ -27,7 +28,7 @@ function NeonBadge({ icon: Icon, text, color = "cyan" }) {
         rose: "from-rose-500/10 to-transparent border-rose-500/30 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.15)] hover:from-rose-500/30 hover:to-rose-500/10 hover:border-rose-400 hover:text-rose-100 hover:shadow-[0_0_25px_rgba(244,63,94,0.4)]",
     };
     return (
-        <div className={`flex items-center gap-1.5 bg-linear-to-r ${colorMap[color]} px-2.5 py-1 rounded-lg border text-xs font-bold backdrop-blur-sm hover:-translate-y-0.5 transition-all duration-300 cursor-default`}>
+        <div className={`flex items-center gap-1.5 bg-linear-to-r ${colorMap[color] || colorMap.cyan} px-2.5 py-1 rounded-lg border text-xs font-bold backdrop-blur-sm hover:-translate-y-0.5 transition-all duration-300 cursor-default`}>
             {Icon && <Icon className="text-[11px]" />} <p className="inline tracking-wide">{text}</p>
         </div>
     );
