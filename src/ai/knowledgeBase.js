@@ -1,6 +1,7 @@
 import { extendedKnowledge } from './extendedKnowledge.js';
+import { largeKnowledge } from './largeKnowledge.js';
 // Reviewed MFILM knowledge. Variants train retrieval, never change model weights.
-export const KNOWLEDGE_VERSION = '2026-10-08.2';
+export const KNOWLEDGE_VERSION = '2026-10-08.3';
 const item = (id, questions, answer, tags = []) => ({ id, questions, answer, tags });
 export const knowledgeBase = [
     item('identity', ['Bạn là ai?', 'MFILM AI là gì?', 'Bạn làm được gì?', 'Bạn giúp được gì cho tôi?'], 'Mình là trợ lý MFILM. Mình có thể tìm phim trong kho, gợi ý theo thể loại hoặc gói xem, giải thích thông tin phim và hướng dẫn sử dụng web. Bạn muốn tìm phim hay cần hỗ trợ việc gì?'),
@@ -51,4 +52,5 @@ export const knowledgeBase = [
     item('history-memory', ['Bạn có nhớ câu trả lời không?', 'Bạn có học từ câu trả lời không?', 'AI có bộ nhớ không?'], 'Mình ưu tiên kiến thức MFILM và dữ liệu phim hiện tại. Với câu chưa biết, mình nhờ mô hình hỗ trợ và ghi nhớ câu trả lời phù hợp trong bộ nhớ dùng chung. Các câu liên quan tài khoản cá nhân, ngữ cảnh riêng hoặc dữ liệu thay đổi theo thời gian không đưa vào bộ nhớ chung.'),
     item('privacy-memory', ['Xóa bộ nhớ AI thế nào?', 'Xóa câu trả lời đã học', 'Câu trả lời này sai'], 'Bấm **Quên câu trả lời** dưới câu được học để xóa bản trên máy và yêu cầu xóa bản đã học dùng chung. Dòng trạng thái dưới câu trả lời cho biết bản nào đã được xóa. Kiến thức MFILM được biên soạn sẵn vẫn được giữ.'),
     ...extendedKnowledge,
+    ...largeKnowledge,
 ];

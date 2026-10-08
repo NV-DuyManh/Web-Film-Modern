@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { retrieveKnowledge, calculateAnswer, normalizeQuestion } from './knowledgeEngine.js';
 import { createAnswerMemory, memoryPolicy } from './answerMemory.js';
 import { extendedKnowledge } from './extendedKnowledge.js';
+import { largeKnowledge } from './largeKnowledge.js';
+import { knowledgeBase } from './knowledgeBase.js';
 
 test('Independent paraphrases retrieve knowledge without confusing negation or unknown facts', () => {
     for (const [q, id] of [
@@ -44,6 +46,44 @@ test('New practical, technical and film questions resolve while unsupported clai
         ['MFILM đảm bảo hoàn tiền vô điều kiện phải không?', null],
         ['Gói Premium hôm nay giá đúng 199999 đồng phải không?', null],
         ['Cầu vồng hình thành như thế nào và ngày mai có xuất hiện không?', null],
+    ]) assert.equal(retrieveKnowledge(question)?.knowledgeId || null, id, question);
+});
+
+test('A further 1000 authored questions cover 40 balanced groups and remain distinct from older questions', () => {
+    assert.ok(largeKnowledge.length >= 1000);
+    const oldQuestions = new Set(knowledgeBase.filter(entry => !entry.id.startsWith('large-')).flatMap(entry => entry.questions.map(normalizeQuestion)));
+    const newQuestions = new Set();
+    const groups = new Map();
+    for (const entry of largeKnowledge) {
+        assert.equal(entry.questions.length, 1, entry.id);
+        const question = normalizeQuestion(entry.questions[0]);
+        assert.ok(!oldQuestions.has(question) && !newQuestions.has(question), entry.id);
+        newQuestions.add(question);
+        assert.ok(entry.answer.length >= 12 && !/TODO|lorem ipsum|đang biên soạn/i.test(entry.answer), entry.id);
+        groups.set(entry.tags[0], (groups.get(entry.tags[0]) || 0) + 1);
+        assert.equal(retrieveKnowledge(entry.questions[0])?.reply, entry.answer, entry.id);
+        assert.equal(retrieveKnowledge(`Mình muốn biết ${entry.questions[0]}`)?.knowledgeId, entry.id);
+    }
+    assert.equal(groups.size, 40);
+    assert.ok([...groups.values()].every(count => count === 25));
+});
+
+test('Expanded knowledge preserves distinctions and does not guess compound, personal or live questions', () => {
+    for (const [question, id] of [
+        ['cho toi biet J-cut la gi', 'large-edit-3'],
+        ['Mình muốn biết L-cut là gì?', 'large-edit-4'],
+        ['Mono audio là gì?', 'large-sound-22'],
+        ['HDR có phải là độ phân giải 4K không?', 'technology-7'],
+        ['Một mét vuông bằng bao nhiêu centimet vuông?', 'large-units-4'],
+        ['Một centimet bằng bao nhiêu milimet?', 'large-units-3'],
+        ['Số 1 có phải nguyên tố không?', 'large-numbers-7'],
+        ['Ram trong may tinh cua toi con bao nhieu', null],
+        ['J-cut là gì và hãy tìm phim mới hôm nay', null],
+        ['Tôi không muốn biết J-cut là gì', null],
+        ['Có chắc dùng VPN sẽ tăng tốc video không', null],
+        ['Giá thuê phim hôm nay tăng bao nhiêu phần trăm', null],
+        ['Ai thắng giải phim năm nay', null],
+        ['Số tập Conan tuần sau là bao nhiêu', null],
     ]) assert.equal(retrieveKnowledge(question)?.knowledgeId || null, id, question);
 });
 

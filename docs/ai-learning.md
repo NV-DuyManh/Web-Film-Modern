@@ -14,7 +14,9 @@
 
 - `src/ai/knowledgeBase.js`: kiến thức MFILM ban đầu và điểm kết hợp các bộ hỏi đáp.
 - `src/ai/extendedKnowledge.js`: 250 cặp hỏi đáp mới tự biên soạn, chia 10 nhóm, mỗi nhóm 25 chủ đề riêng.
-- `data/ai/bo-cau-hoi-tra-loi.md`: danh sách đầy đủ 397 câu hỏi độc nhất kèm đáp án, đánh số để đọc và duyệt. Các cách viết bỏ dấu/thêm lời lịch sự không được tính vào số câu mới.
+- `src/ai/largeKnowledge.js`: thêm 1.000 cặp hỏi đáp ở đợt tiếp theo, chia 40 nhóm × 25 câu về điện ảnh, media, kỹ thuật, ngôn ngữ và kiến thức phổ thông.
+- `data/ai/bo-cau-hoi-tra-loi.md`: danh sách đầy đủ 1.397 câu hỏi độc nhất kèm đáp án, đánh số để đọc và duyệt. Các cách viết bỏ dấu/thêm lời lịch sự không được tính vào số câu mới.
+- Tổng 1.297 mục kiến thức và 4.191 mẫu kiểm tra cách viết. Một số mục ngắn là bản dịch thuật ngữ hoặc quy đổi đơn vị; chúng không thay thế tư vấn chuyên môn hoặc dữ liệu phim trực tiếp.
 - `npm run ai:train`: kiểm tra từng biến thể, xuất `data/ai/mfilm-training.jsonl` và báo cáo. Lệnh thất bại nếu truy xuất sai hoặc có câu hỏi trùng nhưng đáp án khác.
 - JSONL chứa mẫu hội thoại để sử dụng trong quy trình tinh chỉnh một mô hình riêng sau này. Lệnh trên chỉ biên soạn và đánh giá dữ liệu, không tải hay tinh chỉnh mô hình.
 - Thay đổi chính sách quan trọng: tăng `KNOWLEDGE_VERSION` rồi chạy lại lệnh, để đáp án học theo bản cũ không được dùng lại.
