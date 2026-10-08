@@ -7,7 +7,7 @@ import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExcha
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
-import { collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, getDoc, serverTimestamp, runTransaction } from 'firebase/firestore';
+import { collection, doc, setDoc, updateDoc, deleteDoc, onSnapshot, getDoc, getDocFromServer, serverTimestamp } from 'firebase/firestore';
 
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -152,21 +152,20 @@ function MagicImport() {
         let updatedCount = 0;
         try {
             for (const movie of candidates) {
-                const changed = await runTransaction(db, async transaction => {
-                    const movieRef = doc(db, 'Movies', movie.id);
-                    const snapshot = await transaction.get(movieRef);
-                    if (!snapshot.exists()) return false;
-                    const patch = missingRentalPricePatch(snapshot.data(), plans);
-                    if (!patch) return false;
-                    transaction.update(movieRef, patch);
-                    return true;
-                });
-                if (changed) updatedCount++;
+                const movieRef = doc(db, 'Movies', movie.id);
+                const snapshot = await getDocFromServer(movieRef);
+                if (!snapshot.exists()) continue;
+                const patch = missingRentalPricePatch(snapshot.data(), plans);
+                if (!patch) continue;
+                await updateDoc(movieRef, patch);
+                updatedCount++;
                 setRentalPriceMsg(`Đã bổ sung giá thuê cho ${updatedCount} phim...`);
             }
             setRentalPriceMsg(`Hoàn tất: đã cập nhật giá thuê cho ${updatedCount} phim. Free không thu phí.`);
         } catch (err) {
-            setRentalPriceMsg(`Đã cập nhật ${updatedCount} phim; lỗi: ${err.message}. Có thể bấm lại để bổ sung phần còn thiếu.`);
+            setRentalPriceMsg(err.code === 'resource-exhausted'
+                ? `Đã cập nhật ${updatedCount} phim. Firebase đang chặn yêu cầu do hạn mức; cần kiểm tra Firestore Usage trước khi chạy tiếp.`
+                : `Đã cập nhật ${updatedCount} phim; lỗi: ${err.message}. Có thể bấm lại để bổ sung phần còn thiếu.`);
         } finally {
             setIsFillingRentalPrices(false);
         }
@@ -186,16 +185,12 @@ function MagicImport() {
             for (const movie of existingMovies) {
                 const newPlanID = getRandomPlanID(plans);
                 if (movie.planID !== newPlanID) {
-                    const changed = await runTransaction(db, async transaction => {
-                        const movieRef = doc(db, 'Movies', movie.id);
-                        const snapshot = await transaction.get(movieRef);
-                        if (!snapshot.exists()) return false;
-                        const currentMovie = snapshot.data();
-                        const rentalPatch = missingRentalPricePatch({ ...currentMovie, planID: newPlanID }, plans);
-                        transaction.update(movieRef, { planID: newPlanID, ...rentalPatch });
-                        return true;
-                    });
-                    if (changed) updatedCount++;
+                    const movieRef = doc(db, 'Movies', movie.id);
+                    const snapshot = await getDocFromServer(movieRef);
+                    if (!snapshot.exists()) continue;
+                    const rentalPatch = missingRentalPricePatch({ ...snapshot.data(), planID: newPlanID }, plans);
+                    await updateDoc(movieRef, { planID: newPlanID, ...rentalPatch });
+                    updatedCount++;
                 }
             }
             setSuccessMsg(`Đã random thành công gói cho ${updatedCount} bộ phim!`);
