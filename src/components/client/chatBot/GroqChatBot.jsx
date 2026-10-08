@@ -737,7 +737,7 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                                     value={message}
                                     onChange={(e) => setMessage(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                                    className={`flex-1 h-10 border rounded-xl px-3.5 text-sm text-black outline-none transition-all placeholder:text-gray-400 ${isListening
+                                    className={`min-w-0 flex-1 h-10 border rounded-xl px-3.5 text-sm text-black outline-none transition-all placeholder:text-gray-400 ${isListening
                                             ? 'border-red-400 ring-2 ring-red-200 bg-red-50/30'
                                             : 'border-gray-200 focus:border-amber-500 focus:ring-2 focus:ring-amber-200'
                                         }`}
@@ -756,6 +756,7 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                                 <button
                                     onClick={() => handleSend()}
                                     type="button"
+                                    aria-label="Gửi câu hỏi"
                                     disabled={!message.trim() || isTyping}
                                     className="w-10 h-10 bg-linear-to-r from-amber-600 to-amber-500 hover:from-amber-700 hover:to-amber-600 disabled:opacity-50 text-white rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center shrink-0 active:scale-95"
                                 >
