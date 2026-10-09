@@ -1,3 +1,4 @@
+import { canonicalUrl, plainText } from '../../../utils/seo';
 import { routeSegment } from '../../../utils/nameRoutes';
 import { useEffect, useMemo } from 'react';
 import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
@@ -81,6 +82,10 @@ function ActorDetail({ type }) {
                 title={`${entity.name} - ${entityTitle} | MFILM`}
                 description={`Thông tin chi tiết và danh sách phim của ${entityTitle.toLowerCase()} ${entity.name}.`}
                 url={canonicalPath}
+                image={entity.imgUrl || entity.avatar}
+                noindex={entityMovies.length === 0 && (!entity.description || /^Đang cập nhật/i.test(entity.description))}
+                items={entityMovies}
+                schema={{ "@context": "https://schema.org", "@type": type === "character" ? "Thing" : "Person", name: entity.name, url: canonicalUrl(canonicalPath), ...(!/^Đang cập nhật/i.test(entity.description || "") && { description: plainText(entity.description) }) }}
             />
             <div className="entity-detail__container">
                 

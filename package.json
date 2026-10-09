@@ -9,6 +9,9 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "sitemap": "node scripts/generateSitemap.mjs",
+    "seo:refresh": "node scripts/refreshSeo.mjs",
+    "seo:audit": "node scripts/auditSeo.mjs",
+    "seo:submit": "node scripts/submitIndexNow.mjs",
     "ai:train": "node scripts/trainAiKnowledge.mjs"
   },
   "dependencies": {

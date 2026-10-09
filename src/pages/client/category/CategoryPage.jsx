@@ -165,7 +165,7 @@ function CategoryPage() {
 
     return (
         <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
-            <SEO 
+            <SEO items={currentMovies}
                 title={`Phim ${currentCategory.name} - Xem Phim Online`}
                 description={`Tổng hợp phim ${currentCategory.name} hay nhất, mới nhất. Xem phim ${currentCategory.name} vietsub, thuyết minh chất lượng cao tại MFILM.`}
                 url={`/category/${name}`}
@@ -215,7 +215,7 @@ function CategoryPage() {
                         </div>
 
                         {totalPages > 1 && (
-                            <Pagination
+                            <Pagination crawlable
                                 currentPage={safePage}
                                 totalPages={totalPages}
                                 totalItems={categoryMovies.length}

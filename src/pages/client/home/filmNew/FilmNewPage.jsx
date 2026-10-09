@@ -151,7 +151,7 @@ function FilmNewPage() {
 
     return (
         <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
-            <SEO 
+            <SEO items={currentMovies}
                 title="Phim Điện Ảnh Mới Coóng - MFILM"
                 description="Tổng hợp Phim Điện Ảnh Mới Coóng hay nhất, mới nhất."
                 url="/film-new"
@@ -198,7 +198,7 @@ function FilmNewPage() {
                             ))}
                         </div>
 
-                        <Pagination
+                        <Pagination crawlable
                                 currentPage={safePage}
                                 totalPages={totalPages}
                                 totalItems={newMovies.length}

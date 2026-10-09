@@ -6,6 +6,7 @@ import { getOptimizedUrl } from '../../../utils/cloudinary';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaTicketAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { MdLocalMovies, MdAccessTime, MdRoom } from 'react-icons/md';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
+import SEO from '../../../components/SEO';
 
 function Showtimes() {
     const showTimes = useShowTimes() || [];
@@ -144,6 +145,7 @@ function Showtimes() {
 
     return (
         <div className="min-h-screen bg-[#0a0a0f] pb-20 pt-24 px-6 md:px-10 lg:px-20 xl:px-28 relative overflow-hidden">
+            <SEO title="Lịch chiếu phim" url="/showtimes" />
             <ParticleBackground />
             <div className="relative z-10">
             <div className="mb-8">

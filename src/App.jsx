@@ -7,6 +7,7 @@ import { AuthContext } from './contexts/AuthProvider'
 import LoadingScreen from './components/client/loadingScreen/LoadingScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import lazyRetry from './utils/lazyRetry';
+import SEO from './components/SEO';
 
 const HomeAdmin = lazyRetry(() => import('./pages/admin/homeAdmin/HomeAdmin'));
 const LayoutClient = lazyRetry(() => import('./pages/client/LayoutClient'));
@@ -25,6 +26,7 @@ function App() {
 
   return (
     <>
+      <SEO fallback />
       <ErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
         {

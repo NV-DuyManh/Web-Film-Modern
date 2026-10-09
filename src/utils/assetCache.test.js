@@ -26,9 +26,11 @@ test('valid scripts and styles remain available offline; 404s and incorrect MIME
     assert.equal(await assetCachePlugin.cachedResponseWillBeUsed({ request, cachedResponse: json }), null);
 });
 
-test('SPA routes keep their fallback, while missing files and API requests never return the app HTML', () => {
+test('Public HTML routes keep their application entry, while missing files and API requests bypass HTML rendering', () => {
     const config = JSON.parse(readFileSync(new URL('../../vercel.json', import.meta.url), 'utf8'));
-    const route = new RegExp(`^${config.rewrites.find(rule => rule.destination === '/index.html').source}$`);
+    const htmlRoute = config.rewrites.find(rule => rule.destination.startsWith('/api/page?'));
+    assert.ok(htmlRoute, 'Public pages must use the HTML renderer');
+    const route = new RegExp(`^${htmlRoute.source.replace(':path', '')}$`);
     for (const path of ['/', '/actors', '/dien-vien/01Qzckaud2ON8GtsmLsU', '/phim/loi-nguyen-sijjin-4', '/account/account']) assert.equal(route.test(path), true, path);
     for (const path of ['/assets/index-old.js', '/assets/missing.webp', '/api/ai/chat', '/api', '/sw.js', '/app-recovery.js', '/manifest.webmanifest']) assert.equal(route.test(path), false, path);
     assert.equal(config.rewrites.find(rule => rule.source === '/sitemap.xml')?.destination, '/api/sitemap');

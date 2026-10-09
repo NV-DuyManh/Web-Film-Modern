@@ -1,3 +1,4 @@
+import { movieDescription, movieSchema } from '../../../../utils/seo';
 import { normalizeEpisodes, episodeKey } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
@@ -296,55 +297,22 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     return (
         <div className="bg-[#0f1322] min-h-screen text-slate-300 font-sans relative text-sm pb-20">
-            <SEO 
-                title={movie.otherName || movie.name}
-                description={movie.description 
-                    ? `Xem phim ${movie.otherName || movie.name} (${movie.name}) vietsub, thuyết minh chất lượng cao tại MFILM. ${movie.description.substring(0, 150)}...`
-                    : `Xem phim ${movie.otherName || movie.name} (${movie.name}) vietsub, thuyết minh full HD tại MFILM.`
-                }
+            <SEO
+                title={`${movie.otherName || movie.name}${movie.releaseYear ? ` (${movie.releaseYear})` : ''}${movie.hasSub ? ' Vietsub' : ''}`}
+                description={movieDescription(movie)}
                 image={movie.bannerUrl || movie.imgUrl}
                 url={`/phim/${routeSegment(movie)}`}
                 type="video.movie"
-                extra={{
-                    'video:release_date': movie.year || '',
-                    'video:duration': movie.time || '',
-                }}
+                schema={movieSchema(movie, { actors: movieActors, authors, categories: categories.filter(category => movie.listCategory?.includes(category.id)) })}
             />
 
-            {/* JSON-LD Structured Data for Google Rich Results */}
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "Movie",
-                "name": movie.otherName || movie.name,
-                "alternateName": movie.name,
-                "description": movie.description || `Xem phim ${movie.otherName || movie.name} tại MFILM`,
-                "image": movie.bannerUrl || movie.imgUrl,
-                "dateCreated": movie.year || undefined,
-                "url": `https://mfilm.online/phim/${slug}`,
-                ...(movie.time && { "duration": movie.time }),
-                ...(movie.totalEpisodes && { "numberOfEpisodes": movie.totalEpisodes }),
-                ...(movieActors.length > 0 && {
-                    "actor": movieActors.slice(0, 5).map(a => ({
-                        "@type": "Person",
-                        "name": a.name
-                    }))
-                }),
-                ...(authors.length > 0 && {
-                    "director": authors.slice(0, 3).map(a => ({
-                        "@type": "Person",
-                        "name": a.name
-                    }))
-                }),
-                "potentialAction": {
-                    "@type": "WatchAction",
-                    "target": `https://mfilm.online/xem-phim/${slug}`
-                }
-            }) }} />
             <div className="w-full h-112.5 md:h-137.5 lg:h-162.5 relative z-0">
 
                 <img
                     src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 1280, 720, 'banner')}
-                    alt="Banner"
+                    alt={`Bìa phim ${movie.otherName || movie.name}`}
+                    fetchPriority="high"
+                    width="1280" height="720"
                     className="w-full h-full object-cover object-top"
                 />
             </div>
@@ -386,8 +354,8 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                             </div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Thời lượng:</span> {movie.duration ? movie.duration + ' phút' : (movie.time || 'Đang cập nhật')}</div>
                             <div className="text-slate-400"><span className="font-bold text-white inline">Lượt xem:</span> {(Number(movie.views) || 0) + 100}</div>
-                            <div className="text-slate-400"><span className="font-bold text-white inline">Quốc gia:</span> <span className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</span></div>
-                            <div className="text-slate-400"><span className="font-bold text-white inline">Thể loại:</span> {Array.isArray(movie.listCategory) && movie.listCategory.length > 0 ? <span className="ml-1">{movie.listCategory.map(id => { const cat = getObjectById(categories, id); return cat ? <span key={id} className="text-yellow-500">{cat.name}</span> : null; }).filter(Boolean).reduce((prev, curr, i) => i === 0 ? [curr] : [...prev, <span key={`sep-${i}`} className="text-slate-400">, </span>, curr], [])}</span> : <span className="text-slate-300">Đang cập nhật</span>}</div>
+                            <div className="text-slate-400"><span className="font-bold text-white inline">Quốc gia:</span> <Link to={`/country/${encodeURIComponent(movie.countriesID || "")}`} className="text-slate-300 hover:text-white cursor-pointer inline">{movie.countriesID}</Link></div>
+                            <div className="text-slate-400"><span className="font-bold text-white inline">Thể loại:</span> {Array.isArray(movie.listCategory) && movie.listCategory.length > 0 ? <span className="ml-1">{movie.listCategory.map(id => { const cat = getObjectById(categories, id); return cat ? <Link to={`/category/${encodeURIComponent(cat.name)}`} key={id} className="text-yellow-500">{cat.name}</Link> : null; }).filter(Boolean).reduce((prev, curr, i) => i === 0 ? [curr] : [...prev, <span key={`sep-${i}`} className="text-slate-400">, </span>, curr], [])}</span> : <span className="text-slate-300">Đang cập nhật</span>}</div>
                         </div>
 
                         <div className="flex flex-col gap-2">

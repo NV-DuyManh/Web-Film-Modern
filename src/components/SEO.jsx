@@ -1,58 +1,46 @@
+import { useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
+import { AuthContext } from '../contexts/AuthProvider';
+import { routeSegment } from '../utils/nameRoutes';
+import { STATIC_SEO, SITE_TITLE, SITE_DESCRIPTION, canonicalUrl, pageTitle, descriptionText, publicImage, robotsForPath, breadcrumbSchema, safeJsonLd } from '../utils/seo';
 
-/**
- * SEO Component - Quản lý meta tags động cho từng trang
- * 
- * @param {string} title - Tiêu đề trang
- * @param {string} description - Mô tả trang
- * @param {string} image - URL ảnh OG (Open Graph)
- * @param {string} url - URL canonical của trang
- * @param {string} type - Loại OG (website, video.movie, article...)
- * @param {object} extra - Các meta tags bổ sung { property: content }
- */
-function SEO({ 
-    title = 'MFILM - Xem Phim Online Miễn Phí', 
-    description = 'MFILM - Trang xem phim online chất lượng cao, phim mới cập nhật nhanh nhất. Phim lẻ, phim bộ, phim chiếu rạp, anime, phim Hàn Quốc, Trung Quốc, Nhật Bản vietsub.', 
-    image = 'https://mfilm.online/favicon.svg',
-    url,
-    type = 'website',
-    extra = {}
-}) {
-    const siteUrl = 'https://mfilm.online';
-    const fullUrl = url ? `${siteUrl}${url}` : siteUrl;
-    const fullTitle = title === 'MFILM - Xem Phim Online Miễn Phí' 
-        ? title 
-        : `${title} | MFILM`;
+export default function SEO({ title, description, image, url, type = 'website', extra = {}, noindex = false, schema = [], items = [], fallback = false }) {
+    const location = useLocation();
+    const { isLogin } = useContext(AuthContext);
+    const base = STATIC_SEO[location.pathname];
+    const canonical = canonicalUrl(`${url || location.pathname}${location.search}`);
+    const page = new URL(canonical).searchParams.get('page');
+    const fullTitle = pageTitle(`${base?.[0] || title || SITE_TITLE}${page ? ` - Trang ${page}` : ''}`);
+    const summary = descriptionText(base?.[1] || description || SITE_DESCRIPTION);
+    const picture = publicImage(image);
+    const robots = robotsForPath(location.pathname, { noindex, search: location.search, admin: isLogin?.role === 'admin' });
+    const schemas = Array.isArray(schema) ? [...schema] : [schema];
+    if (!fallback && robots.startsWith('index') && location.pathname === '/') schemas.push({ '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${canonicalUrl('/')}#website`, name: 'MFILM', alternateName: ['MFilm', 'ManhFilm'], url: canonicalUrl('/'), inLanguage: 'vi' });
+    else if (!fallback && robots.startsWith('index')) schemas.push(breadcrumbSchema([['MFILM', '/'], [title || base?.[0] || 'Phim', canonical]]));
+    if (items.length) schemas.push({ '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: items.map((item, i) => ({ '@type': 'ListItem', position: i + 1, name: item.otherName || item.title || item.name, url: canonicalUrl(item.publicPath || `/phim/${routeSegment(item)}`) })) });
 
     return (
         <Helmet>
-            {/* Basic Meta Tags */}
             <title>{fullTitle}</title>
-            <meta name="description" content={description} />
-            <link rel="canonical" href={fullUrl} />
-
-            {/* Open Graph / Facebook */}
+            <meta name="description" content={summary} />
+            <meta name="robots" content={robots} />
+            <link rel="canonical" href={canonical} />
             <meta property="og:type" content={type} />
-            <meta property="og:url" content={fullUrl} />
+            <meta property="og:url" content={canonical} />
             <meta property="og:title" content={fullTitle} />
-            <meta property="og:description" content={description} />
-            <meta property="og:image" content={image} />
+            <meta property="og:description" content={summary} />
+            <meta property="og:image" content={picture} />
+            <meta property="og:image:alt" content={title || 'MFILM - Phim hay đỉnh cao'} />
             <meta property="og:site_name" content="MFILM" />
             <meta property="og:locale" content="vi_VN" />
-
-            {/* Twitter Card */}
             <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:url" content={fullUrl} />
+            <meta name="twitter:url" content={canonical} />
             <meta name="twitter:title" content={fullTitle} />
-            <meta name="twitter:description" content={description} />
-            <meta name="twitter:image" content={image} />
-
-            {/* Extra meta tags */}
-            {Object.entries(extra).map(([property, content]) => (
-                <meta key={property} property={property} content={content} />
-            ))}
+            <meta name="twitter:description" content={summary} />
+            <meta name="twitter:image" content={picture} />
+            {Object.entries(extra).filter(([, content]) => content).map(([property, content]) => <meta key={property} property={property} content={content} />)}
+            {schemas.length > 0 && robots.startsWith('index') && <script id="mfilm-schema" type="application/ld+json">{safeJsonLd(schemas)}</script>}
         </Helmet>
     );
 }
-
-export default SEO;

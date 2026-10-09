@@ -40,3 +40,6 @@ jobs:
           if [ "$DRY_RUN" != "true" ]; then args+=(--apply); fi
           if [ "$FORCE" = "true" ]; then args+=(--force); fi
           node scripts/maintainMovieCatalog.mjs "${args[@]}"
+      - name: Notify search engines of recently updated public pages
+        if: ${{ !cancelled() && inputs.dry_run != true }}
+        run: npm run seo:submit -- --recent --submit

@@ -65,7 +65,7 @@ function FilmComingPage() {
 
     return (
         <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
-            <SEO 
+            <SEO items={currentMovies}
                 title="Phim Sắp Tới - MFILM"
                 description="Danh sách những bộ phim sắp tới cực hot."
                 url="/film-coming"
@@ -172,7 +172,7 @@ function FilmComingPage() {
                             ))}
                         </div>
 
-                        <Pagination
+                        <Pagination crawlable
                                 currentPage={safePage}
                                 totalPages={totalPages}
                                 totalItems={comingMovies.length}

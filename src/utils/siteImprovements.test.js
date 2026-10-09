@@ -56,9 +56,9 @@ test('Next episode skips missing sources, respects episode order and stops at th
     assert.equal(episodeSource({ url: 'embed' }, 2), 'embed');
 });
 
-test('Sitemap uses all named entities, resolves duplicate names and escapes XML without private routes', () => {
+test('Sitemap uses named entities associated with films, resolves duplicate names and escapes XML without private routes', () => {
     const xml = buildSitemap({
-        Movies: [{ id: 'opaque', name: 'Đứa Con', slug: 'dua-con', updatedAt: '2026-10-08T00:00:00Z' }],
+        Movies: [{ id: 'opaque', name: 'Đứa Con', slug: 'dua-con', updatedAt: '2026-10-08T00:00:00Z', listActor: ['a', 'b', 'c'], listAuthor: ['d'], listCharacter: ['e'] }],
         Actors: [{ id: 'b', name: 'CCH Pounder' }, { id: 'a', name: 'CCH Pounder' }, { id: 'c', name: 'CCH Pounder 2' }],
         Authors: [{ id: 'd', name: 'Tác Giả' }], Characters: [{ id: 'e', name: 'Nhân Vật' }], Topics: [{ id: 'f', name: 'Chủ Đề' }],
     }, 'https://mfilm.online');

@@ -137,7 +137,7 @@ function CountryPage() {
 
     return (
         <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
-            <SEO 
+            <SEO items={currentMovies}
                 title={`Phim ${decodedName} - Xem Phim Online`}
                 description={`Tổng hợp phim ${decodedName} hay nhất, mới nhất. Xem phim ${decodedName} vietsub, thuyết minh chất lượng cao tại MFILM.`}
                 url={`/country/${name}`}
@@ -185,7 +185,7 @@ function CountryPage() {
                         </div>
 
                         {totalPages > 1 && (
-                            <Pagination
+                            <Pagination crawlable
                                 currentPage={safePage}
                                 totalPages={totalPages}
                                 totalItems={countryMovies.length}

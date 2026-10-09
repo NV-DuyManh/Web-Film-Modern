@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { Link, useLocation } from 'react-router-dom';
 
 const Pagination = ({ 
     currentPage, 
     totalPages, 
     totalItems, 
     itemsPerPage, 
-    onPageChange 
+    onPageChange,
+    crawlable = false
 }) => {
     const [jumpPage, setJumpPage] = useState('');
+    const location = useLocation();
+    const renderPageControl = (page, className, children, disabled = false, label = `Page ${page}`) => {
+        if (!crawlable || disabled) return <button aria-label={label} onClick={() => onPageChange(page)} disabled={disabled} className={className}>{children}</button>;
+        const params = new URLSearchParams(location.search);
+        if (page > 1) params.set('page', page);
+        else params.delete('page');
+        return <Link aria-label={label} aria-current={page === currentPage ? 'page' : undefined} to={`${location.pathname}${params.size ? `?${params}` : ''}`}
+            onClick={event => {
+                if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+                event.preventDefault();
+                onPageChange(page);
+            }} className={className}>{children}</Link>;
+    };
 
     // Reset jump input when current page changes externally
     useEffect(() => {
@@ -59,13 +74,7 @@ const Pagination = ({
             {/* Right Controls */}
             <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2">
                 {/* Prev Button */}
-                <button
-                    onClick={() => onPageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-800/80 text-slate-400 flex items-center justify-center hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:hover:bg-slate-800/80 disabled:cursor-not-allowed transition-colors border border-slate-700 cursor-pointer"
-                >
-                    <FaChevronLeft size={12} />
-                </button>
+                {renderPageControl(currentPage - 1, 'w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-800/80 text-slate-400 flex items-center justify-center hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:hover:bg-slate-800/80 disabled:cursor-not-allowed transition-colors border border-slate-700 cursor-pointer', <FaChevronLeft size={12} />, currentPage === 1, 'Previous page')}
 
                 {/* Page Numbers */}
                 {getPageNumbers().map((page, index) => (
@@ -73,28 +82,17 @@ const Pagination = ({
                         {page === '...' ? (
                             <span className="w-6 sm:w-8 text-center text-slate-500 font-bold tracking-wider">...</span>
                         ) : (
-                            <button
-                                onClick={() => onPageChange(page)}
-                                className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 flex items-center justify-center border cursor-pointer ${
+                            renderPageControl(page, `w-8 h-8 sm:w-9 sm:h-9 rounded-lg font-bold text-xs sm:text-sm transition-all duration-300 flex items-center justify-center border cursor-pointer ${
                                     currentPage === page
                                         ? 'bg-slate-800 border-[#facc15] text-[#facc15] shadow-[0_0_10px_rgba(250,204,21,0.2)]'
                                         : 'bg-slate-800/80 border-slate-700 text-slate-400 hover:bg-slate-700 hover:text-white'
-                                }`}
-                            >
-                                {page}
-                            </button>
+                                }`, page)
                         )}
                     </React.Fragment>
                 ))}
 
                 {/* Next Button */}
-                <button
-                    onClick={() => onPageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-800/80 text-slate-400 flex items-center justify-center hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:hover:bg-slate-800/80 disabled:cursor-not-allowed transition-colors border border-slate-700 cursor-pointer"
-                >
-                    <FaChevronRight size={12} />
-                </button>
+                {renderPageControl(currentPage + 1, 'w-8 h-8 sm:w-9 sm:h-9 rounded-lg bg-slate-800/80 text-slate-400 flex items-center justify-center hover:bg-slate-700 hover:text-white disabled:opacity-40 disabled:hover:bg-slate-800/80 disabled:cursor-not-allowed transition-colors border border-slate-700 cursor-pointer', <FaChevronRight size={12} />, currentPage === totalPages, 'Next page')}
 
                 {/* Jump to Page */}
                 <div className="flex items-center gap-2 ml-0 sm:ml-4 pl-0 sm:pl-4 border-l-0 sm:border-l border-slate-700 mt-2 sm:mt-0">

@@ -124,7 +124,7 @@ function TopicDetail() {
 
     return (
         <div className="w-full min-h-screen bg-transparent relative overflow-hidden">
-            <SEO 
+            <SEO items={currentMovies}
                 title={`${collectionData.title} - Chủ Đề Phim`}
                 description={`${collectionData.description}. Xem ${collectionMovies.length} phim trong bộ sưu tập ${collectionData.title} tại MFILM.`}
                 url={topicPath}
@@ -302,7 +302,7 @@ function TopicDetail() {
                             </div>
 
                             {totalPages > 1 && (
-                                <Pagination
+                                <Pagination crawlable
                                 currentPage={safePage}
                                 totalPages={totalPages}
                                 totalItems={collectionMovies.length}

@@ -71,7 +71,7 @@ function CinemaPage() {
 
     return (
         <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
-            <SEO 
+            <SEO items={currentMovies}
                 title="Mãn Nhãn với Phim Chiếu Rạp - MFILM"
                 description="Tổng hợp phim chiếu rạp hay nhất, mới nhất tại MFILM."
                 url="/cinema-movies"
@@ -198,7 +198,7 @@ function CinemaPage() {
                             ))}
                         </div>
 
-                        <Pagination
+                        <Pagination crawlable
                                 currentPage={safePage}
                                 totalPages={totalPages}
                                 totalItems={cinemaMovies.length}

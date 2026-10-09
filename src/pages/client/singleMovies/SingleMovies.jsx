@@ -64,7 +64,7 @@ function SingleMovies() {
 
     return (
         <div className="w-full min-h-screen bg-[#0a0a0f] px-4 sm:px-6 md:px-8 relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '40px' }}>
-            <SEO 
+            <SEO items={currentMovies}
                 title="Phim Lẻ - Xem Phim Lẻ Online"
                 description="Tổng hợp phim lẻ hay nhất, mới nhất. Xem phim lẻ vietsub, thuyết minh chất lượng cao miễn phí tại MFILM."
                 url="/singleMovies"
@@ -191,7 +191,7 @@ function SingleMovies() {
                             ))}
                         </div>
 
-                        <Pagination
+                        <Pagination crawlable
                                 currentPage={safePage}
                                 totalPages={totalPages}
                                 totalItems={categoryMovies.length}

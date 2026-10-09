@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useMovies } from '../../../hooks/useCollections';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { CategoryContext } from "../../../contexts/CategoryProvider";
 import { FaSearch } from "react-icons/fa";
 import { searchTV } from "../../../components/admin/search/SearchTV";
@@ -43,7 +43,8 @@ function Category({ openCate, setOpenCate, isRightCol }) {
             </div>
             <div className="px-3 pb-4 pt-2 grid grid-cols-2 sm:grid-cols-4 max-h-75 overflow-y-auto custom-scrollbar">
                 {validCategories.length > 0 ? validCategories.map((e, index) => (
-                    <div 
+                    <Link
+                        to={`/category/${encodeURIComponent(e.name)}`}
                         key={index} 
                         onClick={(event) => {
                             event.preventDefault();
@@ -51,12 +52,12 @@ function Category({ openCate, setOpenCate, isRightCol }) {
                             navigate(`/category/${encodeURIComponent(e.name)}`);
                             if (setOpenCate) setOpenCate(false);
                         }}
-                        className="cursor-pointer px-2 py-1 group"
+                        className="block cursor-pointer px-2 py-1 group"
                     >
                         <div className="text-gray-200 px-3 py-2 rounded-lg group-hover:text-yellow-400 group-hover:bg-white/10 text-[13.5px] font-medium transition-colors duration-200">
                             {e.name}
                         </div>
-                    </div>
+                    </Link>
                 )) : (
                     <div className="col-span-full text-center py-8 text-slate-400 text-sm font-medium">
                         Không tìm thấy thể loại "{searchTerm}"

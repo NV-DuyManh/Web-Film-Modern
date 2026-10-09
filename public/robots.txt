@@ -1,9 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /account
-Disallow: /pay
-Disallow: /payVip
-Disallow: /payMovie
-Disallow: /upgrade
+Disallow: /api/
 
-Sitemap: https://mfilm.online/sitemap.xml
+Sitemap: https://www.mfilm.online/sitemap.xml

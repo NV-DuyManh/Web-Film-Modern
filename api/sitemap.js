@@ -1,10 +1,10 @@
 import { readFile } from 'node:fs/promises';
-import { readPublicCatalog } from '../scripts/lib/publicCatalog.mjs';
+import { loadSeoCatalog } from '../server/seo/loadCatalog.js';
 import { buildSitemap } from '../src/utils/sitemap.js';
 
 export const config = { maxDuration: 60 };
 
-export function createSitemapHandler({ readCatalog = readPublicCatalog,
+export function createSitemapHandler({ readCatalog = loadSeoCatalog,
     readSnapshot = () => readFile(new URL('../public/sitemap.xml', import.meta.url), 'utf8'), now = Date.now } = {}) {
     let cached;
     let expiresAt = 0;

@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import ErrorBoundary from '../components/ErrorBoundary';
 import PageLoadingSpinner from '../components/common/PageLoadingSpinner';
 import lazyRetry from '../utils/lazyRetry';
+import NotFound from '../pages/client/NotFound';
 
 const Home = lazyRetry(() => import('../pages/client/home/Home'));
 const Help = lazyRetry(() => import('../pages/client/help/Help'));
@@ -151,6 +152,7 @@ function ClientRouters(props) {
                     {clientRouter.map((p, index) => (
                         <Route key={index} path={p.path} element={<ErrorBoundary>{p.element}</ErrorBoundary>} />
                     ))}
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </Suspense>
         </div>

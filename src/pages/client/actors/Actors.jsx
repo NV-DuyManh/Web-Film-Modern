@@ -130,7 +130,7 @@ function Actors() {
                         </div>
 
                         {totalPages > 1 && (
-                            <Pagination
+                            <Pagination crawlable
                                 currentPage={safePage}
                                 totalPages={totalPages}
                                 totalItems={filteredActors.length}

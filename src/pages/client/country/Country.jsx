@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { COUNTRIES } from '../../../utils/Constants';
 import { FaSearch } from "react-icons/fa";
 import { searchTV } from "../../../components/admin/search/SearchTV";
@@ -42,7 +42,8 @@ function Country({ openCountry, setOpenCountry, isRightCol }) {
             </div>
             <div className="px-3 pb-4 pt-2 grid grid-cols-2 sm:grid-cols-4 max-h-[300px] overflow-y-auto custom-scrollbar">
                 {validCountries.length > 0 ? validCountries.map((e, index) => (
-                    <div 
+                    <Link
+                        to={`/country/${encodeURIComponent(e)}`}
                         key={index} 
                         onClick={(event) => {
                             event.preventDefault();
@@ -50,7 +51,7 @@ function Country({ openCountry, setOpenCountry, isRightCol }) {
                             navigate(`/country/${encodeURIComponent(e)}`);
                             if (setOpenCountry) setOpenCountry(false);
                         }}
-                        className="cursor-pointer px-2 py-1 group"
+                        className="block cursor-pointer px-2 py-1 group"
                     >
                         <div 
                             className="text-gray-200 px-2 py-2 rounded-lg group-hover:text-yellow-400 group-hover:bg-white/10 text-[13px] font-medium transition-colors duration-200 truncate"
@@ -58,7 +59,7 @@ function Country({ openCountry, setOpenCountry, isRightCol }) {
                         >
                             {e}
                         </div>
-                    </div>
+                    </Link>
                 )) : (
                     <div className="col-span-full text-center py-8 text-slate-400 text-sm font-medium">
                         Không tìm thấy quốc gia "{searchTerm}"
