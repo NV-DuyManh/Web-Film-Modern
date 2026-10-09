@@ -27,7 +27,7 @@ function Banner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [mainSwiper, setMainSwiper] = useState(null);
     const movies = useHomeMovies('hot');
-    const hotMovies = movies?.filter(m => m.isHot) || [];
+    const hotMovies = movies?.filter(m => m.isHot === true) || [];
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoryContext);
 
@@ -59,9 +59,7 @@ function Banner() {
 
 
 
-    if (!hotMovies || hotMovies.length === 0) return (
-        <div className='slide-banner bg-white/5 animate-pulse'></div>
-    );
+    if (hotMovies.length === 0) return null;
 
     return (
         <div className='slide-banner'>

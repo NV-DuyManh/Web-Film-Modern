@@ -1,4 +1,5 @@
-import { writeBatch, serverTimestamp } from 'firebase/firestore';
+import { writeBatch, serverTimestamp, FieldPath } from 'firebase/firestore';
+import { hotCatalogEdit } from '../utils/hotCatalog.js';
 import { changesPublicCatalog } from '../utils/publicCatalogFields.js';
 import { doc } from 'firebase/firestore';
 import { publicCatalogCache } from './publicCatalogCache.js';
@@ -20,6 +21,11 @@ export async function trackedWrite(reference, values, { operation = 'set', merge
     else batch.set(reference, values, { merge });
     const change = catalogChange(reference, operation === 'delete' ? null : values);
     if (change) batch.set(change.ref, change.values);
+    if (reference.parent.id === 'Movies') {
+        const edit = hotCatalogEdit({ ...values, id: reference.id }, operation === 'delete');
+        if (edit) batch.set(doc(reference.firestore, 'PublicCatalogControls', 'home'), { hot: { [reference.id]: edit } },
+            { mergeFields: [new FieldPath('hot', reference.id)] });
+    }
     await batch.commit();
     if (PUBLIC_COLLECTIONS.includes(reference.parent.id)) {
         publicCatalogCache.patch(reference.parent.id, publicCatalogRecord({ ...values, id: reference.id }), operation === 'delete');

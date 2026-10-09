@@ -67,7 +67,7 @@ function vercelAiDevPlugin() {
 
 function publicCatalogDevPlugin() {
     const install = server => {
-        for (const name of ['catalog-page', 'public-catalog', 'episode-metadata']) server.middlewares.use(`/api/${name}`, async (req, res) => {
+        for (const name of ['catalog-page', 'public-catalog', 'episode-metadata', 'home-hot']) server.middlewares.use(`/api/${name}`, async (req, res) => {
             try {
                 const { default: handler } = await import(pathToFileURL(resolve(process.cwd(), 'api', `${name}.js`)).href);
                 await handler(req, { setHeader: (key, value) => res.setHeader(key, value),

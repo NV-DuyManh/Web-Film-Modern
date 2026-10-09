@@ -1,5 +1,8 @@
 {
   "functions": {
+    "api/home-hot.js": {
+      "includeFiles": "server/seo/catalog.json"
+    },
     "api/catalog-page.js": {
       "includeFiles": "server/seo/catalog.json"
     },

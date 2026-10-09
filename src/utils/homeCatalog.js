@@ -12,7 +12,7 @@ export function homeCatalog(prepared, now = Date.now()) {
     };
     const animeType = prepared.catalog.CategoryTypes?.find(type => /anime|hoạt hình/i.test(type.name || ''));
     const sections = {
-        hot: movies.filter(movie => movie.isHot).slice(0, 20),
+        hot: movies.filter(movie => movie.isHot === true).slice(0, 20),
         new: movies.slice(0, 15),
         top: [...movies].sort((a, b) => score(b) - score(a)).slice(0, 10),
         cinema: listingMovies('/cinema-movies', prepared).slice(0, 15),

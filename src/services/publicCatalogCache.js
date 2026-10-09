@@ -1,3 +1,5 @@
+import { hotCatalogEdit, hotCatalogMovies } from '../utils/hotCatalog.js';
+
 const allowed = ['Movies', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes'];
 const MAX_AGE = 5 * 60000;
 
@@ -6,6 +8,8 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
     const records = new Map();
     const listeners = new Map();
     const indexEdits = new Map();
+    const hotEdits = new Map();
+    const applyHotEdits = items => hotCatalogMovies(items, Object.fromEntries(hotEdits));
     const applyIndexEdits = (items, acknowledge = true) => {
         const byID = new Map(items.map(item => [item.id, item]));
         for (const [id, edit] of indexEdits) {
@@ -29,6 +33,28 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
         return manifestLoading ||= json('/catalog/manifest.json');
     };
     const load = async name => {
+        if (name === 'Hot') {
+            const previous = records.get(name);
+            if (previous?.items && now() - previous.loadedAt < 60000) return previous.items;
+            if (previous?.loading) return previous.loading;
+            const loading = (async () => {
+                let items;
+                try {
+                    const result = await json('/api/home-hot');
+                    if (!Array.isArray(result.items)) throw new Error('Invalid Hot catalog');
+                    for (const [id, edit] of hotEdits) {
+                        if (result.items.some(item => item.id === id && item.isHot === true) === edit.isHot) hotEdits.delete(id);
+                    }
+                    items = applyHotEdits(result.items);
+                } catch {
+                    const home = previous?.items ? null : await load('Home');
+                    items = applyHotEdits(previous?.items || home.movies);
+                }
+                records.set(name, { items, loadedAt: now() });
+                return items;
+            })();
+            records.set(name, { ...previous, loading }); return loading;
+        }
         if (name === 'MovieIndex') {
             const previous = records.get(name);
             if (previous?.items && now() - previous.loadedAt < MAX_AGE) return previous.items;
@@ -97,6 +123,16 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
         subscribe(name, callback) { if (!listeners.has(name)) listeners.set(name, new Set()); listeners.get(name).add(callback); return () => listeners.get(name)?.delete(callback); },
         patch(name, item, removed = false) {
             if (name === 'Movies') {
+                const hotEdit = hotCatalogEdit(item, removed);
+                if (hotEdit) {
+                    hotEdits.set(item.id, hotEdit);
+                    const hot = records.get('Hot');
+                    if (Array.isArray(hot?.items)) {
+                        const items = applyHotEdits(hot.items);
+                        records.set('Hot', { items, loadedAt: now() });
+                        for (const callback of listeners.get('Hot') || []) callback(items);
+                    }
+                }
                 // Keep confirmed admin edits visible while the daily CDN publication catches up.
                 const fields = Object.fromEntries(['id', 'name', 'otherName', 'slug', 'routeSlug'].filter(field => item[field] !== undefined).map(field => [field, item[field]]));
                 if (removed || Object.keys(fields).length > 1) indexEdits.set(item.id, { item: { ...indexEdits.get(item.id)?.item, ...fields }, removed, at: now() });
@@ -114,7 +150,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
             records.set(name, { items, loadedAt: now() });
             for (const callback of listeners.get(name) || []) callback(items);
         },
-        clear() { records.clear(); indexEdits.clear(); manifestLoading = null; } };
+        clear() { records.clear(); indexEdits.clear(); hotEdits.clear(); manifestLoading = null; } };
 }
 
 let browserStorage;
