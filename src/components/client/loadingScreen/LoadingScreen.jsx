@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
-import { useMovies } from '../../../hooks/useCollections';
+import useHomeMovies from '../../../hooks/useHomeMovies';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import Logo from '../../../assets/Icon.png';
 import './LoadingScreen.css';
@@ -37,7 +37,7 @@ function LoadingScreen({ onFinished }) {
     const [brandReady, setBrandReady] = useState(false);
     const [burst, setBurst] = useState(false);
 
-    const movies = useMovies();
+    const movies = useHomeMovies('new');
     const categories = useContext(CategoryContext);
     const movieStatus = useCatalogStatus('Movies');
     const categoryStatus = useCatalogStatus('Categories');

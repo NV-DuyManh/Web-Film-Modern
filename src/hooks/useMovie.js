@@ -1,14 +1,14 @@
 import { useEffect, useMemo, useState } from 'react';
 import { doc, collection, query, where, limit, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
-import { useMovies } from './useCollections';
+import useMovieIndex from './useMovieIndex';
 import { findRouteEntity } from '../utils/nameRoutes';
 import { resolveMovieImages } from '../utils/movieImages';
 
 // Cached lists are for discovery. Price, plan and current film details still come
 // from one live document so caching never changes purchase/access decisions.
 export default function useMovie(slug) {
-    const movies = useMovies();
+    const movies = useMovieIndex();
     const cached = useMemo(() => findRouteEntity(movies, slug), [movies, slug]);
     const key = cached?.id || slug || '';
     const [state, setState] = useState({ key: '', movie: null });

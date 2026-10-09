@@ -1,16 +1,16 @@
-name: KKPhim Background Crawler
+name: Daily New KKPhim Movies
 
 on:
   schedule:
-    # Resume the admin queue first, then the once-daily discovery queue.
-    - cron: '7-59/5 * * * *'
+    # 01:23 Vietnam time. The existing worker resumes unfinished daily imports.
+    - cron: '23 18 * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  crawl:
+  import-new-movies:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     concurrency:
@@ -25,17 +25,17 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Continue requested crawl
+      - name: Queue daily discovery and continue available work
         id: crawl
-        run: node scripts/crawlKkphim.mjs
-      - name: Publish changed public cache without database scans
+        run: node scripts/crawlKkphim.mjs --daily
+      - name: Publish imported films
         if: steps.crawl.outputs.publish == 'true'
         run: |
           git config user.name "MFILM Catalog"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add server/seo/catalog.json public/sitemap.xml
           if ! git diff --cached --quiet; then
-            git commit -m "chore: publish crawled public catalog"
+            git commit -m "chore: publish daily new movies"
             git pull --rebase origin main
             git push origin HEAD:main
           fi

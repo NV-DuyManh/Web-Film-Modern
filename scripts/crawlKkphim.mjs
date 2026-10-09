@@ -8,6 +8,7 @@ import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, getDocs, getDocFromServer, query, where, limit, terminate } from 'firebase/firestore';
 import { runCrawlerJob } from './lib/crawlerRunner.mjs';
 import { CRAWLER_SETTINGS_ID } from '../src/utils/crawlerJob.js';
+import { DAILY_CRAWLER_SETTINGS_ID, nextDailyCrawlerJob } from '../src/utils/dailyCrawler.js';
 import { kkphimDocumentID, randomMoviePlanID } from '../src/utils/movieMaintenance.js';
 import { randomRentalPrice, rentalPriceRange } from '../src/utils/importRentalPricing.js';
 import { resolveMovieImages } from '../src/utils/movieImages.js';
@@ -24,23 +25,35 @@ import { fetchMoviesList, fetchMovieDetails, fetchMovieImages, getFullImageUrl,
 const hash = value => createHash('sha256').update(value).digest('hex').slice(0, 24);
 const normalize = value => String(value || '').trim().toLowerCase();
 
-export async function crawlOnCloud({ dryRun = false } = {}) {
+export async function crawlOnCloud({ dryRun = false, daily = false } = {}) {
     const db = getFirestore(initializeApp({ projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk' }, 'kkphim-cloud-crawler'));
-    const ref = doc(db, 'Settings', CRAWLER_SETTINGS_ID);
+    let ref = doc(db, 'Settings', CRAWLER_SETTINGS_ID);
     let io;
     const read = async () => (await (io ? io.read(ref, true) : getDocFromServer(ref))).data();
     try {
-        const initial = await read();
+        let initial = await read();
         if (dryRun) {
             console.log(JSON.stringify({ dryRun: true, status: initial?.status || 'idle', options: initial?.options || null }));
             return;
         }
+        if (process.env.GITHUB_ACTIONS !== 'true') throw new Error('Use the serialized cloud workflow for writes, or --dry-run locally.');
+        const adminActive = initial && ['queued', 'running', 'paused'].includes(initial.status);
+        if (daily || !adminActive) {
+            const dailyRef = doc(db, 'Settings', DAILY_CRAWLER_SETTINGS_ID);
+            const previous = (await getDocFromServer(dailyRef)).data();
+            const queued = daily ? nextDailyCrawlerJob(previous) : null;
+            if (queued) {
+                io = await backgroundFirestore(db, { initialReads: 2 });
+                await io.set(dailyRef, queued);
+                console.log('Daily check queued: newest KKPhim pages 1–5.');
+            }
+            if (!adminActive) { ref = dailyRef; initial = queued || previous; }
+        }
         if (!initial || !['queued', 'running', 'paused'].includes(initial.status)) { console.log('No queued KKPhim crawl.'); return; }
         if (Number(initial.resumeAt) > Date.now()) { console.log('Daily background budget reached; waiting for reset.'); return; }
-        io = await backgroundFirestore(db);
+        io ||= await backgroundFirestore(db, { initialReads: adminActive ? 1 : 2 });
         // This process must run within the same GitHub concurrency group as episode sync.
         // A browser never performs any import work or supplies a GitHub credential.
-        if (process.env.GITHUB_ACTIONS !== 'true') throw new Error('Use the serialized cloud workflow for writes, or --dry-run locally.');
         const store = { read, patch: async (id, values) => {
             if ((await read())?.jobId !== id) return false;
             await io.update(ref, values, true);
@@ -74,7 +87,7 @@ export async function crawlOnCloud({ dryRun = false } = {}) {
             if (live && live.crawlImportState !== 'pending') {
                 if (sourceTime && movieTime(live.sourceUpdatedAt) !== sourceTime) { await io.update(movieRef, { sourceUpdatedAt: sourceTime }); live.sourceUpdatedAt = sourceTime; catalogChanged = true; }
                 const cached = data.Movies.find(value => value.id === movieRef.id);
-                if (cached) Object.assign(cached, live); else data.Movies.push({ ...live, id: movieRef.id });
+                if (cached) Object.assign(cached, live); else { data.Movies.push({ ...live, id: movieRef.id }); catalogChanged = true; }
                 // A prior worker can finish saving a film before its cursor checkpoint.
                 return live.crawlJobId === jobId ? { movieId: movieRef.id, movies: 1, episodes: live.crawlImportedEpisodes || 0 } : { skipped: 1 };
             }
@@ -177,5 +190,5 @@ export async function crawlOnCloud({ dryRun = false } = {}) {
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
-    crawlOnCloud({ dryRun: process.argv.includes('--dry-run') }).catch(error => { console.error(error.message); process.exitCode = 1; });
+    crawlOnCloud({ dryRun: process.argv.includes('--dry-run'), daily: process.argv.includes('--daily') }).catch(error => { console.error(error.message); process.exitCode = 1; });
 }

@@ -2,12 +2,16 @@ import { listingMovies } from '../../server/seo/catalog.js';
 
 const paths = { new: '/film-new', single: '/singleMovies', series: '/series', anime: '/anime', cinema: '/cinema-movies', coming: '/film-coming', hongkong: '/film-hongkong' };
 const searchable = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'd').toLowerCase().trim();
+const listings = new WeakMap();
 
 export function catalogPage(prepared, params) {
     const kind = params.get('kind') || 'new';
     if (!Object.hasOwn(paths, kind) && !['category', 'country'].includes(kind)) throw new Error('Invalid public listing.');
     const size = Math.min(100, Math.max(1, Number(params.get('limit')) || 28));
-    let items = listingMovies(paths[kind] || '/film-new', prepared);
+    if (!listings.has(prepared)) listings.set(prepared, new Map());
+    const lists = listings.get(prepared), path = paths[kind] || '/film-new';
+    if (!lists.has(path)) lists.set(path, listingMovies(path, prepared));
+    let items = lists.get(path);
     if (kind === 'category') {
         const name = (params.get('name') || '').toLowerCase();
         const category = prepared.catalog.Categories?.find(value => value.name?.toLowerCase() === name);

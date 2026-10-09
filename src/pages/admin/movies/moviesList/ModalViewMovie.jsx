@@ -1,6 +1,6 @@
 import { routeSegment } from '../../../../utils/nameRoutes';
-import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
-import React, { useContext, useEffect, useState } from 'react';
+import useLiveDocuments from '../../../../hooks/useLiveDocuments';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, Slide } from '@mui/material';
 import { FaTimesCircle, FaStar, FaGlobe, FaClock, FaCalendarAlt, FaTv, FaCrown, FaFilm, FaUserTie, FaUsers, FaUserNinja, FaMoneyBillWave, FaEdit } from 'react-icons/fa';
@@ -113,13 +113,10 @@ function AvatarRow({ items, list, fallback, color = "cyan", entityType, handleCl
 function ModalViewMovie({ open, handleClose, movie, onEdit }) {
     const navigate = useNavigate();
     const categoryTypes = useContext(CategoryTypeContext);
-    const [actors, setActors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
+    const actors = useLiveDocuments('Actors', open ? movie?.listActor || [] : []);
     const categoriesList = useContext(CategoryContext);
-    const [authors, setAuthors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
-    const [characters, setCharacters] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
+    const authors = useLiveDocuments('Authors', open ? movie?.listAuthor || [] : []);
+    const characters = useLiveDocuments('Characters', open ? movie?.listCharacter || [] : []);
     const plansList = useContext(PlanContext);
 
     if (!movie) return null;

@@ -1,19 +1,18 @@
 import React, { useContext, useMemo } from 'react';
-import { useMovies } from '../../../../hooks/useCollections';
+import { useHomeCatalog } from '../../../../hooks/useHomeMovies';
 import { FaChevronRight } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
+const EMPTY_CATEGORIES = [];
 
 function CategoriesFilm() {
-    const categories = useContext(CategoryContext) || [];
-    const movies = useMovies() || [];
+    const categories = useContext(CategoryContext) || EMPTY_CATEGORIES;
+    const home = useHomeCatalog();
 
     const validCategories = useMemo(() => {
-        if (!categories || !movies) return [];
-        return categories.filter(c => 
-            movies.some(m => (m.listCategory || []).some(catId => String(catId) === String(c.id)))
-        );
-    }, [categories, movies]);
+        const used = new Set((home?.categoryIDs || []).map(String));
+        return categories.filter(category => used.has(String(category.id)));
+    }, [categories, home]);
 
     const categoryStyles = [
         "from-blue-600 via-indigo-500 to-purple-600 shadow-[0_8px_15px_rgba(79,70,229,0.25)] hover:shadow-[0_12px_25px_rgba(79,70,229,0.45)]",

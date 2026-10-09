@@ -1,7 +1,7 @@
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
-import { useMovies } from '../../../../hooks/useCollections';
+import useHomeMovies from '../../../../hooks/useHomeMovies';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -13,7 +13,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
 function TopFilm() {
-    const movies = useMovies();
+    const movies = useHomeMovies('top');
     const [realtimeTrending, setRealtimeTrending] = useState(null);
     const REALTIME_TRENDING_ENABLED = import.meta.env?.VITE_REALTIME_TRENDING_ENABLED === 'true';
     const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';

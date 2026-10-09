@@ -2,7 +2,7 @@ import useMovie from '../../../../hooks/useMovie';
 import { normalizeEpisodes, episodeInfo, episodeKey, episodeLabel } from '../../../../utils/episodes';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useId } from 'react';
-import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
+import { useRentMovies, useSubscriptions } from '../../../../hooks/useCollections';
 import { FaLock, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
@@ -22,21 +22,11 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
     const subscriptions = useSubscriptions();
-    const movies = useMovies();
-    const currentMovie = useMovie(slug);
+    const currentMovie = useMovie(episodeShow?.find(episode => episode.id === slug)?.movieID || slug);
     const plans = useContext(PlanContext);
     const allRent = useRentMovies();
 
-    const movie = useMemo(() => {
-        let found = currentMovie;
-        if (!found) {
-            const ep = episodeShow?.find(e => e.id == slug);
-            if (ep) {
-                found = getObjectById(movies, ep.movieID);
-            }
-        }
-        return found;
-    }, [currentMovie, movies, episodeShow, slug]);
+    const movie = currentMovie;
 
     const categoryTypes = useContext(CategoryTypeContext);
     const isSingle = isSingleMovie(movie, categoryTypes);

@@ -2,9 +2,10 @@ import { newestMoviesFirst } from '../utils/movieRecency';
 import { stripRouteMetadata } from '../utils/nameRoutes';
 import { reportCatalogStatus } from '../utils/catalogStatus';
 import { resolveMovieImages, movieArtworkPatch } from '../utils/movieImages';
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, setDoc, query, where, limit, orderBy } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, query, where, limit, orderBy } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { uploadImageToCloudinary } from "../config/cloudinaryConfig";
+import { trackedSetDoc, trackedUpdateDoc, trackedDeleteDoc } from './catalogWrites.js';
 
 const CREATED_AT_COLLECTIONS = ["Movies", "Users", "Reviews", "Comments", "Favorites", "Folders", "MoviesSave", "WatchHistory"];
 
@@ -34,7 +35,7 @@ export const addDocument = async (collectionName, values) => {
             id: docRef.id,
             ...(CREATED_AT_COLLECTIONS.includes(collectionName) ? { createdAt: Date.now() } : {})
         };
-        await setDoc(docRef, finalData);
+        await trackedSetDoc(docRef, finalData);
         if (collectionName === 'Episodes' && finalData.movieID) await updateDoc(doc(db, 'Movies', finalData.movieID), { episodeMetadataVersion: Date.now() }).catch(error => console.warn('Episode metadata refresh delayed:', error.code));
         return finalData;
     } catch (error) {
@@ -76,7 +77,7 @@ export const updateDocument = async (collectionName, values, skipUpdatedAt = fal
     if (!skipUpdatedAt) {
         updatedValues.updatedAt = Date.now();
     }
-    await updateDoc(doc(db, collectionName, id), updatedValues);
+    await trackedUpdateDoc(doc(db, collectionName, id), updatedValues);
     if (collectionName === 'Episodes') {
         const movieID = updatedValues.movieID || (await getDoc(doc(db, collectionName, id))).data()?.movieID;
         if (movieID) await updateDoc(doc(db, 'Movies', movieID), { episodeMetadataVersion: Date.now() }).catch(error => console.warn('Episode metadata refresh delayed:', error.code));
@@ -95,7 +96,7 @@ export const deleteDocument = async (collectionName, values) => {
     } else if (["Characters", "Actors", "Categories", "Authors"].includes(collectionName)) {
         const fieldMap = { Characters: "listCharacter", Actors: "listActor", Categories: "listCategory", Authors: "listAuthor" };
         const field = fieldMap[collectionName];
-        const moviesSnap = await getDocs(collection(db, "Movies"));
+        const moviesSnap = await getDocs(query(collection(db, 'Movies'), where(field, 'array-contains', id)));
 
         for (const d of moviesSnap.docs) {
             const data = d.data();
@@ -106,11 +107,11 @@ export const deleteDocument = async (collectionName, values) => {
                 updatedData[field] = data[field].filter(e => e !== id);
                 needsUpdate = true;
             }
-            if (needsUpdate) await updateDoc(doc(db, "Movies", d.id), updatedData);
+            if (needsUpdate) await trackedUpdateDoc(doc(db, "Movies", d.id), updatedData);
         }
     }
 
-    await deleteDoc(doc(db, collectionName, id));
+    await trackedDeleteDoc(doc(db, collectionName, id));
     if (collectionName === 'Episodes' && values.movieID) await updateDoc(doc(db, 'Movies', values.movieID), { episodeMetadataVersion: Date.now() }).catch(error => console.warn('Episode metadata refresh delayed:', error.code));
 };
 

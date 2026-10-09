@@ -1,6 +1,6 @@
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import React, { useState, useContext, useEffect } from 'react';
-import { useMovies } from '../../../../hooks/useCollections';
+import useMovieIndex from '../../../../hooks/useMovieIndex';
 import { useSearchParams } from 'react-router-dom';
 import Search from '../../../../components/admin/search/Search';
 import TableMovies from './TableMovies';
@@ -11,6 +11,8 @@ import { addDocument, updateDocument, deleteDocument } from '../../../../service
 import { uploadImageToCloudinary } from '../../../../config/cloudinaryConfig';
 import { slugify } from '../../../../utils/appUtils';
 import { resolveMovieImages } from '../../../../utils/movieImages';
+import { doc, getDocFromServer } from 'firebase/firestore';
+import { db } from '../../../../config/firebaseConfig';
 
 const innerMovie = { 
     name: "", otherName: "", description: "", imgUrl: "", bannerUrl: "",
@@ -22,7 +24,7 @@ const innerMovie = {
 };
 
 function MoviesList() {
-    const movies = useMovies();
+    const movies = useMovieIndex();
     const [movie, setMovie] = useState(innerMovie);
     const [movieView, setMovieView] = useState(null);
     const [error, setError] = useState({});
@@ -35,6 +37,7 @@ function MoviesList() {
     const [searchParams, setSearchParams] = useSearchParams();
 
     useEffect(() => {
+        let active = true;
         const viewMovieId = searchParams.get("viewMovie");
         if (viewMovieId && movies.length > 0) {
             const mv = findRouteEntity(movies, viewMovieId);
@@ -45,12 +48,12 @@ function MoviesList() {
                     params.set('viewMovie', canonical);
                     setSearchParams(params, { replace: true });
                 }
-                setMovieView(mv);
-                setOpenView(true);
+                getDocFromServer(doc(db, 'Movies', mv.id)).then(snapshot => {
+                    if (active && snapshot.exists()) { setMovieView({ ...mv, ...snapshot.data(), id: snapshot.id }); setOpenView(true); }
+                }).catch(error => console.warn('Movie details unavailable:', error.code));
             }
-        } else {
-            setOpenView(false);
         }
+        return () => { active = false; };
     }, [searchParams, movies, setSearchParams]);
 
 
@@ -72,15 +75,19 @@ function MoviesList() {
         setOpenForm(true);
     };
 
-    const handleEdit = (row) => {
-        const editRow = { ...row, ...row._artworkSource };
-        delete editRow._artworkSource;
-        if ((!editRow.listAuthor || editRow.listAuthor.length === 0) && editRow.author) {
-            editRow.listAuthor = [editRow.author];
-        }
-        setMovie(editRow);
-        setError({});
-        setOpenForm(true);
+    const handleEdit = async (row) => {
+        try {
+            const snapshot = await getDocFromServer(doc(db, 'Movies', row.id));
+            if (!snapshot.exists()) return;
+            const editRow = { ...snapshot.data(), id: snapshot.id };
+            delete editRow._artworkSource;
+            if ((!editRow.listAuthor || editRow.listAuthor.length === 0) && editRow.author) {
+                editRow.listAuthor = [editRow.author];
+            }
+            setMovie(editRow);
+            setError({});
+            setOpenForm(true);
+        } catch { alert('Could not load current movie details. Please try again.'); }
     };
 
     const handleViewMovie = (row) => {
@@ -206,7 +213,7 @@ function MoviesList() {
             />
 
             <ModalViewMovie 
-                open={openView} 
+                open={openView && Boolean(searchParams.get('viewMovie')) && findRouteEntity(movies, searchParams.get('viewMovie'))?.id === movieView?.id}
                 handleClose={handleCloseView} 
                 movie={movieView} 
                 onEdit={() => {

@@ -32,9 +32,20 @@ async function hasReferences(movieID) {
         const snapshot = io ? await io.query(request, 1) : await getDocs(request);
         if (!snapshot.empty) return true;
     }
-    // Favorites and custom lists are also stored inside user documents.
-    usersCache ||= await readAll('Users');
-    return usersCache.some(item => containsID(item, movieID));
+    // Do not scan every account to decide whether an import can be retired.
+    for (const field of ['listFavorite', 'listSave']) {
+        const request = query(collection(db, 'Users'), where(field, 'array-contains', movieID), limit(1));
+        const snapshot = io ? await io.query(request, 1) : await getDocs(request);
+        if (!snapshot.empty) return true;
+    }
+    // Legacy custom lists can contain nested references. Inspect at most 250
+    // accounts, once per run; preserve the duplicate if the check is incomplete.
+    if (!usersCache) {
+        const request = query(collection(db, 'Users'), orderBy(documentId()), limit(250));
+        const snapshot = io ? await io.query(request, 250) : await getDocs(request);
+        usersCache = { complete: snapshot.size < 250, items: snapshot.docs.map(item => item.data()) };
+    }
+    return !usersCache.complete || usersCache.items.some(item => containsID(item, movieID));
 }
 
 async function maintain() {
@@ -49,7 +60,12 @@ async function maintain() {
     if (apply) io = await backgroundFirestore(db);
     const plans = await readAll('Plans');
     if (!plans.length) throw new Error('Chưa tải được gói; không cập nhật dữ liệu.');
-    const movies = await readAll('Movies');
+    const constraints = [orderBy(documentId()), limit(250)];
+    if (settings.auditCursor) constraints.push(startAfter(settings.auditCursor));
+    const request = query(collection(db, 'Movies'), ...constraints);
+    const page = io ? await io.query(request, 250) : await getDocs(request);
+    const movies = page.docs.map(item => ({ ...item.data(), id: item.id }));
+    const auditCursor = page.size < 250 ? '' : page.docs.at(-1).id;
     summary.checked = movies.length;
     for (const movie of movies) {
         if (!movieMaintenancePatch(movie, plans, () => 0)) continue;
@@ -83,7 +99,7 @@ async function maintain() {
             summary.archivedDuplicates++;
         }
     }
-    if (apply) await io.set(settingsRef, { resumeAt: 0, lastSuccessAt: Date.now(), lastSummary: summary, commit: process.env.GITHUB_SHA || '' }, { merge: true });
+    if (apply) await io.set(settingsRef, { auditCursor, resumeAt: 0, lastSuccessAt: Date.now(), lastSummary: summary, commit: process.env.GITHUB_SHA || '' }, { merge: true });
     console.log('[CatalogMaintenance]', JSON.stringify({ ...summary, apply }));
 }
 

@@ -1,3 +1,4 @@
+import { trackedSetDoc as setDoc, trackedUpdateDoc as updateDoc } from '../../../services/catalogWrites';
 import useEpisodesForMovies from '../../../hooks/useEpisodesForMovies';
 import { episodeSourceFingerprint } from '../../../utils/episodeSourceFingerprint';
 import { movieTime } from '../../../utils/movieRecency';
@@ -11,7 +12,7 @@ import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExcha
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
-import { collection, doc, setDoc, updateDoc, onSnapshot, getDoc, getDocFromServer, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, onSnapshot, getDoc, getDocFromServer, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
 
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -127,7 +128,7 @@ function MagicImport() {
     const plans = useContext(PlanContext) || [];
     const categoryTypes = useContext(CategoryTypeContext) || [];
 
-    const existingMovies = useMovies() || [];
+    const existingMovies = useMovies();
     const existingShowtimes = useShowTimes() || [];
     const matchingMovieIds = useMemo(() => previewData.map(row => findMatchingMovie(existingMovies, row)?.id).filter(Boolean), [previewData, existingMovies]);
     const { episodes: existingEpisodes, ready: episodeReady } = useEpisodesForMovies(matchingMovieIds, needsEntities);
@@ -463,10 +464,10 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         if (movie.releaseYear) updateData.releaseYear = movie.releaseYear;
                         if (categoryTypeID) updateData.categoryTypeID = categoryTypeID;
 
-                        updateData.listCategory = Array.from(new Set([...(existingMovie.listCategory || []), ...listCategory]));
-                        updateData.listActor = Array.from(new Set([...(existingMovie.listActor || []), ...listActor]));
-                        updateData.listCharacter = Array.from(new Set([...(existingMovie.listCharacter || []), ...listCharacter]));
-                        updateData.listAuthor = Array.from(new Set([...(existingMovie.listAuthor || []), ...listAuthor]));
+                        updateData.listCategory = Array.from(new Set([...(liveMovie.listCategory || []), ...listCategory]));
+                        updateData.listActor = Array.from(new Set([...(liveMovie.listActor || []), ...listActor]));
+                        updateData.listCharacter = Array.from(new Set([...(liveMovie.listCharacter || []), ...listCharacter]));
+                        updateData.listAuthor = Array.from(new Set([...(liveMovie.listAuthor || []), ...listAuthor]));
 
                         await updateDoc(movieRef, updateData);
                         moviesUpdated++;

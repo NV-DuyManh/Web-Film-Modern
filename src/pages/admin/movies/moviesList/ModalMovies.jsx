@@ -33,11 +33,11 @@ const AGE_RATING_OPTIONS = [
 
 function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, progress, setMovie, error, setError }) {
     const [actors, setActors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
+    useEffect(() => { if (!open) return; const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, [open]);
     const [authors, setAuthors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
+    useEffect(() => { if (!open) return; const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, [open]);
     const [characters, setCharacters] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
+    useEffect(() => { if (!open) return; const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, [open]);
 
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);

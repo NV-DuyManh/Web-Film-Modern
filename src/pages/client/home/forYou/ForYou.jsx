@@ -2,7 +2,7 @@ import { resolveMovieImages, movieArtwork } from '../../../../utils/movieImages'
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
-import { useMovies } from '../../../../hooks/useCollections';
+import useHomeMovies from '../../../../hooks/useHomeMovies';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -32,7 +32,7 @@ class ForYouErrorBoundary extends React.Component {
 }
 
 function ForYouInner() {
-    const movies = useMovies();
+    const movies = useHomeMovies('new');
     const plans = useContext(PlanContext);
     const authContext = useContext(AuthContext);
     const isLogin = authContext?.isLogin;

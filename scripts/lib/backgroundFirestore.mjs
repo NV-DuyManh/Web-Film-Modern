@@ -1,5 +1,6 @@
 import { doc, getDocFromServer, getDocs, setDoc, updateDoc, deleteDoc, writeBatch } from 'firebase/firestore';
 import { createQuotaCounter, BackgroundQuotaError } from '../../src/utils/backgroundQuota.js';
+import { catalogChange } from '../../src/services/catalogWrites.js';
 
 // Shared only by serialized GitHub jobs. Counts our SDK operations conservatively;
 // it does not claim to measure visitors' or Firebase Console usage.
@@ -31,21 +32,41 @@ export async function backgroundFirestore(db, { dryRun = false, now = Date.now, 
             if (dirty >= 40) await flush();
             return snapshot;
         },
-        async set(reference, values, options) { if (dryRun) return; charge(0, 1); await setDoc(reference, values, options); if (dirty >= 40) await flush(); },
-        async update(reference, values, checkpoint = false) { if (dryRun) return; charge(0, 1, checkpoint); await updateDoc(reference, values); if (dirty >= 40) await flush(); },
-        async remove(reference) { if (dryRun) return; charge(0, 1); await deleteDoc(reference); if (dirty >= 40) await flush(); },
+        async set(reference, values, options) {
+            if (dryRun) return;
+            const change = catalogChange(reference, values); charge(0, change ? 2 : 1);
+            const batch = writeBatch(db); batch.set(reference, values, options || {});
+            if (change) batch.set(change.ref, change.values);
+            await batch.commit(); if (dirty >= 40) await flush();
+        },
+        async update(reference, values, checkpoint = false) {
+            if (dryRun) return;
+            const change = catalogChange(reference, values); charge(0, change ? 2 : 1, checkpoint);
+            const batch = writeBatch(db); batch.update(reference, values);
+            if (change) batch.set(change.ref, change.values);
+            await batch.commit(); if (dirty >= 40) await flush();
+        },
+        async remove(reference) {
+            if (dryRun) return;
+            const change = catalogChange(reference, null); charge(0, change ? 2 : 1);
+            const batch = writeBatch(db); batch.delete(reference); if (change) batch.set(change.ref, change.values);
+            await batch.commit(); if (dirty >= 40) await flush();
+        },
         async batch(items) {
             if (dryRun || !items.length) return;
-            charge(0, items.length);
+            const changes = items.map(item => catalogChange(item.ref, item.values)).filter(Boolean);
+            charge(0, items.length + changes.length);
             const batch = writeBatch(db);
             for (const { ref: target, values, merge = false } of items) batch.set(target, values, { merge });
+            for (const change of changes) batch.set(change.ref, change.values);
             await batch.commit();
             if (dirty >= 40) await flush();
         },
         async archiveAndRemove(archive, original, values) {
             if (dryRun) return;
-            charge(0, 2);
+            const change = catalogChange(original, null); charge(0, change ? 3 : 2);
             const batch = writeBatch(db); batch.set(archive, values); batch.delete(original);
+            if (change) batch.set(change.ref, change.values);
             await batch.commit(); if (dirty >= 40) await flush();
         },
     };

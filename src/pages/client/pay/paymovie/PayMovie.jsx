@@ -1,5 +1,5 @@
 import useMovie from '../../../../hooks/useMovie';
-import { useMovies } from '../../../../hooks/useCollections';
+import useMovieIndex from '../../../../hooks/useMovieIndex';
 import MovieImage from '../../../../components/MovieImage';
 import PaymentMethods from '../PaymentMethods';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
@@ -20,8 +20,8 @@ function PayMovie() {
     const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
     const { slug: routeValue } = useParams();
-    const catalogStatus = useCatalogStatus('Movies');
-    const movies = useMovies();
+    const catalogStatus = useCatalogStatus('MovieIndex');
+    const movies = useMovieIndex();
     const [showModal, setShowModal] = useState(false);
 
     const currentMovie = useMovie(routeValue);

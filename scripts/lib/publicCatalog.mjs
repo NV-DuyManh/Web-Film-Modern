@@ -2,18 +2,11 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, collection, query, orderBy, documentId, limit, startAfter, getDocs, getDoc, doc, where, terminate } from 'firebase/firestore';
 import { SITEMAP_COLLECTIONS } from '../../src/utils/sitemap.js';
 import { backgroundFirestore } from './backgroundFirestore.mjs';
+import { publicCatalogRecord } from '../../src/utils/publicCatalogFields.js';
+export { publicCatalogRecord } from '../../src/utils/publicCatalogFields.js';
 
 let database;
 let metered;
-const PUBLIC_FIELDS = ['name', 'otherName', 'title', 'slug', 'createdAt', 'updatedAt', 'sourceUpdatedAt', 'description',
-    'imgUrl', 'bannerUrl', 'avatar', 'releaseYear', 'year', 'duration', 'time', 'endEpisode',
-    'hasSub', 'hasDub', 'hasVoice', 'episodeSub', 'episodeDub', 'episodeVoice', 'countriesID', 'listCategory', 'categoryTypeID', 'status',
-    'actor', 'actors', 'listActor', 'author', 'listAuthor', 'character', 'characters',
-    'listCharacter', 'sexID', 'movieID', 'isSmart', 'smartID', 'views', 'totalEpisodes',
-    'planID', 'rent', 'ageRating', 'isHot', 'hot', 'gallery', 'images', 'trailer_url', 'trailerUrl'];
-export function publicCatalogRecord(data) {
-    return { id: data.id, ...Object.fromEntries(PUBLIC_FIELDS.filter(key => data[key] !== undefined).map(key => [key, data[key]])) };
-}
 function publicDocument(document) { return publicCatalogRecord({ ...document.data(), id: document.id }); }
 function getCatalogDatabase() {
     if (!database) {

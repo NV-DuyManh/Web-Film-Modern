@@ -36,7 +36,7 @@ function createCollectionHook(cacheKey, collectionName, processData) {
                 const unsubscribe = subscribeToCollection(key, collectionName, setData, (name, callback) => fetchDataById(name, 'userID', isLogin.id, callback), processData);
                 return () => { isMounted = false; unsubscribe(); };
             }
-            if (!isAdmin && (!POSTGRES_CATALOG_ENABLED || !CATALOG_ENDPOINT_MAP[collectionName]) && ['Movies', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes'].includes(collectionName)) {
+            if ((collectionName === 'Movies' || !isAdmin) && (!POSTGRES_CATALOG_ENABLED || !CATALOG_ENDPOINT_MAP[collectionName]) && ['Movies', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes'].includes(collectionName)) {
                 reportCatalogStatus(collectionName, 'loading');
                 const unsubscribe = subscribeToCollection(key, collectionName, setData, (name, callback) => subscribePublicCatalog(name, items => {
                     callback(items);

@@ -48,7 +48,7 @@ jobs:
       - name: Refresh public cache within the shared daily budget
         if: ${{ !cancelled() && inputs.dry_run != true }}
         continue-on-error: true
-        run: npm run seo:refresh -- --budget
+        run: npm run seo:refresh -- --incremental --budget
       - name: Publish refreshed public cache
         if: ${{ !cancelled() && inputs.dry_run != true }}
         run: |

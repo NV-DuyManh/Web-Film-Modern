@@ -1,7 +1,7 @@
 import MovieImage from '../../MovieImage';
 import { routeSegment } from '../../../utils/nameRoutes';
 import React, { useMemo, useRef } from 'react';
-import { useMovies } from '../../../hooks/useCollections';
+import usePublicMoviePage from '../../../hooks/usePublicMoviePage';
 import { useNavigate } from 'react-router-dom';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { searchTV } from '../../../components/admin/search/SearchTV';
@@ -11,7 +11,7 @@ import { trackEvent } from '../../../services/eventTracker';
 
 function SearchHeader({ searchQuery, isOpen, onClose }) {
     const navigate = useNavigate();
-    const movies = useMovies();
+    const { items: movies, loading } = usePublicMoviePage({ kind: 'new', q: searchQuery || '', limit: 100, enabled: isOpen && Boolean(searchQuery?.trim()) });
     const plans = React.useContext(PlanContext);
     const searchRef = useRef(null);
 
@@ -51,7 +51,8 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
                         {dataSearch.map((movie) => (
                             <button
                                 key={movie.id}
-                                onMouseDown={(e) => { e.preventDefault(); handleSelect(movie); }}
+                                onMouseDown={e => e.preventDefault()}
+                                onClick={() => handleSelect(movie)}
                                 className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-white/5 transition duration-200 cursor-pointer group/movie text-left"
                             >
                                 <div className="w-13 h-18 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover/movie:border-cyan-500/50 transition-colors duration-300 bg-slate-800">
@@ -79,7 +80,7 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
             ) : (
                 <div className="p-8 text-center text-slate-400">
                     <FaFilm className="mx-auto text-3xl mb-2 opacity-40 text-cyan-400" />
-                    <p className="text-sm font-medium">Không tìm thấy phim phù hợp</p>
+                    <p className="text-sm font-medium">{loading ? 'Đang tìm phim...' : 'Không tìm thấy phim phù hợp'}</p>
                 </div>
             )}
         </div>

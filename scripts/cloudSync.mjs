@@ -93,11 +93,15 @@ async function runCloudSync() {
                 for (const item of data.data?.items || data.items || []) if (item.slug) slugs.add(item.slug);
             }
             const slugList = [...slugs];
+            const found = new Map();
             for (let i = 0; i < slugList.length; i += 10) {
-                const request = query(collection(db, 'Movies'), where('slug', 'in', slugList.slice(i, i + 10)), limit(30));
-                const snapshot = io ? await io.query(request, 30) : await getDocs(request);
-                for (const item of snapshot.docs) targetMovies.push({ ...item.data(), id: item.id });
+                for (const field of ['slug', 'sourceSlug']) {
+                    const request = query(collection(db, 'Movies'), where(field, 'in', slugList.slice(i, i + 10)), limit(30));
+                    const snapshot = io ? await io.query(request, 30) : await getDocs(request);
+                    for (const item of snapshot.docs) found.set(item.id, { ...item.data(), id: item.id });
+                }
             }
+            targetMovies = [...found.values()];
         }
         console.log(`[CloudSync] 🔍 Tìm thấy ${targetMovies.length} phim đang chiếu cần kiểm tra.`);
 
@@ -108,7 +112,7 @@ async function runCloudSync() {
 
         for (let i = 0; i < targetMovies.length; i++) {
             const movie = targetMovies[i];
-            let activeSlug = movie.slug || nameSlug(movie.otherName || movie.name);
+            let activeSlug = movie.sourceSlug || movie.slug || nameSlug(movie.otherName || movie.name);
             if (!activeSlug) continue;
 
             try {
@@ -149,7 +153,7 @@ async function runCloudSync() {
                         endEpisode: newEndEpisode,
                         status: newStatus,
                         ...(movieTime(movieData.modified?.time) ? { sourceUpdatedAt: movieTime(movieData.modified.time) } : {}),
-                        slug: activeSlug,
+                        sourceSlug: activeSlug,
                         updatedAt: new Date().toISOString()
                     };
                     if (!dryRun) { if (io) await io.update(movieRef, patch); else await updateDoc(movieRef, patch); }

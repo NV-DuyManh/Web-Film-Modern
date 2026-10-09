@@ -5,7 +5,8 @@ import { normalizeEpisodes, episodeKey, episodeLabel, findEpisode } from '../../
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
-import { useSubscriptions, useRentMovies, useMovies } from '../../../../hooks/useCollections';
+import { useSubscriptions, useRentMovies } from '../../../../hooks/useCollections';
+import useHomeMovies from '../../../../hooks/useHomeMovies';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory, FaBolt } from 'react-icons/fa';
@@ -36,7 +37,7 @@ function PlayFilm() {
     
     const [activeAudio, setActiveAudio] = useState('vietsub');
     const serverParam = searchParams.get('server');
-    const movies = useMovies();
+    const movies = useHomeMovies('new');
     const plans = useContext(PlanContext);
     const lastProgressTimeRef = useRef(0);
     const completedEpisodeRef = useRef(null);

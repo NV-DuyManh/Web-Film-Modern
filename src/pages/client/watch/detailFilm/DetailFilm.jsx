@@ -6,7 +6,8 @@ import { normalizeEpisodes, episodeKey } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useEffect, useState } from 'react';
-import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
+import { useRentMovies, useSubscriptions } from '../../../../hooks/useCollections';
+import useHomeMovies from '../../../../hooks/useHomeMovies';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
 import ModalDetail from './ModalDetail';
@@ -28,7 +29,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
     const [activeTab, setActiveTab] = useState('episodes');
     const [showListDropdown, setShowListDropdown] = useState(false);
     const [loginDialogState, setLoginDialogState] = useState({ open: false, title: "Yêu cầu đăng nhập", description: "Bạn cần đăng nhập tài khoản để mua hoặc thuê phim này" });
-    const movies = useMovies() || [];
+    const movies = useHomeMovies('new');
 
     const [authorsMap, setAuthorsMap] = useState({});
     const [actorsMap, setActorsMap] = useState({});

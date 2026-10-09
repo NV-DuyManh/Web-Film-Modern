@@ -2,7 +2,7 @@ import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useState } from 'react';
 import ModalDetail from '../../watch/detailFilm/ModalDetail';
-import { useMovies } from '../../../../hooks/useCollections';
+import useHomeMovies from '../../../../hooks/useHomeMovies';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
 import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
 import 'swiper/css';
@@ -26,7 +26,7 @@ import { useNavigate } from 'react-router-dom';
 function Banner() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
     const [mainSwiper, setMainSwiper] = useState(null);
-    const movies = useMovies();
+    const movies = useHomeMovies('hot');
     const hotMovies = movies?.filter(m => m.isHot) || [];
     const categoryTypes = useContext(CategoryTypeContext);
     const categories = useContext(CategoryContext);

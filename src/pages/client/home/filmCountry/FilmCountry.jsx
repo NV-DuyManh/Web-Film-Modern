@@ -1,7 +1,7 @@
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
-import { useMovies } from '../../../../hooks/useCollections';
+import useHomeMovies from '../../../../hooks/useHomeMovies';
 import { FaChevronLeft, FaChevronRight, FaClock, FaCalendarAlt, FaEye } from "react-icons/fa";
 import { getObjectById } from "../../../../services/firebaseResponse";
 import { PlanContext } from "../../../../contexts/PlanProvider";
@@ -11,7 +11,7 @@ import { COUNTRY_OVERSCAN, countryCardLayout, countryCycleCount, countryWindow, 
 import { observeMovieNavigation } from '../../../../utils/movieNavigation';
 
 function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, index }) {
-    const movies = useMovies();
+    const movies = useHomeMovies('country:' + countryName);
     const plans = useContext(PlanContext);
 
     const isReverse = reverse !== undefined ? reverse : (index !== undefined ? index % 2 !== 0 : false);

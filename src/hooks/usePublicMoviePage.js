@@ -4,12 +4,13 @@ import { resolveMovieImages } from '../utils/movieImages';
 import { publicCatalogCache } from '../services/publicCatalogCache';
 
 const cache = new Map();
-export default function usePublicMoviePage({ kind, page = 1, limit = 28, q = '', name = '' }) {
+export default function usePublicMoviePage({ kind, page = 1, limit = 28, q = '', name = '', enabled = true }) {
     const [settledQuery, setSettledQuery] = useState(q);
     useEffect(() => { const timer = setTimeout(() => setSettledQuery(q), 250); return () => clearTimeout(timer); }, [q]);
     const key = new URLSearchParams({ kind, page: String(page), limit: String(limit), q: settledQuery, name }).toString();
     const [state, setState] = useState({ key: '', items: [], total: 0, totalPages: 1, page: 1 });
     useEffect(() => {
+        if (!enabled) return;
         let active = true;
         let promise = cache.get(key);
         if (!promise || promise.expiresAt <= Date.now()) {
@@ -32,6 +33,7 @@ export default function usePublicMoviePage({ kind, page = 1, limit = 28, q = '',
             if (active) setState(previous => ({ ...previous, key }));
         });
         return () => { active = false; };
-    }, [key]);
+    }, [key, enabled]);
+    if (!enabled) return { items: [], total: 0, page: 1, totalPages: 1, loading: false };
     return state.key === key && settledQuery === q ? { ...state, loading: false } : { ...state, items: [], total: 0, page: 1, totalPages: 1, loading: true };
 }

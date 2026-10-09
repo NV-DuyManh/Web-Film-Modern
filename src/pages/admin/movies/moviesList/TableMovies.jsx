@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useContext } from 'react';
+import React, { useState, useMemo, useContext } from 'react';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
@@ -12,7 +12,9 @@ import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { BiSolidCategoryAlt } from 'react-icons/bi';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import ModalDelete from '../../../../components/admin/ModalDelete';
-import { deleteDocument , fetchDocumentsRealtime } from '../../../../services/firebaseService';
+import { deleteDocument } from '../../../../services/firebaseService';
+import useLiveDocuments from '../../../../hooks/useLiveDocuments';
+import { resolveMovieImages } from '../../../../utils/movieImages';
 import MovieImage from '../../../../components/MovieImage';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
@@ -40,14 +42,8 @@ const getAgeRatingStyle = (ageRating) => {
 };
 
 function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
-    const [actors, setActors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
-    const [authors, setAuthors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
-    const [characters, setCharacters] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
-
-    const [page, setPage] = useState(1);
+    const [pagination, setPagination] = useState({ page: 1, search });
+    const setPage = page => setPagination({ page, search });
     const [rowsPerPage, setRowsPerPage] = useState(5);
 
     
@@ -60,11 +56,16 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
         [search, movies]
     );
 
-    const currentData = dataSearch?.slice((page - 1) * rowsPerPage, page * rowsPerPage) || [];
-
-    useEffect(() => {
-        setPage(1);
-    }, [search]);
+    const page = Math.min(pagination.search === search ? pagination.page : 1, Math.max(1, Math.ceil((dataSearch?.length || 0) / rowsPerPage)));
+    const summaries = useMemo(() => dataSearch?.slice((page - 1) * rowsPerPage, page * rowsPerPage) || [], [dataSearch, page, rowsPerPage]);
+    const live = useLiveDocuments('Movies', summaries.map(movie => movie.id));
+    const currentData = useMemo(() => summaries.flatMap(summary => {
+        const row = live.find(movie => movie.id === summary.id);
+        return row ? [{ ...summary, ...row, ...resolveMovieImages(row), _artworkSource: { imgUrl: row.imgUrl || '', bannerUrl: row.bannerUrl || '' } }] : [];
+    }), [summaries, live]);
+    const actors = useLiveDocuments('Actors', currentData.flatMap(row => row.listActor || []));
+    const authors = useLiveDocuments('Authors', currentData.flatMap(row => row.listAuthor || []));
+    const characters = useLiveDocuments('Characters', currentData.flatMap(row => row.listCharacter || []));
 
     const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
 
@@ -194,6 +195,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                         </thead>
 
                         <tbody>
+                            {summaries.length > 0 && currentData.length === 0 && <tr><td colSpan={10} className="table-cell text-center text-slate-400">Loading movies...</td></tr>}
                             {currentData.map((row, index) => {
                                 const isSelected = selectedIds.includes(row.id);
                                 return (
