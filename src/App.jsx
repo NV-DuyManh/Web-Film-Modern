@@ -1,6 +1,6 @@
 import { useContext, useState, Suspense } from 'react'
 import './App.scss'
-import { BrowserRouter } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import AdminRouters from './routers/AdminRouters'
 import NoelBackground from './components/admin/noelBackground/NoelBackground'
 import { AuthContext } from './contexts/AuthProvider'
@@ -8,6 +8,7 @@ import LoadingScreen from './components/client/loadingScreen/LoadingScreen';
 import ErrorBoundary from './components/ErrorBoundary';
 import lazyRetry from './utils/lazyRetry';
 import SEO from './components/SEO';
+import { isPrivatePath } from './utils/seo';
 
 const HomeAdmin = lazyRetry(() => import('./pages/admin/homeAdmin/HomeAdmin'));
 const LayoutClient = lazyRetry(() => import('./pages/client/LayoutClient'));
@@ -23,10 +24,13 @@ const LoadingFallback = () => (
 
 function App() {
   const { isLogin } = useContext(AuthContext);
+  const location = useLocation();
+  const privatePage = isLogin?.role === 'admin' || isPrivatePath(location.pathname) || location.pathname.startsWith('/xem-phim/');
 
   return (
     <>
-      <SEO fallback />
+      {/* Keep the server's page metadata while a public page is loading its catalog. */}
+      {privatePage && <SEO fallback />}
       <ErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
         {
