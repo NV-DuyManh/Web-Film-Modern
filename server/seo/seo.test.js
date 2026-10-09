@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { runInNewContext } from 'node:vm';
 import { prepareCatalog, resolvePublicPage, indexableCatalogPaths } from './catalog.js';
 import { renderPageHtml } from './render.js';
 import { canonicalUrl, movieSchema, safeJsonLd, robotsForPath } from '../../src/utils/seo.js';
@@ -16,6 +17,22 @@ const catalog = {
 };
 const prepared = prepareCatalog(catalog);
 const response = () => ({ code: 200, headers: {}, setHeader(name, value) { this.headers[name] = value; }, status(code) { this.code = code; return this; }, end(body) { this.body = body; return this; } });
+
+test('JS startup hides the fallback before any body content; the non-JS catalog and metadata remain', () => {
+    for (const path of ['/', '/film-new', '/phim/phim-mau', '/dien-vien/dien-vien-a']) {
+        const html = renderPageHtml(template, resolvePublicPage(path, prepared));
+        const script = html.match(/<script>([^<]+)<\/script>/)[1];
+        const classes = new Set();
+        runInNewContext(script, { document: { documentElement: { classList: { add: value => classes.add(value) } } } });
+        assert.ok(classes.has('mfilm-js'));
+        assert.ok(html.indexOf(script) < html.indexOf('/app-recovery.js'));
+        assert.ok(html.indexOf('html.mfilm-js #mfilm-public-html{display:none}') < html.indexOf('<body>'));
+        assert.match(html, /<article id="mfilm-public-html" lang="vi">/);
+        assert.match(html, /<h1>/);
+        assert.match(html, /rel="canonical"/);
+        assert.doesNotMatch(html, /<article[^>]*\bhidden\b/);
+    }
+});
 
 test('Navigation hubs have actual category/country links and public HTML instead of 404s', () => {
     for (const [path, child] of [['/category', '/category/H%C3%A0nh%20%C4%90%E1%BB%99ng'], ['/country', '/country/Vi%E1%BB%87t%20Nam']]) {

@@ -6,7 +6,7 @@ const { runInNewContext } = require('node:vm');
 const code = readFileSync(require('node:path').join(__dirname, '../../public/app-recovery.js'), 'utf8');
 function browser(query = '', storageAvailable = true) {
     const handlers = {}, navigations = [], storage = new Map(), fetched = [], deleted = [];
-    const root = { children: [], hasChildNodes() { return this.children.length > 0; }, append(node) { this.children.push(node); } };
+    const root = { children: [], get firstElementChild() { return this.children[0]; }, hasChildNodes() { return this.children.length > 0; }, replaceChildren(...nodes) { this.children = nodes; } };
     const cacheEntries = new Map([
         ['https://mfilm.online/assets/index-old.js', new Response('<html>', { headers: { 'content-type': 'text/html' } })],
         ['https://mfilm.online/assets/good.js', new Response('code', { headers: { 'content-type': 'application/javascript' } })],
@@ -43,6 +43,18 @@ test('a repeated error offers a retry button without looping, even with unavaila
     b.fail(); await b.flush();
     assert.equal(b.navigations.length, 0);
     assert.equal(b.root.children[0].children[1].textContent, 'Tải lại trang');
+});
+
+test('hidden public HTML cannot block entry-error recovery or count as a successful React mount', async () => {
+    const b = browser('?__mfilm_reload=123');
+    b.root.children.push({ id: 'mfilm-public-html' });
+    b.storage.set('mfilm_asset_recovery', '123');
+    b.handlers.load();
+    assert.equal(b.storage.get('mfilm_asset_recovery'), '123');
+    b.fail(); await b.flush();
+    assert.equal(b.root.children.length, 1);
+    assert.equal(b.root.firstElementChild.children[1].textContent, 'Tải lại trang');
+    assert.equal(b.navigations.length, 0);
 });
 
 test('image and extension errors do not trigger recovery; healthy startup clears the retry marker', () => {

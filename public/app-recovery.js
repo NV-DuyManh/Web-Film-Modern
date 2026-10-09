@@ -6,7 +6,9 @@
 
     function showRecovery(retry) {
         const root = document.getElementById('root');
-        if (!root || root.hasChildNodes()) return;
+        // Server-rendered catalog markup is hidden in JS mode. It must not prevent
+        // the retry panel from appearing when the entry bundle cannot start React.
+        if (!root || (root.hasChildNodes() && root.firstElementChild?.id !== 'mfilm-public-html')) return;
         const panel = document.createElement('div');
         panel.style.cssText = 'min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;background:#111827;color:#fff;font:16px system-ui;text-align:center';
         const text = document.createElement('p');
@@ -22,7 +24,7 @@
             };
             panel.append(button);
         }
-        root.append(panel);
+        root.replaceChildren(panel);
     }
 
     function reload() {
@@ -71,7 +73,8 @@
 
     window.addEventListener('load', () => {
         if (recovering) return;
-        if (document.getElementById('root')?.hasChildNodes()) {
+        const root = document.getElementById('root');
+        if (root?.hasChildNodes() && root.firstElementChild?.id !== 'mfilm-public-html') {
             try { sessionStorage.removeItem(retryKey); } catch { /* Optional storage. */ }
             const url = new URL(location.href);
             if (url.searchParams.has(retryParam)) {

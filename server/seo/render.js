@@ -19,10 +19,13 @@ export function renderPageHtml(template, page) {
         meta('twitter:card', 'summary_large_image'), meta('twitter:title', page.title), meta('twitter:description', page.description), meta('twitter:image', image),
         ...(page.schemas?.length ? [`<script data-rh="true" id="mfilm-schema" type="application/ld+json">${safeJsonLd(page.schemas)}</script>`] : []),
     ].join('\n');
-    // The same HTML is delivered to visitors, social previews and crawlers. React replaces
-    // this public, non-interactive catalog view when the existing application starts.
+    // Run in the head before the body can paint, without waiting for an external bundle.
+    // The public catalog remains available without JavaScript; React owns the JS view.
+    const startup = `<script>document.documentElement.classList.add('mfilm-js');</script>
+<style>html.mfilm-js body{margin:0;background:#06060e}html.mfilm-js #mfilm-public-html{display:none}</style>`;
     const content = page.kind === 'private' ? '' : renderPublicContent(page);
     return template
+        .replace(/<head\b[^>]*>/i, match => `${match}\n${startup}`)
         .replace(/<title\b[^>]*>[\s\S]*?<\/title>/gi, '')
         .replace(/<meta\b[^>]*(?:name="(?:description|robots|keywords|twitter:[^"]+)"|property="og:[^"]+")[^>]*>/gi, '')
         .replace(/<link\b[^>]*rel="canonical"[^>]*>/gi, '')
