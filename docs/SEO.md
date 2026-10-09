@@ -34,4 +34,6 @@ The default social PNG is a byte-for-byte copy of the existing MFILM logo. Origi
 
 Submit `https://www.mfilm.online/sitemap.xml` in the verified Google Search Console domain property. Check URL inspection, indexing exclusions and search performance there. IndexNow acceptance confirms receipt, not ranking or indexing. Google decides indexing separately; do not use Google's restricted Indexing API for ordinary film pages.
 
+`public/BingSiteAuth.xml` is the Bing-provided public ownership verification file for the site's Webmaster Tools account. Keep it available at `https://www.mfilm.online/BingSiteAuth.xml` across deployments; it must bypass the HTML page handler. Submit the same canonical sitemap in Bing Webmaster Tools. IndexNow already notifies participating search engines of genuine daily catalog changes.
+
 Public SEO works with standard HTML in all browsers. Actual appearance in results depends on Google, Bing and other engines, not which browser the visitor uses. Browser compatibility, HTML validation and search indexing are distinct checks; do not claim all browsers were tested without evidence.
