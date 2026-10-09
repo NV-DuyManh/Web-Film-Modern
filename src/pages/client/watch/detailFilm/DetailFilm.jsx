@@ -581,8 +581,8 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                                 key={idx}
                                                 className="group relative rounded-2xl overflow-hidden aspect-video border-3 border-transparent shadow-md hover:border-[#facc15] hover:-translate-y-2 hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] transition duration-300 cursor-pointer"
                                             >
-                                                <img
-                                                    src={imgSrc}
+                                                <MovieImage
+                                                    movie={{ imgUrl: imgSrc, bannerUrl: movie.bannerUrl, posterUrl: movie.imgUrl }} optimize={false}
                                                     alt={`Gallery ${idx + 1}`}
                                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                                 />

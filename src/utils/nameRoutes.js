@@ -46,7 +46,7 @@ export function withNameRoutes(items, options) {
 
 // Routing metadata belongs to the client; saving an admin form keeps the original data schema.
 export function stripRouteMetadata(item) {
-    const { routeSlug: _routeSlug, ...values } = item;
+    const { routeSlug: _routeSlug, _artworkSource: _artworkSource, ...values } = item;
     return values;
 }
 

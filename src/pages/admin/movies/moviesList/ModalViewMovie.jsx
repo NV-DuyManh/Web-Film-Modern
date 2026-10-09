@@ -11,6 +11,7 @@ import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import Logo5 from "../../../../assets/Logo5.png";
+import MovieImage from '../../../../components/MovieImage';
 import { getDefaultAvatar, getSafeEntityAvatar, OTHER_AVATAR } from '../../../../utils/appUtils';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -201,8 +202,8 @@ function ModalViewMovie({ open, handleClose, movie, onEdit }) {
                 <div className="movie-view-modal w-[calc(100%-12px)] mx-auto my-1.5 rounded-3xl overflow-y-auto overflow-x-hidden custom-scrollbar relative z-5 flex-1 p-0.5">
 
                     <div className="relative w-full h-55 overflow-hidden rounded-t-[22px]">
-                        <img
-                            src={movie.bannerUrl || movie.imgUrl}
+                        <MovieImage
+                            movie={movie} kind="banner" imageWidth={1280} imageHeight={720}
                             alt="banner"
                             className="w-full h-full object-cover"
                             style={{ filter: 'brightness(0.4) saturate(1.3)' }}
@@ -224,8 +225,8 @@ function ModalViewMovie({ open, handleClose, movie, onEdit }) {
                                         <div className="magic-spark"></div>
                                     </div>
                                 )}
-                                <img
-                                    src={movie.imgUrl}
+                                <MovieImage
+                                    movie={movie} imageWidth={600} imageHeight={900}
                                     alt={movie.name}
                                     className="w-42.5 aspect- object-cover rounded-2xl border-2 border-white/20 shadow-2xl"
                                 />

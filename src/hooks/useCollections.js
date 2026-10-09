@@ -53,7 +53,7 @@ function createCollectionHook(cacheKey, collectionName, processData) {
 function processMovies(movieList) {
     return withNameRoutes(movieList, { preferSlug: true }).map(movie => {
         const images = resolveMovieImages(movie);
-        return { ...movie, imgUrl: images.imgUrl || Logo6, bannerUrl: images.bannerUrl || Logo5 };
+        return { ...movie, _artworkSource: { imgUrl: movie.imgUrl || '', bannerUrl: movie.bannerUrl || '' }, imgUrl: images.imgUrl || Logo6, bannerUrl: images.bannerUrl || Logo5 };
     });
 }
 

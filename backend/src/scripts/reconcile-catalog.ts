@@ -1,3 +1,4 @@
+import { resolveMovieImages } from '../common/movie-artwork';
 /**
  * MFILM Catalog Outbox & Dual-Write Reconciliation Runner
  * Resolves pending or failed replication jobs between Firestore and PostgreSQL.
@@ -120,8 +121,8 @@ async function runReconciliation() {
               data.slug || job.entity_id.toLowerCase(),
               data.type || 'series',
               data.status || 'ongoing',
-              data.thumb_url || data.imageMovie || '',
-              data.poster_url || data.poster || '',
+              resolveMovieImages(data).bannerUrl,
+              resolveMovieImages(data).imgUrl,
               parseInt(data.views || data.view || '0', 10),
               parseFloat(data.rating || data.rate || '0.0'),
               parseInt(data.rating_count || data.rateCount || '0', 10),

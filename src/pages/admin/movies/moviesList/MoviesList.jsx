@@ -10,11 +10,10 @@ import ModalDelete from '../../../../components/admin/ModalDelete';
 import { addDocument, updateDocument, deleteDocument } from '../../../../services/firebaseService';
 import { uploadImageToCloudinary } from '../../../../config/cloudinaryConfig';
 import { slugify } from '../../../../utils/appUtils';
-import LOGO_POSTER from "../../../../assets/Logo6.png";
-import LOGO_BANNER from "../../../../assets/Logo5.png";
+import { resolveMovieImages } from '../../../../utils/movieImages';
 
 const innerMovie = { 
-    name: "", otherName: "", description: "", imgUrl: LOGO_POSTER, bannerUrl: LOGO_BANNER, 
+    name: "", otherName: "", description: "", imgUrl: "", bannerUrl: "",
     releaseYear: "", duration: "", endEpisode: "", ageRating: "", status: "", 
     hasSub: false, hasDub: false, hasVoice: false, 
     episodeSub: "", episodeDub: "", episodeVoice: "", 
@@ -74,7 +73,8 @@ function MoviesList() {
     };
 
     const handleEdit = (row) => {
-        const editRow = { ...row };
+        const editRow = { ...row, ...row._artworkSource };
+        delete editRow._artworkSource;
         if ((!editRow.listAuthor || editRow.listAuthor.length === 0) && editRow.author) {
             editRow.listAuthor = [editRow.author];
         }
@@ -141,21 +141,17 @@ function MoviesList() {
             const sourceName = submitData.otherName || submitData.name;
             submitData.slug = slugify(sourceName);
             
-            const isLocalAsset = (url) => url && !url.startsWith("http") && !url.startsWith("data:");
-
             if (submitData.imgFile) {
                 submitData.imgUrl = await uploadImageToCloudinary(submitData.imgFile, "Movies");
                 delete submitData.imgFile;
-            } else if (!submitData.imgUrl || isLocalAsset(submitData.imgUrl)) {
-                submitData.imgUrl = LOGO_POSTER;
             }
 
             if (submitData.bannerFile) {
                 submitData.bannerUrl = await uploadImageToCloudinary(submitData.bannerFile, "Banners");
                 delete submitData.bannerFile;
-            } else if (!submitData.bannerUrl || isLocalAsset(submitData.bannerUrl)) {
-                submitData.bannerUrl = LOGO_BANNER;
             }
+
+            Object.assign(submitData, resolveMovieImages(submitData));
 
             submitData.releaseYear = Number(submitData.releaseYear);
             submitData.duration = Number(submitData.duration);

@@ -69,8 +69,8 @@ export const mapMovieData = (parsedData) => {
             endEpisode: epTotal,
             rawShowtimes: row["time"] || row["showtimes"] || row["lịch chiếu"] || "",
 
-            imgUrl: "", 
-            bannerUrl: "", 
+            imgUrl: row['imgurl'] || row['poster url'] || row['poster_url'] || row['poster'] || row['ảnh poster'] || '',
+            bannerUrl: row['bannerurl'] || row['banner url'] || row['banner_url'] || row['banner'] || row['thumb_url'] || row['ảnh banner'] || '',
             
             hasSub: epSub > 0,
             hasDub: epDub > 0,

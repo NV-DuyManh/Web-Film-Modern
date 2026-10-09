@@ -1,5 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
+import { withMovieArtwork } from '../../common/movie-artwork';
 
 @Injectable()
 export class UserStateService {
@@ -32,7 +33,7 @@ export class UserStateService {
       ORDER BY f.created_at DESC;
     `;
     const res = await this.db.query(query, [userId]);
-    return res.rows;
+    return res.rows.map(withMovieArtwork);
   }
 
   async addFavorite(userId: string, movieId: string) {
@@ -59,7 +60,7 @@ export class UserStateService {
 
   async getWatchHistory(userId: string) {
     const query = `
-      SELECT wh.*, m.name as movie_name, m.thumb_url, m.slug as movie_slug,
+      SELECT wh.*, m.name as movie_name, m.thumb_url, m.poster_url, m.slug as movie_slug,
              e.name as episode_name, e.number_episode
       FROM watch_histories wh
       JOIN movies m ON wh.movie_id = m.id
@@ -68,7 +69,7 @@ export class UserStateService {
       ORDER BY wh.updated_at DESC;
     `;
     const res = await this.db.query(query, [userId]);
-    return res.rows;
+    return res.rows.map(withMovieArtwork);
   }
 
   async updateWatchHistory(
@@ -127,6 +128,7 @@ export class UserStateService {
               'name', m.name,
               'slug', m.slug,
               'thumb_url', m.thumb_url,
+              'poster_url', m.poster_url,
               'added_at', ms.created_at
             )
           ) FILTER (WHERE m.id IS NOT NULL), '[]'
@@ -139,7 +141,7 @@ export class UserStateService {
       ORDER BY f.created_at DESC;
     `;
     const res = await this.db.query(query, [userId]);
-    return res.rows;
+    return res.rows.map(folder => ({ ...folder, movies: (folder.movies || []).map(withMovieArtwork) }));
   }
 
   async createPlaylist(userId: string, name: string) {

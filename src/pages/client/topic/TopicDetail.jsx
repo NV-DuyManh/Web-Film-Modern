@@ -133,8 +133,8 @@ function TopicDetail() {
 
             <div className="relative h-[40vh] md:h-[50vh] xl:h-[60vh] w-full mt-17.5 overflow-hidden">
                 {heroBanner && (
-                    <img 
-                        src={heroBanner} 
+                    <MovieImage
+                        movie={collectionMovies[0]} kind="banner" imageWidth={1280} imageHeight={720}
                         alt="" 
                         className="absolute inset-0 w-full h-full object-cover object-top"
                     />

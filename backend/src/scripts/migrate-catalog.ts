@@ -1,3 +1,4 @@
+import { resolveMovieImages } from '../common/movie-artwork';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { Pool } from 'pg';
@@ -228,8 +229,8 @@ async function runMigration() {
               m.slug || m.id,
               m.otherName || '',
               m.description || '',
-              m.imgUrl || '',
-              m.bannerUrl || '',
+              resolveMovieImages(m).imgUrl,
+              resolveMovieImages(m).bannerUrl,
               m.trailerUrl || '',
               parseInt(m.duration || '0', 10),
               parseInt(m.views || '0', 10),

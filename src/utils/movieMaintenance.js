@@ -1,4 +1,5 @@
 import { missingRentalPricePatch, rentalPriceRange } from './importRentalPricing.js';
+import { missingMovieArtworkPatch } from './movieImages.js';
 
 export function randomMoviePlanID(plans, random = Math.random) {
     const eligible = plans.filter(plan => rentalPriceRange(plan));
@@ -10,13 +11,13 @@ export function randomMoviePlanID(plans, random = Math.random) {
 }
 
 export function movieMaintenancePatch(movie, plans, random = Math.random) {
-    const patch = {};
+    const patch = missingMovieArtworkPatch(movie);
     // Assign only missing/invalid plans; repeated maintenance never rerolls a valid plan.
     const currentPlan = plans.find(plan => plan.id === movie.planID);
-    if (currentPlan && !rentalPriceRange(currentPlan)) return null;
+    if (currentPlan && !rentalPriceRange(currentPlan)) return Object.keys(patch).length ? patch : null;
     if (!currentPlan) {
         const planID = randomMoviePlanID(plans, random);
-        if (!planID) return null;
+        if (!planID) return Object.keys(patch).length ? patch : null;
         patch.planID = planID;
     }
     const rent = missingRentalPricePatch({ ...movie, ...patch }, plans, random);

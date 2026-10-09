@@ -1,5 +1,6 @@
 import { stripRouteMetadata } from '../utils/nameRoutes';
 import { reportCatalogStatus } from '../utils/catalogStatus';
+import { resolveMovieImages, movieArtworkPatch } from '../utils/movieImages';
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, setDoc, query, where, limit, orderBy } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { uploadImageToCloudinary } from "../config/cloudinaryConfig";
@@ -20,6 +21,10 @@ const uploadIfNeeded = async (url, collectionName) => {
 export const addDocument = async (collectionName, values) => {
     try {
         if (values.imgUrl) values.imgUrl = await uploadIfNeeded(values.imgUrl, collectionName);
+        if (collectionName === 'Movies') {
+            if (values.bannerUrl) values.bannerUrl = await uploadIfNeeded(values.bannerUrl, 'Banners');
+            Object.assign(values, resolveMovieImages(values));
+        }
         if (values.avatarUrl) values.avatarUrl = await uploadIfNeeded(values.avatarUrl, collectionName);
         
         const docRef = doc(collection(db, collectionName));
@@ -59,6 +64,12 @@ export const fetchDocumentsRealtimePage = (collectionName, pageSize, callback) =
 export const updateDocument = async (collectionName, values, skipUpdatedAt = false) => {
     const { id, ...updatedValues } = stripRouteMetadata(values);
     if (updatedValues.imgUrl) updatedValues.imgUrl = await uploadIfNeeded(updatedValues.imgUrl, collectionName);
+    if (collectionName === 'Movies' && Object.keys(movieArtworkPatch(updatedValues)).length) {
+        if (updatedValues.bannerUrl) updatedValues.bannerUrl = await uploadIfNeeded(updatedValues.bannerUrl, 'Banners');
+        const complete = Object.hasOwn(updatedValues, 'imgUrl') && Object.hasOwn(updatedValues, 'bannerUrl');
+        const current = complete ? {} : (await getDoc(doc(db, collectionName, id))).data() || {};
+        Object.assign(updatedValues, movieArtworkPatch(updatedValues, current));
+    }
     if (updatedValues.avatarUrl) updatedValues.avatarUrl = await uploadIfNeeded(updatedValues.avatarUrl, collectionName);
     if (!skipUpdatedAt) {
         updatedValues.updatedAt = Date.now();

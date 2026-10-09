@@ -11,7 +11,7 @@ import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { COUNTRIES } from '../../../../utils/Constants';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
-import Logo5 from "../../../../assets/Logo5.png";
+import MovieImage from '../../../../components/MovieImage';
 import { getDefaultAvatar, getSafeEntityAvatar, OTHER_AVATAR } from '../../../../utils/appUtils';
 
 const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={ref} {...props} />);
@@ -52,8 +52,6 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
     const [posterMode, setPosterMode] = useState("file");
     const [bannerMode, setBannerMode] = useState("file");
 
-    const posterPreview = movie.imgFile ? movie.imgUrl : (movie.imgUrl || Logo5);
-    const bannerPreview = movie.bannerFile ? movie.bannerUrl : (movie.bannerUrl || Logo5);
 
     const handleClickOpenChoose = (type) => {
         if (type === "actors") setDataChoose(actors);
@@ -371,7 +369,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                 </div>
                                 {posterMode === 'file' ? (
                                     <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-pink-400">
-                                        <img src={posterPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
+                                        <MovieImage movie={movie} optimize={false} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Poster" />
                                         <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                             <FaCloudUploadAlt className="text-3xl text-pink-400 mb-1" />
                                             <p className="text-white text-xs font-bold inline">Upload</p>
@@ -389,7 +387,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                             InputProps={{ style: { fontSize: 11 } }}
                                         />
                                         <div className="w-full aspect-2/3 rounded-xl overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
-                                            <img src={movie.imgUrl} className="w-full h-full object-cover" alt="Poster Preview" onError={(e) => e.target.src = Logo5} />
+                                            <MovieImage movie={movie} optimize={false} className="w-full h-full object-cover" alt="Poster Preview" />
                                         </div>
                                     </div>
                                 )}
@@ -406,7 +404,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                 </div>
                                 {bannerMode === 'file' ? (
                                     <div className="relative w-full aspect-video rounded-xl overflow-hidden border-2 border-dashed border-slate-600 group bg-slate-900/50 flex items-center justify-center transition-all hover:border-yellow-400">
-                                        <img src={bannerPreview} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Banner" />
+                                        <MovieImage movie={movie} kind="banner" optimize={false} className="w-full h-full object-cover group-hover:opacity-20 transition-all" alt="Banner" />
                                         <label className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-all">
                                             <FaCloudUploadAlt className="text-4xl text-yellow-400 mb-1" />
                                             <p className="text-white text-xs font-bold inline">Upload</p>
@@ -424,7 +422,7 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                                             InputProps={{ style: { fontSize: 11 } }}
                                         />
                                         <div className="w-full aspect-video rounded-xl overflow-hidden border border-white/10 bg-slate-900/50 flex items-center justify-center">
-                                            <img src={movie.bannerUrl || Logo5} className="w-full h-full object-cover" alt="Banner Preview" onError={(e) => e.target.src = Logo5} />
+                                            <MovieImage movie={movie} kind="banner" optimize={false} className="w-full h-full object-cover" alt="Banner Preview" />
                                         </div>
                                     </div>
                                 )}

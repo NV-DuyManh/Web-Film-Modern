@@ -1,3 +1,4 @@
+import { resolveMovieImages } from '../../common/movie-artwork';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
@@ -130,8 +131,7 @@ export class AnalyticsService {
           movieId: r.movie_id,
           name: r.name,
           slug: r.slug,
-          imgUrl: r.img_url,
-          bannerUrl: r.banner_url,
+          ...resolveMovieImages({ imgUrl: r.img_url, bannerUrl: r.banner_url }),
           score: parseFloat(r.score) || 100,
           views: parseInt(r.views || '0', 10),
           recentEvents: Math.floor(Math.random() * 50) + 10,
@@ -155,8 +155,7 @@ export class AnalyticsService {
               ...item,
               name: meta.name || item.movieId,
               slug: meta.slug || item.movieId,
-              imgUrl: meta.img_url || '',
-              bannerUrl: meta.banner_url || '',
+              ...resolveMovieImages({ imgUrl: meta.img_url || '', bannerUrl: meta.banner_url || '' }),
             };
           });
         } catch {}

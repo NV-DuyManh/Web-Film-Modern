@@ -4,6 +4,7 @@ import { RedisService } from '../redis/redis.service';
 import { KafkaService } from '../kafka/kafka.service';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
+import { resolveMovieImages } from '../../common/movie-artwork';
 
 export interface MutationResult {
   success: boolean;
@@ -79,8 +80,8 @@ export class CatalogMutationService {
         payload.slug || id.toLowerCase(),
         payload.type || 'series',
         payload.status || 'ongoing',
-        payload.thumb_url || payload.imageMovie || '',
-        payload.poster_url || payload.poster || '',
+        resolveMovieImages(payload).bannerUrl,
+        resolveMovieImages(payload).imgUrl,
         parseInt(payload.views || payload.view || '0', 10),
         parseFloat(payload.rating || payload.rate || '0.0'),
         parseInt(payload.rating_count || payload.rateCount || '0', 10),

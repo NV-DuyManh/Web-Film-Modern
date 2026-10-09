@@ -1,0 +1,12 @@
+[
+  { "input": { "imgUrl": "https://film.test/poster.webp" }, "expected": { "imgUrl": "https://film.test/poster.webp", "bannerUrl": "https://film.test/poster.webp" } },
+  { "input": { "bannerUrl": "https://film.test/banner.webp" }, "expected": { "imgUrl": "https://film.test/banner.webp", "bannerUrl": "https://film.test/banner.webp" } },
+  { "input": { "imgUrl": "/assets/Logo6-hash.png", "bannerUrl": "https://film.test/banner.webp" }, "expected": { "imgUrl": "https://film.test/banner.webp", "bannerUrl": "https://film.test/banner.webp" } },
+  { "input": { "imgUrl": "https://film.test/poster.webp", "bannerUrl": "/assets%2FLogo5-hash.png" }, "expected": { "imgUrl": "https://film.test/poster.webp", "bannerUrl": "https://film.test/poster.webp" } },
+  { "input": { "poster_url": "https://film.test/poster.webp", "thumb_url": "https://film.test/banner.webp" }, "expected": { "imgUrl": "https://film.test/poster.webp", "bannerUrl": "https://film.test/banner.webp" } },
+  { "input": { "img_url": "https://film.test/poster.webp", "banner_url": "" }, "expected": { "imgUrl": "https://film.test/poster.webp", "bannerUrl": "https://film.test/poster.webp" } },
+  { "input": { "imageMovie": "https://film.test/banner.webp" }, "expected": { "imgUrl": "https://film.test/banner.webp", "bannerUrl": "https://film.test/banner.webp" } },
+  { "input": { "imgUrl": "https://via.placeholder.com/100x150?text=No+Image", "bannerUrl": "https://film.test/banner.webp" }, "expected": { "imgUrl": "https://film.test/banner.webp", "bannerUrl": "https://film.test/banner.webp" } },
+  { "input": { "imgUrl": " data:image/png;base64,YQ== ", "bannerUrl": "undefined" }, "expected": { "imgUrl": "data:image/png;base64,YQ==", "bannerUrl": "data:image/png;base64,YQ==" } },
+  { "input": { "imgUrl": "/assets/Logo6.png", "bannerUrl": "/src/assets/Logo5.png" }, "expected": { "imgUrl": "", "bannerUrl": "" } }
+]

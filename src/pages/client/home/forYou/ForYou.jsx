@@ -1,3 +1,4 @@
+import { resolveMovieImages, movieArtwork } from '../../../../utils/movieImages';
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
@@ -203,8 +204,11 @@ function ForYouInner() {
                         slug: itemSlug || catalogMovie.slug,
                         name: catalogMovie.name || item.name,
                         otherName: catalogMovie.otherName || item.otherName || item.name,
-                        imgUrl: catalogMovie.imgUrl || item.imgUrl || item.img_url,
-                        bannerUrl: catalogMovie.bannerUrl || item.bannerUrl || item.banner_url || catalogMovie.imgUrl || item.imgUrl,
+                        ...resolveMovieImages({
+                            ...catalogMovie,
+                            imgUrl: movieArtwork(catalogMovie.imgUrl) || item.imgUrl || item.img_url,
+                            bannerUrl: movieArtwork(catalogMovie.bannerUrl) || item.bannerUrl || item.banner_url,
+                        }),
                         reason: item.reason || 'Dành cho bạn',
                         recScore: item.score,
                         recSource: item.recommendationSource || 'hybrid',
@@ -212,14 +216,13 @@ function ForYouInner() {
                 }
 
                 // Self-sufficient fallback directly from API payload
-                if (item.name && (item.imgUrl || item.img_url)) {
+                if (item.name && resolveMovieImages({ ...item, imgUrl: item.imgUrl || item.img_url }).imgUrl) {
                     return {
                         id: stableId,
                         slug: itemSlug || stableId,
                         name: item.name,
                         otherName: item.otherName || item.name,
-                        imgUrl: item.imgUrl || item.img_url,
-                        bannerUrl: item.bannerUrl || item.banner_url || item.imgUrl || item.img_url,
+                        ...resolveMovieImages({ ...item, imgUrl: item.imgUrl || item.img_url }),
                         reason: item.reason || 'Dành cho bạn',
                         recScore: item.score,
                         recSource: item.recommendationSource || 'hybrid',

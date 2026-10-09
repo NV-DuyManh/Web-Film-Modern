@@ -16,8 +16,7 @@ import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 
 import { fetchMoviesList, fetchMovieDetails, fetchMovieImages, fetchAllCategories, fetchAllCountries, getFullImageUrl, mapMovieType, mapMovieStatus, parseDuration, stripHtml, mapCountryName } from '../../../services/kkphimService';
 
-import LOGO from "../../../assets/Logo6.png";
-import LOGO_BANNER from "../../../assets/Logo5.png";
+import { resolveMovieImages, movieArtwork } from '../../../utils/movieImages';
 import { detectGender } from '../../../utils/genderDetect';
 
 // Helper chuyển chuỗi tiếng Việt có dấu thành slug không dấu
@@ -432,7 +431,12 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         if (movie.duration > 0) updateData.duration = movie.duration;
                         const liveMovie = (await getDocFromServer(movieRef)).data();
                         if (!liveMovie) throw new Error('Phim cần cập nhật không còn tồn tại.');
-                        const pricingInput = { ...liveMovie, ...(movie.rent > 0 ? { rent: movie.rent } : {}) };
+                        Object.assign(updateData, resolveMovieImages({
+                            ...liveMovie,
+                            ...(movieArtwork(movie.imgUrl) ? { imgUrl: movie.imgUrl } : {}),
+                            ...(movieArtwork(movie.bannerUrl) ? { bannerUrl: movie.bannerUrl } : {}),
+                        }));
+                        const pricingInput = { ...liveMovie, ...updateData, ...(movie.rent > 0 ? { rent: movie.rent } : {}) };
                         if (movie.rent > 0) updateData.rent = movie.rent;
                         Object.assign(updateData, movieMaintenancePatch(pricingInput, plans));
                         if (movie.releaseYear) updateData.releaseYear = movie.releaseYear;
@@ -449,7 +453,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         const movieRef = doc(collection(db, "Movies"));
                         currentMovieId = movieRef.id;
                         const submitMovie = {
-                            ...movie, id: currentMovieId, imgUrl: LOGO, bannerUrl: LOGO_BANNER, listCategory, listActor, listCharacter, listAuthor,
+                            ...movie, ...resolveMovieImages(movie), id: currentMovieId, listCategory, listActor, listCharacter, listAuthor,
                             categoryTypeID, planID: finalPlanID, createdAt: new Date().toISOString()
                         };
                         Object.assign(submitMovie, movieMaintenancePatch(submitMovie, plans));
@@ -715,8 +719,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         name: movieData.origin_name || item.name,
                         otherName: movieData.name || '',
                         description: stripHtml(movieData.content),
-                        imgUrl: posterUrl || thumbUrl || LOGO,
-                        bannerUrl: thumbUrl || posterUrl || LOGO_BANNER,
+                        ...resolveMovieImages({ imgUrl: posterUrl, bannerUrl: thumbUrl }),
                         listCategory,
                         listActor,
                         listCharacter: [],

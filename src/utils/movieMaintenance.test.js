@@ -3,6 +3,14 @@ import assert from 'node:assert/strict';
 import { randomMoviePlanID, movieMaintenancePatch, kkphimDocumentID, exactDuplicateMovieGroups, canRetireEmptyImport } from './movieMaintenance.js';
 
 const plans = [{ id: 'free', level: 0, price: 0 }, { id: 'basic', level: 1, price: 100000 }, { id: 'plus', level: 2, price: 500000 }, { id: 'premium', level: 3, price: 1000000 }];
+
+test('daily artwork repair is idempotent and preserves plan, rental price and distinct real images', () => {
+    const movie = { planID: 'premium', rent: 25000, imgUrl: 'https://film.test/poster.webp', bannerUrl: '/assets/Logo5-hash.png' };
+    const patch = movieMaintenancePatch(movie, plans, () => { throw new Error('Existing plan must not reroll'); });
+    assert.deepEqual(patch, { bannerUrl: movie.imgUrl });
+    assert.equal(movieMaintenancePatch({ ...movie, ...patch }, plans), null);
+    assert.equal(movieMaintenancePatch({ ...movie, bannerUrl: 'https://film.test/banner.webp' }, plans), null);
+});
 test('Maintenance preserves assigned plans and valid prices across repeated runs', () => {
     for (const plan of plans) {
         const movie = { planID: plan.id, rent: plan.level ? 17000 : 0 };

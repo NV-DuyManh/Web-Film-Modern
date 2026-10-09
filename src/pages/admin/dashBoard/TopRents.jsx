@@ -1,4 +1,5 @@
 import React from "react";
+import MovieImage from '../../../components/MovieImage';
 
 const RANK_STYLES = [
     {
@@ -131,11 +132,8 @@ function TopRents({ films = [] }) {
                                     }}
                                 >
 
-                                    <img
-                                        src={
-                                            film.imgUrl ||
-                                            "https://via.placeholder.com/100x150?text=No+Image"
-                                        }
+                                    <MovieImage
+                                        movie={film} imageWidth={200} imageHeight={300}
                                         alt={film.name || "Film"}
                                         className="w-full h-full object-cover"
                                     />

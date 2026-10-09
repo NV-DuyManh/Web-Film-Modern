@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import { RedisService } from '../redis/redis.service';
+import { resolveMovieImages, withMovieArtwork } from '../../common/movie-artwork';
 
 @Injectable()
 export class CatalogService {
@@ -21,7 +22,8 @@ export class CatalogService {
     const cached = await this.redis.get(cacheKey);
     if (cached) {
       try {
-        return JSON.parse(cached);
+        const response = JSON.parse(cached);
+        return { ...response, data: response.data.map(withMovieArtwork) };
       } catch {}
     }
 
@@ -60,7 +62,7 @@ export class CatalogService {
     const total = parseInt(countResult.rows[0]?.count || '0', 10);
 
     const response = {
-      data: result.rows,
+      data: result.rows.map(withMovieArtwork),
       meta: {
         page,
         limit,
@@ -99,7 +101,7 @@ export class CatalogService {
     if (result.rows.length === 0) {
       throw new NotFoundException(`Movie with ID ${id} not found`);
     }
-    return result.rows[0];
+    return withMovieArtwork(result.rows[0]);
   }
 
   /**
@@ -122,7 +124,7 @@ export class CatalogService {
     if (result.rows.length === 0) {
       throw new NotFoundException(`Movie with slug "${slug}" not found`);
     }
-    return result.rows[0];
+    return withMovieArtwork(result.rows[0]);
   }
 
   /**
@@ -201,8 +203,8 @@ export class CatalogService {
         movieData.slug || movieData.id,
         movieData.otherName || '',
         movieData.description || '',
-        movieData.imgUrl || '',
-        movieData.bannerUrl || '',
+        resolveMovieImages(movieData).imgUrl,
+        resolveMovieImages(movieData).bannerUrl,
         movieData.trailerUrl || '',
         parseInt(movieData.duration || '0', 10),
         parseInt(movieData.views || '0', 10),

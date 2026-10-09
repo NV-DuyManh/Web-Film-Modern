@@ -13,7 +13,7 @@ import { BiSolidCategoryAlt } from 'react-icons/bi';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import ModalDelete from '../../../../components/admin/ModalDelete';
 import { deleteDocument , fetchDocumentsRealtime } from '../../../../services/firebaseService';
-import Logo5 from '../../../../assets/Logo5.png';
+import MovieImage from '../../../../components/MovieImage';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
@@ -219,7 +219,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                                             <div className="magic-spark"></div>
                                                         </div>
                                                     )}
-                                                    <img src={getOptimizedUrl(row.imgUrl, 300, 400)} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10 relative z-10" />
+                                                    <MovieImage movie={row} imageWidth={300} imageHeight={400} alt={row.name} className="w-16 h-24 object-cover rounded-md shadow-md border border-white/10 relative z-10" />
                                                 </div>
                                             </div>
                                         </td>

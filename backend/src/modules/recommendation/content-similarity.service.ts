@@ -1,3 +1,4 @@
+import { resolveMovieImages } from '../../common/movie-artwork';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from '../database/database.service';
@@ -175,8 +176,7 @@ export class ContentSimilarityService implements OnModuleInit {
       id: r.id,
       name: r.name,
       slug: r.slug,
-      imgUrl: r.img_url,
-      bannerUrl: r.banner_url,
+      ...resolveMovieImages({ imgUrl: r.img_url, bannerUrl: r.banner_url }),
       country: normalizeCountry(r.country || ''),
       categories: r.categories || [],
       actors: r.actors || [],
@@ -232,8 +232,7 @@ export class ContentSimilarityService implements OnModuleInit {
         id: docSnap.id,
         name: d.name || d.otherName || 'Phim MFILM',
         slug: d.slug || docSnap.id,
-        imgUrl: d.imgUrl || '',
-        bannerUrl: d.bannerUrl || '',
+        ...resolveMovieImages({ imgUrl: d.imgUrl || '', bannerUrl: d.bannerUrl || '' }),
         country: normalizeCountry(d.countriesID || d.country || ''),
         categories: categories.length > 0 ? categories : (d.categories || []),
         actors: actors.length > 0 ? actors : (d.actors || []),
@@ -677,8 +676,7 @@ export class ContentSimilarityService implements OnModuleInit {
         movieId: candidateId,
         name: candidateMovie.name,
         slug: candidateMovie.slug,
-        imgUrl: candidateMovie.imgUrl,
-        bannerUrl: candidateMovie.bannerUrl,
+        ...resolveMovieImages({ imgUrl: candidateMovie.imgUrl, bannerUrl: candidateMovie.bannerUrl }),
         similarityScore: Number(cosineSim.toFixed(4)),
         reason,
         sharedCategories,

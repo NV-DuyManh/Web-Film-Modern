@@ -1,5 +1,6 @@
 import { parseEpisode, episodeKey } from '../../../../utils/episodes';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
+import { resolveMovieImages } from '../../../../utils/movieImages';
 import React, { useState, useContext, useEffect, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useSearchParams } from 'react-router-dom';
@@ -142,7 +143,7 @@ function Episodes() {
                             movie_name: movie?.otherName || movie?.name || 'Phim Mới',
                             episode_number: submitData.numberEpisode,
                             release_date: new Date().toLocaleDateString('vi-VN'),
-                            movie_banner: movie?.bannerUrl || movie?.imgUrl || movie?.thumbUrl || 'https://via.placeholder.com/480x270',
+                            movie_banner: resolveMovieImages(movie || {}).bannerUrl,
                             watch_url: `https://mfilm.online/phim/${routeSegment(movie)}`
                         };
                         
