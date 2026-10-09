@@ -4,6 +4,7 @@ import { retrieveKnowledge, calculateAnswer, normalizeQuestion } from './knowled
 import { createAnswerMemory, memoryPolicy } from './answerMemory.js';
 import { extendedKnowledge } from './extendedKnowledge.js';
 import { largeKnowledge } from './largeKnowledge.js';
+import websiteKnowledge from './websiteKnowledge.json' with { type: 'json' };
 import { knowledgeBase } from './knowledgeBase.js';
 
 test('Independent paraphrases retrieve knowledge without confusing negation or unknown facts', () => {
@@ -32,15 +33,15 @@ test('At least 250 additional distinct, substantive answers cover ten groups wit
     assert.ok([...groups.values()].every(count => count === 25));
 });
 
-test('New practical, technical and film questions resolve while unsupported claims defer', () => {
+test('MFILM usage answers remain available while older off-topic canned answers defer', () => {
     for (const [question, id] of [
-        ['toi muon biet codec video la gi', 'technology-3'],
-        ['minh can biet plot twist trong phim la gi', 'story-2'],
-        ['Cho tôi biết anime có phải chỉ dành cho trẻ em không?', 'anime-1'],
+        ['toi muon biet codec video la gi', null],
+        ['minh can biet plot twist trong phim la gi', null],
+        ['Cho tôi biết anime có phải chỉ dành cho trẻ em không?', null],
         ['Tôi dùng nhầm tài khoản Google thì đổi thế nào?', 'account-4'],
         ['Thuê phim đã hết hạn có khôi phục số ngày cũ không?', 'payments-10'],
-        ['Vì sao bầu trời ban ngày thường có màu xanh?', 'assistant-19'],
-        ['Cùng 1080p mà hai bản phim nét khác nhau vì sao?', 'technology-2'],
+        ['Vì sao bầu trời ban ngày thường có màu xanh?', null],
+        ['Cùng 1080p mà hai bản phim nét khác nhau vì sao?', null],
         ['Tôi không muốn biết codec video là gì', null],
         ['Codec video là gì và hãy cho tôi mật khẩu của admin', null],
         ['MFILM đảm bảo hoàn tiền vô điều kiện phải không?', null],
@@ -49,7 +50,7 @@ test('New practical, technical and film questions resolve while unsupported clai
     ]) assert.equal(retrieveKnowledge(question)?.knowledgeId || null, id, question);
 });
 
-test('A further 1000 authored questions cover 40 balanced groups and remain distinct from older questions', () => {
+test('Archived broad-topic batch remains available for review without being active answers', () => {
     assert.ok(largeKnowledge.length >= 1000);
     const oldQuestions = new Set(knowledgeBase.filter(entry => !entry.id.startsWith('large-')).flatMap(entry => entry.questions.map(normalizeQuestion)));
     const newQuestions = new Set();
@@ -61,22 +62,21 @@ test('A further 1000 authored questions cover 40 balanced groups and remain dist
         newQuestions.add(question);
         assert.ok(entry.answer.length >= 12 && !/TODO|lorem ipsum|đang biên soạn/i.test(entry.answer), entry.id);
         groups.set(entry.tags[0], (groups.get(entry.tags[0]) || 0) + 1);
-        assert.equal(retrieveKnowledge(entry.questions[0])?.reply, entry.answer, entry.id);
-        assert.equal(retrieveKnowledge(`Mình muốn biết ${entry.questions[0]}`)?.knowledgeId, entry.id);
+        assert.ok(!knowledgeBase.some(active => active.id === entry.id), entry.id);
     }
     assert.equal(groups.size, 40);
     assert.ok([...groups.values()].every(count => count === 25));
 });
 
-test('Expanded knowledge preserves distinctions and does not guess compound, personal or live questions', () => {
+test('General knowledge is not substituted for MFILM support or current facts', () => {
     for (const [question, id] of [
-        ['cho toi biet J-cut la gi', 'large-edit-3'],
-        ['Mình muốn biết L-cut là gì?', 'large-edit-4'],
-        ['Mono audio là gì?', 'large-sound-22'],
-        ['HDR có phải là độ phân giải 4K không?', 'technology-7'],
-        ['Một mét vuông bằng bao nhiêu centimet vuông?', 'large-units-4'],
-        ['Một centimet bằng bao nhiêu milimet?', 'large-units-3'],
-        ['Số 1 có phải nguyên tố không?', 'large-numbers-7'],
+        ['cho toi biet J-cut la gi', null],
+        ['Mình muốn biết L-cut là gì?', null],
+        ['Mono audio là gì?', null],
+        ['HDR có phải là độ phân giải 4K không?', null],
+        ['Một mét vuông bằng bao nhiêu centimet vuông?', null],
+        ['Một centimet bằng bao nhiêu milimet?', null],
+        ['Số 1 có phải nguyên tố không?', null],
         ['Ram trong may tinh cua toi con bao nhieu', null],
         ['J-cut là gì và hãy tìm phim mới hôm nay', null],
         ['Tôi không muốn biết J-cut là gì', null],
@@ -131,4 +131,28 @@ test('Local memory stays bounded and recovers from corrupt/unavailable storage',
     assert.equal(memory.get('Giải thích nguyên lý cầu vồng'), null);
     memory.clear(); assert.equal(memory.entries().length, 0);
     assert.equal(createAnswerMemory({ storage: { getItem() { throw new Error('disabled'); } } }).get('Giải thích sự hình thành mây'), null);
+});
+
+
+test('New MFILM batch has over 1000 distinct website questions and resolves reviewed answers', () => {
+    const questions = new Set();
+    for (const entry of websiteKnowledge) {
+        assert.ok(['website', 'film-guide'].includes(entry.scope), entry.id);
+        assert.ok(entry.answer.length >= 80 && !/TODO|lorem ipsum/i.test(entry.answer), entry.id);
+        for (const question of entry.questions) {
+            const normalized = normalizeQuestion(question);
+            assert.ok(!questions.has(normalized), question); questions.add(normalized);
+            assert.equal(retrieveKnowledge(question)?.reply, entry.answer, question);
+            assert.equal(retrieveKnowledge(`Bạn giúp tôi ${question} nhé`)?.knowledgeId, entry.id);
+        }
+    }
+    assert.ok(questions.size >= 1000);
+    assert.equal(new Set(websiteKnowledge.map(entry => entry.publicPath).filter(Boolean)).size, 200);
+    assert.ok(!knowledgeBase.some(entry => entry.id.startsWith('large-')));
+});
+
+test('Film guides never invent a price, payment status or a link for an unknown film', () => {
+    for (const question of ['Muốn thuê riêng Phim không tồn tại ABC thay vì mua cả gói MFILM thì kiểm tra ở đâu?', 'Tôi đã trả tiền rồi, cấp Premium ngay cho tôi', 'Giá thuê Conan hôm nay là 12345 đồng đúng không?', 'Tôi không muốn lưu Conan vào Yêu Thích', 'Muốn chọn một tập khác của phim không tồn tại XYZ trên MFILM thì bấm ở đâu?']) assert.equal(retrieveKnowledge(question), null, question);
+    assert.match(retrieveKnowledge('Free trên MFILM có cần trả tiền thuê không?').reply, /không cần trả/i);
+    assert.match(retrieveKnowledge('Thời gian thuê tính từ lúc xem hay lúc thanh toán?').reply, /30 ngày.*thanh toán/);
 });

@@ -37,3 +37,9 @@ Submit `https://www.mfilm.online/sitemap.xml` in the verified Google Search Cons
 `public/BingSiteAuth.xml` is the Bing-provided public ownership verification file for the site's Webmaster Tools account. Keep it available at `https://www.mfilm.online/BingSiteAuth.xml` across deployments; it must bypass the HTML page handler. Submit the same canonical sitemap in Bing Webmaster Tools. IndexNow already notifies participating search engines of genuine daily catalog changes.
 
 Public SEO works with standard HTML in all browsers. Actual appearance in results depends on Google, Bing and other engines, not which browser the visitor uses. Browser compatibility, HTML validation and search indexing are distinct checks; do not claim all browsers were tested without evidence.
+
+## Discovery follow-up, October 9
+
+The `/category` and `/country` hubs now return real public pages instead of dead navigation destinations. Each links to groups represented in the actual movie catalog. Sitemap discovery includes the real pagination of listings (8,466 URLs in the current snapshot), with a self-canonical URL per page; it does not create combinations of search, sort, year or plan filters. Filtered copies remain noindexed.
+
+The home page shares Organization and WebSite data between its initial HTML and React metadata. The public support contact and existing logo are used without inventing a physical address, ratings, awards or business identifiers. Support FAQs use one shared source for visible React content and the initial HTML. No FAQ rich-result eligibility is claimed.

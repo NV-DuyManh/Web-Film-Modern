@@ -17,6 +17,37 @@ const catalog = {
 const prepared = prepareCatalog(catalog);
 const response = () => ({ code: 200, headers: {}, setHeader(name, value) { this.headers[name] = value; }, status(code) { this.code = code; return this; }, end(body) { this.body = body; return this; } });
 
+test('Navigation hubs have actual category/country links and public HTML instead of 404s', () => {
+    for (const [path, child] of [['/category', '/category/H%C3%A0nh%20%C4%90%E1%BB%99ng'], ['/country', '/country/Vi%E1%BB%87t%20Nam']]) {
+        const page = resolvePublicPage(path, prepared);
+        assert.equal(page.status, 200);
+        assert.equal(page.kind, 'hub');
+        assert.ok(page.links.some(link => link.path === child));
+        assert.match(renderPageHtml(template, page), new RegExp(`href="${child}"`));
+        assert.ok(indexableCatalogPaths(prepared).includes(path));
+    }
+});
+
+test('Sitemap discovers real pagination, excludes duplicate filtered lists and keeps FAQ visible', () => {
+    const many = prepareCatalog({ ...catalog, Movies: Array.from({ length: 60 }, (_, i) => ({ ...catalog.Movies[0], id: `m${i}`, slug: `movie-${i}` })) });
+    const paths = indexableCatalogPaths(many);
+    assert.ok(paths.includes('/film-new?page=2'));
+    assert.ok(paths.includes('/film-new?page=3'));
+    assert.ok(!paths.includes('/film-new?page=4'));
+    const xml = buildSitemap(many.catalog);
+    assert.match(xml, /film-new\?page=2/);
+    for (const param of ['search=x', 'sort=views', 'year=2024', 'plan=free']) assert.match(resolvePublicPage(`/film-new?${param}`, many).robots, /noindex/);
+    const html = renderPageHtml(template, resolvePublicPage('/ho-tro', many));
+    assert.match(html, /Câu hỏi thường gặp/);
+    assert.match(html, /Thuê phim được xem trong bao lâu/);
+    assert.match(html, /30 ngày kể từ khi thanh toán thành công/);
+    const schemas = resolvePublicPage('/', many).schemas;
+    const organization = schemas.find(schema => schema['@type'] === 'Organization');
+    assert.ok(organization.logo.startsWith('https://www.mfilm.online/'));
+    assert.equal(schemas.find(schema => schema['@type'] === 'WebSite').publisher['@id'], organization['@id']);
+    assert.equal(organization.address, undefined);
+});
+
 test('Movie HTML has unique metadata, readable content and links before JavaScript starts', () => {
     const page = resolvePublicPage('/phim/phim-mau', prepared);
     const html = renderPageHtml(template, page);

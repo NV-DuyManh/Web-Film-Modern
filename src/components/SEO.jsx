@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AuthContext } from '../contexts/AuthProvider';
 import { routeSegment } from '../utils/nameRoutes';
-import { STATIC_SEO, SITE_TITLE, SITE_DESCRIPTION, canonicalUrl, pageTitle, descriptionText, publicImage, robotsForPath, breadcrumbSchema, safeJsonLd } from '../utils/seo';
+import { STATIC_SEO, SITE_TITLE, SITE_DESCRIPTION, canonicalUrl, pageTitle, descriptionText, publicImage, robotsForPath, breadcrumbSchema, safeJsonLd, siteSchemas } from '../utils/seo';
 
 export default function SEO({ title, description, image, url, type = 'website', extra = {}, noindex = false, schema = [], items = [], fallback = false }) {
     useLayoutEffect(() => {
@@ -22,7 +22,7 @@ export default function SEO({ title, description, image, url, type = 'website', 
     const picture = publicImage(image);
     const robots = robotsForPath(location.pathname, { noindex, search: location.search, admin: isLogin?.role === 'admin' });
     const schemas = Array.isArray(schema) ? [...schema] : [schema];
-    if (!fallback && robots.startsWith('index') && location.pathname === '/') schemas.push({ '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${canonicalUrl('/')}#website`, name: 'MFILM', alternateName: ['MFilm', 'ManhFilm'], url: canonicalUrl('/'), inLanguage: 'vi' });
+    if (!fallback && robots.startsWith('index') && location.pathname === '/') schemas.push(...siteSchemas());
     else if (!fallback && robots.startsWith('index')) schemas.push(breadcrumbSchema([['MFILM', '/'], [title || base?.[0] || 'Phim', canonical]]));
     if (items.length) schemas.push({ '@context': 'https://schema.org', '@type': 'ItemList', itemListElement: items.map((item, i) => ({ '@type': 'ListItem', position: i + 1, name: item.otherName || item.title || item.name, url: canonicalUrl(item.publicPath || `/phim/${routeSegment(item)}`) })) });
 

@@ -1,5 +1,5 @@
 import { createNameRouteIndex, withNameRoutes } from '../../src/utils/nameRoutes.js';
-import { STATIC_SEO, canonicalUrl, descriptionText, movieDescription, movieSchema, plainText, publicImage, breadcrumbSchema, isPrivatePath, robotsForPath, pageTitle } from '../../src/utils/seo.js';
+import { STATIC_SEO, canonicalUrl, descriptionText, movieDescription, movieSchema, plainText, publicImage, breadcrumbSchema, isPrivatePath, isPaginatedPath, robotsForPath, pageTitle, siteSchemas } from '../../src/utils/seo.js';
 
 export const PREFIXES = { Movies: '/phim', Actors: '/dien-vien', Authors: '/tac-gia', Characters: '/nhan-vat', Topics: '/topic' };
 const list = value => Array.isArray(value) ? value : value ? [value] : [];
@@ -76,10 +76,15 @@ export function resolvePublicPage(input, prepared) {
         [page.title, page.description] = STATIC_SEO[path];
         if (path === '/actors') page.items = catalog.Actors;
         else if (path === '/topic') page.items = catalog.Topics;
-        else if (!['/ho-tro', '/showtimes'].includes(path)) page.items = listingMovies(path, prepared);
+        else if (!['/ho-tro', '/showtimes', '/category', '/country'].includes(path)) page.items = listingMovies(path, prepared);
+        if (['/category', '/country'].includes(path)) {
+            page.kind = 'hub';
+            page.links = publicCategoryLinks(prepared).filter(link => link.path.startsWith(`${path}/`));
+            page.schemas.push({ '@context': 'https://schema.org', '@type': 'CollectionPage', name: page.title, url: canonicalUrl(path) });
+        }
         if (path === '/') {
             page.kind = 'home';
-            page.schemas.push({ '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${canonicalUrl('/')}#website`, name: 'MFILM', alternateName: ['MFilm', 'ManhFilm'], url: canonicalUrl('/'), inLanguage: 'vi' });
+            page.schemas.push(...siteSchemas());
             page.links = publicCategoryLinks(prepared);
         }
         if (path === '/ho-tro') page.kind = 'help';
@@ -173,5 +178,13 @@ export function indexableCatalogPaths(prepared) {
         paths.add(item.publicPath);
     }
     for (const link of publicCategoryLinks(prepared)) paths.add(link.path);
+    // Give each real listing page its own discovery URL, with no search/sort
+    // combinations or invented pages beyond the current catalog.
+    for (const path of [...paths]) {
+        if (!isPaginatedPath(path)) continue;
+        const page = resolvePublicPage(path, prepared);
+        if (page.kind !== 'listing') continue;
+        for (let number = 2; number <= page.totalPages; number++) paths.add(`${path}?page=${number}`);
+    }
     return [...paths];
 }

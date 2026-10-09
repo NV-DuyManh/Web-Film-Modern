@@ -1,12 +1,14 @@
 # Bộ câu hỏi và câu trả lời MFILM AI
 
-Phiên bản: 2026-10-08.4. **1000 cặp hỏi đáp bổ sung ở đợt mới nhất**, cộng 250 cặp đã biên soạn trước đó; tổng 1297 mục kiến thức và 1397 câu hỏi độc nhất.
+Phiên bản: 2026-10-09.website.1. Đợt này thêm **1328 câu hỏi** liên quan MFILM: 328 câu hướng dẫn web và 1000 tình huống trên 200 phim thật trong kho. Tổng đang sử dụng: 1600 câu hỏi.
 
-Danh sách dưới đây chứa tất cả câu hỏi đã lưu và đáp án tương ứng. Các mẫu bỏ dấu hoặc thêm lời lịch sự trong tệp JSONL không được tính thành câu hỏi mới.
+Mỗi câu dưới đây có đáp án tương ứng. Mẫu viết không dấu hoặc thêm lời lịch sự trong JSONL không tính thêm câu mới.
 
-Thông tin giá, quyền xem, lịch phát hành và trạng thái tài khoản cần kiểm tra dữ liệu hiện tại. Các hướng dẫn có điều kiện không khẳng định tính năng hoặc chính sách chưa được xác nhận.
+Bộ kiến thức phổ thông ngoài sử dụng MFILM đã đưa ra khỏi bộ trả lời sẵn. Nguồn cũ giữ để đối chiếu. Giá, gói của phim, quyền cá nhân, số tập và ngày cập nhật phải kiểm tra dữ liệu hiện tại.
 
-## Kiến thức MFILM ban đầu
+Hỏi đáp theo phim hướng dẫn thao tác; không khẳng định phim luôn có nguồn hay giá cố định. Đây là truy xuất đáp án, chưa huấn luyện trọng số mô hình mới.
+
+## Kiến thức MFILM
 
 ### 1. Bạn là ai?
 
@@ -1106,4649 +1108,5319 @@ Hệ thống chỉ có thể chuyển đến mục video có nguồn phù hợp 
 
 Khi không có tập kế tiếp hợp lệ, hệ thống không có tập để chuyển sang. Bạn có thể quay lại danh sách để chọn phần khác hoặc tìm phim mới.
 
-## Hình ảnh, âm thanh và trình duyệt
+## Hướng dẫn sử dụng MFILM
 
-### 273. Bitrate của video là gì?
+### 273. Free trên MFILM có cần trả tiền thuê không?
 
-Bitrate là lượng dữ liệu video được dùng trong một giây. Bitrate ảnh hưởng dung lượng và chất lượng, nhưng cần xét cùng codec, độ phân giải và chất lượng nguồn ban đầu.
+Phim thuộc gói Free không cần trả giá thuê. Mở trang phim, chọn Xem Ngay và tập có nguồn phát. Nếu một phim đang ghi Free nhưng vẫn yêu cầu tiền thuê, gửi tên phim qua [Hỗ trợ](/ho-tro) để kiểm tra.
 
-Tham khảo: [Khái niệm xử lý video — MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API/Video_processing_concepts).
+### 274. Tại sao phim gói Free không có giá thuê?
 
-### 274. Cùng 1080p mà hai bản phim nét khác nhau vì sao?
+Phim thuộc gói Free không cần trả giá thuê. Mở trang phim, chọn Xem Ngay và tập có nguồn phát. Nếu một phim đang ghi Free nhưng vẫn yêu cầu tiền thuê, gửi tên phim qua [Hỗ trợ](/ho-tro) để kiểm tra.
 
-1080p chỉ mô tả độ phân giải. Nguồn gốc, mức nén và bitrate có thể khác, khiến một bản giữ nhiều chi tiết hơn dù có cùng số điểm ảnh.
+### 275. Tôi thấy nhãn Free, có cần mua phim đó không?
 
-### 275. Codec video là gì?
+Phim thuộc gói Free không cần trả giá thuê. Mở trang phim, chọn Xem Ngay và tập có nguồn phát. Nếu một phim đang ghi Free nhưng vẫn yêu cầu tiền thuê, gửi tên phim qua [Hỗ trợ](/ho-tro) để kiểm tra.
 
-Codec là cách mã hóa và giải mã video để lưu hoặc truyền dữ liệu. Trình duyệt và thiết bị phải hỗ trợ codec của nguồn thì mới phát được bình thường.
+### 276. Phim miễn phí có phải thanh toán thuê trước khi xem không?
 
-Tham khảo: [Codec video — MDN](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Video_codecs).
+Phim thuộc gói Free không cần trả giá thuê. Mở trang phim, chọn Xem Ngay và tập có nguồn phát. Nếu một phim đang ghi Free nhưng vẫn yêu cầu tiền thuê, gửi tên phim qua [Hỗ trợ](/ho-tro) để kiểm tra.
 
-### 276. MP4 có phải là codec không?
+### 277. Gói MFILM được xếp từ thấp đến cao ra sao?
 
-MP4 là định dạng chứa dữ liệu, có thể bao gồm hình, tiếng và thông tin khác. Video bên trong dùng codec riêng, nên chỉ thấy đuôi MP4 chưa đủ để biết mọi thiết bị có phát được.
+Thứ tự gói là **Free → Basic → Plus → Premium**. Premium là cấp cao nhất dành cho người xem. Xem giá và thời hạn đang áp dụng tại [Gói thành viên](/upgrade-vip).
 
-Tham khảo: [Codec video — MDN](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Video_codecs).
+### 278. Basic hay Plus cao hơn trên MFILM?
 
-### 277. H.264 và H.265 khác nhau ở điểm nào?
+Thứ tự gói là **Free → Basic → Plus → Premium**. Premium là cấp cao nhất dành cho người xem. Xem giá và thời hạn đang áp dụng tại [Gói thành viên](/upgrade-vip).
 
-Đây là hai chuẩn nén video, H.265 còn được gọi là HEVC. Chúng khác khả năng nén và mức hỗ trợ trên thiết bị; nguồn nén hiệu quả hơn vẫn có thể không tương thích máy cũ.
+### 279. Premium có cao hơn Plus không?
 
-Tham khảo: [Codec video — MDN](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Video_codecs).
+Thứ tự gói là **Free → Basic → Plus → Premium**. Premium là cấp cao nhất dành cho người xem. Xem giá và thời hạn đang áp dụng tại [Gói thành viên](/upgrade-vip).
 
-### 278. AV1 trong video nghĩa là gì?
+### 280. Sau gói Basic là gói nào của MFILM?
 
-AV1 là một định dạng nén video được thiết kế để truyền nội dung hiệu quả. Việc phát mượt còn phụ thuộc trình duyệt, thiết bị và khả năng giải mã phần cứng.
+Thứ tự gói là **Free → Basic → Plus → Premium**. Premium là cấp cao nhất dành cho người xem. Xem giá và thời hạn đang áp dụng tại [Gói thành viên](/upgrade-vip).
 
-Tham khảo: [Codec video — MDN](https://developer.mozilla.org/en-US/docs/Web/Media/Guides/Formats/Video_codecs).
+### 281. Có cần mua Premium để xem tất cả phim Free không?
 
-### 279. HDR có phải là độ phân giải 4K không?
+Bạn không cần mua Premium để xem phim thuộc gói Free. Khi chọn phim, kiểm tra nhãn Free trên thẻ hoặc trang chi tiết. Bạn cũng có thể hỏi chatbot gợi ý phim Free; danh sách cần được đối chiếu với kho phim đang tải.
 
-Không. HDR liên quan dải sáng và cách biểu diễn hình ảnh; 4K nói về độ phân giải. Muốn thấy HDR đúng cần nguồn và thiết bị hiển thị tương thích.
+### 282. Tôi đang dùng Free thì xem phim Free ở đâu?
 
-Tham khảo: [Hình ảnh HDR — Adobe](https://helpx.adobe.com/in/photoshop/using/high-dynamic-range-images.html).
+Bạn không cần mua Premium để xem phim thuộc gói Free. Khi chọn phim, kiểm tra nhãn Free trên thẻ hoặc trang chi tiết. Bạn cũng có thể hỏi chatbot gợi ý phim Free; danh sách cần được đối chiếu với kho phim đang tải.
 
-### 280. Tại sao phim trông tối trên màn hình của tôi?
+### 283. Muốn chỉ tìm phim không mất tiền trên MFILM phải làm gì?
 
-Có thể do cảnh phim, độ sáng màn hình hoặc cách thiết bị hiển thị nguồn. So sánh với nguồn khác và kiểm tra cài đặt hiển thị; tăng sáng quá nhiều có thể làm mất chi tiết.
+Bạn không cần mua Premium để xem phim thuộc gói Free. Khi chọn phim, kiểm tra nhãn Free trên thẻ hoặc trang chi tiết. Bạn cũng có thể hỏi chatbot gợi ý phim Free; danh sách cần được đối chiếu với kho phim đang tải.
 
-### 281. Màu phim quá nhợt hoặc quá rực thì kiểm tra gì?
+### 284. Tôi không muốn thuê, làm sao chọn phim gói Free?
 
-Kiểm tra chế độ màu màn hình, chế độ ban đêm và so sánh nguồn khác. Nếu chỉ một bản phim bị khác màu rõ rệt, nguồn hoặc cách phát có thể cần được đối chiếu.
+Bạn không cần mua Premium để xem phim thuộc gói Free. Khi chọn phim, kiểm tra nhãn Free trên thẻ hoặc trang chi tiết. Bạn cũng có thể hỏi chatbot gợi ý phim Free; danh sách cần được đối chiếu với kho phim đang tải.
 
-### 282. 60Hz trên màn hình có giống 60fps của phim không?
+### 285. Có thể thuê riêng phim dù chưa mua gói không?
 
-Hz là số lần màn hình làm mới trong một giây; fps là số khung hình của video. Hai thông số liên quan trải nghiệm chuyển động nhưng không phải một đại lượng giống nhau.
+Nếu trang phim có lựa chọn thuê hợp lệ, bạn có thể thuê riêng phim đó. Phim thuê được xem trong **30 ngày từ lúc thanh toán thành công**. Giá và quyền xem cần kiểm tra trên trang phim; thuê riêng không mở toàn bộ phim trong gói.
 
-### 283. Upscale có tạo lại mọi chi tiết bị mất không?
+### 286. Tôi chỉ muốn trả tiền cho một phim MFILM thì chọn gì?
 
-Upscale tăng kích thước hình bằng nội suy hoặc mô hình xử lý. Nó có thể làm hình dễ nhìn hơn nhưng không đảm bảo khôi phục chính xác mọi chi tiết của bản gốc.
+Nếu trang phim có lựa chọn thuê hợp lệ, bạn có thể thuê riêng phim đó. Phim thuê được xem trong **30 ngày từ lúc thanh toán thành công**. Giá và quyền xem cần kiểm tra trên trang phim; thuê riêng không mở toàn bộ phim trong gói.
 
-### 284. Âm thanh stereo và 5.1 khác nhau thế nào?
+### 287. Không muốn đăng ký cả gói, tôi có lựa chọn nào?
 
-Stereo thường có hai kênh trái, phải. Hệ 5.1 có nhiều kênh bố trí quanh người nghe và một kênh hiệu ứng tần số thấp; nguồn và thiết bị cần hỗ trợ để nghe đúng.
+Nếu trang phim có lựa chọn thuê hợp lệ, bạn có thể thuê riêng phim đó. Phim thuê được xem trong **30 ngày từ lúc thanh toán thành công**. Giá và quyền xem cần kiểm tra trên trang phim; thuê riêng không mở toàn bộ phim trong gói.
 
-### 285. Tai nghe Bluetooth có thể làm tiếng bị trễ không?
+### 288. Muốn xem một phim trả phí một lần thì vào đâu?
 
-Có thể vì âm thanh cần được truyền và giải mã trước khi phát. Thử loa máy hoặc tai nghe có dây để đối chiếu xem độ trễ đến từ thiết bị hay từ nguồn phim.
+Nếu trang phim có lựa chọn thuê hợp lệ, bạn có thể thuê riêng phim đó. Phim thuê được xem trong **30 ngày từ lúc thanh toán thành công**. Giá và quyền xem cần kiểm tra trên trang phim; thuê riêng không mở toàn bộ phim trong gói.
 
-### 286. Vì sao tiếng nhạc lớn nhưng lời thoại nhỏ?
+### 289. Thời gian thuê tính từ lúc xem hay lúc thanh toán?
 
-Bản trộn âm thanh có thể giữ chênh lệch lớn giữa lời thoại và hiệu ứng. Kiểm tra chế độ âm thanh hoặc lựa chọn tăng lời thoại nếu thiết bị có, rồi so sánh nguồn khác.
+Thời hạn 30 ngày bắt đầu khi thanh toán thành công, không đợi lần xem đầu tiên. Kiểm tra ngày hết hạn trong Tài khoản → Phim Đang Thuê; chưa xem ngay không tự kéo dài thời hạn.
 
-### 287. Cache trình duyệt là gì?
+### 290. Tôi trả tiền thuê nhưng chưa mở phim, hạn có bắt đầu chưa?
 
-Cache giữ lại một số tài nguyên để lần truy cập sau không phải tải lại toàn bộ. Khi bản cũ gây lỗi, làm mới hoặc xóa cache có thể hữu ích; xóa dữ liệu trang là thao tác rộng hơn.
+Thời hạn 30 ngày bắt đầu khi thanh toán thành công, không đợi lần xem đầu tiên. Kiểm tra ngày hết hạn trong Tài khoản → Phim Đang Thuê; chưa xem ngay không tự kéo dài thời hạn.
 
-Tham khảo: [HTTP caching — MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Caching).
+### 291. Thuê rồi để vài ngày mới xem có được tính lại 30 ngày không?
 
-### 288. Cookie và cache có giống nhau không?
+Thời hạn 30 ngày bắt đầu khi thanh toán thành công, không đợi lần xem đầu tiên. Kiểm tra ngày hết hạn trong Tài khoản → Phim Đang Thuê; chưa xem ngay không tự kéo dài thời hạn.
 
-Không. Cookie có thể lưu trạng thái hoặc dữ liệu trao đổi với trang; cache chủ yếu giữ tài nguyên đã tải. Xóa từng loại có thể gây tác động khác nhau đến đăng nhập và tải trang.
+### 292. Hạn thuê MFILM bắt đầu vào thời điểm nào?
 
-### 289. Duyệt ẩn danh có làm tôi vô hình trên mạng không?
+Thời hạn 30 ngày bắt đầu khi thanh toán thành công, không đợi lần xem đầu tiên. Kiểm tra ngày hết hạn trong Tài khoản → Phim Đang Thuê; chưa xem ngay không tự kéo dài thời hạn.
 
-Không. Chế độ riêng tư chủ yếu hạn chế lưu dấu vết trên thiết bị sau phiên. Website và nhà cung cấp mạng vẫn có thể quan sát một số thông tin kết nối.
+### 293. Thuê phim trên máy tính có xem trên điện thoại được không?
 
-Tham khảo: [Duyệt riêng tư — Mozilla](https://www.mozilla.org/en-US/firefox/browsers/incognito-browser/).
+Đăng nhập đúng tài khoản đã thuê trên thiết bị hoặc trình duyệt còn lại. Quyền thuê được kiểm tra theo tài khoản và thời hạn giao dịch; đăng nhập tài khoản khác không nhận quyền của tài khoản đã trả tiền.
 
-### 290. Trình chặn quảng cáo có thể làm video không chạy không?
+### 294. Đổi trình duyệt có mất quyền thuê MFILM không?
 
-Một tiện ích có thể chặn nhầm tài nguyên cần cho nguồn phát. Kiểm tra tiện ích hoặc thử một hồ sơ trình duyệt sạch để đối chiếu, thay vì tắt mọi bảo vệ mà chưa biết nguyên nhân.
+Đăng nhập đúng tài khoản đã thuê trên thiết bị hoặc trình duyệt còn lại. Quyền thuê được kiểm tra theo tài khoản và thời hạn giao dịch; đăng nhập tài khoản khác không nhận quyền của tài khoản đã trả tiền.
 
-### 291. Có nên cập nhật trình duyệt khi phim lỗi không?
+### 295. Tôi thuê ở Chrome rồi mở Edge có cần thuê lại không?
 
-Dùng bản trình duyệt được hỗ trợ giúp có các bản sửa lỗi và khả năng phát mới hơn. Cập nhật qua nguồn chính thức; nếu lỗi chỉ xảy ra ở một tập, vẫn cần kiểm tra nguồn phim.
+Đăng nhập đúng tài khoản đã thuê trên thiết bị hoặc trình duyệt còn lại. Quyền thuê được kiểm tra theo tài khoản và thời hạn giao dịch; đăng nhập tài khoản khác không nhận quyền của tài khoản đã trả tiền.
 
-### 292. Tăng tốc phần cứng có tác dụng gì với video?
+### 296. Phim thuê có đi theo tài khoản MFILM không?
 
-Tăng tốc phần cứng có thể dùng bộ xử lý đồ họa để giải mã hoặc hiển thị, giảm tải cho CPU. Hiệu quả tùy máy và nguồn; nếu nghi lỗi tương thích, thử thay đổi rồi so sánh.
+Đăng nhập đúng tài khoản đã thuê trên thiết bị hoặc trình duyệt còn lại. Quyền thuê được kiểm tra theo tài khoản và thời hạn giao dịch; đăng nhập tài khoản khác không nhận quyền của tài khoản đã trả tiền.
 
-### 293. CPU hoặc GPU chạy cao khi xem phim có bình thường không?
+### 297. Hết 30 ngày thuê có còn xem được không?
 
-Giải mã video cần tài nguyên, nhất là nguồn độ phân giải cao hoặc thiếu hỗ trợ phần cứng. Đóng tác vụ nặng và thử nguồn nhẹ hơn; mức tải cao chưa đủ để kết luận web có lỗi.
+Giao dịch thuê hết hạn không còn cấp quyền xem. Kiểm tra xem gói hiện tại có đủ quyền cho phim đó không; nếu chưa đủ, dùng lựa chọn thuê hoặc nâng cấp đang có trên trang phim. Việc mở lại phim không tự gia hạn.
 
-### 294. Mở nhiều tab phim có thể làm máy chậm không?
+### 298. Phim đang thuê báo hết hạn thì xử lý thế nào?
 
-Có. Các tab đang phát hoặc tải dữ liệu có thể cùng dùng bộ nhớ, CPU và mạng. Tạm dừng các tab không xem và đóng bớt trước khi kiểm tra độ mượt.
+Giao dịch thuê hết hạn không còn cấp quyền xem. Kiểm tra xem gói hiện tại có đủ quyền cho phim đó không; nếu chưa đủ, dùng lựa chọn thuê hoặc nâng cấp đang có trên trang phim. Việc mở lại phim không tự gia hạn.
 
-### 295. Kéo thay đổi kích thước cửa sổ khác zoom trang thế nào?
+### 299. Có tự cộng thêm 30 ngày khi mở lại phim thuê không?
 
-Resize đổi diện tích hiển thị nên bố cục chuyển theo các điểm responsive. Zoom thay đổi tỷ lệ nội dung; cả hai có thể ảnh hưởng bố cục nhưng là hai thao tác khác nhau.
+Giao dịch thuê hết hạn không còn cấp quyền xem. Kiểm tra xem gói hiện tại có đủ quyền cho phim đó không; nếu chưa đủ, dùng lựa chọn thuê hoặc nâng cấp đang có trên trang phim. Việc mở lại phim không tự gia hạn.
 
-### 296. Nút trên web bị che khi màn hình nhỏ thì báo sao?
+### 300. Muốn tiếp tục xem sau khi hết hạn thuê phải làm gì?
 
-Gửi trang đang mở, tên nút và kích thước hoặc thiết bị nếu biết. Ảnh chụp thể hiện cả vùng bị che giúp kiểm tra bố cục; không cần gửi dữ liệu đăng nhập.
+Giao dịch thuê hết hạn không còn cấp quyền xem. Kiểm tra xem gói hiện tại có đủ quyền cho phim đó không; nếu chưa đủ, dùng lựa chọn thuê hoặc nâng cấp đang có trên trang phim. Việc mở lại phim không tự gia hạn.
 
-### 297. Thông báo JavaScript tải sai loại MIME là lỗi gì?
+### 301. Giá thuê phim của MFILM có giống nhau không?
 
-Trình duyệt đang nhận nội dung không đúng loại cho tệp JavaScript, có thể là trang HTML thay cho mã ứng dụng. Thử làm mới trang; nếu vẫn trắng hoặc đen, báo MFILM kiểm tra bản triển khai.
+Giá thuê gắn với từng phim và cấp gói, nên có thể khác nhau. Xem mức tiền đang hiển thị ở trang thanh toán của phim; phim Free không cần giá thuê. Chatbot không tự đặt mức tiền hoặc khẳng định giá từ dữ liệu cũ.
 
-## Thể loại và cách chọn phim
+### 302. Tại sao hai phim cùng web lại có giá thuê khác nhau?
 
-### 298. Phim hành động thường có đặc điểm gì?
+Giá thuê gắn với từng phim và cấp gói, nên có thể khác nhau. Xem mức tiền đang hiển thị ở trang thanh toán của phim; phim Free không cần giá thuê. Chatbot không tự đặt mức tiền hoặc khẳng định giá từ dữ liệu cũ.
 
-Phim hành động nhấn mạnh xung đột qua vận động như truy đuổi, giao chiến hoặc giải cứu. Mức bạo lực và nhịp phim rất khác nhau, nên đọc phân loại tuổi trước khi chọn.
+### 303. Phim gói cao hơn có thể có giá thuê cao hơn không?
 
-### 299. Phim phiêu lưu khác phim hành động thế nào?
+Giá thuê gắn với từng phim và cấp gói, nên có thể khác nhau. Xem mức tiền đang hiển thị ở trang thanh toán của phim; phim Free không cần giá thuê. Chatbot không tự đặt mức tiền hoặc khẳng định giá từ dữ liệu cũ.
 
-Phiêu lưu thường tập trung hành trình khám phá, vượt thử thách hoặc tìm kiếm. Hành động nhấn mạnh các tình huống đối đầu mạnh; một phim có thể thuộc cả hai thể loại.
+### 304. Có phải mọi phim đều thuê cùng một giá không?
 
-### 300. Phim hài có phải luôn phù hợp trẻ em không?
+Giá thuê gắn với từng phim và cấp gói, nên có thể khác nhau. Xem mức tiền đang hiển thị ở trang thanh toán của phim; phim Free không cần giá thuê. Chatbot không tự đặt mức tiền hoặc khẳng định giá từ dữ liệu cũ.
 
-Không. Phim hài vẫn có thể chứa ngôn ngữ, bạo lực hoặc chủ đề người lớn. Hãy xem nhãn tuổi và mô tả nội dung thay vì suy ra từ chữ Hài Hước.
+### 305. Tôi thanh toán nhầm tài khoản thì quyền xem nằm ở đâu?
 
-### 301. Phim chính kịch thường kể chuyện gì?
+Trước hết đăng nhập lại tài khoản đã thực hiện giao dịch và kiểm tra Phim Đang Thuê. Quyền xem không tự chuyển giữa tài khoản. Nếu cần kiểm tra giao dịch nhầm, liên hệ [Hỗ trợ](/ho-tro) với mã giao dịch, không gửi mật khẩu.
 
-Chính kịch chú trọng xung đột, cảm xúc và sự phát triển của nhân vật. Nó có thể kết hợp tình cảm, gia đình, lịch sử hay các thể loại khác, không nhất thiết luôn có kết thúc buồn.
+### 306. Đã mua phim nhưng đang đăng nhập email khác thì sao?
 
-### 302. Phim tâm lý có nhất thiết ít hành động không?
+Trước hết đăng nhập lại tài khoản đã thực hiện giao dịch và kiểm tra Phim Đang Thuê. Quyền xem không tự chuyển giữa tài khoản. Nếu cần kiểm tra giao dịch nhầm, liên hệ [Hỗ trợ](/ho-tro) với mã giao dịch, không gửi mật khẩu.
 
-Không nhất thiết. Nhãn tâm lý nhấn mạnh suy nghĩ, cảm xúc và động cơ nhân vật; một phim tâm lý vẫn có thể có truy đuổi, bạo lực hoặc yếu tố kinh dị.
+### 307. Đổi tài khoản sau thanh toán có chuyển phim thuê không?
 
-### 303. Phim kinh dị và thriller khác nhau thế nào?
+Trước hết đăng nhập lại tài khoản đã thực hiện giao dịch và kiểm tra Phim Đang Thuê. Quyền xem không tự chuyển giữa tài khoản. Nếu cần kiểm tra giao dịch nhầm, liên hệ [Hỗ trợ](/ho-tro) với mã giao dịch, không gửi mật khẩu.
 
-Kinh dị thường hướng tới cảm giác sợ hãi. Thriller thường xây căng thẳng, nguy hiểm và hồi hộp; hai cách kể có thể chồng lên nhau trong cùng một phim.
+### 308. Không thấy phim đã thuê sau khi đổi email đăng nhập, cần kiểm tra gì?
 
-### 304. Phim huyền bí khác phim kinh dị thế nào?
+Trước hết đăng nhập lại tài khoản đã thực hiện giao dịch và kiểm tra Phim Đang Thuê. Quyền xem không tự chuyển giữa tài khoản. Nếu cần kiểm tra giao dịch nhầm, liên hệ [Hỗ trợ](/ho-tro) với mã giao dịch, không gửi mật khẩu.
 
-Huyền bí có thể xoay quanh điều khó giải thích hoặc yếu tố bí ẩn, không bắt buộc khiến người xem sợ. Kinh dị chủ yếu tạo cảm giác sợ hãi; cần đọc mô tả để phân biệt một phim cụ thể.
+### 309. MFILM có thanh toán MoMo đang hoạt động chưa?
 
-### 305. Phim trinh thám thường hấp dẫn ở điểm nào?
+Chỉ sử dụng phương thức đang ghi được hỗ trợ trên trang thanh toán. Các biểu tượng ví hoặc thẻ có thể được giữ để trang trí dù phương thức chưa hoạt động. Nếu một phương thức ghi chưa hỗ trợ, chọn phương thức đang có; không chuyển tiền theo hướng dẫn lạ trong chat.
 
-Trinh thám theo quá trình tìm manh mối, suy luận và giải đáp một vụ việc. Nếu muốn giữ bất ngờ, bạn nên tránh đọc phần giải thích thủ phạm hay kết thúc trước khi xem.
+### 310. Có thể trả tiền bằng ZaloPay trên MFILM không?
 
-### 306. Phim hình sự có phải lúc nào cũng là trinh thám không?
+Chỉ sử dụng phương thức đang ghi được hỗ trợ trên trang thanh toán. Các biểu tượng ví hoặc thẻ có thể được giữ để trang trí dù phương thức chưa hoạt động. Nếu một phương thức ghi chưa hỗ trợ, chọn phương thức đang có; không chuyển tiền theo hướng dẫn lạ trong chat.
 
-Không. Hình sự có thể tập trung tội phạm, điều tra, pháp đình hoặc hậu quả của một vụ án. Trinh thám nhấn mạnh việc giải bí ẩn nên chỉ là một cách kể có thể xuất hiện.
+### 311. Biểu tượng ShopeePay có nghĩa là đã thanh toán được chưa?
 
-### 307. Phim khoa học viễn tưởng khác giả tưởng thế nào?
+Chỉ sử dụng phương thức đang ghi được hỗ trợ trên trang thanh toán. Các biểu tượng ví hoặc thẻ có thể được giữ để trang trí dù phương thức chưa hoạt động. Nếu một phương thức ghi chưa hỗ trợ, chọn phương thức đang có; không chuyển tiền theo hướng dẫn lạ trong chat.
 
-Khoa học viễn tưởng thường dùng ý tưởng khoa học hoặc công nghệ làm nền. Giả tưởng thường dùng phép thuật hay thế giới huyền ảo; ranh giới có thể pha trộn tùy tác phẩm.
+### 312. Nhấn VNPAY nhưng báo chưa hỗ trợ thì phải làm gì?
 
-### 308. Phim cổ trang có phải luôn đúng lịch sử không?
+Chỉ sử dụng phương thức đang ghi được hỗ trợ trên trang thanh toán. Các biểu tượng ví hoặc thẻ có thể được giữ để trang trí dù phương thức chưa hoạt động. Nếu một phương thức ghi chưa hỗ trợ, chọn phương thức đang có; không chuyển tiền theo hướng dẫn lạ trong chat.
 
-Không. Cổ trang mô tả bối cảnh hoặc trang phục thời xưa, có thể hoàn toàn hư cấu. Muốn tìm hiểu lịch sử thực tế, cần đối chiếu tài liệu ngoài nội dung phim.
+### 313. Tôi bấm PayPal nhưng chưa xác nhận, phim đã được thuê chưa?
 
-### 309. Phim lịch sử và phim dựa trên chuyện thật khác nhau thế nào?
+Mở trang thanh toán hoặc bấm PayPal chưa đồng nghĩa giao dịch thành công. Chỉ giao dịch được hệ thống xác nhận thành công mới cấp quyền thuê hoặc gói. Kiểm tra tài khoản và trạng thái giao dịch trước khi thử thanh toán lại.
 
-Phim lịch sử đặt trong một giai đoạn hoặc sự kiện quá khứ. Phim dựa trên chuyện thật có thể kể chuyện hiện đại; cả hai vẫn có thể thay đổi chi tiết để kể chuyện.
+### 314. Đóng cửa sổ PayPal trước khi trả tiền có mở phim không?
 
-### 310. Phim tu tiên thường nói về gì?
+Mở trang thanh toán hoặc bấm PayPal chưa đồng nghĩa giao dịch thành công. Chỉ giao dịch được hệ thống xác nhận thành công mới cấp quyền thuê hoặc gói. Kiểm tra tài khoản và trạng thái giao dịch trước khi thử thanh toán lại.
 
-Phim tu tiên thường xoay quanh nhân vật tu luyện, nâng cảnh giới và khám phá một thế giới huyền ảo. Quy tắc tu luyện do từng tác phẩm xây dựng, không phải hệ thống kiến thức thực tế chung.
+### 315. Nút thanh toán hiện ra đã có nghĩa giao dịch thành công chưa?
 
-### 311. Phim võ hiệp khác phim tu tiên thế nào?
+Mở trang thanh toán hoặc bấm PayPal chưa đồng nghĩa giao dịch thành công. Chỉ giao dịch được hệ thống xác nhận thành công mới cấp quyền thuê hoặc gói. Kiểm tra tài khoản và trạng thái giao dịch trước khi thử thanh toán lại.
 
-Võ hiệp thường kể chuyện võ thuật và giang hồ, còn tu tiên thường có tu luyện, cảnh giới và yếu tố vượt khỏi đời sống thường. Một tác phẩm có thể pha trộn cả hai.
+### 316. Tôi hủy ở bước thanh toán có được quyền xem phim không?
 
-### 312. Phim đời thường có bắt buộc không có cốt truyện không?
+Mở trang thanh toán hoặc bấm PayPal chưa đồng nghĩa giao dịch thành công. Chỉ giao dịch được hệ thống xác nhận thành công mới cấp quyền thuê hoặc gói. Kiểm tra tài khoản và trạng thái giao dịch trước khi thử thanh toán lại.
 
-Không. Phim đời thường chú trọng những trải nghiệm gần gũi và quan hệ hằng ngày. Cốt truyện có thể nhẹ hoặc phát triển chậm nhưng vẫn có xung đột và chuyển biến.
+### 317. Đã trừ tiền nhưng phim vẫn khóa thì báo gì cho MFILM?
 
-### 313. Phim tài liệu có hoàn toàn khách quan không?
+Gửi mã giao dịch, tên phim hoặc gói, thời điểm thanh toán và trạng thái đang thấy qua [Hỗ trợ](/ho-tro). Có thể che thông tin nhạy cảm trên ảnh giao dịch. Không gửi số thẻ đầy đủ, mật khẩu hay mã xác thực trong chatbot.
 
-Phim tài liệu ghi lại hoặc tìm hiểu vấn đề thực tế, nhưng lựa chọn tư liệu và cách dựng vẫn tạo góc nhìn. Với thông tin quan trọng, nên đối chiếu thêm nguồn đáng tin cậy.
+### 318. Hỗ trợ cần thông tin nào khi tôi chưa nhận quyền xem?
 
-### 314. Phim hoạt hình có phải một thể loại nội dung duy nhất không?
+Gửi mã giao dịch, tên phim hoặc gói, thời điểm thanh toán và trạng thái đang thấy qua [Hỗ trợ](/ho-tro). Có thể che thông tin nhạy cảm trên ảnh giao dịch. Không gửi số thẻ đầy đủ, mật khẩu hay mã xác thực trong chatbot.
 
-Hoạt hình là cách tạo hình ảnh chuyển động, có thể kể hài, phiêu lưu, kinh dị hoặc chính kịch. Vì vậy nhãn hoạt hình không tự quyết định nội dung hay độ tuổi phù hợp.
+### 319. Mua gói xong chưa cập nhật thì gửi bằng chứng gì?
 
-### 315. Phim ca nhạc và phim có nhạc nền khác nhau thế nào?
+Gửi mã giao dịch, tên phim hoặc gói, thời điểm thanh toán và trạng thái đang thấy qua [Hỗ trợ](/ho-tro). Có thể che thông tin nhạy cảm trên ảnh giao dịch. Không gửi số thẻ đầy đủ, mật khẩu hay mã xác thực trong chatbot.
 
-Phim ca nhạc thường để hát hoặc trình diễn tham gia kể chuyện. Phim có nhạc nền dùng âm nhạc hỗ trợ cảnh; gần như mọi loại phim đều có thể dùng nhạc nền.
+### 320. Tôi không muốn gửi thông tin thẻ khi báo lỗi thanh toán thì sao?
 
-### 316. Phim tình cảm có nhất thiết có kết thúc hạnh phúc không?
+Gửi mã giao dịch, tên phim hoặc gói, thời điểm thanh toán và trạng thái đang thấy qua [Hỗ trợ](/ho-tro). Có thể che thông tin nhạy cảm trên ảnh giao dịch. Không gửi số thẻ đầy đủ, mật khẩu hay mã xác thực trong chatbot.
 
-Không. Tình cảm mô tả trọng tâm quan hệ và cảm xúc, còn kết thúc có thể vui, buồn hoặc mở. Nếu không muốn spoiler, hãy hỏi về sắc thái chung của phim thay vì kết thúc cụ thể.
+### 321. Muốn xem giá gói đang áp dụng của MFILM vào đâu?
 
-### 317. Phim chiến tranh có thể kể ngoài chiến trường không?
+Mở [Gói thành viên](/upgrade-vip) để xem giá và thời hạn hiện tại. Thông tin thanh toán đang hiển thị là nơi cần đối chiếu trước khi mua; câu trả lời lưu sẵn không được dùng để khẳng định giá hôm nay.
 
-Có. Phim chiến tranh còn có thể kể về gia đình, hậu phương, người dân hoặc hậu quả sau chiến đấu. Mức độ bạo lực tùy tác phẩm, không thể suy ra chỉ từ nhãn thể loại.
+### 322. Chatbot có thể xác nhận giá Premium hôm nay từ trí nhớ không?
 
-### 318. Phim gia đình có nghĩa mọi độ tuổi đều xem được không?
+Mở [Gói thành viên](/upgrade-vip) để xem giá và thời hạn hiện tại. Thông tin thanh toán đang hiển thị là nơi cần đối chiếu trước khi mua; câu trả lời lưu sẵn không được dùng để khẳng định giá hôm nay.
 
-Nhãn gia đình gợi ý hướng nội dung, không thay thế phân loại tuổi. Kiểm tra mô tả và các cảnh nhạy cảm trước khi chọn cho trẻ nhỏ hoặc xem cùng nhiều thế hệ.
+### 323. Giá cũ trong chat khác trang mua gói thì tin đâu?
 
-### 319. Tôi ít thời gian thì nên chọn phim kiểu nào?
+Mở [Gói thành viên](/upgrade-vip) để xem giá và thời hạn hiện tại. Thông tin thanh toán đang hiển thị là nơi cần đối chiếu trước khi mua; câu trả lời lưu sẵn không được dùng để khẳng định giá hôm nay.
 
-Bạn có thể chọn phim lẻ hoặc tập ngắn và kiểm tra thời lượng trước. Nếu muốn theo một series, chọn bộ có số tập vừa sức thay vì chỉ dựa vào độ nổi tiếng.
+### 324. Tôi cần bảng giá hiện tại của Free Basic Plus Premium ở đâu?
 
-### 320. Tôi không thích cảnh bạo lực thì tìm phim thế nào?
+Mở [Gói thành viên](/upgrade-vip) để xem giá và thời hạn hiện tại. Thông tin thanh toán đang hiển thị là nơi cần đối chiếu trước khi mua; câu trả lời lưu sẵn không được dùng để khẳng định giá hôm nay.
 
-Hãy nói rõ muốn hạn chế bạo lực, cùng thể loại bạn thích. Đọc nhãn tuổi và mô tả từng phim; mình không thể bảo đảm không có cảnh đó khi dữ liệu nội dung chưa đủ.
+### 325. Tôi cần tìm phim nhưng chỉ nhớ tên tiếng Anh thì sao?
 
-### 321. Tôi muốn xem cùng gia đình thì nên cung cấp thông tin gì?
+Dùng ô tìm kiếm đầu trang với tên tiếng Việt hoặc tên khác của phim. Nếu có nhiều bản trùng tên, thêm năm hoặc phần phim; bạn có thể gửi tên nhớ được cho chatbot để tìm trong kho hiện tại.
 
-Cho mình biết nhóm tuổi, độ dài mong muốn và nội dung cần tránh. Khi chưa biết độ tuổi hoặc mô tả cảnh nhạy cảm, mình sẽ không khẳng định một phim phù hợp tuyệt đối.
+### 326. Nhập tên gốc thay tên Việt trên MFILM có được không?
 
-### 322. Một phim có nhiều thể loại thì nên hiểu thế nào?
+Dùng ô tìm kiếm đầu trang với tên tiếng Việt hoặc tên khác của phim. Nếu có nhiều bản trùng tên, thêm năm hoặc phần phim; bạn có thể gửi tên nhớ được cho chatbot để tìm trong kho hiện tại.
 
-Các nhãn mô tả nhiều yếu tố cùng xuất hiện, chẳng hạn hài, hành động và phiêu lưu. Đọc giới thiệu để biết yếu tố nào là trọng tâm thay vì cho rằng mọi nhãn có mức độ bằng nhau.
+### 327. Phim có nhiều tên thì tôi nên tìm bằng tên nào?
 
-Tham khảo: [Các nhãn thể loại — BFI](https://www.bfi.org.uk/features/genres-where-draw-line).
+Dùng ô tìm kiếm đầu trang với tên tiếng Việt hoặc tên khác của phim. Nếu có nhiều bản trùng tên, thêm năm hoặc phần phim; bạn có thể gửi tên nhớ được cho chatbot để tìm trong kho hiện tại.
 
-## Kể chuyện và sản xuất phim
+### 328. Tên Việt không ra kết quả, tôi thử tên khác ở đâu?
 
-### 323. Cốt truyện và chủ đề của phim khác nhau thế nào?
+Dùng ô tìm kiếm đầu trang với tên tiếng Việt hoặc tên khác của phim. Nếu có nhiều bản trùng tên, thêm năm hoặc phần phim; bạn có thể gửi tên nhớ được cho chatbot để tìm trong kho hiện tại.
 
-Cốt truyện là các sự kiện diễn ra và cách chúng nối với nhau. Chủ đề là ý tưởng được khám phá, chẳng hạn gia đình hay trách nhiệm; cùng chủ đề có thể có nhiều cốt truyện khác nhau.
+### 329. Muốn mở danh sách phim mới MFILM vào đâu?
 
-### 324. Plot twist trong phim là gì?
+Mở [Phim mới cập nhật](/film-new). Dùng phân trang để xem tiếp danh sách, rồi mở trang phim để kiểm tra tập và bản chiếu thực tế. Vừa cập nhật trên web không nhất thiết là vừa phát hành ngoài rạp.
 
-Plot twist là bước ngoặt khiến người xem hiểu tình huống theo cách khác trước đó. Việc tiết lộ twist có thể làm mất bất ngờ, nên mình sẽ hỏi rõ khi bạn muốn phân tích nội dung.
+### 330. Phim vừa cập nhật nằm ở trang nào của MFILM?
 
-### 325. Cliffhanger là gì?
+Mở [Phim mới cập nhật](/film-new). Dùng phân trang để xem tiếp danh sách, rồi mở trang phim để kiểm tra tập và bản chiếu thực tế. Vừa cập nhật trên web không nhất thiết là vừa phát hành ngoài rạp.
 
-Cliffhanger kết thúc một đoạn hoặc tập ở lúc vấn đề quan trọng chưa được giải quyết. Nó tạo mong đợi phần tiếp theo nhưng không tự chứng minh rằng phần tiếp đã có lịch phát hành.
+### 331. Có trang riêng để tìm phim mới trên web không?
 
-### 326. Kết thúc mở có nghĩa phim chưa làm xong không?
+Mở [Phim mới cập nhật](/film-new). Dùng phân trang để xem tiếp danh sách, rồi mở trang phim để kiểm tra tập và bản chiếu thực tế. Vừa cập nhật trên web không nhất thiết là vừa phát hành ngoài rạp.
 
-Không nhất thiết. Kết thúc mở có thể cố ý để người xem suy nghĩ về điều chưa xác định. Muốn biết phim bị dừng hay chủ ý nghệ thuật cần thông tin ngoài cách kết thúc.
+### 332. Tôi muốn duyệt kho phim mới thay vì hỏi chatbot, vào đâu?
 
-### 327. Flashback trong phim có tác dụng gì?
+Mở [Phim mới cập nhật](/film-new). Dùng phân trang để xem tiếp danh sách, rồi mở trang phim để kiểm tra tập và bản chiếu thực tế. Vừa cập nhật trên web không nhất thiết là vừa phát hành ngoài rạp.
 
-Flashback đưa câu chuyện trở lại sự kiện quá khứ để giải thích bối cảnh hoặc nhân vật. Nó có thể thay đổi cách hiểu một cảnh hiện tại mà không đồng nghĩa nhân vật thực sự du hành thời gian.
+### 333. Tìm phim bộ khác phim lẻ ở đâu trên MFILM?
 
-### 328. Kể chuyện phi tuyến nghĩa là gì?
+Dùng [Phim lẻ](/singleMovies) khi muốn duyệt phim điện ảnh và [Phim bộ](/series) khi muốn xem phim nhiều tập. Xem thông tin từng phim để xác nhận thời lượng và danh sách tập đang có.
 
-Kể chuyện phi tuyến không trình bày mọi sự kiện theo thứ tự thời gian xảy ra. Người xem có thể cần ghép mốc thời gian, hồi tưởng và góc nhìn để hiểu toàn bộ câu chuyện.
+### 334. Tôi muốn chọn phim một tập thay vì phim dài tập thì vào đâu?
 
-### 329. Easter egg trong phim là gì?
+Dùng [Phim lẻ](/singleMovies) khi muốn duyệt phim điện ảnh và [Phim bộ](/series) khi muốn xem phim nhiều tập. Xem thông tin từng phim để xác nhận thời lượng và danh sách tập đang có.
 
-Easter egg là chi tiết ẩn hoặc lời gợi nhắc dành cho người xem tinh ý, thường liên quan tác phẩm khác hoặc nội dung quen thuộc. Một chi tiết giống nhau chưa chắc đã được tác giả xác nhận là easter egg.
+### 335. Có mục riêng cho các phim nhiều tập không?
 
-### 330. Foreshadowing trong phim nghĩa là gì?
+Dùng [Phim lẻ](/singleMovies) khi muốn duyệt phim điện ảnh và [Phim bộ](/series) khi muốn xem phim nhiều tập. Xem thông tin từng phim để xác nhận thời lượng và danh sách tập đang có.
 
-Foreshadowing đặt dấu hiệu trước một diễn biến sau này, giúp biến cố có cơ sở khi nhìn lại. Khác spoiler, nó thường chỉ gợi ý chứ chưa nói rõ kết quả.
+### 336. Muốn duyệt phim điện ảnh trên MFILM thì mở trang nào?
 
-### 331. Cameo là gì?
+Dùng [Phim lẻ](/singleMovies) khi muốn duyệt phim điện ảnh và [Phim bộ](/series) khi muốn xem phim nhiều tập. Xem thông tin từng phim để xác nhận thời lượng và danh sách tập đang có.
 
-Cameo là sự xuất hiện ngắn của một người, thường có ý nghĩa đặc biệt với khán giả. Người đó không nhất thiết giữ vai trò lớn hoặc xuất hiện nhiều trong cốt truyện.
+### 337. Lọc phim theo quốc gia trên MFILM thế nào?
 
-### 332. Nhân vật chính và người kể chuyện có luôn là một không?
+Mở Quốc gia trên thanh điều hướng và chọn tên nước. Ở trang chi tiết phim, bạn cũng có thể bấm tên quốc gia để mở danh sách tương ứng. Danh mục là dữ liệu kho MFILM, không phải danh sách tất cả phim của nước đó.
 
-Không. Người kể chuyện có thể là nhân vật phụ hoặc giọng kể bên ngoài, trong khi câu chuyện tập trung vào người khác. Cần phân biệt ai kể và ai là trung tâm diễn biến.
+### 338. Muốn tìm riêng phim Hàn trên web thì bấm đâu?
 
-### 333. Phản diện và phản anh hùng khác nhau thế nào?
+Mở Quốc gia trên thanh điều hướng và chọn tên nước. Ở trang chi tiết phim, bạn cũng có thể bấm tên quốc gia để mở danh sách tương ứng. Danh mục là dữ liệu kho MFILM, không phải danh sách tất cả phim của nước đó.
 
-Phản diện thường tạo lực đối đầu với nhân vật trung tâm. Phản anh hùng là nhân vật trung tâm thiếu những phẩm chất anh hùng truyền thống; họ có thể phức tạp mà không phải phản diện.
+### 339. Tôi cần phim Trung Quốc trong kho MFILM thì tìm thế nào?
 
-### 334. Người kể chuyện không đáng tin là gì?
+Mở Quốc gia trên thanh điều hướng và chọn tên nước. Ở trang chi tiết phim, bạn cũng có thể bấm tên quốc gia để mở danh sách tương ứng. Danh mục là dữ liệu kho MFILM, không phải danh sách tất cả phim của nước đó.
 
-Đó là người kể có lời trình bày không hoàn toàn đáng tin do thiếu hiểu biết, thiên kiến hoặc cố tình che giấu. Các dấu hiệu mâu thuẫn trong phim giúp người xem tự đối chiếu.
+### 340. Muốn duyệt phim Việt Nam thay vì toàn bộ phim thì làm sao?
 
-### 335. Character arc là gì?
+Mở Quốc gia trên thanh điều hướng và chọn tên nước. Ở trang chi tiết phim, bạn cũng có thể bấm tên quốc gia để mở danh sách tương ứng. Danh mục là dữ liệu kho MFILM, không phải danh sách tất cả phim của nước đó.
 
-Character arc là tiến trình thay đổi của nhân vật về suy nghĩ, lựa chọn hoặc quan hệ qua câu chuyện. Không phải nhân vật nào cũng thay đổi rõ; một số được dùng để tác động đến người khác.
+### 341. Tìm phim theo thể loại trên MFILM thế nào?
 
-### 336. World building là gì?
+Mở Thể loại, tìm tên thể loại rồi chọn để xem các phim phù hợp trong kho. Tên thể loại trên trang chi tiết cũng là liên kết tới danh sách đó; một phim có thể thuộc nhiều thể loại.
 
-World-building xây dựng bối cảnh và quy tắc của thế giới trong tác phẩm, như xã hội, phép thuật hoặc công nghệ. Quy tắc rõ giúp người xem hiểu giới hạn và ý nghĩa các lựa chọn của nhân vật.
+### 342. Tôi muốn danh sách phim hành động của web thì bấm đâu?
 
-### 337. Canon trong một series nghĩa là gì?
+Mở Thể loại, tìm tên thể loại rồi chọn để xem các phim phù hợp trong kho. Tên thể loại trên trang chi tiết cũng là liên kết tới danh sách đó; một phim có thể thuộc nhiều thể loại.
 
-Canon thường chỉ nội dung được xem là thuộc mạch chính thức của một series. Cách xác định tùy chủ sở hữu hoặc tác giả; không nên kết luận chỉ vì một cảnh xuất hiện trong bản phụ.
+### 343. Có thể bấm nhãn thể loại ở trang phim để tìm phim tương tự không?
 
-### 338. Fan theory có phải lời giải chính thức không?
+Mở Thể loại, tìm tên thể loại rồi chọn để xem các phim phù hợp trong kho. Tên thể loại trên trang chi tiết cũng là liên kết tới danh sách đó; một phim có thể thuộc nhiều thể loại.
 
-Không. Fan theory là cách suy đoán hoặc giải thích của người hâm mộ dựa trên chi tiết tác phẩm. Khi bàn luận, nên tách điều phim xác nhận khỏi giả thuyết chưa được xác nhận.
+### 344. Bộ lọc Thể loại trên đầu trang dùng ra sao?
 
-### 339. Đạo diễn và biên kịch khác nhau thế nào?
+Mở Thể loại, tìm tên thể loại rồi chọn để xem các phim phù hợp trong kho. Tên thể loại trên trang chi tiết cũng là liên kết tới danh sách đó; một phim có thể thuộc nhiều thể loại.
 
-Biên kịch xây dựng kịch bản, lời thoại và diễn biến. Đạo diễn dẫn dắt cách thể hiện tác phẩm khi sản xuất; một người có thể đảm nhiệm cả hai vai trò.
+### 345. Tôi thích một diễn viên thì tìm phim của họ ở đâu?
 
-### 340. Nhà sản xuất phim làm gì?
+Mở [Diễn viên](/actors), tìm người bạn quan tâm và mở trang chi tiết để xem phim đã tham gia trong kho. Bạn cũng có thể chọn diễn viên trong tab Diễn viên của một trang phim. Không có phim trong kho không đồng nghĩa họ chưa từng đóng phim.
 
-Nhà sản xuất tham gia tổ chức dự án như nguồn lực, đội ngũ, kế hoạch và quá trình thực hiện. Vai trò cụ thể thay đổi giữa dự án, không phải luôn là người trực tiếp đạo diễn cảnh quay.
+### 346. Tên diễn viên trên MFILM có dẫn đến các phim đã tham gia không?
 
-### 341. Quay phim và dựng phim khác nhau thế nào?
+Mở [Diễn viên](/actors), tìm người bạn quan tâm và mở trang chi tiết để xem phim đã tham gia trong kho. Bạn cũng có thể chọn diễn viên trong tab Diễn viên của một trang phim. Không có phim trong kho không đồng nghĩa họ chưa từng đóng phim.
 
-Quay phim tạo ra hình ảnh từ các cảnh được ghi lại. Dựng phim chọn và sắp xếp hình, tiếng để tạo nhịp kể; cách dựng có thể làm thay đổi cảm nhận dù dùng cùng tư liệu.
+### 347. Muốn duyệt danh sách diễn viên trên web vào đâu?
 
-### 342. CGI là gì?
+Mở [Diễn viên](/actors), tìm người bạn quan tâm và mở trang chi tiết để xem phim đã tham gia trong kho. Bạn cũng có thể chọn diễn viên trong tab Diễn viên của một trang phim. Không có phim trong kho không đồng nghĩa họ chưa từng đóng phim.
 
-CGI là hình ảnh được tạo bằng máy tính, có thể dùng cho nhân vật, bối cảnh hoặc hiệu ứng. CGI chỉ là một công cụ; hiệu quả còn phụ thuộc cách kết hợp với câu chuyện và hình ảnh khác.
+### 348. Diễn viên có trang riêng trên MFILM không?
 
-### 343. Hiệu ứng thực tế khác CGI thế nào?
+Mở [Diễn viên](/actors), tìm người bạn quan tâm và mở trang chi tiết để xem phim đã tham gia trong kho. Bạn cũng có thể chọn diễn viên trong tab Diễn viên của một trang phim. Không có phim trong kho không đồng nghĩa họ chưa từng đóng phim.
 
-Hiệu ứng thực tế được tạo trực tiếp khi quay, như mô hình, hóa trang hoặc cơ cấu vật lý. CGI tạo hình ảnh bằng máy tính; nhiều phim kết hợp hai cách để đạt kết quả mong muốn.
+### 349. Chủ đề phim của MFILM nằm ở đâu?
 
-### 344. Nhạc nền có thể ảnh hưởng cách hiểu một cảnh không?
+Mở [Chủ đề](/topic), chọn bộ sưu tập rồi xem các phim bên trong. Các bộ sưu tập giúp duyệt kho theo sở thích; kiểm tra nhãn gói và trang phim trước khi xem.
 
-Có. Nhạc góp phần tạo nhịp, cảm xúc và gợi liên tưởng, nên cùng hình ảnh có thể mang sắc thái khác khi đổi nhạc. Tuy vậy ý nghĩa cảnh còn phụ thuộc lời thoại và bối cảnh câu chuyện.
+### 350. Tôi muốn xem bộ sưu tập phim theo chủ đề thì chọn mục nào?
 
-### 345. Bản director cut là gì?
+Mở [Chủ đề](/topic), chọn bộ sưu tập rồi xem các phim bên trong. Các bộ sưu tập giúp duyệt kho theo sở thích; kiểm tra nhãn gói và trang phim trước khi xem.
 
-Director’s cut thường là một phiên bản dựng gắn với lựa chọn của đạo diễn, có thể khác bản phát hành trước. Nội dung và mức khác biệt tùy phim, không đảm bảo luôn dài hơn hoặc hay hơn.
+### 351. Có trang gom phim theo sở thích trên MFILM không?
 
-### 346. Cảnh sau phần credit có cần xem không?
+Mở [Chủ đề](/topic), chọn bộ sưu tập rồi xem các phim bên trong. Các bộ sưu tập giúp duyệt kho theo sở thích; kiểm tra nhãn gói và trang phim trước khi xem.
 
-Một số phim có cảnh giữa hoặc sau danh sách ê-kíp để bổ sung nội dung hay gợi phần tiếp. Không phải phim nào cũng có; nếu muốn tránh spoiler, có thể hỏi riêng việc có cảnh đó hay không.
+### 352. Tìm một bộ sưu tập phim trên web thế nào?
 
-### 347. Bài review và tóm tắt nội dung khác nhau thế nào?
+Mở [Chủ đề](/topic), chọn bộ sưu tập rồi xem các phim bên trong. Các bộ sưu tập giúp duyệt kho theo sở thích; kiểm tra nhãn gói và trang phim trước khi xem.
 
-Tóm tắt thuật lại nội dung chính; review đưa nhận xét và đánh giá về trải nghiệm tác phẩm. Cả hai có thể chứa spoiler, nên hãy nói rõ mức tiết lộ bạn chấp nhận.
+### 353. Tôi chỉ muốn duyệt anime có sẵn trên MFILM thì vào đâu?
 
-## Anime và thuật ngữ của người xem
+Bạn có thể mở [Anime và phim hoạt hình](/anime). Chọn phim rồi xem mô tả, nhãn độ tuổi, phụ đề và danh sách tập đang có. Không mặc định mọi anime đều dành cho trẻ nhỏ hoặc đều có đủ mọi tập.
 
-### 348. Anime có phải chỉ dành cho trẻ em không?
+### 354. MFILM có trang danh sách phim hoạt hình riêng không?
 
-Không. Anime có thể hướng đến nhiều nhóm tuổi và chứa các chủ đề rất khác nhau. Hãy xem phân loại tuổi, mô tả và nội dung cần tránh trước khi chọn cho trẻ.
+Bạn có thể mở [Anime và phim hoạt hình](/anime). Chọn phim rồi xem mô tả, nhãn độ tuổi, phụ đề và danh sách tập đang có. Không mặc định mọi anime đều dành cho trẻ nhỏ hoặc đều có đủ mọi tập.
 
-### 349. Anime dài tập và anime theo mùa khác nhau thế nào?
+### 355. Muốn tìm anime trên web thay vì phim người thật, chọn trang nào?
 
-Anime dài tập có thể tiếp tục qua nhiều đợt phát hành, còn một mùa thường là một nhóm tập trong một đợt. Cách chia phần phụ thuộc tác phẩm, không có số tập cố định cho mọi mùa.
+Bạn có thể mở [Anime và phim hoạt hình](/anime). Chọn phim rồi xem mô tả, nhãn độ tuổi, phụ đề và danh sách tập đang có. Không mặc định mọi anime đều dành cho trẻ nhỏ hoặc đều có đủ mọi tập.
 
-### 350. Anime movie khác tập truyền hình thế nào?
+### 356. Có liên kết mở danh mục anime MFILM không?
 
-Anime movie là một tác phẩm phim, thường có thời lượng dài hơn một tập truyền hình. Nó có thể độc lập, tóm tắt series hoặc tiếp nối nội dung; cần kiểm tra vai trò của phim trong từng bộ.
+Bạn có thể mở [Anime và phim hoạt hình](/anime). Chọn phim rồi xem mô tả, nhãn độ tuổi, phụ đề và danh sách tập đang có. Không mặc định mọi anime đều dành cho trẻ nhỏ hoặc đều có đủ mọi tập.
 
-### 351. Filler trong anime là gì?
+### 357. Muốn xem phần giới thiệu mà chưa phát phim thì mở đâu?
 
-Filler thường chỉ nội dung không chuyển thể trực tiếp phần truyện gốc hoặc không đẩy mạch chính theo cách người xem phân loại. Việc có nên bỏ qua cần xét từng bộ, không thể áp dụng chung.
+Mở trang chi tiết phim để đọc giới thiệu, tên khác, thể loại, quốc gia, diễn viên và thông tin tập. Bạn không cần phát video để đọc các thông tin công khai này; quyền phát phụ thuộc gói hoặc thuê còn hạn.
 
-### 352. Anime chuyển thể có cần giống manga từng cảnh không?
+### 358. Tôi muốn đọc thông tin phim MFILM trước khi mua được không?
 
-Không nhất thiết. Bản chuyển thể có thể đổi nhịp kể, thêm hoặc bớt cảnh để phù hợp hình thức phim. Khác bản truyện chưa tự chứng minh lỗi; cần xét mục đích và tính nhất quán.
+Mở trang chi tiết phim để đọc giới thiệu, tên khác, thể loại, quốc gia, diễn viên và thông tin tập. Bạn không cần phát video để đọc các thông tin công khai này; quyền phát phụ thuộc gói hoặc thuê còn hạn.
 
-### 353. Light novel khác manga thế nào?
+### 359. Trang chi tiết phim có gì để chọn phim phù hợp?
 
-Light novel là dạng tiểu thuyết thường có minh họa, còn manga kể chuyện chủ yếu bằng các khung tranh. Cùng một tác phẩm có thể được chuyển thể giữa truyện chữ, manga và anime.
+Mở trang chi tiết phim để đọc giới thiệu, tên khác, thể loại, quốc gia, diễn viên và thông tin tập. Bạn không cần phát video để đọc các thông tin công khai này; quyền phát phụ thuộc gói hoặc thuê còn hạn.
 
-### 354. Web novel và light novel có phải luôn giống nhau không?
+### 360. Có cần vào trình phát để xem mô tả phim không?
 
-Không. Web novel thường được đăng trên mạng, còn bản light novel xuất bản có thể được biên tập hoặc thay đổi nội dung. Cần ghi rõ đang nói về phiên bản nào khi so sánh.
+Mở trang chi tiết phim để đọc giới thiệu, tên khác, thể loại, quốc gia, diễn viên và thông tin tập. Bạn không cần phát video để đọc các thông tin công khai này; quyền phát phụ thuộc gói hoặc thuê còn hạn.
 
-### 355. Manhwa và manga khác nhau ở đâu?
+### 361. Số cuối của khoảng 1–126 có phải là 126 nút tập không?
 
-Manga thường chỉ truyện tranh Nhật Bản, manhwa thường chỉ truyện tranh Hàn Quốc. Hình thức đọc và cách phát hành có thể khác theo tác phẩm; không nên suy ra chất lượng từ tên gọi.
+Một nhóm chứa tối đa 120 mục có nguồn, nhưng nhãn tập có thể nhảy số hoặc gộp tập. Khoảng 1–126 mô tả nhãn đầu và cuối của nhóm, không có nghĩa có 126 video. MFILM không tạo thêm video cho số tập nguồn chưa cung cấp.
 
-### 356. Manhua nghĩa là gì?
+### 362. Một nhóm tập ghi 1–126 mà chỉ có 120 mục là vì sao?
 
-Manhua thường dùng để gọi truyện tranh Trung Quốc. Đây là tên gọi theo truyền thống hoặc nguồn gốc, không quyết định một thể loại nội dung duy nhất.
+Một nhóm chứa tối đa 120 mục có nguồn, nhưng nhãn tập có thể nhảy số hoặc gộp tập. Khoảng 1–126 mô tả nhãn đầu và cuối của nhóm, không có nghĩa có 126 video. MFILM không tạo thêm video cho số tập nguồn chưa cung cấp.
 
-### 357. Donghua có phải anime Nhật Bản không?
+### 363. Tại sao khoảng tập có số lớn hơn lượng tập trong nhóm?
 
-Donghua thường dùng để gọi hoạt hình Trung Quốc. Trong cách gọi phổ biến, anime gắn với hoạt hình Nhật Bản; hai nhóm đều có thể dùng nhiều phong cách hình ảnh và thể loại.
+Một nhóm chứa tối đa 120 mục có nguồn, nhưng nhãn tập có thể nhảy số hoặc gộp tập. Khoảng 1–126 mô tả nhãn đầu và cuối của nhóm, không có nghĩa có 126 video. MFILM không tạo thêm video cho số tập nguồn chưa cung cấp.
 
-### 358. Chibi trong hình ảnh anime là gì?
+### 364. Nhóm tối đa 120 tập có nghĩa số nhãn cuối luôn là 120 không?
 
-Chibi là cách vẽ nhân vật nhỏ, đầu lớn và tỷ lệ cách điệu, thường để tạo vẻ dễ thương hoặc hài. Một cảnh chibi không nhất thiết phản ánh chiều cao thật của nhân vật trong câu chuyện.
+Một nhóm chứa tối đa 120 mục có nguồn, nhưng nhãn tập có thể nhảy số hoặc gộp tập. Khoảng 1–126 mô tả nhãn đầu và cuối của nhóm, không có nghĩa có 126 video. MFILM không tạo thêm video cho số tập nguồn chưa cung cấp.
 
-### 359. Mecha trong anime nghĩa là gì?
+### 365. Tôi cần đi thẳng tới tập ở nhóm cuối thì làm sao?
 
-Mecha thường gắn với robot hoặc máy móc lớn giữ vai trò quan trọng trong nội dung. Các bộ mecha có thể kết hợp chiến tranh, khoa học viễn tưởng, chính trị hoặc câu chuyện nhân vật.
+Mở bộ chọn Khoảng tập và nhập số tập cần tìm để chọn nhóm chứa nhãn đó. Sau đó bấm tập có nguồn trong nhóm. Nếu số tập không có hoặc thuộc video gộp, kiểm tra nhãn khoảng và báo tên phim, số tập qua Hỗ trợ.
 
-### 360. Shounen có nghĩa tất cả phim đều đánh nhau không?
+### 366. Bộ phim dài có cần bấm mũi tên từng nhóm để tới tập cuối không?
 
-Không. Shounen là cách phân nhóm độc giả mục tiêu trong xuất bản, không phải một cốt truyện duy nhất. Tác phẩm thuộc nhóm này vẫn có thể kể thể thao, hài, tình cảm hoặc đời thường.
+Mở bộ chọn Khoảng tập và nhập số tập cần tìm để chọn nhóm chứa nhãn đó. Sau đó bấm tập có nguồn trong nhóm. Nếu số tập không có hoặc thuộc video gộp, kiểm tra nhãn khoảng và báo tên phim, số tập qua Hỗ trợ.
 
-### 361. Shoujo có phải chỉ là truyện tình cảm không?
+### 367. Muốn tìm tập 900 trên MFILM thì thao tác thế nào?
 
-Không. Shoujo là cách phân nhóm độc giả mục tiêu, còn nội dung có thể có giả tưởng, phiêu lưu hay các chủ đề khác. Không nên dùng nhãn này để đoán toàn bộ câu chuyện.
+Mở bộ chọn Khoảng tập và nhập số tập cần tìm để chọn nhóm chứa nhãn đó. Sau đó bấm tập có nguồn trong nhóm. Nếu số tập không có hoặc thuộc video gộp, kiểm tra nhãn khoảng và báo tên phim, số tập qua Hỗ trợ.
 
-### 362. Seinen có phải luôn là nội dung bạo lực không?
+### 368. Có thể tìm khoảng tập bằng số trong bộ chọn không?
 
-Không. Seinen gắn với nhóm độc giả mục tiêu trong xuất bản, không đồng nghĩa mọi tác phẩm đều bạo lực hoặc có cùng giới hạn tuổi. Hãy kiểm tra tác phẩm cụ thể.
+Mở bộ chọn Khoảng tập và nhập số tập cần tìm để chọn nhóm chứa nhãn đó. Sau đó bấm tập có nguồn trong nhóm. Nếu số tập không có hoặc thuộc video gộp, kiểm tra nhãn khoảng và báo tên phim, số tập qua Hỗ trợ.
 
-### 363. Josei nghĩa là gì trong manga?
+### 369. Không thấy tập 40 nhưng có tập 41 trên MFILM thì làm sao?
 
-Josei thường chỉ nhóm manga hướng tới độc giả nữ trưởng thành. Nội dung có thể trải rộng từ quan hệ, công việc đến nhiều chủ đề khác; nhãn không thay thế việc đọc mô tả.
+Kiểm tra các nhãn tập gộp và bản chiếu khác trước. Nguồn có thể chưa có video riêng cho số đó. Gửi tên phim, số tập và bản chiếu qua [Hỗ trợ](/ho-tro); chatbot không tạo link tập chưa có nguồn.
 
-### 364. Opening và ending trong anime là gì?
+### 370. Danh sách tập nhảy số có phải tự tạo tập thiếu không?
 
-Opening là phần mở đầu thường có nhạc và hình giới thiệu; ending là phần kết tập thường đi cùng nhạc hoặc danh sách ê-kíp. Cả hai đôi khi chứa gợi ý nội dung, không chỉ là nhạc trang trí.
+Kiểm tra các nhãn tập gộp và bản chiếu khác trước. Nguồn có thể chưa có video riêng cho số đó. Gửi tên phim, số tập và bản chiếu qua [Hỗ trợ](/ho-tro); chatbot không tạo link tập chưa có nguồn.
 
-### 365. OST có giống bài opening không?
+### 371. Tập thiếu trong kho có thể xem ở đâu để kiểm tra?
 
-OST là nhạc của tác phẩm, có thể gồm nhạc nền và các bài hát tùy bản phát hành. Opening là một bài hoặc phần mở đầu; không phải toàn bộ OST chỉ gồm bài đó.
+Kiểm tra các nhãn tập gộp và bản chiếu khác trước. Nguồn có thể chưa có video riêng cho số đó. Gửi tên phim, số tập và bản chiếu qua [Hỗ trợ](/ho-tro); chatbot không tạo link tập chưa có nguồn.
 
-### 366. AMV có phải một tập anime chính thức không?
+### 372. Muốn báo một bộ phim bị thiếu tập cần gửi gì?
 
-AMV thường là video ghép cảnh anime với âm nhạc, hay do người hâm mộ làm. Nó không tự trở thành tập phim chính thức hoặc nguồn xác nhận tình tiết mới.
+Kiểm tra các nhãn tập gộp và bản chiếu khác trước. Nguồn có thể chưa có video riêng cho số đó. Gửi tên phim, số tập và bản chiếu qua [Hỗ trợ](/ho-tro); chatbot không tạo link tập chưa có nguồn.
 
-### 367. Cosplay là gì?
+### 373. Đổi server có đổi tên phim đang xem không?
 
-Cosplay là hóa trang và thể hiện hình ảnh của một nhân vật hoặc hình tượng. Người cosplay có thể tự làm trang phục và đạo cụ; đó không có nghĩa họ là diễn viên của bản phim chính thức.
+Chọn lại cùng tập ở server hoặc bản chiếu còn hoạt động. Server là nguồn phát, không phải một phim mới; khả năng giữ vị trí có thể khác theo trình phát. Ghi lại số tập và vị trí trước khi đổi nếu bạn cần quay lại chỗ đang xem.
 
-### 368. Tsundere là kiểu nhân vật gì?
+### 374. Một nguồn phát hỏng có nên thử nguồn khác cùng tập không?
 
-Tsundere thường mô tả nhân vật có biểu hiện cứng rắn hoặc lạnh lùng nhưng cũng bộc lộ sự quan tâm, dịu dàng. Đây là cách gọi mô-típ nhân vật, không phải chẩn đoán tâm lý người thật.
+Chọn lại cùng tập ở server hoặc bản chiếu còn hoạt động. Server là nguồn phát, không phải một phim mới; khả năng giữ vị trí có thể khác theo trình phát. Ghi lại số tập và vị trí trước khi đổi nếu bạn cần quay lại chỗ đang xem.
 
-### 369. Waifu và husbando là cách gọi gì?
+### 375. Server 1 không chạy nhưng Server 2 có thì dùng thế nào?
 
-Đây là cách gọi vui của người hâm mộ dành cho nhân vật họ đặc biệt yêu thích. Cách dùng tùy cộng đồng, không phải một quan hệ thật hay thuật ngữ bắt buộc để hiểu anime.
+Chọn lại cùng tập ở server hoặc bản chiếu còn hoạt động. Server là nguồn phát, không phải một phim mới; khả năng giữ vị trí có thể khác theo trình phát. Ghi lại số tập và vị trí trước khi đổi nếu bạn cần quay lại chỗ đang xem.
 
-### 370. Thứ tự phát hành và thứ tự thời gian của anime có thể khác không?
+### 376. Tôi muốn giữ tập đang xem và đổi nguồn phát thì làm sao?
 
-Có. Một phần ra sau có thể kể sự kiện trước phần đã phát hành. Nếu là người xem mới, hãy gửi tên series và mức chấp nhận spoiler để tìm thứ tự phù hợp.
+Chọn lại cùng tập ở server hoặc bản chiếu còn hoạt động. Server là nguồn phát, không phải một phim mới; khả năng giữ vị trí có thể khác theo trình phát. Ghi lại số tập và vị trí trước khi đổi nếu bạn cần quay lại chỗ đang xem.
 
-### 371. Phần anime kết thúc có nghĩa truyện gốc cũng kết thúc không?
+### 377. Có Vietsub nhưng không thấy thuyết minh thì chọn ở đâu?
 
-Không nhất thiết. Anime có thể mới chuyển thể một phần truyện, dừng ở một mốc riêng hoặc có kết thúc khác. Muốn biết tiến độ hiện tại cần kiểm tra thông tin mới của từng phiên bản.
+Chỉ chọn được bản chiếu mà phim có nguồn thực tế. Mở mục Bản chiếu để kiểm tra Vietsub, thuyết minh hoặc lồng tiếng nếu có; không có lựa chọn đó thì không thể mặc định web tự tạo bản âm thanh mới.
 
-### 372. Anime có mùa mới thì mùa cũ có bắt buộc xem trước không?
+### 378. MFILM có tự làm bản lồng tiếng cho mọi phim không?
 
-Thường cần hiểu mạch trước nếu mùa mới tiếp nối, nhưng một số series kể các câu chuyện độc lập. Hãy kiểm tra mô tả hoặc gửi tên bộ; không mặc định mọi mùa đều xem đảo thứ tự được.
+Chỉ chọn được bản chiếu mà phim có nguồn thực tế. Mở mục Bản chiếu để kiểm tra Vietsub, thuyết minh hoặc lồng tiếng nếu có; không có lựa chọn đó thì không thể mặc định web tự tạo bản âm thanh mới.
 
-## Trợ lý AI và kiến thức phổ thông
+### 379. Không tìm được bản tiếng Việt đọc thoại của một phim thì sao?
 
-### 373. Làm sao hỏi chatbot để nhận gợi ý phim sát ý hơn?
+Chỉ chọn được bản chiếu mà phim có nguồn thực tế. Mở mục Bản chiếu để kiểm tra Vietsub, thuyết minh hoặc lồng tiếng nếu có; không có lựa chọn đó thì không thể mặc định web tự tạo bản âm thanh mới.
 
-Nêu thể loại, độ dài, quốc gia và những nội dung không muốn xem. Nếu chọn theo gói, hãy đăng nhập rồi nói muốn phim hợp gói hiện tại để mình đối chiếu quyền.
+### 380. Bản chiếu chỉ hiện Vietsub có xem thuyết minh được không?
 
-### 374. Tôi nên đưa tên phim kèm năm khi hỏi AI không?
+Chỉ chọn được bản chiếu mà phim có nguồn thực tế. Mở mục Bản chiếu để kiểm tra Vietsub, thuyết minh hoặc lồng tiếng nếu có; không có lựa chọn đó thì không thể mặc định web tự tạo bản âm thanh mới.
 
-Có, nhất là phim trùng tên hoặc có nhiều bản làm lại. Tên gốc, năm và phần phim giúp mình giảm khả năng nhầm giữa các tác phẩm.
+### 381. Tôi vào đúng phim nhưng video là phim khác thì báo sao?
 
-### 375. Chatbot có thể trả lời sai không?
+Thử bản chiếu hoặc server khác của cùng tập để đối chiếu. Báo qua [Hỗ trợ](/ho-tro) với tên phim, số tập, server và thời điểm nhận ra sai nội dung. Không tự kết luận số tập phải đổi khi chưa kiểm tra nguồn.
 
-Có. Câu trả lời từ mô hình hoặc dữ liệu chưa đầy đủ có thể sai. Hãy kiểm tra thông tin quan trọng; nếu gặp đáp án sai, gửi câu hỏi và nội dung cho MFILM qua [Hỗ trợ](/ho-tro).
+### 382. Tập phim trên MFILM phát sai nội dung, cần gửi thông tin gì?
 
-### 376. Dòng Kiến thức MFILM dưới câu trả lời nghĩa là gì?
+Thử bản chiếu hoặc server khác của cùng tập để đối chiếu. Báo qua [Hỗ trợ](/ho-tro) với tên phim, số tập, server và thời điểm nhận ra sai nội dung. Không tự kết luận số tập phải đổi khi chưa kiểm tra nguồn.
 
-Đáp án đến từ bộ hỏi đáp biên soạn sẵn của MFILM. Với câu đó, chatbot có thể trả lời trực tiếp mà không cần nhờ nhà cung cấp AI.
+### 383. Nguồn phát bị gắn nhầm tập thì xử lý thế nào?
 
-### 377. Dòng Kho phim MFILM dưới câu trả lời nghĩa là gì?
+Thử bản chiếu hoặc server khác của cùng tập để đối chiếu. Báo qua [Hỗ trợ](/ho-tro) với tên phim, số tập, server và thời điểm nhận ra sai nội dung. Không tự kết luận số tập phải đổi khi chưa kiểm tra nguồn.
 
-Đáp án được tạo từ dữ liệu phim đang tải trên web, ví dụ tên, số tập hoặc danh sách gợi ý. Dữ liệu chưa có sẽ không được tự bịa để điền cho đầy.
+### 384. Phát tập 5 mà nội dung giống tập 4 thì báo ở đâu?
 
-### 378. Dòng Bộ nhớ đã học dưới câu trả lời nghĩa là gì?
+Thử bản chiếu hoặc server khác của cùng tập để đối chiếu. Báo qua [Hỗ trợ](/ho-tro) với tên phim, số tập, server và thời điểm nhận ra sai nội dung. Không tự kết luận số tập phải đổi khi chưa kiểm tra nguồn.
 
-Hệ thống đang dùng một đáp án đã được lưu sau lượt hỏi trước, không gọi lại mô hình cho câu đó. Đây là khả năng dùng lại đáp án, không phải bằng chứng đáp án luôn đúng.
+### 385. Xem tiếp biến mất sau khi đăng nhập tài khoản khác thì sao?
 
-### 379. Dòng AI hỗ trợ dưới câu trả lời nghĩa là gì?
+Lịch sử và tiến độ được tách theo tài khoản; lịch sử khách trên trình duyệt cũng có phạm vi riêng. Đăng nhập lại tài khoản đã xem và mở mục Xem Tiếp. Không dùng lịch sử của một người để trả lời thay cho người khác.
 
-Câu hỏi được chuyển đến mô hình hỗ trợ khi kiến thức, dữ liệu phim và bộ nhớ chưa xử lý được. Đáp án phù hợp có thể được lưu để dùng lại cho những lần hỏi tương đương sau.
+### 386. Tại sao lịch sử phim ở hai tài khoản MFILM khác nhau?
 
-### 380. Học một câu trả lời có phải huấn luyện mô hình mới không?
+Lịch sử và tiến độ được tách theo tài khoản; lịch sử khách trên trình duyệt cũng có phạm vi riêng. Đăng nhập lại tài khoản đã xem và mở mục Xem Tiếp. Không dùng lịch sử của một người để trả lời thay cho người khác.
 
-Không. Bộ nhớ lưu câu hỏi và đáp án để truy xuất lại. Huấn luyện trọng số của mô hình là một quy trình khác, cần mô hình, dữ liệu và tài nguyên tính toán phù hợp.
+### 387. Tôi đổi tài khoản rồi không thấy chỗ đã dừng thì kiểm tra gì?
 
-### 381. Cùng câu hỏi viết không dấu có dùng lại bộ nhớ không?
+Lịch sử và tiến độ được tách theo tài khoản; lịch sử khách trên trình duyệt cũng có phạm vi riêng. Đăng nhập lại tài khoản đã xem và mở mục Xem Tiếp. Không dùng lịch sử của một người để trả lời thay cho người khác.
 
-Hệ thống chuẩn hóa dấu tiếng Việt, chữ hoa và dấu câu để nhận diện câu tương đương. Hai câu đổi ý nghĩa hoặc dùng cách diễn đạt khác nhiều chưa chắc khớp cùng đáp án.
+### 388. Có dùng chung lịch sử xem giữa hai tài khoản MFILM không?
 
-### 382. Câu trả lời đã học có được lưu mãi mãi không?
+Lịch sử và tiến độ được tách theo tài khoản; lịch sử khách trên trình duyệt cũng có phạm vi riêng. Đăng nhập lại tài khoản đã xem và mở mục Xem Tiếp. Không dùng lịch sử của một người để trả lời thay cho người khác.
 
-Không. Bộ nhớ tự động có thời hạn để tránh dùng mãi đáp án cũ. Các thông tin thay đổi theo thời gian hoặc gắn với tài khoản riêng không được coi là kiến thức chung ổn định.
+### 389. Mở hai máy cùng xem thì vị trí xem tiếp lấy của máy nào?
 
-### 383. Quên câu trả lời có xóa luôn đoạn hội thoại không?
+Dừng phát và chờ kết nối ở thiết bị đang xem trước khi chuyển. Tiến độ mới hơn được dùng khi đồng bộ, nên hai thiết bị cùng phát có thể gửi vị trí khác nhau. Kiểm tra đúng tập và vị trí ở thiết bị mới trước khi tiếp tục.
 
-Giao diện chat hiện không có nút Quên câu trả lời. Bộ nhớ đáp án được quản lý tách với lịch sử hội thoại; nếu gặp đáp án sai, gửi câu hỏi và nội dung cho MFILM qua [Hỗ trợ](/ho-tro).
+### 390. Tôi tua lùi trên máy tính rồi sang điện thoại, tiến độ có thể đổi không?
 
-### 384. Xóa lịch sử chat có đồng nghĩa xóa bộ nhớ chung không?
+Dừng phát và chờ kết nối ở thiết bị đang xem trước khi chuyển. Tiến độ mới hơn được dùng khi đồng bộ, nên hai thiết bị cùng phát có thể gửi vị trí khác nhau. Kiểm tra đúng tập và vị trí ở thiết bị mới trước khi tiếp tục.
 
-Không. Lịch sử là các đoạn trao đổi trên trình duyệt; bộ nhớ chung là các đáp án hệ thống dùng lại. Nếu một đáp án học tự động cần được kiểm tra, báo MFILM qua [Hỗ trợ](/ho-tro).
+### 391. Muốn chuyển thiết bị mà không lưu nhầm tiến độ thì làm gì?
 
-### 385. Tại sao AI không nhớ tên riêng của tôi cho người khác?
+Dừng phát và chờ kết nối ở thiết bị đang xem trước khi chuyển. Tiến độ mới hơn được dùng khi đồng bộ, nên hai thiết bị cùng phát có thể gửi vị trí khác nhau. Kiểm tra đúng tập và vị trí ở thiết bị mới trước khi tiếp tục.
 
-Thông tin cá nhân không nên trở thành đáp án chung cho mọi khách. Mình dùng ngữ cảnh tài khoản hoặc cuộc trò chuyện khi phù hợp, nhưng không đưa dữ liệu riêng của bạn vào kiến thức chung.
+### 392. Hai thiết bị đang mở cùng phim thì nên dừng máy nào trước?
 
-### 386. AI có thể tự bấm mua gói hoặc thuê phim cho tôi không?
+Dừng phát và chờ kết nối ở thiết bị đang xem trước khi chuyển. Tiến độ mới hơn được dùng khi đồng bộ, nên hai thiết bị cùng phát có thể gửi vị trí khác nhau. Kiểm tra đúng tập và vị trí ở thiết bị mới trước khi tiếp tục.
 
-Mình có thể hướng dẫn đến trang cần thao tác. Việc chọn gói, xác nhận thông tin và thanh toán cần bạn thực hiện trong luồng của web; lời nhắn không thay cho xác nhận giao dịch.
+### 393. Mất mạng lúc xem phim có lưu được vị trí trên máy không?
 
-### 387. Có thể yêu cầu AI giải thích mà không tiết lộ kết thúc không?
+Vị trí có thể lưu trên trình duyệt ngay cả khi tạm mất mạng. Đồng bộ giữa thiết bị cần đăng nhập và kết nối; hệ thống sẽ thử lại khi có mạng. Nếu xóa dữ liệu trình duyệt, dữ liệu chỉ lưu cục bộ có thể mất.
 
-Có. Hãy nói rõ không spoiler hoặc chỉ muốn biết bối cảnh và phong cách phim. Nếu cần phân tích tình tiết quan trọng, mình nên xác nhận mức tiết lộ trước.
+### 394. Tạm thời offline có xóa hết tiến độ MFILM không?
 
-### 388. AI có thể tính phép cộng trừ nhân chia không?
+Vị trí có thể lưu trên trình duyệt ngay cả khi tạm mất mạng. Đồng bộ giữa thiết bị cần đăng nhập và kết nối; hệ thống sẽ thử lại khi có mạng. Nếu xóa dữ liệu trình duyệt, dữ liệu chỉ lưu cục bộ có thể mất.
 
-Có. Bạn có thể gửi một biểu thức số ngắn, chẳng hạn (2 + 3) * 4. Bộ tính trực tiếp hỗ trợ các phép cơ bản; biểu thức không hợp lệ sẽ không được tự đoán thành kết quả.
+### 395. Đóng trình duyệt khi mạng yếu có đồng bộ ngay không?
 
-### 389. RAG trong một chatbot nghĩa là gì?
+Vị trí có thể lưu trên trình duyệt ngay cả khi tạm mất mạng. Đồng bộ giữa thiết bị cần đăng nhập và kết nối; hệ thống sẽ thử lại khi có mạng. Nếu xóa dữ liệu trình duyệt, dữ liệu chỉ lưu cục bộ có thể mất.
 
-RAG là cách lấy thông tin từ nguồn kiến thức rồi dùng thông tin đó để hỗ trợ trả lời. Chất lượng vẫn phụ thuộc nguồn và cách truy xuất; nó không tự bảo đảm mọi đáp án chính xác.
+### 396. Tiến độ lưu cục bộ khác đồng bộ tài khoản thế nào?
 
-### 390. API key là gì và có nên gửi vào chat không?
+Vị trí có thể lưu trên trình duyệt ngay cả khi tạm mất mạng. Đồng bộ giữa thiết bị cần đăng nhập và kết nối; hệ thống sẽ thử lại khi có mạng. Nếu xóa dữ liệu trình duyệt, dữ liệu chỉ lưu cục bộ có thể mất.
 
-API key là khóa dùng để truy cập một dịch vụ. Hãy giữ bí mật và không dán vào chat hoặc chia sẻ công khai; mình không cần khóa của bạn để giải thích một câu hỏi thông thường.
+### 397. Muốn xóa một phim khỏi Xem Tiếp thì vào đâu?
 
-### 391. Vì sao bầu trời ban ngày thường có màu xanh?
+Mở Tài khoản → Xem Tiếp và dùng thao tác xóa cho phim cần bỏ. Việc đó chỉ quản lý lịch sử của bạn, không xóa phim khỏi kho hoặc hủy thuê. Nếu sau đó xem lại phim, tiến độ mới có thể được lưu lại.
 
-Các phân tử trong khí quyển tán xạ ánh sáng có bước sóng ngắn mạnh hơn ánh sáng có bước sóng dài. Sự tán xạ này cùng cách mắt cảm nhận màu làm bầu trời thường trông xanh.
+### 398. Xóa lịch sử xem tiếp có xóa phim khỏi kho MFILM không?
 
-Tham khảo: [Vì sao bầu trời xanh — NASA](https://spaceplace.nasa.gov/blue-sky/en/).
+Mở Tài khoản → Xem Tiếp và dùng thao tác xóa cho phim cần bỏ. Việc đó chỉ quản lý lịch sử của bạn, không xóa phim khỏi kho hoặc hủy thuê. Nếu sau đó xem lại phim, tiến độ mới có thể được lưu lại.
 
-### 392. Cầu vồng hình thành như thế nào?
+### 399. Tôi không muốn một phim xuất hiện trong lịch sử nữa thì làm sao?
 
-Ánh sáng mặt trời bị khúc xạ, tán sắc và phản xạ bên trong các giọt nước rồi đi ra ngoài. Các màu đổi hướng khác nhau, tạo dải màu mà người quan sát thấy khi vị trí phù hợp.
+Mở Tài khoản → Xem Tiếp và dùng thao tác xóa cho phim cần bỏ. Việc đó chỉ quản lý lịch sử của bạn, không xóa phim khỏi kho hoặc hủy thuê. Nếu sau đó xem lại phim, tiến độ mới có thể được lưu lại.
 
-Tham khảo: [Hành vi của sóng ánh sáng — NASA](https://science.nasa.gov/ems/03_behaviors/).
+### 400. Xóa Xem Tiếp rồi xem lại phim có được lưu lại không?
 
-### 393. Mặt Trăng có tự phát sáng như Mặt Trời không?
+Mở Tài khoản → Xem Tiếp và dùng thao tác xóa cho phim cần bỏ. Việc đó chỉ quản lý lịch sử của bạn, không xóa phim khỏi kho hoặc hủy thuê. Nếu sau đó xem lại phim, tiến độ mới có thể được lưu lại.
 
-Không. Ánh sáng Mặt Trăng ta thường nhìn thấy chủ yếu là ánh sáng Mặt Trời phản xạ từ bề mặt của nó. Phần sáng nhìn từ Trái Đất thay đổi theo vị trí tương đối của các thiên thể.
+### 401. Yêu thích và Danh sách trên MFILM khác nhau thế nào?
 
-### 394. Tại sao Trái Đất có ngày và đêm?
+Yêu Thích là danh sách phim đã bấm trái tim. Nút Thêm vào dùng để đưa phim vào danh sách bạn chọn. Cả hai giúp lưu phim để tìm lại nhưng không tự cấp quyền xem phim trả phí.
 
-Trái Đất tự quay nên mỗi nơi lần lượt hướng về phía Mặt Trời rồi quay ra phía không được chiếu trực tiếp. Sự thay đổi đó tạo chu kỳ ngày và đêm.
+### 402. Nút trái tim có tự thêm phim vào danh sách riêng không?
 
-### 395. Một byte bằng bao nhiêu bit?
+Yêu Thích là danh sách phim đã bấm trái tim. Nút Thêm vào dùng để đưa phim vào danh sách bạn chọn. Cả hai giúp lưu phim để tìm lại nhưng không tự cấp quyền xem phim trả phí.
 
-Một byte bằng 8 bit. Khi đọc dung lượng và tốc độ, chú ý chữ B thường dùng cho byte còn chữ b thường dùng cho bit để tránh nhầm hai đại lượng.
+### 403. Tôi muốn chia phim theo nhiều danh sách thì chọn chức năng nào?
 
-### 396. Từ đồng nghĩa và trái nghĩa khác nhau thế nào?
+Yêu Thích là danh sách phim đã bấm trái tim. Nút Thêm vào dùng để đưa phim vào danh sách bạn chọn. Cả hai giúp lưu phim để tìm lại nhưng không tự cấp quyền xem phim trả phí.
 
-Từ đồng nghĩa có nghĩa giống hoặc gần nhau, như vui và hân hoan trong một số ngữ cảnh. Từ trái nghĩa biểu thị ý đối lập, như nóng và lạnh; cách dùng vẫn phụ thuộc câu cụ thể.
+### 404. Lưu một phim để xem sau bằng Yêu thích hay Thêm vào?
 
-### 397. Làm sao phân biệt một nhận xét với một dữ kiện?
+Yêu Thích là danh sách phim đã bấm trái tim. Nút Thêm vào dùng để đưa phim vào danh sách bạn chọn. Cả hai giúp lưu phim để tìm lại nhưng không tự cấp quyền xem phim trả phí.
 
-Dữ kiện là điều có thể đối chiếu bằng bằng chứng, chẳng hạn thời lượng được ghi trên một bản phim. Nhận xét thể hiện đánh giá, như phim hấp dẫn; nên ghi rõ cơ sở khi trình bày cả hai.
+### 405. Thêm phim vào danh sách có làm mất quyền thuê không?
 
-## Cỡ cảnh và góc quay
+Yêu thích và danh sách là cách tổ chức phim, tách với quyền thuê hoặc gói. Bỏ một phim khỏi danh sách không tự hủy giao dịch hay hoàn tiền. Kiểm tra quyền xem tại phim và Phim Đang Thuê.
 
-### 398. Close-up nghĩa là gì?
+### 406. Xóa phim khỏi Yêu Thích có hủy tiền thuê không?
 
-Cảnh cận, nhấn vào khuôn mặt hoặc một chi tiết.
+Yêu thích và danh sách là cách tổ chức phim, tách với quyền thuê hoặc gói. Bỏ một phim khỏi danh sách không tự hủy giao dịch hay hoàn tiền. Kiểm tra quyền xem tại phim và Phim Đang Thuê.
 
-Tham khảo: [Cỡ cảnh và góc máy — Adobe](https://www.adobe.com/creativecloud/video/production/cinematography/camera-shots-and-angles.html).
+### 407. Tôi bỏ phim đã mua khỏi danh sách thì còn quyền xem không?
 
-### 399. Extreme close-up là gì?
+Yêu thích và danh sách là cách tổ chức phim, tách với quyền thuê hoặc gói. Bỏ một phim khỏi danh sách không tự hủy giao dịch hay hoàn tiền. Kiểm tra quyền xem tại phim và Phim Đang Thuê.
 
-Cảnh đặc tả một vùng nhỏ như mắt hay bàn tay.
+### 408. Danh sách phim có quyết định quyền thanh toán của tôi không?
 
-Tham khảo: [Cỡ cảnh và góc máy — Adobe](https://www.adobe.com/creativecloud/video/production/cinematography/camera-shots-and-angles.html).
+Yêu thích và danh sách là cách tổ chức phim, tách với quyền thuê hoặc gói. Bỏ một phim khỏi danh sách không tự hủy giao dịch hay hoàn tiền. Kiểm tra quyền xem tại phim và Phim Đang Thuê.
 
-### 400. Medium shot là gì?
+### 409. Chia sẻ phim MFILM cho bạn bè nên gửi link nào?
 
-Cảnh trung, thường lấy nhân vật từ khoảng eo trở lên.
+Mở trang chi tiết và dùng Chia sẻ hoặc sao chép đường dẫn dạng /phim/tên-phim. Người nhận có thể đọc thông tin công khai và tự chọn tập; quyền thuê hoặc gói của bạn không chuyển theo liên kết.
 
-Tham khảo: [Cỡ cảnh và góc máy — Adobe](https://www.adobe.com/creativecloud/video/production/cinematography/camera-shots-and-angles.html).
+### 410. Tôi muốn gửi trang phim mà không gửi link thanh toán thì sao?
 
-### 401. Full shot là gì?
+Mở trang chi tiết và dùng Chia sẻ hoặc sao chép đường dẫn dạng /phim/tên-phim. Người nhận có thể đọc thông tin công khai và tự chọn tập; quyền thuê hoặc gói của bạn không chuyển theo liên kết.
 
-Cảnh lấy toàn thân nhân vật trong khung hình.
+### 411. Link có số tập có cần dùng để giới thiệu phim không?
 
-Tham khảo: [Cỡ cảnh và góc máy — Adobe](https://www.adobe.com/creativecloud/video/production/cinematography/camera-shots-and-angles.html).
+Mở trang chi tiết và dùng Chia sẻ hoặc sao chép đường dẫn dạng /phim/tên-phim. Người nhận có thể đọc thông tin công khai và tự chọn tập; quyền thuê hoặc gói của bạn không chuyển theo liên kết.
 
-### 402. Wide shot là gì?
+### 412. Làm sao gửi liên kết phim rõ tên trên MFILM?
 
-Cảnh rộng, cho thấy chủ thể cùng không gian xung quanh.
+Mở trang chi tiết và dùng Chia sẻ hoặc sao chép đường dẫn dạng /phim/tên-phim. Người nhận có thể đọc thông tin công khai và tự chọn tập; quyền thuê hoặc gói của bạn không chuyển theo liên kết.
 
-Tham khảo: [Cỡ cảnh và góc máy — Adobe](https://www.adobe.com/creativecloud/video/production/cinematography/camera-shots-and-angles.html).
+### 413. Xem trên điện thoại có cần cài ứng dụng ở hai nút store không?
 
-### 403. Extreme wide shot là gì?
+Bạn có thể dùng MFILM trực tiếp trong trình duyệt điện thoại. Để truy cập nhanh, xem [hướng dẫn thêm vào màn hình chính](/ho-tro#thiet-bi). Chỉ tải ứng dụng khi có liên kết phát hành chính thức hoạt động; biểu tượng cửa hàng không tự chứng minh app đã được phát hành.
 
-Cảnh rất rộng, nhấn mạnh bối cảnh hơn kích thước nhân vật.
+### 414. Logo App Store của MFILM có bắt buộc tải app để xem không?
 
-### 404. Establishing shot là gì?
+Bạn có thể dùng MFILM trực tiếp trong trình duyệt điện thoại. Để truy cập nhanh, xem [hướng dẫn thêm vào màn hình chính](/ho-tro#thiet-bi). Chỉ tải ứng dụng khi có liên kết phát hành chính thức hoạt động; biểu tượng cửa hàng không tự chứng minh app đã được phát hành.
 
-Cảnh giới thiệu nơi diễn ra hành động hoặc quan hệ không gian.
+### 415. Tôi muốn dùng web MFILM trên iPhone mà không tải app thì sao?
 
-### 405. Two-shot là gì?
+Bạn có thể dùng MFILM trực tiếp trong trình duyệt điện thoại. Để truy cập nhanh, xem [hướng dẫn thêm vào màn hình chính](/ho-tro#thiet-bi). Chỉ tải ứng dụng khi có liên kết phát hành chính thức hoạt động; biểu tượng cửa hàng không tự chứng minh app đã được phát hành.
 
-Khung hình có hai nhân vật, thường làm rõ tương tác.
+### 416. Trên Android có mở MFILM trực tiếp bằng trình duyệt được không?
 
-### 406. Three-shot là gì?
+Bạn có thể dùng MFILM trực tiếp trong trình duyệt điện thoại. Để truy cập nhanh, xem [hướng dẫn thêm vào màn hình chính](/ho-tro#thiet-bi). Chỉ tải ứng dụng khi có liên kết phát hành chính thức hoạt động; biểu tượng cửa hàng không tự chứng minh app đã được phát hành.
 
-Khung hình chứa ba nhân vật trong cùng một cảnh quay.
+### 417. Tại sao xoay điện thoại làm giao diện phim thay đổi?
 
-### 407. Over-the-shoulder shot là gì?
+MFILM bố trí lại giao diện theo chiều rộng màn hình. Bạn vẫn dùng mục Tập phim, Khoảng tập và các nút server; không cần ép bản máy tính. Nếu số tập bị che hoặc nút không bấm được, gửi kích thước màn hình và ảnh qua Hỗ trợ.
 
-Quay qua vai một người để nhìn người hoặc vật phía trước.
+### 418. Trang MFILM ở màn hình hẹp có cần dùng bản desktop không?
 
-### 408. POV shot là gì?
+MFILM bố trí lại giao diện theo chiều rộng màn hình. Bạn vẫn dùng mục Tập phim, Khoảng tập và các nút server; không cần ép bản máy tính. Nếu số tập bị che hoặc nút không bấm được, gửi kích thước màn hình và ảnh qua Hỗ trợ.
 
-Cảnh mô phỏng điều nhân vật đang nhìn thấy.
+### 419. Khi thu nhỏ cửa sổ, tôi tìm chọn tập ở đâu?
 
-### 409. Eye-level shot là gì?
+MFILM bố trí lại giao diện theo chiều rộng màn hình. Bạn vẫn dùng mục Tập phim, Khoảng tập và các nút server; không cần ép bản máy tính. Nếu số tập bị che hoặc nút không bấm được, gửi kích thước màn hình và ảnh qua Hỗ trợ.
 
-Máy quay đặt gần ngang tầm mắt chủ thể.
+### 420. Trên điện thoại các nút phim xuống hàng có bình thường không?
 
-Tham khảo: [Cỡ cảnh và góc máy — Adobe](https://www.adobe.com/creativecloud/video/production/cinematography/camera-shots-and-angles.html).
+MFILM bố trí lại giao diện theo chiều rộng màn hình. Bạn vẫn dùng mục Tập phim, Khoảng tập và các nút server; không cần ép bản máy tính. Nếu số tập bị che hoặc nút không bấm được, gửi kích thước màn hình và ảnh qua Hỗ trợ.
 
-### 410. Low-angle shot là gì?
+### 421. Tôi thấy bản MFILM cũ sau khi bạn cập nhật thì làm sao?
 
-Máy quay nhìn lên chủ thể từ vị trí thấp.
+Nếu thấy thông báo Có phiên bản mới, bấm Cập nhật khi bạn đã sẵn sàng tải lại trang. Có thể thử tải lại trình duyệt. Không cần xóa tài khoản; trước khi tải lại hãy dừng video để lưu tiến độ.
 
-Tham khảo: [Cỡ cảnh và góc máy — Adobe](https://www.adobe.com/creativecloud/video/production/cinematography/camera-shots-and-angles.html).
+### 422. Thông báo Có phiên bản mới trên MFILM nên bấm gì?
 
-### 411. High-angle shot là gì?
+Nếu thấy thông báo Có phiên bản mới, bấm Cập nhật khi bạn đã sẵn sàng tải lại trang. Có thể thử tải lại trình duyệt. Không cần xóa tài khoản; trước khi tải lại hãy dừng video để lưu tiến độ.
 
-Máy quay nhìn xuống chủ thể từ vị trí cao.
+### 423. Trang web chưa nhận giao diện mới thì cập nhật thế nào?
 
-### 412. Bird's-eye view trong phim là gì?
+Nếu thấy thông báo Có phiên bản mới, bấm Cập nhật khi bạn đã sẵn sàng tải lại trang. Có thể thử tải lại trình duyệt. Không cần xóa tài khoản; trước khi tải lại hãy dừng video để lưu tiến độ.
 
-Góc nhìn gần thẳng từ trên xuống để thấy bố cục không gian.
+### 424. Tôi có nên xóa tài khoản khi web chưa cập nhật không?
 
-### 413. Worm's-eye view là gì?
+Nếu thấy thông báo Có phiên bản mới, bấm Cập nhật khi bạn đã sẵn sàng tải lại trang. Có thể thử tải lại trình duyệt. Không cần xóa tài khoản; trước khi tải lại hãy dừng video để lưu tiến độ.
 
-Góc nhìn rất thấp hướng lên, làm nổi bật độ cao.
+### 425. Phim bị đen cả trang khác video đen thế nào?
 
-Tham khảo: [Cỡ cảnh và góc máy — Adobe](https://www.adobe.com/creativecloud/video/production/cinematography/camera-shots-and-angles.html).
+Nếu cả menu và nội dung không hiện, đó là lỗi tải trang khác với một server video hỏng. Thử tải lại và gửi đường dẫn, trình duyệt, thời điểm lỗi qua [Hỗ trợ](/ho-tro). Không cần thử đổi server khi giao diện chưa tải được.
 
-### 414. Dutch angle là gì?
+### 426. Trang chủ MFILM trắng hoặc đen không có nút thì báo gì?
 
-Khung hình nghiêng đường chân trời, có thể tạo cảm giác bất ổn.
+Nếu cả menu và nội dung không hiện, đó là lỗi tải trang khác với một server video hỏng. Thử tải lại và gửi đường dẫn, trình duyệt, thời điểm lỗi qua [Hỗ trợ](/ho-tro). Không cần thử đổi server khi giao diện chưa tải được.
 
-### 415. Insert shot là gì?
+### 427. Không hiện giao diện web khác lỗi server phim ra sao?
 
-Cảnh chèn nhấn vào chi tiết như thư, đồng hồ hoặc vật dụng.
+Nếu cả menu và nội dung không hiện, đó là lỗi tải trang khác với một server video hỏng. Thử tải lại và gửi đường dẫn, trình duyệt, thời điểm lỗi qua [Hỗ trợ](/ho-tro). Không cần thử đổi server khi giao diện chưa tải được.
 
-### 416. Reaction shot là gì?
+### 428. Tôi không thấy cả tên phim và menu MFILM thì cần làm gì?
 
-Cảnh cho thấy phản ứng của nhân vật trước một sự kiện.
+Nếu cả menu và nội dung không hiện, đó là lỗi tải trang khác với một server video hỏng. Thử tải lại và gửi đường dẫn, trình duyệt, thời điểm lỗi qua [Hỗ trợ](/ho-tro). Không cần thử đổi server khi giao diện chưa tải được.
 
-### 417. Cutaway shot là gì?
+### 429. Tôi xem phim có hình nhưng không nghe âm thanh thì sao?
 
-Cảnh chuyển tạm khỏi hành động chính sang chi tiết liên quan.
+Bấm nút âm lượng trong trình phát và kiểm tra âm lượng của thiết bị hoặc tab. Trình duyệt có thể chặn phát âm thanh tự động nên cần thao tác phát trực tiếp. Nếu nguồn vẫn im lặng, thử server khác và báo tên phim, tập.
 
-### 418. Master shot là gì?
+### 430. Video MFILM tự tắt tiếng trên điện thoại phải làm gì?
 
-Cảnh bao quát hành động chính, làm nền cho các cảnh cắt thêm.
+Bấm nút âm lượng trong trình phát và kiểm tra âm lượng của thiết bị hoặc tab. Trình duyệt có thể chặn phát âm thanh tự động nên cần thao tác phát trực tiếp. Nếu nguồn vẫn im lặng, thử server khác và báo tên phim, tập.
 
-### 419. Profile shot là gì?
+### 431. Tăng loa máy mà phim vẫn im lặng thì kiểm tra đâu?
 
-Góc quay nhìn nhân vật từ bên hông.
+Bấm nút âm lượng trong trình phát và kiểm tra âm lượng của thiết bị hoặc tab. Trình duyệt có thể chặn phát âm thanh tự động nên cần thao tác phát trực tiếp. Nếu nguồn vẫn im lặng, thử server khác và báo tên phim, tập.
 
-### 420. Back shot là gì?
+### 432. Server đang phát nhưng không có tiếng, tôi thử gì trước?
 
-Cảnh nhìn nhân vật từ phía sau lưng.
+Bấm nút âm lượng trong trình phát và kiểm tra âm lượng của thiết bị hoặc tab. Trình duyệt có thể chặn phát âm thanh tự động nên cần thao tác phát trực tiếp. Nếu nguồn vẫn im lặng, thử server khác và báo tên phim, tập.
 
-### 421. Cowboy shot là gì?
+### 433. Không thấy phụ đề MFILM dù phim ghi Vietsub thì làm sao?
 
-Khung hình thường lấy từ khoảng giữa đùi trở lên.
+Kiểm tra đúng bản Vietsub, thử server khác và mục phụ đề nếu trình phát có. Nếu phụ đề bị lệch hoặc thiếu, báo tên phim, tập, server và vị trí thời gian. Không mặc định trình phát nào cũng có điều chỉnh thời gian phụ đề.
 
-### 422. Group shot là gì?
+### 434. Chữ phụ đề bị mất trên một server thì xử lý gì?
 
-Cảnh đặt nhiều nhân vật trong cùng khung hình.
+Kiểm tra đúng bản Vietsub, thử server khác và mục phụ đề nếu trình phát có. Nếu phụ đề bị lệch hoặc thiếu, báo tên phim, tập, server và vị trí thời gian. Không mặc định trình phát nào cũng có điều chỉnh thời gian phụ đề.
 
-## Chuyển động máy quay
+### 435. Phụ đề bị lệch khi xem phim trên web nên báo sao?
 
-### 423. Pan trong quay phim là gì?
+Kiểm tra đúng bản Vietsub, thử server khác và mục phụ đề nếu trình phát có. Nếu phụ đề bị lệch hoặc thiếu, báo tên phim, tập, server và vị trí thời gian. Không mặc định trình phát nào cũng có điều chỉnh thời gian phụ đề.
 
-Xoay hướng máy sang trái hoặc phải từ một vị trí.
+### 436. Nguồn Vietsub không có chữ ở một tập thì thử gì?
 
-### 424. Tilt trong quay phim là gì?
+Kiểm tra đúng bản Vietsub, thử server khác và mục phụ đề nếu trình phát có. Nếu phụ đề bị lệch hoặc thiếu, báo tên phim, tập, server và vị trí thời gian. Không mặc định trình phát nào cũng có điều chỉnh thời gian phụ đề.
 
-Xoay hướng máy lên hoặc xuống từ một vị trí.
+### 437. Tôi muốn báo lỗi link phim MFILM không mở được thì gửi gì?
 
-### 425. Dolly shot là gì?
+Gửi đường dẫn lỗi và tên phim hoặc diễn viên bạn định mở qua [Hỗ trợ](/ho-tro). Thử tìm lại bằng ô tìm kiếm. Chatbot không nên tạo slug từ một tên chưa đối chiếu được với kho.
 
-Máy quay di chuyển tiến, lùi hoặc ngang bằng hệ đỡ.
+### 438. Link diễn viên báo không tìm thấy trên web cần làm sao?
 
-### 426. Tracking shot là gì?
+Gửi đường dẫn lỗi và tên phim hoặc diễn viên bạn định mở qua [Hỗ trợ](/ho-tro). Thử tìm lại bằng ô tìm kiếm. Chatbot không nên tạo slug từ một tên chưa đối chiếu được với kho.
 
-Máy quay di chuyển theo hành động hoặc chủ thể.
+### 439. Bạn gửi link phim sai trong chatbot thì tôi báo thế nào?
 
-### 427. Truck shot là gì?
+Gửi đường dẫn lỗi và tên phim hoặc diễn viên bạn định mở qua [Hỗ trợ](/ho-tro). Thử tìm lại bằng ô tìm kiếm. Chatbot không nên tạo slug từ một tên chưa đối chiếu được với kho.
 
-Máy quay dịch sang bên, thường giữ hướng nhìn tương đối ổn định.
+### 440. Liên kết tên phim cũ không tới trang mới thì cần kiểm tra gì?
 
-### 428. Pedestal movement là gì?
+Gửi đường dẫn lỗi và tên phim hoặc diễn viên bạn định mở qua [Hỗ trợ](/ho-tro). Thử tìm lại bằng ô tìm kiếm. Chatbot không nên tạo slug từ một tên chưa đối chiếu được với kho.
 
-Nâng hoặc hạ cả máy quay, khác với chỉ nghiêng máy.
+### 441. Chatbot có thể tự mở gói Premium cho tôi không?
 
-### 429. Crane shot là gì?
+Chatbot hướng dẫn và tìm phim, không tự cấp quyền Premium hoặc xác nhận thanh toán chỉ từ lời nhắn. Quyền xem phải được hệ thống đối chiếu gói và giao dịch hợp lệ của tài khoản.
 
-Cảnh dùng cần cẩu để đưa máy lên cao hoặc di chuyển rộng.
+### 442. Nhắn AI là đã thanh toán có tự mở khóa phim không?
 
-### 430. Handheld shot là gì?
+Chatbot hướng dẫn và tìm phim, không tự cấp quyền Premium hoặc xác nhận thanh toán chỉ từ lời nhắn. Quyền xem phải được hệ thống đối chiếu gói và giao dịch hợp lệ của tài khoản.
 
-Máy quay được cầm tay, thường có chuyển động nhỏ tự nhiên.
+### 443. Tôi yêu cầu chatbot cấp quyền xem thay vì trả tiền được không?
 
-### 431. Steadicam dùng làm gì?
+Chatbot hướng dẫn và tìm phim, không tự cấp quyền Premium hoặc xác nhận thanh toán chỉ từ lời nhắn. Quyền xem phải được hệ thống đối chiếu gói và giao dịch hợp lệ của tài khoản.
 
-Hệ ổn định giúp quay khi di chuyển mà giảm rung.
+### 444. AI có tự thay đổi tài khoản thành VIP trên MFILM không?
 
-### 432. Gimbal máy quay là gì?
+Chatbot hướng dẫn và tìm phim, không tự cấp quyền Premium hoặc xác nhận thanh toán chỉ từ lời nhắn. Quyền xem phải được hệ thống đối chiếu gói và giao dịch hợp lệ của tài khoản.
 
-Bộ giữ ổn định bằng các trục để hạn chế rung khi quay.
+### 445. Chatbot có nên đoán số tập mới hôm nay không?
 
-### 433. Zoom shot là gì?
+Số tập, lịch cập nhật và bản chiếu cần đối chiếu dữ liệu phim hiện tại. Nếu chưa có dữ liệu, chatbot nên nói chưa xác nhận thay vì tự bịa số, ngày hoặc link tập mới.
 
-Thay đổi tiêu cự để đổi độ lớn chủ thể trong khung.
+### 446. Tôi hỏi lịch tập tuần tới thì AI có trả lời bằng trí nhớ được không?
 
-### 434. Dolly zoom là gì?
+Số tập, lịch cập nhật và bản chiếu cần đối chiếu dữ liệu phim hiện tại. Nếu chưa có dữ liệu, chatbot nên nói chưa xác nhận thay vì tự bịa số, ngày hoặc link tập mới.
 
-Di chuyển máy đồng thời đổi zoom để biến đổi cảm giác hậu cảnh.
+### 447. Nguồn chưa cập nhật có thể để AI tự điền tập mới không?
 
-### 435. Whip pan là gì?
+Số tập, lịch cập nhật và bản chiếu cần đối chiếu dữ liệu phim hiện tại. Nếu chưa có dữ liệu, chatbot nên nói chưa xác nhận thay vì tự bịa số, ngày hoặc link tập mới.
 
-Đảo máy ngang rất nhanh, thường tạo hình ảnh nhòe chuyển động.
+### 448. Số tập hiện tại trong chat phải lấy từ đâu?
 
-### 436. Orbit shot là gì?
+Số tập, lịch cập nhật và bản chiếu cần đối chiếu dữ liệu phim hiện tại. Nếu chưa có dữ liệu, chatbot nên nói chưa xác nhận thay vì tự bịa số, ngày hoặc link tập mới.
 
-Máy quay di chuyển quanh chủ thể theo một cung hoặc vòng.
+### 449. Tôi muốn gợi ý phim hợp gói của mình thì hỏi AI thế nào?
 
-### 437. Push-in là gì?
+Đăng nhập rồi nói rõ muốn phim hợp gói hiện tại, kèm thể loại hoặc quốc gia. Chatbot cần đối chiếu gói trong phiên và kho hiện tại; bộ hỏi đáp chung không dùng để khẳng định quyền cá nhân.
 
-Máy tiến gần chủ thể để tăng chú ý hoặc cảm xúc.
+### 450. Làm sao để chatbot chỉ đề xuất phim tôi có quyền xem?
 
-### 438. Pull-out là gì?
+Đăng nhập rồi nói rõ muốn phim hợp gói hiện tại, kèm thể loại hoặc quốc gia. Chatbot cần đối chiếu gói trong phiên và kho hiện tại; bộ hỏi đáp chung không dùng để khẳng định quyền cá nhân.
 
-Máy lùi ra để mở rộng bối cảnh quanh chủ thể.
+### 451. Tôi đang dùng Basic thì mô tả yêu cầu cho AI ra sao?
 
-### 439. Locked-off shot là gì?
+Đăng nhập rồi nói rõ muốn phim hợp gói hiện tại, kèm thể loại hoặc quốc gia. Chatbot cần đối chiếu gói trong phiên và kho hiện tại; bộ hỏi đáp chung không dùng để khẳng định quyền cá nhân.
 
-Cảnh có máy giữ cố định, không chủ động dịch chuyển.
+### 452. AI có cần biết gói khi gợi ý phim trên MFILM không?
 
-### 440. Rack focus là gì?
+Đăng nhập rồi nói rõ muốn phim hợp gói hiện tại, kèm thể loại hoặc quốc gia. Chatbot cần đối chiếu gói trong phiên và kho hiện tại; bộ hỏi đáp chung không dùng để khẳng định quyền cá nhân.
 
-Đổi điểm nét giữa các chủ thể trong cùng cảnh.
+### 453. Tôi muốn phim nhẹ nhàng không kinh dị thì hỏi AI sao?
 
-### 441. Follow focus dùng làm gì?
+Nêu thể loại muốn xem, nội dung muốn tránh, độ dài, quốc gia và gói của bạn nếu cần. Ví dụ: gợi ý phim hài nhẹ nhàng trong kho MFILM, không kinh dị, không tiết lộ kết thúc. Danh sách phải lấy từ kho có thật.
 
-Điều khiển nét theo chủ thể khi khoảng cách thay đổi.
+### 454. Chatbot MFILM cần thông tin nào để gợi ý đúng tâm trạng?
 
-### 442. Focus puller làm gì?
+Nêu thể loại muốn xem, nội dung muốn tránh, độ dài, quốc gia và gói của bạn nếu cần. Ví dụ: gợi ý phim hài nhẹ nhàng trong kho MFILM, không kinh dị, không tiết lộ kết thúc. Danh sách phải lấy từ kho có thật.
 
-Giữ hoặc chuyển nét theo yêu cầu trong quá trình quay.
+### 455. Tôi không muốn spoil khi xin gợi ý phim thì nói gì?
 
-### 443. Camera blocking là gì?
+Nêu thể loại muốn xem, nội dung muốn tránh, độ dài, quốc gia và gói của bạn nếu cần. Ví dụ: gợi ý phim hài nhẹ nhàng trong kho MFILM, không kinh dị, không tiết lộ kết thúc. Danh sách phải lấy từ kho có thật.
 
-Sắp vị trí và chuyển động máy tương ứng với hành động diễn viên.
+### 456. Muốn AI gợi ý phim ngắn dễ xem trên MFILM nên hỏi ra sao?
 
-### 444. Tripod giúp ích gì khi quay?
+Nêu thể loại muốn xem, nội dung muốn tránh, độ dài, quốc gia và gói của bạn nếu cần. Ví dụ: gợi ý phim hài nhẹ nhàng trong kho MFILM, không kinh dị, không tiết lộ kết thúc. Danh sách phải lấy từ kho có thật.
 
-Giữ máy ổn định và hỗ trợ điều khiển góc quay.
+### 457. Chatbot trả lời không liên quan tới MFILM thì báo gì?
 
-### 445. Slider máy quay dùng làm gì?
+Nói rõ bạn đang hỏi thao tác nào trên MFILM và gửi lại câu hỏi nếu cần. Nếu đáp án vẫn sai, gửi câu hỏi cùng câu trả lời qua [Hỗ trợ](/ho-tro). Hướng dẫn web phải dựa trên tính năng thực tế; không dùng đáp án ngoài chủ đề để thay thế.
 
-Cho máy trượt trên đường ngắn để tạo chuyển động mượt.
+### 458. AI hỏi phim lại nói kiến thức phổ thông thì tôi sửa thế nào?
 
-### 446. Drone shot thường thể hiện gì?
+Nói rõ bạn đang hỏi thao tác nào trên MFILM và gửi lại câu hỏi nếu cần. Nếu đáp án vẫn sai, gửi câu hỏi cùng câu trả lời qua [Hỗ trợ](/ho-tro). Hướng dẫn web phải dựa trên tính năng thực tế; không dùng đáp án ngoài chủ đề để thay thế.
 
-Cho thấy cảnh từ trên cao hoặc chuyển động qua không gian rộng.
+### 459. Tôi muốn chatbot hiểu là đang hỏi web phim này thì nói sao?
 
-### 447. Máy quay rung có luôn là lỗi không?
+Nói rõ bạn đang hỏi thao tác nào trên MFILM và gửi lại câu hỏi nếu cần. Nếu đáp án vẫn sai, gửi câu hỏi cùng câu trả lời qua [Hỗ trợ](/ho-tro). Hướng dẫn web phải dựa trên tính năng thực tế; không dùng đáp án ngoài chủ đề để thay thế.
 
-Không; đôi khi đó là lựa chọn để tạo cảm giác trực tiếp hoặc căng thẳng.
+### 460. Câu trả lời chatbot sai thao tác trên web thì gửi cho ai?
 
-## Ánh sáng và ống kính
+Nói rõ bạn đang hỏi thao tác nào trên MFILM và gửi lại câu hỏi nếu cần. Nếu đáp án vẫn sai, gửi câu hỏi cùng câu trả lời qua [Hỗ trợ](/ho-tro). Hướng dẫn web phải dựa trên tính năng thực tế; không dùng đáp án ngoài chủ đề để thay thế.
 
-### 448. Key light là gì?
+### 461. Tại sao chatbot không biết mật khẩu tài khoản của tôi?
 
-Nguồn sáng chính định hình độ sáng và hình khối chủ thể.
+Không gửi mật khẩu, OTP hoặc thông tin thẻ trong chat. Chatbot không tiết lộ thông tin riêng của người khác. Khi cần hỗ trợ tài khoản hoặc giao dịch, dùng kênh Hỗ trợ và thông tin xác minh phù hợp.
 
-### 449. Fill light là gì?
+### 462. Có nên nhập mã OTP vào chat MFILM để được hỗ trợ không?
 
-Nguồn sáng bổ sung để giảm độ tối của vùng bóng.
+Không gửi mật khẩu, OTP hoặc thông tin thẻ trong chat. Chatbot không tiết lộ thông tin riêng của người khác. Khi cần hỗ trợ tài khoản hoặc giao dịch, dùng kênh Hỗ trợ và thông tin xác minh phù hợp.
 
-### 450. Backlight trong quay phim là gì?
+### 463. AI có thể xem thông tin thẻ của người khác không?
 
-Ánh sáng từ phía sau giúp tách chủ thể khỏi nền.
+Không gửi mật khẩu, OTP hoặc thông tin thẻ trong chat. Chatbot không tiết lộ thông tin riêng của người khác. Khi cần hỗ trợ tài khoản hoặc giao dịch, dùng kênh Hỗ trợ và thông tin xác minh phù hợp.
 
-### 451. Rim light là gì?
+### 464. Chatbot có chia sẻ tài khoản thuê phim cho người khác không?
 
-Ánh sáng tạo viền sáng quanh rìa chủ thể.
+Không gửi mật khẩu, OTP hoặc thông tin thẻ trong chat. Chatbot không tiết lộ thông tin riêng của người khác. Khi cần hỗ trợ tài khoản hoặc giao dịch, dùng kênh Hỗ trợ và thông tin xác minh phù hợp.
 
-### 452. Practical light là gì?
+### 465. Link phim trả lời trong chat có bấm mở được không?
 
-Nguồn sáng xuất hiện trong cảnh, như đèn bàn hoặc nến.
+Khi tìm được phim trong kho, chatbot dùng liên kết tới trang chi tiết theo tên. Nếu chưa tìm được tác phẩm tương ứng, cần hỏi thêm tên hoặc năm thay vì tự tạo một URL có vẻ đúng nhưng không mở được.
 
-### 453. Motivated lighting là gì?
+### 466. Tôi muốn AI gửi trang phim bằng tên thay vì ID thì hỏi sao?
 
-Ánh sáng được bố trí như có nguồn hợp lý trong bối cảnh.
+Khi tìm được phim trong kho, chatbot dùng liên kết tới trang chi tiết theo tên. Nếu chưa tìm được tác phẩm tương ứng, cần hỏi thêm tên hoặc năm thay vì tự tạo một URL có vẻ đúng nhưng không mở được.
 
-### 454. High-key lighting là gì?
+### 467. Chatbot nên đưa link gì khi giới thiệu một phim MFILM?
 
-Ánh sáng nhìn chung sáng, ít tương phản bóng tối mạnh.
+Khi tìm được phim trong kho, chatbot dùng liên kết tới trang chi tiết theo tên. Nếu chưa tìm được tác phẩm tương ứng, cần hỏi thêm tên hoặc năm thay vì tự tạo một URL có vẻ đúng nhưng không mở được.
 
-### 455. Low-key lighting là gì?
+### 468. AI có được tạo đường dẫn phim chưa có trong kho không?
 
-Ánh sáng dùng nhiều bóng tối và tương phản để tạo không khí.
+Khi tìm được phim trong kho, chatbot dùng liên kết tới trang chi tiết theo tên. Nếu chưa tìm được tác phẩm tương ứng, cần hỏi thêm tên hoặc năm thay vì tự tạo một URL có vẻ đúng nhưng không mở được.
 
-### 456. Soft light là gì?
+### 469. Tôi đổi tên hiển thị có ảnh hưởng phim thuê không?
 
-Ánh sáng tạo ranh giới bóng mềm và chuyển sắc nhẹ.
+Mở Tài khoản → Tài Khoản để chỉnh thông tin hoặc ảnh đại diện. Quyền thuê, gói và lịch sử theo tài khoản, không phải tên hiển thị. Đừng tạo một tài khoản khác chỉ để thay tên hoặc avatar.
 
-### 457. Hard light là gì?
+### 470. Sửa ảnh đại diện có làm mất gói MFILM không?
 
-Ánh sáng tạo bóng có ranh giới rõ, tương phản mạnh.
+Mở Tài khoản → Tài Khoản để chỉnh thông tin hoặc ảnh đại diện. Quyền thuê, gói và lịch sử theo tài khoản, không phải tên hiển thị. Đừng tạo một tài khoản khác chỉ để thay tên hoặc avatar.
 
-### 458. Bounce light là gì?
+### 471. Thông tin cá nhân nằm ở tab nào trong tài khoản?
 
-Ánh sáng phản xạ từ bề mặt thay vì chiếu thẳng chủ thể.
+Mở Tài khoản → Tài Khoản để chỉnh thông tin hoặc ảnh đại diện. Quyền thuê, gói và lịch sử theo tài khoản, không phải tên hiển thị. Đừng tạo một tài khoản khác chỉ để thay tên hoặc avatar.
 
-### 459. Diffuser ánh sáng dùng làm gì?
+### 472. Muốn chỉnh hồ sơ mà vẫn giữ lịch sử xem cần vào đâu?
 
-Tán nguồn sáng để bóng đổ mềm hơn.
+Mở Tài khoản → Tài Khoản để chỉnh thông tin hoặc ảnh đại diện. Quyền thuê, gói và lịch sử theo tài khoản, không phải tên hiển thị. Đừng tạo một tài khoản khác chỉ để thay tên hoặc avatar.
 
-### 460. Negative fill là gì?
+### 473. Đăng nhập Google khác đăng nhập email trên MFILM thì chú ý gì?
 
-Dùng bề mặt tối giảm ánh sáng phản xạ vào chủ thể.
+Dùng đúng phương thức và tài khoản đã xem hoặc thanh toán trước đó. Kiểm tra email trong hồ sơ sau khi đăng nhập. Nếu vào nhầm tài khoản, đăng xuất rồi chọn lại; lịch sử và quyền xem của hai tài khoản không tự gộp.
 
-### 461. White balance là gì?
+### 474. Tôi có nhiều email Google thì chọn tài khoản nào để xem tiếp?
 
-Cân màu để vật trung tính hiển thị phù hợp với nguồn sáng.
+Dùng đúng phương thức và tài khoản đã xem hoặc thanh toán trước đó. Kiểm tra email trong hồ sơ sau khi đăng nhập. Nếu vào nhầm tài khoản, đăng xuất rồi chọn lại; lịch sử và quyền xem của hai tài khoản không tự gộp.
 
-### 462. Color temperature là gì?
+### 475. Muốn giữ đúng phim đã thuê khi đăng nhập lại phải làm sao?
 
-Thông số mô tả sắc ánh sáng, thường tính bằng kelvin.
+Dùng đúng phương thức và tài khoản đã xem hoặc thanh toán trước đó. Kiểm tra email trong hồ sơ sau khi đăng nhập. Nếu vào nhầm tài khoản, đăng xuất rồi chọn lại; lịch sử và quyền xem của hai tài khoản không tự gộp.
 
-### 463. Exposure trong quay phim là gì?
+### 476. Lần sau đăng nhập làm sao tránh vào nhầm tài khoản?
 
-Mức ánh sáng được ghi nhận, ảnh hưởng độ sáng hình ảnh.
+Dùng đúng phương thức và tài khoản đã xem hoặc thanh toán trước đó. Kiểm tra email trong hồ sơ sau khi đăng nhập. Nếu vào nhầm tài khoản, đăng xuất rồi chọn lại; lịch sử và quyền xem của hai tài khoản không tự gộp.
 
-### 464. Aperture là gì?
+### 477. Trang lịch chiếu MFILM có bảo đảm ngày có tập online không?
 
-Khẩu độ của ống kính điều chỉnh lượng ánh sáng đi qua.
+[Lịch chiếu](/showtimes) và trạng thái video trong kho là hai thông tin khác nhau. Xem ngày, địa điểm và thông tin hiển thị ở lịch; mở trang phim để kiểm tra bản chiếu thực tế. Không tự suy ra thời điểm đăng tập online.
 
-### 465. Depth of field là gì?
+### 478. Lịch chiếu rạp có giống lịch cập nhật phim trên web không?
 
-Khoảng không gian trông đủ nét trước và sau điểm lấy nét.
+[Lịch chiếu](/showtimes) và trạng thái video trong kho là hai thông tin khác nhau. Xem ngày, địa điểm và thông tin hiển thị ở lịch; mở trang phim để kiểm tra bản chiếu thực tế. Không tự suy ra thời điểm đăng tập online.
 
-### 466. Bokeh là gì?
+### 479. Tôi thấy lịch chiếu nhưng chưa có video thì vì sao?
 
-Hình thức và cảm giác của vùng ảnh ngoài nét.
+[Lịch chiếu](/showtimes) và trạng thái video trong kho là hai thông tin khác nhau. Xem ngày, địa điểm và thông tin hiển thị ở lịch; mở trang phim để kiểm tra bản chiếu thực tế. Không tự suy ra thời điểm đăng tập online.
 
-### 467. Focal length là gì?
+### 480. Có được suy ra giờ đăng tập từ lịch chiếu trên MFILM không?
 
-Tiêu cự ảnh hưởng góc nhìn và độ lớn chủ thể trong ảnh.
+[Lịch chiếu](/showtimes) và trạng thái video trong kho là hai thông tin khác nhau. Xem ngày, địa điểm và thông tin hiển thị ở lịch; mở trang phim để kiểm tra bản chiếu thực tế. Không tự suy ra thời điểm đăng tập online.
 
-### 468. Wide-angle lens là gì?
+### 481. Phim có nhãn gói nhưng không có nút thuê hợp lệ thì sao?
 
-Ống kính có góc nhìn rộng, hữu ích khi cần thấy nhiều bối cảnh.
+Phim Free không cần giá thuê, nhưng phim trả phí thiếu giá không được tự coi là miễn phí hoặc tự đoán tiền. Kiểm tra lại trang phim và [Hỗ trợ](/ho-tro) trước khi thanh toán; giá hợp lệ phải do hệ thống cung cấp.
 
-### 469. Telephoto lens là gì?
+### 482. Giá thuê trống có được coi là miễn phí không?
 
-Ống kính tiêu cự dài, cho góc nhìn hẹp hơn.
+Phim Free không cần giá thuê, nhưng phim trả phí thiếu giá không được tự coi là miễn phí hoặc tự đoán tiền. Kiểm tra lại trang phim và [Hỗ trợ](/ho-tro) trước khi thanh toán; giá hợp lệ phải do hệ thống cung cấp.
 
-### 470. Prime lens là gì?
+### 483. Một phim trả phí chưa hiển thị giá nên thanh toán thế nào?
 
-Ống kính có tiêu cự cố định.
+Phim Free không cần giá thuê, nhưng phim trả phí thiếu giá không được tự coi là miễn phí hoặc tự đoán tiền. Kiểm tra lại trang phim và [Hỗ trợ](/ho-tro) trước khi thanh toán; giá hợp lệ phải do hệ thống cung cấp.
 
-### 471. Zoom lens là gì?
+### 484. AI thấy thiếu giá thuê có thể tự đặt giá giúp tôi không?
 
-Ống kính cho phép thay đổi tiêu cự.
+Phim Free không cần giá thuê, nhưng phim trả phí thiếu giá không được tự coi là miễn phí hoặc tự đoán tiền. Kiểm tra lại trang phim và [Hỗ trợ](/ho-tro) trước khi thanh toán; giá hợp lệ phải do hệ thống cung cấp.
 
-### 472. Lens flare là gì?
+### 485. Có nên trả tiền hai lần khi trang thanh toán bị đứng không?
 
-Vệt hoặc đốm sáng do ánh sáng tương tác trong hệ quang học.
+Kiểm tra tài khoản, Phim Đang Thuê hoặc gói và mã giao dịch trước khi trả tiền lại. Nếu nhà cung cấp báo đã thành công mà quyền chưa cập nhật, liên hệ Hỗ trợ để đối chiếu. Chatbot không xác nhận giao dịch chỉ dựa trên màn hình tải.
 
-## Kỹ thuật dựng phim
+### 486. PayPal đã báo thành công nhưng MFILM tải chậm thì bấm lại không?
 
-### 473. Jump cut là gì?
+Kiểm tra tài khoản, Phim Đang Thuê hoặc gói và mã giao dịch trước khi trả tiền lại. Nếu nhà cung cấp báo đã thành công mà quyền chưa cập nhật, liên hệ Hỗ trợ để đối chiếu. Chatbot không xác nhận giao dịch chỉ dựa trên màn hình tải.
 
-Cắt giữa các hình gần giống khiến hành động có cảm giác nhảy.
+### 487. Tôi không rõ giao dịch đã hoàn tất thì kiểm tra trước ở đâu?
 
-### 474. Match cut là gì?
+Kiểm tra tài khoản, Phim Đang Thuê hoặc gói và mã giao dịch trước khi trả tiền lại. Nếu nhà cung cấp báo đã thành công mà quyền chưa cập nhật, liên hệ Hỗ trợ để đối chiếu. Chatbot không xác nhận giao dịch chỉ dựa trên màn hình tải.
 
-Nối hai cảnh bằng sự tương đồng hình ảnh hoặc hành động.
+### 488. Mạng mất sau khi thanh toán nên xử lý bước nào đầu tiên?
 
-### 475. J-cut là gì?
+Kiểm tra tài khoản, Phim Đang Thuê hoặc gói và mã giao dịch trước khi trả tiền lại. Nếu nhà cung cấp báo đã thành công mà quyền chưa cập nhật, liên hệ Hỗ trợ để đối chiếu. Chatbot không xác nhận giao dịch chỉ dựa trên màn hình tải.
 
-Âm thanh cảnh sau xuất hiện trước hình ảnh của cảnh đó.
+### 489. Muốn báo lỗi MFILM trên điện thoại cần ghi trình duyệt nào?
 
-### 476. L-cut là gì?
+Gửi đường dẫn, thiết bị, trình duyệt, kích thước màn hình nếu liên quan, các bước thao tác và ảnh lỗi qua Hỗ trợ. Với video, thêm tên phim, tập và server. Những thông tin đó giúp phân biệt lỗi giao diện với lỗi nguồn phát.
 
-Âm thanh cảnh trước tiếp tục khi hình đã chuyển sang cảnh sau.
+### 490. Tôi gửi ảnh lỗi resize web cần thêm thông tin gì?
 
-### 477. Cross-cutting là gì?
+Gửi đường dẫn, thiết bị, trình duyệt, kích thước màn hình nếu liên quan, các bước thao tác và ảnh lỗi qua Hỗ trợ. Với video, thêm tên phim, tập và server. Những thông tin đó giúp phân biệt lỗi giao diện với lỗi nguồn phát.
 
-Luân phiên giữa các tuyến hành động để liên hệ chúng.
+### 491. Lỗi phim chỉ xảy ra trên Edge thì báo thế nào?
 
-### 478. Parallel editing là gì?
+Gửi đường dẫn, thiết bị, trình duyệt, kích thước màn hình nếu liên quan, các bước thao tác và ảnh lỗi qua Hỗ trợ. Với video, thêm tên phim, tập và server. Những thông tin đó giúp phân biệt lỗi giao diện với lỗi nguồn phát.
 
-Dựng xen các tuyến để so sánh hoặc gợi quan hệ giữa chúng.
+### 492. Báo lỗi giao diện MFILM cần những bước nào để tái hiện?
 
-### 479. Montage trong dựng phim là gì?
+Gửi đường dẫn, thiết bị, trình duyệt, kích thước màn hình nếu liên quan, các bước thao tác và ảnh lỗi qua Hỗ trợ. Với video, thêm tên phim, tập và server. Những thông tin đó giúp phân biệt lỗi giao diện với lỗi nguồn phát.
 
-Chuỗi cảnh được ghép để cô đọng thời gian hoặc xây ý nghĩa.
+### 493. Xóa lịch sử chat có xóa phim yêu thích không?
 
-### 480. Continuity editing là gì?
+Chat mới hoặc xóa lịch sử hội thoại chỉ quản lý chat, không tự xóa phim yêu thích, quyền thuê hay tiến độ xem. Mỗi chức năng được quản lý ở khu vực riêng; đóng chatbot không hủy giao dịch.
 
-Dựng giúp hành động và không gian có cảm giác liền mạch.
+### 494. Tạo Chat mới có hủy phim thuê trên MFILM không?
 
-### 481. Elliptical editing là gì?
+Chat mới hoặc xóa lịch sử hội thoại chỉ quản lý chat, không tự xóa phim yêu thích, quyền thuê hay tiến độ xem. Mỗi chức năng được quản lý ở khu vực riêng; đóng chatbot không hủy giao dịch.
 
-Bỏ qua một phần thời gian hay hành động vẫn để người xem suy ra.
+### 495. Tôi đóng chatbot thì vị trí xem có bị xóa không?
 
-### 482. Smash cut là gì?
+Chat mới hoặc xóa lịch sử hội thoại chỉ quản lý chat, không tự xóa phim yêu thích, quyền thuê hay tiến độ xem. Mỗi chức năng được quản lý ở khu vực riêng; đóng chatbot không hủy giao dịch.
 
-Chuyển cảnh đột ngột tạo tương phản hoặc bất ngờ.
+### 496. Hội thoại AI và tài khoản phim có chung nút xóa không?
 
-### 483. Hard cut là gì?
+Chat mới hoặc xóa lịch sử hội thoại chỉ quản lý chat, không tự xóa phim yêu thích, quyền thuê hay tiến độ xem. Mỗi chức năng được quản lý ở khu vực riêng; đóng chatbot không hủy giao dịch.
 
-Chuyển trực tiếp từ hình này sang hình khác.
+### 497. Tôi hỏi phim vừa thêm mà AI chưa thấy thì làm gì?
 
-### 484. Dissolve là gì?
+Thử tải lại trang để nhận dữ liệu mới và gửi tên phim kèm phần hoặc năm. Chatbot ưu tiên đối chiếu kho hiện tại, không kết luận phim không tồn tại chỉ vì chưa có trong hỏi đáp sẵn; nếu chưa xác nhận được thì cần nói rõ.
 
-Một hình dần biến mất đồng thời hình khác hiện lên.
+### 498. Chatbot cần tải kho mới để tìm phim vừa nhập không?
 
-### 485. Fade-in là gì?
+Thử tải lại trang để nhận dữ liệu mới và gửi tên phim kèm phần hoặc năm. Chatbot ưu tiên đối chiếu kho hiện tại, không kết luận phim không tồn tại chỉ vì chưa có trong hỏi đáp sẵn; nếu chưa xác nhận được thì cần nói rõ.
 
-Hình ảnh dần xuất hiện từ một nền, thường là màu đen.
+### 499. AI không tìm thấy tên phim có trên web thì xử lý ra sao?
 
-### 486. Fade-out là gì?
+Thử tải lại trang để nhận dữ liệu mới và gửi tên phim kèm phần hoặc năm. Chatbot ưu tiên đối chiếu kho hiện tại, không kết luận phim không tồn tại chỉ vì chưa có trong hỏi đáp sẵn; nếu chưa xác nhận được thì cần nói rõ.
 
-Hình ảnh dần biến mất vào một nền.
+### 500. Phim mới thêm chưa có trong câu trả lời sẵn thì có nên bịa không?
 
-### 487. Wipe transition là gì?
+Thử tải lại trang để nhận dữ liệu mới và gửi tên phim kèm phần hoặc năm. Chatbot ưu tiên đối chiếu kho hiện tại, không kết luận phim không tồn tại chỉ vì chưa có trong hỏi đáp sẵn; nếu chưa xác nhận được thì cần nói rõ.
 
-Hình mới thay hình cũ theo một đường hoặc hình chuyển động.
+### 501. Phim có giới hạn tuổi thì tôi kiểm tra ở đâu trên MFILM?
 
-### 488. Iris transition là gì?
+Đọc nhãn độ tuổi và giới thiệu trên thẻ hoặc trang chi tiết trước khi chọn phim. Hoạt hình cũng có thể chứa nội dung dành cho người lớn. Nếu thiếu phân loại đáng tin cậy, không nên mặc định phim phù hợp mọi độ tuổi.
 
-Chuyển cảnh bằng vùng hình tròn mở rộng hoặc thu hẹp.
+### 502. Hoạt hình trong kho MFILM có phải đều dành cho trẻ em không?
 
-### 489. Freeze frame là gì?
+Đọc nhãn độ tuổi và giới thiệu trên thẻ hoặc trang chi tiết trước khi chọn phim. Hoạt hình cũng có thể chứa nội dung dành cho người lớn. Nếu thiếu phân loại đáng tin cậy, không nên mặc định phim phù hợp mọi độ tuổi.
 
-Giữ một khung hình đứng yên trong một khoảng thời gian.
+### 503. Tôi muốn chọn phim cho gia đình thì đọc thông tin nào trước?
 
-### 490. Speed ramp là gì?
+Đọc nhãn độ tuổi và giới thiệu trên thẻ hoặc trang chi tiết trước khi chọn phim. Hoạt hình cũng có thể chứa nội dung dành cho người lớn. Nếu thiếu phân loại đáng tin cậy, không nên mặc định phim phù hợp mọi độ tuổi.
 
-Thay đổi tốc độ trong một đoạn để điều khiển nhịp chuyển động.
+### 504. Nhãn T13 T16 T18 trên thẻ phim dùng để chọn phim ra sao?
 
-### 491. Slow motion là gì?
+Đọc nhãn độ tuổi và giới thiệu trên thẻ hoặc trang chi tiết trước khi chọn phim. Hoạt hình cũng có thể chứa nội dung dành cho người lớn. Nếu thiếu phân loại đáng tin cậy, không nên mặc định phim phù hợp mọi độ tuổi.
 
-Phát chuyển động chậm hơn tốc độ thực hoặc tốc độ ghi tương ứng.
+### 505. Xem một tập nhiều lần có phải trả tiền thuê lại mỗi lần không?
 
-### 492. Time-lapse là gì?
+Quyền thuê đang còn hạn áp dụng cho phim đã thuê; mở lại không tự tạo giao dịch mới hay đặt lại 30 ngày. Kiểm tra đúng tài khoản và ngày hết hạn trong Phim Đang Thuê. Từng nguồn vẫn cần có video hoạt động.
 
-Chuỗi hình ghi cách quãng được phát để thấy biến đổi nhanh hơn.
+### 506. Thuê còn hạn thì có mở lại cùng phim được không?
 
-### 493. Split screen là gì?
+Quyền thuê đang còn hạn áp dụng cho phim đã thuê; mở lại không tự tạo giao dịch mới hay đặt lại 30 ngày. Kiểm tra đúng tài khoản và ngày hết hạn trong Phim Đang Thuê. Từng nguồn vẫn cần có video hoạt động.
 
-Chia khung hình để đồng thời hiển thị nhiều hình hoặc hành động.
+### 507. Tôi dừng giữa chừng rồi xem lại có mất ngày thuê còn lại không?
 
-### 494. Rough cut là gì?
+Quyền thuê đang còn hạn áp dụng cho phim đã thuê; mở lại không tự tạo giao dịch mới hay đặt lại 30 ngày. Kiểm tra đúng tài khoản và ngày hết hạn trong Phim Đang Thuê. Từng nguồn vẫn cần có video hoạt động.
 
-Bản dựng sơ bộ trước khi tinh chỉnh chi tiết.
+### 508. Trong 30 ngày thuê có phải mua riêng từng lần mở phim không?
 
-### 495. Fine cut là gì?
+Quyền thuê đang còn hạn áp dụng cho phim đã thuê; mở lại không tự tạo giao dịch mới hay đặt lại 30 ngày. Kiểm tra đúng tài khoản và ngày hết hạn trong Phim Đang Thuê. Từng nguồn vẫn cần có video hoạt động.
 
-Bản dựng đã được chỉnh nhịp và chi tiết kỹ hơn.
+### 509. Chuyển từ máy tính sang điện thoại có phải tạo tài khoản MFILM mới không?
 
-### 496. Picture lock là gì?
+Đăng nhập cùng tài khoản để giữ danh sách và quyền xem theo tài khoản. Xem tiếp cần kết nối để đồng bộ tiến độ. Không cần tạo tài khoản mới cho từng thiết bị.
 
-Mốc chốt bản dựng hình để chuyển sang các công đoạn tiếp theo.
+### 510. Tôi muốn dùng cùng danh sách phim trên hai thiết bị thì sao?
 
-### 497. Offline editing là gì?
+Đăng nhập cùng tài khoản để giữ danh sách và quyền xem theo tài khoản. Xem tiếp cần kết nối để đồng bộ tiến độ. Không cần tạo tài khoản mới cho từng thiết bị.
 
-Dựng bằng bản media làm việc, thường nhẹ hơn nguồn gốc.
+### 511. Muốn giữ Yêu Thích khi đổi máy phải làm gì?
 
-## Âm thanh điện ảnh
+Đăng nhập cùng tài khoản để giữ danh sách và quyền xem theo tài khoản. Xem tiếp cần kết nối để đồng bộ tiến độ. Không cần tạo tài khoản mới cho từng thiết bị.
 
-### 498. Diegetic sound là gì?
+### 512. Có nên đăng ký email mới mỗi lần mở MFILM trên thiết bị khác không?
 
-Âm thanh thuộc thế giới câu chuyện mà nhân vật có thể nghe.
+Đăng nhập cùng tài khoản để giữ danh sách và quyền xem theo tài khoản. Xem tiếp cần kết nối để đồng bộ tiến độ. Không cần tạo tài khoản mới cho từng thiết bị.
 
-### 499. Non-diegetic sound là gì?
+### 513. Tôi muốn hỏi hỗ trợ mà không dùng AI thì liên hệ MFILM ở đâu?
 
-Âm thanh dành cho người xem, như một số nhạc nền ngoài cảnh.
+Mở [Hỗ trợ MFILM](/ho-tro) và bấm Liên hệ MFILM để tới Zalo chính thức đang được web công khai. Gửi vấn đề cụ thể; không cần gửi mật khẩu hay thông tin thẻ để mô tả lỗi.
 
-### 500. Foley là gì?
+### 514. Có kênh Zalo công khai của MFILM không?
 
-Tạo lại tiếng hành động, như bước chân, để bổ sung âm thanh phim.
+Mở [Hỗ trợ MFILM](/ho-tro) và bấm Liên hệ MFILM để tới Zalo chính thức đang được web công khai. Gửi vấn đề cụ thể; không cần gửi mật khẩu hay thông tin thẻ để mô tả lỗi.
 
-### 501. ADR trong phim là gì?
+### 515. Chatbot không xử lý được lỗi của tôi thì liên hệ ai?
 
-Thu lại lời thoại sau quay để thay hoặc bổ sung tiếng gốc.
+Mở [Hỗ trợ MFILM](/ho-tro) và bấm Liên hệ MFILM để tới Zalo chính thức đang được web công khai. Gửi vấn đề cụ thể; không cần gửi mật khẩu hay thông tin thẻ để mô tả lỗi.
 
-### 502. Room tone là gì?
+### 516. Trang trợ giúp MFILM có nút liên hệ trực tiếp không?
 
-Âm nền đặc trưng của không gian, dùng nối tiếng tự nhiên.
+Mở [Hỗ trợ MFILM](/ho-tro) và bấm Liên hệ MFILM để tới Zalo chính thức đang được web công khai. Gửi vấn đề cụ thể; không cần gửi mật khẩu hay thông tin thẻ để mô tả lỗi.
 
-### 503. Ambience trong âm thanh là gì?
+### 517. Một phim cùng tên có nhiều phần thì chọn đúng thế nào?
 
-Lớp âm môi trường tạo cảm giác nơi diễn ra câu chuyện.
+Đối chiếu tên khác, phần, năm phát hành, poster và giới thiệu trong từng trang phim. Khi hỏi chatbot, thêm các chi tiết bạn nhớ. Không nên chọn ngẫu nhiên một phim chỉ vì giống vài từ trong tên.
 
-### 504. Sound bridge là gì?
+### 518. Tìm MFILM ra hai phim trùng tên, tôi so sánh gì?
 
-Âm thanh nối qua ranh giới hai cảnh để liên kết chúng.
+Đối chiếu tên khác, phần, năm phát hành, poster và giới thiệu trong từng trang phim. Khi hỏi chatbot, thêm các chi tiết bạn nhớ. Không nên chọn ngẫu nhiên một phim chỉ vì giống vài từ trong tên.
 
-### 505. Sound motif là gì?
+### 519. Chatbot nên hỏi thêm gì nếu tôi chỉ nhớ tên series?
 
-Yếu tố âm thanh lặp lại mang ý nghĩa trong tác phẩm.
+Đối chiếu tên khác, phần, năm phát hành, poster và giới thiệu trong từng trang phim. Khi hỏi chatbot, thêm các chi tiết bạn nhớ. Không nên chọn ngẫu nhiên một phim chỉ vì giống vài từ trong tên.
 
-### 506. Leitmotif âm nhạc là gì?
+### 520. Tôi muốn tránh mở nhầm bản remake trên MFILM thì làm sao?
 
-Chủ đề nhạc gắn với một nhân vật, nơi chốn hoặc ý tưởng.
+Đối chiếu tên khác, phần, năm phát hành, poster và giới thiệu trong từng trang phim. Khi hỏi chatbot, thêm các chi tiết bạn nhớ. Không nên chọn ngẫu nhiên một phim chỉ vì giống vài từ trong tên.
 
-### 507. Underscore là gì?
+### 521. Trang phim ghi Vietsub có bảo đảm mọi server đều có phụ đề không?
 
-Nhạc nền hỗ trợ cảnh mà thường không phải phần trình diễn trong cảnh.
+Nhãn phim mô tả các định dạng có trong kho, còn nguồn của từng bản chiếu hoặc tập có thể khác. Kiểm tra đúng bản đang chọn và thử nguồn khác; báo lại tập bị sai nhãn để MFILM đối chiếu.
 
-### 508. Stinger âm nhạc là gì?
+### 522. Tôi cần xác nhận phụ đề của từng tập thì kiểm tra thế nào?
 
-Đoạn nhạc hoặc âm ngắn nhấn một khoảnh khắc.
+Nhãn phim mô tả các định dạng có trong kho, còn nguồn của từng bản chiếu hoặc tập có thể khác. Kiểm tra đúng bản đang chọn và thử nguồn khác; báo lại tập bị sai nhãn để MFILM đối chiếu.
 
-### 509. Soundscape là gì?
+### 523. Nhãn thuyết minh trên phim có áp dụng mọi bản chiếu không?
 
-Tổng thể lớp âm tạo nên không gian nghe của một cảnh.
+Nhãn phim mô tả các định dạng có trong kho, còn nguồn của từng bản chiếu hoặc tập có thể khác. Kiểm tra đúng bản đang chọn và thử nguồn khác; báo lại tập bị sai nhãn để MFILM đối chiếu.
 
-### 510. Boom microphone dùng làm gì?
+### 524. Tập tôi mở không giống nhãn chung của phim thì làm gì?
 
-Thu tiếng gần diễn viên từ vị trí thường nằm ngoài khung hình.
+Nhãn phim mô tả các định dạng có trong kho, còn nguồn của từng bản chiếu hoặc tập có thể khác. Kiểm tra đúng bản đang chọn và thử nguồn khác; báo lại tập bị sai nhãn để MFILM đối chiếu.
 
-### 511. Lavalier microphone là gì?
+### 525. Tôi không thấy nút chất lượng 4K thì MFILM có tự nâng video không?
 
-Micro nhỏ gắn gần người nói để thu lời thoại.
+Gói quyết định quyền xem, không tự nâng độ phân giải của nguồn video. Chất lượng phụ thuộc bản phim và trình phát có lựa chọn tương ứng hay không; kiểm tra nguồn hiện tại, không suy ra 4K chỉ từ nhãn Premium.
 
-### 512. Wild track là gì?
+### 526. Chọn gói Premium có biến mọi phim thành 4K không?
 
-Âm thanh thu riêng ngoài một lượt quay hình đồng bộ.
+Gói quyết định quyền xem, không tự nâng độ phân giải của nguồn video. Chất lượng phụ thuộc bản phim và trình phát có lựa chọn tương ứng hay không; kiểm tra nguồn hiện tại, không suy ra 4K chỉ từ nhãn Premium.
 
-### 513. Clipping âm thanh là gì?
+### 527. Phim gói cao có bảo đảm mọi nguồn đều Full HD không?
 
-Tín hiệu vượt mức xử lý, gây méo ở các đỉnh âm.
+Gói quyết định quyền xem, không tự nâng độ phân giải của nguồn video. Chất lượng phụ thuộc bản phim và trình phát có lựa chọn tương ứng hay không; kiểm tra nguồn hiện tại, không suy ra 4K chỉ từ nhãn Premium.
 
-### 514. Dynamic range âm thanh là gì?
+### 528. AI có được khẳng định chất lượng phim từ tên gói không?
 
-Khoảng chênh giữa mức âm nhỏ và lớn có thể biểu đạt.
+Gói quyết định quyền xem, không tự nâng độ phân giải của nguồn video. Chất lượng phụ thuộc bản phim và trình phát có lựa chọn tương ứng hay không; kiểm tra nguồn hiện tại, không suy ra 4K chỉ từ nhãn Premium.
 
-### 515. Compression âm thanh dùng làm gì?
+### 529. Một liên kết phim thuê có giúp bạn tôi xem miễn phí không?
 
-Giảm chênh lệch mức âm theo thiết lập, khác với nén dung lượng tệp.
+Liên kết chỉ dẫn tới nội dung; quyền xem được kiểm tra theo tài khoản người nhận. Phim trả phí vẫn cần gói đủ quyền hoặc thuê còn hạn của tài khoản đó. Không gửi mật khẩu để chia sẻ quyền qua chat.
 
-### 516. Equalizer là gì?
+### 530. Tôi gửi link đang xem thì quyền gói có đi theo link không?
 
-Điều chỉnh mức âm theo các vùng tần số.
+Liên kết chỉ dẫn tới nội dung; quyền xem được kiểm tra theo tài khoản người nhận. Phim trả phí vẫn cần gói đủ quyền hoặc thuê còn hạn của tài khoản đó. Không gửi mật khẩu để chia sẻ quyền qua chat.
 
-### 517. Reverb là gì?
+### 531. Chia sẻ phim trong thời hạn thuê có chia sẻ tài khoản không?
 
-Âm phản xạ kéo dài tạo cảm giác không gian.
+Liên kết chỉ dẫn tới nội dung; quyền xem được kiểm tra theo tài khoản người nhận. Phim trả phí vẫn cần gói đủ quyền hoặc thuê còn hạn của tài khoản đó. Không gửi mật khẩu để chia sẻ quyền qua chat.
 
-### 518. Echo khác reverb ở đâu?
+### 532. Bạn tôi mở link của tôi vẫn bị khóa có phải lỗi không?
 
-Echo thường nghe thành tiếng lặp tách biệt; reverb hòa thành đuôi âm.
+Liên kết chỉ dẫn tới nội dung; quyền xem được kiểm tra theo tài khoản người nhận. Phim trả phí vẫn cần gói đủ quyền hoặc thuê còn hạn của tài khoản đó. Không gửi mật khẩu để chia sẻ quyền qua chat.
 
-### 519. Mono audio là gì?
+### 533. Xem Tiếp chỉ hiện một tập cũ thì tôi tìm tập mới ở đâu?
 
-Âm thanh dùng một kênh, khác hệ nhiều kênh.
+Xem Tiếp đưa bạn về tiến độ đã lưu. Muốn chọn tập khác, mở Tập phim và bộ chọn Khoảng tập trên trang phim hoặc trình phát. Danh sách nguồn hiện tại quyết định tập nào có thể mở; lịch sử không tạo thêm tập.
 
-### 520. Center channel thường dùng cho gì?
+### 534. Muốn xem tập mới thay vì vị trí đã lưu trên MFILM phải làm gì?
 
-Trong nhiều bản trộn phim, kênh giữa chứa phần lớn lời thoại.
+Xem Tiếp đưa bạn về tiến độ đã lưu. Muốn chọn tập khác, mở Tập phim và bộ chọn Khoảng tập trên trang phim hoặc trình phát. Danh sách nguồn hiện tại quyết định tập nào có thể mở; lịch sử không tạo thêm tập.
 
-### 521. LFE channel là gì?
+### 535. Lịch sử xem có phải danh sách tất cả tập của phim không?
 
-Kênh dành cho hiệu ứng tần số thấp trong hệ âm đa kênh.
+Xem Tiếp đưa bạn về tiến độ đã lưu. Muốn chọn tập khác, mở Tập phim và bộ chọn Khoảng tập trên trang phim hoặc trình phát. Danh sách nguồn hiện tại quyết định tập nào có thể mở; lịch sử không tạo thêm tập.
 
-### 522. Audio description là gì?
+### 536. Tôi muốn chuyển tập khác sau khi mở Xem Tiếp thì chọn đâu?
 
-Lời mô tả bổ sung hình ảnh cho người cần hỗ trợ tiếp cận.
+Xem Tiếp đưa bạn về tiến độ đã lưu. Muốn chọn tập khác, mở Tập phim và bộ chọn Khoảng tập trên trang phim hoặc trình phát. Danh sách nguồn hiện tại quyết định tập nào có thể mở; lịch sử không tạo thêm tập.
 
-## Kịch bản và cấu trúc
+### 537. Tôi vào web MFILM nhưng chatbot đưa tên phim không có link thì sao?
 
-### 523. Logline là gì?
+Nói rõ muốn phim có trong kho MFILM và yêu cầu liên kết trang phim. Nếu chưa đối chiếu được, chatbot cần nói đó là gợi ý chưa xác nhận hoặc hỏi thêm, không coi mọi tên do mô hình nêu là phim có sẵn trên web.
 
-Một câu ngắn nêu nhân vật, mục tiêu và xung đột trung tâm.
+### 538. AI chỉ nói một tên phim có bảo đảm phim nằm trong kho không?
 
-### 524. Synopsis là gì?
+Nói rõ muốn phim có trong kho MFILM và yêu cầu liên kết trang phim. Nếu chưa đối chiếu được, chatbot cần nói đó là gợi ý chưa xác nhận hoặc hỏi thêm, không coi mọi tên do mô hình nêu là phim có sẵn trên web.
 
-Bản tóm tắt nội dung chính, có thể tiết lộ kết thúc.
+### 539. Tôi muốn gợi ý chỉ từ kho MFILM phải yêu cầu thế nào?
 
-### 525. Treatment kịch bản là gì?
+Nói rõ muốn phim có trong kho MFILM và yêu cầu liên kết trang phim. Nếu chưa đối chiếu được, chatbot cần nói đó là gợi ý chưa xác nhận hoặc hỏi thêm, không coi mọi tên do mô hình nêu là phim có sẵn trên web.
 
-Bản trình bày câu chuyện bằng văn xuôi trước hoặc bên cạnh kịch bản.
+### 540. Không mở được phim do AI gợi ý thì nên hỏi lại gì?
 
-### 526. Beat sheet là gì?
+Nói rõ muốn phim có trong kho MFILM và yêu cầu liên kết trang phim. Nếu chưa đối chiếu được, chatbot cần nói đó là gợi ý chưa xác nhận hoặc hỏi thêm, không coi mọi tên do mô hình nêu là phim có sẵn trên web.
 
-Danh sách các nhịp hoặc bước quan trọng của câu chuyện.
+### 541. Muốn theo dõi gói của tài khoản MFILM vào mục nào?
 
-### 527. Scene heading là gì?
+Mở Tài khoản → Gói Đăng Ký để kiểm tra gói và thời hạn. Chatbot chỉ được xác nhận thông tin cá nhân khi phiên có dữ liệu hợp lệ; đáp án chung không đoán ngày hết hạn hoặc gói của bạn.
 
-Dòng kịch bản ghi nơi và thời điểm diễn ra cảnh.
+### 542. Tôi xem ngày hết hạn thành viên ở đâu?
 
-### 528. INT trong kịch bản nghĩa là gì?
+Mở Tài khoản → Gói Đăng Ký để kiểm tra gói và thời hạn. Chatbot chỉ được xác nhận thông tin cá nhân khi phiên có dữ liệu hợp lệ; đáp án chung không đoán ngày hết hạn hoặc gói của bạn.
 
-Viết tắt chỉ cảnh nội thất, diễn ra bên trong.
+### 543. Nhắn chatbot có biết chắc tài khoản tôi còn VIP không?
 
-### 529. EXT trong kịch bản nghĩa là gì?
+Mở Tài khoản → Gói Đăng Ký để kiểm tra gói và thời hạn. Chatbot chỉ được xác nhận thông tin cá nhân khi phiên có dữ liệu hợp lệ; đáp án chung không đoán ngày hết hạn hoặc gói của bạn.
 
-Viết tắt chỉ cảnh ngoại thất, diễn ra bên ngoài.
+### 544. Tôi muốn kiểm tra gói đang dùng trước khi mua phim thì mở đâu?
 
-### 530. Action line là gì?
+Mở Tài khoản → Gói Đăng Ký để kiểm tra gói và thời hạn. Chatbot chỉ được xác nhận thông tin cá nhân khi phiên có dữ liệu hợp lệ; đáp án chung không đoán ngày hết hạn hoặc gói của bạn.
 
-Phần mô tả hành động hoặc điều nhìn, nghe được trong cảnh.
+### 545. Tôi muốn biết phim MFILM có đủ tập hay chưa thì kiểm tra gì?
 
-### 531. Parenthetical trong thoại là gì?
+Mở Tập phim để xem các nguồn thực tế và đọc trạng thái ở trang chi tiết. Số mục đang có, nhãn tập gộp và tổng dự kiến là các khái niệm khác nhau. Nếu dữ liệu chưa rõ, chatbot không nên khẳng định phim đã hoàn tất.
 
-Ghi chú ngắn cạnh lời thoại để làm rõ cách nói hoặc hành động.
+### 546. Nhãn số tập có nói chắc series ngoài đời đã kết thúc không?
 
-### 532. Cold open là gì?
+Mở Tập phim để xem các nguồn thực tế và đọc trạng thái ở trang chi tiết. Số mục đang có, nhãn tập gộp và tổng dự kiến là các khái niệm khác nhau. Nếu dữ liệu chưa rõ, chatbot không nên khẳng định phim đã hoàn tất.
 
-Đoạn mở trước phần giới thiệu hoặc tiêu đề chính.
+### 547. Phim đang cập nhật có nên đoán tổng tập cuối cùng không?
 
-### 533. Inciting incident là gì?
+Mở Tập phim để xem các nguồn thực tế và đọc trạng thái ở trang chi tiết. Số mục đang có, nhãn tập gộp và tổng dự kiến là các khái niệm khác nhau. Nếu dữ liệu chưa rõ, chatbot không nên khẳng định phim đã hoàn tất.
 
-Sự kiện khởi động xung đột chính và thay đổi tình thế nhân vật.
+### 548. Tôi muốn kiểm tra các tập đang phát được thay vì tổng dự kiến thì làm sao?
 
-### 534. Exposition là gì?
+Mở Tập phim để xem các nguồn thực tế và đọc trạng thái ở trang chi tiết. Số mục đang có, nhãn tập gộp và tổng dự kiến là các khái niệm khác nhau. Nếu dữ liệu chưa rõ, chatbot không nên khẳng định phim đã hoàn tất.
 
-Thông tin nền giúp hiểu nhân vật, bối cảnh hoặc tình huống.
+### 549. Tôi có thể yêu cầu MFILM thêm phim chưa có trong kho không?
 
-### 535. Rising action là gì?
+Bạn có thể gửi tên, tên gốc, năm hoặc phần phim qua [Hỗ trợ](/ho-tro) để MFILM xem xét. Chatbot không cam kết tự nhập, có bản quyền phát hành hay thời điểm cập nhật nếu chưa có xác nhận.
 
-Chuỗi diễn biến làm xung đột và áp lực tăng lên.
+### 550. Tìm mãi không thấy phim muốn xem thì báo web ở đâu?
 
-### 536. Climax trong cốt truyện là gì?
+Bạn có thể gửi tên, tên gốc, năm hoặc phần phim qua [Hỗ trợ](/ho-tro) để MFILM xem xét. Chatbot không cam kết tự nhập, có bản quyền phát hành hay thời điểm cập nhật nếu chưa có xác nhận.
 
-Điểm xung đột đạt cao trào hoặc quyết định bước ngoặt quan trọng.
+### 551. Muốn đề xuất một phim cho MFILM cần gửi gì?
 
-### 537. Falling action là gì?
+Bạn có thể gửi tên, tên gốc, năm hoặc phần phim qua [Hỗ trợ](/ho-tro) để MFILM xem xét. Chatbot không cam kết tự nhập, có bản quyền phát hành hay thời điểm cập nhật nếu chưa có xác nhận.
 
-Các diễn biến sau cao trào dẫn tới kết thúc.
+### 552. Chatbot có tự nhập ngay phim tôi yêu cầu không?
 
-### 538. Denouement là gì?
+Bạn có thể gửi tên, tên gốc, năm hoặc phần phim qua [Hỗ trợ](/ho-tro) để MFILM xem xét. Chatbot không cam kết tự nhập, có bản quyền phát hành hay thời điểm cập nhật nếu chưa có xác nhận.
 
-Phần tháo gỡ hoặc trình bày trạng thái sau xung đột chính.
+### 553. Đánh giá phim và bình luận trên MFILM khác nhau thế nào?
 
-### 539. Midpoint trong cấu trúc phim là gì?
+Xem phần Đánh giá và bình luận trên trang phim để đọc phản hồi đang có. Nếu viết nhận xét có tiết lộ nội dung, báo rõ spoil. Chatbot không tự tạo số sao hoặc số lượt đánh giá khi không có dữ liệu thực tế.
 
-Mốc giữa câu chuyện thường làm thay đổi hướng hoặc mức cược.
+### 554. Tôi muốn nêu cảm nhận mà không spoil cho người khác thì làm gì?
 
-### 540. Set-up trong kịch bản là gì?
+Xem phần Đánh giá và bình luận trên trang phim để đọc phản hồi đang có. Nếu viết nhận xét có tiết lộ nội dung, báo rõ spoil. Chatbot không tự tạo số sao hoặc số lượt đánh giá khi không có dữ liệu thực tế.
 
-Đặt thông tin hoặc tình huống để có tác dụng về sau.
+### 555. Muốn xem đánh giá của phim trên web vào đâu?
 
-### 541. Payoff trong kịch bản là gì?
+Xem phần Đánh giá và bình luận trên trang phim để đọc phản hồi đang có. Nếu viết nhận xét có tiết lộ nội dung, báo rõ spoil. Chatbot không tự tạo số sao hoặc số lượt đánh giá khi không có dữ liệu thực tế.
 
-Kết quả hoặc sự đáp lại một chi tiết đã được chuẩn bị trước.
+### 556. Chatbot có tự tạo điểm đánh giá của một phim không?
 
-### 542. Plant trong kể chuyện là gì?
+Xem phần Đánh giá và bình luận trên trang phim để đọc phản hồi đang có. Nếu viết nhận xét có tiết lộ nội dung, báo rõ spoil. Chatbot không tự tạo số sao hoặc số lượt đánh giá khi không có dữ liệu thực tế.
 
-Chi tiết được cài sớm để người xem có thể hiểu diễn biến sau.
+### 557. Gói của tôi đủ cấp nhưng video không chạy thì có nên mua lại không?
 
-### 543. Story beat là gì?
+Kiểm tra gói hoặc thuê còn hạn, rồi thử server, tập và mạng. Lỗi nguồn phát không được xử lý bằng cách tự thanh toán lại. Nếu quyền hợp lệ mà vẫn không phát, gửi tên phim, tập và server qua Hỗ trợ.
 
-Một thay đổi nhỏ có ý nghĩa trong hành động, thông tin hoặc cảm xúc.
+### 558. Phim không phát dù quyền xem hợp lệ có phải hết gói không?
 
-### 544. Three-act structure là gì?
+Kiểm tra gói hoặc thuê còn hạn, rồi thử server, tập và mạng. Lỗi nguồn phát không được xử lý bằng cách tự thanh toán lại. Nếu quyền hợp lệ mà vẫn không phát, gửi tên phim, tập và server qua Hỗ trợ.
 
-Cách tổ chức theo mở tình huống, phát triển xung đột và giải quyết.
+### 559. Trả thêm tiền có sửa được server bị lỗi không?
 
-### 545. B-plot là gì?
+Kiểm tra gói hoặc thuê còn hạn, rồi thử server, tập và mạng. Lỗi nguồn phát không được xử lý bằng cách tự thanh toán lại. Nếu quyền hợp lệ mà vẫn không phát, gửi tên phim, tập và server qua Hỗ trợ.
 
-Tuyến truyện phụ chạy bên cạnh tuyến chính.
+### 560. Có quyền xem nhưng video quay vòng thì kiểm tra bước nào?
 
-### 546. Bottle episode là gì?
+Kiểm tra gói hoặc thuê còn hạn, rồi thử server, tập và mạng. Lỗi nguồn phát không được xử lý bằng cách tự thanh toán lại. Nếu quyền hợp lệ mà vẫn không phát, gửi tên phim, tập và server qua Hỗ trợ.
 
-Tập thường tập trung ở ít bối cảnh và nhân vật để kể chuyện cô đọng.
+### 561. Tôi tìm trên Google không thấy phim MFILM có phải web đã xóa phim không?
 
-### 547. Table read là gì?
+Dùng ô tìm kiếm của MFILM hoặc [Phim mới](/film-new) để đối chiếu kho hiện tại. Công cụ tìm kiếm có thời gian thu thập riêng; chưa có kết quả trên Google hoặc Bing không đủ để kết luận phim bị xóa khỏi web.
 
-Đọc kịch bản cùng diễn viên để nghe nhịp và kiểm tra thoại.
+### 562. Phim có trên web nhưng chưa có kết quả tìm kiếm thì sao?
 
-## Thời gian và điểm nhìn
+Dùng ô tìm kiếm của MFILM hoặc [Phim mới](/film-new) để đối chiếu kho hiện tại. Công cụ tìm kiếm có thời gian thu thập riêng; chưa có kết quả trên Google hoặc Bing không đủ để kết luận phim bị xóa khỏi web.
 
-### 548. Flashforward là gì?
+### 563. Bing chưa hiện tên phim thì tôi có tìm trong MFILM được không?
 
-Cho thấy sự kiện ở thời điểm sau so với mạch đang kể.
+Dùng ô tìm kiếm của MFILM hoặc [Phim mới](/film-new) để đối chiếu kho hiện tại. Công cụ tìm kiếm có thời gian thu thập riêng; chưa có kết quả trên Google hoặc Bing không đủ để kết luận phim bị xóa khỏi web.
 
-### 549. In medias res là gì?
+### 564. Muốn tìm phim trên web khi công cụ tìm kiếm chưa cập nhật nên vào đâu?
 
-Mở câu chuyện ngay giữa hành động thay vì kể từ đầu.
+Dùng ô tìm kiếm của MFILM hoặc [Phim mới](/film-new) để đối chiếu kho hiện tại. Công cụ tìm kiếm có thời gian thu thập riêng; chưa có kết quả trên Google hoặc Bing không đủ để kết luận phim bị xóa khỏi web.
 
-### 550. Frame narrative là gì?
+### 565. Tôi muốn lưu link MFILM để mở nhanh lần sau thì làm gì?
 
-Một câu chuyện bao lấy hoặc dẫn vào câu chuyện khác.
+Bạn có thể đánh dấu trang trong trình duyệt hoặc thêm MFILM vào màn hình chính. Bookmark chỉ lưu liên kết; Yêu Thích lưu theo tài khoản và Xem Tiếp lưu tiến độ. Các thao tác lưu không tự mua gói hay thuê phim.
 
-### 551. Story within a story là gì?
+### 566. Bookmark trang phim có tự lưu tiến độ không?
 
-Một câu chuyện được kể bên trong câu chuyện chính.
+Bạn có thể đánh dấu trang trong trình duyệt hoặc thêm MFILM vào màn hình chính. Bookmark chỉ lưu liên kết; Yêu Thích lưu theo tài khoản và Xem Tiếp lưu tiến độ. Các thao tác lưu không tự mua gói hay thuê phim.
 
-### 552. Dramatic irony là gì?
+### 567. Thêm web vào màn hình chính có tự mua gói không?
 
-Người xem biết điều quan trọng mà nhân vật chưa biết.
+Bạn có thể đánh dấu trang trong trình duyệt hoặc thêm MFILM vào màn hình chính. Bookmark chỉ lưu liên kết; Yêu Thích lưu theo tài khoản và Xem Tiếp lưu tiến độ. Các thao tác lưu không tự mua gói hay thuê phim.
 
-### 553. Verbal irony là gì?
+### 568. Lưu đường dẫn phim khác nút Yêu thích thế nào?
 
-Lời nói có ý nghĩa khác hoặc đối lập với nghĩa bề mặt.
+Bạn có thể đánh dấu trang trong trình duyệt hoặc thêm MFILM vào màn hình chính. Bookmark chỉ lưu liên kết; Yêu Thích lưu theo tài khoản và Xem Tiếp lưu tiến độ. Các thao tác lưu không tự mua gói hay thuê phim.
 
-### 554. Situational irony là gì?
+### 569. Tôi thấy phim đã thuê ở Phim Đang Thuê nhưng mở video không được thì sao?
 
-Kết quả xảy ra trái với điều được kỳ vọng từ tình huống.
+Kiểm tra ngày hết hạn và đúng tài khoản, rồi thử server hoặc bản chiếu khác của cùng tập. Nếu vẫn lỗi, gửi tên phim, tập, server và mã giao dịch qua Hỗ trợ để kiểm tra riêng nguồn và quyền xem.
 
-### 555. Red herring là gì?
+### 570. Giao dịch thuê còn hạn mà một tập lỗi có phải đã hết quyền không?
 
-Chi tiết dẫn chú ý sang hướng sai để trì hoãn lời giải.
+Kiểm tra ngày hết hạn và đúng tài khoản, rồi thử server hoặc bản chiếu khác của cùng tập. Nếu vẫn lỗi, gửi tên phim, tập, server và mã giao dịch qua Hỗ trợ để kiểm tra riêng nguồn và quyền xem.
 
-### 556. MacGuffin là gì?
+### 571. Muốn hỗ trợ kiểm tra tập của phim đã thanh toán cần gửi gì?
 
-Vật hoặc mục tiêu thúc đẩy hành động dù bản thân có thể ít quan trọng.
+Kiểm tra ngày hết hạn và đúng tài khoản, rồi thử server hoặc bản chiếu khác của cùng tập. Nếu vẫn lỗi, gửi tên phim, tập, server và mã giao dịch qua Hỗ trợ để kiểm tra riêng nguồn và quyền xem.
 
-### 557. Chekhov's gun là gì?
+### 572. Tôi thuê đúng phim mà server chết thì xử lý ra sao?
 
-Nguyên tắc nhắc rằng chi tiết nổi bật nên có vai trò trong câu chuyện.
+Kiểm tra ngày hết hạn và đúng tài khoản, rồi thử server hoặc bản chiếu khác của cùng tập. Nếu vẫn lỗi, gửi tên phim, tập, server và mã giao dịch qua Hỗ trợ để kiểm tra riêng nguồn và quyền xem.
 
-### 558. Deus ex machina là gì?
+### 573. Chatbot có phải gọi dịch vụ AI ngoài cho mọi câu MFILM không?
 
-Giải pháp xuất hiện bất ngờ, ít được chuẩn bị để tháo gỡ khó khăn.
+Hướng dẫn ổn định của MFILM ưu tiên bộ hỏi đáp sẵn. Tên phim, số tập, giá và quyền cá nhân cần dữ liệu hiện tại; câu chưa xử lý được mới dùng mô hình hỗ trợ. Đây là truy xuất đáp án, không phải cam kết AI biết mọi thứ.
 
-### 559. Unreliable memory trong phim là gì?
+### 574. Các hướng dẫn web có thể trả lời ngay bằng kiến thức sẵn không?
 
-Hồi ức được trình bày có thể sai, thiếu hoặc bị ảnh hưởng chủ quan.
+Hướng dẫn ổn định của MFILM ưu tiên bộ hỏi đáp sẵn. Tên phim, số tập, giá và quyền cá nhân cần dữ liệu hiện tại; câu chưa xử lý được mới dùng mô hình hỗ trợ. Đây là truy xuất đáp án, không phải cam kết AI biết mọi thứ.
 
-### 560. Multiple timelines là gì?
+### 575. Tôi hỏi thao tác thuê phim thì AI có cần đoán lại từ đầu không?
 
-Câu chuyện theo dõi các chuỗi thời gian khác nhau.
+Hướng dẫn ổn định của MFILM ưu tiên bộ hỏi đáp sẵn. Tên phim, số tập, giá và quyền cá nhân cần dữ liệu hiện tại; câu chưa xử lý được mới dùng mô hình hỗ trợ. Đây là truy xuất đáp án, không phải cam kết AI biết mọi thứ.
 
-### 561. Time loop là gì?
+### 576. Câu hướng dẫn MFILM lặp lại được trả lời thế nào?
 
-Tình huống nhân vật hoặc sự kiện lặp lại một khoảng thời gian.
+Hướng dẫn ổn định của MFILM ưu tiên bộ hỏi đáp sẵn. Tên phim, số tập, giá và quyền cá nhân cần dữ liệu hiện tại; câu chưa xử lý được mới dùng mô hình hỗ trợ. Đây là truy xuất đáp án, không phải cam kết AI biết mọi thứ.
 
-### 562. Time jump là gì?
+### 577. Thông tin tài khoản của tôi có được dùng trả lời cho người khác không?
 
-Bỏ qua một khoảng thời gian để chuyển sang mốc khác.
+Hướng dẫn chung có thể tái sử dụng, còn mật khẩu, thông tin tài khoản, mã giao dịch và ngữ cảnh riêng không được biến thành đáp án chung. Thông tin biến động cũng cần đối chiếu lại thay vì lưu như một sự thật cố định.
 
-### 563. Real-time storytelling là gì?
+### 578. Bộ nhớ chung AI có nên lưu số giao dịch của tôi không?
 
-Kể với thời gian diễn biến gần tương ứng thời gian xem.
+Hướng dẫn chung có thể tái sử dụng, còn mật khẩu, thông tin tài khoản, mã giao dịch và ngữ cảnh riêng không được biến thành đáp án chung. Thông tin biến động cũng cần đối chiếu lại thay vì lưu như một sự thật cố định.
 
-### 564. Omniscient narrator là gì?
+### 579. Tôi hỏi tiến độ cá nhân có đưa vào kiến thức MFILM chung không?
 
-Người kể có khả năng biết thông tin vượt ngoài một nhân vật.
+Hướng dẫn chung có thể tái sử dụng, còn mật khẩu, thông tin tài khoản, mã giao dịch và ngữ cảnh riêng không được biến thành đáp án chung. Thông tin biến động cũng cần đối chiếu lại thay vì lưu như một sự thật cố định.
 
-### 565. Limited perspective là gì?
+### 580. Hỏi một đáp án dùng chung khác câu hỏi riêng về tài khoản thế nào?
 
-Thông tin câu chuyện bị giới hạn theo một điểm nhìn.
+Hướng dẫn chung có thể tái sử dụng, còn mật khẩu, thông tin tài khoản, mã giao dịch và ngữ cảnh riêng không được biến thành đáp án chung. Thông tin biến động cũng cần đối chiếu lại thay vì lưu như một sự thật cố định.
 
-### 566. First-person narration là gì?
+### 581. Tôi thấy đáp án AI về thuê không còn đúng thì báo ở đâu?
 
-Kể qua lời hoặc trải nghiệm của người xưng tôi.
+Đối chiếu chính sách và giao dịch đang áp dụng trên web. Phim thuê hiện có thời hạn 30 ngày kể từ thanh toán thành công. Gửi câu hỏi và đáp án sai qua Hỗ trợ để kiểm tra; đáp án sai không nên tiếp tục được dùng như kiến thức đã xác nhận.
 
-### 567. Objective narration là gì?
+### 582. Muốn MFILM sửa câu hướng dẫn chatbot bị cũ phải làm gì?
 
-Trình bày điều quan sát được, hạn chế nói trực tiếp suy nghĩ bên trong.
+Đối chiếu chính sách và giao dịch đang áp dụng trên web. Phim thuê hiện có thời hạn 30 ngày kể từ thanh toán thành công. Gửi câu hỏi và đáp án sai qua Hỗ trợ để kiểm tra; đáp án sai không nên tiếp tục được dùng như kiến thức đã xác nhận.
 
-### 568. Stream of consciousness là gì?
+### 583. Chatbot báo thời hạn khác 30 ngày thì tôi tin dữ liệu nào?
 
-Diễn tả dòng suy nghĩ và liên tưởng của nhân vật.
+Đối chiếu chính sách và giao dịch đang áp dụng trên web. Phim thuê hiện có thời hạn 30 ngày kể từ thanh toán thành công. Gửi câu hỏi và đáp án sai qua Hỗ trợ để kiểm tra; đáp án sai không nên tiếp tục được dùng như kiến thức đã xác nhận.
 
-### 569. Metafiction là gì?
+### 584. Một câu trả lời chung sai có nên được học tiếp không?
 
-Tác phẩm tự ý thức hoặc bình luận về việc kể chuyện của mình.
+Đối chiếu chính sách và giao dịch đang áp dụng trên web. Phim thuê hiện có thời hạn 30 ngày kể từ thanh toán thành công. Gửi câu hỏi và đáp án sai qua Hỗ trợ để kiểm tra; đáp án sai không nên tiếp tục được dùng như kiến thức đã xác nhận.
 
-### 570. Breaking the fourth wall là gì?
+### 585. Tôi cần chọn đúng bản chiếu trước khi báo thiếu tập thế nào?
 
-Nhân vật trực tiếp thừa nhận hoặc giao tiếp với khán giả.
+Kiểm tra từng bản chiếu và nguồn tương ứng trên phim. Các nguồn có thể cập nhật khác nhau hoặc gộp tập khác cách đánh số. Nếu vẫn thiếu, báo tên phim, bản chiếu và số tập; không mặc định mọi nguồn phải giống hệt nhau.
 
-### 571. Circular narrative là gì?
+### 586. Server khác nhau có thể có danh sách tập khác nhau không?
 
-Cấu trúc kết thúc trở lại hình ảnh, tình huống hoặc ý tưởng mở đầu.
+Kiểm tra từng bản chiếu và nguồn tương ứng trên phim. Các nguồn có thể cập nhật khác nhau hoặc gộp tập khác cách đánh số. Nếu vẫn thiếu, báo tên phim, bản chiếu và số tập; không mặc định mọi nguồn phải giống hệt nhau.
 
-### 572. Episodic narrative là gì?
+### 587. Một bản Vietsub đủ tập hơn thuyết minh có bất thường không?
 
-Chuỗi phần tương đối riêng, liên kết bằng nhân vật hoặc chủ đề.
+Kiểm tra từng bản chiếu và nguồn tương ứng trên phim. Các nguồn có thể cập nhật khác nhau hoặc gộp tập khác cách đánh số. Nếu vẫn thiếu, báo tên phim, bản chiếu và số tập; không mặc định mọi nguồn phải giống hệt nhau.
 
-## Vai trò và quan hệ nhân vật
+### 588. Bản chiếu đang chọn không có tập cuối thì thử gì?
 
-### 573. Protagonist là gì?
+Kiểm tra từng bản chiếu và nguồn tương ứng trên phim. Các nguồn có thể cập nhật khác nhau hoặc gộp tập khác cách đánh số. Nếu vẫn thiếu, báo tên phim, bản chiếu và số tập; không mặc định mọi nguồn phải giống hệt nhau.
 
-Nhân vật trung tâm của hành động hoặc góc nhìn câu chuyện.
+### 589. Tôi muốn bấm xem phim khi chưa đăng nhập MFILM thì sao?
 
-### 574. Antagonist là gì?
+Bạn có thể duyệt thông tin phim công khai; các thao tác tài khoản như Yêu Thích, Danh Sách, thuê và đồng bộ cần đúng phiên đăng nhập. Tiến độ khách chỉ có phạm vi trình duyệt, không tự trở thành lịch sử chung trên mọi thiết bị.
 
-Nhân vật hoặc lực cản đối đầu mục tiêu của nhân vật chính.
+### 590. Có cần đăng nhập để lưu yêu thích trên MFILM không?
 
-### 575. Deuteragonist là gì?
+Bạn có thể duyệt thông tin phim công khai; các thao tác tài khoản như Yêu Thích, Danh Sách, thuê và đồng bộ cần đúng phiên đăng nhập. Tiến độ khách chỉ có phạm vi trình duyệt, không tự trở thành lịch sử chung trên mọi thiết bị.
 
-Nhân vật có vai trò quan trọng thứ hai trong câu chuyện.
+### 591. Xem như khách có đồng bộ với tài khoản ở máy khác không?
 
-### 576. Foil character là gì?
+Bạn có thể duyệt thông tin phim công khai; các thao tác tài khoản như Yêu Thích, Danh Sách, thuê và đồng bộ cần đúng phiên đăng nhập. Tiến độ khách chỉ có phạm vi trình duyệt, không tự trở thành lịch sử chung trên mọi thiết bị.
 
-Nhân vật tương phản giúp làm rõ đặc điểm một nhân vật khác.
+### 592. Khi nào cần đăng nhập tài khoản để dùng web đầy đủ?
 
-### 577. Confidant character là gì?
+Bạn có thể duyệt thông tin phim công khai; các thao tác tài khoản như Yêu Thích, Danh Sách, thuê và đồng bộ cần đúng phiên đăng nhập. Tiến độ khách chỉ có phạm vi trình duyệt, không tự trở thành lịch sử chung trên mọi thiết bị.
 
-Người được nhân vật chia sẻ suy nghĩ hoặc bí mật.
+### 593. Quên mật khẩu email Google có hỏi MFILM AI lấy lại được không?
 
-### 578. Mentor trong phim là gì?
+Nếu dùng Google, khôi phục tài khoản qua Google rồi đăng nhập MFILM lại. Với email/mật khẩu MFILM, dùng hướng dẫn khôi phục đang có hoặc liên hệ Hỗ trợ để xác minh. Chatbot không đọc lại hay tiết lộ mật khẩu cũ.
 
-Nhân vật hướng dẫn hoặc giúp người khác trưởng thành.
+### 594. AI có cung cấp lại mật khẩu cũ của tôi không?
 
-### 579. Sidekick là gì?
+Nếu dùng Google, khôi phục tài khoản qua Google rồi đăng nhập MFILM lại. Với email/mật khẩu MFILM, dùng hướng dẫn khôi phục đang có hoặc liên hệ Hỗ trợ để xác minh. Chatbot không đọc lại hay tiết lộ mật khẩu cũ.
 
-Người đồng hành hỗ trợ nhân vật chính.
+### 595. Muốn khôi phục đăng nhập đúng tài khoản phải bắt đầu ở đâu?
 
-### 580. Comic relief là gì?
+Nếu dùng Google, khôi phục tài khoản qua Google rồi đăng nhập MFILM lại. Với email/mật khẩu MFILM, dùng hướng dẫn khôi phục đang có hoặc liên hệ Hỗ trợ để xác minh. Chatbot không đọc lại hay tiết lộ mật khẩu cũ.
 
-Nhân vật hoặc khoảnh khắc hài giúp giảm căng thẳng.
+### 596. Không đăng nhập được để xem phim thuê thì xin hỗ trợ thế nào?
 
-### 581. Ensemble cast là gì?
+Nếu dùng Google, khôi phục tài khoản qua Google rồi đăng nhập MFILM lại. Với email/mật khẩu MFILM, dùng hướng dẫn khôi phục đang có hoặc liên hệ Hỗ trợ để xác minh. Chatbot không đọc lại hay tiết lộ mật khẩu cũ.
 
-Dàn nhân vật cùng giữ vai trò đáng kể thay vì chỉ một trung tâm.
+### 597. Tôi muốn tìm nội dung phù hợp thay vì hỏi kiến thức ngẫu nhiên thì nhắn sao?
 
-### 582. Flat character là gì?
+Trợ lý MFILM tập trung tìm phim trong kho, gợi ý theo nhu cầu và hướng dẫn dùng web: tập phim, server, xem tiếp, gói, thuê và tài khoản. Bạn cứ nêu việc muốn làm trên MFILM; không cần đổi sang câu hỏi học thuật.
 
-Nhân vật có ít chiều nét tính cách hoặc ít được khai triển.
+### 598. AI MFILM có ưu tiên hướng dẫn web và kho phim không?
 
-### 583. Round character là gì?
+Trợ lý MFILM tập trung tìm phim trong kho, gợi ý theo nhu cầu và hướng dẫn dùng web: tập phim, server, xem tiếp, gói, thuê và tài khoản. Bạn cứ nêu việc muốn làm trên MFILM; không cần đổi sang câu hỏi học thuật.
 
-Nhân vật có tính cách nhiều chiều và sự phức tạp.
+### 599. Chatbot của website phim nên giúp tôi những việc nào?
 
-### 584. Static character là gì?
+Trợ lý MFILM tập trung tìm phim trong kho, gợi ý theo nhu cầu và hướng dẫn dùng web: tập phim, server, xem tiếp, gói, thuê và tài khoản. Bạn cứ nêu việc muốn làm trên MFILM; không cần đổi sang câu hỏi học thuật.
 
-Nhân vật không thay đổi đáng kể về bản chất qua câu chuyện.
+### 600. Tôi hỏi chọn phim thì có cần chuyển sang câu hỏi học thuật không?
 
-### 585. Dynamic character là gì?
+Trợ lý MFILM tập trung tìm phim trong kho, gợi ý theo nhu cầu và hướng dẫn dùng web: tập phim, server, xem tiếp, gói, thuê và tài khoản. Bạn cứ nêu việc muốn làm trên MFILM; không cần đổi sang câu hỏi học thuật.
 
-Nhân vật thay đổi đáng kể bởi các trải nghiệm.
+## Tình huống theo phim trong kho MFILM
 
-### 586. Character motivation là gì?
+### 601. Muốn chọn một tập khác của Thất Nghiệp Chuyển Sinh trên MFILM thì bấm ở đâu?
 
-Lý do thúc đẩy nhân vật lựa chọn hoặc hành động.
+Mở [Thất Nghiệp Chuyển Sinh](/phim/that-nghiep-chuyen-sinh) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 587. Character flaw là gì?
+### 602. Tôi muốn lưu Thất Nghiệp Chuyển Sinh vào Yêu Thích trên MFILM thì làm sao?
 
-Điểm yếu của nhân vật có thể gây xung đột hoặc sai lầm.
+Đăng nhập rồi mở [Thất Nghiệp Chuyển Sinh](/phim/that-nghiep-chuyen-sinh), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 588. Internal conflict là gì?
+### 603. Muốn thuê riêng Thất Nghiệp Chuyển Sinh thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Mâu thuẫn trong suy nghĩ, giá trị hoặc cảm xúc nhân vật.
+Mở [Thất Nghiệp Chuyển Sinh](/phim/that-nghiep-chuyen-sinh) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 589. External conflict là gì?
+### 604. Nếu Thất Nghiệp Chuyển Sinh không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Mâu thuẫn giữa nhân vật và người, hoàn cảnh hoặc lực bên ngoài.
+Kiểm tra đúng phim tại [Thất Nghiệp Chuyển Sinh](/phim/that-nghiep-chuyen-sinh), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Thất Nghiệp Chuyển Sinh**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 590. Character want là gì?
+### 605. Tôi muốn gửi link Thất Nghiệp Chuyển Sinh trên MFILM cho bạn bè thì gửi trang nào?
 
-Điều nhân vật chủ động mong đạt được.
+Gửi trang chi tiết [Thất Nghiệp Chuyển Sinh](/phim/that-nghiep-chuyen-sinh), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 591. Character need là gì?
+### 606. Muốn chọn một tập khác của Thần Tượng Luyện Kim trên MFILM thì bấm ở đâu?
 
-Điều nhân vật cần hiểu hoặc thay đổi để trưởng thành.
+Mở [Thần Tượng Luyện Kim](/phim/than-tuong-luyen-kim) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 592. Positive character arc là gì?
+### 607. Tôi muốn lưu Thần Tượng Luyện Kim vào Yêu Thích trên MFILM thì làm sao?
 
-Hành trình nhân vật thay đổi theo hướng tiến bộ.
+Đăng nhập rồi mở [Thần Tượng Luyện Kim](/phim/than-tuong-luyen-kim), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 593. Negative character arc là gì?
+### 608. Muốn thuê riêng Thần Tượng Luyện Kim thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Hành trình nhân vật suy thoái hoặc củng cố niềm tin gây hại.
+Mở [Thần Tượng Luyện Kim](/phim/than-tuong-luyen-kim) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 594. Character backstory là gì?
+### 609. Nếu Thần Tượng Luyện Kim không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Những trải nghiệm trước mạch chính ảnh hưởng nhân vật hiện tại.
+Kiểm tra đúng phim tại [Thần Tượng Luyện Kim](/phim/than-tuong-luyen-kim), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Thần Tượng Luyện Kim**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 595. Character agency là gì?
+### 610. Tôi muốn gửi link Thần Tượng Luyện Kim trên MFILM cho bạn bè thì gửi trang nào?
 
-Khả năng lựa chọn và tác động của nhân vật lên diễn biến.
+Gửi trang chi tiết [Thần Tượng Luyện Kim](/phim/than-tuong-luyen-kim), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 596. Anti-villain là gì?
+### 611. Muốn chọn một tập khác của Pháp Sư Tử Linh: Ta Chính Là Thiên Tai trên MFILM thì bấm ở đâu?
 
-Nhân vật đối lập có động cơ hoặc phẩm chất dễ cảm thông.
+Mở [Pháp Sư Tử Linh: Ta Chính Là Thiên Tai](/phim/phap-su-tu-linh-ta-chinh-la-thien-tai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 597. Unlikely alliance là gì?
+### 612. Tôi muốn lưu Pháp Sư Tử Linh: Ta Chính Là Thiên Tai vào Yêu Thích trên MFILM thì làm sao?
 
-Liên minh giữa những người vốn khó hợp tác với nhau.
+Đăng nhập rồi mở [Pháp Sư Tử Linh: Ta Chính Là Thiên Tai](/phim/phap-su-tu-linh-ta-chinh-la-thien-tai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-## Diễn xuất và ngôn ngữ cơ thể
+### 613. Muốn thuê riêng Pháp Sư Tử Linh: Ta Chính Là Thiên Tai thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 598. Subtext trong diễn xuất là gì?
+Mở [Pháp Sư Tử Linh: Ta Chính Là Thiên Tai](/phim/phap-su-tu-linh-ta-chinh-la-thien-tai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Ý định hoặc cảm xúc nằm dưới nghĩa trực tiếp của lời thoại.
+### 614. Nếu Pháp Sư Tử Linh: Ta Chính Là Thiên Tai không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 599. Blocking diễn viên là gì?
+Kiểm tra đúng phim tại [Pháp Sư Tử Linh: Ta Chính Là Thiên Tai](/phim/phap-su-tu-linh-ta-chinh-la-thien-tai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Pháp Sư Tử Linh: Ta Chính Là Thiên Tai**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Sắp vị trí và chuyển động diễn viên trong cảnh.
+### 615. Tôi muốn gửi link Pháp Sư Tử Linh: Ta Chính Là Thiên Tai trên MFILM cho bạn bè thì gửi trang nào?
 
-### 600. Mark trên sàn quay là gì?
+Gửi trang chi tiết [Pháp Sư Tử Linh: Ta Chính Là Thiên Tai](/phim/phap-su-tu-linh-ta-chinh-la-thien-tai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Dấu chỉ nơi diễn viên hoặc thiết bị cần đứng.
+### 616. Muốn chọn một tập khác của Chuyển Sinh Thành Slime trên MFILM thì bấm ở đâu?
 
-### 601. Eyeline trong diễn xuất là gì?
+Mở [Chuyển Sinh Thành Slime](/phim/chuyen-sinh-thanh-slime) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Hướng mắt nhân vật nhìn, giúp xác lập quan hệ không gian.
+### 617. Tôi muốn lưu Chuyển Sinh Thành Slime vào Yêu Thích trên MFILM thì làm sao?
 
-### 602. Improvisation trong diễn xuất là gì?
+Đăng nhập rồi mở [Chuyển Sinh Thành Slime](/phim/chuyen-sinh-thanh-slime), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Ứng biến lời hoặc hành động thay vì làm hoàn toàn theo phần chuẩn bị.
+### 618. Muốn thuê riêng Chuyển Sinh Thành Slime thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 603. Rehearsal là gì?
+Mở [Chuyển Sinh Thành Slime](/phim/chuyen-sinh-thanh-slime) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Diễn tập để chuẩn bị hành động, nhịp và phối hợp.
+### 619. Nếu Chuyển Sinh Thành Slime không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 604. Screen test là gì?
+Kiểm tra đúng phim tại [Chuyển Sinh Thành Slime](/phim/chuyen-sinh-thanh-slime), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Chuyển Sinh Thành Slime**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Thử diễn trước máy để đánh giá sự phù hợp với vai.
+### 620. Tôi muốn gửi link Chuyển Sinh Thành Slime trên MFILM cho bạn bè thì gửi trang nào?
 
-### 605. Audition là gì?
+Gửi trang chi tiết [Chuyển Sinh Thành Slime](/phim/chuyen-sinh-thanh-slime), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Buổi thử vai để tuyển diễn viên.
+### 621. Muốn chọn một tập khác của Na Tra: Ma Đồng Giáng Thế trên MFILM thì bấm ở đâu?
 
-### 606. Callback trong tuyển vai là gì?
+Mở [Na Tra: Ma Đồng Giáng Thế](/phim/na-tra-ma-dong-giang-the) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Mời ứng viên trở lại thử thêm sau vòng đầu.
+### 622. Tôi muốn lưu Na Tra: Ma Đồng Giáng Thế vào Yêu Thích trên MFILM thì làm sao?
 
-### 607. Chemistry read là gì?
+Đăng nhập rồi mở [Na Tra: Ma Đồng Giáng Thế](/phim/na-tra-ma-dong-giang-the), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Thử diễn cùng để đánh giá sự tương tác giữa các diễn viên.
+### 623. Muốn thuê riêng Na Tra: Ma Đồng Giáng Thế thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 608. Underplaying là gì?
+Mở [Na Tra: Ma Đồng Giáng Thế](/phim/na-tra-ma-dong-giang-the) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Diễn tiết chế, giảm biểu hiện rõ ra ngoài.
+### 624. Nếu Na Tra: Ma Đồng Giáng Thế không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 609. Overacting là gì?
+Kiểm tra đúng phim tại [Na Tra: Ma Đồng Giáng Thế](/phim/na-tra-ma-dong-giang-the), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Na Tra: Ma Đồng Giáng Thế**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Diễn quá nhấn mạnh so với yêu cầu hoặc phong cách cảnh.
+### 625. Tôi muốn gửi link Na Tra: Ma Đồng Giáng Thế trên MFILM cho bạn bè thì gửi trang nào?
 
-### 610. Method acting có nghĩa gì?
+Gửi trang chi tiết [Na Tra: Ma Đồng Giáng Thế](/phim/na-tra-ma-dong-giang-the), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nhóm cách diễn tìm cảm xúc và trải nghiệm để xây vai từ bên trong.
+### 626. Muốn chọn một tập khác của Tài phiệt và Cảnh sát (Phần 2) trên MFILM thì bấm ở đâu?
 
-### 611. Character objective trong một cảnh là gì?
+Mở [Tài phiệt và Cảnh sát (Phần 2)](/phim/tai-phiet-va-canh-sat-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Điều nhân vật muốn đạt được ngay trong cảnh đó.
+### 627. Tôi muốn lưu Tài phiệt và Cảnh sát (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-### 612. Acting beat là gì?
+Đăng nhập rồi mở [Tài phiệt và Cảnh sát (Phần 2)](/phim/tai-phiet-va-canh-sat-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Một nhịp thay đổi ý định, hành động hoặc cảm xúc khi diễn.
+### 628. Muốn thuê riêng Tài phiệt và Cảnh sát (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 613. Continuity diễn xuất cần giữ gì?
+Mở [Tài phiệt và Cảnh sát (Phần 2)](/phim/tai-phiet-va-canh-sat-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Giữ động tác, vị trí và trạng thái phù hợp giữa các lượt quay.
+### 629. Nếu Tài phiệt và Cảnh sát (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 614. Body double là gì?
+Kiểm tra đúng phim tại [Tài phiệt và Cảnh sát (Phần 2)](/phim/tai-phiet-va-canh-sat-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Tài phiệt và Cảnh sát (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Người thay diễn viên cho phần hình cơ thể hoặc góc quay phù hợp.
+### 630. Tôi muốn gửi link Tài phiệt và Cảnh sát (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 615. Stand-in là gì?
+Gửi trang chi tiết [Tài phiệt và Cảnh sát (Phần 2)](/phim/tai-phiet-va-canh-sat-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Người đứng thay để chuẩn bị ánh sáng và bố trí trước lượt diễn.
+### 631. Muốn chọn một tập khác của Vạn Giới Độc Tôn trên MFILM thì bấm ở đâu?
 
-### 616. Extra trong phim là gì?
+Mở [Vạn Giới Độc Tôn](/phim/van-gioi-doc-ton) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Diễn viên quần chúng góp phần tạo bối cảnh.
+### 632. Tôi muốn lưu Vạn Giới Độc Tôn vào Yêu Thích trên MFILM thì làm sao?
 
-### 617. Stunt performer là gì?
+Đăng nhập rồi mở [Vạn Giới Độc Tôn](/phim/van-gioi-doc-ton), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Người thực hiện các hành động nguy hiểm hoặc kỹ thuật chuyên biệt.
+### 633. Muốn thuê riêng Vạn Giới Độc Tôn thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 618. Voice actor là gì?
+Mở [Vạn Giới Độc Tôn](/phim/van-gioi-doc-ton) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Diễn viên thể hiện nhân vật hoặc nội dung bằng giọng nói.
+### 634. Nếu Vạn Giới Độc Tôn không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 619. Motion-capture performer là gì?
+Kiểm tra đúng phim tại [Vạn Giới Độc Tôn](/phim/van-gioi-doc-ton), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Vạn Giới Độc Tôn**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Người diễn để chuyển động được ghi và áp dụng lên nhân vật số.
+### 635. Tôi muốn gửi link Vạn Giới Độc Tôn trên MFILM cho bạn bè thì gửi trang nào?
 
-### 620. Silent reaction có quan trọng không?
+Gửi trang chi tiết [Vạn Giới Độc Tôn](/phim/van-gioi-doc-ton), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Có; nét mặt và cử chỉ có thể truyền đạt ý nghĩa mà không cần thoại.
+### 636. Muốn chọn một tập khác của Huyết Thù trên MFILM thì bấm ở đâu?
 
-### 621. Diễn viên nhìn thẳng máy có luôn là lỗi không?
+Mở [Huyết Thù](/phim/huyet-thu) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Không; phim có thể chủ ý tạo giao tiếp trực tiếp hoặc điểm nhìn đặc biệt.
+### 637. Tôi muốn lưu Huyết Thù vào Yêu Thích trên MFILM thì làm sao?
 
-### 622. Diễn tự nhiên có nghĩa không cần chuẩn bị không?
+Đăng nhập rồi mở [Huyết Thù](/phim/huyet-thu), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Không; biểu hiện tự nhiên vẫn có thể cần tập luyện và nghiên cứu vai.
+### 638. Muốn thuê riêng Huyết Thù thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-## Tổ chức sản xuất phim
+Mở [Huyết Thù](/phim/huyet-thu) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 623. Pre-production là gì?
+### 639. Nếu Huyết Thù không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Giai đoạn chuẩn bị trước quay, gồm kịch bản, tuyển vai và kế hoạch.
+Kiểm tra đúng phim tại [Huyết Thù](/phim/huyet-thu), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Huyết Thù**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 624. Principal photography là gì?
+### 640. Tôi muốn gửi link Huyết Thù trên MFILM cho bạn bè thì gửi trang nào?
 
-Giai đoạn quay chính với các cảnh thuộc tác phẩm.
+Gửi trang chi tiết [Huyết Thù](/phim/huyet-thu), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 625. Post-production là gì?
+### 641. Muốn chọn một tập khác của Nghịch Thiên Chí Tôn trên MFILM thì bấm ở đâu?
 
-Giai đoạn dựng, âm thanh, hiệu ứng và hoàn thiện sau quay.
+Mở [Nghịch Thiên Chí Tôn](/phim/nghich-thien-chi-ton) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 626. Call sheet là gì?
+### 642. Tôi muốn lưu Nghịch Thiên Chí Tôn vào Yêu Thích trên MFILM thì làm sao?
 
-Tờ thông tin lịch, địa điểm và người cần có mặt trong ngày quay.
+Đăng nhập rồi mở [Nghịch Thiên Chí Tôn](/phim/nghich-thien-chi-ton), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 627. Shot list là gì?
+### 643. Muốn thuê riêng Nghịch Thiên Chí Tôn thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Danh sách cảnh quay cần thực hiện và các thông tin liên quan.
+Mở [Nghịch Thiên Chí Tôn](/phim/nghich-thien-chi-ton) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 628. Storyboard là gì?
+### 644. Nếu Nghịch Thiên Chí Tôn không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Chuỗi hình phác giúp hình dung cách kể bằng khung hình.
+Kiểm tra đúng phim tại [Nghịch Thiên Chí Tôn](/phim/nghich-thien-chi-ton), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Nghịch Thiên Chí Tôn**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 629. Animatic là gì?
+### 645. Tôi muốn gửi link Nghịch Thiên Chí Tôn trên MFILM cho bạn bè thì gửi trang nào?
 
-Bản thử nhịp từ hình storyboard, có thể kèm tiếng.
+Gửi trang chi tiết [Nghịch Thiên Chí Tôn](/phim/nghich-thien-chi-ton), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 630. Location scouting là gì?
+### 646. Muốn chọn một tập khác của Thâm Hải trên MFILM thì bấm ở đâu?
 
-Khảo sát địa điểm phù hợp nhu cầu quay.
+Mở [Thâm Hải](/phim/tham-hai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 631. Location manager làm gì?
+### 647. Tôi muốn lưu Thâm Hải vào Yêu Thích trên MFILM thì làm sao?
 
-Điều phối địa điểm quay và những vấn đề vận hành liên quan.
+Đăng nhập rồi mở [Thâm Hải](/phim/tham-hai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 632. Line producer làm gì?
+### 648. Muốn thuê riêng Thâm Hải thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Quản lý các mặt vận hành, ngân sách và lịch sản xuất.
+Mở [Thâm Hải](/phim/tham-hai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 633. Production manager làm gì?
+### 649. Nếu Thâm Hải không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Điều phối nguồn lực và tổ chức công việc sản xuất.
+Kiểm tra đúng phim tại [Thâm Hải](/phim/tham-hai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Thâm Hải**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 634. Assistant director làm gì?
+### 650. Tôi muốn gửi link Thâm Hải trên MFILM cho bạn bè thì gửi trang nào?
 
-Hỗ trợ điều phối lịch, hoạt động đoàn và tiến độ trường quay.
+Gửi trang chi tiết [Thâm Hải](/phim/tham-hai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 635. Script supervisor làm gì?
+### 651. Muốn chọn một tập khác của Chiến Binh Ánh Sáng TEO trên MFILM thì bấm ở đâu?
 
-Theo dõi tính liên tục và ghi chép các lượt quay.
+Mở [Chiến Binh Ánh Sáng TEO](/phim/chien-binh-anh-sang-teo) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 636. Gaffer làm gì?
+### 652. Tôi muốn lưu Chiến Binh Ánh Sáng TEO vào Yêu Thích trên MFILM thì làm sao?
 
-Phụ trách triển khai ánh sáng trong đoàn quay.
+Đăng nhập rồi mở [Chiến Binh Ánh Sáng TEO](/phim/chien-binh-anh-sang-teo), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 637. Key grip làm gì?
+### 653. Muốn thuê riêng Chiến Binh Ánh Sáng TEO thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Điều phối đội hỗ trợ thiết bị dựng, đỡ và định hình ánh sáng.
+Mở [Chiến Binh Ánh Sáng TEO](/phim/chien-binh-anh-sang-teo) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 638. DIT trong đoàn quay là gì?
+### 654. Nếu Chiến Binh Ánh Sáng TEO không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Hỗ trợ quy trình hình ảnh số, giám sát kỹ thuật và quản lý liên quan.
+Kiểm tra đúng phim tại [Chiến Binh Ánh Sáng TEO](/phim/chien-binh-anh-sang-teo), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Chiến Binh Ánh Sáng TEO**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 639. Dailies là gì?
+### 655. Tôi muốn gửi link Chiến Binh Ánh Sáng TEO trên MFILM cho bạn bè thì gửi trang nào?
 
-Tư liệu quay được xem lại theo ngày để đánh giá công việc.
+Gửi trang chi tiết [Chiến Binh Ánh Sáng TEO](/phim/chien-binh-anh-sang-teo), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 640. Take trong quay phim là gì?
+### 656. Muốn chọn một tập khác của Cô Gà Mái Xổng Chuồng trên MFILM thì bấm ở đâu?
 
-Một lần ghi lại cảnh hoặc hành động cần quay.
+Mở [Cô Gà Mái Xổng Chuồng](/phim/co-ga-mai-xong-chuong) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 641. Retake là gì?
+### 657. Tôi muốn lưu Cô Gà Mái Xổng Chuồng vào Yêu Thích trên MFILM thì làm sao?
 
-Quay lại để có thêm một lượt thực hiện.
+Đăng nhập rồi mở [Cô Gà Mái Xổng Chuồng](/phim/co-ga-mai-xong-chuong), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 642. Pickup shot là gì?
+### 658. Muốn thuê riêng Cô Gà Mái Xổng Chuồng thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Cảnh bổ sung hoặc chi tiết quay thêm để hoàn thiện bản dựng.
+Mở [Cô Gà Mái Xổng Chuồng](/phim/co-ga-mai-xong-chuong) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 643. Reshoot là gì?
+### 659. Nếu Cô Gà Mái Xổng Chuồng không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Quay lại một phần đã quay vì cần thay đổi hoặc sửa vấn đề.
+Kiểm tra đúng phim tại [Cô Gà Mái Xổng Chuồng](/phim/co-ga-mai-xong-chuong), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cô Gà Mái Xổng Chuồng**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 644. Clapperboard dùng làm gì?
+### 660. Tôi muốn gửi link Cô Gà Mái Xổng Chuồng trên MFILM cho bạn bè thì gửi trang nào?
 
-Đánh dấu cảnh, lượt quay và hỗ trợ đồng bộ hình với tiếng.
+Gửi trang chi tiết [Cô Gà Mái Xổng Chuồng](/phim/co-ga-mai-xong-chuong), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 645. Wrap trong đoàn phim nghĩa là gì?
+### 661. Muốn chọn một tập khác của Koukaku Kidoutai trên MFILM thì bấm ở đâu?
 
-Thông báo hoàn thành phần quay của một người, ngày hoặc dự án.
+Mở [Koukaku Kidoutai](/phim/koukaku-kidoutai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 646. Behind the scenes là gì?
+### 662. Tôi muốn lưu Koukaku Kidoutai vào Yêu Thích trên MFILM thì làm sao?
 
-Tư liệu cho thấy quá trình làm phim phía sau tác phẩm.
+Đăng nhập rồi mở [Koukaku Kidoutai](/phim/koukaku-kidoutai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 647. Press kit của phim là gì?
+### 663. Muốn thuê riêng Koukaku Kidoutai thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Bộ thông tin và tư liệu phục vụ giới thiệu phim với báo chí.
+Mở [Koukaku Kidoutai](/phim/koukaku-kidoutai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-## Mỹ thuật và trang phục
+### 664. Nếu Koukaku Kidoutai không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 648. Production design là gì?
+Kiểm tra đúng phim tại [Koukaku Kidoutai](/phim/koukaku-kidoutai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Koukaku Kidoutai**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Thiết kế tổng thể không gian và diện mạo thế giới trong phim.
+### 665. Tôi muốn gửi link Koukaku Kidoutai trên MFILM cho bạn bè thì gửi trang nào?
 
-### 649. Art director làm gì?
+Gửi trang chi tiết [Koukaku Kidoutai](/phim/koukaku-kidoutai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Điều phối thực hiện các yếu tố mỹ thuật theo định hướng thiết kế.
+### 666. Muốn chọn một tập khác của Sự Trỗi Dậy Của Khiên Anh Hùng trên MFILM thì bấm ở đâu?
 
-### 650. Set design là gì?
+Mở [Sự Trỗi Dậy Của Khiên Anh Hùng](/phim/su-troi-day-cua-khien-anh-hung) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Thiết kế bối cảnh để phục vụ hình ảnh và hành động.
+### 667. Tôi muốn lưu Sự Trỗi Dậy Của Khiên Anh Hùng vào Yêu Thích trên MFILM thì làm sao?
 
-### 651. Set dressing là gì?
+Đăng nhập rồi mở [Sự Trỗi Dậy Của Khiên Anh Hùng](/phim/su-troi-day-cua-khien-anh-hung), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Bố trí đồ vật trang trí để bối cảnh có đời sống.
+### 668. Muốn thuê riêng Sự Trỗi Dậy Của Khiên Anh Hùng thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 652. Prop trong phim là gì?
+Mở [Sự Trỗi Dậy Của Khiên Anh Hùng](/phim/su-troi-day-cua-khien-anh-hung) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Đạo cụ được dùng hoặc xuất hiện trong cảnh.
+### 669. Nếu Sự Trỗi Dậy Của Khiên Anh Hùng không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 653. Hero prop là gì?
+Kiểm tra đúng phim tại [Sự Trỗi Dậy Của Khiên Anh Hùng](/phim/su-troi-day-cua-khien-anh-hung), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Sự Trỗi Dậy Của Khiên Anh Hùng**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Đạo cụ quan trọng được chuẩn bị kỹ cho cảnh nổi bật.
+### 670. Tôi muốn gửi link Sự Trỗi Dậy Của Khiên Anh Hùng trên MFILM cho bạn bè thì gửi trang nào?
 
-### 654. Costume design là gì?
+Gửi trang chi tiết [Sự Trỗi Dậy Của Khiên Anh Hùng](/phim/su-troi-day-cua-khien-anh-hung), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Thiết kế trang phục phù hợp nhân vật, thời kỳ và câu chuyện.
+### 671. Muốn chọn một tập khác của Đấu La Đại Lục trên MFILM thì bấm ở đâu?
 
-### 655. Wardrobe continuity là gì?
+Mở [Đấu La Đại Lục](/phim/dau-la-dai-luc) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Giữ trang phục nhất quán giữa những cảnh cần liền mạch.
+### 672. Tôi muốn lưu Đấu La Đại Lục vào Yêu Thích trên MFILM thì làm sao?
 
-### 656. Makeup artist làm gì?
+Đăng nhập rồi mở [Đấu La Đại Lục](/phim/dau-la-dai-luc), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Tạo diện mạo nhân vật bằng trang điểm theo yêu cầu cảnh.
+### 673. Muốn thuê riêng Đấu La Đại Lục thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 657. Prosthetic makeup là gì?
+Mở [Đấu La Đại Lục](/phim/dau-la-dai-luc) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Trang điểm dùng bộ phận tạo hình gắn lên người diễn.
+### 674. Nếu Đấu La Đại Lục không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 658. Practical set là gì?
+Kiểm tra đúng phim tại [Đấu La Đại Lục](/phim/dau-la-dai-luc), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đấu La Đại Lục**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Bối cảnh vật lý được xây hoặc bố trí để quay trực tiếp.
+### 675. Tôi muốn gửi link Đấu La Đại Lục trên MFILM cho bạn bè thì gửi trang nào?
 
-### 659. Miniature set là gì?
+Gửi trang chi tiết [Đấu La Đại Lục](/phim/dau-la-dai-luc), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Bối cảnh mô hình thu nhỏ được quay để tạo hình ảnh cần thiết.
+### 676. Muốn chọn một tập khác của La Tiểu Hắc Chiến Ký trên MFILM thì bấm ở đâu?
 
-### 660. Matte painting là gì?
+Mở [La Tiểu Hắc Chiến Ký](/phim/la-tieu-hac-chien-ky) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Hình nền được tạo hoặc vẽ để mở rộng môi trường trong cảnh.
+### 677. Tôi muốn lưu La Tiểu Hắc Chiến Ký vào Yêu Thích trên MFILM thì làm sao?
 
-### 661. Green screen dùng làm gì?
+Đăng nhập rồi mở [La Tiểu Hắc Chiến Ký](/phim/la-tieu-hac-chien-ky), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Tạo nền màu dễ tách để thay bằng hình ảnh khác.
+### 678. Muốn thuê riêng La Tiểu Hắc Chiến Ký thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 662. Blue screen khác green screen thế nào?
+Mở [La Tiểu Hắc Chiến Ký](/phim/la-tieu-hac-chien-ky) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Dùng nền xanh lam; lựa chọn tùy màu chủ thể và điều kiện quay.
+### 679. Nếu La Tiểu Hắc Chiến Ký không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 663. Chroma key là gì?
+Kiểm tra đúng phim tại [La Tiểu Hắc Chiến Ký](/phim/la-tieu-hac-chien-ky), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **La Tiểu Hắc Chiến Ký**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Tách vùng theo màu để ghép hình với nền khác.
+### 680. Tôi muốn gửi link La Tiểu Hắc Chiến Ký trên MFILM cho bạn bè thì gửi trang nào?
 
-### 664. Set extension là gì?
+Gửi trang chi tiết [La Tiểu Hắc Chiến Ký](/phim/la-tieu-hac-chien-ky), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Mở rộng bối cảnh quay bằng hiệu ứng hoặc hình ảnh bổ sung.
+### 681. Muốn chọn một tập khác của Thám Tử Lừng Danh Conan trên MFILM thì bấm ở đâu?
 
-### 665. Color palette của phim là gì?
+Mở [Thám Tử Lừng Danh Conan](/phim/tham-tu-lung-danh-conan) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Tập màu chủ đạo giúp thống nhất cảm giác hình ảnh.
+### 682. Tôi muốn lưu Thám Tử Lừng Danh Conan vào Yêu Thích trên MFILM thì làm sao?
 
-### 666. Visual texture là gì?
+Đăng nhập rồi mở [Thám Tử Lừng Danh Conan](/phim/tham-tu-lung-danh-conan), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Cảm giác bề mặt hình ảnh tạo từ vật liệu, ánh sáng và chi tiết.
+### 683. Muốn thuê riêng Thám Tử Lừng Danh Conan thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 667. Period detail là gì?
+Mở [Thám Tử Lừng Danh Conan](/phim/tham-tu-lung-danh-conan) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Chi tiết phù hợp thời kỳ như đồ dùng, trang phục và kiến trúc.
+### 684. Nếu Thám Tử Lừng Danh Conan không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 668. Anachronism trong phim là gì?
+Kiểm tra đúng phim tại [Thám Tử Lừng Danh Conan](/phim/tham-tu-lung-danh-conan), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Thám Tử Lừng Danh Conan**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Chi tiết thuộc thời đại khác xuất hiện trong bối cảnh đang kể.
+### 685. Tôi muốn gửi link Thám Tử Lừng Danh Conan trên MFILM cho bạn bè thì gửi trang nào?
 
-### 669. Weathering đạo cụ là gì?
+Gửi trang chi tiết [Thám Tử Lừng Danh Conan](/phim/tham-tu-lung-danh-conan), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Làm vật trông cũ, mòn hoặc đã được sử dụng.
+### 686. Muốn chọn một tập khác của Học Viện Cao Võ Đông Đại trên MFILM thì bấm ở đâu?
 
-### 670. Continuity photo dùng làm gì?
+Mở [Học Viện Cao Võ Đông Đại](/phim/hoc-vien-cao-vo-dong-dai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Ảnh tham chiếu giúp tái tạo bố trí, trang phục và trạng thái cảnh.
+### 687. Tôi muốn lưu Học Viện Cao Võ Đông Đại vào Yêu Thích trên MFILM thì làm sao?
 
-### 671. Location và studio set khác nhau thế nào?
+Đăng nhập rồi mở [Học Viện Cao Võ Đông Đại](/phim/hoc-vien-cao-vo-dong-dai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Location là địa điểm quay; studio set là bối cảnh dựng trong trường quay.
+### 688. Muốn thuê riêng Học Viện Cao Võ Đông Đại thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 672. Màu trang phục có thể kể chuyện không?
+Mở [Học Viện Cao Võ Đông Đại](/phim/hoc-vien-cao-vo-dong-dai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Có; sự lặp hoặc đổi màu có thể hỗ trợ nhận diện và biến chuyển nhân vật.
+### 689. Nếu Học Viện Cao Võ Đông Đại không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-## Kỹ thuật hoạt hình
+Kiểm tra đúng phim tại [Học Viện Cao Võ Đông Đại](/phim/hoc-vien-cao-vo-dong-dai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Học Viện Cao Võ Đông Đại**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 673. Keyframe trong hoạt hình là gì?
+### 690. Tôi muốn gửi link Học Viện Cao Võ Đông Đại trên MFILM cho bạn bè thì gửi trang nào?
 
-Khung chính xác định tư thế hoặc trạng thái quan trọng.
+Gửi trang chi tiết [Học Viện Cao Võ Đông Đại](/phim/hoc-vien-cao-vo-dong-dai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 674. Inbetween trong hoạt hình là gì?
+### 691. Muốn chọn một tập khác của Huấn Luyện Viên Ted Lasso (Phần 4) trên MFILM thì bấm ở đâu?
 
-Khung trung gian nối chuyển động giữa các khung chính.
+Mở [Huấn Luyện Viên Ted Lasso (Phần 4)](/phim/huan-luyen-vien-ted-lasso-phan-4) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 675. Tweening là gì?
+### 692. Tôi muốn lưu Huấn Luyện Viên Ted Lasso (Phần 4) vào Yêu Thích trên MFILM thì làm sao?
 
-Tạo trạng thái trung gian giữa các mốc hoạt ảnh.
+Đăng nhập rồi mở [Huấn Luyện Viên Ted Lasso (Phần 4)](/phim/huan-luyen-vien-ted-lasso-phan-4), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 676. Squash and stretch là gì?
+### 693. Muốn thuê riêng Huấn Luyện Viên Ted Lasso (Phần 4) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Biến dạng co và giãn để thể hiện trọng lượng hoặc độ đàn hồi.
+Mở [Huấn Luyện Viên Ted Lasso (Phần 4)](/phim/huan-luyen-vien-ted-lasso-phan-4) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 677. Anticipation trong hoạt hình là gì?
+### 694. Nếu Huấn Luyện Viên Ted Lasso (Phần 4) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Chuyển động chuẩn bị giúp người xem hiểu hành động sắp diễn ra.
+Kiểm tra đúng phim tại [Huấn Luyện Viên Ted Lasso (Phần 4)](/phim/huan-luyen-vien-ted-lasso-phan-4), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Huấn Luyện Viên Ted Lasso (Phần 4)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 678. Follow-through trong hoạt hình là gì?
+### 695. Tôi muốn gửi link Huấn Luyện Viên Ted Lasso (Phần 4) trên MFILM cho bạn bè thì gửi trang nào?
 
-Phần cơ thể hoặc vật tiếp tục chuyển động sau hành động chính.
+Gửi trang chi tiết [Huấn Luyện Viên Ted Lasso (Phần 4)](/phim/huan-luyen-vien-ted-lasso-phan-4), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 679. Overlapping action là gì?
+### 696. Muốn chọn một tập khác của Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4) trên MFILM thì bấm ở đâu?
 
-Các bộ phận chuyển động lệch nhịp để hình ảnh tự nhiên hơn.
+Mở [Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4)](/phim/luc-do-toi-da-chuyen-sinh-thanh-slime-phan-4) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 680. Ease-in và ease-out là gì?
+### 697. Tôi muốn lưu Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4) vào Yêu Thích trên MFILM thì làm sao?
 
-Chuyển động tăng hoặc giảm tốc dần quanh mốc hoạt ảnh.
+Đăng nhập rồi mở [Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4)](/phim/luc-do-toi-da-chuyen-sinh-thanh-slime-phan-4), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 681. Animation timing là gì?
+### 698. Muốn thuê riêng Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Số khung và nhịp dùng để tạo tốc độ, trọng lượng chuyển động.
+Mở [Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4)](/phim/luc-do-toi-da-chuyen-sinh-thanh-slime-phan-4) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 682. Animation spacing là gì?
+### 699. Nếu Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Khoảng cách vị trí giữa các khung, quyết định cảm giác tốc độ.
+Kiểm tra đúng phim tại [Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4)](/phim/luc-do-toi-da-chuyen-sinh-thanh-slime-phan-4), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 683. Motion arc là gì?
+### 700. Tôi muốn gửi link Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4) trên MFILM cho bạn bè thì gửi trang nào?
 
-Đường cong mà chuyển động đi theo thay vì luôn đi thẳng.
+Gửi trang chi tiết [Lúc Đó Tôi Đã Chuyển Sinh Thành Slime (Phần 4)](/phim/luc-do-toi-da-chuyen-sinh-thanh-slime-phan-4), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 684. Staging trong hoạt hình là gì?
+### 701. Muốn chọn một tập khác của Vùng Đất Linh Hồn trên MFILM thì bấm ở đâu?
 
-Sắp hình và hành động để ý chính dễ được nhận ra.
+Mở [Vùng Đất Linh Hồn](/phim/vung-dat-linh-hon) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 685. Secondary action là gì?
+### 702. Tôi muốn lưu Vùng Đất Linh Hồn vào Yêu Thích trên MFILM thì làm sao?
 
-Hành động phụ hỗ trợ tính cách hoặc ý nghĩa hành động chính.
+Đăng nhập rồi mở [Vùng Đất Linh Hồn](/phim/vung-dat-linh-hon), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 686. Model sheet là gì?
+### 703. Muốn thuê riêng Vùng Đất Linh Hồn thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Bản tham chiếu giúp vẽ nhân vật nhất quán ở nhiều góc.
+Mở [Vùng Đất Linh Hồn](/phim/vung-dat-linh-hon) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 687. Character rig là gì?
+### 704. Nếu Vùng Đất Linh Hồn không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Hệ điều khiển giúp tạo tư thế và chuyển động nhân vật số.
+Kiểm tra đúng phim tại [Vùng Đất Linh Hồn](/phim/vung-dat-linh-hon), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Vùng Đất Linh Hồn**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 688. Rigging là gì?
+### 705. Tôi muốn gửi link Vùng Đất Linh Hồn trên MFILM cho bạn bè thì gửi trang nào?
 
-Xây bộ khung và điều khiển để hoạt hóa mô hình.
+Gửi trang chi tiết [Vùng Đất Linh Hồn](/phim/vung-dat-linh-hon), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 689. Skinning trong 3D là gì?
+### 706. Muốn chọn một tập khác của Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich trên MFILM thì bấm ở đâu?
 
-Gắn bề mặt mô hình với bộ xương để biến dạng khi chuyển động.
+Mở [Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich](/phim/cau-ban-than-cua-toi-co-ban-gai-mein-bester-freund-seine-freundin-und-ich) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 690. Rotoscoping là gì?
+### 707. Tôi muốn lưu Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich vào Yêu Thích trên MFILM thì làm sao?
 
-Dựa trên hình quay thật để tạo hoặc tách chuyển động từng khung.
+Đăng nhập rồi mở [Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich](/phim/cau-ban-than-cua-toi-co-ban-gai-mein-bester-freund-seine-freundin-und-ich), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 691. Stop-motion là gì?
+### 708. Muốn thuê riêng Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Di chuyển vật thể từng chút rồi chụp để tạo ảo giác chuyển động.
+Mở [Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich](/phim/cau-ban-than-cua-toi-co-ban-gai-mein-bester-freund-seine-freundin-und-ich) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 692. Clay animation là gì?
+### 709. Nếu Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Stop-motion dùng nhân vật hoặc vật tạo từ vật liệu nặn.
+Kiểm tra đúng phim tại [Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich](/phim/cau-ban-than-cua-toi-co-ban-gai-mein-bester-freund-seine-freundin-und-ich), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 693. Cutout animation là gì?
+### 710. Tôi muốn gửi link Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich trên MFILM cho bạn bè thì gửi trang nào?
 
-Hoạt hình dùng các phần hình cắt ghép và điều khiển chuyển động.
+Gửi trang chi tiết [Cậu Bạn Thân Của Tôi Có Bạn Gái / Mein bester Freund, seine Freundin und ich](/phim/cau-ban-than-cua-toi-co-ban-gai-mein-bester-freund-seine-freundin-und-ich), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 694. Cel animation là gì?
+### 711. Muốn chọn một tập khác của Minions & Quái Vật trên MFILM thì bấm ở đâu?
 
-Quy trình truyền thống vẽ các lớp hình trên tấm trong suốt.
+Mở [Minions & Quái Vật](/phim/minions-quai-vat) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 695. Compositing là gì?
+### 712. Tôi muốn lưu Minions & Quái Vật vào Yêu Thích trên MFILM thì làm sao?
 
-Ghép nhiều lớp hình hoặc hiệu ứng thành hình cuối.
+Đăng nhập rồi mở [Minions & Quái Vật](/phim/minions-quai-vat), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 696. Onion skin trong hoạt hình là gì?
+### 713. Muốn thuê riêng Minions & Quái Vật thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Hiển thị mờ các khung lân cận để hỗ trợ chỉnh chuyển động.
+Mở [Minions & Quái Vật](/phim/minions-quai-vat) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 697. Loop animation là gì?
+### 714. Nếu Minions & Quái Vật không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Đoạn chuyển động có thể lặp, thường nối đầu và cuối phù hợp.
+Kiểm tra đúng phim tại [Minions & Quái Vật](/phim/minions-quai-vat), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Minions & Quái Vật**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-## Nhánh thể loại điện ảnh
+### 715. Tôi muốn gửi link Minions & Quái Vật trên MFILM cho bạn bè thì gửi trang nào?
 
-### 698. Neo-noir là gì?
+Gửi trang chi tiết [Minions & Quái Vật](/phim/minions-quai-vat), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Tác phẩm vận dụng đặc điểm noir trong bối cảnh hoặc phong cách mới.
+### 716. Muốn chọn một tập khác của Siêu Khuyển Thần Thông trên MFILM thì bấm ở đâu?
 
-### 699. Film noir thường có không khí gì?
+Mở [Siêu Khuyển Thần Thông](/phim/sieu-khuyen-than-thong) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Thường có bi quan, mơ hồ đạo đức và hình ảnh tương phản.
+### 717. Tôi muốn lưu Siêu Khuyển Thần Thông vào Yêu Thích trên MFILM thì làm sao?
 
-### 700. Legal drama là gì?
+Đăng nhập rồi mở [Siêu Khuyển Thần Thông](/phim/sieu-khuyen-than-thong), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Chính kịch tập trung vào tranh chấp, nghề luật hoặc phòng xử án.
+### 718. Muốn thuê riêng Siêu Khuyển Thần Thông thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 701. Medical drama là gì?
+Mở [Siêu Khuyển Thần Thông](/phim/sieu-khuyen-than-thong) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Chính kịch về nhân vật và xung đột trong môi trường y tế.
+### 719. Nếu Siêu Khuyển Thần Thông không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 702. Political thriller là gì?
+Kiểm tra đúng phim tại [Siêu Khuyển Thần Thông](/phim/sieu-khuyen-than-thong), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Siêu Khuyển Thần Thông**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Phim căng thẳng gắn với quyền lực và xung đột chính trị.
+### 720. Tôi muốn gửi link Siêu Khuyển Thần Thông trên MFILM cho bạn bè thì gửi trang nào?
 
-### 703. Spy thriller là gì?
+Gửi trang chi tiết [Siêu Khuyển Thần Thông](/phim/sieu-khuyen-than-thong), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Phim hồi hộp xoay quanh hoạt động tình báo hoặc gián điệp.
+### 721. Muốn chọn một tập khác của 100 Ngày Trở Thành Vua trên MFILM thì bấm ở đâu?
 
-### 704. Heist film là gì?
+Mở [100 Ngày Trở Thành Vua](/phim/100-ngay-tro-thanh-vua) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Phim tập trung vào kế hoạch và thực hiện một vụ trộm lớn.
+### 722. Tôi muốn lưu 100 Ngày Trở Thành Vua vào Yêu Thích trên MFILM thì làm sao?
 
-### 705. Prison drama là gì?
+Đăng nhập rồi mở [100 Ngày Trở Thành Vua](/phim/100-ngay-tro-thanh-vua), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Chính kịch trong môi trường nhà tù hoặc đời sống người bị giam.
+### 723. Muốn thuê riêng 100 Ngày Trở Thành Vua thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 706. Road movie là gì?
+Mở [100 Ngày Trở Thành Vua](/phim/100-ngay-tro-thanh-vua) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Phim kể hành trình di chuyển gắn với biến đổi của nhân vật.
+### 724. Nếu 100 Ngày Trở Thành Vua không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 707. Buddy movie là gì?
+Kiểm tra đúng phim tại [100 Ngày Trở Thành Vua](/phim/100-ngay-tro-thanh-vua), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **100 Ngày Trở Thành Vua**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Phim đặt quan hệ và hành trình của đôi nhân vật làm trọng tâm.
+### 725. Tôi muốn gửi link 100 Ngày Trở Thành Vua trên MFILM cho bạn bè thì gửi trang nào?
 
-### 708. Coming-of-age film là gì?
+Gửi trang chi tiết [100 Ngày Trở Thành Vua](/phim/100-ngay-tro-thanh-vua), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Phim theo dõi quá trình trưởng thành và hình thành bản sắc.
+### 726. Muốn chọn một tập khác của Đứa Con Của Thời Tiết trên MFILM thì bấm ở đâu?
 
-### 709. Sports drama là gì?
+Mở [Đứa Con Của Thời Tiết](/phim/dua-con-cua-thoi-tiet) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Chính kịch dùng thi đấu hoặc tập luyện thể thao làm môi trường xung đột.
+### 727. Tôi muốn lưu Đứa Con Của Thời Tiết vào Yêu Thích trên MFILM thì làm sao?
 
-### 710. Survival film là gì?
+Đăng nhập rồi mở [Đứa Con Của Thời Tiết](/phim/dua-con-cua-thoi-tiet), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Phim tập trung nỗ lực sống sót trước hiểm nguy hoặc hoàn cảnh khắc nghiệt.
+### 728. Muốn thuê riêng Đứa Con Của Thời Tiết thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 711. Disaster film là gì?
+Mở [Đứa Con Của Thời Tiết](/phim/dua-con-cua-thoi-tiet) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Phim lấy thảm họa và phản ứng của con người làm trọng tâm.
+### 729. Nếu Đứa Con Của Thời Tiết không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 712. Monster movie là gì?
+Kiểm tra đúng phim tại [Đứa Con Của Thời Tiết](/phim/dua-con-cua-thoi-tiet), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đứa Con Của Thời Tiết**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Phim đặt sinh vật gây đe dọa làm yếu tố nổi bật.
+### 730. Tôi muốn gửi link Đứa Con Của Thời Tiết trên MFILM cho bạn bè thì gửi trang nào?
 
-### 713. Creature feature là gì?
+Gửi trang chi tiết [Đứa Con Của Thời Tiết](/phim/dua-con-cua-thoi-tiet), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Phim giải trí xoay quanh sinh vật lạ hoặc nguy hiểm.
+### 731. Muốn chọn một tập khác của Lửa Trắng trên MFILM thì bấm ở đâu?
 
-### 714. Gothic horror là gì?
+Mở [Lửa Trắng](/phim/lua-trang) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Kinh dị thường kết hợp không gian u tối, quá khứ và bí mật.
+### 732. Tôi muốn lưu Lửa Trắng vào Yêu Thích trên MFILM thì làm sao?
 
-### 715. Folk horror là gì?
+Đăng nhập rồi mở [Lửa Trắng](/phim/lua-trang), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Kinh dị khai thác tín ngưỡng, cộng đồng và truyền thống dân gian.
+### 733. Muốn thuê riêng Lửa Trắng thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 716. Cosmic horror là gì?
+Mở [Lửa Trắng](/phim/lua-trang) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Kinh dị về thế lực vượt hiểu biết, khiến con người cảm thấy nhỏ bé.
+### 734. Nếu Lửa Trắng không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 717. Found-footage film là gì?
+Kiểm tra đúng phim tại [Lửa Trắng](/phim/lua-trang), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Lửa Trắng**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Phim trình bày như tư liệu được nhân vật ghi rồi tìm lại.
+### 735. Tôi muốn gửi link Lửa Trắng trên MFILM cho bạn bè thì gửi trang nào?
 
-### 718. Mockumentary là gì?
+Gửi trang chi tiết [Lửa Trắng](/phim/lua-trang), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Tác phẩm hư cấu sử dụng hình thức giống phim tài liệu.
+### 736. Muốn chọn một tập khác của Victoria Đa Diện trên MFILM thì bấm ở đâu?
 
-### 719. Docudrama là gì?
+Mở [Victoria Đa Diện](/phim/victoria-da-dien) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Tác phẩm tái hiện sự kiện thực bằng diễn xuất và cấu trúc chính kịch.
+### 737. Tôi muốn lưu Victoria Đa Diện vào Yêu Thích trên MFILM thì làm sao?
 
-### 720. Anthology film là gì?
+Đăng nhập rồi mở [Victoria Đa Diện](/phim/victoria-da-dien), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Phim gồm nhiều câu chuyện hoặc phần tương đối độc lập.
+### 738. Muốn thuê riêng Victoria Đa Diện thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 721. Chamber drama là gì?
+Mở [Victoria Đa Diện](/phim/victoria-da-dien) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Chính kịch thường tập trung vào ít nhân vật trong không gian hạn chế.
+### 739. Nếu Victoria Đa Diện không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 722. Screwball comedy là gì?
+Kiểm tra đúng phim tại [Victoria Đa Diện](/phim/victoria-da-dien), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Victoria Đa Diện**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Hài với tình huống lệch nhịp, đối đáp nhanh và quan hệ nhiều va chạm.
+### 740. Tôi muốn gửi link Victoria Đa Diện trên MFILM cho bạn bè thì gửi trang nào?
 
-## Chủ đề và mô-típ phim
+Gửi trang chi tiết [Victoria Đa Diện](/phim/victoria-da-dien), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 723. Found family trong phim là gì?
+### 741. Muốn chọn một tập khác của Đấu Phá Thương Khung trên MFILM thì bấm ở đâu?
 
-Những người không cùng huyết thống hình thành quan hệ như gia đình.
+Mở [Đấu Phá Thương Khung](/phim/dau-pha-thuong-khung) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 724. Redemption story là gì?
+### 742. Tôi muốn lưu Đấu Phá Thương Khung vào Yêu Thích trên MFILM thì làm sao?
 
-Câu chuyện về nỗ lực sửa sai và thay đổi sau lỗi lầm.
+Đăng nhập rồi mở [Đấu Phá Thương Khung](/phim/dau-pha-thuong-khung), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 725. Revenge cycle là gì?
+### 743. Muốn thuê riêng Đấu Phá Thương Khung thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Chuỗi trả đũa tiếp diễn khi hành động trước tạo thù hận mới.
+Mở [Đấu Phá Thương Khung](/phim/dau-pha-thuong-khung) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 726. Fish out of water là gì?
+### 744. Nếu Đấu Phá Thương Khung không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Nhân vật bị đặt trong môi trường xa lạ với kinh nghiệm của mình.
+Kiểm tra đúng phim tại [Đấu Phá Thương Khung](/phim/dau-pha-thuong-khung), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đấu Phá Thương Khung**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 727. Enemies to allies là gì?
+### 745. Tôi muốn gửi link Đấu Phá Thương Khung trên MFILM cho bạn bè thì gửi trang nào?
 
-Quan hệ chuyển từ đối đầu sang hợp tác.
+Gửi trang chi tiết [Đấu Phá Thương Khung](/phim/dau-pha-thuong-khung), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 728. Friends to rivals là gì?
+### 746. Muốn chọn một tập khác của Thử Thách Thần Tượng trên MFILM thì bấm ở đâu?
 
-Quan hệ chuyển từ thân thiết sang cạnh tranh hoặc đối lập.
+Mở [Thử Thách Thần Tượng](/phim/thu-thach-than-tuong) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 729. Forbidden love là gì?
+### 747. Tôi muốn lưu Thử Thách Thần Tượng vào Yêu Thích trên MFILM thì làm sao?
 
-Tình yêu bị ngăn cản bởi quy tắc, hoàn cảnh hoặc quan hệ khác.
+Đăng nhập rồi mở [Thử Thách Thần Tượng](/phim/thu-thach-than-tuong), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 730. Love triangle là gì?
+### 748. Muốn thuê riêng Thử Thách Thần Tượng thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Mối quan hệ tình cảm đan xen giữa ba người.
+Mở [Thử Thách Thần Tượng](/phim/thu-thach-than-tuong) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 731. Mistaken identity là gì?
+### 749. Nếu Thử Thách Thần Tượng không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Nhầm danh tính tạo xung đột hoặc tình huống câu chuyện.
+Kiểm tra đúng phim tại [Thử Thách Thần Tượng](/phim/thu-thach-than-tuong), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Thử Thách Thần Tượng**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 732. Double life là gì?
+### 750. Tôi muốn gửi link Thử Thách Thần Tượng trên MFILM cho bạn bè thì gửi trang nào?
 
-Nhân vật sống với hai đời sống hoặc danh tính khác nhau.
+Gửi trang chi tiết [Thử Thách Thần Tượng](/phim/thu-thach-than-tuong), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 733. Secret identity là gì?
+### 751. Muốn chọn một tập khác của Tình Yêu Nổi Loạn (Phần 2) trên MFILM thì bấm ở đâu?
 
-Danh tính được che giấu với những người trong câu chuyện.
+Mở [Tình Yêu Nổi Loạn (Phần 2)](/phim/tinh-yeu-noi-loan-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 734. Quest story là gì?
+### 752. Tôi muốn lưu Tình Yêu Nổi Loạn (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-Hành trình tìm vật, người hoặc mục tiêu có ý nghĩa.
+Đăng nhập rồi mở [Tình Yêu Nổi Loạn (Phần 2)](/phim/tinh-yeu-noi-loan-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 735. Chosen-one trope là gì?
+### 753. Muốn thuê riêng Tình Yêu Nổi Loạn (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Mô-típ nhân vật được chọn cho một nhiệm vụ đặc biệt.
+Mở [Tình Yêu Nổi Loạn (Phần 2)](/phim/tinh-yeu-noi-loan-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 736. Underdog story là gì?
+### 754. Nếu Tình Yêu Nổi Loạn (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Câu chuyện về người bị đánh giá thấp nỗ lực vượt trở ngại.
+Kiểm tra đúng phim tại [Tình Yêu Nổi Loạn (Phần 2)](/phim/tinh-yeu-noi-loan-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Tình Yêu Nổi Loạn (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 737. Rise-and-fall story là gì?
+### 755. Tôi muốn gửi link Tình Yêu Nổi Loạn (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-Theo dõi sự đi lên rồi suy sụp của nhân vật hoặc tổ chức.
+Gửi trang chi tiết [Tình Yêu Nổi Loạn (Phần 2)](/phim/tinh-yeu-noi-loan-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 738. Rags-to-riches story là gì?
+### 756. Muốn chọn một tập khác của Cánh Buồm Đen (Phần 4) trên MFILM thì bấm ở đâu?
 
-Hành trình từ hoàn cảnh thiếu thốn đến giàu có hoặc thành công.
+Mở [Cánh Buồm Đen (Phần 4)](/phim/canh-buom-den-phan-4) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 739. Identity crisis trong phim là gì?
+### 757. Tôi muốn lưu Cánh Buồm Đen (Phần 4) vào Yêu Thích trên MFILM thì làm sao?
 
-Nhân vật nghi vấn mình là ai hoặc muốn sống theo điều gì.
+Đăng nhập rồi mở [Cánh Buồm Đen (Phần 4)](/phim/canh-buom-den-phan-4), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 740. Moral dilemma là gì?
+### 758. Muốn thuê riêng Cánh Buồm Đen (Phần 4) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tình thế phải chọn giữa các giá trị hoặc nghĩa vụ xung đột.
+Mở [Cánh Buồm Đen (Phần 4)](/phim/canh-buom-den-phan-4) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 741. Nature versus nurture là chủ đề gì?
+### 759. Nếu Cánh Buồm Đen (Phần 4) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Đặt ảnh hưởng bẩm sinh cạnh tác động của môi trường và trải nghiệm.
+Kiểm tra đúng phim tại [Cánh Buồm Đen (Phần 4)](/phim/canh-buom-den-phan-4), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cánh Buồm Đen (Phần 4)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 742. Man versus nature là gì?
+### 760. Tôi muốn gửi link Cánh Buồm Đen (Phần 4) trên MFILM cho bạn bè thì gửi trang nào?
 
-Xung đột giữa con người với môi trường tự nhiên.
+Gửi trang chi tiết [Cánh Buồm Đen (Phần 4)](/phim/canh-buom-den-phan-4), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 743. Man versus society là gì?
+### 761. Muốn chọn một tập khác của Cú Twist Tầng Thứ 9 trên MFILM thì bấm ở đâu?
 
-Xung đột giữa cá nhân và quy tắc hoặc tổ chức xã hội.
+Mở [Cú Twist Tầng Thứ 9](/phim/cu-twist-tang-thu-9) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 744. Man versus self là gì?
+### 762. Tôi muốn lưu Cú Twist Tầng Thứ 9 vào Yêu Thích trên MFILM thì làm sao?
 
-Xung đột của nhân vật với suy nghĩ hoặc phần bên trong mình.
+Đăng nhập rồi mở [Cú Twist Tầng Thứ 9](/phim/cu-twist-tang-thu-9), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 745. Hubris trong bi kịch là gì?
+### 763. Muốn thuê riêng Cú Twist Tầng Thứ 9 thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Sự kiêu ngạo quá mức góp phần dẫn đến sai lầm hoặc sụp đổ.
+Mở [Cú Twist Tầng Thứ 9](/phim/cu-twist-tang-thu-9) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 746. Sacrifice motif là gì?
+### 764. Nếu Cú Twist Tầng Thứ 9 không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Mô-típ từ bỏ điều có giá trị để bảo vệ người hoặc mục tiêu khác.
+Kiểm tra đúng phim tại [Cú Twist Tầng Thứ 9](/phim/cu-twist-tang-thu-9), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cú Twist Tầng Thứ 9**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 747. Journey home là mô-típ gì?
+### 765. Tôi muốn gửi link Cú Twist Tầng Thứ 9 trên MFILM cho bạn bè thì gửi trang nào?
 
-Hành trình trở về gắn với việc thay đổi cách hiểu về nơi thuộc về.
+Gửi trang chi tiết [Cú Twist Tầng Thứ 9](/phim/cu-twist-tang-thu-9), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-## Đọc và phân tích phim
+### 766. Muốn chọn một tập khác của Đến Khi Áo Phông Khô trên MFILM thì bấm ở đâu?
 
-### 748. Mise-en-scène nghĩa là gì?
+Mở [Đến Khi Áo Phông Khô](/phim/den-khi-ao-phong-kho) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Cách bố trí những gì trong cảnh, như diễn viên, ánh sáng và bối cảnh.
+### 767. Tôi muốn lưu Đến Khi Áo Phông Khô vào Yêu Thích trên MFILM thì làm sao?
 
-### 749. Visual motif là gì?
+Đăng nhập rồi mở [Đến Khi Áo Phông Khô](/phim/den-khi-ao-phong-kho), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Hình ảnh lặp lại có vai trò biểu đạt trong tác phẩm.
+### 768. Muốn thuê riêng Đến Khi Áo Phông Khô thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 750. Symbolism trong phim là gì?
+Mở [Đến Khi Áo Phông Khô](/phim/den-khi-ao-phong-kho) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Dùng chi tiết gợi ý nghĩa vượt ngoài chức năng trực tiếp.
+### 769. Nếu Đến Khi Áo Phông Khô không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 751. Allegory trong phim là gì?
+Kiểm tra đúng phim tại [Đến Khi Áo Phông Khô](/phim/den-khi-ao-phong-kho), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đến Khi Áo Phông Khô**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Câu chuyện hoặc hệ chi tiết đại diện một tầng ý nghĩa khác.
+### 770. Tôi muốn gửi link Đến Khi Áo Phông Khô trên MFILM cho bạn bè thì gửi trang nào?
 
-### 752. Metaphor bằng hình ảnh là gì?
+Gửi trang chi tiết [Đến Khi Áo Phông Khô](/phim/den-khi-ao-phong-kho), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Dùng hình ảnh để gợi sự tương đồng với một ý tưởng.
+### 771. Muốn chọn một tập khác của Số Đào Hoa Của Thư Khắc trên MFILM thì bấm ở đâu?
 
-### 753. Juxtaposition là gì?
+Mở [Số Đào Hoa Của Thư Khắc](/phim/so-dao-hoa-cua-thu-khac) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Đặt các yếu tố cạnh nhau để làm nổi bật quan hệ hoặc tương phản.
+### 772. Tôi muốn lưu Số Đào Hoa Của Thư Khắc vào Yêu Thích trên MFILM thì làm sao?
 
-### 754. Contrast trong kể chuyện là gì?
+Đăng nhập rồi mở [Số Đào Hoa Của Thư Khắc](/phim/so-dao-hoa-cua-thu-khac), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Nhấn khác biệt giữa nhân vật, hình ảnh hoặc tình huống.
+### 773. Muốn thuê riêng Số Đào Hoa Của Thư Khắc thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 755. Tone của phim là gì?
+Mở [Số Đào Hoa Của Thư Khắc](/phim/so-dao-hoa-cua-thu-khac) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Thái độ và sắc thái tác phẩm thể hiện với nội dung.
+### 774. Nếu Số Đào Hoa Của Thư Khắc không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 756. Mood của cảnh là gì?
+Kiểm tra đúng phim tại [Số Đào Hoa Của Thư Khắc](/phim/so-dao-hoa-cua-thu-khac), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Số Đào Hoa Của Thư Khắc**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Bầu không khí cảm xúc mà cảnh gợi ở người xem.
+### 775. Tôi muốn gửi link Số Đào Hoa Của Thư Khắc trên MFILM cho bạn bè thì gửi trang nào?
 
-### 757. Pacing của phim là gì?
+Gửi trang chi tiết [Số Đào Hoa Của Thư Khắc](/phim/so-dao-hoa-cua-thu-khac), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nhịp tiến triển của thông tin, hành động và cảm xúc.
+### 776. Muốn chọn một tập khác của Thương Nguyên Đồ trên MFILM thì bấm ở đâu?
 
-### 758. Visual rhythm là gì?
+Mở [Thương Nguyên Đồ](/phim/thuong-nguyen-do) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Nhịp cảm nhận từ độ dài cảnh, chuyển động và bố cục.
+### 777. Tôi muốn lưu Thương Nguyên Đồ vào Yêu Thích trên MFILM thì làm sao?
 
-### 759. Screen direction là gì?
+Đăng nhập rồi mở [Thương Nguyên Đồ](/phim/thuong-nguyen-do), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Hướng hành động trong khung giúp người xem hiểu không gian.
+### 778. Muốn thuê riêng Thương Nguyên Đồ thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 760. 180-degree rule là gì?
+Mở [Thương Nguyên Đồ](/phim/thuong-nguyen-do) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Giữ máy ở một phía trục hành động để hướng nhìn nhất quán.
+### 779. Nếu Thương Nguyên Đồ không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 761. 30-degree rule là gì?
+Kiểm tra đúng phim tại [Thương Nguyên Đồ](/phim/thuong-nguyen-do), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Thương Nguyên Đồ**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Gợi ý đổi góc đủ rõ giữa cảnh gần nhau để tránh cảm giác nhảy.
+### 780. Tôi muốn gửi link Thương Nguyên Đồ trên MFILM cho bạn bè thì gửi trang nào?
 
-### 762. Shot-reverse-shot là gì?
+Gửi trang chi tiết [Thương Nguyên Đồ](/phim/thuong-nguyen-do), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Luân phiên hai hướng nhìn, thường dùng trong hội thoại.
+### 781. Muốn chọn một tập khác của Tiểu Thư Không Chơi Game Đối Kháng trên MFILM thì bấm ở đâu?
 
-### 763. Eyeline match là gì?
+Mở [Tiểu Thư Không Chơi Game Đối Kháng](/phim/tieu-thu-khong-choi-game-doi-khang) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Nối hướng mắt nhân vật với hình cho thấy thứ được nhìn.
+### 782. Tôi muốn lưu Tiểu Thư Không Chơi Game Đối Kháng vào Yêu Thích trên MFILM thì làm sao?
 
-### 764. Match on action là gì?
+Đăng nhập rồi mở [Tiểu Thư Không Chơi Game Đối Kháng](/phim/tieu-thu-khong-choi-game-doi-khang), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Cắt cảnh khi giữ liên tục một hành động đang diễn ra.
+### 783. Muốn thuê riêng Tiểu Thư Không Chơi Game Đối Kháng thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 765. Negative space trong khung hình là gì?
+Mở [Tiểu Thư Không Chơi Game Đối Kháng](/phim/tieu-thu-khong-choi-game-doi-khang) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Khoảng không quanh chủ thể có thể cân bố cục hoặc gợi cảm xúc.
+### 784. Nếu Tiểu Thư Không Chơi Game Đối Kháng không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 766. Leading lines là gì?
+Kiểm tra đúng phim tại [Tiểu Thư Không Chơi Game Đối Kháng](/phim/tieu-thu-khong-choi-game-doi-khang), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Tiểu Thư Không Chơi Game Đối Kháng**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Các đường trong hình dẫn mắt về vùng hoặc chủ thể.
+### 785. Tôi muốn gửi link Tiểu Thư Không Chơi Game Đối Kháng trên MFILM cho bạn bè thì gửi trang nào?
 
-### 767. Rule of thirds là gì?
+Gửi trang chi tiết [Tiểu Thư Không Chơi Game Đối Kháng](/phim/tieu-thu-khong-choi-game-doi-khang), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Gợi ý đặt điểm chú ý theo các đường chia khung thành ba phần.
+### 786. Muốn chọn một tập khác của Trời Cao Nguyên Xanh trên MFILM thì bấm ở đâu?
 
-### 768. Symmetry trong bố cục là gì?
+Mở [Trời Cao Nguyên Xanh](/phim/troi-cao-nguyen-xanh) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Sự cân hoặc phản chiếu hình dạng quanh một trục.
+### 787. Tôi muốn lưu Trời Cao Nguyên Xanh vào Yêu Thích trên MFILM thì làm sao?
 
-### 769. Deep focus là gì?
+Đăng nhập rồi mở [Trời Cao Nguyên Xanh](/phim/troi-cao-nguyen-xanh), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Cách ghi hình làm nhiều lớp khoảng cách cùng trông nét.
+### 788. Muốn thuê riêng Trời Cao Nguyên Xanh thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 770. Shallow focus là gì?
+Mở [Trời Cao Nguyên Xanh](/phim/troi-cao-nguyen-xanh) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Cách ghi hình chỉ giữ một vùng khoảng cách hẹp đủ nét.
+### 789. Nếu Trời Cao Nguyên Xanh không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 771. Off-screen space là gì?
+Kiểm tra đúng phim tại [Trời Cao Nguyên Xanh](/phim/troi-cao-nguyen-xanh), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Trời Cao Nguyên Xanh**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Không gian ngoài khung hình vẫn được câu chuyện gợi tồn tại.
+### 790. Tôi muốn gửi link Trời Cao Nguyên Xanh trên MFILM cho bạn bè thì gửi trang nào?
 
-### 772. Subtle storytelling là gì?
+Gửi trang chi tiết [Trời Cao Nguyên Xanh](/phim/troi-cao-nguyen-xanh), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Kể bằng dấu hiệu tiết chế để người xem tự liên kết ý nghĩa.
+### 791. Muốn chọn một tập khác của U Linh Tích Ký trên MFILM thì bấm ở đâu?
 
-## Thói quen xem và trao đổi
+Mở [U Linh Tích Ký](/phim/u-linh-tich-ky) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 773. Xem phim khó hiểu nên dừng ghi chú không?
+### 792. Tôi muốn lưu U Linh Tích Ký vào Yêu Thích trên MFILM thì làm sao?
 
-Bạn có thể ghi nhân vật và mốc sự kiện, tránh tìm lời giải gây spoiler.
+Đăng nhập rồi mở [U Linh Tích Ký](/phim/u-linh-tich-ky), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 774. Xem phim có nhiều nhân vật nên nhớ thế nào?
+### 793. Muốn thuê riêng U Linh Tích Ký thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Ghi tên cùng quan hệ hoặc đặc điểm nổi bật của từng người.
+Mở [U Linh Tích Ký](/phim/u-linh-tich-ky) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 775. Đọc review trước phim nên tránh gì?
+### 794. Nếu U Linh Tích Ký không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Tránh bài tiết lộ bước ngoặt nếu muốn giữ trải nghiệm lần đầu.
+Kiểm tra đúng phim tại [U Linh Tích Ký](/phim/u-linh-tich-ky), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **U Linh Tích Ký**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 776. Xem phim theo nhóm chọn sao cho dễ thống nhất?
+### 795. Tôi muốn gửi link U Linh Tích Ký trên MFILM cho bạn bè thì gửi trang nào?
 
-Mỗi người nêu một điều muốn xem và một điều muốn tránh.
+Gửi trang chi tiết [U Linh Tích Ký](/phim/u-linh-tich-ky), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 777. Tranh luận phim khác ý nên nói thế nào?
+### 796. Muốn chọn một tập khác của Bạch Xà: Duyên Khởi trên MFILM thì bấm ở đâu?
 
-Nêu cảnh làm căn cứ và phân biệt cách cảm nhận với thông tin trong phim.
+Mở [Bạch Xà: Duyên Khởi](/phim/bach-xa-duyen-khoi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 778. Muốn kể về phim mà không spoiler thì nói gì?
+### 797. Tôi muốn lưu Bạch Xà: Duyên Khởi vào Yêu Thích trên MFILM thì làm sao?
 
-Nói về tiền đề, phong cách và cảm giác, tránh tiết lộ diễn biến quyết định.
+Đăng nhập rồi mở [Bạch Xà: Duyên Khởi](/phim/bach-xa-duyen-khoi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 779. Viết cảnh báo spoiler nên đặt ở đâu?
+### 798. Muốn thuê riêng Bạch Xà: Duyên Khởi thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Đặt trước phần tiết lộ để người đọc quyết định có tiếp tục không.
+Mở [Bạch Xà: Duyên Khởi](/phim/bach-xa-duyen-khoi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 780. Phim chậm có nên xem lúc đang vội không?
+### 799. Nếu Bạch Xà: Duyên Khởi không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Nếu thiếu thời gian, chọn lúc rảnh để theo nhịp và chi tiết tốt hơn.
+Kiểm tra đúng phim tại [Bạch Xà: Duyên Khởi](/phim/bach-xa-duyen-khoi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bạch Xà: Duyên Khởi**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 781. Xem nhiều phần liên tiếp nên ghi gì?
+### 800. Tôi muốn gửi link Bạch Xà: Duyên Khởi trên MFILM cho bạn bè thì gửi trang nào?
 
-Ghi phần đã xem và câu hỏi còn mở để tiếp tục không nhầm mạch.
+Gửi trang chi tiết [Bạch Xà: Duyên Khởi](/phim/bach-xa-duyen-khoi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 782. Không hiểu nhân vật làm vậy nên xem lại gì?
+### 801. Muốn chọn một tập khác của Bắt Đầu Lại Ở Thế Giới Khác trên MFILM thì bấm ở đâu?
 
-Xem mục tiêu, thông tin họ biết và các lựa chọn trước hành động đó.
+Mở [Bắt Đầu Lại Ở Thế Giới Khác](/phim/bat-dau-lai-o-the-gioi-khac) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 783. Một cảnh buồn mà tôi không buồn có sai không?
+### 802. Tôi muốn lưu Bắt Đầu Lại Ở Thế Giới Khác vào Yêu Thích trên MFILM thì làm sao?
 
-Không; cảm nhận phụ thuộc trải nghiệm và mức đồng cảm của từng người.
+Đăng nhập rồi mở [Bắt Đầu Lại Ở Thế Giới Khác](/phim/bat-dau-lai-o-the-gioi-khac), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 784. Phim được khen mà tôi không thích có bình thường không?
+### 803. Muốn thuê riêng Bắt Đầu Lại Ở Thế Giới Khác thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Có; đánh giá chung không thay thế sở thích và cảm nhận cá nhân.
+Mở [Bắt Đầu Lại Ở Thế Giới Khác](/phim/bat-dau-lai-o-the-gioi-khac) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 785. Nên so bản chuyển thể với truyện thế nào?
+### 804. Nếu Bắt Đầu Lại Ở Thế Giới Khác không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-So mục tiêu kể chuyện và tác dụng thay đổi, thay vì chỉ đếm cảnh khác.
+Kiểm tra đúng phim tại [Bắt Đầu Lại Ở Thế Giới Khác](/phim/bat-dau-lai-o-the-gioi-khac), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bắt Đầu Lại Ở Thế Giới Khác**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 786. Xem phim cũ cần chú ý bối cảnh gì?
+### 805. Tôi muốn gửi link Bắt Đầu Lại Ở Thế Giới Khác trên MFILM cho bạn bè thì gửi trang nào?
 
-Xét thời kỳ sản xuất và cách biểu đạt, vẫn có thể phản biện nội dung.
+Gửi trang chi tiết [Bắt Đầu Lại Ở Thế Giới Khác](/phim/bat-dau-lai-o-the-gioi-khac), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 787. Muốn hiểu đoạn kết nên bắt đầu từ đâu?
+### 806. Muốn chọn một tập khác của Biệt Đội Siêu Khờ trên MFILM thì bấm ở đâu?
 
-Đối chiếu cảnh cuối với mục tiêu, lựa chọn và chi tiết cài trước đó.
+Mở [Biệt Đội Siêu Khờ](/phim/biet-doi-sieu-kho) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 788. Nhận ra lỗi liên tục có làm phim vô giá trị không?
+### 807. Tôi muốn lưu Biệt Đội Siêu Khờ vào Yêu Thích trên MFILM thì làm sao?
 
-Không; đánh giá tác phẩm có thể xét nhiều mặt ngoài một lỗi nhỏ.
+Đăng nhập rồi mở [Biệt Đội Siêu Khờ](/phim/biet-doi-sieu-kho), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 789. Nên đọc phụ đề hay nhìn nét mặt nhiều hơn?
+### 808. Muốn thuê riêng Biệt Đội Siêu Khờ thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Điều chỉnh nhịp xem; có thể tạm dừng khi lời nhiều để không bỏ diễn xuất.
+Mở [Biệt Đội Siêu Khờ](/phim/biet-doi-sieu-kho) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 790. Xem lại cùng phim có ích gì?
+### 809. Nếu Biệt Đội Siêu Khờ không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Bạn có thể nhận ra chi tiết cài trước và quan hệ khó thấy lần đầu.
+Kiểm tra đúng phim tại [Biệt Đội Siêu Khờ](/phim/biet-doi-sieu-kho), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Biệt Đội Siêu Khờ**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 791. Phim hết mà còn thắc mắc có nên hỏi AI không?
+### 810. Tôi muốn gửi link Biệt Đội Siêu Khờ trên MFILM cho bạn bè thì gửi trang nào?
 
-Có; gửi câu hỏi cụ thể và cho biết bạn chấp nhận mức spoiler nào.
+Gửi trang chi tiết [Biệt Đội Siêu Khờ](/phim/biet-doi-sieu-kho), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 792. Đánh giá phim nên chấm theo tiêu chí gì?
+### 811. Muốn chọn một tập khác của Chúa Tể Bóng Tối trên MFILM thì bấm ở đâu?
 
-Có thể xét câu chuyện, diễn xuất, hình, tiếng và trải nghiệm tổng thể.
+Mở [Chúa Tể Bóng Tối](/phim/chua-te-bong-toi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 793. Có nên chấm phim khi mới xem nửa đầu không?
+### 812. Tôi muốn lưu Chúa Tể Bóng Tối vào Yêu Thích trên MFILM thì làm sao?
 
-Nên ghi rõ mới xem một phần, tránh kết luận thay cho toàn bộ tác phẩm.
+Đăng nhập rồi mở [Chúa Tể Bóng Tối](/phim/chua-te-bong-toi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 794. Tóm tắt phim nên kể mọi cảnh không?
+### 813. Muốn thuê riêng Chúa Tể Bóng Tối thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Không; giữ sự kiện chính và quan hệ nhân quả, bỏ chi tiết không cần thiết.
+Mở [Chúa Tể Bóng Tối](/phim/chua-te-bong-toi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 795. Nhớ nhầm hai nhân vật cùng tên xử lý sao?
+### 814. Nếu Chúa Tể Bóng Tối không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Đối chiếu diễn viên, quan hệ và thời điểm xuất hiện trước khi hỏi tiếp.
+Kiểm tra đúng phim tại [Chúa Tể Bóng Tối](/phim/chua-te-bong-toi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Chúa Tể Bóng Tối**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 796. Xem phim nhiều ngôn ngữ nên kiểm tra gì?
+### 815. Tôi muốn gửi link Chúa Tể Bóng Tối trên MFILM cho bạn bè thì gửi trang nào?
 
-Kiểm tra bản âm thanh và phụ đề cho từng nguồn đang phát.
+Gửi trang chi tiết [Chúa Tể Bóng Tối](/phim/chua-te-bong-toi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 797. Nên chọn phim mới hay xem lại phim thích?
+### 816. Muốn chọn một tập khác của Con Rồng Cháu Tiên trên MFILM thì bấm ở đâu?
 
-Chọn theo tâm trạng; khám phá mới và sự quen thuộc đều có giá trị.
+Mở [Con Rồng Cháu Tiên](/phim/con-rong-chau-tien) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-## Đặt yêu cầu tìm phim
+### 817. Tôi muốn lưu Con Rồng Cháu Tiên vào Yêu Thích trên MFILM thì làm sao?
 
-### 798. Muốn gợi ý phim ít nhân vật thì hỏi sao?
+Đăng nhập rồi mở [Con Rồng Cháu Tiên](/phim/con-rong-chau-tien), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Nêu muốn câu chuyện tập trung ít nhân vật và thêm thể loại bạn thích.
+### 818. Muốn thuê riêng Con Rồng Cháu Tiên thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 799. Muốn phim diễn ra ở một địa điểm thì hỏi sao?
+Mở [Con Rồng Cháu Tiên](/phim/con-rong-chau-tien) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Nêu yêu cầu bối cảnh hạn chế, thời lượng và mức căng thẳng chấp nhận.
+### 819. Nếu Con Rồng Cháu Tiên không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 800. Muốn phim có nữ chính mạnh thì mô tả sao?
+Kiểm tra đúng phim tại [Con Rồng Cháu Tiên](/phim/con-rong-chau-tien), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Con Rồng Cháu Tiên**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Nói muốn nữ chính chủ động tác động cốt truyện, không chỉ mạnh về chiến đấu.
+### 820. Tôi muốn gửi link Con Rồng Cháu Tiên trên MFILM cho bạn bè thì gửi trang nào?
 
-### 801. Muốn phim có nam chính hiền thì hỏi sao?
+Gửi trang chi tiết [Con Rồng Cháu Tiên](/phim/con-rong-chau-tien), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nêu tính cách mong muốn và các mô-típ bạn không thích.
+### 821. Muốn chọn một tập khác của Cuộc Chiến Sinh Tử II trên MFILM thì bấm ở đâu?
 
-### 802. Muốn phim về tình bạn không tình yêu thì hỏi sao?
+Mở [Cuộc Chiến Sinh Tử II](/phim/cuoc-chien-sinh-tu-ii) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Nêu trọng tâm tình bạn và muốn hạn chế tuyến tình cảm.
+### 822. Tôi muốn lưu Cuộc Chiến Sinh Tử II vào Yêu Thích trên MFILM thì làm sao?
 
-### 803. Muốn phim về anh chị em thì hỏi sao?
+Đăng nhập rồi mở [Cuộc Chiến Sinh Tử II](/phim/cuoc-chien-sinh-tu-ii), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Nêu quan hệ gia đình mong muốn và muốn không khí hài hay chính kịch.
+### 823. Muốn thuê riêng Cuộc Chiến Sinh Tử II thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 804. Muốn phim về cha con thì hỏi sao?
+Mở [Cuộc Chiến Sinh Tử II](/phim/cuoc-chien-sinh-tu-ii) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Nêu chủ đề cha con và mức buồn hoặc nhẹ nhàng bạn phù hợp.
+### 824. Nếu Cuộc Chiến Sinh Tử II không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 805. Muốn phim về mẹ con thì hỏi sao?
+Kiểm tra đúng phim tại [Cuộc Chiến Sinh Tử II](/phim/cuoc-chien-sinh-tu-ii), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cuộc Chiến Sinh Tử II**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Nêu chủ đề mẹ con, độ dài và nội dung muốn tránh.
+### 825. Tôi muốn gửi link Cuộc Chiến Sinh Tử II trên MFILM cho bạn bè thì gửi trang nào?
 
-### 806. Muốn phim về người già thì hỏi sao?
+Gửi trang chi tiết [Cuộc Chiến Sinh Tử II](/phim/cuoc-chien-sinh-tu-ii), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nêu mong muốn nhân vật lớn tuổi giữ vai trò trung tâm và thể loại phù hợp.
+### 826. Muốn chọn một tập khác của Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8) trên MFILM thì bấm ở đâu?
 
-### 807. Muốn phim về nghề bếp thì hỏi sao?
+Mở [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8)](/phim/cuoc-goi-khan-cap-9-1-1-phan-8) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Nêu muốn câu chuyện về nấu ăn hoặc nhà hàng, thêm độ dài mong muốn.
+### 827. Tôi muốn lưu Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8) vào Yêu Thích trên MFILM thì làm sao?
 
-### 808. Muốn phim về âm nhạc không musical thì hỏi sao?
+Đăng nhập rồi mở [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8)](/phim/cuoc-goi-khan-cap-9-1-1-phan-8), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Nêu muốn chủ đề nhạc sĩ nhưng không ưu tiên nhân vật hát kể chuyện.
+### 828. Muốn thuê riêng Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 809. Muốn phim thể thao không bóng đá thì hỏi sao?
+Mở [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8)](/phim/cuoc-goi-khan-cap-9-1-1-phan-8) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Nêu môn thích hoặc môn muốn loại trừ, đừng chỉ ghi thể thao.
+### 829. Nếu Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 810. Muốn phim giải đố không kinh dị thì hỏi sao?
+Kiểm tra đúng phim tại [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8)](/phim/cuoc-goi-khan-cap-9-1-1-phan-8), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Nêu thích bí ẩn và giải đố, muốn tránh yếu tố hù dọa.
+### 830. Tôi muốn gửi link Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 811. Muốn phim điều tra không bạo lực nặng thì hỏi sao?
+Gửi trang chi tiết [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 8)](/phim/cuoc-goi-khan-cap-9-1-1-phan-8), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nêu trọng tâm suy luận và mức bạo lực muốn hạn chế.
+### 831. Muốn chọn một tập khác của Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9 trên MFILM thì bấm ở đâu?
 
-### 812. Muốn phim du hành không gian thì hỏi sao?
+Mở [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9](/phim/cuoc-goi-khan-cap-9-1-1-phan-9) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Nêu bối cảnh không gian và ưu tiên khoa học hay phiêu lưu.
+### 832. Tôi muốn lưu Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9 vào Yêu Thích trên MFILM thì làm sao?
 
-### 813. Muốn phim về trí tuệ nhân tạo thì hỏi sao?
+Đăng nhập rồi mở [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9](/phim/cuoc-goi-khan-cap-9-1-1-phan-9), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Nêu muốn chủ đề AI cùng hướng triết lý, hành động hoặc cảm xúc.
+### 833. Muốn thuê riêng Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9 thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 814. Muốn phim về robot thân thiện thì hỏi sao?
+Mở [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9](/phim/cuoc-goi-khan-cap-9-1-1-phan-9) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Nêu robot là bạn đồng hành và giới hạn nội dung bạn muốn tránh.
+### 834. Nếu Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9 không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 815. Muốn phim phép thuật nhẹ nhàng thì hỏi sao?
+Kiểm tra đúng phim tại [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9](/phim/cuoc-goi-khan-cap-9-1-1-phan-9), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Nêu giả tưởng ít căng thẳng và cho biết nhóm tuổi người xem.
+### 835. Tôi muốn gửi link Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9 trên MFILM cho bạn bè thì gửi trang nào?
 
-### 816. Muốn phim về chuyến đi thì hỏi sao?
+Gửi trang chi tiết [Cuộc Gọi Khẩn Cấp 9-1-1 (Phần 9](/phim/cuoc-goi-khan-cap-9-1-1-phan-9), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nêu hành trình, nơi chốn hoặc mục đích chuyến đi bạn thích.
+### 836. Muốn chọn một tập khác của Cưới Vợ Cho Cha trên MFILM thì bấm ở đâu?
 
-### 817. Muốn phim có nhân vật làm giáo viên thì hỏi sao?
+Mở [Cưới Vợ Cho Cha](/phim/cuoi-vo-cho-cha) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Nêu môi trường trường học và vai giáo viên làm trọng tâm.
+### 837. Tôi muốn lưu Cưới Vợ Cho Cha vào Yêu Thích trên MFILM thì làm sao?
 
-### 818. Muốn phim dựa trên sách thì hỏi sao?
+Đăng nhập rồi mở [Cưới Vợ Cho Cha](/phim/cuoi-vo-cho-cha), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Nêu muốn bản chuyển thể và tên sách nếu có ưu tiên.
+### 838. Muốn thuê riêng Cưới Vợ Cho Cha thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 819. Muốn phim kết thúc kín thì hỏi sao?
+Mở [Cưới Vợ Cho Cha](/phim/cuoi-vo-cho-cha) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Nêu thích giải quyết tuyến chính, đồng thời yêu cầu tránh kể trước đoạn kết.
+### 839. Nếu Cưới Vợ Cho Cha không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 820. Muốn phim ít thoại thì hỏi sao?
+Kiểm tra đúng phim tại [Cưới Vợ Cho Cha](/phim/cuoi-vo-cho-cha), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cưới Vợ Cho Cha**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Nêu thích kể bằng hình ảnh và muốn lời thoại hạn chế.
+### 840. Tôi muốn gửi link Cưới Vợ Cho Cha trên MFILM cho bạn bè thì gửi trang nào?
 
-### 821. Muốn phim nhiều đối thoại thì hỏi sao?
+Gửi trang chi tiết [Cưới Vợ Cho Cha](/phim/cuoi-vo-cho-cha), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nêu thích tranh luận hoặc tương tác nhân vật, thêm chủ đề quan tâm.
+### 841. Muốn chọn một tập khác của Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên trên MFILM thì bấm ở đâu?
 
-### 822. Muốn phim ngắn mà có chiều sâu thì hỏi sao?
+Mở [Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên](/phim/dai-thoai-tay-du-phan-ii-tien-ly-ky-duyen) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Nêu thời gian tối đa và chủ đề, tránh chỉ yêu cầu phim hay.
+### 842. Tôi muốn lưu Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên vào Yêu Thích trên MFILM thì làm sao?
 
-## Phụ đề và bản dịch
+Đăng nhập rồi mở [Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên](/phim/dai-thoai-tay-du-phan-ii-tien-ly-ky-duyen), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 823. SDH trong phụ đề là gì?
+### 843. Muốn thuê riêng Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Phụ đề có thêm thông tin tiếng và người nói để hỗ trợ người khó nghe.
+Mở [Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên](/phim/dai-thoai-tay-du-phan-ii-tien-ly-ky-duyen) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 824. Closed captions là gì?
+### 844. Nếu Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Chú thích có thể bật tắt, thường gồm thoại và thông tin âm thanh.
+Kiểm tra đúng phim tại [Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên](/phim/dai-thoai-tay-du-phan-ii-tien-ly-ky-duyen), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 825. Forced subtitles là gì?
+### 845. Tôi muốn gửi link Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên trên MFILM cho bạn bè thì gửi trang nào?
 
-Phụ đề cho phần cần dịch riêng, như lời bằng ngôn ngữ khác.
+Gửi trang chi tiết [Đại Thoại Tây Du Phần II: Tiên Lý Kỳ Duyên](/phim/dai-thoai-tay-du-phan-ii-tien-ly-ky-duyen), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 826. SRT là loại tệp gì?
+### 846. Muốn chọn một tập khác của Đảo Hải Tặc trên MFILM thì bấm ở đâu?
 
-Tệp phụ đề văn bản chứa số thứ tự, thời gian và nội dung.
+Mở [Đảo Hải Tặc](/phim/dao-hai-tac) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 827. WebVTT là gì?
+### 847. Tôi muốn lưu Đảo Hải Tặc vào Yêu Thích trên MFILM thì làm sao?
 
-Định dạng văn bản cho phụ đề và các nội dung định thời trên web.
+Đăng nhập rồi mở [Đảo Hải Tặc](/phim/dao-hai-tac), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Tham khảo: [WebVTT — MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API).
+### 848. Muốn thuê riêng Đảo Hải Tặc thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 828. ASS subtitle là gì?
+Mở [Đảo Hải Tặc](/phim/dao-hai-tac) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Định dạng phụ đề hỗ trợ kiểu chữ, vị trí và hiệu ứng.
+### 849. Nếu Đảo Hải Tặc không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 829. Subtitle cue là gì?
+Kiểm tra đúng phim tại [Đảo Hải Tặc](/phim/dao-hai-tac), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đảo Hải Tặc**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Một mục phụ đề có nội dung cùng thời điểm bắt đầu và kết thúc.
+### 850. Tôi muốn gửi link Đảo Hải Tặc trên MFILM cho bạn bè thì gửi trang nào?
 
-Tham khảo: [WebVTT — MDN](https://developer.mozilla.org/en-US/docs/Web/API/WebVTT_API).
+Gửi trang chi tiết [Đảo Hải Tặc](/phim/dao-hai-tac), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 830. Timecode trong phụ đề là gì?
+### 851. Muốn chọn một tập khác của Đấu Phá Thương Khung (Phần 5) trên MFILM thì bấm ở đâu?
 
-Mốc thời gian dùng xác định khi dòng chữ xuất hiện hoặc biến mất.
+Mở [Đấu Phá Thương Khung (Phần 5)](/phim/dau-pha-thuong-khung-phan-5) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 831. Phụ đề có ký hiệu nốt nhạc nghĩa gì?
+### 852. Tôi muốn lưu Đấu Phá Thương Khung (Phần 5) vào Yêu Thích trên MFILM thì làm sao?
 
-Thường đánh dấu lời hát hoặc nội dung âm nhạc đang nghe.
+Đăng nhập rồi mở [Đấu Phá Thương Khung (Phần 5)](/phim/dau-pha-thuong-khung-phan-5), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 832. Phụ đề ghi tên trong ngoặc để làm gì?
+### 853. Muốn thuê riêng Đấu Phá Thương Khung (Phần 5) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Giúp nhận diện người nói khi hình ảnh hoặc tiếng chưa rõ.
+Mở [Đấu Phá Thương Khung (Phần 5)](/phim/dau-pha-thuong-khung-phan-5) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 833. Phụ đề ghi tiếng cửa đóng để làm gì?
+### 854. Nếu Đấu Phá Thương Khung (Phần 5) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Truyền đạt thông tin âm thanh có ý nghĩa cho người không nghe rõ.
+Kiểm tra đúng phim tại [Đấu Phá Thương Khung (Phần 5)](/phim/dau-pha-thuong-khung-phan-5), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đấu Phá Thương Khung (Phần 5)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 834. Fansub là gì?
+### 855. Tôi muốn gửi link Đấu Phá Thương Khung (Phần 5) trên MFILM cho bạn bè thì gửi trang nào?
 
-Bản phụ đề do cộng đồng người hâm mộ thực hiện.
+Gửi trang chi tiết [Đấu Phá Thương Khung (Phần 5)](/phim/dau-pha-thuong-khung-phan-5), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 835. Localization khác dịch từng chữ thế nào?
+### 856. Muốn chọn một tập khác của Giao Phong trên MFILM thì bấm ở đâu?
 
-Điều chỉnh cách biểu đạt để phù hợp ngữ cảnh và người tiếp nhận.
+Mở [Giao Phong](/phim/giao-phong) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 836. Literal translation là gì?
+### 857. Tôi muốn lưu Giao Phong vào Yêu Thích trên MFILM thì làm sao?
 
-Dịch gần cấu trúc và nghĩa trực tiếp của văn bản gốc.
+Đăng nhập rồi mở [Giao Phong](/phim/giao-phong), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 837. Transcreation là gì?
+### 858. Muốn thuê riêng Giao Phong thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Chuyển ý sáng tạo để giữ tác dụng hơn là từng từ.
+Mở [Giao Phong](/phim/giao-phong) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 838. Honorific trong phụ đề Nhật là gì?
+### 859. Nếu Giao Phong không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Hậu tố xưng hô thể hiện quan hệ hoặc mức lịch sự.
+Kiểm tra đúng phim tại [Giao Phong](/phim/giao-phong), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Giao Phong**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 839. Romanization là gì?
+### 860. Tôi muốn gửi link Giao Phong trên MFILM cho bạn bè thì gửi trang nào?
 
-Biểu diễn một hệ chữ bằng chữ Latinh.
+Gửi trang chi tiết [Giao Phong](/phim/giao-phong), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 840. Phụ đề hai dòng có phải lỗi không?
+### 861. Muốn chọn một tập khác của Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2) trên MFILM thì bấm ở đâu?
 
-Không; cách chia dòng thường giúp đọc trong thời gian hiển thị.
+Mở [Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2)](/phim/hell-mode-game-thu-xuat-chung-tung-hoanh-chon-di-gioi-hon-nguyen-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 841. Phụ đề biến mất nhanh có phải video tua không?
+### 862. Tôi muốn lưu Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-Chưa chắc; thời gian từng dòng có thể ngắn hoặc dữ liệu phụ đề lỗi.
+Đăng nhập rồi mở [Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2)](/phim/hell-mode-game-thu-xuat-chung-tung-hoanh-chon-di-gioi-hon-nguyen-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 842. Phụ đề không dấu có phải máy tôi hỏng không?
+### 863. Muốn thuê riêng Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Không chắc; nguồn có thể không dấu hoặc gặp lỗi mã hóa.
+Mở [Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2)](/phim/hell-mode-game-thu-xuat-chung-tung-hoanh-chon-di-gioi-hon-nguyen-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 843. Chữ phụ đề thành ký tự lạ thường do gì?
+### 864. Nếu Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Có thể do mã hóa văn bản không được đọc đúng.
+Kiểm tra đúng phim tại [Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2)](/phim/hell-mode-game-thu-xuat-chung-tung-hoanh-chon-di-gioi-hon-nguyen-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 844. Bản dịch tên riêng khác nhau xử lý sao?
+### 865. Tôi muốn gửi link Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-Đối chiếu tên gốc và nhân vật trước khi cho rằng là hai người.
+Gửi trang chi tiết [Hell Mode: Game Thủ Xuất Chúng Tung Hoành Chốn Dị Giới Hỗn Nguyên (Phần 2)](/phim/hell-mode-game-thu-xuat-chung-tung-hoanh-chon-di-gioi-hon-nguyen-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 845. Phụ đề có lược lời đùa có hợp lý không?
+### 866. Muốn chọn một tập khác của Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja trên MFILM thì bấm ở đâu?
 
-Có thể để đủ thời gian đọc; nên xét tác dụng và ngữ cảnh bản dịch.
+Mở [Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja](/phim/hien-gia-manh-nhat-voi-dau-an-yeu-nhat-shikkakumon-no-saikyou-kenja) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 846. Có thể thay phụ đề trên video nhúng bằng chat không?
+### 867. Tôi muốn lưu Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja vào Yêu Thích trên MFILM thì làm sao?
 
-Không; chatbot không sửa trực tiếp điều khiển hoặc dữ liệu nguồn nhúng.
+Đăng nhập rồi mở [Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja](/phim/hien-gia-manh-nhat-voi-dau-an-yeu-nhat-shikkakumon-no-saikyou-kenja), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 847. Phụ đề che nội dung quan trọng nên làm gì?
+### 868. Muốn thuê riêng Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Thử tùy chọn vị trí hoặc nguồn khác nếu trình phát hỗ trợ.
+Mở [Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja](/phim/hien-gia-manh-nhat-voi-dau-an-yeu-nhat-shikkakumon-no-saikyou-kenja) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-## Tệp và dữ liệu video
+### 869. Nếu Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 848. Container video là gì?
+Kiểm tra đúng phim tại [Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja](/phim/hien-gia-manh-nhat-voi-dau-an-yeu-nhat-shikkakumon-no-saikyou-kenja), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Định dạng chứa các luồng hình, tiếng và dữ liệu liên quan.
+### 870. Tôi muốn gửi link Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja trên MFILM cho bạn bè thì gửi trang nào?
 
-### 849. MKV là gì?
+Gửi trang chi tiết [Hiền Giả Mạnh Nhất Với Dấu Ấn Yếu Nhất / Shikkakumon no Saikyou Kenja](/phim/hien-gia-manh-nhat-voi-dau-an-yeu-nhat-shikkakumon-no-saikyou-kenja), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Định dạng container có thể chứa nhiều luồng media và phụ đề.
+### 871. Muốn chọn một tập khác của Hồi Kết Của Kẻ Làm Tiền Giả trên MFILM thì bấm ở đâu?
 
-### 850. WebM là gì?
+Mở [Hồi Kết Của Kẻ Làm Tiền Giả](/phim/hoi-ket-cua-ke-lam-tien-gia) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Định dạng container được dùng cho media trên web.
+### 872. Tôi muốn lưu Hồi Kết Của Kẻ Làm Tiền Giả vào Yêu Thích trên MFILM thì làm sao?
 
-### 851. MOV là gì?
+Đăng nhập rồi mở [Hồi Kết Của Kẻ Làm Tiền Giả](/phim/hoi-ket-cua-ke-lam-tien-gia), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Định dạng container gắn với hệ QuickTime, chứa các luồng media.
+### 873. Muốn thuê riêng Hồi Kết Của Kẻ Làm Tiền Giả thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 852. HLS là gì?
+Mở [Hồi Kết Của Kẻ Làm Tiền Giả](/phim/hoi-ket-cua-ke-lam-tien-gia) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Cách truyền media theo danh sách và các đoạn để phát qua HTTP.
+### 874. Nếu Hồi Kết Của Kẻ Làm Tiền Giả không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 853. M3U8 là gì?
+Kiểm tra đúng phim tại [Hồi Kết Của Kẻ Làm Tiền Giả](/phim/hoi-ket-cua-ke-lam-tien-gia), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Hồi Kết Của Kẻ Làm Tiền Giả**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Tệp danh sách phát dùng mã hóa UTF-8, thường gặp trong HLS.
+### 875. Tôi muốn gửi link Hồi Kết Của Kẻ Làm Tiền Giả trên MFILM cho bạn bè thì gửi trang nào?
 
-### 854. MPEG-DASH là gì?
+Gửi trang chi tiết [Hồi Kết Của Kẻ Làm Tiền Giả](/phim/hoi-ket-cua-ke-lam-tien-gia), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Chuẩn truyền media theo đoạn với thông tin mô tả các bản phát.
+### 876. Muốn chọn một tập khác của Khải Giáp Chân Truyền trên MFILM thì bấm ở đâu?
 
-### 855. Media segment là gì?
+Mở [Khải Giáp Chân Truyền](/phim/khai-giap-chan-truyen) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Một phần nhỏ của nội dung được tải và phát theo chuỗi.
+### 877. Tôi muốn lưu Khải Giáp Chân Truyền vào Yêu Thích trên MFILM thì làm sao?
 
-### 856. Manifest của video là gì?
+Đăng nhập rồi mở [Khải Giáp Chân Truyền](/phim/khai-giap-chan-truyen), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Tệp mô tả các luồng, đoạn hoặc lựa chọn cần để phát.
+### 878. Muốn thuê riêng Khải Giáp Chân Truyền thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 857. Adaptive bitrate streaming là gì?
+Mở [Khải Giáp Chân Truyền](/phim/khai-giap-chan-truyen) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Thay đổi bản bitrate theo điều kiện mạng và khả năng phát.
+### 879. Nếu Khải Giáp Chân Truyền không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 858. Buffer video là gì?
+Kiểm tra đúng phim tại [Khải Giáp Chân Truyền](/phim/khai-giap-chan-truyen), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Khải Giáp Chân Truyền**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Phần dữ liệu tải trước để hỗ trợ phát liên tục.
+### 880. Tôi muốn gửi link Khải Giáp Chân Truyền trên MFILM cho bạn bè thì gửi trang nào?
 
-### 859. Buffer underrun là gì?
+Gửi trang chi tiết [Khải Giáp Chân Truyền](/phim/khai-giap-chan-truyen), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Dữ liệu chờ phát hết trước khi đoạn tiếp tải đủ.
+### 881. Muốn chọn một tập khác của Ma Thuật Thực Hành trên MFILM thì bấm ở đâu?
 
-### 860. Video seek là gì?
+Mở [Ma Thuật Thực Hành](/phim/ma-thuat-thuc-hanh) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Chuyển vị trí phát đến một mốc thời gian khác.
+### 882. Tôi muốn lưu Ma Thuật Thực Hành vào Yêu Thích trên MFILM thì làm sao?
 
-### 861. I-frame là gì?
+Đăng nhập rồi mở [Ma Thuật Thực Hành](/phim/ma-thuat-thuc-hanh), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Khung được mã hóa không cần tham chiếu khung khác để giải mã hình đó.
+### 883. Muốn thuê riêng Ma Thuật Thực Hành thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 862. P-frame là gì?
+Mở [Ma Thuật Thực Hành](/phim/ma-thuat-thuc-hanh) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Khung dùng dự đoán từ khung tham chiếu trước trong mã hóa.
+### 884. Nếu Ma Thuật Thực Hành không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 863. B-frame là gì?
+Kiểm tra đúng phim tại [Ma Thuật Thực Hành](/phim/ma-thuat-thuc-hanh), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Ma Thuật Thực Hành**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Khung có thể dùng dự đoán từ các khung tham chiếu trước và sau.
+### 885. Tôi muốn gửi link Ma Thuật Thực Hành trên MFILM cho bạn bè thì gửi trang nào?
 
-### 864. GOP trong video là gì?
+Gửi trang chi tiết [Ma Thuật Thực Hành](/phim/ma-thuat-thuc-hanh), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nhóm khung được tổ chức theo cấu trúc mã hóa và tham chiếu.
+### 886. Muốn chọn một tập khác của Người Quyết Định trên MFILM thì bấm ở đâu?
 
-### 865. Chroma subsampling là gì?
+Mở [Người Quyết Định](/phim/nguoi-quyet-dinh) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Giảm dữ liệu màu so với dữ liệu độ sáng để tiết kiệm dung lượng.
+### 887. Tôi muốn lưu Người Quyết Định vào Yêu Thích trên MFILM thì làm sao?
 
-### 866. Bit depth hình ảnh là gì?
+Đăng nhập rồi mở [Người Quyết Định](/phim/nguoi-quyet-dinh), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Số bit dùng biểu diễn mức giá trị của một thành phần màu.
+### 888. Muốn thuê riêng Người Quyết Định thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 867. Interlaced video là gì?
+Mở [Người Quyết Định](/phim/nguoi-quyet-dinh) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Video lưu hình theo các trường quét xen thay vì toàn khung cùng lúc.
+### 889. Nếu Người Quyết Định không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 868. Progressive video là gì?
+Kiểm tra đúng phim tại [Người Quyết Định](/phim/nguoi-quyet-dinh), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Người Quyết Định**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Video biểu diễn các dòng của mỗi khung theo dạng đầy đủ.
+### 890. Tôi muốn gửi link Người Quyết Định trên MFILM cho bạn bè thì gửi trang nào?
 
-### 869. Deinterlacing là gì?
+Gửi trang chi tiết [Người Quyết Định](/phim/nguoi-quyet-dinh), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Chuyển tín hiệu quét xen thành khung phù hợp hiển thị quét liên tục.
+### 891. Muốn chọn một tập khác của Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem trên MFILM thì bấm ở đâu?
 
-### 870. Variable frame rate là gì?
+Mở [Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem](/phim/nhung-loi-tran-troi-noi-tieng-gloria-steinem) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Tốc độ khung hình có thể thay đổi trong cùng video.
+### 892. Tôi muốn lưu Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem vào Yêu Thích trên MFILM thì làm sao?
 
-### 871. Constant frame rate là gì?
+Đăng nhập rồi mở [Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem](/phim/nhung-loi-tran-troi-noi-tieng-gloria-steinem), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Khung hình được biểu diễn với tốc độ ổn định.
+### 893. Muốn thuê riêng Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 872. Transcoding là gì?
+Mở [Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem](/phim/nhung-loi-tran-troi-noi-tieng-gloria-steinem) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Chuyển media từ kiểu mã hóa hoặc cấu hình sang kiểu khác.
+### 894. Nếu Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-## Mạng và kết nối
+Kiểm tra đúng phim tại [Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem](/phim/nhung-loi-tran-troi-noi-tieng-gloria-steinem), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 873. Bandwidth mạng là gì?
+### 895. Tôi muốn gửi link Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem trên MFILM cho bạn bè thì gửi trang nào?
 
-Khả năng truyền dữ liệu của kết nối trong một khoảng thời gian.
+Gửi trang chi tiết [Những Lời Trăn Trối Nổi Tiếng: Gloria Steinem](/phim/nhung-loi-tran-troi-noi-tieng-gloria-steinem), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 874. Latency mạng là gì?
+### 896. Muốn chọn một tập khác của Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)! trên MFILM thì bấm ở đâu?
 
-Độ trễ để dữ liệu hoặc phản hồi đi qua kết nối.
+Mở [Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)!](/phim/nu-anh-hung-thanh-nu-khong-toi-chi-la-mot-hau-gai-dam-dang-va-tu-hao-ve-dieu-do) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 875. Jitter mạng là gì?
+### 897. Tôi muốn lưu Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)! vào Yêu Thích trên MFILM thì làm sao?
 
-Sự thay đổi độ trễ giữa các lần truyền.
+Đăng nhập rồi mở [Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)!](/phim/nu-anh-hung-thanh-nu-khong-toi-chi-la-mot-hau-gai-dam-dang-va-tu-hao-ve-dieu-do), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 876. Packet loss là gì?
+### 898. Muốn thuê riêng Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)! thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Một phần gói dữ liệu không đến được nơi nhận.
+Mở [Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)!](/phim/nu-anh-hung-thanh-nu-khong-toi-chi-la-mot-hau-gai-dam-dang-va-tu-hao-ve-dieu-do) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 877. Ping đo gì?
+### 899. Nếu Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)! không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Thường đo thời gian khứ hồi của một trao đổi kiểm tra mạng.
+Kiểm tra đúng phim tại [Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)!](/phim/nu-anh-hung-thanh-nu-khong-toi-chi-la-mot-hau-gai-dam-dang-va-tu-hao-ve-dieu-do), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)!**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 878. DNS dùng làm gì?
+### 900. Tôi muốn gửi link Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)! trên MFILM cho bạn bè thì gửi trang nào?
 
-Tra cứu tên miền thành thông tin cần để kết nối, như địa chỉ IP.
+Gửi trang chi tiết [Nữ Anh Hùng? Thánh Nữ? Không, Tôi Chỉ Là Một Hầu Gái Đảm Đang (Và Tự Hào Về Điều Đó)!](/phim/nu-anh-hung-thanh-nu-khong-toi-chi-la-mot-hau-gai-dam-dang-va-tu-hao-ve-dieu-do), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 879. IP address là gì?
+### 901. Muốn chọn một tập khác của Phong Thần Bảng (Đát Kỷ Trụ Vương) trên MFILM thì bấm ở đâu?
 
-Địa chỉ dùng nhận diện điểm kết nối trong mạng IP.
+Mở [Phong Thần Bảng (Đát Kỷ Trụ Vương)](/phim/phong-than-bang-dat-ky-tru-vuong) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 880. IPv4 khác IPv6 cơ bản thế nào?
+### 902. Tôi muốn lưu Phong Thần Bảng (Đát Kỷ Trụ Vương) vào Yêu Thích trên MFILM thì làm sao?
 
-IPv4 dùng địa chỉ 32 bit; IPv6 dùng 128 bit.
+Đăng nhập rồi mở [Phong Thần Bảng (Đát Kỷ Trụ Vương)](/phim/phong-than-bang-dat-ky-tru-vuong), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 881. Router làm gì?
+### 903. Muốn thuê riêng Phong Thần Bảng (Đát Kỷ Trụ Vương) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Chuyển dữ liệu giữa các mạng theo thông tin định tuyến.
+Mở [Phong Thần Bảng (Đát Kỷ Trụ Vương)](/phim/phong-than-bang-dat-ky-tru-vuong) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 882. Modem làm gì?
+### 904. Nếu Phong Thần Bảng (Đát Kỷ Trụ Vương) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Chuyển đổi tín hiệu để kết nối với đường truyền của nhà mạng.
+Kiểm tra đúng phim tại [Phong Thần Bảng (Đát Kỷ Trụ Vương)](/phim/phong-than-bang-dat-ky-tru-vuong), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Phong Thần Bảng (Đát Kỷ Trụ Vương)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 883. Wi-Fi khác internet thế nào?
+### 905. Tôi muốn gửi link Phong Thần Bảng (Đát Kỷ Trụ Vương) trên MFILM cho bạn bè thì gửi trang nào?
 
-Wi-Fi là kết nối không dây cục bộ; internet là mạng liên kết rộng.
+Gửi trang chi tiết [Phong Thần Bảng (Đát Kỷ Trụ Vương)](/phim/phong-than-bang-dat-ky-tru-vuong), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 884. Ethernet là gì?
+### 906. Muốn chọn một tập khác của Play Me: Buổi Diễn Tập Của Chúng Ta trên MFILM thì bấm ở đâu?
 
-Nhóm công nghệ mạng có dây dùng phổ biến trong mạng cục bộ.
+Mở [Play Me: Buổi Diễn Tập Của Chúng Ta](/phim/play-me-buoi-dien-tap-cua-chung-ta) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 885. LAN là gì?
+### 907. Tôi muốn lưu Play Me: Buổi Diễn Tập Của Chúng Ta vào Yêu Thích trên MFILM thì làm sao?
 
-Mạng cục bộ trong phạm vi như nhà hoặc văn phòng.
+Đăng nhập rồi mở [Play Me: Buổi Diễn Tập Của Chúng Ta](/phim/play-me-buoi-dien-tap-cua-chung-ta), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 886. WAN là gì?
+### 908. Muốn thuê riêng Play Me: Buổi Diễn Tập Của Chúng Ta thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Mạng kết nối trên phạm vi rộng hơn mạng cục bộ.
+Mở [Play Me: Buổi Diễn Tập Của Chúng Ta](/phim/play-me-buoi-dien-tap-cua-chung-ta) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 887. CDN làm gì?
+### 909. Nếu Play Me: Buổi Diễn Tập Của Chúng Ta không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Phân phối nội dung qua nhiều điểm phục vụ gần hoặc phù hợp người dùng.
+Kiểm tra đúng phim tại [Play Me: Buổi Diễn Tập Của Chúng Ta](/phim/play-me-buoi-dien-tap-cua-chung-ta), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Play Me: Buổi Diễn Tập Của Chúng Ta**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 888. Proxy là gì?
+### 910. Tôi muốn gửi link Play Me: Buổi Diễn Tập Của Chúng Ta trên MFILM cho bạn bè thì gửi trang nào?
 
-Máy hoặc dịch vụ trung gian xử lý kết nối thay cho một phía.
+Gửi trang chi tiết [Play Me: Buổi Diễn Tập Của Chúng Ta](/phim/play-me-buoi-dien-tap-cua-chung-ta), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 889. NAT là gì?
+### 911. Muốn chọn một tập khác của Sự Thật Trần Trụi trên MFILM thì bấm ở đâu?
 
-Chuyển đổi thông tin địa chỉ giữa các mạng khi truyền dữ liệu.
+Mở [Sự Thật Trần Trụi](/phim/su-that-tran-trui) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 890. Firewall là gì?
+### 912. Tôi muốn lưu Sự Thật Trần Trụi vào Yêu Thích trên MFILM thì làm sao?
 
-Cơ chế lọc lưu lượng theo quy tắc được đặt.
+Đăng nhập rồi mở [Sự Thật Trần Trụi](/phim/su-that-tran-trui), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 891. Upload khác download thế nào?
+### 913. Muốn thuê riêng Sự Thật Trần Trụi thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Upload gửi dữ liệu lên; download nhận dữ liệu về.
+Mở [Sự Thật Trần Trụi](/phim/su-that-tran-trui) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 892. Mbps khác MB/s thế nào?
+### 914. Nếu Sự Thật Trần Trụi không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Mbps tính megabit mỗi giây; MB/s tính megabyte mỗi giây.
+Kiểm tra đúng phim tại [Sự Thật Trần Trụi](/phim/su-that-tran-trui), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Sự Thật Trần Trụi**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 893. Wi-Fi đủ vạch có chắc internet tốt không?
+### 915. Tôi muốn gửi link Sự Thật Trần Trụi trên MFILM cho bạn bè thì gửi trang nào?
 
-Không; vạch sóng chỉ phản ánh một phần kết nối không dây.
+Gửi trang chi tiết [Sự Thật Trần Trụi](/phim/su-that-tran-trui), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 894. Speed test tốt có đảm bảo mọi video mượt không?
+### 916. Muốn chọn một tập khác của Tàu Buôn Người trên MFILM thì bấm ở đâu?
 
-Không; đường đến nguồn phim và tải máy chủ có thể khác.
+Mở [Tàu Buôn Người](/phim/tau-buon-nguoi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 895. Nhiều người dùng chung mạng có ảnh hưởng phim không?
+### 917. Tôi muốn lưu Tàu Buôn Người vào Yêu Thích trên MFILM thì làm sao?
 
-Có thể; các tác vụ chia sẻ băng thông và làm tăng độ trễ.
+Đăng nhập rồi mở [Tàu Buôn Người](/phim/tau-buon-nguoi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 896. Tải tệp lớn lúc xem phim có gây đứng không?
+### 918. Muốn thuê riêng Tàu Buôn Người thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Có thể, nếu việc tải cạnh tranh dữ liệu mà video cần.
+Mở [Tàu Buôn Người](/phim/tau-buon-nguoi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 897. Đổi DNS có tự tăng tốc mọi phim không?
+### 919. Nếu Tàu Buôn Người không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Không; DNS chủ yếu hỗ trợ tra cứu, không sửa mọi nút nghẽn truyền video.
+Kiểm tra đúng phim tại [Tàu Buôn Người](/phim/tau-buon-nguoi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Tàu Buôn Người**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-## Khái niệm trình duyệt
+### 920. Tôi muốn gửi link Tàu Buôn Người trên MFILM cho bạn bè thì gửi trang nào?
 
-### 898. Viewport trình duyệt là gì?
+Gửi trang chi tiết [Tàu Buôn Người](/phim/tau-buon-nguoi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Vùng nhìn thấy của trang trong cửa sổ trình duyệt.
+### 921. Muốn chọn một tập khác của Tuyệt Thế Chiến Hồn trên MFILM thì bấm ở đâu?
 
-### 899. Breakpoint responsive là gì?
+Mở [Tuyệt Thế Chiến Hồn](/phim/tuyet-the-chien-hon) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Mốc kích thước để quy tắc giao diện thay đổi.
+### 922. Tôi muốn lưu Tuyệt Thế Chiến Hồn vào Yêu Thích trên MFILM thì làm sao?
 
-### 900. Responsive layout là gì?
+Đăng nhập rồi mở [Tuyệt Thế Chiến Hồn](/phim/tuyet-the-chien-hon), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Bố cục thích nghi theo không gian màn hình.
+### 923. Muốn thuê riêng Tuyệt Thế Chiến Hồn thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 901. Page reflow là gì?
+Mở [Tuyệt Thế Chiến Hồn](/phim/tuyet-the-chien-hon) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Tính lại vị trí và kích thước các phần tử trên trang.
+### 924. Nếu Tuyệt Thế Chiến Hồn không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 902. Page repaint là gì?
+Kiểm tra đúng phim tại [Tuyệt Thế Chiến Hồn](/phim/tuyet-the-chien-hon), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Tuyệt Thế Chiến Hồn**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Vẽ lại hình hiển thị khi nội dung hoặc cách thể hiện thay đổi.
+### 925. Tôi muốn gửi link Tuyệt Thế Chiến Hồn trên MFILM cho bạn bè thì gửi trang nào?
 
-### 903. Lazy loading là gì?
+Gửi trang chi tiết [Tuyệt Thế Chiến Hồn](/phim/tuyet-the-chien-hon), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Trì hoãn tải nội dung tới khi có nhu cầu.
+### 926. Muốn chọn một tập khác của Vua Hài Kịch trên MFILM thì bấm ở đâu?
 
-### 904. Prefetch là gì?
+Mở [Vua Hài Kịch](/phim/vua-hai-kich) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Tải trước tài nguyên có thể cần trong bước tiếp theo.
+### 927. Tôi muốn lưu Vua Hài Kịch vào Yêu Thích trên MFILM thì làm sao?
 
-### 905. Preload là gì?
+Đăng nhập rồi mở [Vua Hài Kịch](/phim/vua-hai-kich), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Báo trình duyệt ưu tiên tải tài nguyên cần sớm.
+### 928. Muốn thuê riêng Vua Hài Kịch thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 906. Service worker là gì?
+Mở [Vua Hài Kịch](/phim/vua-hai-kich) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Mã chạy tách trang, có thể xử lý yêu cầu mạng và tác vụ hỗ trợ.
+### 929. Nếu Vua Hài Kịch không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 907. LocalStorage là gì?
+Kiểm tra đúng phim tại [Vua Hài Kịch](/phim/vua-hai-kich), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Vua Hài Kịch**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Kho dữ liệu chuỗi theo nguồn trang, thường tồn tại qua các phiên.
+### 930. Tôi muốn gửi link Vua Hài Kịch trên MFILM cho bạn bè thì gửi trang nào?
 
-### 908. SessionStorage là gì?
+Gửi trang chi tiết [Vua Hài Kịch](/phim/vua-hai-kich), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Kho dữ liệu theo nguồn trang và phiên tab.
+### 931. Muốn chọn một tập khác của Anh Cũng Có Ngày Này trên MFILM thì bấm ở đâu?
 
-### 909. IndexedDB là gì?
+Mở [Anh Cũng Có Ngày Này](/phim/anh-cung-co-ngay-nay) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Cơ sở dữ liệu cục bộ để ứng dụng web lưu dữ liệu có cấu trúc.
+### 932. Tôi muốn lưu Anh Cũng Có Ngày Này vào Yêu Thích trên MFILM thì làm sao?
 
-### 910. DOM là gì?
+Đăng nhập rồi mở [Anh Cũng Có Ngày Này](/phim/anh-cung-co-ngay-nay), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Mô hình dạng cây biểu diễn nội dung tài liệu để mã truy cập.
+### 933. Muốn thuê riêng Anh Cũng Có Ngày Này thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 911. CSS làm gì?
+Mở [Anh Cũng Có Ngày Này](/phim/anh-cung-co-ngay-nay) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Quy định cách trình bày như màu, bố cục và kích thước.
+### 934. Nếu Anh Cũng Có Ngày Này không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 912. HTML làm gì?
+Kiểm tra đúng phim tại [Anh Cũng Có Ngày Này](/phim/anh-cung-co-ngay-nay), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Anh Cũng Có Ngày Này**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Mô tả cấu trúc và ý nghĩa nội dung trang web.
+### 935. Tôi muốn gửi link Anh Cũng Có Ngày Này trên MFILM cho bạn bè thì gửi trang nào?
 
-### 913. JavaScript làm gì trong trang web?
+Gửi trang chi tiết [Anh Cũng Có Ngày Này](/phim/anh-cung-co-ngay-nay), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Xử lý hành vi, tương tác và cập nhật nội dung theo chương trình.
+### 936. Muốn chọn một tập khác của Anh Hùng trên MFILM thì bấm ở đâu?
 
-### 914. Web accessibility là gì?
+Mở [Anh Hùng](/phim/anh-hung) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Khả năng dùng web của người có các nhu cầu và cách tương tác khác nhau.
+### 937. Tôi muốn lưu Anh Hùng vào Yêu Thích trên MFILM thì làm sao?
 
-### 915. Alt text của ảnh là gì?
+Đăng nhập rồi mở [Anh Hùng](/phim/anh-hung), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Văn bản thay thế diễn đạt nội dung hoặc chức năng của ảnh.
+### 938. Muốn thuê riêng Anh Hùng thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 916. Focus bàn phím là gì?
+Mở [Anh Hùng](/phim/anh-hung) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Phần tử đang nhận thao tác từ bàn phím.
+### 939. Nếu Anh Hùng không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 917. Tab order là gì?
+Kiểm tra đúng phim tại [Anh Hùng](/phim/anh-hung), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Anh Hùng**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Thứ tự các phần tử được chuyển đến bằng phím Tab.
+### 940. Tôi muốn gửi link Anh Hùng trên MFILM cho bạn bè thì gửi trang nào?
 
-### 918. ARIA label là gì?
+Gửi trang chi tiết [Anh Hùng](/phim/anh-hung), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Thông tin tên hỗ trợ công nghệ trợ năng nhận diện phần tử.
+### 941. Muốn chọn một tập khác của Đánh Quái trên MFILM thì bấm ở đâu?
 
-### 919. Horizontal overflow là gì?
+Mở [Đánh Quái](/phim/danh-quai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Nội dung vượt chiều ngang vùng chứa.
+### 942. Tôi muốn lưu Đánh Quái vào Yêu Thích trên MFILM thì làm sao?
 
-### 920. Scrollbar dùng làm gì?
+Đăng nhập rồi mở [Đánh Quái](/phim/danh-quai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Cho phép chuyển phần nội dung đang thấy trong vùng có thể cuộn.
+### 943. Muốn thuê riêng Đánh Quái thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 921. Media query là gì?
+Mở [Đánh Quái](/phim/danh-quai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Quy tắc CSS áp dụng theo điều kiện môi trường như kích thước hiển thị.
+### 944. Nếu Đánh Quái không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 922. Browser extension là gì?
+Kiểm tra đúng phim tại [Đánh Quái](/phim/danh-quai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đánh Quái**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Phần mở rộng bổ sung hành vi hoặc chức năng cho trình duyệt.
+### 945. Tôi muốn gửi link Đánh Quái trên MFILM cho bạn bè thì gửi trang nào?
 
-## Máy tính và dữ liệu
+Gửi trang chi tiết [Đánh Quái](/phim/danh-quai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 923. RAM dùng làm gì?
+### 946. Muốn chọn một tập khác của Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn) trên MFILM thì bấm ở đâu?
 
-Lưu dữ liệu làm việc để máy truy cập nhanh khi chương trình chạy.
+Mở [Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn)](/phim/dau-la-dai-luc-2-tuyet-the-duong-mon) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 924. SSD khác HDD ở đâu?
+### 947. Tôi muốn lưu Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn) vào Yêu Thích trên MFILM thì làm sao?
 
-SSD lưu bằng linh kiện điện tử; HDD dùng đĩa từ quay.
+Đăng nhập rồi mở [Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn)](/phim/dau-la-dai-luc-2-tuyet-the-duong-mon), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 925. CPU làm gì?
+### 948. Muốn thuê riêng Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Thực hiện lệnh và các xử lý chung của máy tính.
+Mở [Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn)](/phim/dau-la-dai-luc-2-tuyet-the-duong-mon) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 926. GPU làm gì?
+### 949. Nếu Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Xử lý nhiều tác vụ song song, đặc biệt hình ảnh và đồ họa.
+Kiểm tra đúng phim tại [Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn)](/phim/dau-la-dai-luc-2-tuyet-the-duong-mon), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 927. VRAM là gì?
+### 950. Tôi muốn gửi link Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn) trên MFILM cho bạn bè thì gửi trang nào?
 
-Bộ nhớ phục vụ xử lý đồ họa trên GPU.
+Gửi trang chi tiết [Đấu La Đại Lục 2 (Tuyệt Thế Đường Môn)](/phim/dau-la-dai-luc-2-tuyet-the-duong-mon), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 928. Operating system là gì?
+### 951. Muốn chọn một tập khác của Đối Chứng trên MFILM thì bấm ở đâu?
 
-Phần mềm quản lý tài nguyên máy và môi trường chạy ứng dụng.
+Mở [Đối Chứng](/phim/doi-chung) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 929. Driver thiết bị là gì?
+### 952. Tôi muốn lưu Đối Chứng vào Yêu Thích trên MFILM thì làm sao?
 
-Phần mềm giúp hệ điều hành làm việc với thiết bị.
+Đăng nhập rồi mở [Đối Chứng](/phim/doi-chung), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 930. Process máy tính là gì?
+### 953. Muốn thuê riêng Đối Chứng thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Một phiên thực thi chương trình cùng tài nguyên liên quan.
+Mở [Đối Chứng](/phim/doi-chung) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 931. Thread là gì?
+### 954. Nếu Đối Chứng không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Luồng thực thi bên trong tiến trình.
+Kiểm tra đúng phim tại [Đối Chứng](/phim/doi-chung), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Đối Chứng**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 932. Multitasking là gì?
+### 955. Tôi muốn gửi link Đối Chứng trên MFILM cho bạn bè thì gửi trang nào?
 
-Khả năng điều phối nhiều tác vụ trong cùng hệ thống.
+Gửi trang chi tiết [Đối Chứng](/phim/doi-chung), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 933. File extension là gì?
+### 956. Muốn chọn một tập khác của Hana-Kimi (Phần 2) trên MFILM thì bấm ở đâu?
 
-Phần đuôi tên tệp thường gợi loại hoặc cách sử dụng tệp.
+Mở [Hana-Kimi (Phần 2)](/phim/hana-kimi-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 934. Directory là gì?
+### 957. Tôi muốn lưu Hana-Kimi (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-Thư mục dùng tổ chức tệp và thư mục khác.
+Đăng nhập rồi mở [Hana-Kimi (Phần 2)](/phim/hana-kimi-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 935. Backup là gì?
+### 958. Muốn thuê riêng Hana-Kimi (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Bản sao để khôi phục dữ liệu khi bản chính mất hoặc hỏng.
+Mở [Hana-Kimi (Phần 2)](/phim/hana-kimi-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 936. Sync dữ liệu là gì?
+### 959. Nếu Hana-Kimi (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Cập nhật giữa các nơi để giữ dữ liệu tương ứng theo quy tắc.
+Kiểm tra đúng phim tại [Hana-Kimi (Phần 2)](/phim/hana-kimi-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Hana-Kimi (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 937. Archive tệp là gì?
+### 960. Tôi muốn gửi link Hana-Kimi (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-Gói chứa các tệp, có thể kèm nén để lưu hoặc truyền thuận tiện.
+Gửi trang chi tiết [Hana-Kimi (Phần 2)](/phim/hana-kimi-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 938. Lossless compression là gì?
+### 961. Muốn chọn một tập khác của Hộp Bất Ngờ trên MFILM thì bấm ở đâu?
 
-Nén cho phép khôi phục dữ liệu gốc đầy đủ.
+Mở [Hộp Bất Ngờ](/phim/hop-bat-ngo) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 939. Lossy compression là gì?
+### 962. Tôi muốn lưu Hộp Bất Ngờ vào Yêu Thích trên MFILM thì làm sao?
 
-Nén loại bớt thông tin để giảm dung lượng.
+Đăng nhập rồi mở [Hộp Bất Ngờ](/phim/hop-bat-ngo), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 940. Checksum là gì?
+### 963. Muốn thuê riêng Hộp Bất Ngờ thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Giá trị tính từ dữ liệu để hỗ trợ phát hiện thay đổi hoặc lỗi.
+Mở [Hộp Bất Ngờ](/phim/hop-bat-ngo) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 941. Binary là hệ gì?
+### 964. Nếu Hộp Bất Ngờ không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Hệ cơ số hai, dùng các chữ số 0 và 1.
+Kiểm tra đúng phim tại [Hộp Bất Ngờ](/phim/hop-bat-ngo), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Hộp Bất Ngờ**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 942. Hexadecimal là hệ gì?
+### 965. Tôi muốn gửi link Hộp Bất Ngờ trên MFILM cho bạn bè thì gửi trang nào?
 
-Hệ cơ số mười sáu, thường dùng 0–9 và A–F.
+Gửi trang chi tiết [Hộp Bất Ngờ](/phim/hop-bat-ngo), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 943. Unicode là gì?
+### 966. Muốn chọn một tập khác của Monkey Wrench trên MFILM thì bấm ở đâu?
 
-Tiêu chuẩn mã hóa ký tự cho nhiều hệ chữ.
+Mở [Monkey Wrench](/phim/monkey-wrench) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 944. UTF-8 là gì?
+### 967. Tôi muốn lưu Monkey Wrench vào Yêu Thích trên MFILM thì làm sao?
 
-Cách mã hóa Unicode bằng chuỗi byte có độ dài thay đổi.
+Đăng nhập rồi mở [Monkey Wrench](/phim/monkey-wrench), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 945. ASCII là gì?
+### 968. Muốn thuê riêng Monkey Wrench thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Bộ mã ký tự cơ bản truyền thống dùng các giá trị 7 bit.
+Mở [Monkey Wrench](/phim/monkey-wrench) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 946. Clipboard là gì?
+### 969. Nếu Monkey Wrench không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Vùng giữ nội dung sao chép hoặc cắt để dán nơi khác.
+Kiểm tra đúng phim tại [Monkey Wrench](/phim/monkey-wrench), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Monkey Wrench**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 947. Read-only file là gì?
+### 970. Tôi muốn gửi link Monkey Wrench trên MFILM cho bạn bè thì gửi trang nào?
 
-Tệp được mở hoặc đặt quyền theo cách không cho chỉnh sửa trực tiếp.
+Gửi trang chi tiết [Monkey Wrench](/phim/monkey-wrench), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-## An toàn thông tin cơ bản
+### 971. Muốn chọn một tập khác của Mùi Phở trên MFILM thì bấm ở đâu?
 
-### 948. Phishing là gì?
+Mở [Mùi Phở](/phim/mui-pho) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Giả mạo để dụ người dùng tiết lộ thông tin hoặc thực hiện hành động.
+### 972. Tôi muốn lưu Mùi Phở vào Yêu Thích trên MFILM thì làm sao?
 
-### 949. Malware là gì?
+Đăng nhập rồi mở [Mùi Phở](/phim/mui-pho), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Phần mềm có mục đích gây hại hoặc hành vi không được mong muốn.
+### 973. Muốn thuê riêng Mùi Phở thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 950. Ransomware là gì?
+Mở [Mùi Phở](/phim/mui-pho) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Mã độc khóa hoặc mã hóa dữ liệu để đòi tiền chuộc.
+### 974. Nếu Mùi Phở không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 951. Spyware là gì?
+Kiểm tra đúng phim tại [Mùi Phở](/phim/mui-pho), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Mùi Phở**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Phần mềm thu thập thông tin hoặc theo dõi người dùng trái mong muốn.
+### 975. Tôi muốn gửi link Mùi Phở trên MFILM cho bạn bè thì gửi trang nào?
 
-### 952. Trojan là gì?
+Gửi trang chi tiết [Mùi Phở](/phim/mui-pho), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Phần mềm trông hợp lệ nhưng chứa chức năng gây hại.
+### 976. Muốn chọn một tập khác của Phù Sinh: Bạch Xà Tiền Duyên trên MFILM thì bấm ở đâu?
 
-### 953. Brute-force attack là gì?
+Mở [Phù Sinh: Bạch Xà Tiền Duyên](/phim/phu-sinh-bach-xa-tien-duyen) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Thử nhiều khả năng để tìm mật khẩu hoặc giá trị bí mật.
+### 977. Tôi muốn lưu Phù Sinh: Bạch Xà Tiền Duyên vào Yêu Thích trên MFILM thì làm sao?
 
-### 954. Password reuse nguy hiểm ở đâu?
+Đăng nhập rồi mở [Phù Sinh: Bạch Xà Tiền Duyên](/phim/phu-sinh-bach-xa-tien-duyen), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Một nơi lộ mật khẩu có thể ảnh hưởng các tài khoản dùng cùng mật khẩu.
+### 978. Muốn thuê riêng Phù Sinh: Bạch Xà Tiền Duyên thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 955. Passphrase là gì?
+Mở [Phù Sinh: Bạch Xà Tiền Duyên](/phim/phu-sinh-bach-xa-tien-duyen) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Cụm từ dùng làm bí mật đăng nhập, cần đủ khó đoán.
+### 979. Nếu Phù Sinh: Bạch Xà Tiền Duyên không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 956. Password manager làm gì?
+Kiểm tra đúng phim tại [Phù Sinh: Bạch Xà Tiền Duyên](/phim/phu-sinh-bach-xa-tien-duyen), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Phù Sinh: Bạch Xà Tiền Duyên**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Lưu và hỗ trợ quản lý thông tin đăng nhập theo cơ chế bảo vệ.
+### 980. Tôi muốn gửi link Phù Sinh: Bạch Xà Tiền Duyên trên MFILM cho bạn bè thì gửi trang nào?
 
-### 957. Two-factor authentication là gì?
+Gửi trang chi tiết [Phù Sinh: Bạch Xà Tiền Duyên](/phim/phu-sinh-bach-xa-tien-duyen), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Xác thực bằng hai loại yếu tố khác nhau.
+### 981. Muốn chọn một tập khác của Sân Golf Tình Yêu trên MFILM thì bấm ở đâu?
 
-### 958. OTP là gì?
+Mở [Sân Golf Tình Yêu](/phim/san-golf-tinh-yeu) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Mật mã dùng một lần, không nên chia sẻ cho người lạ.
+### 982. Tôi muốn lưu Sân Golf Tình Yêu vào Yêu Thích trên MFILM thì làm sao?
 
-### 959. Recovery code dùng làm gì?
+Đăng nhập rồi mở [Sân Golf Tình Yêu](/phim/san-golf-tinh-yeu), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Mã dự phòng để khôi phục truy cập theo cơ chế của dịch vụ.
+### 983. Muốn thuê riêng Sân Golf Tình Yêu thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 960. HTTPS bảo vệ điều gì?
+Mở [Sân Golf Tình Yêu](/phim/san-golf-tinh-yeu) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Mã hóa và xác thực kết nối; không đảm bảo mọi nội dung trang đều đáng tin.
+### 984. Nếu Sân Golf Tình Yêu không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 961. TLS là gì?
+Kiểm tra đúng phim tại [Sân Golf Tình Yêu](/phim/san-golf-tinh-yeu), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Sân Golf Tình Yêu**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Giao thức bảo vệ dữ liệu truyền qua mạng bằng mã hóa và xác thực.
+### 985. Tôi muốn gửi link Sân Golf Tình Yêu trên MFILM cho bạn bè thì gửi trang nào?
 
-### 962. Digital certificate là gì?
+Gửi trang chi tiết [Sân Golf Tình Yêu](/phim/san-golf-tinh-yeu), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Chứng thư gắn danh tính với khóa công khai theo hệ tin cậy.
+### 986. Muốn chọn một tập khác của Thế Giới Hoàn Mỹ trên MFILM thì bấm ở đâu?
 
-### 963. Encryption là gì?
+Mở [Thế Giới Hoàn Mỹ](/phim/the-gioi-hoan-my) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Biến dữ liệu thành dạng chỉ đọc được với thông tin giải mã phù hợp.
+### 987. Tôi muốn lưu Thế Giới Hoàn Mỹ vào Yêu Thích trên MFILM thì làm sao?
 
-### 964. Hash dữ liệu là gì?
+Đăng nhập rồi mở [Thế Giới Hoàn Mỹ](/phim/the-gioi-hoan-my), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Hàm tạo giá trị đại diện từ dữ liệu, không phải mã hóa để giải ngược.
+### 988. Muốn thuê riêng Thế Giới Hoàn Mỹ thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tham khảo: [Hash function — MDN](https://developer.mozilla.org/en-US/docs/Glossary/Hash_function).
+Mở [Thế Giới Hoàn Mỹ](/phim/the-gioi-hoan-my) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 965. Salt mật khẩu là gì?
+### 989. Nếu Thế Giới Hoàn Mỹ không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Dữ liệu thêm riêng vào quá trình băm để giảm việc dùng bảng tra sẵn.
+Kiểm tra đúng phim tại [Thế Giới Hoàn Mỹ](/phim/the-gioi-hoan-my), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Thế Giới Hoàn Mỹ**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 966. Authentication khác authorization thế nào?
+### 990. Tôi muốn gửi link Thế Giới Hoàn Mỹ trên MFILM cho bạn bè thì gửi trang nào?
 
-Authentication xác minh danh tính; authorization xác định quyền được phép.
+Gửi trang chi tiết [Thế Giới Hoàn Mỹ](/phim/the-gioi-hoan-my), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Tham khảo: [Authentication — MDN](https://developer.mozilla.org/en-US/docs/Glossary/Authentication).
+### 991. Muốn chọn một tập khác của Thợ Săn Giác Thú Omegahorn trên MFILM thì bấm ở đâu?
 
-### 967. Least privilege nghĩa là gì?
+Mở [Thợ Săn Giác Thú Omegahorn](/phim/tho-san-giac-thu-omegahorn) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Chỉ cấp các quyền cần thiết cho công việc.
+### 992. Tôi muốn lưu Thợ Săn Giác Thú Omegahorn vào Yêu Thích trên MFILM thì làm sao?
 
-### 968. Session hijacking là gì?
+Đăng nhập rồi mở [Thợ Săn Giác Thú Omegahorn](/phim/tho-san-giac-thu-omegahorn), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Chiếm thông tin phiên để hành động dưới danh tính người dùng.
+### 993. Muốn thuê riêng Thợ Săn Giác Thú Omegahorn thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 969. CSRF là gì?
+Mở [Thợ Săn Giác Thú Omegahorn](/phim/tho-san-giac-thu-omegahorn) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Dụ trình duyệt đã xác thực gửi yêu cầu ngoài ý muốn của người dùng.
+### 994. Nếu Thợ Săn Giác Thú Omegahorn không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 970. XSS là gì?
+Kiểm tra đúng phim tại [Thợ Săn Giác Thú Omegahorn](/phim/tho-san-giac-thu-omegahorn), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Thợ Săn Giác Thú Omegahorn**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Chèn mã chạy trong trang theo cách không được phép.
+### 995. Tôi muốn gửi link Thợ Săn Giác Thú Omegahorn trên MFILM cho bạn bè thì gửi trang nào?
 
-### 971. SQL injection là gì?
+Gửi trang chi tiết [Thợ Săn Giác Thú Omegahorn](/phim/tho-san-giac-thu-omegahorn), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Đưa dữ liệu làm thay đổi câu lệnh truy vấn SQL ngoài dự kiến.
+### 996. Muốn chọn một tập khác của Từ Bị Lu Mờ Đến Áp Đảo trên MFILM thì bấm ở đâu?
 
-### 972. Social engineering là gì?
+Mở [Từ Bị Lu Mờ Đến Áp Đảo](/phim/tu-bi-lu-mo-den-ap-dao) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Lợi dụng tâm lý và sự tin tưởng để thao túng hành động người dùng.
+### 997. Tôi muốn lưu Từ Bị Lu Mờ Đến Áp Đảo vào Yêu Thích trên MFILM thì làm sao?
 
-## Kiến thức về AI
+Đăng nhập rồi mở [Từ Bị Lu Mờ Đến Áp Đảo](/phim/tu-bi-lu-mo-den-ap-dao), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 973. Machine learning là gì?
+### 998. Muốn thuê riêng Từ Bị Lu Mờ Đến Áp Đảo thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Học quy luật từ dữ liệu để hỗ trợ dự đoán hoặc quyết định.
+Mở [Từ Bị Lu Mờ Đến Áp Đảo](/phim/tu-bi-lu-mo-den-ap-dao) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 974. Deep learning là gì?
+### 999. Nếu Từ Bị Lu Mờ Đến Áp Đảo không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Học máy dùng mạng nơ-ron nhiều lớp.
+Kiểm tra đúng phim tại [Từ Bị Lu Mờ Đến Áp Đảo](/phim/tu-bi-lu-mo-den-ap-dao), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Từ Bị Lu Mờ Đến Áp Đảo**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 975. Neural network là gì?
+### 1000. Tôi muốn gửi link Từ Bị Lu Mờ Đến Áp Đảo trên MFILM cho bạn bè thì gửi trang nào?
 
-Mô hình gồm các đơn vị và liên kết có tham số được học.
+Gửi trang chi tiết [Từ Bị Lu Mờ Đến Áp Đảo](/phim/tu-bi-lu-mo-den-ap-dao), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 976. LLM là gì?
+### 1001. Muốn chọn một tập khác của Ushiro no Shoumen Kamui-san trên MFILM thì bấm ở đâu?
 
-Mô hình ngôn ngữ lớn học quan hệ trong dữ liệu văn bản.
+Mở [Ushiro no Shoumen Kamui-san](/phim/ushiro-no-shoumen-kamui-san) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 977. Token trong mô hình ngôn ngữ là gì?
+### 1002. Tôi muốn lưu Ushiro no Shoumen Kamui-san vào Yêu Thích trên MFILM thì làm sao?
 
-Đơn vị văn bản được mô hình mã hóa và xử lý.
+Đăng nhập rồi mở [Ushiro no Shoumen Kamui-san](/phim/ushiro-no-shoumen-kamui-san), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 978. Context window là gì?
+### 1003. Muốn thuê riêng Ushiro no Shoumen Kamui-san thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Lượng nội dung mô hình có thể xét trong một lần xử lý.
+Mở [Ushiro no Shoumen Kamui-san](/phim/ushiro-no-shoumen-kamui-san) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 979. Embedding là gì?
+### 1004. Nếu Ushiro no Shoumen Kamui-san không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Biểu diễn dữ liệu thành vector để thể hiện các quan hệ.
+Kiểm tra đúng phim tại [Ushiro no Shoumen Kamui-san](/phim/ushiro-no-shoumen-kamui-san), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Ushiro no Shoumen Kamui-san**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 980. Semantic search là gì?
+### 1005. Tôi muốn gửi link Ushiro no Shoumen Kamui-san trên MFILM cho bạn bè thì gửi trang nào?
 
-Tìm theo ý nghĩa thay vì chỉ khớp chuỗi ký tự.
+Gửi trang chi tiết [Ushiro no Shoumen Kamui-san](/phim/ushiro-no-shoumen-kamui-san), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 981. Vector database dùng làm gì?
+### 1006. Muốn chọn một tập khác của 100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3) trên MFILM thì bấm ở đâu?
 
-Lưu và tìm các biểu diễn vector theo độ tương tự.
+Mở [100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3)](/phim/100-co-ban-gai-yeu-ban-rat-rat-rat-rat-rat-nhieu-phan-3) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 982. Fine-tuning là gì?
+### 1007. Tôi muốn lưu 100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3) vào Yêu Thích trên MFILM thì làm sao?
 
-Điều chỉnh tham số mô hình bằng dữ liệu phục vụ một mục tiêu.
+Đăng nhập rồi mở [100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3)](/phim/100-co-ban-gai-yeu-ban-rat-rat-rat-rat-rat-nhieu-phan-3), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 983. Inference AI là gì?
+### 1008. Muốn thuê riêng 100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Dùng mô hình đã có để tạo dự đoán hoặc đáp án.
+Mở [100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3)](/phim/100-co-ban-gai-yeu-ban-rat-rat-rat-rat-rat-nhieu-phan-3) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 984. Training dataset là gì?
+### 1009. Nếu 100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Dữ liệu dùng trong quá trình học tham số hoặc quy luật.
+Kiểm tra đúng phim tại [100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3)](/phim/100-co-ban-gai-yeu-ban-rat-rat-rat-rat-rat-nhieu-phan-3), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 985. Validation dataset là gì?
+### 1010. Tôi muốn gửi link 100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3) trên MFILM cho bạn bè thì gửi trang nào?
 
-Dữ liệu đánh giá để chọn cấu hình mà không dùng như dữ liệu học chính.
+Gửi trang chi tiết [100 Cô Bạn Gái Yêu Bạn Rất Rất Rất Rất Rất Nhiều (Phần 3)](/phim/100-co-ban-gai-yeu-ban-rat-rat-rat-rat-rat-nhieu-phan-3), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 986. Test dataset là gì?
+### 1011. Muốn chọn một tập khác của 1670 (Phần 1) trên MFILM thì bấm ở đâu?
 
-Dữ liệu dành kiểm tra kết quả sau khi chọn mô hình hoặc cấu hình.
+Mở [1670 (Phần 1)](/phim/1670-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 987. Overfitting là gì?
+### 1012. Tôi muốn lưu 1670 (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
 
-Học quá sát dữ liệu huấn luyện nên kém với dữ liệu mới.
+Đăng nhập rồi mở [1670 (Phần 1)](/phim/1670-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 988. Underfitting là gì?
+### 1013. Muốn thuê riêng 1670 (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Mô hình chưa nắm đủ quy luật của dữ liệu.
+Mở [1670 (Phần 1)](/phim/1670-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 989. Hallucination của AI là gì?
+### 1014. Nếu 1670 (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Đáp án có vẻ thuyết phục nhưng không có căn cứ hoặc sai.
+Kiểm tra đúng phim tại [1670 (Phần 1)](/phim/1670-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **1670 (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 990. Prompt injection là gì?
+### 1015. Tôi muốn gửi link 1670 (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
 
-Nội dung cố khiến AI làm theo chỉ dẫn ngoài phạm vi được phép.
+Gửi trang chi tiết [1670 (Phần 1)](/phim/1670-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 991. System prompt là gì?
+### 1016. Muốn chọn một tập khác của 1670 (Phần 2) trên MFILM thì bấm ở đâu?
 
-Chỉ dẫn cấp hệ thống định hướng hành vi của mô hình.
+Mở [1670 (Phần 2)](/phim/1670-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 992. Few-shot prompting là gì?
+### 1017. Tôi muốn lưu 1670 (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-Đưa một số ví dụ vào yêu cầu để hướng cách trả lời.
+Đăng nhập rồi mở [1670 (Phần 2)](/phim/1670-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 993. Zero-shot prompting là gì?
+### 1018. Muốn thuê riêng 1670 (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Yêu cầu tác vụ mà không đưa ví dụ mẫu cụ thể.
+Mở [1670 (Phần 2)](/phim/1670-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 994. Temperature khi sinh văn bản là gì?
+### 1019. Nếu 1670 (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Tham số ảnh hưởng mức ngẫu nhiên khi chọn token.
+Kiểm tra đúng phim tại [1670 (Phần 2)](/phim/1670-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **1670 (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 995. Top-p sampling là gì?
+### 1020. Tôi muốn gửi link 1670 (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-Chọn trong tập token có tổng xác suất đạt một ngưỡng.
+Gửi trang chi tiết [1670 (Phần 2)](/phim/1670-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 996. AI evaluation là gì?
+### 1021. Muốn chọn một tập khác của 1670 (Phần 3) trên MFILM thì bấm ở đâu?
 
-Đánh giá mô hình hoặc ứng dụng trên các tiêu chí và trường hợp thử.
+Mở [1670 (Phần 3)](/phim/1670-phan-3) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 997. Human review trong AI làm gì?
+### 1022. Tôi muốn lưu 1670 (Phần 3) vào Yêu Thích trên MFILM thì làm sao?
 
-Con người kiểm tra chất lượng, đúng sai và mức phù hợp của kết quả.
+Đăng nhập rồi mở [1670 (Phần 3)](/phim/1670-phan-3), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-## Từ tiếng Anh về phim
+### 1023. Muốn thuê riêng 1670 (Phần 3) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 998. Film critic dịch là gì?
+Mở [1670 (Phần 3)](/phim/1670-phan-3) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Nhà phê bình phim, người phân tích và đánh giá tác phẩm.
+### 1024. Nếu 1670 (Phần 3) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 999. Film festival dịch là gì?
+Kiểm tra đúng phim tại [1670 (Phần 3)](/phim/1670-phan-3), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **1670 (Phần 3)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Liên hoan phim, sự kiện tổ chức trình chiếu và hoạt động điện ảnh.
+### 1025. Tôi muốn gửi link 1670 (Phần 3) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1000. Box office dịch là gì?
+Gửi trang chi tiết [1670 (Phần 3)](/phim/1670-phan-3), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Phòng vé; trong thảo luận thường chỉ doanh thu vé xem phim.
+### 1026. Muốn chọn một tập khác của 5 thầy pháp trên MFILM thì bấm ở đâu?
 
-### 1001. Premiere dịch là gì?
+Mở [5 thầy pháp](/phim/5-thay-phap) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Buổi hoặc lần công chiếu đầu tiên của tác phẩm trong phạm vi nói đến.
+### 1027. Tôi muốn lưu 5 thầy pháp vào Yêu Thích trên MFILM thì làm sao?
 
-### 1002. Screening dịch là gì?
+Đăng nhập rồi mở [5 thầy pháp](/phim/5-thay-phap), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Buổi chiếu hoặc việc trình chiếu phim.
+### 1028. Muốn thuê riêng 5 thầy pháp thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1003. Feature film dịch là gì?
+Mở [5 thầy pháp](/phim/5-thay-phap) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Phim dài, phân biệt với phim ngắn theo cách phân loại áp dụng.
+### 1029. Nếu 5 thầy pháp không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1004. Short film dịch là gì?
+Kiểm tra đúng phim tại [5 thầy pháp](/phim/5-thay-phap), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **5 thầy pháp**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Phim ngắn; ngưỡng thời lượng tùy quy định của từng tổ chức.
+### 1030. Tôi muốn gửi link 5 thầy pháp trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1005. Silent film dịch là gì?
+Gửi trang chi tiết [5 thầy pháp](/phim/5-thay-phap), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Phim câm, thường không có lời thoại thu đồng bộ.
+### 1031. Muốn chọn một tập khác của 6 Viên Đá Vàng trên MFILM thì bấm ở đâu?
 
-### 1006. Live action dịch là gì?
+Mở [6 Viên Đá Vàng](/phim/6-vien-da-vang) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Phim người hoặc cảnh thật được quay, có thể kết hợp hiệu ứng.
+### 1032. Tôi muốn lưu 6 Viên Đá Vàng vào Yêu Thích trên MFILM thì làm sao?
 
-### 1007. Screenplay dịch là gì?
+Đăng nhập rồi mở [6 Viên Đá Vàng](/phim/6-vien-da-vang), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Kịch bản phim, mô tả cảnh, hành động và lời thoại.
+### 1033. Muốn thuê riêng 6 Viên Đá Vàng thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1008. Screenwriter dịch là gì?
+Mở [6 Viên Đá Vàng](/phim/6-vien-da-vang) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Biên kịch, người viết kịch bản.
+### 1034. Nếu 6 Viên Đá Vàng không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1009. Cast dịch là gì?
+Kiểm tra đúng phim tại [6 Viên Đá Vàng](/phim/6-vien-da-vang), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **6 Viên Đá Vàng**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Dàn diễn viên tham gia tác phẩm.
+### 1035. Tôi muốn gửi link 6 Viên Đá Vàng trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1010. Crew dịch là gì?
+Gửi trang chi tiết [6 Viên Đá Vàng](/phim/6-vien-da-vang), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Đội ngũ làm việc trong quá trình sản xuất.
+### 1036. Muốn chọn một tập khác của 7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí trên MFILM thì bấm ở đâu?
 
-### 1011. Lead actor dịch là gì?
+Mở [7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí](/phim/7-vien-ngoc-rong-hanh-trinh-ky-dieu-bay-vien-ngoc-rong-cuoc-phieu-luu-huyen-bi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Diễn viên đảm nhận vai chính.
+### 1037. Tôi muốn lưu 7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí vào Yêu Thích trên MFILM thì làm sao?
 
-### 1012. Supporting actor dịch là gì?
+Đăng nhập rồi mở [7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí](/phim/7-vien-ngoc-rong-hanh-trinh-ky-dieu-bay-vien-ngoc-rong-cuoc-phieu-luu-huyen-bi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Diễn viên đảm nhận vai phụ hoặc vai hỗ trợ.
+### 1038. Muốn thuê riêng 7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1013. Guest star dịch là gì?
+Mở [7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí](/phim/7-vien-ngoc-rong-hanh-trinh-ky-dieu-bay-vien-ngoc-rong-cuoc-phieu-luu-huyen-bi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Diễn viên khách mời, xuất hiện trong phần hoặc tập nhất định.
+### 1039. Nếu 7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1014. Episode guide dịch là gì?
+Kiểm tra đúng phim tại [7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí](/phim/7-vien-ngoc-rong-hanh-trinh-ky-dieu-bay-vien-ngoc-rong-cuoc-phieu-luu-huyen-bi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Hướng dẫn hoặc danh mục thông tin về các tập.
+### 1040. Tôi muốn gửi link 7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1015. Season finale dịch là gì?
+Gửi trang chi tiết [7 Viên Ngọc Rồng: Hành Trình Kỳ Diệu / Bảy Viên Ngọc Rồng: Cuộc Phiêu Lưu Huyền Bí](/phim/7-vien-ngoc-rong-hanh-trinh-ky-dieu-bay-vien-ngoc-rong-cuoc-phieu-luu-huyen-bi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Tập kết thúc một mùa phim.
+### 1041. Muốn chọn một tập khác của 9 Rưỡi Tối trên MFILM thì bấm ở đâu?
 
-### 1016. Series finale dịch là gì?
+Mở [9 Rưỡi Tối](/phim/9-ruoi-toi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Tập hoặc phần kết thúc toàn bộ series.
+### 1042. Tôi muốn lưu 9 Rưỡi Tối vào Yêu Thích trên MFILM thì làm sao?
 
-### 1017. Season premiere dịch là gì?
+Đăng nhập rồi mở [9 Rưỡi Tối](/phim/9-ruoi-toi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Tập mở đầu hoặc lần ra mắt một mùa phim.
+### 1043. Muốn thuê riêng 9 Rưỡi Tối thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1018. Screen time dịch là gì?
+Mở [9 Rưỡi Tối](/phim/9-ruoi-toi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Thời lượng nhân vật hoặc yếu tố xuất hiện trên màn hình.
+### 1044. Nếu 9 Rưỡi Tối không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1019. Running time dịch là gì?
+Kiểm tra đúng phim tại [9 Rưỡi Tối](/phim/9-ruoi-toi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **9 Rưỡi Tối**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Thời lượng phát của tác phẩm hoặc bản chiếu.
+### 1045. Tôi muốn gửi link 9 Rưỡi Tối trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1020. End credits dịch là gì?
+Gửi trang chi tiết [9 Rưỡi Tối](/phim/9-ruoi-toi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Phần ghi tên những người và đơn vị tham gia ở cuối phim.
+### 1046. Muốn chọn một tập khác của Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác trên MFILM thì bấm ở đâu?
 
-### 1021. Opening credits dịch là gì?
+Mở [Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác](/phim/ac-nu-nua-voi-truyen-ki-hoan-hon-doi-xac) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Phần ghi tên ê-kíp xuất hiện ở đầu phim.
+### 1047. Tôi muốn lưu Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác vào Yêu Thích trên MFILM thì làm sao?
 
-### 1022. Deleted scene dịch là gì?
+Đăng nhập rồi mở [Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác](/phim/ac-nu-nua-voi-truyen-ki-hoan-hon-doi-xac), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Cảnh đã quay nhưng bị loại khỏi bản dựng được nói đến.
+### 1048. Muốn thuê riêng Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-## Cụm tiếng Anh khi xem
+Mở [Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác](/phim/ac-nu-nua-voi-truyen-ki-hoan-hon-doi-xac) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1023. Now playing dịch là gì?
+### 1049. Nếu Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Đang phát hoặc đang chiếu, tùy ngữ cảnh.
+Kiểm tra đúng phim tại [Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác](/phim/ac-nu-nua-voi-truyen-ki-hoan-hon-doi-xac), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1024. Up next dịch là gì?
+### 1050. Tôi muốn gửi link Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác trên MFILM cho bạn bè thì gửi trang nào?
 
-Nội dung sẽ phát tiếp theo.
+Gửi trang chi tiết [Ác Nữ Nửa Vời: Truyền Kì Hoán Hồn Đổi Xác](/phim/ac-nu-nua-voi-truyen-ki-hoan-hon-doi-xac), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1025. Watch later dịch là gì?
+### 1051. Muốn chọn một tập khác của Âm Hồn Đô Thị trên MFILM thì bấm ở đâu?
 
-Xem sau, thường là lựa chọn lưu để quay lại.
+Mở [Âm Hồn Đô Thị](/phim/am-hon-do-thi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1026. Continue watching dịch là gì?
+### 1052. Tôi muốn lưu Âm Hồn Đô Thị vào Yêu Thích trên MFILM thì làm sao?
 
-Tiếp tục xem nội dung đang xem dở.
+Đăng nhập rồi mở [Âm Hồn Đô Thị](/phim/am-hon-do-thi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1027. Recently watched dịch là gì?
+### 1053. Muốn thuê riêng Âm Hồn Đô Thị thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Nội dung đã xem gần đây.
+Mở [Âm Hồn Đô Thị](/phim/am-hon-do-thi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1028. Recently added dịch là gì?
+### 1054. Nếu Âm Hồn Đô Thị không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Nội dung mới được thêm vào danh mục.
+Kiểm tra đúng phim tại [Âm Hồn Đô Thị](/phim/am-hon-do-thi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Âm Hồn Đô Thị**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1029. Coming soon dịch là gì?
+### 1055. Tôi muốn gửi link Âm Hồn Đô Thị trên MFILM cho bạn bè thì gửi trang nào?
 
-Sắp ra mắt hoặc sắp có.
+Gửi trang chi tiết [Âm Hồn Đô Thị](/phim/am-hon-do-thi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1030. Available now dịch là gì?
+### 1056. Muốn chọn một tập khác của Âm Sơn Cấm Địa trên MFILM thì bấm ở đâu?
 
-Đã có hoặc hiện có thể truy cập.
+Mở [Âm Sơn Cấm Địa](/phim/am-son-cam-dia) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1031. Full screen dịch là gì?
+### 1057. Tôi muốn lưu Âm Sơn Cấm Địa vào Yêu Thích trên MFILM thì làm sao?
 
-Toàn màn hình.
+Đăng nhập rồi mở [Âm Sơn Cấm Địa](/phim/am-son-cam-dia), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1032. Exit full screen dịch là gì?
+### 1058. Muốn thuê riêng Âm Sơn Cấm Địa thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Thoát chế độ toàn màn hình.
+Mở [Âm Sơn Cấm Địa](/phim/am-son-cam-dia) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1033. Playback speed dịch là gì?
+### 1059. Nếu Âm Sơn Cấm Địa không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Tốc độ phát.
+Kiểm tra đúng phim tại [Âm Sơn Cấm Địa](/phim/am-son-cam-dia), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Âm Sơn Cấm Địa**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1034. Audio track dịch là gì?
+### 1060. Tôi muốn gửi link Âm Sơn Cấm Địa trên MFILM cho bạn bè thì gửi trang nào?
 
-Luồng hoặc bản âm thanh.
+Gửi trang chi tiết [Âm Sơn Cấm Địa](/phim/am-son-cam-dia), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1035. Subtitle language dịch là gì?
+### 1061. Muốn chọn một tập khác của Án Mạng Ở Biot trên MFILM thì bấm ở đâu?
 
-Ngôn ngữ phụ đề.
+Mở [Án Mạng Ở Biot](/phim/an-mang-o-biot) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1036. Quality settings dịch là gì?
+### 1062. Tôi muốn lưu Án Mạng Ở Biot vào Yêu Thích trên MFILM thì làm sao?
 
-Thiết lập chất lượng.
+Đăng nhập rồi mở [Án Mạng Ở Biot](/phim/an-mang-o-biot), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1037. Mute dịch là gì?
+### 1063. Muốn thuê riêng Án Mạng Ở Biot thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tắt âm thanh đang phát.
+Mở [Án Mạng Ở Biot](/phim/an-mang-o-biot) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1038. Unmute dịch là gì?
+### 1064. Nếu Án Mạng Ở Biot không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Bật tiếng trở lại.
+Kiểm tra đúng phim tại [Án Mạng Ở Biot](/phim/an-mang-o-biot), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Án Mạng Ở Biot**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1039. Replay dịch là gì?
+### 1065. Tôi muốn gửi link Án Mạng Ở Biot trên MFILM cho bạn bè thì gửi trang nào?
 
-Phát lại nội dung vừa xem hoặc nghe.
+Gửi trang chi tiết [Án Mạng Ở Biot](/phim/an-mang-o-biot), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1040. Skip intro dịch là gì?
+### 1066. Muốn chọn một tập khác của Án Tử Cận Kề trên MFILM thì bấm ở đâu?
 
-Bỏ qua đoạn mở đầu.
+Mở [Án Tử Cận Kề](/phim/an-tu-can-ke) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1041. Skip recap dịch là gì?
+### 1067. Tôi muốn lưu Án Tử Cận Kề vào Yêu Thích trên MFILM thì làm sao?
 
-Bỏ qua đoạn tóm tắt phần trước.
+Đăng nhập rồi mở [Án Tử Cận Kề](/phim/an-tu-can-ke), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1042. Seek forward dịch là gì?
+### 1068. Muốn thuê riêng Án Tử Cận Kề thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tua về phía trước.
+Mở [Án Tử Cận Kề](/phim/an-tu-can-ke) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1043. Seek backward dịch là gì?
+### 1069. Nếu Án Tử Cận Kề không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Tua về phía sau.
+Kiểm tra đúng phim tại [Án Tử Cận Kề](/phim/an-tu-can-ke), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Án Tử Cận Kề**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1044. Loading video dịch là gì?
+### 1070. Tôi muốn gửi link Án Tử Cận Kề trên MFILM cho bạn bè thì gửi trang nào?
 
-Đang tải video.
+Gửi trang chi tiết [Án Tử Cận Kề](/phim/an-tu-can-ke), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1045. Playback error dịch là gì?
+### 1071. Muốn chọn một tập khác của Anh Bạn, Xe Tôi Đâu? trên MFILM thì bấm ở đâu?
 
-Lỗi trong quá trình phát.
+Mở [Anh Bạn, Xe Tôi Đâu?](/phim/anh-ban-xe-toi-dau) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1046. Source unavailable dịch là gì?
+### 1072. Tôi muốn lưu Anh Bạn, Xe Tôi Đâu? vào Yêu Thích trên MFILM thì làm sao?
 
-Nguồn hiện không truy cập được.
+Đăng nhập rồi mở [Anh Bạn, Xe Tôi Đâu?](/phim/anh-ban-xe-toi-dau), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1047. Retry playback dịch là gì?
+### 1073. Muốn thuê riêng Anh Bạn, Xe Tôi Đâu? thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Thử phát lại sau lần lỗi trước.
+Mở [Anh Bạn, Xe Tôi Đâu?](/phim/anh-ban-xe-toi-dau) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-## Từ tiếng Anh mô tả truyện
+### 1074. Nếu Anh Bạn, Xe Tôi Đâu? không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1048. Conflict dịch là gì?
+Kiểm tra đúng phim tại [Anh Bạn, Xe Tôi Đâu?](/phim/anh-ban-xe-toi-dau), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Anh Bạn, Xe Tôi Đâu?**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Xung đột giữa các lực, mục tiêu hoặc giá trị.
+### 1075. Tôi muốn gửi link Anh Bạn, Xe Tôi Đâu? trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1049. Resolution dịch là gì trong truyện?
+Gửi trang chi tiết [Anh Bạn, Xe Tôi Đâu?](/phim/anh-ban-xe-toi-dau), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Sự giải quyết xung đột hoặc tình huống chính.
+### 1076. Muốn chọn một tập khác của Ánh Dương Của Mẹ trên MFILM thì bấm ở đâu?
 
-### 1050. Suspense dịch là gì?
+Mở [Ánh Dương Của Mẹ](/phim/anh-duong-cua-me) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Cảm giác hồi hộp do chưa biết diễn biến hoặc kết quả.
+### 1077. Tôi muốn lưu Ánh Dương Của Mẹ vào Yêu Thích trên MFILM thì làm sao?
 
-### 1051. Tension dịch là gì?
+Đăng nhập rồi mở [Ánh Dương Của Mẹ](/phim/anh-duong-cua-me), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Sự căng thẳng trong quan hệ, hành động hoặc cảm xúc.
+### 1078. Muốn thuê riêng Ánh Dương Của Mẹ thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1052. Plot hole dịch là gì?
+Mở [Ánh Dương Của Mẹ](/phim/anh-duong-cua-me) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Lỗ hổng logic hoặc thông tin trong cốt truyện.
+### 1079. Nếu Ánh Dương Của Mẹ không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1053. Backstory dịch là gì?
+Kiểm tra đúng phim tại [Ánh Dương Của Mẹ](/phim/anh-duong-cua-me), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Ánh Dương Của Mẹ**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Chuyện nền xảy ra trước mạch chính.
+### 1080. Tôi muốn gửi link Ánh Dương Của Mẹ trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1054. Setting dịch là gì trong truyện?
+Gửi trang chi tiết [Ánh Dương Của Mẹ](/phim/anh-duong-cua-me), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Bối cảnh thời gian, không gian và môi trường câu chuyện.
+### 1081. Muốn chọn một tập khác của Anh Hùng Của Tôi trên MFILM thì bấm ở đâu?
 
-### 1055. Narrator dịch là gì?
+Mở [Anh Hùng Của Tôi](/phim/anh-hung-cua-toi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Người kể chuyện.
+### 1082. Tôi muốn lưu Anh Hùng Của Tôi vào Yêu Thích trên MFILM thì làm sao?
 
-### 1056. Point of view dịch là gì?
+Đăng nhập rồi mở [Anh Hùng Của Tôi](/phim/anh-hung-cua-toi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Điểm nhìn hoặc góc nhìn.
+### 1083. Muốn thuê riêng Anh Hùng Của Tôi thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1057. Dialogue dịch là gì?
+Mở [Anh Hùng Của Tôi](/phim/anh-hung-cua-toi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Đối thoại giữa các nhân vật.
+### 1084. Nếu Anh Hùng Của Tôi không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1058. Monologue dịch là gì?
+Kiểm tra đúng phim tại [Anh Hùng Của Tôi](/phim/anh-hung-cua-toi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Anh Hùng Của Tôi**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Độc thoại, phần lời kéo dài của một người.
+### 1085. Tôi muốn gửi link Anh Hùng Của Tôi trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1059. Voice-over dịch là gì?
+Gửi trang chi tiết [Anh Hùng Của Tôi](/phim/anh-hung-cua-toi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Lời hoặc giọng nói phát trên hình mà không nhất thiết thuộc người trong khung.
+### 1086. Muốn chọn một tập khác của Anh Sam Của Em trên MFILM thì bấm ở đâu?
 
-### 1060. Inner voice dịch là gì?
+Mở [Anh Sam Của Em](/phim/anh-sam-cua-em) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Tiếng nói nội tâm hoặc dòng suy nghĩ được diễn đạt.
+### 1087. Tôi muốn lưu Anh Sam Của Em vào Yêu Thích trên MFILM thì làm sao?
 
-### 1061. Reveal dịch là gì trong truyện?
+Đăng nhập rồi mở [Anh Sam Của Em](/phim/anh-sam-cua-em), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Mốc tiết lộ thông tin trước đó bị che hoặc chưa biết.
+### 1088. Muốn thuê riêng Anh Sam Của Em thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1062. Betrayal dịch là gì?
+Mở [Anh Sam Của Em](/phim/anh-sam-cua-em) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Sự phản bội niềm tin hoặc cam kết.
+### 1089. Nếu Anh Sam Của Em không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1063. Reconciliation dịch là gì?
+Kiểm tra đúng phim tại [Anh Sam Của Em](/phim/anh-sam-cua-em), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Anh Sam Của Em**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Sự hòa giải hoặc khôi phục quan hệ.
+### 1090. Tôi muốn gửi link Anh Sam Của Em trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1064. Rivalry dịch là gì?
+Gửi trang chi tiết [Anh Sam Của Em](/phim/anh-sam-cua-em), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Quan hệ cạnh tranh hoặc đối đầu.
+### 1091. Muốn chọn một tập khác của Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã trên MFILM thì bấm ở đâu?
 
-### 1065. Alliance dịch là gì?
+Mở [Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã](/phim/anh-sang-va-bong-toi-hao-quang-nghiet-nga) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Sự liên minh hoặc hợp tác.
+### 1092. Tôi muốn lưu Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã vào Yêu Thích trên MFILM thì làm sao?
 
-### 1066. Destiny dịch là gì?
+Đăng nhập rồi mở [Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã](/phim/anh-sang-va-bong-toi-hao-quang-nghiet-nga), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Số phận, điều được xem là định trước.
+### 1093. Muốn thuê riêng Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1067. Consequence dịch là gì?
+Mở [Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã](/phim/anh-sang-va-bong-toi-hao-quang-nghiet-nga) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Hệ quả của hành động hoặc sự kiện.
+### 1094. Nếu Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1068. Turning point dịch là gì?
+Kiểm tra đúng phim tại [Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã](/phim/anh-sang-va-bong-toi-hao-quang-nghiet-nga), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Bước ngoặt làm thay đổi hướng phát triển.
+### 1095. Tôi muốn gửi link Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1069. Parallel story dịch là gì?
+Gửi trang chi tiết [Ánh Sáng Và Bóng Tối / Hào Quang Nghiệt Ngã](/phim/anh-sang-va-bong-toi-hao-quang-nghiet-nga), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Tuyến truyện diễn tiến song song với một tuyến khác.
+### 1096. Muốn chọn một tập khác của Ao Ashi: Tân Binh Sân Cỏ (Phần 1) trên MFILM thì bấm ở đâu?
 
-### 1070. Origin story dịch là gì?
+Mở [Ao Ashi: Tân Binh Sân Cỏ (Phần 1)](/phim/ao-ashi-tan-binh-san-co-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Câu chuyện về nguồn gốc của nhân vật hoặc hiện tượng.
+### 1097. Tôi muốn lưu Ao Ashi: Tân Binh Sân Cỏ (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1071. Unresolved mystery dịch là gì?
+Đăng nhập rồi mở [Ao Ashi: Tân Binh Sân Cỏ (Phần 1)](/phim/ao-ashi-tan-binh-san-co-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Bí ẩn chưa được giải đáp.
+### 1098. Muốn thuê riêng Ao Ashi: Tân Binh Sân Cỏ (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1072. Ambiguous ending dịch là gì?
+Mở [Ao Ashi: Tân Binh Sân Cỏ (Phần 1)](/phim/ao-ashi-tan-binh-san-co-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Kết thúc có thể hiểu theo nhiều cách.
+### 1099. Nếu Ao Ashi: Tân Binh Sân Cỏ (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-## Từ tiếng Anh trên giao diện
+Kiểm tra đúng phim tại [Ao Ashi: Tân Binh Sân Cỏ (Phần 1)](/phim/ao-ashi-tan-binh-san-co-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Ao Ashi: Tân Binh Sân Cỏ (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1073. Sign in dịch là gì?
+### 1100. Tôi muốn gửi link Ao Ashi: Tân Binh Sân Cỏ (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
 
-Đăng nhập vào tài khoản.
+Gửi trang chi tiết [Ao Ashi: Tân Binh Sân Cỏ (Phần 1)](/phim/ao-ashi-tan-binh-san-co-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1074. Sign out dịch là gì?
+### 1101. Muốn chọn một tập khác của Ao Ashi: Tân Binh Sân Cỏ (Phần 2) trên MFILM thì bấm ở đâu?
 
-Đăng xuất khỏi tài khoản.
+Mở [Ao Ashi: Tân Binh Sân Cỏ (Phần 2)](/phim/ao-ashi-tan-binh-san-co-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1075. Sign up dịch là gì?
+### 1102. Tôi muốn lưu Ao Ashi: Tân Binh Sân Cỏ (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-Đăng ký tài khoản hoặc dịch vụ.
+Đăng nhập rồi mở [Ao Ashi: Tân Binh Sân Cỏ (Phần 2)](/phim/ao-ashi-tan-binh-san-co-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1076. Username dịch là gì?
+### 1103. Muốn thuê riêng Ao Ashi: Tân Binh Sân Cỏ (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tên người dùng, không luôn là tên hiển thị.
+Mở [Ao Ashi: Tân Binh Sân Cỏ (Phần 2)](/phim/ao-ashi-tan-binh-san-co-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1077. Display name dịch là gì?
+### 1104. Nếu Ao Ashi: Tân Binh Sân Cỏ (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Tên hiển thị của hồ sơ.
+Kiểm tra đúng phim tại [Ao Ashi: Tân Binh Sân Cỏ (Phần 2)](/phim/ao-ashi-tan-binh-san-co-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Ao Ashi: Tân Binh Sân Cỏ (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1078. Account settings dịch là gì?
+### 1105. Tôi muốn gửi link Ao Ashi: Tân Binh Sân Cỏ (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-Thiết lập tài khoản.
+Gửi trang chi tiết [Ao Ashi: Tân Binh Sân Cỏ (Phần 2)](/phim/ao-ashi-tan-binh-san-co-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1079. Privacy settings dịch là gì?
+### 1106. Muốn chọn một tập khác của Azur Lane: Bisoku Zenshin! Ni!! (Phần 2) trên MFILM thì bấm ở đâu?
 
-Thiết lập quyền riêng tư.
+Mở [Azur Lane: Bisoku Zenshin! Ni!! (Phần 2)](/phim/azur-lane-bisoku-zenshin-ni-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1080. Billing history dịch là gì?
+### 1107. Tôi muốn lưu Azur Lane: Bisoku Zenshin! Ni!! (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-Lịch sử tính phí hoặc giao dịch thanh toán.
+Đăng nhập rồi mở [Azur Lane: Bisoku Zenshin! Ni!! (Phần 2)](/phim/azur-lane-bisoku-zenshin-ni-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1081. Subscription status dịch là gì?
+### 1108. Muốn thuê riêng Azur Lane: Bisoku Zenshin! Ni!! (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Trạng thái đăng ký dịch vụ.
+Mở [Azur Lane: Bisoku Zenshin! Ni!! (Phần 2)](/phim/azur-lane-bisoku-zenshin-ni-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1082. Expiry date dịch là gì?
+### 1109. Nếu Azur Lane: Bisoku Zenshin! Ni!! (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Ngày hết hạn.
+Kiểm tra đúng phim tại [Azur Lane: Bisoku Zenshin! Ni!! (Phần 2)](/phim/azur-lane-bisoku-zenshin-ni-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Azur Lane: Bisoku Zenshin! Ni!! (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1083. Renewal date dịch là gì?
+### 1110. Tôi muốn gửi link Azur Lane: Bisoku Zenshin! Ni!! (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-Ngày gia hạn.
+Gửi trang chi tiết [Azur Lane: Bisoku Zenshin! Ni!! (Phần 2)](/phim/azur-lane-bisoku-zenshin-ni-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1084. Payment pending dịch là gì?
+### 1111. Muốn chọn một tập khác của Ba Bước Lên Thiên Đường trên MFILM thì bấm ở đâu?
 
-Thanh toán đang chờ xử lý hoặc xác nhận.
+Mở [Ba Bước Lên Thiên Đường](/phim/ba-buoc-len-thien-duong) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1085. Payment failed dịch là gì?
+### 1112. Tôi muốn lưu Ba Bước Lên Thiên Đường vào Yêu Thích trên MFILM thì làm sao?
 
-Thanh toán không hoàn tất thành công.
+Đăng nhập rồi mở [Ba Bước Lên Thiên Đường](/phim/ba-buoc-len-thien-duong), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1086. Payment completed dịch là gì?
+### 1113. Muốn thuê riêng Ba Bước Lên Thiên Đường thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Thanh toán đã được hoàn tất theo trạng thái hệ thống đó.
+Mở [Ba Bước Lên Thiên Đường](/phim/ba-buoc-len-thien-duong) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1087. Transaction ID dịch là gì?
+### 1114. Nếu Ba Bước Lên Thiên Đường không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Mã định danh giao dịch.
+Kiểm tra đúng phim tại [Ba Bước Lên Thiên Đường](/phim/ba-buoc-len-thien-duong), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Ba Bước Lên Thiên Đường**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1088. Order summary dịch là gì?
+### 1115. Tôi muốn gửi link Ba Bước Lên Thiên Đường trên MFILM cho bạn bè thì gửi trang nào?
 
-Phần tóm tắt đơn hàng.
+Gửi trang chi tiết [Ba Bước Lên Thiên Đường](/phim/ba-buoc-len-thien-duong), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1089. Total amount dịch là gì?
+### 1116. Muốn chọn một tập khác của Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời trên MFILM thì bấm ở đâu?
 
-Tổng số tiền.
+Mở [Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời](/phim/ba-buoc-len-thien-duong-3-met-phia-tren-bau-troi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1090. Discount dịch là gì?
+### 1117. Tôi muốn lưu Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời vào Yêu Thích trên MFILM thì làm sao?
 
-Mức hoặc khoản giảm giá.
+Đăng nhập rồi mở [Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời](/phim/ba-buoc-len-thien-duong-3-met-phia-tren-bau-troi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1091. Apply code dịch là gì?
+### 1118. Muốn thuê riêng Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Áp dụng mã, thường là mã ưu đãi.
+Mở [Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời](/phim/ba-buoc-len-thien-duong-3-met-phia-tren-bau-troi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1092. Required field dịch là gì?
+### 1119. Nếu Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Trường bắt buộc phải điền.
+Kiểm tra đúng phim tại [Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời](/phim/ba-buoc-len-thien-duong-3-met-phia-tren-bau-troi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1093. Optional field dịch là gì?
+### 1120. Tôi muốn gửi link Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời trên MFILM cho bạn bè thì gửi trang nào?
 
-Trường có thể để trống.
+Gửi trang chi tiết [Ba Bước Lên Thiên Đường / 3 Mét Phía Trên Bầu Trời](/phim/ba-buoc-len-thien-duong-3-met-phia-tren-bau-troi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1094. Save changes dịch là gì?
+### 1121. Muốn chọn một tập khác của Bà Đồng Muifei (Muội Phi) trên MFILM thì bấm ở đâu?
 
-Lưu các thay đổi.
+Mở [Bà Đồng Muifei (Muội Phi)](/phim/ba-dong-muifei-muoi-phi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1095. Discard changes dịch là gì?
+### 1122. Tôi muốn lưu Bà Đồng Muifei (Muội Phi) vào Yêu Thích trên MFILM thì làm sao?
 
-Bỏ những thay đổi chưa lưu.
+Đăng nhập rồi mở [Bà Đồng Muifei (Muội Phi)](/phim/ba-dong-muifei-muoi-phi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1096. Confirmation dịch là gì?
+### 1123. Muốn thuê riêng Bà Đồng Muifei (Muội Phi) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Sự xác nhận hoặc thông báo xác nhận.
+Mở [Bà Đồng Muifei (Muội Phi)](/phim/ba-dong-muifei-muoi-phi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1097. Terms and conditions dịch là gì?
+### 1124. Nếu Bà Đồng Muifei (Muội Phi) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Các điều khoản và điều kiện áp dụng.
+Kiểm tra đúng phim tại [Bà Đồng Muifei (Muội Phi)](/phim/ba-dong-muifei-muoi-phi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bà Đồng Muifei (Muội Phi)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-## Tiếng Việt và diễn đạt
+### 1125. Tôi muốn gửi link Bà Đồng Muifei (Muội Phi) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1098. Danh từ là gì?
+Gửi trang chi tiết [Bà Đồng Muifei (Muội Phi)](/phim/ba-dong-muifei-muoi-phi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Từ gọi tên người, vật, hiện tượng hoặc khái niệm.
+### 1126. Muốn chọn một tập khác của Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai trên MFILM thì bấm ở đâu?
 
-### 1099. Động từ là gì?
+Mở [Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai](/phim/bac-dau-than-quyen-khuc-bi-trang-cua-nhung-ten-tay-sai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Từ biểu thị hoạt động hoặc trạng thái.
+### 1127. Tôi muốn lưu Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai vào Yêu Thích trên MFILM thì làm sao?
 
-### 1100. Tính từ là gì?
+Đăng nhập rồi mở [Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai](/phim/bac-dau-than-quyen-khuc-bi-trang-cua-nhung-ten-tay-sai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Từ biểu thị đặc điểm, tính chất hoặc mức độ.
+### 1128. Muốn thuê riêng Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1101. Đại từ là gì?
+Mở [Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai](/phim/bac-dau-than-quyen-khuc-bi-trang-cua-nhung-ten-tay-sai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Từ dùng để chỉ hoặc thay thế đối tượng trong ngữ cảnh.
+### 1129. Nếu Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1102. Số từ là gì?
+Kiểm tra đúng phim tại [Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai](/phim/bac-dau-than-quyen-khuc-bi-trang-cua-nhung-ten-tay-sai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Từ biểu thị số lượng hoặc thứ tự.
+### 1130. Tôi muốn gửi link Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1103. Quan hệ từ là gì?
+Gửi trang chi tiết [Bắc Đẩu Thần Quyền: Khúc Bi Tráng Của Những Tên Tay Sai](/phim/bac-dau-than-quyen-khuc-bi-trang-cua-nhung-ten-tay-sai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Từ biểu thị quan hệ giữa các thành phần, như vì, của, với.
+### 1131. Muốn chọn một tập khác của Bác Sĩ Phi Phàm trên MFILM thì bấm ở đâu?
 
-### 1104. Từ ghép là gì?
+Mở [Bác Sĩ Phi Phàm](/phim/bac-si-phi-pham) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Từ được tạo từ các tiếng có quan hệ về nghĩa.
+### 1132. Tôi muốn lưu Bác Sĩ Phi Phàm vào Yêu Thích trên MFILM thì làm sao?
 
-### 1105. Từ láy là gì?
+Đăng nhập rồi mở [Bác Sĩ Phi Phàm](/phim/bac-si-phi-pham), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Từ có các tiếng liên hệ về âm, như lung linh.
+### 1133. Muốn thuê riêng Bác Sĩ Phi Phàm thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1106. Từ đồng âm là gì?
+Mở [Bác Sĩ Phi Phàm](/phim/bac-si-phi-pham) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Các từ giống âm nhưng có nghĩa khác nhau.
+### 1134. Nếu Bác Sĩ Phi Phàm không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1107. Từ nhiều nghĩa là gì?
+Kiểm tra đúng phim tại [Bác Sĩ Phi Phàm](/phim/bac-si-phi-pham), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bác Sĩ Phi Phàm**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Một từ có nhiều nghĩa liên quan, cần ngữ cảnh để hiểu.
+### 1135. Tôi muốn gửi link Bác Sĩ Phi Phàm trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1108. Nghĩa đen là gì?
+Gửi trang chi tiết [Bác Sĩ Phi Phàm](/phim/bac-si-phi-pham), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nghĩa trực tiếp hoặc thông thường trong ngữ cảnh được nói đến.
+### 1136. Muốn chọn một tập khác của Bác Sĩ Thiên Tài (Bản Thái) trên MFILM thì bấm ở đâu?
 
-### 1109. Nghĩa bóng là gì?
+Mở [Bác Sĩ Thiên Tài (Bản Thái)](/phim/bac-si-thien-tai-ban-thai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Nghĩa chuyển được hiểu qua liên tưởng hoặc cách nói.
+### 1137. Tôi muốn lưu Bác Sĩ Thiên Tài (Bản Thái) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1110. So sánh tu từ là gì?
+Đăng nhập rồi mở [Bác Sĩ Thiên Tài (Bản Thái)](/phim/bac-si-thien-tai-ban-thai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Đối chiếu các đối tượng để làm nổi bật đặc điểm.
+### 1138. Muốn thuê riêng Bác Sĩ Thiên Tài (Bản Thái) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1111. Ẩn dụ tu từ là gì?
+Mở [Bác Sĩ Thiên Tài (Bản Thái)](/phim/bac-si-thien-tai-ban-thai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Gọi hoặc biểu đạt đối tượng qua sự tương đồng với đối tượng khác.
+### 1139. Nếu Bác Sĩ Thiên Tài (Bản Thái) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1112. Hoán dụ là gì?
+Kiểm tra đúng phim tại [Bác Sĩ Thiên Tài (Bản Thái)](/phim/bac-si-thien-tai-ban-thai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bác Sĩ Thiên Tài (Bản Thái)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Gọi đối tượng bằng yếu tố có quan hệ gần gũi với nó.
+### 1140. Tôi muốn gửi link Bác Sĩ Thiên Tài (Bản Thái) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1113. Nhân hóa là gì?
+Gửi trang chi tiết [Bác Sĩ Thiên Tài (Bản Thái)](/phim/bac-si-thien-tai-ban-thai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Gán đặc điểm hoặc hành động con người cho đối tượng không phải người.
+### 1141. Muốn chọn một tập khác của Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1) trên MFILM thì bấm ở đâu?
 
-### 1114. Điệp từ là gì?
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Lặp từ nhằm nhấn mạnh hoặc tạo nhịp.
+### 1142. Tôi muốn lưu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1115. Nói quá là gì?
+Đăng nhập rồi mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Phóng đại mức độ để tăng tác dụng biểu đạt.
+### 1143. Muốn thuê riêng Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1116. Nói giảm nói tránh là gì?
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Diễn đạt nhẹ hoặc gián tiếp để phù hợp cảm xúc và hoàn cảnh.
+### 1144. Nếu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1117. Liệt kê tu từ là gì?
+Kiểm tra đúng phim tại [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Đưa liên tiếp các yếu tố để làm rõ hoặc nhấn mạnh.
+### 1145. Tôi muốn gửi link Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1118. Câu hỏi tu từ là gì?
+Gửi trang chi tiết [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 1)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Câu hỏi chủ yếu dùng biểu đạt ý hoặc cảm xúc, không đòi đáp án trực tiếp.
+### 1146. Muốn chọn một tập khác của Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2) trên MFILM thì bấm ở đâu?
 
-### 1119. Chủ ngữ là gì?
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Thành phần nêu đối tượng được nói đến trong câu.
+### 1147. Tôi muốn lưu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1120. Vị ngữ là gì?
+Đăng nhập rồi mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Thành phần nêu điều được nói về chủ ngữ.
+### 1148. Muốn thuê riêng Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1121. Trạng ngữ là gì?
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Thành phần bổ sung hoàn cảnh như thời gian, nơi chốn hoặc nguyên nhân.
+### 1149. Nếu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1122. Câu đặc biệt là gì?
+Kiểm tra đúng phim tại [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Câu không theo cấu trúc chủ ngữ–vị ngữ thông thường.
+### 1150. Tôi muốn gửi link Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-## Viết và trình bày ý
+Gửi trang chi tiết [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 2)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1123. Luận điểm là gì?
+### 1151. Muốn chọn một tập khác của Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3) trên MFILM thì bấm ở đâu?
 
-Ý kiến trung tâm cần trình bày hoặc bảo vệ.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-3) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1124. Luận cứ là gì?
+### 1152. Tôi muốn lưu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3) vào Yêu Thích trên MFILM thì làm sao?
 
-Lý lẽ hoặc bằng chứng hỗ trợ luận điểm.
+Đăng nhập rồi mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-3), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1125. Ví dụ minh họa có thay bằng chứng được không?
+### 1153. Muốn thuê riêng Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Không luôn; ví dụ giúp hiểu nhưng chưa đủ chứng minh kết luận chung.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-3) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1126. Đoạn văn nên có bao nhiêu ý chính?
+### 1154. Nếu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Thường một ý chính giúp đoạn rõ và dễ theo dõi.
+Kiểm tra đúng phim tại [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-3), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1127. Mở bài review nên viết gì?
+### 1155. Tôi muốn gửi link Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3) trên MFILM cho bạn bè thì gửi trang nào?
 
-Nêu tác phẩm và góc đánh giá mà không kể hết diễn biến.
+Gửi trang chi tiết [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 3)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-3), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1128. Thân bài review nên sắp thế nào?
+### 1156. Muốn chọn một tập khác của Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4) trên MFILM thì bấm ở đâu?
 
-Nhóm nhận xét theo tiêu chí, mỗi ý kèm cảnh hoặc chi tiết làm căn cứ.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-4) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1129. Kết bài review nên làm gì?
+### 1157. Tôi muốn lưu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4) vào Yêu Thích trên MFILM thì làm sao?
 
-Nêu đánh giá cuối và người có thể phù hợp với trải nghiệm đó.
+Đăng nhập rồi mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-4), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1130. Trích dẫn và diễn giải khác nhau thế nào?
+### 1158. Muốn thuê riêng Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Trích dẫn giữ lời nguồn; diễn giải viết lại ý bằng cách của mình.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-4) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1131. Paraphrase là gì?
+### 1159. Nếu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Diễn đạt lại ý bằng lời khác mà giữ nghĩa cần thiết.
+Kiểm tra đúng phim tại [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-4), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1132. Tóm tắt khác rút nhận xét thế nào?
+### 1160. Tôi muốn gửi link Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4) trên MFILM cho bạn bè thì gửi trang nào?
 
-Tóm tắt cô đọng nội dung; nhận xét thêm đánh giá hoặc diễn giải.
+Gửi trang chi tiết [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 4)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-4), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1133. Đọc soát chính tả nên chú ý gì?
+### 1161. Muốn chọn một tập khác của Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5) trên MFILM thì bấm ở đâu?
 
-Kiểm tra tên riêng, dấu, từ dễ nhầm và câu bị thiếu thành phần.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-5) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1134. Tiêu đề tốt cần điều gì?
+### 1162. Tôi muốn lưu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5) vào Yêu Thích trên MFILM thì làm sao?
 
-Nêu trọng tâm rõ và phù hợp nội dung thực sự.
+Đăng nhập rồi mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-5), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1135. Clickbait là gì?
+### 1163. Muốn thuê riêng Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tiêu đề hoặc hình dùng gây tò mò quá mức, đôi khi lệch nội dung.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-5) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1136. Bullet list hợp khi nào?
+### 1164. Nếu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Khi các mục song song hoặc các bước cần dễ quét mắt.
+Kiểm tra đúng phim tại [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-5), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1137. Viết câu dài quá nên sửa sao?
+### 1165. Tôi muốn gửi link Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5) trên MFILM cho bạn bè thì gửi trang nào?
 
-Tách theo ý và giữ rõ quan hệ nguyên nhân, đối lập hoặc thời gian.
+Gửi trang chi tiết [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 5)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-5), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1138. Viết đoạn bị lặp từ nên sửa sao?
+### 1166. Muốn chọn một tập khác của Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6) trên MFILM thì bấm ở đâu?
 
-Bỏ chỗ không cần và thay cách diễn đạt khi vẫn giữ nghĩa rõ.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-6) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1139. Giọng văn nhất quán là gì?
+### 1167. Tôi muốn lưu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6) vào Yêu Thích trên MFILM thì làm sao?
 
-Giữ cách xưng hô và sắc thái phù hợp xuyên suốt.
+Đăng nhập rồi mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-6), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1140. Văn phong trang trọng khác thân mật thế nào?
+### 1168. Muốn thuê riêng Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Trang trọng dùng cách diễn đạt thận trọng; thân mật gần lời trò chuyện hơn.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-6) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1141. Đề cương giúp gì khi viết?
+### 1169. Nếu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Xác định ý chính và thứ tự trước khi triển khai câu chữ.
+Kiểm tra đúng phim tại [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-6), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1142. Viết hướng dẫn nên bắt đầu từ đâu?
+### 1170. Tôi muốn gửi link Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6) trên MFILM cho bạn bè thì gửi trang nào?
 
-Nêu mục tiêu và điều kiện cần, rồi đưa bước có thể thực hiện.
+Gửi trang chi tiết [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 6)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-6), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1143. Viết mô tả lỗi nên có gì?
+### 1171. Muốn chọn một tập khác của Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7) trên MFILM thì bấm ở đâu?
 
-Hiện tượng, bước tái hiện, kết quả mong đợi và môi trường liên quan.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-7) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1144. Nêu giới hạn nhận xét có ích gì?
+### 1172. Tôi muốn lưu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7) vào Yêu Thích trên MFILM thì làm sao?
 
-Giúp người đọc biết kết luận dựa trên phạm vi nào.
+Đăng nhập rồi mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-7), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1145. Đưa số liệu chưa rõ nguồn nên làm gì?
+### 1173. Muốn thuê riêng Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tìm nguồn hoặc ghi chưa xác minh, tránh trình bày như dữ kiện chắc chắn.
+Mở [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-7) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1146. Đọc biểu đồ trước khi kết luận cần xem gì?
+### 1174. Nếu Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Xem đơn vị, trục, khoảng thời gian và cách thu dữ liệu.
+Kiểm tra đúng phim tại [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-7), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1147. Viết so sánh nên dùng cùng tiêu chí không?
+### 1175. Tôi muốn gửi link Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7) trên MFILM cho bạn bè thì gửi trang nào?
 
-Có; tiêu chí nhất quán giúp thấy khác biệt có ý nghĩa.
+Gửi trang chi tiết [Bác Sĩ X Ngoại Khoa: Daimon Michiko (Phần 7)](/phim/bac-si-x-ngoai-khoa-daimon-michiko-phan-7), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-## Lập luận và suy luận
+### 1176. Muốn chọn một tập khác của Bách Biến Tinh Quân trên MFILM thì bấm ở đâu?
 
-### 1148. Tiền đề là gì?
+Mở [Bách Biến Tinh Quân](/phim/bach-bien-tinh-quan) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Mệnh đề hoặc giả định được dùng làm điểm xuất phát của lập luận.
+### 1177. Tôi muốn lưu Bách Biến Tinh Quân vào Yêu Thích trên MFILM thì làm sao?
 
-### 1149. Kết luận của lập luận là gì?
+Đăng nhập rồi mở [Bách Biến Tinh Quân](/phim/bach-bien-tinh-quan), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Ý được suy ra hoặc bảo vệ từ các tiền đề.
+### 1178. Muốn thuê riêng Bách Biến Tinh Quân thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1150. Suy diễn là gì?
+Mở [Bách Biến Tinh Quân](/phim/bach-bien-tinh-quan) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Lập luận mà kết luận theo tất yếu từ tiền đề nếu dạng suy luận hợp lệ.
+### 1179. Nếu Bách Biến Tinh Quân không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1151. Quy nạp là gì?
+Kiểm tra đúng phim tại [Bách Biến Tinh Quân](/phim/bach-bien-tinh-quan), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bách Biến Tinh Quân**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Rút kết luận tổng quát từ các trường hợp quan sát.
+### 1180. Tôi muốn gửi link Bách Biến Tinh Quân trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1152. Suy luận giải thích tốt nhất là gì?
+Gửi trang chi tiết [Bách Biến Tinh Quân](/phim/bach-bien-tinh-quan), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Chọn giả thuyết giải thích dữ kiện phù hợp nhất trong các khả năng xét.
+### 1181. Muốn chọn một tập khác của Bạn Gái Người Máy trên MFILM thì bấm ở đâu?
 
-### 1153. Lập luận vòng tròn là gì?
+Mở [Bạn Gái Người Máy](/phim/ban-gai-nguoi-may) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Dùng chính ý cần chứng minh làm cơ sở để chứng minh nó.
+### 1182. Tôi muốn lưu Bạn Gái Người Máy vào Yêu Thích trên MFILM thì làm sao?
 
-### 1154. Ngụy biện người rơm là gì?
+Đăng nhập rồi mở [Bạn Gái Người Máy](/phim/ban-gai-nguoi-may), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Biến dạng ý người khác rồi phản bác phiên bản dễ đánh hơn.
+### 1183. Muốn thuê riêng Bạn Gái Người Máy thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1155. Ngụy biện công kích cá nhân là gì?
+Mở [Bạn Gái Người Máy](/phim/ban-gai-nguoi-may) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Đánh người nói thay vì đánh giá lý lẽ liên quan.
+### 1184. Nếu Bạn Gái Người Máy không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1156. Lưỡng phân giả là gì?
+Kiểm tra đúng phim tại [Bạn Gái Người Máy](/phim/ban-gai-nguoi-may), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bạn Gái Người Máy**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Chỉ đưa hai lựa chọn dù còn khả năng khác.
+### 1185. Tôi muốn gửi link Bạn Gái Người Máy trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1157. Khái quát vội là gì?
+Gửi trang chi tiết [Bạn Gái Người Máy](/phim/ban-gai-nguoi-may), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Kết luận rộng từ dữ liệu quá ít hoặc không đại diện.
+### 1186. Muốn chọn một tập khác của Bạn Gái Thiên Tài trên MFILM thì bấm ở đâu?
 
-### 1158. Ngụy biện số đông là gì?
+Mở [Bạn Gái Thiên Tài](/phim/ban-gai-thien-tai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Coi một ý đúng chỉ vì nhiều người tin hoặc làm theo.
+### 1187. Tôi muốn lưu Bạn Gái Thiên Tài vào Yêu Thích trên MFILM thì làm sao?
 
-### 1159. Thiên kiến xác nhận là gì?
+Đăng nhập rồi mở [Bạn Gái Thiên Tài](/phim/ban-gai-thien-tai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Ưu tiên thông tin phù hợp điều đã tin và bỏ qua thông tin trái lại.
+### 1188. Muốn thuê riêng Bạn Gái Thiên Tài thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1160. Thiên kiến sống sót là gì?
+Mở [Bạn Gái Thiên Tài](/phim/ban-gai-thien-tai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Chỉ xét trường hợp còn xuất hiện, bỏ qua những trường hợp đã bị loại.
+### 1189. Nếu Bạn Gái Thiên Tài không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1161. Tương quan có chứng minh nhân quả không?
+Kiểm tra đúng phim tại [Bạn Gái Thiên Tài](/phim/ban-gai-thien-tai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bạn Gái Thiên Tài**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Không; hai yếu tố đi cùng nhau chưa chứng minh yếu tố này gây yếu tố kia.
+### 1190. Tôi muốn gửi link Bạn Gái Thiên Tài trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1162. Điều kiện cần là gì?
+Gửi trang chi tiết [Bạn Gái Thiên Tài](/phim/ban-gai-thien-tai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Điều phải có để kết quả hoặc mệnh đề được nói đến xảy ra.
+### 1191. Muốn chọn một tập khác của Bạn Gái Thuê (Bản Live Action) trên MFILM thì bấm ở đâu?
 
-### 1163. Điều kiện đủ là gì?
+Mở [Bạn Gái Thuê (Bản Live Action)](/phim/ban-gai-thue-ban-live-action) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Điều mà nếu có thì dẫn đến kết quả theo quan hệ đang xét.
+### 1192. Tôi muốn lưu Bạn Gái Thuê (Bản Live Action) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1164. Mệnh đề đảo là gì?
+Đăng nhập rồi mở [Bạn Gái Thuê (Bản Live Action)](/phim/ban-gai-thue-ban-live-action), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Đổi chỗ giả thiết và kết luận của mệnh đề kéo theo.
+### 1193. Muốn thuê riêng Bạn Gái Thuê (Bản Live Action) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1165. Mệnh đề phản đảo là gì?
+Mở [Bạn Gái Thuê (Bản Live Action)](/phim/ban-gai-thue-ban-live-action) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Với A kéo theo B, phản đảo là không B kéo theo không A.
+### 1194. Nếu Bạn Gái Thuê (Bản Live Action) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1166. Ví dụ phản chứng là gì?
+Kiểm tra đúng phim tại [Bạn Gái Thuê (Bản Live Action)](/phim/ban-gai-thue-ban-live-action), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bạn Gái Thuê (Bản Live Action)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Một trường hợp bác bỏ phát biểu cho tất cả trường hợp.
+### 1195. Tôi muốn gửi link Bạn Gái Thuê (Bản Live Action) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1167. Giả thuyết là gì?
+Gửi trang chi tiết [Bạn Gái Thuê (Bản Live Action)](/phim/ban-gai-thue-ban-live-action), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Ý giải thích hoặc dự đoán được đưa ra để xem xét và kiểm tra.
+### 1196. Muốn chọn một tập khác của Bàn Long trên MFILM thì bấm ở đâu?
 
-### 1168. Gánh nặng chứng minh là gì?
+Mở [Bàn Long](/phim/ban-long) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Trách nhiệm đưa căn cứ cho khẳng định đang được đưa ra.
+### 1197. Tôi muốn lưu Bàn Long vào Yêu Thích trên MFILM thì làm sao?
 
-### 1169. Không có bằng chứng có luôn là bằng chứng không có không?
+Đăng nhập rồi mở [Bàn Long](/phim/ban-long), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Không; cần xét khả năng quan sát và phương pháp kiểm tra.
+### 1198. Muốn thuê riêng Bàn Long thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1170. Occam's razor gợi ý gì?
+Mở [Bàn Long](/phim/ban-long) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Trong các giải thích tương đương, ưu tiên cách không thêm giả định không cần thiết.
+### 1199. Nếu Bàn Long không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1171. Tính hợp lệ khác tính đúng thế nào?
+Kiểm tra đúng phim tại [Bàn Long](/phim/ban-long), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bàn Long**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Hợp lệ nói về cách suy ra; đúng nói về nội dung mệnh đề.
+### 1200. Tôi muốn gửi link Bàn Long trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1172. Lập luận chặt chẽ cần gì?
+Gửi trang chi tiết [Bàn Long](/phim/ban-long), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Tiền đề đáng tin và cách suy luận phù hợp với kết luận.
+### 1201. Muốn chọn một tập khác của Bàn Tay Quỷ trên MFILM thì bấm ở đâu?
 
-## Số và phép tính
+Mở [Bàn Tay Quỷ](/phim/ban-tay-quy) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1173. Số tự nhiên là gì?
+### 1202. Tôi muốn lưu Bàn Tay Quỷ vào Yêu Thích trên MFILM thì làm sao?
 
-Các số đếm không âm theo quy ước phổ biến, gồm 0, 1, 2 và tiếp nữa.
+Đăng nhập rồi mở [Bàn Tay Quỷ](/phim/ban-tay-quy), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1174. Số nguyên là gì?
+### 1203. Muốn thuê riêng Bàn Tay Quỷ thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Gồm số nguyên âm, số 0 và số nguyên dương.
+Mở [Bàn Tay Quỷ](/phim/ban-tay-quy) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1175. Số hữu tỉ là gì?
+### 1204. Nếu Bàn Tay Quỷ không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Số viết được dưới dạng a/b với a, b nguyên và b khác 0.
+Kiểm tra đúng phim tại [Bàn Tay Quỷ](/phim/ban-tay-quy), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bàn Tay Quỷ**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1176. Số vô tỉ là gì?
+### 1205. Tôi muốn gửi link Bàn Tay Quỷ trên MFILM cho bạn bè thì gửi trang nào?
 
-Số thực không viết được thành tỉ số hai số nguyên.
+Gửi trang chi tiết [Bàn Tay Quỷ](/phim/ban-tay-quy), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1177. Số nguyên tố là gì?
+### 1206. Muốn chọn một tập khác của Bạn Tôi Là Marsupilami trên MFILM thì bấm ở đâu?
 
-Số nguyên lớn hơn 1 có đúng hai ước dương: 1 và chính nó.
+Mở [Bạn Tôi Là Marsupilami](/phim/ban-toi-la-marsupilami) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1178. Hợp số là gì?
+### 1207. Tôi muốn lưu Bạn Tôi Là Marsupilami vào Yêu Thích trên MFILM thì làm sao?
 
-Số nguyên lớn hơn 1 có nhiều hơn hai ước dương.
+Đăng nhập rồi mở [Bạn Tôi Là Marsupilami](/phim/ban-toi-la-marsupilami), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1179. Số 1 có phải nguyên tố không?
+### 1208. Muốn thuê riêng Bạn Tôi Là Marsupilami thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Không; 1 chỉ có một ước dương.
+Mở [Bạn Tôi Là Marsupilami](/phim/ban-toi-la-marsupilami) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1180. Số chẵn là gì?
+### 1209. Nếu Bạn Tôi Là Marsupilami không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Số nguyên chia hết cho 2.
+Kiểm tra đúng phim tại [Bạn Tôi Là Marsupilami](/phim/ban-toi-la-marsupilami), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bạn Tôi Là Marsupilami**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1181. Số lẻ là gì?
+### 1210. Tôi muốn gửi link Bạn Tôi Là Marsupilami trên MFILM cho bạn bè thì gửi trang nào?
 
-Số nguyên không chia hết cho 2.
+Gửi trang chi tiết [Bạn Tôi Là Marsupilami](/phim/ban-toi-la-marsupilami), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1182. Ước của một số là gì?
+### 1211. Muốn chọn một tập khác của BanG Dream! YUME∞MITA trên MFILM thì bấm ở đâu?
 
-Số chia số đó không dư trong phạm vi số nguyên đang xét.
+Mở [BanG Dream! YUME∞MITA](/phim/bang-dream-yumemita) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1183. Bội của một số là gì?
+### 1212. Tôi muốn lưu BanG Dream! YUME∞MITA vào Yêu Thích trên MFILM thì làm sao?
 
-Số thu được khi nhân số đó với một số nguyên.
+Đăng nhập rồi mở [BanG Dream! YUME∞MITA](/phim/bang-dream-yumemita), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1184. Ước chung lớn nhất là gì?
+### 1213. Muốn thuê riêng BanG Dream! YUME∞MITA thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Ước dương lớn nhất chung của các số nguyên đang xét.
+Mở [BanG Dream! YUME∞MITA](/phim/bang-dream-yumemita) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1185. Bội chung nhỏ nhất là gì?
+### 1214. Nếu BanG Dream! YUME∞MITA không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Bội dương nhỏ nhất chung của các số nguyên khác 0 đang xét.
+Kiểm tra đúng phim tại [BanG Dream! YUME∞MITA](/phim/bang-dream-yumemita), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **BanG Dream! YUME∞MITA**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1186. Giá trị tuyệt đối là gì?
+### 1215. Tôi muốn gửi link BanG Dream! YUME∞MITA trên MFILM cho bạn bè thì gửi trang nào?
 
-Khoảng cách của số đến 0 trên trục số.
+Gửi trang chi tiết [BanG Dream! YUME∞MITA](/phim/bang-dream-yumemita), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1187. Lũy thừa nguyên dương là gì?
+### 1216. Muốn chọn một tập khác của Báo Động Mayday trên MFILM thì bấm ở đâu?
 
-Tích của cơ số nhân với chính nó theo số lần của số mũ.
+Mở [Báo Động Mayday](/phim/bao-dong-mayday) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1188. Căn bậc hai số học là gì?
+### 1217. Tôi muốn lưu Báo Động Mayday vào Yêu Thích trên MFILM thì làm sao?
 
-Số không âm có bình phương bằng số không âm đã cho.
+Đăng nhập rồi mở [Báo Động Mayday](/phim/bao-dong-mayday), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1189. Phân số tối giản là gì?
+### 1218. Muốn thuê riêng Báo Động Mayday thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Phân số có tử và mẫu không còn ước chung dương lớn hơn 1.
+Mở [Báo Động Mayday](/phim/bao-dong-mayday) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1190. Phần trăm nghĩa là gì?
+### 1219. Nếu Báo Động Mayday không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Tỉ lệ tính trên một trăm; 25% bằng 25/100.
+Kiểm tra đúng phim tại [Báo Động Mayday](/phim/bao-dong-mayday), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Báo Động Mayday**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1191. Trung bình cộng tính thế nào?
+### 1220. Tôi muốn gửi link Báo Động Mayday trên MFILM cho bạn bè thì gửi trang nào?
 
-Cộng các giá trị rồi chia cho số lượng giá trị.
+Gửi trang chi tiết [Báo Động Mayday](/phim/bao-dong-mayday), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1192. Trung vị là gì?
+### 1221. Muốn chọn một tập khác của Bảo Mẫu Bí Mật Của Tiểu Thư trên MFILM thì bấm ở đâu?
 
-Giá trị giữa của dãy đã sắp; số lượng chẵn lấy trung bình hai giá trị giữa.
+Mở [Bảo Mẫu Bí Mật Của Tiểu Thư](/phim/bao-mau-bi-mat-cua-tieu-thu) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1193. Mốt trong thống kê là gì?
+### 1222. Tôi muốn lưu Bảo Mẫu Bí Mật Của Tiểu Thư vào Yêu Thích trên MFILM thì làm sao?
 
-Giá trị xuất hiện nhiều nhất; có thể có nhiều mốt.
+Đăng nhập rồi mở [Bảo Mẫu Bí Mật Của Tiểu Thư](/phim/bao-mau-bi-mat-cua-tieu-thu), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1194. Khoảng biến thiên tính thế nào?
+### 1223. Muốn thuê riêng Bảo Mẫu Bí Mật Của Tiểu Thư thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Lấy giá trị lớn nhất trừ giá trị nhỏ nhất.
+Mở [Bảo Mẫu Bí Mật Của Tiểu Thư](/phim/bao-mau-bi-mat-cua-tieu-thu) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1195. Xác suất bằng 0 có nghĩa gì cơ bản?
+### 1224. Nếu Bảo Mẫu Bí Mật Của Tiểu Thư không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Trong mô hình rời rạc thông thường, biến cố có xác suất 0 không được chọn.
+Kiểm tra đúng phim tại [Bảo Mẫu Bí Mật Của Tiểu Thư](/phim/bao-mau-bi-mat-cua-tieu-thu), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bảo Mẫu Bí Mật Của Tiểu Thư**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1196. Xác suất bằng 1 có nghĩa gì cơ bản?
+### 1225. Tôi muốn gửi link Bảo Mẫu Bí Mật Của Tiểu Thư trên MFILM cho bạn bè thì gửi trang nào?
 
-Biến cố xảy ra gần như chắc chắn theo mô hình xác suất đang dùng.
+Gửi trang chi tiết [Bảo Mẫu Bí Mật Của Tiểu Thư](/phim/bao-mau-bi-mat-cua-tieu-thu), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1197. Giai thừa là gì?
+### 1226. Muốn chọn một tập khác của Bắt Đầu Với Chí Tôn Đan Điền trên MFILM thì bấm ở đâu?
 
-Với n nguyên dương, n! là tích từ 1 đến n; quy ước 0! = 1.
+Mở [Bắt Đầu Với Chí Tôn Đan Điền](/phim/bat-dau-voi-chi-ton-dan-dien) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-## Hình học cơ bản
+### 1227. Tôi muốn lưu Bắt Đầu Với Chí Tôn Đan Điền vào Yêu Thích trên MFILM thì làm sao?
 
-### 1198. Điểm trong hình học là gì?
+Đăng nhập rồi mở [Bắt Đầu Với Chí Tôn Đan Điền](/phim/bat-dau-voi-chi-ton-dan-dien), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Đối tượng biểu thị vị trí, không có kích thước.
+### 1228. Muốn thuê riêng Bắt Đầu Với Chí Tôn Đan Điền thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1199. Đường thẳng là gì?
+Mở [Bắt Đầu Với Chí Tôn Đan Điền](/phim/bat-dau-voi-chi-ton-dan-dien) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Đường kéo dài vô hạn theo hai phía trong mô hình hình học.
+### 1229. Nếu Bắt Đầu Với Chí Tôn Đan Điền không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1200. Đoạn thẳng là gì?
+Kiểm tra đúng phim tại [Bắt Đầu Với Chí Tôn Đan Điền](/phim/bat-dau-voi-chi-ton-dan-dien), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bắt Đầu Với Chí Tôn Đan Điền**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Phần đường thẳng nằm giữa hai điểm đầu mút.
+### 1230. Tôi muốn gửi link Bắt Đầu Với Chí Tôn Đan Điền trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1201. Tia hình học là gì?
+Gửi trang chi tiết [Bắt Đầu Với Chí Tôn Đan Điền](/phim/bat-dau-voi-chi-ton-dan-dien), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Phần đường thẳng bắt đầu tại một điểm và kéo dài về một phía.
+### 1231. Muốn chọn một tập khác của Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1 trên MFILM thì bấm ở đâu?
 
-### 1202. Hai đường song song là gì?
+Mở [Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1](/phim/batman-su-sup-do-cua-hiep-si-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Trong cùng mặt phẳng, hai đường thẳng không giao nhau.
+### 1232. Tôi muốn lưu Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1 vào Yêu Thích trên MFILM thì làm sao?
 
-### 1203. Hai đường vuông góc là gì?
+Đăng nhập rồi mở [Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1](/phim/batman-su-sup-do-cua-hiep-si-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Hai đường thẳng giao nhau tạo góc vuông.
+### 1233. Muốn thuê riêng Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1 thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1204. Góc nhọn là gì?
+Mở [Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1](/phim/batman-su-sup-do-cua-hiep-si-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Góc có số đo lớn hơn 0° và nhỏ hơn 90°.
+### 1234. Nếu Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1 không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1205. Góc tù là gì?
+Kiểm tra đúng phim tại [Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1](/phim/batman-su-sup-do-cua-hiep-si-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Góc có số đo lớn hơn 90° và nhỏ hơn 180°.
+### 1235. Tôi muốn gửi link Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1 trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1206. Góc bẹt là gì?
+Gửi trang chi tiết [Batman: Sự Sụp Đổ Của Hiệp Sĩ - Phần 1](/phim/batman-su-sup-do-cua-hiep-si-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Góc có số đo 180°.
+### 1236. Muốn chọn một tập khác của Bẫy chuột (Phần 1) trên MFILM thì bấm ở đâu?
 
-### 1207. Góc vuông là gì?
+Mở [Bẫy chuột (Phần 1)](/phim/bay-chuot-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Góc có số đo 90°.
+### 1237. Tôi muốn lưu Bẫy chuột (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1208. Tam giác đều là gì?
+Đăng nhập rồi mở [Bẫy chuột (Phần 1)](/phim/bay-chuot-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Tam giác có ba cạnh bằng nhau.
+### 1238. Muốn thuê riêng Bẫy chuột (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1209. Tam giác cân là gì?
+Mở [Bẫy chuột (Phần 1)](/phim/bay-chuot-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Tam giác có ít nhất hai cạnh bằng nhau.
+### 1239. Nếu Bẫy chuột (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1210. Tam giác vuông là gì?
+Kiểm tra đúng phim tại [Bẫy chuột (Phần 1)](/phim/bay-chuot-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bẫy chuột (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Tam giác có một góc vuông.
+### 1240. Tôi muốn gửi link Bẫy chuột (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1211. Tổng góc tam giác phẳng là bao nhiêu?
+Gửi trang chi tiết [Bẫy chuột (Phần 1)](/phim/bay-chuot-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Trong hình học Euclid, tổng ba góc trong bằng 180°.
+### 1241. Muốn chọn một tập khác của Bảy Tay Súng Huyền Thoại trên MFILM thì bấm ở đâu?
 
-### 1212. Định lý Pythagore nói gì?
+Mở [Bảy Tay Súng Huyền Thoại](/phim/bay-tay-sung-huyen-thoai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Trong tam giác vuông, bình phương cạnh huyền bằng tổng bình phương hai cạnh góc vuông.
+### 1242. Tôi muốn lưu Bảy Tay Súng Huyền Thoại vào Yêu Thích trên MFILM thì làm sao?
 
-### 1213. Chu vi hình chữ nhật tính thế nào?
+Đăng nhập rồi mở [Bảy Tay Súng Huyền Thoại](/phim/bay-tay-sung-huyen-thoai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Hai lần tổng chiều dài và chiều rộng: P = 2(a + b).
+### 1243. Muốn thuê riêng Bảy Tay Súng Huyền Thoại thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1214. Diện tích hình chữ nhật tính thế nào?
+Mở [Bảy Tay Súng Huyền Thoại](/phim/bay-tay-sung-huyen-thoai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Nhân chiều dài với chiều rộng: S = a × b.
+### 1244. Nếu Bảy Tay Súng Huyền Thoại không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1215. Diện tích tam giác tính thế nào?
+Kiểm tra đúng phim tại [Bảy Tay Súng Huyền Thoại](/phim/bay-tay-sung-huyen-thoai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bảy Tay Súng Huyền Thoại**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Một nửa tích cạnh đáy với chiều cao tương ứng: S = a × h / 2.
+### 1245. Tôi muốn gửi link Bảy Tay Súng Huyền Thoại trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1216. Chu vi hình tròn tính thế nào?
+Gửi trang chi tiết [Bảy Tay Súng Huyền Thoại](/phim/bay-tay-sung-huyen-thoai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-C = 2πr, với r là bán kính.
+### 1246. Muốn chọn một tập khác của Bay Vào Trái Tim Anh / Bay Vào Tim Anh trên MFILM thì bấm ở đâu?
 
-### 1217. Diện tích hình tròn tính thế nào?
+Mở [Bay Vào Trái Tim Anh / Bay Vào Tim Anh](/phim/bay-vao-trai-tim-anh-bay-vao-tim-anh) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-S = πr², với r là bán kính.
+### 1247. Tôi muốn lưu Bay Vào Trái Tim Anh / Bay Vào Tim Anh vào Yêu Thích trên MFILM thì làm sao?
 
-### 1218. Hình bình hành là gì?
+Đăng nhập rồi mở [Bay Vào Trái Tim Anh / Bay Vào Tim Anh](/phim/bay-vao-trai-tim-anh-bay-vao-tim-anh), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Tứ giác có hai cặp cạnh đối song song.
+### 1248. Muốn thuê riêng Bay Vào Trái Tim Anh / Bay Vào Tim Anh thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1219. Hình thoi là gì?
+Mở [Bay Vào Trái Tim Anh / Bay Vào Tim Anh](/phim/bay-vao-trai-tim-anh-bay-vao-tim-anh) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Tứ giác có bốn cạnh bằng nhau.
+### 1249. Nếu Bay Vào Trái Tim Anh / Bay Vào Tim Anh không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1220. Thể tích hình hộp chữ nhật tính thế nào?
+Kiểm tra đúng phim tại [Bay Vào Trái Tim Anh / Bay Vào Tim Anh](/phim/bay-vao-trai-tim-anh-bay-vao-tim-anh), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bay Vào Trái Tim Anh / Bay Vào Tim Anh**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Nhân ba kích thước vuông góc: V = a × b × c.
+### 1250. Tôi muốn gửi link Bay Vào Trái Tim Anh / Bay Vào Tim Anh trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1221. Thể tích hình trụ tính thế nào?
+Gửi trang chi tiết [Bay Vào Trái Tim Anh / Bay Vào Tim Anh](/phim/bay-vao-trai-tim-anh-bay-vao-tim-anh), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-V = πr²h, với r là bán kính đáy và h là chiều cao.
+### 1251. Muốn chọn một tập khác của Bảy Viên Ngọc Rồng Siêu Cấp trên MFILM thì bấm ở đâu?
 
-### 1222. Hình đồng dạng là gì?
+Mở [Bảy Viên Ngọc Rồng Siêu Cấp](/phim/bay-vien-ngoc-rong-sieu-cap) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Các hình có cùng dạng với kích thước tương ứng theo một tỉ lệ.
+### 1252. Tôi muốn lưu Bảy Viên Ngọc Rồng Siêu Cấp vào Yêu Thích trên MFILM thì làm sao?
 
-## Đơn vị và quy đổi
+Đăng nhập rồi mở [Bảy Viên Ngọc Rồng Siêu Cấp](/phim/bay-vien-ngoc-rong-sieu-cap), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1223. Một kilomet bằng bao nhiêu mét?
+### 1253. Muốn thuê riêng Bảy Viên Ngọc Rồng Siêu Cấp thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-1 kilomet bằng 1.000 mét.
+Mở [Bảy Viên Ngọc Rồng Siêu Cấp](/phim/bay-vien-ngoc-rong-sieu-cap) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1224. Một mét bằng bao nhiêu centimet?
+### 1254. Nếu Bảy Viên Ngọc Rồng Siêu Cấp không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-1 mét bằng 100 centimet.
+Kiểm tra đúng phim tại [Bảy Viên Ngọc Rồng Siêu Cấp](/phim/bay-vien-ngoc-rong-sieu-cap), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bảy Viên Ngọc Rồng Siêu Cấp**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1225. Một centimet bằng bao nhiêu milimet?
+### 1255. Tôi muốn gửi link Bảy Viên Ngọc Rồng Siêu Cấp trên MFILM cho bạn bè thì gửi trang nào?
 
-1 centimet bằng 10 milimet.
+Gửi trang chi tiết [Bảy Viên Ngọc Rồng Siêu Cấp](/phim/bay-vien-ngoc-rong-sieu-cap), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1226. Một mét vuông bằng bao nhiêu centimet vuông?
+### 1256. Muốn chọn một tập khác của Bảy Viên Ngọc Rồng Z Kai Chương Cuối trên MFILM thì bấm ở đâu?
 
-1 m² bằng 10.000 cm².
+Mở [Bảy Viên Ngọc Rồng Z Kai Chương Cuối](/phim/bay-vien-ngoc-rong-z-kai-chuong-cuoi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1227. Một hecta bằng bao nhiêu mét vuông?
+### 1257. Tôi muốn lưu Bảy Viên Ngọc Rồng Z Kai Chương Cuối vào Yêu Thích trên MFILM thì làm sao?
 
-1 hecta bằng 10.000 m².
+Đăng nhập rồi mở [Bảy Viên Ngọc Rồng Z Kai Chương Cuối](/phim/bay-vien-ngoc-rong-z-kai-chuong-cuoi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1228. Một mét khối bằng bao nhiêu lít?
+### 1258. Muốn thuê riêng Bảy Viên Ngọc Rồng Z Kai Chương Cuối thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-1 m³ bằng 1.000 lít.
+Mở [Bảy Viên Ngọc Rồng Z Kai Chương Cuối](/phim/bay-vien-ngoc-rong-z-kai-chuong-cuoi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1229. Một lít bằng bao nhiêu mililit?
+### 1259. Nếu Bảy Viên Ngọc Rồng Z Kai Chương Cuối không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-1 lít bằng 1.000 mililit.
+Kiểm tra đúng phim tại [Bảy Viên Ngọc Rồng Z Kai Chương Cuối](/phim/bay-vien-ngoc-rong-z-kai-chuong-cuoi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bảy Viên Ngọc Rồng Z Kai Chương Cuối**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1230. Một kilogram bằng bao nhiêu gram?
+### 1260. Tôi muốn gửi link Bảy Viên Ngọc Rồng Z Kai Chương Cuối trên MFILM cho bạn bè thì gửi trang nào?
 
-1 kilogram bằng 1.000 gram.
+Gửi trang chi tiết [Bảy Viên Ngọc Rồng Z Kai Chương Cuối](/phim/bay-vien-ngoc-rong-z-kai-chuong-cuoi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1231. Một tấn hệ mét bằng bao nhiêu kilogram?
+### 1261. Muốn chọn một tập khác của Bầy Xác Sống trên MFILM thì bấm ở đâu?
 
-1 tấn hệ mét bằng 1.000 kilogram.
+Mở [Bầy Xác Sống](/phim/bay-xac-song) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1232. Một giờ bằng bao nhiêu phút?
+### 1262. Tôi muốn lưu Bầy Xác Sống vào Yêu Thích trên MFILM thì làm sao?
 
-1 giờ bằng 60 phút.
+Đăng nhập rồi mở [Bầy Xác Sống](/phim/bay-xac-song), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1233. Một phút bằng bao nhiêu giây?
+### 1263. Muốn thuê riêng Bầy Xác Sống thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-1 phút bằng 60 giây.
+Mở [Bầy Xác Sống](/phim/bay-xac-song) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1234. Một ngày thông thường bằng bao nhiêu giờ?
+### 1264. Nếu Bầy Xác Sống không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Một ngày dân dụng thông thường có 24 giờ.
+Kiểm tra đúng phim tại [Bầy Xác Sống](/phim/bay-xac-song), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bầy Xác Sống**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1235. Một tuần bằng bao nhiêu ngày?
+### 1265. Tôi muốn gửi link Bầy Xác Sống trên MFILM cho bạn bè thì gửi trang nào?
 
-1 tuần có 7 ngày.
+Gửi trang chi tiết [Bầy Xác Sống](/phim/bay-xac-song), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1236. Một radian là góc thế nào?
+### 1266. Muốn chọn một tập khác của Bên Trong Chính Thể / Chế Độ trên MFILM thì bấm ở đâu?
 
-Góc ở tâm chắn cung dài bằng bán kính của đường tròn.
+Mở [Bên Trong Chính Thể / Chế Độ](/phim/ben-trong-chinh-the-che-do) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1237. Một vòng tròn bằng bao nhiêu độ?
+### 1267. Tôi muốn lưu Bên Trong Chính Thể / Chế Độ vào Yêu Thích trên MFILM thì làm sao?
 
-Một vòng đầy đủ bằng 360°.
+Đăng nhập rồi mở [Bên Trong Chính Thể / Chế Độ](/phim/ben-trong-chinh-the-che-do), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1238. Một vòng tròn bằng bao nhiêu radian?
+### 1268. Muốn thuê riêng Bên Trong Chính Thể / Chế Độ thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Một vòng đầy đủ bằng 2π radian.
+Mở [Bên Trong Chính Thể / Chế Độ](/phim/ben-trong-chinh-the-che-do) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1239. Kelvin đổi sang Celsius thế nào?
+### 1269. Nếu Bên Trong Chính Thể / Chế Độ không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Lấy nhiệt độ kelvin trừ 273,15 để được độ Celsius.
+Kiểm tra đúng phim tại [Bên Trong Chính Thể / Chế Độ](/phim/ben-trong-chinh-the-che-do), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bên Trong Chính Thể / Chế Độ**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1240. Fahrenheit đổi sang Celsius thế nào?
+### 1270. Tôi muốn gửi link Bên Trong Chính Thể / Chế Độ trên MFILM cho bạn bè thì gửi trang nào?
 
-Dùng công thức C = (F − 32) × 5/9.
+Gửi trang chi tiết [Bên Trong Chính Thể / Chế Độ](/phim/ben-trong-chinh-the-che-do), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1241. Kilowatt là đơn vị gì?
+### 1271. Muốn chọn một tập khác của Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre trên MFILM thì bấm ở đâu?
 
-Đơn vị công suất; 1 kW bằng 1.000 watt.
+Mở [Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre](/phim/bi-an-cung-trang-bi-mat-thung-lung-moonacre) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1242. Kilowatt giờ đo gì?
+### 1272. Tôi muốn lưu Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre vào Yêu Thích trên MFILM thì làm sao?
 
-Đo năng lượng, bằng công suất 1 kW dùng trong một giờ.
+Đăng nhập rồi mở [Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre](/phim/bi-an-cung-trang-bi-mat-thung-lung-moonacre), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1243. Hertz đo gì?
+### 1273. Muốn thuê riêng Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Đo tần số; 1 Hz tương ứng một chu kỳ mỗi giây.
+Mở [Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre](/phim/bi-an-cung-trang-bi-mat-thung-lung-moonacre) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1244. Newton đo gì?
+### 1274. Nếu Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Đo lực trong hệ SI.
+Kiểm tra đúng phim tại [Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre](/phim/bi-an-cung-trang-bi-mat-thung-lung-moonacre), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1245. Pascal đo gì?
+### 1275. Tôi muốn gửi link Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre trên MFILM cho bạn bè thì gửi trang nào?
 
-Đo áp suất; 1 Pa bằng 1 newton trên mét vuông.
+Gửi trang chi tiết [Bí Ẩn Cung Trăng / Bí Mật Thung Lũng Moonacre](/phim/bi-an-cung-trang-bi-mat-thung-lung-moonacre), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1246. Joule đo gì?
+### 1276. Muốn chọn một tập khác của Bí Ẩn Nhà Ma trên MFILM thì bấm ở đâu?
 
-Đo năng lượng hoặc công trong hệ SI.
+Mở [Bí Ẩn Nhà Ma](/phim/bi-an-nha-ma) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1247. Watt đo gì?
+### 1277. Tôi muốn lưu Bí Ẩn Nhà Ma vào Yêu Thích trên MFILM thì làm sao?
 
-Đo công suất; 1 W bằng 1 joule mỗi giây.
+Đăng nhập rồi mở [Bí Ẩn Nhà Ma](/phim/bi-an-nha-ma), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-## Vật lý phổ thông
+### 1278. Muốn thuê riêng Bí Ẩn Nhà Ma thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1248. Vận tốc khác tốc độ thế nào?
+Mở [Bí Ẩn Nhà Ma](/phim/bi-an-nha-ma) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Vận tốc có hướng; tốc độ biểu thị mức nhanh chậm không kèm hướng.
+### 1279. Nếu Bí Ẩn Nhà Ma không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1249. Gia tốc là gì?
+Kiểm tra đúng phim tại [Bí Ẩn Nhà Ma](/phim/bi-an-nha-ma), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Ẩn Nhà Ma**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Mức thay đổi vận tốc theo thời gian.
+### 1280. Tôi muốn gửi link Bí Ẩn Nhà Ma trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1250. Quán tính là gì?
+Gửi trang chi tiết [Bí Ẩn Nhà Ma](/phim/bi-an-nha-ma), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Xu hướng giữ trạng thái chuyển động khi không có tác động làm thay đổi.
+### 1281. Muốn chọn một tập khác của Bí Mật Bị Vùi Lấp (Phần 1) trên MFILM thì bấm ở đâu?
 
-### 1251. Khối lượng khác trọng lượng thế nào?
+Mở [Bí Mật Bị Vùi Lấp (Phần 1)](/phim/bi-mat-bi-vui-lap-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Khối lượng là thuộc tính vật; trọng lượng là lực hấp dẫn tác dụng lên vật.
+### 1282. Tôi muốn lưu Bí Mật Bị Vùi Lấp (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1252. Ma sát là gì?
+Đăng nhập rồi mở [Bí Mật Bị Vùi Lấp (Phần 1)](/phim/bi-mat-bi-vui-lap-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Lực cản chuyển động tương đối giữa các bề mặt tiếp xúc.
+### 1283. Muốn thuê riêng Bí Mật Bị Vùi Lấp (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1253. Động năng là gì?
+Mở [Bí Mật Bị Vùi Lấp (Phần 1)](/phim/bi-mat-bi-vui-lap-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Năng lượng của vật do chuyển động.
+### 1284. Nếu Bí Mật Bị Vùi Lấp (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1254. Thế năng là gì?
+Kiểm tra đúng phim tại [Bí Mật Bị Vùi Lấp (Phần 1)](/phim/bi-mat-bi-vui-lap-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Mật Bị Vùi Lấp (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Năng lượng liên quan vị trí hoặc cấu hình trong một hệ tương tác.
+### 1285. Tôi muốn gửi link Bí Mật Bị Vùi Lấp (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1255. Công cơ học là gì?
+Gửi trang chi tiết [Bí Mật Bị Vùi Lấp (Phần 1)](/phim/bi-mat-bi-vui-lap-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Năng lượng truyền bởi lực khi vật có dịch chuyển phù hợp.
+### 1286. Muốn chọn một tập khác của Bí Mật Bị Vùi Lấp (Phần 2) trên MFILM thì bấm ở đâu?
 
-### 1256. Áp suất là gì?
+Mở [Bí Mật Bị Vùi Lấp (Phần 2)](/phim/bi-mat-bi-vui-lap-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Lực tác dụng vuông góc trên một đơn vị diện tích.
+### 1287. Tôi muốn lưu Bí Mật Bị Vùi Lấp (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1257. Lực đẩy Archimedes là gì?
+Đăng nhập rồi mở [Bí Mật Bị Vùi Lấp (Phần 2)](/phim/bi-mat-bi-vui-lap-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Lực nổi do chất lưu tác dụng, bằng trọng lượng chất lưu bị chiếm chỗ.
+### 1288. Muốn thuê riêng Bí Mật Bị Vùi Lấp (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1258. Khối lượng riêng là gì?
+Mở [Bí Mật Bị Vùi Lấp (Phần 2)](/phim/bi-mat-bi-vui-lap-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Khối lượng trên một đơn vị thể tích.
+### 1289. Nếu Bí Mật Bị Vùi Lấp (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1259. Nhiệt độ khác nhiệt lượng thế nào?
+Kiểm tra đúng phim tại [Bí Mật Bị Vùi Lấp (Phần 2)](/phim/bi-mat-bi-vui-lap-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Mật Bị Vùi Lấp (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Nhiệt độ mô tả trạng thái nhiệt; nhiệt lượng là năng lượng truyền do chênh nhiệt.
+### 1290. Tôi muốn gửi link Bí Mật Bị Vùi Lấp (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1260. Dẫn nhiệt là gì?
+Gửi trang chi tiết [Bí Mật Bị Vùi Lấp (Phần 2)](/phim/bi-mat-bi-vui-lap-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Truyền năng lượng nhiệt qua tương tác trong vật chất.
+### 1291. Muốn chọn một tập khác của Bí Mật Bị Vùi Lấp (Phần 3) trên MFILM thì bấm ở đâu?
 
-### 1261. Đối lưu là gì?
+Mở [Bí Mật Bị Vùi Lấp (Phần 3)](/phim/bi-mat-bi-vui-lap-phan-3) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Truyền nhiệt gắn với chuyển động của chất lưu.
+### 1292. Tôi muốn lưu Bí Mật Bị Vùi Lấp (Phần 3) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1262. Bức xạ nhiệt là gì?
+Đăng nhập rồi mở [Bí Mật Bị Vùi Lấp (Phần 3)](/phim/bi-mat-bi-vui-lap-phan-3), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Truyền năng lượng bằng sóng điện từ, không cần môi trường vật chất.
+### 1293. Muốn thuê riêng Bí Mật Bị Vùi Lấp (Phần 3) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1263. Sóng cơ là gì?
+Mở [Bí Mật Bị Vùi Lấp (Phần 3)](/phim/bi-mat-bi-vui-lap-phan-3) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Sự lan truyền dao động qua môi trường vật chất.
+### 1294. Nếu Bí Mật Bị Vùi Lấp (Phần 3) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1264. Âm thanh truyền trong chân không không?
+Kiểm tra đúng phim tại [Bí Mật Bị Vùi Lấp (Phần 3)](/phim/bi-mat-bi-vui-lap-phan-3), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Mật Bị Vùi Lấp (Phần 3)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Không; âm thanh là sóng cơ cần môi trường truyền.
+### 1295. Tôi muốn gửi link Bí Mật Bị Vùi Lấp (Phần 3) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1265. Tần số âm ảnh hưởng cảm nhận gì?
+Gửi trang chi tiết [Bí Mật Bị Vùi Lấp (Phần 3)](/phim/bi-mat-bi-vui-lap-phan-3), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Liên quan độ cao thấp của âm, nhưng cảm nhận còn phụ thuộc điều kiện.
+### 1296. Muốn chọn một tập khác của Bí Mật Bị Vùi Lấp (Phần 4) trên MFILM thì bấm ở đâu?
 
-### 1266. Phản xạ ánh sáng là gì?
+Mở [Bí Mật Bị Vùi Lấp (Phần 4)](/phim/bi-mat-bi-vui-lap-phan-4) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Ánh sáng đổi hướng trở lại khi gặp bề mặt.
+### 1297. Tôi muốn lưu Bí Mật Bị Vùi Lấp (Phần 4) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1267. Khúc xạ ánh sáng là gì?
+Đăng nhập rồi mở [Bí Mật Bị Vùi Lấp (Phần 4)](/phim/bi-mat-bi-vui-lap-phan-4), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Ánh sáng đổi hướng khi đi giữa môi trường có chiết suất khác.
+### 1298. Muốn thuê riêng Bí Mật Bị Vùi Lấp (Phần 4) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1268. Tán sắc ánh sáng là gì?
+Mở [Bí Mật Bị Vùi Lấp (Phần 4)](/phim/bi-mat-bi-vui-lap-phan-4) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Các thành phần bước sóng bị tách do đổi hướng khác nhau.
+### 1299. Nếu Bí Mật Bị Vùi Lấp (Phần 4) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1269. Dòng điện là gì?
+Kiểm tra đúng phim tại [Bí Mật Bị Vùi Lấp (Phần 4)](/phim/bi-mat-bi-vui-lap-phan-4), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Mật Bị Vùi Lấp (Phần 4)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Sự dịch chuyển có hướng của điện tích.
+### 1300. Tôi muốn gửi link Bí Mật Bị Vùi Lấp (Phần 4) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1270. Hiệu điện thế là gì?
+Gửi trang chi tiết [Bí Mật Bị Vùi Lấp (Phần 4)](/phim/bi-mat-bi-vui-lap-phan-4), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Chênh lệch điện thế giữa hai điểm.
+### 1301. Muốn chọn một tập khác của Bí Mật Bị Vùi Lấp (Phần 5) trên MFILM thì bấm ở đâu?
 
-### 1271. Điện trở là gì?
+Mở [Bí Mật Bị Vùi Lấp (Phần 5)](/phim/bi-mat-bi-vui-lap-phan-5) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Đại lượng biểu thị mức cản dòng điện theo mô hình đang xét.
+### 1302. Tôi muốn lưu Bí Mật Bị Vùi Lấp (Phần 5) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1272. Mạch nối tiếp khác song song thế nào?
+Đăng nhập rồi mở [Bí Mật Bị Vùi Lấp (Phần 5)](/phim/bi-mat-bi-vui-lap-phan-5), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Nối tiếp có đường dòng chung; song song có các nhánh giữa cùng hai nút.
+### 1303. Muốn thuê riêng Bí Mật Bị Vùi Lấp (Phần 5) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-## Trái Đất và môi trường
+Mở [Bí Mật Bị Vùi Lấp (Phần 5)](/phim/bi-mat-bi-vui-lap-phan-5) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1273. Khí quyển là gì?
+### 1304. Nếu Bí Mật Bị Vùi Lấp (Phần 5) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Lớp khí bao quanh một thiên thể, được giữ bởi hấp dẫn.
+Kiểm tra đúng phim tại [Bí Mật Bị Vùi Lấp (Phần 5)](/phim/bi-mat-bi-vui-lap-phan-5), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Mật Bị Vùi Lấp (Phần 5)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1274. Thủy quyển là gì?
+### 1305. Tôi muốn gửi link Bí Mật Bị Vùi Lấp (Phần 5) trên MFILM cho bạn bè thì gửi trang nào?
 
-Toàn bộ nước của Trái Đất trong các dạng và nơi tồn tại.
+Gửi trang chi tiết [Bí Mật Bị Vùi Lấp (Phần 5)](/phim/bi-mat-bi-vui-lap-phan-5), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1275. Sinh quyển là gì?
+### 1306. Muốn chọn một tập khác của Bí Mật Đen Tối trên MFILM thì bấm ở đâu?
 
-Phần môi trường Trái Đất có sự sống và các hệ liên quan.
+Mở [Bí Mật Đen Tối](/phim/bi-mat-den-toi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1276. Địa quyển là gì?
+### 1307. Tôi muốn lưu Bí Mật Đen Tối vào Yêu Thích trên MFILM thì làm sao?
 
-Các phần rắn của Trái Đất, gồm đất đá và cấu trúc bên trong.
+Đăng nhập rồi mở [Bí Mật Đen Tối](/phim/bi-mat-den-toi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1277. Chu trình nước là gì?
+### 1308. Muốn thuê riêng Bí Mật Đen Tối thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Sự tuần hoàn nước qua bốc hơi, ngưng tụ, giáng thủy và dòng chảy.
+Mở [Bí Mật Đen Tối](/phim/bi-mat-den-toi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1278. Bốc hơi là gì?
+### 1309. Nếu Bí Mật Đen Tối không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Chuyển từ chất lỏng sang hơi tại bề mặt.
+Kiểm tra đúng phim tại [Bí Mật Đen Tối](/phim/bi-mat-den-toi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Mật Đen Tối**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1279. Ngưng tụ là gì?
+### 1310. Tôi muốn gửi link Bí Mật Đen Tối trên MFILM cho bạn bè thì gửi trang nào?
 
-Chuyển từ trạng thái khí sang lỏng.
+Gửi trang chi tiết [Bí Mật Đen Tối](/phim/bi-mat-den-toi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1280. Mây được tạo từ gì?
+### 1311. Muốn chọn một tập khác của Bí Mật Giới Thể Thao: Mr T trên MFILM thì bấm ở đâu?
 
-Các giọt nước nhỏ hoặc tinh thể băng lơ lửng trong khí quyển.
+Mở [Bí Mật Giới Thể Thao: Mr T](/phim/bi-mat-gioi-the-thao-mr-t) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1281. Sương mù khác mây ở đâu?
+### 1312. Tôi muốn lưu Bí Mật Giới Thể Thao: Mr T vào Yêu Thích trên MFILM thì làm sao?
 
-Sương mù là các giọt nước hoặc tinh thể gần mặt đất làm giảm tầm nhìn.
+Đăng nhập rồi mở [Bí Mật Giới Thể Thao: Mr T](/phim/bi-mat-gioi-the-thao-mr-t), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1282. Độ ẩm tương đối là gì?
+### 1313. Muốn thuê riêng Bí Mật Giới Thể Thao: Mr T thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tỉ lệ hơi nước hiện có so với mức bão hòa ở cùng nhiệt độ.
+Mở [Bí Mật Giới Thể Thao: Mr T](/phim/bi-mat-gioi-the-thao-mr-t) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1283. Thời tiết khác khí hậu thế nào?
+### 1314. Nếu Bí Mật Giới Thể Thao: Mr T không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Thời tiết là trạng thái ngắn hạn; khí hậu xét đặc điểm lâu dài.
+Kiểm tra đúng phim tại [Bí Mật Giới Thể Thao: Mr T](/phim/bi-mat-gioi-the-thao-mr-t), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Mật Giới Thể Thao: Mr T**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1284. Gió hình thành do đâu cơ bản?
+### 1315. Tôi muốn gửi link Bí Mật Giới Thể Thao: Mr T trên MFILM cho bạn bè thì gửi trang nào?
 
-Không khí chuyển động dưới tác động chênh lệch áp suất và các lực liên quan.
+Gửi trang chi tiết [Bí Mật Giới Thể Thao: Mr T](/phim/bi-mat-gioi-the-thao-mr-t), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1285. Xói mòn là gì?
+### 1316. Muốn chọn một tập khác của Bí Mật Giới Thể Thao: Rachael Gunn trên MFILM thì bấm ở đâu?
 
-Đất hoặc vật liệu bị bào và chuyển đi bởi nước, gió hoặc tác nhân khác.
+Mở [Bí Mật Giới Thể Thao: Rachael Gunn](/phim/bi-mat-gioi-the-thao-rachael-gunn) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1286. Phong hóa là gì?
+### 1317. Tôi muốn lưu Bí Mật Giới Thể Thao: Rachael Gunn vào Yêu Thích trên MFILM thì làm sao?
 
-Đá và khoáng vật biến đổi hoặc vỡ tại chỗ do tác động môi trường.
+Đăng nhập rồi mở [Bí Mật Giới Thể Thao: Rachael Gunn](/phim/bi-mat-gioi-the-thao-rachael-gunn), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1287. Trầm tích là gì?
+### 1318. Muốn thuê riêng Bí Mật Giới Thể Thao: Rachael Gunn thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Vật liệu được vận chuyển rồi lắng đọng.
+Mở [Bí Mật Giới Thể Thao: Rachael Gunn](/phim/bi-mat-gioi-the-thao-rachael-gunn) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1288. Đá magma hình thành thế nào?
+### 1319. Nếu Bí Mật Giới Thể Thao: Rachael Gunn không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Từ vật chất nóng chảy nguội và kết tinh.
+Kiểm tra đúng phim tại [Bí Mật Giới Thể Thao: Rachael Gunn](/phim/bi-mat-gioi-the-thao-rachael-gunn), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bí Mật Giới Thể Thao: Rachael Gunn**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1289. Đá trầm tích hình thành thế nào?
+### 1320. Tôi muốn gửi link Bí Mật Giới Thể Thao: Rachael Gunn trên MFILM cho bạn bè thì gửi trang nào?
 
-Từ vật liệu lắng đọng hoặc kết tủa rồi được gắn kết theo quá trình địa chất.
+Gửi trang chi tiết [Bí Mật Giới Thể Thao: Rachael Gunn](/phim/bi-mat-gioi-the-thao-rachael-gunn), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1290. Đá biến chất hình thành thế nào?
+### 1321. Muốn chọn một tập khác của Biệt Đội Công Lý Avalanche trên MFILM thì bấm ở đâu?
 
-Đá cũ biến đổi do nhiệt, áp suất và tương tác mà không nóng chảy hoàn toàn.
+Mở [Biệt Đội Công Lý Avalanche](/phim/biet-doi-cong-ly-avalanche) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1291. Mảng kiến tạo là gì?
+### 1322. Tôi muốn lưu Biệt Đội Công Lý Avalanche vào Yêu Thích trên MFILM thì làm sao?
 
-Những phần lớn của lớp vỏ cứng ngoài cùng di chuyển tương đối.
+Đăng nhập rồi mở [Biệt Đội Công Lý Avalanche](/phim/biet-doi-cong-ly-avalanche), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1292. Động đất là gì?
+### 1323. Muốn thuê riêng Biệt Đội Công Lý Avalanche thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Rung chuyển do năng lượng được giải phóng trong Trái Đất.
+Mở [Biệt Đội Công Lý Avalanche](/phim/biet-doi-cong-ly-avalanche) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1293. Núi lửa là gì?
+### 1324. Nếu Biệt Đội Công Lý Avalanche không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Nơi vật chất nóng từ bên trong Trái Đất thoát lên bề mặt.
+Kiểm tra đúng phim tại [Biệt Đội Công Lý Avalanche](/phim/biet-doi-cong-ly-avalanche), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Biệt Đội Công Lý Avalanche**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1294. Thủy triều chịu tác động chính nào?
+### 1325. Tôi muốn gửi link Biệt Đội Công Lý Avalanche trên MFILM cho bạn bè thì gửi trang nào?
 
-Hấp dẫn của Mặt Trăng, Mặt Trời cùng chuyển động của hệ Trái Đất.
+Gửi trang chi tiết [Biệt Đội Công Lý Avalanche](/phim/biet-doi-cong-ly-avalanche), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1295. Hiệu ứng nhà kính là gì?
+### 1326. Muốn chọn một tập khác của Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1) trên MFILM thì bấm ở đâu?
 
-Các khí hấp thụ và phát bức xạ nhiệt góp phần giữ ấm bề mặt.
+Mở [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1296. Tài nguyên tái tạo là gì?
+### 1327. Tôi muốn lưu Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
 
-Nguồn có thể bổ sung tự nhiên theo quy mô thời gian phù hợp cách sử dụng.
+Đăng nhập rồi mở [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1297. Đa dạng sinh học là gì?
+### 1328. Muốn thuê riêng Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Sự đa dạng của sự sống ở mức gen, loài và hệ sinh thái.
+Mở [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-## Không gian và thiên văn
+### 1329. Nếu Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1298. Hệ Mặt Trời có bao nhiêu hành tinh?
+Kiểm tra đúng phim tại [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Có tám hành tinh được công nhận trong phân loại hiện hành.
+### 1330. Tôi muốn gửi link Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
 
-Tham khảo: [Các hành tinh — NASA](https://science.nasa.gov/solar-system/planets/).
+Gửi trang chi tiết [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 1)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1299. Hành tinh gần Mặt Trời nhất là gì?
+### 1331. Muốn chọn một tập khác của Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2) trên MFILM thì bấm ở đâu?
 
-Sao Thủy là hành tinh gần Mặt Trời nhất.
+Mở [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Tham khảo: [Các hành tinh — NASA](https://science.nasa.gov/solar-system/planets/).
+### 1332. Tôi muốn lưu Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1300. Hành tinh lớn nhất Hệ Mặt Trời là gì?
+Đăng nhập rồi mở [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Sao Mộc là hành tinh lớn nhất Hệ Mặt Trời.
+### 1333. Muốn thuê riêng Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tham khảo: [Các hành tinh — NASA](https://science.nasa.gov/solar-system/planets/).
+Mở [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1301. Sao Thổ nổi bật vì điều gì?
+### 1334. Nếu Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Hệ vành đai rất rõ; nó không phải hành tinh duy nhất có vành đai.
+Kiểm tra đúng phim tại [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1302. Sao Hỏa thường gọi là gì?
+### 1335. Tôi muốn gửi link Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-Thường gọi hành tinh đỏ vì diện mạo đỏ của bề mặt.
+Gửi trang chi tiết [Biệt Đội Nữ Cảnh Sát Áo Xanh (Phần 2)](/phim/biet-doi-nu-canh-sat-ao-xanh-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1303. Ngôi sao khác hành tinh thế nào?
+### 1336. Muốn chọn một tập khác của Bịp Vương Thượng Hải trên MFILM thì bấm ở đâu?
 
-Sao như Mặt Trời tạo năng lượng bằng nhiệt hạch; hành tinh không duy trì quá trình đó như sao.
+Mở [Bịp Vương Thượng Hải](/phim/bip-vuong-thuong-hai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1304. Thiên hà là gì?
+### 1337. Tôi muốn lưu Bịp Vương Thượng Hải vào Yêu Thích trên MFILM thì làm sao?
 
-Hệ lớn gồm sao, khí, bụi và thành phần khác liên kết bởi hấp dẫn.
+Đăng nhập rồi mở [Bịp Vương Thượng Hải](/phim/bip-vuong-thuong-hai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1305. Dải Ngân Hà là gì?
+### 1338. Muốn thuê riêng Bịp Vương Thượng Hải thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Thiên hà chứa Hệ Mặt Trời.
+Mở [Bịp Vương Thượng Hải](/phim/bip-vuong-thuong-hai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1306. Năm ánh sáng đo gì?
+### 1339. Nếu Bịp Vương Thượng Hải không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Đo khoảng cách ánh sáng đi trong một năm, không phải đơn vị thời gian.
+Kiểm tra đúng phim tại [Bịp Vương Thượng Hải](/phim/bip-vuong-thuong-hai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bịp Vương Thượng Hải**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1307. Đơn vị thiên văn là gì?
+### 1340. Tôi muốn gửi link Bịp Vương Thượng Hải trên MFILM cho bạn bè thì gửi trang nào?
 
-Đơn vị độ dài xấp xỉ khoảng cách trung bình Trái Đất–Mặt Trời.
+Gửi trang chi tiết [Bịp Vương Thượng Hải](/phim/bip-vuong-thuong-hai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1308. Quỹ đạo là gì?
+### 1341. Muốn chọn một tập khác của Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn trên MFILM thì bấm ở đâu?
 
-Đường chuyển động của vật dưới tương tác hấp dẫn hoặc lực liên quan.
+Mở [Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn](/phim/bleach-huyet-chien-ngan-nam-kiep-nan) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1309. Vệ tinh tự nhiên là gì?
+### 1342. Tôi muốn lưu Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn vào Yêu Thích trên MFILM thì làm sao?
 
-Thiên thể quay quanh một thiên thể lớn hơn theo quỹ đạo.
+Đăng nhập rồi mở [Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn](/phim/bleach-huyet-chien-ngan-nam-kiep-nan), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1310. Vệ tinh nhân tạo là gì?
+### 1343. Muốn thuê riêng Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Thiết bị do con người đưa lên quỹ đạo.
+Mở [Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn](/phim/bleach-huyet-chien-ngan-nam-kiep-nan) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1311. Tiểu hành tinh là gì?
+### 1344. Nếu Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Thiên thể nhỏ thường có thành phần đá hoặc kim loại quay quanh Mặt Trời.
+Kiểm tra đúng phim tại [Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn](/phim/bleach-huyet-chien-ngan-nam-kiep-nan), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1312. Sao chổi là gì?
+### 1345. Tôi muốn gửi link Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn trên MFILM cho bạn bè thì gửi trang nào?
 
-Thiên thể nhỏ chứa băng và vật liệu khác, có thể tạo đuôi khi gần Mặt Trời.
+Gửi trang chi tiết [Bleach: Huyết Chiến Ngàn Năm - Kiếp Nạn](/phim/bleach-huyet-chien-ngan-nam-kiep-nan), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1313. Sao băng là gì?
+### 1346. Muốn chọn một tập khác của Blue Box (Phần 1) trên MFILM thì bấm ở đâu?
 
-Vệt sáng khi vật nhỏ từ không gian tương tác với khí quyển.
+Mở [Blue Box (Phần 1)](/phim/blue-box-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1314. Thiên thạch là gì?
+### 1347. Tôi muốn lưu Blue Box (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
 
-Phần vật từ không gian tồn tại và rơi tới bề mặt.
+Đăng nhập rồi mở [Blue Box (Phần 1)](/phim/blue-box-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1315. Nhật thực xảy ra khi nào?
+### 1348. Muốn thuê riêng Blue Box (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Khi Mặt Trăng che Mặt Trời đối với vị trí quan sát trên Trái Đất.
+Mở [Blue Box (Phần 1)](/phim/blue-box-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Tham khảo: [Nhật thực và nguyệt thực — NASA](https://science.nasa.gov/moon/eclipses/).
+### 1349. Nếu Blue Box (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1316. Nguyệt thực xảy ra khi nào?
+Kiểm tra đúng phim tại [Blue Box (Phần 1)](/phim/blue-box-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Blue Box (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Khi Mặt Trăng đi vào vùng bóng của Trái Đất.
+### 1350. Tôi muốn gửi link Blue Box (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
 
-Tham khảo: [Nhật thực và nguyệt thực — NASA](https://science.nasa.gov/moon/eclipses/).
+Gửi trang chi tiết [Blue Box (Phần 1)](/phim/blue-box-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1317. Pha Mặt Trăng do đâu?
+### 1351. Muốn chọn một tập khác của Blue Box (Phần 2) trên MFILM thì bấm ở đâu?
 
-Do phần bề mặt được chiếu sáng nhìn từ Trái Đất thay đổi theo vị trí.
+Mở [Blue Box (Phần 2)](/phim/blue-box-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1318. Lỗ đen là gì?
+### 1352. Tôi muốn lưu Blue Box (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-Vùng không thời gian có ranh giới mà ánh sáng bên trong không thoát ra được.
+Đăng nhập rồi mở [Blue Box (Phần 2)](/phim/blue-box-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1319. Tinh vân là gì?
+### 1353. Muốn thuê riêng Blue Box (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Đám khí và bụi trong không gian.
+Mở [Blue Box (Phần 2)](/phim/blue-box-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1320. Siêu tân tinh là gì?
+### 1354. Nếu Blue Box (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Sự bùng nổ rất mạnh ở giai đoạn hoặc quá trình đặc biệt của sao.
+Kiểm tra đúng phim tại [Blue Box (Phần 2)](/phim/blue-box-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Blue Box (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1321. Kính thiên văn dùng làm gì?
+### 1355. Tôi muốn gửi link Blue Box (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-Thu tín hiệu như ánh sáng để quan sát các vật ở xa.
+Gửi trang chi tiết [Blue Box (Phần 2)](/phim/blue-box-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1322. Vũ trụ giãn nở nghĩa là gì?
+### 1356. Muốn chọn một tập khác của Bố Gặp Rắc Rối trên MFILM thì bấm ở đâu?
 
-Khoảng cách quy mô lớn giữa các vùng không bị ràng buộc tăng theo thời gian.
+Mở [Bố Gặp Rắc Rối](/phim/bo-gap-rac-roi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-## Sinh học và sự sống
+### 1357. Tôi muốn lưu Bố Gặp Rắc Rối vào Yêu Thích trên MFILM thì làm sao?
 
-### 1323. Tế bào là gì?
+Đăng nhập rồi mở [Bố Gặp Rắc Rối](/phim/bo-gap-rac-roi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Đơn vị cấu trúc và chức năng cơ bản của sinh vật.
+### 1358. Muốn thuê riêng Bố Gặp Rắc Rối thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1324. DNA là gì?
+Mở [Bố Gặp Rắc Rối](/phim/bo-gap-rac-roi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Phân tử mang thông tin di truyền ở nhiều dạng sống.
+### 1359. Nếu Bố Gặp Rắc Rối không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1325. Gene là gì?
+Kiểm tra đúng phim tại [Bố Gặp Rắc Rối](/phim/bo-gap-rac-roi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bố Gặp Rắc Rối**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Đoạn thông tin di truyền có chức năng trong một hệ sinh học.
+### 1360. Tôi muốn gửi link Bố Gặp Rắc Rối trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1326. Nhiễm sắc thể là gì?
+Gửi trang chi tiết [Bố Gặp Rắc Rối](/phim/bo-gap-rac-roi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Cấu trúc chứa DNA và các thành phần liên quan trong tế bào.
+### 1361. Muốn chọn một tập khác của Bố Già Vùng Harlem (Phần 1) trên MFILM thì bấm ở đâu?
 
-### 1327. Protein là gì?
+Mở [Bố Già Vùng Harlem (Phần 1)](/phim/bo-gia-vung-harlem-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Phân tử tạo từ chuỗi amino acid, thực hiện nhiều chức năng sinh học.
+### 1362. Tôi muốn lưu Bố Già Vùng Harlem (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1328. Enzyme là gì?
+Đăng nhập rồi mở [Bố Già Vùng Harlem (Phần 1)](/phim/bo-gia-vung-harlem-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Chất xúc tác sinh học, thường là protein.
+### 1363. Muốn thuê riêng Bố Già Vùng Harlem (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1329. Quang hợp là gì?
+Mở [Bố Già Vùng Harlem (Phần 1)](/phim/bo-gia-vung-harlem-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Chuyển năng lượng ánh sáng thành năng lượng hóa học trong các sinh vật phù hợp.
+### 1364. Nếu Bố Già Vùng Harlem (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1330. Diệp lục là gì?
+Kiểm tra đúng phim tại [Bố Già Vùng Harlem (Phần 1)](/phim/bo-gia-vung-harlem-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bố Già Vùng Harlem (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Sắc tố tham gia hấp thụ ánh sáng trong quang hợp.
+### 1365. Tôi muốn gửi link Bố Già Vùng Harlem (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1331. Hô hấp tế bào là gì?
+Gửi trang chi tiết [Bố Già Vùng Harlem (Phần 1)](/phim/bo-gia-vung-harlem-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Quá trình chuyển năng lượng từ chất dinh dưỡng sang dạng tế bào sử dụng.
+### 1366. Muốn chọn một tập khác của Bố Già Vùng Harlem (Phần 2) trên MFILM thì bấm ở đâu?
 
-### 1332. Trao đổi chất là gì?
+Mở [Bố Già Vùng Harlem (Phần 2)](/phim/bo-gia-vung-harlem-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Các phản ứng hóa học giúp duy trì hoạt động sống.
+### 1367. Tôi muốn lưu Bố Già Vùng Harlem (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1333. Hệ sinh thái là gì?
+Đăng nhập rồi mở [Bố Già Vùng Harlem (Phần 2)](/phim/bo-gia-vung-harlem-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Sinh vật và môi trường không sống tương tác trong một hệ.
+### 1368. Muốn thuê riêng Bố Già Vùng Harlem (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1334. Quần thể sinh vật là gì?
+Mở [Bố Già Vùng Harlem (Phần 2)](/phim/bo-gia-vung-harlem-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Các cá thể cùng loài sống trong một khu vực ở thời điểm xét.
+### 1369. Nếu Bố Già Vùng Harlem (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1335. Quần xã là gì?
+Kiểm tra đúng phim tại [Bố Già Vùng Harlem (Phần 2)](/phim/bo-gia-vung-harlem-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bố Già Vùng Harlem (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Các quần thể khác loài cùng tồn tại và tương tác trong khu vực.
+### 1370. Tôi muốn gửi link Bố Già Vùng Harlem (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1336. Chuỗi thức ăn là gì?
+Gửi trang chi tiết [Bố Già Vùng Harlem (Phần 2)](/phim/bo-gia-vung-harlem-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Dãy quan hệ ăn và bị ăn thể hiện truyền vật chất, năng lượng.
+### 1371. Muốn chọn một tập khác của Bố Già Vùng Harlem (Phần 3) trên MFILM thì bấm ở đâu?
 
-### 1337. Lưới thức ăn là gì?
+Mở [Bố Già Vùng Harlem (Phần 3)](/phim/bo-gia-vung-harlem-phan-3) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Các chuỗi thức ăn kết nối trong một hệ sinh thái.
+### 1372. Tôi muốn lưu Bố Già Vùng Harlem (Phần 3) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1338. Sinh vật sản xuất là gì?
+Đăng nhập rồi mở [Bố Già Vùng Harlem (Phần 3)](/phim/bo-gia-vung-harlem-phan-3), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Sinh vật tạo chất hữu cơ từ nguồn vô cơ bằng năng lượng phù hợp.
+### 1373. Muốn thuê riêng Bố Già Vùng Harlem (Phần 3) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1339. Sinh vật tiêu thụ là gì?
+Mở [Bố Già Vùng Harlem (Phần 3)](/phim/bo-gia-vung-harlem-phan-3) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Sinh vật lấy vật chất và năng lượng qua việc ăn sinh vật hoặc nguồn hữu cơ.
+### 1374. Nếu Bố Già Vùng Harlem (Phần 3) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1340. Sinh vật phân giải là gì?
+Kiểm tra đúng phim tại [Bố Già Vùng Harlem (Phần 3)](/phim/bo-gia-vung-harlem-phan-3), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bố Già Vùng Harlem (Phần 3)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Sinh vật phân hủy chất hữu cơ và góp phần tái tuần hoàn vật chất.
+### 1375. Tôi muốn gửi link Bố Già Vùng Harlem (Phần 3) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1341. Thích nghi sinh học là gì?
+Gửi trang chi tiết [Bố Già Vùng Harlem (Phần 3)](/phim/bo-gia-vung-harlem-phan-3), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Đặc điểm giúp sinh vật phù hợp hơn với điều kiện sống qua quá trình tiến hóa.
+### 1376. Muốn chọn một tập khác của Bố Già Vùng Harlem (Phần 4) trên MFILM thì bấm ở đâu?
 
-### 1342. Chọn lọc tự nhiên là gì?
+Mở [Bố Già Vùng Harlem (Phần 4)](/phim/bo-gia-vung-harlem-phan-4) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Khác biệt sống sót và sinh sản làm thay đổi tần suất đặc điểm di truyền.
+### 1377. Tôi muốn lưu Bố Già Vùng Harlem (Phần 4) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1343. Đột biến là gì?
+Đăng nhập rồi mở [Bố Già Vùng Harlem (Phần 4)](/phim/bo-gia-vung-harlem-phan-4), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Thay đổi trong vật liệu di truyền; tác dụng tùy vị trí và hoàn cảnh.
+### 1378. Muốn thuê riêng Bố Già Vùng Harlem (Phần 4) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1344. Thụ phấn là gì?
+Mở [Bố Già Vùng Harlem (Phần 4)](/phim/bo-gia-vung-harlem-phan-4) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Chuyển hạt phấn đến bộ phận nhận phấn phù hợp của cây.
+### 1379. Nếu Bố Già Vùng Harlem (Phần 4) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1345. Nảy mầm là gì?
+Kiểm tra đúng phim tại [Bố Già Vùng Harlem (Phần 4)](/phim/bo-gia-vung-harlem-phan-4), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bố Già Vùng Harlem (Phần 4)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Hạt bắt đầu phát triển thành cây non khi có điều kiện phù hợp.
+### 1380. Tôi muốn gửi link Bố Già Vùng Harlem (Phần 4) trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1346. Động vật có xương sống là gì?
+Gửi trang chi tiết [Bố Già Vùng Harlem (Phần 4)](/phim/bo-gia-vung-harlem-phan-4), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nhóm động vật có cột sống hoặc cấu trúc tương ứng trong phát triển.
+### 1381. Muốn chọn một tập khác của Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh) trên MFILM thì bấm ở đâu?
 
-### 1347. Động vật không xương sống là gì?
+Mở [Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh)](/phim/bo-phim-dao-au-trung-dao-au-trung-ban-dien-anh) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Cách gọi các động vật không có cột sống.
+### 1382. Tôi muốn lưu Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh) vào Yêu Thích trên MFILM thì làm sao?
 
-## Hóa học phổ thông
+Đăng nhập rồi mở [Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh)](/phim/bo-phim-dao-au-trung-dao-au-trung-ban-dien-anh), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1348. Nguyên tử là gì?
+### 1383. Muốn thuê riêng Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Đơn vị của nguyên tố gồm hạt nhân và các electron.
+Mở [Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh)](/phim/bo-phim-dao-au-trung-dao-au-trung-ban-dien-anh) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1349. Phân tử là gì?
+### 1384. Nếu Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh) không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Tập hợp các nguyên tử liên kết, biểu diễn một đơn vị của nhiều chất.
+Kiểm tra đúng phim tại [Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh)](/phim/bo-phim-dao-au-trung-dao-au-trung-ban-dien-anh), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1350. Nguyên tố hóa học là gì?
+### 1385. Tôi muốn gửi link Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh) trên MFILM cho bạn bè thì gửi trang nào?
 
-Loại nguyên tử có cùng số proton trong hạt nhân.
+Gửi trang chi tiết [Bộ Phim Đảo Ấu Trùng (Đảo Ấu Trùng: Bản Điện Ảnh)](/phim/bo-phim-dao-au-trung-dao-au-trung-ban-dien-anh), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1351. Hợp chất là gì?
+### 1386. Muốn chọn một tập khác của Bôi Tuyết trên MFILM thì bấm ở đâu?
 
-Chất gồm các nguyên tố khác nhau liên kết theo cấu trúc hóa học.
+Mở [Bôi Tuyết](/phim/boi-tuyet) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1352. Hỗn hợp là gì?
+### 1387. Tôi muốn lưu Bôi Tuyết vào Yêu Thích trên MFILM thì làm sao?
 
-Sự kết hợp các chất không bắt buộc tạo chất hóa học mới.
+Đăng nhập rồi mở [Bôi Tuyết](/phim/boi-tuyet), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1353. Dung dịch là gì?
+### 1388. Muốn thuê riêng Bôi Tuyết thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Hỗn hợp đồng nhất của chất tan trong dung môi.
+Mở [Bôi Tuyết](/phim/boi-tuyet) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1354. Dung môi là gì?
+### 1389. Nếu Bôi Tuyết không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Thành phần hòa tan chất khác trong dung dịch.
+Kiểm tra đúng phim tại [Bôi Tuyết](/phim/boi-tuyet), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bôi Tuyết**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1355. Chất tan là gì?
+### 1390. Tôi muốn gửi link Bôi Tuyết trên MFILM cho bạn bè thì gửi trang nào?
 
-Thành phần được hòa tan trong dung môi.
+Gửi trang chi tiết [Bôi Tuyết](/phim/boi-tuyet), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1356. Ion là gì?
+### 1391. Muốn chọn một tập khác của Bốn bàn tay, hai bản sonata trên MFILM thì bấm ở đâu?
 
-Nguyên tử hoặc nhóm nguyên tử mang điện tích.
+Mở [Bốn bàn tay, hai bản sonata](/phim/bon-ban-tay-hai-ban-sonata) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1357. Proton mang điện gì?
+### 1392. Tôi muốn lưu Bốn bàn tay, hai bản sonata vào Yêu Thích trên MFILM thì làm sao?
 
-Proton mang điện tích dương.
+Đăng nhập rồi mở [Bốn bàn tay, hai bản sonata](/phim/bon-ban-tay-hai-ban-sonata), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1358. Electron mang điện gì?
+### 1393. Muốn thuê riêng Bốn bàn tay, hai bản sonata thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Electron mang điện tích âm.
+Mở [Bốn bàn tay, hai bản sonata](/phim/bon-ban-tay-hai-ban-sonata) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1359. Neutron mang điện gì?
+### 1394. Nếu Bốn bàn tay, hai bản sonata không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Neutron không mang điện tích tổng.
+Kiểm tra đúng phim tại [Bốn bàn tay, hai bản sonata](/phim/bon-ban-tay-hai-ban-sonata), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bốn bàn tay, hai bản sonata**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1360. Đồng vị là gì?
+### 1395. Tôi muốn gửi link Bốn bàn tay, hai bản sonata trên MFILM cho bạn bè thì gửi trang nào?
 
-Các nguyên tử cùng nguyên tố có số neutron khác nhau.
+Gửi trang chi tiết [Bốn bàn tay, hai bản sonata](/phim/bon-ban-tay-hai-ban-sonata), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1361. Số hiệu nguyên tử là gì?
+### 1396. Muốn chọn một tập khác của Bốn Mùa trên MFILM thì bấm ở đâu?
 
-Số proton trong hạt nhân nguyên tử.
+Mở [Bốn Mùa](/phim/bon-mua) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1362. Liên kết cộng hóa trị là gì?
+### 1397. Tôi muốn lưu Bốn Mùa vào Yêu Thích trên MFILM thì làm sao?
 
-Liên kết có sự dùng chung electron giữa các nguyên tử.
+Đăng nhập rồi mở [Bốn Mùa](/phim/bon-mua), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1363. Liên kết ion là gì?
+### 1398. Muốn thuê riêng Bốn Mùa thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Tương tác liên kết giữa các ion trái dấu.
+Mở [Bốn Mùa](/phim/bon-mua) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1364. Phản ứng hóa học là gì?
+### 1399. Nếu Bốn Mùa không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-Quá trình biến đổi các chất qua thay đổi liên kết và sắp xếp nguyên tử.
+Kiểm tra đúng phim tại [Bốn Mùa](/phim/bon-mua), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bốn Mùa**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1365. Chất xúc tác là gì?
+### 1400. Tôi muốn gửi link Bốn Mùa trên MFILM cho bạn bè thì gửi trang nào?
 
-Chất làm thay đổi tốc độ phản ứng và được tái tạo trong chu trình phản ứng.
+Gửi trang chi tiết [Bốn Mùa](/phim/bon-mua), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1366. Phản ứng tỏa nhiệt là gì?
+### 1401. Muốn chọn một tập khác của Bóng Dưới Trăng trên MFILM thì bấm ở đâu?
 
-Phản ứng truyền nhiệt ra môi trường theo điều kiện xét.
+Mở [Bóng Dưới Trăng](/phim/bong-duoi-trang) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1367. Phản ứng thu nhiệt là gì?
+### 1402. Tôi muốn lưu Bóng Dưới Trăng vào Yêu Thích trên MFILM thì làm sao?
 
-Phản ứng nhận nhiệt từ môi trường theo điều kiện xét.
+Đăng nhập rồi mở [Bóng Dưới Trăng](/phim/bong-duoi-trang), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-### 1368. pH biểu thị gì?
+### 1403. Muốn thuê riêng Bóng Dưới Trăng thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-Đại lượng liên quan độ acid của dung dịch theo hoạt độ ion hydrogen.
+Mở [Bóng Dưới Trăng](/phim/bong-duoi-trang) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-### 1369. Nước tinh khiết có công thức gì?
+### 1404. Nếu Bóng Dưới Trăng không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-H₂O: mỗi phân tử gồm hai nguyên tử hydrogen và một oxygen.
+Kiểm tra đúng phim tại [Bóng Dưới Trăng](/phim/bong-duoi-trang), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bóng Dưới Trăng**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-### 1370. Muối ăn thông thường có công thức gì?
+### 1405. Tôi muốn gửi link Bóng Dưới Trăng trên MFILM cho bạn bè thì gửi trang nào?
 
-Thành phần chính là sodium chloride, công thức NaCl.
+Gửi trang chi tiết [Bóng Dưới Trăng](/phim/bong-duoi-trang), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-### 1371. Carbon dioxide có công thức gì?
+### 1406. Muốn chọn một tập khác của Bùa Ngải Trói Buộc trên MFILM thì bấm ở đâu?
 
-CO₂: một nguyên tử carbon liên kết với hai nguyên tử oxygen.
+Mở [Bùa Ngải Trói Buộc](/phim/bua-ngai-troi-buoc) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-### 1372. Bảng tuần hoàn sắp xếp theo gì?
+### 1407. Tôi muốn lưu Bùa Ngải Trói Buộc vào Yêu Thích trên MFILM thì làm sao?
 
-Các nguyên tố được sắp theo số hiệu nguyên tử và quan hệ tính chất.
+Đăng nhập rồi mở [Bùa Ngải Trói Buộc](/phim/bua-ngai-troi-buoc), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-## Âm nhạc và nghệ thuật
+### 1408. Muốn thuê riêng Bùa Ngải Trói Buộc thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1373. Melody là gì?
+Mở [Bùa Ngải Trói Buộc](/phim/bua-ngai-troi-buoc) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Giai điệu, chuỗi cao độ được cảm nhận thành một tuyến nhạc.
+### 1409. Nếu Bùa Ngải Trói Buộc không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1374. Harmony là gì?
+Kiểm tra đúng phim tại [Bùa Ngải Trói Buộc](/phim/bua-ngai-troi-buoc), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bùa Ngải Trói Buộc**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Sự kết hợp các cao độ và quan hệ hòa âm.
+### 1410. Tôi muốn gửi link Bùa Ngải Trói Buộc trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1375. Rhythm là gì?
+Gửi trang chi tiết [Bùa Ngải Trói Buộc](/phim/bua-ngai-troi-buoc), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Nhịp điệu, cách sắp âm và khoảng lặng theo thời gian.
+### 1411. Muốn chọn một tập khác của Bụi Mebius trên MFILM thì bấm ở đâu?
 
-### 1376. Tempo là gì?
+Mở [Bụi Mebius](/phim/bui-mebius) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Tốc độ của nhịp trong bản nhạc.
+### 1412. Tôi muốn lưu Bụi Mebius vào Yêu Thích trên MFILM thì làm sao?
 
-### 1377. BPM nghĩa là gì?
+Đăng nhập rồi mở [Bụi Mebius](/phim/bui-mebius), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Số nhịp mỗi phút, thường dùng mô tả tempo.
+### 1413. Muốn thuê riêng Bụi Mebius thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1378. Timbre là gì?
+Mở [Bụi Mebius](/phim/bui-mebius) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Âm sắc giúp phân biệt nguồn âm dù cùng cao độ.
+### 1414. Nếu Bụi Mebius không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1379. Pitch là gì?
+Kiểm tra đúng phim tại [Bụi Mebius](/phim/bui-mebius), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bụi Mebius**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Độ cao thấp được cảm nhận của âm.
+### 1415. Tôi muốn gửi link Bụi Mebius trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1380. Chord là gì?
+Gửi trang chi tiết [Bụi Mebius](/phim/bui-mebius), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Hợp âm, tổ hợp các nốt được nghe hoặc hiểu cùng nhau.
+### 1416. Muốn chọn một tập khác của Bước Ngoặt Thế Hệ: 11 Tháng 9 trên MFILM thì bấm ở đâu?
 
-### 1381. Scale âm nhạc là gì?
+Mở [Bước Ngoặt Thế Hệ: 11 Tháng 9](/phim/buoc-ngoat-the-he-11-thang-9) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Dãy cao độ theo một cấu trúc khoảng cách nhất định.
+### 1417. Tôi muốn lưu Bước Ngoặt Thế Hệ: 11 Tháng 9 vào Yêu Thích trên MFILM thì làm sao?
 
-### 1382. Octave là gì?
+Đăng nhập rồi mở [Bước Ngoặt Thế Hệ: 11 Tháng 9](/phim/buoc-ngoat-the-he-11-thang-9), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Quãng tám; trong mô hình chuẩn, hai tần số có tỉ lệ 2:1.
+### 1418. Muốn thuê riêng Bước Ngoặt Thế Hệ: 11 Tháng 9 thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1383. Major key thường được hiểu thế nào?
+Mở [Bước Ngoặt Thế Hệ: 11 Tháng 9](/phim/buoc-ngoat-the-he-11-thang-9) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Giọng trưởng theo hệ âm giai; cảm xúc thực tế còn phụ thuộc cách viết và diễn.
+### 1419. Nếu Bước Ngoặt Thế Hệ: 11 Tháng 9 không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1384. Minor key thường được hiểu thế nào?
+Kiểm tra đúng phim tại [Bước Ngoặt Thế Hệ: 11 Tháng 9](/phim/buoc-ngoat-the-he-11-thang-9), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Bước Ngoặt Thế Hệ: 11 Tháng 9**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Giọng thứ theo hệ âm giai; không có nghĩa mọi bản đều buồn.
+### 1420. Tôi muốn gửi link Bước Ngoặt Thế Hệ: 11 Tháng 9 trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1385. Dynamics âm nhạc là gì?
+Gửi trang chi tiết [Bước Ngoặt Thế Hệ: 11 Tháng 9](/phim/buoc-ngoat-the-he-11-thang-9), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Cách điều khiển mức mạnh nhẹ của âm khi diễn.
+### 1421. Muốn chọn một tập khác của Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh trên MFILM thì bấm ở đâu?
 
-### 1386. Crescendo là gì?
+Mở [Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh](/phim/buoi-hen-ho-hoang-gia-dip-giang-sinh) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Tăng dần cường độ hoặc độ lớn khi diễn nhạc.
+### 1422. Tôi muốn lưu Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh vào Yêu Thích trên MFILM thì làm sao?
 
-### 1387. Decrescendo là gì?
+Đăng nhập rồi mở [Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh](/phim/buoi-hen-ho-hoang-gia-dip-giang-sinh), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Giảm dần cường độ hoặc độ lớn khi diễn nhạc.
+### 1423. Muốn thuê riêng Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1388. Legato là gì?
+Mở [Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh](/phim/buoi-hen-ho-hoang-gia-dip-giang-sinh) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Diễn các nốt nối liền, tạo dòng âm mượt.
+### 1424. Nếu Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1389. Staccato là gì?
+Kiểm tra đúng phim tại [Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh](/phim/buoi-hen-ho-hoang-gia-dip-giang-sinh), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Diễn nốt tách và ngắn tương đối với cách nối liền.
+### 1425. Tôi muốn gửi link Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1390. Syncopation là gì?
+Gửi trang chi tiết [Buổi Hẹn Hò Hoàng Gia Dịp Giáng Sinh](/phim/buoi-hen-ho-hoang-gia-dip-giang-sinh), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Đặt nhấn lệch vị trí nhấn thường được mong đợi.
+### 1426. Muốn chọn một tập khác của Búp bê trên MFILM thì bấm ở đâu?
 
-### 1391. Counterpoint là gì?
+Mở [Búp bê](/phim/bup-be) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Kết hợp các tuyến giai điệu có tính độc lập theo quan hệ âm nhạc.
+### 1427. Tôi muốn lưu Búp bê vào Yêu Thích trên MFILM thì làm sao?
 
-### 1392. Orchestration là gì?
+Đăng nhập rồi mở [Búp bê](/phim/bup-be), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Phân phối ý nhạc cho các nhạc cụ hoặc nhóm nhạc cụ.
+### 1428. Muốn thuê riêng Búp bê thay vì mua cả gói MFILM thì kiểm tra ở đâu?
 
-### 1393. A cappella là gì?
+Mở [Búp bê](/phim/bup-be) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
 
-Âm nhạc bằng giọng hát không có nhạc cụ đệm theo cách gọi thông thường.
+### 1429. Nếu Búp bê không phát được trên MFILM thì tôi báo lỗi thế nào?
 
-### 1394. Instrumental là gì?
+Kiểm tra đúng phim tại [Búp bê](/phim/bup-be), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Búp bê**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
 
-Nhạc chủ yếu do nhạc cụ thể hiện, không có tuyến lời hát chính.
+### 1430. Tôi muốn gửi link Búp bê trên MFILM cho bạn bè thì gửi trang nào?
 
-### 1395. Chorus bài hát là gì?
+Gửi trang chi tiết [Búp bê](/phim/bup-be), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 
-Đoạn điệp khúc thường lặp và mang ý hoặc giai điệu nổi bật.
+### 1431. Muốn chọn một tập khác của Cá đỏ, cá xanh (Phần 1) trên MFILM thì bấm ở đâu?
 
-### 1396. Verse bài hát là gì?
+Mở [Cá đỏ, cá xanh (Phần 1)](/phim/ca-do-ca-xanh-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
 
-Đoạn lời phát triển nội dung giữa các phần lặp.
+### 1432. Tôi muốn lưu Cá đỏ, cá xanh (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
 
-### 1397. Bridge bài hát là gì?
+Đăng nhập rồi mở [Cá đỏ, cá xanh (Phần 1)](/phim/ca-do-ca-xanh-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
 
-Đoạn chuyển hoặc tương phản nối các phần của bài.
+### 1433. Muốn thuê riêng Cá đỏ, cá xanh (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cá đỏ, cá xanh (Phần 1)](/phim/ca-do-ca-xanh-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1434. Nếu Cá đỏ, cá xanh (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cá đỏ, cá xanh (Phần 1)](/phim/ca-do-ca-xanh-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cá đỏ, cá xanh (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1435. Tôi muốn gửi link Cá đỏ, cá xanh (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cá đỏ, cá xanh (Phần 1)](/phim/ca-do-ca-xanh-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1436. Muốn chọn một tập khác của Cá đỏ, cá xanh (Phần 2) trên MFILM thì bấm ở đâu?
+
+Mở [Cá đỏ, cá xanh (Phần 2)](/phim/ca-do-ca-xanh-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1437. Tôi muốn lưu Cá đỏ, cá xanh (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cá đỏ, cá xanh (Phần 2)](/phim/ca-do-ca-xanh-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1438. Muốn thuê riêng Cá đỏ, cá xanh (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cá đỏ, cá xanh (Phần 2)](/phim/ca-do-ca-xanh-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1439. Nếu Cá đỏ, cá xanh (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cá đỏ, cá xanh (Phần 2)](/phim/ca-do-ca-xanh-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cá đỏ, cá xanh (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1440. Tôi muốn gửi link Cá đỏ, cá xanh (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cá đỏ, cá xanh (Phần 2)](/phim/ca-do-ca-xanh-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1441. Muốn chọn một tập khác của Cá đỏ, cá xanh (Phần 3) trên MFILM thì bấm ở đâu?
+
+Mở [Cá đỏ, cá xanh (Phần 3)](/phim/ca-do-ca-xanh-phan-3) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1442. Tôi muốn lưu Cá đỏ, cá xanh (Phần 3) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cá đỏ, cá xanh (Phần 3)](/phim/ca-do-ca-xanh-phan-3), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1443. Muốn thuê riêng Cá đỏ, cá xanh (Phần 3) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cá đỏ, cá xanh (Phần 3)](/phim/ca-do-ca-xanh-phan-3) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1444. Nếu Cá đỏ, cá xanh (Phần 3) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cá đỏ, cá xanh (Phần 3)](/phim/ca-do-ca-xanh-phan-3), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cá đỏ, cá xanh (Phần 3)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1445. Tôi muốn gửi link Cá đỏ, cá xanh (Phần 3) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cá đỏ, cá xanh (Phần 3)](/phim/ca-do-ca-xanh-phan-3), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1446. Muốn chọn một tập khác của Cả Đội Cố Lên trên MFILM thì bấm ở đâu?
+
+Mở [Cả Đội Cố Lên](/phim/ca-doi-co-len) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1447. Tôi muốn lưu Cả Đội Cố Lên vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cả Đội Cố Lên](/phim/ca-doi-co-len), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1448. Muốn thuê riêng Cả Đội Cố Lên thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cả Đội Cố Lên](/phim/ca-doi-co-len) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1449. Nếu Cả Đội Cố Lên không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cả Đội Cố Lên](/phim/ca-doi-co-len), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cả Đội Cố Lên**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1450. Tôi muốn gửi link Cả Đội Cố Lên trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cả Đội Cố Lên](/phim/ca-doi-co-len), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1451. Muốn chọn một tập khác của Cá Mập: Cơn Bão trên MFILM thì bấm ở đâu?
+
+Mở [Cá Mập: Cơn Bão](/phim/ca-map-con-bao) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1452. Tôi muốn lưu Cá Mập: Cơn Bão vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cá Mập: Cơn Bão](/phim/ca-map-con-bao), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1453. Muốn thuê riêng Cá Mập: Cơn Bão thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cá Mập: Cơn Bão](/phim/ca-map-con-bao) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1454. Nếu Cá Mập: Cơn Bão không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cá Mập: Cơn Bão](/phim/ca-map-con-bao), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cá Mập: Cơn Bão**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1455. Tôi muốn gửi link Cá Mập: Cơn Bão trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cá Mập: Cơn Bão](/phim/ca-map-con-bao), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1456. Muốn chọn một tập khác của Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi trên MFILM thì bấm ở đâu?
+
+Mở [Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi](/phim/ca-the-gioi-chi-co-anh-ket-noi-duoc-voi-toi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1457. Tôi muốn lưu Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi](/phim/ca-the-gioi-chi-co-anh-ket-noi-duoc-voi-toi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1458. Muốn thuê riêng Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi](/phim/ca-the-gioi-chi-co-anh-ket-noi-duoc-voi-toi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1459. Nếu Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi](/phim/ca-the-gioi-chi-co-anh-ket-noi-duoc-voi-toi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1460. Tôi muốn gửi link Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cả Thế Giới Chỉ Có Anh Kết Nối Được Với Tôi](/phim/ca-the-gioi-chi-co-anh-ket-noi-duoc-voi-toi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1461. Muốn chọn một tập khác của Cả Thế Giới Đang Nhảy Múa trên MFILM thì bấm ở đâu?
+
+Mở [Cả Thế Giới Đang Nhảy Múa](/phim/ca-the-gioi-dang-nhay-mua) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1462. Tôi muốn lưu Cả Thế Giới Đang Nhảy Múa vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cả Thế Giới Đang Nhảy Múa](/phim/ca-the-gioi-dang-nhay-mua), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1463. Muốn thuê riêng Cả Thế Giới Đang Nhảy Múa thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cả Thế Giới Đang Nhảy Múa](/phim/ca-the-gioi-dang-nhay-mua) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1464. Nếu Cả Thế Giới Đang Nhảy Múa không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cả Thế Giới Đang Nhảy Múa](/phim/ca-the-gioi-dang-nhay-mua), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cả Thế Giới Đang Nhảy Múa**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1465. Tôi muốn gửi link Cả Thế Giới Đang Nhảy Múa trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cả Thế Giới Đang Nhảy Múa](/phim/ca-the-gioi-dang-nhay-mua), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1466. Muốn chọn một tập khác của Cái Chết Của Vợ Người Mục Sư trên MFILM thì bấm ở đâu?
+
+Mở [Cái Chết Của Vợ Người Mục Sư](/phim/cai-chet-cua-vo-nguoi-muc-su) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1467. Tôi muốn lưu Cái Chết Của Vợ Người Mục Sư vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cái Chết Của Vợ Người Mục Sư](/phim/cai-chet-cua-vo-nguoi-muc-su), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1468. Muốn thuê riêng Cái Chết Của Vợ Người Mục Sư thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cái Chết Của Vợ Người Mục Sư](/phim/cai-chet-cua-vo-nguoi-muc-su) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1469. Nếu Cái Chết Của Vợ Người Mục Sư không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cái Chết Của Vợ Người Mục Sư](/phim/cai-chet-cua-vo-nguoi-muc-su), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cái Chết Của Vợ Người Mục Sư**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1470. Tôi muốn gửi link Cái Chết Của Vợ Người Mục Sư trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cái Chết Của Vợ Người Mục Sư](/phim/cai-chet-cua-vo-nguoi-muc-su), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1471. Muốn chọn một tập khác của Cạm Bẫy trên MFILM thì bấm ở đâu?
+
+Mở [Cạm Bẫy](/phim/cam-bay) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1472. Tôi muốn lưu Cạm Bẫy vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cạm Bẫy](/phim/cam-bay), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1473. Muốn thuê riêng Cạm Bẫy thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cạm Bẫy](/phim/cam-bay) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1474. Nếu Cạm Bẫy không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cạm Bẫy](/phim/cam-bay), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cạm Bẫy**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1475. Tôi muốn gửi link Cạm Bẫy trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cạm Bẫy](/phim/cam-bay), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1476. Muốn chọn một tập khác của Cám Dỗ Nơi Công Sở trên MFILM thì bấm ở đâu?
+
+Mở [Cám Dỗ Nơi Công Sở](/phim/cam-do-noi-cong-so) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1477. Tôi muốn lưu Cám Dỗ Nơi Công Sở vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cám Dỗ Nơi Công Sở](/phim/cam-do-noi-cong-so), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1478. Muốn thuê riêng Cám Dỗ Nơi Công Sở thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cám Dỗ Nơi Công Sở](/phim/cam-do-noi-cong-so) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1479. Nếu Cám Dỗ Nơi Công Sở không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cám Dỗ Nơi Công Sở](/phim/cam-do-noi-cong-so), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cám Dỗ Nơi Công Sở**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1480. Tôi muốn gửi link Cám Dỗ Nơi Công Sở trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cám Dỗ Nơi Công Sở](/phim/cam-do-noi-cong-so), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1481. Muốn chọn một tập khác của Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường trên MFILM thì bấm ở đâu?
+
+Mở [Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường](/phim/cam-ly-nhan-gian-nhu-nguyen-di-thuong) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1482. Tôi muốn lưu Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường](/phim/cam-ly-nhan-gian-nhu-nguyen-di-thuong), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1483. Muốn thuê riêng Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường](/phim/cam-ly-nhan-gian-nhu-nguyen-di-thuong) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1484. Nếu Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường](/phim/cam-ly-nhan-gian-nhu-nguyen-di-thuong), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1485. Tôi muốn gửi link Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cẩm Lý Nhân Gian: Như Nguyện Dĩ Thường](/phim/cam-ly-nhan-gian-nhu-nguyen-di-thuong), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1486. Muốn chọn một tập khác của Cận Vệ Cừ Khôi trên MFILM thì bấm ở đâu?
+
+Mở [Cận Vệ Cừ Khôi](/phim/can-ve-cu-khoi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1487. Tôi muốn lưu Cận Vệ Cừ Khôi vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cận Vệ Cừ Khôi](/phim/can-ve-cu-khoi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1488. Muốn thuê riêng Cận Vệ Cừ Khôi thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cận Vệ Cừ Khôi](/phim/can-ve-cu-khoi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1489. Nếu Cận Vệ Cừ Khôi không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cận Vệ Cừ Khôi](/phim/can-ve-cu-khoi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cận Vệ Cừ Khôi**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1490. Tôi muốn gửi link Cận Vệ Cừ Khôi trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cận Vệ Cừ Khôi](/phim/can-ve-cu-khoi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1491. Muốn chọn một tập khác của Cánh Buồm Đen (Phần 1) trên MFILM thì bấm ở đâu?
+
+Mở [Cánh Buồm Đen (Phần 1)](/phim/canh-buom-den-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1492. Tôi muốn lưu Cánh Buồm Đen (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cánh Buồm Đen (Phần 1)](/phim/canh-buom-den-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1493. Muốn thuê riêng Cánh Buồm Đen (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cánh Buồm Đen (Phần 1)](/phim/canh-buom-den-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1494. Nếu Cánh Buồm Đen (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cánh Buồm Đen (Phần 1)](/phim/canh-buom-den-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cánh Buồm Đen (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1495. Tôi muốn gửi link Cánh Buồm Đen (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cánh Buồm Đen (Phần 1)](/phim/canh-buom-den-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1496. Muốn chọn một tập khác của Cánh Buồm Đen (Phần 2) trên MFILM thì bấm ở đâu?
+
+Mở [Cánh Buồm Đen (Phần 2)](/phim/canh-buom-den-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1497. Tôi muốn lưu Cánh Buồm Đen (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cánh Buồm Đen (Phần 2)](/phim/canh-buom-den-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1498. Muốn thuê riêng Cánh Buồm Đen (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cánh Buồm Đen (Phần 2)](/phim/canh-buom-den-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1499. Nếu Cánh Buồm Đen (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cánh Buồm Đen (Phần 2)](/phim/canh-buom-den-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cánh Buồm Đen (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1500. Tôi muốn gửi link Cánh Buồm Đen (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cánh Buồm Đen (Phần 2)](/phim/canh-buom-den-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1501. Muốn chọn một tập khác của Cánh Buồm Đen (Phần 3) trên MFILM thì bấm ở đâu?
+
+Mở [Cánh Buồm Đen (Phần 3)](/phim/canh-buom-den-phan-3) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1502. Tôi muốn lưu Cánh Buồm Đen (Phần 3) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cánh Buồm Đen (Phần 3)](/phim/canh-buom-den-phan-3), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1503. Muốn thuê riêng Cánh Buồm Đen (Phần 3) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cánh Buồm Đen (Phần 3)](/phim/canh-buom-den-phan-3) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1504. Nếu Cánh Buồm Đen (Phần 3) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cánh Buồm Đen (Phần 3)](/phim/canh-buom-den-phan-3), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cánh Buồm Đen (Phần 3)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1505. Tôi muốn gửi link Cánh Buồm Đen (Phần 3) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cánh Buồm Đen (Phần 3)](/phim/canh-buom-den-phan-3), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1506. Muốn chọn một tập khác của Cảnh sát bảo vệ trên MFILM thì bấm ở đâu?
+
+Mở [Cảnh sát bảo vệ](/phim/canh-sat-bao-ve) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1507. Tôi muốn lưu Cảnh sát bảo vệ vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cảnh sát bảo vệ](/phim/canh-sat-bao-ve), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1508. Muốn thuê riêng Cảnh sát bảo vệ thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cảnh sát bảo vệ](/phim/canh-sat-bao-ve) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1509. Nếu Cảnh sát bảo vệ không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cảnh sát bảo vệ](/phim/canh-sat-bao-ve), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cảnh sát bảo vệ**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1510. Tôi muốn gửi link Cảnh sát bảo vệ trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cảnh sát bảo vệ](/phim/canh-sat-bao-ve), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1511. Muốn chọn một tập khác của Cảnh Sát Trưởng Labrador (Phần 1) trên MFILM thì bấm ở đâu?
+
+Mở [Cảnh Sát Trưởng Labrador (Phần 1)](/phim/canh-sat-truong-labrador-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1512. Tôi muốn lưu Cảnh Sát Trưởng Labrador (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cảnh Sát Trưởng Labrador (Phần 1)](/phim/canh-sat-truong-labrador-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1513. Muốn thuê riêng Cảnh Sát Trưởng Labrador (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cảnh Sát Trưởng Labrador (Phần 1)](/phim/canh-sat-truong-labrador-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1514. Nếu Cảnh Sát Trưởng Labrador (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cảnh Sát Trưởng Labrador (Phần 1)](/phim/canh-sat-truong-labrador-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cảnh Sát Trưởng Labrador (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1515. Tôi muốn gửi link Cảnh Sát Trưởng Labrador (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cảnh Sát Trưởng Labrador (Phần 1)](/phim/canh-sat-truong-labrador-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1516. Muốn chọn một tập khác của Cảnh Sát Trưởng Labrador (Phần 2) trên MFILM thì bấm ở đâu?
+
+Mở [Cảnh Sát Trưởng Labrador (Phần 2)](/phim/canh-sat-truong-labrador-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1517. Tôi muốn lưu Cảnh Sát Trưởng Labrador (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cảnh Sát Trưởng Labrador (Phần 2)](/phim/canh-sat-truong-labrador-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1518. Muốn thuê riêng Cảnh Sát Trưởng Labrador (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cảnh Sát Trưởng Labrador (Phần 2)](/phim/canh-sat-truong-labrador-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1519. Nếu Cảnh Sát Trưởng Labrador (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cảnh Sát Trưởng Labrador (Phần 2)](/phim/canh-sat-truong-labrador-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cảnh Sát Trưởng Labrador (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1520. Tôi muốn gửi link Cảnh Sát Trưởng Labrador (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cảnh Sát Trưởng Labrador (Phần 2)](/phim/canh-sat-truong-labrador-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1521. Muốn chọn một tập khác của Cặp Đôi Trái Ngược trên MFILM thì bấm ở đâu?
+
+Mở [Cặp Đôi Trái Ngược](/phim/cap-doi-trai-nguoc) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1522. Tôi muốn lưu Cặp Đôi Trái Ngược vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cặp Đôi Trái Ngược](/phim/cap-doi-trai-nguoc), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1523. Muốn thuê riêng Cặp Đôi Trái Ngược thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cặp Đôi Trái Ngược](/phim/cap-doi-trai-nguoc) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1524. Nếu Cặp Đôi Trái Ngược không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cặp Đôi Trái Ngược](/phim/cap-doi-trai-nguoc), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cặp Đôi Trái Ngược**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1525. Tôi muốn gửi link Cặp Đôi Trái Ngược trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cặp Đôi Trái Ngược](/phim/cap-doi-trai-nguoc), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1526. Muốn chọn một tập khác của Cậu Bạn Thân Của Tôi Có Bạn Gái trên MFILM thì bấm ở đâu?
+
+Mở [Cậu Bạn Thân Của Tôi Có Bạn Gái](/phim/cau-ban-than-cua-toi-co-ban-gai) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1527. Tôi muốn lưu Cậu Bạn Thân Của Tôi Có Bạn Gái vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cậu Bạn Thân Của Tôi Có Bạn Gái](/phim/cau-ban-than-cua-toi-co-ban-gai), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1528. Muốn thuê riêng Cậu Bạn Thân Của Tôi Có Bạn Gái thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cậu Bạn Thân Của Tôi Có Bạn Gái](/phim/cau-ban-than-cua-toi-co-ban-gai) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1529. Nếu Cậu Bạn Thân Của Tôi Có Bạn Gái không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cậu Bạn Thân Của Tôi Có Bạn Gái](/phim/cau-ban-than-cua-toi-co-ban-gai), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cậu Bạn Thân Của Tôi Có Bạn Gái**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1530. Tôi muốn gửi link Cậu Bạn Thân Của Tôi Có Bạn Gái trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cậu Bạn Thân Của Tôi Có Bạn Gái](/phim/cau-ban-than-cua-toi-co-ban-gai), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1531. Muốn chọn một tập khác của Cậu Bé Không Lên Thiên Đường trên MFILM thì bấm ở đâu?
+
+Mở [Cậu Bé Không Lên Thiên Đường](/phim/cau-be-khong-len-thien-duong) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1532. Tôi muốn lưu Cậu Bé Không Lên Thiên Đường vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cậu Bé Không Lên Thiên Đường](/phim/cau-be-khong-len-thien-duong), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1533. Muốn thuê riêng Cậu Bé Không Lên Thiên Đường thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cậu Bé Không Lên Thiên Đường](/phim/cau-be-khong-len-thien-duong) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1534. Nếu Cậu Bé Không Lên Thiên Đường không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cậu Bé Không Lên Thiên Đường](/phim/cau-be-khong-len-thien-duong), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cậu Bé Không Lên Thiên Đường**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1535. Tôi muốn gửi link Cậu Bé Không Lên Thiên Đường trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cậu Bé Không Lên Thiên Đường](/phim/cau-be-khong-len-thien-duong), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1536. Muốn chọn một tập khác của Cậu Bé Rắc Rối trên MFILM thì bấm ở đâu?
+
+Mở [Cậu Bé Rắc Rối](/phim/cau-be-rac-roi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1537. Tôi muốn lưu Cậu Bé Rắc Rối vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cậu Bé Rắc Rối](/phim/cau-be-rac-roi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1538. Muốn thuê riêng Cậu Bé Rắc Rối thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cậu Bé Rắc Rối](/phim/cau-be-rac-roi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1539. Nếu Cậu Bé Rắc Rối không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cậu Bé Rắc Rối](/phim/cau-be-rac-roi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cậu Bé Rắc Rối**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1540. Tôi muốn gửi link Cậu Bé Rắc Rối trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cậu Bé Rắc Rối](/phim/cau-be-rac-roi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1541. Muốn chọn một tập khác của Cậu Bé Rắc Rối 2 trên MFILM thì bấm ở đâu?
+
+Mở [Cậu Bé Rắc Rối 2](/phim/cau-be-rac-roi-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1542. Tôi muốn lưu Cậu Bé Rắc Rối 2 vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cậu Bé Rắc Rối 2](/phim/cau-be-rac-roi-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1543. Muốn thuê riêng Cậu Bé Rắc Rối 2 thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cậu Bé Rắc Rối 2](/phim/cau-be-rac-roi-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1544. Nếu Cậu Bé Rắc Rối 2 không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cậu Bé Rắc Rối 2](/phim/cau-be-rac-roi-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cậu Bé Rắc Rối 2**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1545. Tôi muốn gửi link Cậu Bé Rắc Rối 2 trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cậu Bé Rắc Rối 2](/phim/cau-be-rac-roi-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1546. Muốn chọn một tập khác của Cậu Bé Rắc Rối 3 trên MFILM thì bấm ở đâu?
+
+Mở [Cậu Bé Rắc Rối 3](/phim/cau-be-rac-roi-3) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1547. Tôi muốn lưu Cậu Bé Rắc Rối 3 vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cậu Bé Rắc Rối 3](/phim/cau-be-rac-roi-3), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1548. Muốn thuê riêng Cậu Bé Rắc Rối 3 thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cậu Bé Rắc Rối 3](/phim/cau-be-rac-roi-3) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1549. Nếu Cậu Bé Rắc Rối 3 không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cậu Bé Rắc Rối 3](/phim/cau-be-rac-roi-3), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cậu Bé Rắc Rối 3**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1550. Tôi muốn gửi link Cậu Bé Rắc Rối 3 trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cậu Bé Rắc Rối 3](/phim/cau-be-rac-roi-3), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1551. Muốn chọn một tập khác của Câu Chuyện Đồ Chơi 5 trên MFILM thì bấm ở đâu?
+
+Mở [Câu Chuyện Đồ Chơi 5](/phim/cau-chuyen-do-choi-5) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1552. Tôi muốn lưu Câu Chuyện Đồ Chơi 5 vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Câu Chuyện Đồ Chơi 5](/phim/cau-chuyen-do-choi-5), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1553. Muốn thuê riêng Câu Chuyện Đồ Chơi 5 thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Câu Chuyện Đồ Chơi 5](/phim/cau-chuyen-do-choi-5) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1554. Nếu Câu Chuyện Đồ Chơi 5 không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Câu Chuyện Đồ Chơi 5](/phim/cau-chuyen-do-choi-5), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Câu Chuyện Đồ Chơi 5**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1555. Tôi muốn gửi link Câu Chuyện Đồ Chơi 5 trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Câu Chuyện Đồ Chơi 5](/phim/cau-chuyen-do-choi-5), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1556. Muốn chọn một tập khác của Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên trên MFILM thì bấm ở đâu?
+
+Mở [Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên](/phim/cau-chuyen-do-choi-thoi-gian-bi-lang-quen) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1557. Tôi muốn lưu Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên](/phim/cau-chuyen-do-choi-thoi-gian-bi-lang-quen), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1558. Muốn thuê riêng Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên](/phim/cau-chuyen-do-choi-thoi-gian-bi-lang-quen) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1559. Nếu Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên](/phim/cau-chuyen-do-choi-thoi-gian-bi-lang-quen), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1560. Tôi muốn gửi link Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Câu Chuyện Đồ Chơi: Thời Gian Bị Lãng Quên](/phim/cau-chuyen-do-choi-thoi-gian-bi-lang-quen), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1561. Muốn chọn một tập khác của Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2) trên MFILM thì bấm ở đâu?
+
+Mở [Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2)](/phim/cau-va-to-la-hai-thai-cuc-doi-lap-seihantai-na-kimi-to-boku-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1562. Tôi muốn lưu Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2)](/phim/cau-va-to-la-hai-thai-cuc-doi-lap-seihantai-na-kimi-to-boku-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1563. Muốn thuê riêng Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2)](/phim/cau-va-to-la-hai-thai-cuc-doi-lap-seihantai-na-kimi-to-boku-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1564. Nếu Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2)](/phim/cau-va-to-la-hai-thai-cuc-doi-lap-seihantai-na-kimi-to-boku-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1565. Tôi muốn gửi link Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cậu Và Tớ Là Hai Thái Cực Đối Lập (Seihantai na Kimi to Boku) (Phần 2)](/phim/cau-va-to-la-hai-thai-cuc-doi-lap-seihantai-na-kimi-to-boku-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1566. Muốn chọn một tập khác của Cầy Mangut trên MFILM thì bấm ở đâu?
+
+Mở [Cầy Mangut](/phim/cay-mangut) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1567. Tôi muốn lưu Cầy Mangut vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Cầy Mangut](/phim/cay-mangut), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1568. Muốn thuê riêng Cầy Mangut thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Cầy Mangut](/phim/cay-mangut) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1569. Nếu Cầy Mangut không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Cầy Mangut](/phim/cay-mangut), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Cầy Mangut**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1570. Tôi muốn gửi link Cầy Mangut trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Cầy Mangut](/phim/cay-mangut), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1571. Muốn chọn một tập khác của Chị Ơi, Xin Hãy Yêu Anh trên MFILM thì bấm ở đâu?
+
+Mở [Chị Ơi, Xin Hãy Yêu Anh](/phim/chi-oi-xin-hay-yeu-anh) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1572. Tôi muốn lưu Chị Ơi, Xin Hãy Yêu Anh vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Chị Ơi, Xin Hãy Yêu Anh](/phim/chi-oi-xin-hay-yeu-anh), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1573. Muốn thuê riêng Chị Ơi, Xin Hãy Yêu Anh thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Chị Ơi, Xin Hãy Yêu Anh](/phim/chi-oi-xin-hay-yeu-anh) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1574. Nếu Chị Ơi, Xin Hãy Yêu Anh không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Chị Ơi, Xin Hãy Yêu Anh](/phim/chi-oi-xin-hay-yeu-anh), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Chị Ơi, Xin Hãy Yêu Anh**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1575. Tôi muốn gửi link Chị Ơi, Xin Hãy Yêu Anh trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Chị Ơi, Xin Hãy Yêu Anh](/phim/chi-oi-xin-hay-yeu-anh), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1576. Muốn chọn một tập khác của Chìa Khóa Xương Người trên MFILM thì bấm ở đâu?
+
+Mở [Chìa Khóa Xương Người](/phim/chia-khoa-xuong-nguoi) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1577. Tôi muốn lưu Chìa Khóa Xương Người vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Chìa Khóa Xương Người](/phim/chia-khoa-xuong-nguoi), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1578. Muốn thuê riêng Chìa Khóa Xương Người thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Chìa Khóa Xương Người](/phim/chia-khoa-xuong-nguoi) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1579. Nếu Chìa Khóa Xương Người không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Chìa Khóa Xương Người](/phim/chia-khoa-xuong-nguoi), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Chìa Khóa Xương Người**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1580. Tôi muốn gửi link Chìa Khóa Xương Người trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Chìa Khóa Xương Người](/phim/chia-khoa-xuong-nguoi), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1581. Muốn chọn một tập khác của Chiếc Điện Thoại Thần Kỳ (Phần 1) trên MFILM thì bấm ở đâu?
+
+Mở [Chiếc Điện Thoại Thần Kỳ (Phần 1)](/phim/chiec-dien-thoai-than-ky-phan-1) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1582. Tôi muốn lưu Chiếc Điện Thoại Thần Kỳ (Phần 1) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Chiếc Điện Thoại Thần Kỳ (Phần 1)](/phim/chiec-dien-thoai-than-ky-phan-1), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1583. Muốn thuê riêng Chiếc Điện Thoại Thần Kỳ (Phần 1) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Chiếc Điện Thoại Thần Kỳ (Phần 1)](/phim/chiec-dien-thoai-than-ky-phan-1) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1584. Nếu Chiếc Điện Thoại Thần Kỳ (Phần 1) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Chiếc Điện Thoại Thần Kỳ (Phần 1)](/phim/chiec-dien-thoai-than-ky-phan-1), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Chiếc Điện Thoại Thần Kỳ (Phần 1)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1585. Tôi muốn gửi link Chiếc Điện Thoại Thần Kỳ (Phần 1) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Chiếc Điện Thoại Thần Kỳ (Phần 1)](/phim/chiec-dien-thoai-than-ky-phan-1), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1586. Muốn chọn một tập khác của Chiếc Điện Thoại Thần Kỳ (Phần 2) trên MFILM thì bấm ở đâu?
+
+Mở [Chiếc Điện Thoại Thần Kỳ (Phần 2)](/phim/chiec-dien-thoai-than-ky-phan-2) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1587. Tôi muốn lưu Chiếc Điện Thoại Thần Kỳ (Phần 2) vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Chiếc Điện Thoại Thần Kỳ (Phần 2)](/phim/chiec-dien-thoai-than-ky-phan-2), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1588. Muốn thuê riêng Chiếc Điện Thoại Thần Kỳ (Phần 2) thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Chiếc Điện Thoại Thần Kỳ (Phần 2)](/phim/chiec-dien-thoai-than-ky-phan-2) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1589. Nếu Chiếc Điện Thoại Thần Kỳ (Phần 2) không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Chiếc Điện Thoại Thần Kỳ (Phần 2)](/phim/chiec-dien-thoai-than-ky-phan-2), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Chiếc Điện Thoại Thần Kỳ (Phần 2)**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1590. Tôi muốn gửi link Chiếc Điện Thoại Thần Kỳ (Phần 2) trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Chiếc Điện Thoại Thần Kỳ (Phần 2)](/phim/chiec-dien-thoai-than-ky-phan-2), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1591. Muốn chọn một tập khác của Chiến Binh Đường Phố: Đại Chiến Biên Đạo trên MFILM thì bấm ở đâu?
+
+Mở [Chiến Binh Đường Phố: Đại Chiến Biên Đạo](/phim/chien-binh-duong-pho-dai-chien-bien-dao) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1592. Tôi muốn lưu Chiến Binh Đường Phố: Đại Chiến Biên Đạo vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Chiến Binh Đường Phố: Đại Chiến Biên Đạo](/phim/chien-binh-duong-pho-dai-chien-bien-dao), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1593. Muốn thuê riêng Chiến Binh Đường Phố: Đại Chiến Biên Đạo thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Chiến Binh Đường Phố: Đại Chiến Biên Đạo](/phim/chien-binh-duong-pho-dai-chien-bien-dao) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1594. Nếu Chiến Binh Đường Phố: Đại Chiến Biên Đạo không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Chiến Binh Đường Phố: Đại Chiến Biên Đạo](/phim/chien-binh-duong-pho-dai-chien-bien-dao), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Chiến Binh Đường Phố: Đại Chiến Biên Đạo**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1595. Tôi muốn gửi link Chiến Binh Đường Phố: Đại Chiến Biên Đạo trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Chiến Binh Đường Phố: Đại Chiến Biên Đạo](/phim/chien-binh-duong-pho-dai-chien-bien-dao), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
+
+### 1596. Muốn chọn một tập khác của Chiến Binh Trong Gió trên MFILM thì bấm ở đâu?
+
+Mở [Chiến Binh Trong Gió](/phim/chien-binh-trong-gio) và chọn tab **Tập phim**. Dùng **Khoảng tập** để tới nhóm cần tìm rồi chọn video có nguồn. Mỗi nhóm chứa tối đa 120 mục; nhãn có thể nhảy số hoặc gộp nhiều tập, nên không tạo thêm tập chỉ từ số cuối.
+
+### 1597. Tôi muốn lưu Chiến Binh Trong Gió vào Yêu Thích trên MFILM thì làm sao?
+
+Đăng nhập rồi mở [Chiến Binh Trong Gió](/phim/chien-binh-trong-gio), bấm **Yêu thích**. Tìm lại trong Tài khoản → Yêu Thích; bấm lại để bỏ lưu. Thao tác này lưu phim vào danh sách của bạn, không tự cấp quyền xem nếu phim yêu cầu gói hoặc thuê.
+
+### 1598. Muốn thuê riêng Chiến Binh Trong Gió thay vì mua cả gói MFILM thì kiểm tra ở đâu?
+
+Mở [Chiến Binh Trong Gió](/phim/chien-binh-trong-gio) để kiểm tra nhãn gói, quyền xem và lựa chọn thuê đang áp dụng. **Phim Free không cần trả giá thuê**; phim trả phí chỉ thuê khi có giá hợp lệ. Giao dịch thuê thành công cấp quyền phim đó trong **30 ngày**, không mở mọi phim trong gói. Mình không dùng đáp án sẵn để đoán giá hiện tại.
+
+### 1599. Nếu Chiến Binh Trong Gió không phát được trên MFILM thì tôi báo lỗi thế nào?
+
+Kiểm tra đúng phim tại [Chiến Binh Trong Gió](/phim/chien-binh-trong-gio), chọn lại tập và thử server khác nếu có. Nếu vẫn lỗi, gửi tên **Chiến Binh Trong Gió**, số tập, bản chiếu, server và thời điểm lỗi qua [Hỗ trợ MFILM](/ho-tro). Không cần gửi mật khẩu hoặc thông tin thẻ.
+
+### 1600. Tôi muốn gửi link Chiến Binh Trong Gió trên MFILM cho bạn bè thì gửi trang nào?
+
+Gửi trang chi tiết [Chiến Binh Trong Gió](/phim/chien-binh-trong-gio), hoặc mở trang đó và dùng **Chia sẻ**. Người nhận có thể xem thông tin và tự chọn tập; quyền gói hoặc quyền thuê của bạn không đi theo liên kết, nên mỗi tài khoản vẫn được kiểm tra quyền riêng.
 

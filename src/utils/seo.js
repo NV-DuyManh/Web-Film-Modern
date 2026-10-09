@@ -16,11 +16,13 @@ export const STATIC_SEO = {
     '/film-coming': ['Phim sắp tới', 'Khám phá mục phim sắp tới tại MFILM. Kiểm tra trạng thái và thông tin phát hành trong trang chi tiết của từng phim.'],
     '/actors': ['Diễn viên - Thông tin và phim đã tham gia', 'Tra cứu diễn viên tại MFILM. Xem thông tin giới thiệu và danh sách phim đã tham gia; tìm phim theo diễn viên bạn yêu thích.'],
     '/topic': ['Chủ đề phim - Bộ sưu tập MFILM', 'Khám phá các bộ sưu tập phim theo chủ đề tại MFILM. Tìm phim theo sở thích và xem thông tin từng phim trong bộ sưu tập.'],
+    '/category': ['Thể loại phim - Khám phá kho MFILM', 'Duyệt thể loại phim có trong kho MFILM: hành động, tình cảm, hài hước, hoạt hình và nhiều thể loại khác. Chọn thể loại để xem danh sách phim.'],
+    '/country': ['Phim theo quốc gia - Khám phá kho MFILM', 'Tìm phim theo quốc gia trong kho MFILM. Chọn Việt Nam, Hàn Quốc, Trung Quốc, Nhật Bản hoặc các quốc gia đang có phim để xem danh sách.'],
     '/showtimes': ['Lịch chiếu phim', 'Theo dõi lịch chiếu phim tại MFILM. Chọn ngày và xem thông tin lịch chiếu, địa điểm và phim được giới thiệu.'],
     '/ho-tro': ['Hỗ trợ & hỏi đáp', 'Hướng dẫn xem phim, chọn tập, lưu xem tiếp, thuê phim trong 30 ngày và sử dụng MFILM trên điện thoại, máy tính.'],
 };
 export function isPaginatedPath(path) {
-    return Object.hasOwn(STATIC_SEO, path) && !['/', '/ho-tro', '/showtimes'].includes(path) || /^\/(?:category|country|topic)\//.test(path);
+    return Object.hasOwn(STATIC_SEO, path) && !['/', '/ho-tro', '/showtimes', '/category', '/country'].includes(path) || /^\/(?:category|country|topic)\//.test(path);
 }
 
 export function plainText(value = '') {
@@ -58,7 +60,7 @@ export function isPrivatePath(path) {
 }
 export function robotsForPath(path, { noindex = false, search = '', admin = false } = {}) {
     const params = new URLSearchParams(search);
-    return noindex || admin || isPrivatePath(path) || path.startsWith('/xem-phim/') || ['q', 'search', 'keyword'].some(key => params.has(key))
+    return noindex || admin || isPrivatePath(path) || path.startsWith('/xem-phim/') || ['q', 'search', 'keyword', 'sort', 'order', 'year', 'plan', 'filter'].some(key => params.has(key))
         ? 'noindex, follow' : INDEX_ROBOTS;
 }
 export function safeJsonLd(value) {
@@ -68,6 +70,10 @@ export function breadcrumbSchema(items) {
     return { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: items.map(([name, path], i) => ({
         '@type': 'ListItem', position: i + 1, name: plainText(name), item: canonicalUrl(path),
     })) };
+}
+export function siteSchemas() {
+    const organization = { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE_ORIGIN}/#organization`, name: 'MFILM', url: `${SITE_ORIGIN}/`, logo: DEFAULT_SOCIAL_IMAGE, contactPoint: { '@type': 'ContactPoint', contactType: 'customer support', url: 'https://zalo.me/0779534325', availableLanguage: 'vi' } };
+    return [organization, { '@context': 'https://schema.org', '@type': 'WebSite', '@id': `${SITE_ORIGIN}/#website`, name: 'MFILM', alternateName: ['MFilm', 'ManhFilm'], url: `${SITE_ORIGIN}/`, inLanguage: 'vi', publisher: { '@id': organization['@id'] } }];
 }
 export function movieDescription(movie) {
     const name = plainText(movie.otherName || movie.name);

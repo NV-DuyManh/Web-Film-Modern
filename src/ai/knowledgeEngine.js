@@ -29,6 +29,9 @@ export function retrieveKnowledge(prompt) {
         let score = 0;
         for (const variant of entry.variants) {
             if (q === variant.normalized || tokens.join(' ') === variant.tokens.join(' ')) { score = 1; break; }
+            // Never fuzzy-match one film's guide to a different title. Exact
+            // normalized questions and conversational wrappers still work.
+            if (entry.scope === 'film-guide') continue;
             const queryWords = new Set(tokens);
             const words = new Set(variant.tokens);
             const overlap = [...queryWords].filter(token => words.has(token)).length;
