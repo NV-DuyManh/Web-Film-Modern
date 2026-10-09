@@ -147,7 +147,7 @@ function Banner() {
                                 </p>
                             </div>
 
-                            <div className='mt-4 sm:mt-6 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
+                            <div className='banner-actions mt-4 sm:mt-6 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
                                 <button aria-label="Xem phim" onClick={() => navigate(`/xem-phim/${routeSegment(e)}`)} className='group relative flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-300 to-yellow-500 text-lg sm:text-xl text-slate-900 shadow-[0_0_20px_rgba(251,191,36,0.4)] transition duration-500 hover:-translate-y-1 hover:scale-110 hover:shadow-[0_0_40px_rgba(251,191,36,0.6)] active:scale-95 cursor-pointer'>
                                     <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                     <div className="absolute inset-0 rounded-full animate-ping opacity-0 group-hover:opacity-30 bg-amber-400"></div>

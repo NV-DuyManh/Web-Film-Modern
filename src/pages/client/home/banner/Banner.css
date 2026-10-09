@@ -24,6 +24,7 @@
 @media (min-width: 1024px) {
     .slide-banner {
         height: 600px;
+        --banner-bottom-row-height: 112px;
     }
 }
 
@@ -162,7 +163,7 @@
 @media (min-width: 1024px) {
     .banner-info-box {
         top: 100px;
-        bottom: 90px;
+        bottom: 30px;
         left: 50px;
         right: auto;
         margin: 0;
@@ -170,7 +171,12 @@
         width: 60%;
         max-width: 650px;
         align-items: flex-start;
+        justify-content: flex-end;
         text-align: left;
+    }
+
+    .banner-actions {
+        min-height: var(--banner-bottom-row-height);
     }
 }
 
@@ -224,7 +230,10 @@
         bottom: 30px;
         right: 40px;
         width: 600px;
+        height: var(--banner-bottom-row-height);
     }
+
+    .thumb-swiper { height: 100%; }
 
     .thumb-swiper .swiper-slide {
         height: auto !important;
