@@ -343,7 +343,7 @@ function PlayFilm() {
                                     <FaPlay className="text-2xl ml-1" />
                                 </div>
                                 <p className="text-gray-200 text-sm sm:text-base font-semibold leading-relaxed">
-                                    Hệ thống ghi nhận bạn đã từng xem anime này trước đó!
+                                    Hệ thống ghi nhận bạn đã từng xem phim này trước đó!
                                 </p>
                                 <p className="text-gray-400 text-xs sm:text-sm">
                                     Bạn có muốn xem tiếp từ đoạn:
