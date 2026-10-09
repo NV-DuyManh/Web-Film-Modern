@@ -1,3 +1,4 @@
+import { newestMoviesFirst } from '../../../../utils/movieRecency';
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
@@ -123,11 +124,7 @@ function FilmNewPage() {
 
     const newMovies = useMemo(() => {
         if (!movies) return [];
-        let filtered = [...movies].sort((a, b) => {
-            const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : (a.createdAt ? new Date(a.createdAt).getTime() : 0);
-            const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
-            return dateB - dateA;
-        });
+        let filtered = [...movies].sort(newestMoviesFirst);
         if (searchTerm) {
             filtered = filtered.filter(m => 
                 searchTV(m.name || '').includes(searchTV(searchTerm)) || 

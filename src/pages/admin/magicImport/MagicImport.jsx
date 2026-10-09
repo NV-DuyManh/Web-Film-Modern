@@ -1,6 +1,7 @@
+import { movieTime } from '../../../utils/movieRecency';
 import { parseEpisode, episodeKey, highestEpisode } from '../../../utils/episodes';
-import { rentalPriceRange, randomRentalPrice } from '../../../utils/importRentalPricing';
-import { randomMoviePlanID, movieMaintenancePatch, kkphimDocumentID } from '../../../utils/movieMaintenance';
+import { rentalPriceRange } from '../../../utils/importRentalPricing';
+import { randomMoviePlanID, movieMaintenancePatch } from '../../../utils/movieMaintenance';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
 import { useShowTimes, useMovies, useEpisodes } from '../../../hooks/useCollections';
 import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
@@ -14,10 +15,12 @@ import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 
-import { fetchMoviesList, fetchMovieDetails, fetchMovieImages, fetchAllCategories, fetchAllCountries, getFullImageUrl, mapMovieType, mapMovieStatus, parseDuration, stripHtml, mapCountryName } from '../../../services/kkphimService';
+import { fetchMoviesList, fetchMovieDetails, mapMovieStatus } from '../../../services/kkphimService';
 
 import { resolveMovieImages, movieArtwork } from '../../../utils/movieImages';
 import { detectGender } from '../../../utils/genderDetect';
+import { CRAWLER_ACTIVE, EMPTY_CRAWL_STATS, crawlOptions } from '../../../utils/crawlerJob';
+import { subscribeCrawlerJob, queueCrawlerJob, controlCrawlerJob } from '../../../services/crawlerJobService';
 
 // Helper chuyển chuỗi tiếng Việt có dấu thành slug không dấu
 const slugify = (text) => {
@@ -525,293 +528,48 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     const [crawlLogs, setCrawlLogs] = useState([]);
     const [crawlStats, setCrawlStats] = useState({ movies: 0, episodes: 0, categories: 0, actors: 0, directors: 0, pages: 0, errors: 0 });
     const [crawlProgress, setCrawlProgress] = useState(0);
-    const crawlAbortRef = useRef(false);
-    const crawlPauseRef = useRef(false);
-
+    const [crawlBusy, setCrawlBusy] = useState(false);
+    const [crawlReady, setCrawlReady] = useState(false);
+    const [crawlControl, setCrawlControl] = useState('run');
     const addCrawlLog = useCallback((message, type = 'info') => {
-        setCrawlLogs(prev => [{ message, type, time: new Date().toLocaleTimeString('vi-VN') }, ...prev].slice(0, 500));
+        setCrawlLogs(prev => [{ message, type, time: new Date().toLocaleTimeString('en-GB') }, ...prev].slice(0, 100));
     }, []);
-
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
+    useEffect(() => subscribeCrawlerJob(job => {
+        setCrawlReady(true);
+        setCrawlStatus(job?.status || 'idle');
+        setCrawlControl(job?.control || 'run');
+        setCrawlLogs(job?.logs || []);
+        setCrawlStats({ ...EMPTY_CRAWL_STATS, ...job?.stats });
+        setCrawlProgress(job?.progress || 0);
+        if (job && CRAWLER_ACTIVE.includes(job.status)) {
+            setCrawlPageStart(job.options.pageStart);
+            setCrawlPageEnd(job.options.pageEnd);
+            setCrawlDelay(job.options.delayMs);
+        }
+    }, error => {
+        setCrawlReady(false);
+        addCrawlLog(`Cannot read cloud crawl status: ${error.message}`, 'error');
+    }), [addCrawlLog]);
     const handleStartCrawl = async () => {
-        if (crawlStatus === 'running') return;
-        if (!plans.length || plans.some(plan => !rentalPriceRange(plan))) {
-            addCrawlLog('Vui lòng kiểm tra gói và giá gói trước khi crawl; gói trả phí phải có giá lớn hơn 0.', 'error');
-            return;
-        }
-        crawlAbortRef.current = false;
-        crawlPauseRef.current = false;
-        setCrawlStatus('running');
-        setCrawlLogs([]);
-        setCrawlProgress(0);
-        setCrawlStats({ movies: 0, episodes: 0, categories: 0, actors: 0, directors: 0, pages: 0, errors: 0 });
-
-        let localCategories = [...categories];
-        let localAuthors = [...authors];
-        let localActors = [...actors];
-        let localCategoryTypes = [...categoryTypes];
-        let localMovies = [...existingMovies];
-        let stats = { movies: 0, episodes: 0, categories: 0, actors: 0, directors: 0, pages: 0, errors: 0 };
-        const totalPages = crawlPageEnd - crawlPageStart + 1;
-        let finalPlanID = plans.length > 0 ? plans[0].id : "";
-
-        addCrawlLog(`🚀 Bắt đầu crawl từ trang ${crawlPageStart} đến trang ${crawlPageEnd} (${totalPages} trang)`, 'success');
-
+        if (crawlBusy || !crawlReady || CRAWLER_ACTIVE.includes(crawlStatus)) return;
+        setCrawlBusy(true);
         try {
-            for (let page = crawlPageStart; page <= crawlPageEnd; page++) {
-                if (crawlAbortRef.current) { addCrawlLog('⛔ Đã dừng crawl theo yêu cầu.', 'error'); break; }
-                while (crawlPauseRef.current) { await sleep(500); }
-
-                addCrawlLog(`📄 Đang lấy danh sách phim trang ${page}/${crawlPageEnd}...`);
-                let listData;
-                try {
-                    listData = await fetchMoviesList(page);
-                } catch (err) {
-                    addCrawlLog(`❌ Lỗi lấy trang ${page}: ${err.message}`, 'error');
-                    stats.errors++;
-                    setCrawlStats({ ...stats });
-                    await sleep(crawlDelay);
-                    continue;
-                }
-
-                const items = listData?.data?.items || [];
-                if (items.length === 0) { addCrawlLog(`⚠️ Trang ${page} không có dữ liệu, bỏ qua.`, 'warning'); continue; }
-                addCrawlLog(`✅ Trang ${page}: Tìm thấy ${items.length} phim.`, 'success');
-
-                for (let i = 0; i < items.length; i++) {
-                    const currentProgress = ((page - crawlPageStart) / totalPages) * 100 + ((i + 1) / items.length) * (100 / totalPages);
-                    setCrawlProgress(Math.round(currentProgress));
-
-                    if (crawlAbortRef.current) break;
-                    while (crawlPauseRef.current) { await sleep(500); }
-
-                    const item = items[i];
-                    const slug = item.slug;
-                    if (!slug) continue;
-
-                    // Skip nếu phim đã tồn tại trong database (kiểm tra sơ bộ)
-                    const candidatePre = {
-                        name: item.origin_name || item.name,
-                        otherName: item.name,
-                        slug: item.slug || slugify(item.name)
-                    };
-                    const existCheck1 = findMatchingMovie(localMovies, candidatePre);
-                    if (existCheck1) {
-                        addCrawlLog(`⏭️ Bỏ qua "${item.name}" (đã tồn tại trong hệ thống).`);
-                        continue;
-                    }
-
-                    addCrawlLog(`🔍 [${i + 1}/${items.length}] Đang lấy chi tiết: ${item.name}...`);
-                    let detail;
-                    try {
-                        detail = await fetchMovieDetails(slug);
-                        await sleep(Math.max(300, crawlDelay / 2));
-                    } catch (err) {
-                        addCrawlLog(`❌ Lỗi lấy chi tiết "${item.name}": ${err.message}`, 'error');
-                        stats.errors++;
-                        setCrawlStats({ ...stats });
-                        continue;
-                    }
-
-                    const movieData = detail?.movie;
-                    const episodesData = detail?.episodes || [];
-                    if (!movieData) { addCrawlLog(`⚠️ Không có dữ liệu chi tiết cho "${item.name}".`, 'warning'); continue; }
-
-                    // Kiểm tra kỹ lại lần 2 với tên gốc và tên tiếng Việt đầy đủ từ detail
-                    const candidateDetail = {
-                        name: movieData.origin_name || item.name,
-                        otherName: movieData.name || item.name,
-                        slug: movieData.slug || slugify(movieData.name || movieData.origin_name || item.name)
-                    };
-                    const existCheck2 = findMatchingMovie(localMovies, candidateDetail);
-                    if (existCheck2) {
-                        addCrawlLog(`⏭️ Bỏ qua "${movieData.name || item.name}" (đã tồn tại trong hệ thống).`);
-                        continue;
-                    }
-
-                    // A stable source identity also prevents two simultaneous crawls
-                    // from creating separate movie documents for the same source.
-                    const stableMovieID = kkphimDocumentID(slug);
-                    const plannedMovieRef = stableMovieID ? doc(db, 'Movies', stableMovieID) : doc(collection(db, 'Movies'));
-                    if (stableMovieID && (await getDocFromServer(plannedMovieRef)).exists()) {
-                        addCrawlLog(`⏭️ Bỏ qua "${movieData.name || item.name}" (đã được nhập từ KKPhim).`);
-                        continue;
-                    }
-
-                    // === Map Categories ===
-                    let listCategory = [];
-                    if (movieData.category && movieData.category.length > 0) {
-                        for (const cat of movieData.category) {
-                            const catName = cat.name;
-                            if (!catName) continue;
-                            const exist = localCategories.find(c => c.name?.toLowerCase() === catName.toLowerCase());
-                            if (exist) {
-                                listCategory.push(exist.id);
-                            } else {
-                                const newRef = doc(collection(db, "Categories"));
-                                await setDoc(newRef, { id: newRef.id, name: catName, description: "Đang cập nhật..." });
-                                listCategory.push(newRef.id);
-                                localCategories.push({ id: newRef.id, name: catName });
-                                stats.categories++;
-                            }
-                        }
-                    }
-
-                    // === Map CategoryType ===
-                    let categoryTypeID = "";
-                    const typeName = mapMovieType(movieData.type);
-                    const existType = localCategoryTypes.find(c => c.name?.toLowerCase() === typeName.toLowerCase());
-                    if (existType) categoryTypeID = existType.id;
-                    else {
-                        const newRef = doc(collection(db, "CategoryTypes"));
-                        await setDoc(newRef, { id: newRef.id, name: typeName, description: "Đang cập nhật..." });
-                        categoryTypeID = newRef.id;
-                        localCategoryTypes.push({ id: newRef.id, name: typeName });
-                    }
-
-                    // === Map Directors ===
-                    let listAuthor = [];
-                    if (movieData.director && movieData.director.length > 0) {
-                        for (const dirName of movieData.director) {
-                            if (!dirName || dirName === "Đang cập nhật") continue;
-                            const exist = localAuthors.find(a => a.name?.toLowerCase() === dirName.toLowerCase());
-                            if (exist) {
-                                listAuthor.push(exist.id);
-                            } else {
-                                const newRef = doc(collection(db, "Authors"));
-                                await setDoc(newRef, { id: newRef.id, name: dirName, imgUrl: "", description: "Đang cập nhật...", sexID: detectGender(dirName), countriesID: mapCountryName(movieData.country) });
-                                listAuthor.push(newRef.id);
-                                localAuthors.push({ id: newRef.id, name: dirName });
-                                stats.directors++;
-                            }
-                        }
-                    }
-
-                    // === Map Actors ===
-                    let listActor = [];
-                    if (movieData.actor && movieData.actor.length > 0) {
-                        for (const actorName of movieData.actor) {
-                            if (!actorName || actorName === "Đang cập nhật") continue;
-                            const exist = localActors.find(a => a.name?.toLowerCase() === actorName.toLowerCase());
-                            if (exist) {
-                                listActor.push(exist.id);
-                            } else {
-                                const newRef = doc(collection(db, "Actors"));
-                                await setDoc(newRef, { id: newRef.id, name: actorName, imgUrl: "", description: "Đang cập nhật...", sexID: detectGender(actorName), countriesID: mapCountryName(movieData.country) });
-                                listActor.push(newRef.id);
-                                localActors.push({ id: newRef.id, name: actorName });
-                                stats.actors++;
-                            }
-                        }
-                    }
-
-                    // === Create Movie ===
-                    const movieRef = plannedMovieRef;
-                    const newMovieId = movieRef.id;
-                    const posterUrl = getFullImageUrl(movieData.poster_url);
-                    const thumbUrl = getFullImageUrl(movieData.thumb_url);
-                    const moviePlanID = randomMoviePlanID(plans);
-                    const moviePlan = plans.find(plan => plan.id === moviePlanID);
-                    const submitMovie = {
-                        id: newMovieId,
-                        slug: slugify(movieData.name || movieData.origin_name || item.name),
-                        name: movieData.origin_name || item.name,
-                        otherName: movieData.name || '',
-                        description: stripHtml(movieData.content),
-                        ...resolveMovieImages({ imgUrl: posterUrl, bannerUrl: thumbUrl }),
-                        listCategory,
-                        listActor,
-                        listCharacter: [],
-                        listAuthor,
-                        categoryTypeID,
-                        planID: moviePlanID,
-                        importSource: 'kkphim',
-                        sourceSlug: slug,
-                        countriesID: mapCountryName(movieData.country),
-                        releaseYear: movieData.year || new Date().getFullYear(),
-                        duration: parseDuration(movieData.time),
-                        rent: randomRentalPrice(moviePlan),
-                        status: mapMovieStatus(movieData.status),
-                        ageRating: 'T13',
-                        endEpisode: parseEpisode(movieData.episode_total)?.end ?? 1,
-                        hasSub: movieData.lang?.includes('Vietsub') || false,
-                        hasDub: movieData.lang?.includes('Thuyết Minh') || false,
-                        hasVoice: movieData.lang?.includes('Lồng Tiếng') || false,
-                        episodeSub: 0,
-                        episodeDub: 0,
-                        episodeVoice: 0,
-                        createdAt: new Date().toISOString(),
-                    };
-                    await setDoc(movieRef, submitMovie);
-                    localMovies.push({ id: newMovieId, name: submitMovie.name, otherName: submitMovie.otherName, slug: submitMovie.slug });
-                    stats.movies++;
-
-                    // === Fetch Gallery Images ===
-                    try {
-                        const galleryUrls = await fetchMovieImages(slug);
-                        if (galleryUrls.length > 0) {
-                            await updateDoc(movieRef, { gallery: galleryUrls });
-                            addCrawlLog(`🖼️ Lấy được ${galleryUrls.length} ảnh gallery cho "${submitMovie.name}".`);
-                        }
-                    } catch { /* ignore gallery errors */ }
-
-                    // === Create Episodes ===
-                    if (episodesData.length > 0) {
-                        const firstServer = episodesData[0];
-                        const serverData = firstServer?.server_data || [];
-                        for (const ep of serverData) {
-                            const parsedEpisode = parseEpisode(ep.name);
-                            if (!parsedEpisode) continue;
-                            const epNum = parsedEpisode.number;
-                            const epUrl = ep.link_m3u8 || ep.link_embed || '';
-                            const epUrl2 = ep.link_embed || '';
-                            if (!epUrl) continue;
-                            const epRef = doc(collection(db, "Episodes"));
-                            await setDoc(epRef, {
-                                id: epRef.id,
-                                movieID: newMovieId,
-                                title: submitMovie.name,
-                                numberEpisode: epNum,
-                                nameEpisode: ep.name,
-                                url: epUrl,
-                                url2: epUrl2 !== epUrl ? epUrl2 : '',
-                            });
-                            stats.episodes++;
-                        }
-                        // Count sub/dub/voice
-                        let subCount = 0, dubCount = 0, voiceCount = 0;
-                        episodesData.forEach(server => {
-                            const sName = server.server_name?.toLowerCase() || '';
-                            const count = server.server_data?.length || 0;
-                            if (sName.includes('vietsub') || sName === 'vietsub') subCount += count;
-                            else if (sName.includes('thuyết minh') || sName.includes('thuyet-minh')) dubCount += count;
-                            else if (sName.includes('lồng tiếng') || sName.includes('long-tieng')) voiceCount += count;
-                            else subCount += count;
-                        });
-                        await updateDoc(movieRef, { episodeSub: subCount, episodeDub: dubCount, episodeVoice: voiceCount });
-                    }
-
-                    setCrawlStats({ ...stats });
-                    addCrawlLog(`✅ Đã lưu: "${submitMovie.name}" (${stats.movies} phim | ${stats.episodes} tập)`, 'success');
-                }
-
-                stats.pages++;
-                setCrawlStats({ ...stats });
-                addCrawlLog(`📊 Hoàn thành trang ${page}/${crawlPageEnd}. Tổng: ${stats.movies} phim, ${stats.episodes} tập.`, 'success');
-                if (page < crawlPageEnd) await sleep(crawlDelay);
-            }
-        } catch (err) {
-            addCrawlLog(`💥 Lỗi nghiêm trọng: ${err.message}`, 'error');
-        } finally {
-            setCrawlStatus('done');
-            setCrawlProgress(100);
-            addCrawlLog(`🏁 Crawl hoàn tất! Tổng kết: ${stats.movies} phim, ${stats.episodes} tập, ${stats.categories} thể loại mới, ${stats.actors} diễn viên mới, ${stats.directors} đạo diễn mới, ${stats.errors} lỗi.`, 'success');
-        }
+            const options = crawlOptions(crawlPageStart, crawlPageEnd, crawlDelay);
+            if (!plans.length || plans.some(plan => !rentalPriceRange(plan))) throw new Error('Check movie plans and rental prices before starting.');
+            await queueCrawlerJob(options);
+        } catch (error) { addCrawlLog(error.message, 'error'); }
+        finally { setCrawlBusy(false); }
     };
-
-    const handlePauseCrawl = () => { crawlPauseRef.current = !crawlPauseRef.current; setCrawlStatus(crawlPauseRef.current ? 'paused' : 'running'); addCrawlLog(crawlPauseRef.current ? '⏸️ Đã tạm dừng crawl.' : '▶️ Tiếp tục crawl...', 'warning'); };
-    const handleStopCrawl = () => { crawlAbortRef.current = true; crawlPauseRef.current = false; setCrawlStatus('idle'); };
+    const controlCrawl = async action => {
+        if (crawlBusy) return;
+        setCrawlBusy(true);
+        try { await controlCrawlerJob(action); }
+        catch (error) { addCrawlLog(error.message, 'error'); }
+        finally { setCrawlBusy(false); }
+    };
+    const handlePauseCrawl = () => controlCrawl(crawlControl === 'pause' || crawlStatus === 'paused' ? 'run' : 'pause');
+    const handleStopCrawl = () => controlCrawl('stop');
 
     // === Auto Fix Missing Slugs ===
     const autoFixSlugs = useCallback(async () => {
@@ -1052,7 +810,8 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         const updatePayload = {
                             endEpisode: Math.max(highestEp, Number(matchedMovie.endEpisode) || 1),
                             status: movieData?.status ? mapMovieStatus(movieData.status) : (matchedMovie.status || 'Đang chiếu'),
-                            updatedAt: new Date().toISOString()
+                            updatedAt: new Date().toISOString(),
+                            ...(movieTime(movieData.modified?.time) ? { sourceUpdatedAt: movieTime(movieData.modified.time) } : {})
                         };
                         await updateDoc(movieRef, updatePayload);
 
@@ -1138,48 +897,49 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 {/* Page Range */}
                                 <div className="grid grid-cols-2 gap-3 mb-4">
                                     <div>
-                                        <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Trang bắt đầu</label>
-                                        <input type="number" min="1" value={crawlPageStart} onChange={e => setCrawlPageStart(Math.max(1, parseInt(e.target.value) || 1))}
+                                        <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Start page</label>
+                                        <input type="number" min="1" disabled={CRAWLER_ACTIVE.includes(crawlStatus) || crawlBusy} value={crawlPageStart} onChange={e => setCrawlPageStart(Math.max(1, parseInt(e.target.value) || 1))}
                                             className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
                                     </div>
                                     <div>
-                                        <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Trang kết thúc</label>
-                                        <input type="number" min="1" value={crawlPageEnd} onChange={e => setCrawlPageEnd(Math.max(1, parseInt(e.target.value) || 1))}
+                                        <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">End page</label>
+                                        <input type="number" min="1" disabled={CRAWLER_ACTIVE.includes(crawlStatus) || crawlBusy} value={crawlPageEnd} onChange={e => setCrawlPageEnd(Math.max(1, parseInt(e.target.value) || 1))}
                                             className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
                                     </div>
                                 </div>
 
                                 {/* Delay */}
                                 <div className="mb-4">
-                                    <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Delay giữa các trang (ms)</label>
-                                    <input type="number" min="500" step="100" value={crawlDelay} onChange={e => setCrawlDelay(Math.max(500, parseInt(e.target.value) || 1500))}
+                                    <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Delay between pages (ms)</label>
+                                    <input type="number" min="500" step="100" disabled={CRAWLER_ACTIVE.includes(crawlStatus) || crawlBusy} value={crawlDelay} onChange={e => setCrawlDelay(Math.max(500, parseInt(e.target.value) || 1500))}
                                         className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
-                                    <p className="text-[10px] text-gray-600 mt-1">Khuyến nghị: 1500ms. Thấp hơn 500ms có thể bị API chặn.</p>
+                                    <p className="text-[10px] text-gray-600 mt-1">Recommended: 1500ms. Minimum: 500ms.</p>
                                 </div>
 
                                 {/* Info */}
                                 <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-3 mb-4">
-                                    <p className="text-[11px] text-orange-300">📌 Mỗi trang có ~24 phim. Crawl {crawlPageEnd - crawlPageStart + 1} trang ≈ <span className="font-bold text-white">{(crawlPageEnd - crawlPageStart + 1) * 24}</span> phim.</p>
-                                    <p className="text-[11px] text-orange-300 mt-1">⏱️ Thời gian ước tính: ~<span className="font-bold text-white">{Math.round(((crawlPageEnd - crawlPageStart + 1) * 24 * (crawlDelay / 2 + 300) + (crawlPageEnd - crawlPageStart + 1) * crawlDelay) / 60000)}</span> phút.</p>
+                                    <p className="text-[11px] text-orange-300">📌 Each page has ~24 films. Crawl {crawlPageEnd - crawlPageStart + 1} pages ≈ <span className="font-bold text-white">{(crawlPageEnd - crawlPageStart + 1) * 24}</span> films.</p>
+                                    <p className="text-[11px] text-orange-300 mt-1">⏱️ Estimated processing time: ~<span className="font-bold text-white">{Math.round(((crawlPageEnd - crawlPageStart + 1) * 24 * (crawlDelay / 2 + 300) + (crawlPageEnd - crawlPageStart + 1) * crawlDelay) / 60000)}</span> minutes.</p>
                                 </div>
 
+                                <p className="text-[11px] text-orange-300 mb-3">Cloud crawl continues after you leave. Start may take a few minutes. Order: {crawlPageEnd} → {crawlPageStart}, oldest to newest.</p>
                                 {/* Action Buttons */}
                                 <div className="flex flex-col gap-2">
-                                    {crawlStatus === 'idle' || crawlStatus === 'done' ? (
-                                        <button onClick={handleStartCrawl}
+                                    {!CRAWLER_ACTIVE.includes(crawlStatus) ? (
+                                        <button onClick={handleStartCrawl} disabled={!crawlReady || crawlBusy}
                                             className="w-full py-3 rounded-xl bg-linear-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all disabled:opacity-50">
-                                            <FaPlay /> Bắt đầu Crawl
+                                            <FaPlay /> Start Cloud Crawl
                                         </button>
                                     ) : (
                                         <div className="grid grid-cols-2 gap-2">
-                                            <button onClick={handlePauseCrawl}
+                                            <button onClick={handlePauseCrawl} disabled={crawlBusy || crawlControl === 'stop'}
                                                 className={`py-3 rounded-xl font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all
-                                            ${crawlStatus === 'paused' ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-yellow-600 hover:bg-yellow-500 text-white'}`}>
-                                                {crawlStatus === 'paused' ? <><FaPlay /> Tiếp tục</> : <><FaPause /> Tạm dừng</>}
+                                            ${(crawlStatus === 'paused' || crawlControl === 'pause') ? 'bg-emerald-600 hover:bg-emerald-500 text-white' : 'bg-yellow-600 hover:bg-yellow-500 text-white'}`}>
+                                                {(crawlStatus === 'paused' || crawlControl === 'pause') ? <><FaPlay /> Resume</> : <><FaPause /> Pause</>}
                                             </button>
-                                            <button onClick={handleStopCrawl}
+                                            <button onClick={handleStopCrawl} disabled={crawlBusy || crawlControl === 'stop'}
                                                 className="py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all">
-                                                <FaStop /> Dừng hẳn
+                                                <FaStop /> Stop
                                             </button>
                                         </div>
                                     )}
@@ -1191,32 +951,32 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(249, 115, 22, 0.25), rgba(239, 68, 68, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
                             <div className='table-container p-5' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
                                 <h2 className='text-orange-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center gap-2'>
-                                    <FaDatabase className="text-lg" /> Thống kê
+                                    <FaDatabase className="text-lg" /> Statistics
                                 </h2>
                                 <div className="grid grid-cols-2 gap-2 text-xs">
                                     <div className="bg-cyan-500/10 border border-cyan-500/20 rounded-lg p-2.5 text-center">
                                         <p className="text-cyan-400 font-black text-lg">{crawlStats.movies}</p>
-                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Phim đã lưu</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Movies saved</p>
                                     </div>
                                     <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-2.5 text-center">
                                         <p className="text-emerald-400 font-black text-lg">{crawlStats.episodes}</p>
-                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Tập phim</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Episodes</p>
                                     </div>
                                     <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-2.5 text-center">
                                         <p className="text-purple-400 font-black text-lg">{crawlStats.categories}</p>
-                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Thể loại mới</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">New categories</p>
                                     </div>
                                     <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-2.5 text-center">
                                         <p className="text-blue-400 font-black text-lg">{crawlStats.actors}</p>
-                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Diễn viên mới</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">New actors</p>
                                     </div>
                                     <div className="bg-pink-500/10 border border-pink-500/20 rounded-lg p-2.5 text-center">
                                         <p className="text-pink-400 font-black text-lg">{crawlStats.directors}</p>
-                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Đạo diễn mới</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">New directors</p>
                                     </div>
                                     <div className="bg-red-500/10 border border-red-500/20 rounded-lg p-2.5 text-center">
                                         <p className="text-red-400 font-black text-lg">{crawlStats.errors}</p>
-                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Lỗi</p>
+                                        <p className="text-gray-500 text-[10px] uppercase tracking-wider font-bold">Errors</p>
                                     </div>
                                 </div>
                             </div>
@@ -1231,10 +991,10 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                     <span className="flex items-center gap-2">📋 Live Logs</span>
                                     <span className={`px-3 py-1 rounded-full text-xs border transition-all
                                     ${crawlStatus === 'running' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse' :
-                                            crawlStatus === 'paused' ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
+                                            (crawlStatus === 'paused' || crawlControl === 'pause') ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
                                                 crawlStatus === 'done' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
                                                     'bg-gray-500/20 text-gray-400 border-gray-500/30'}`}>
-                                        {crawlStatus === 'running' ? '🟢 Đang chạy' : crawlStatus === 'paused' ? '🟡 Tạm dừng' : crawlStatus === 'done' ? '🔵 Hoàn tất' : '⚪ Chờ lệnh'}
+                                        {crawlStatus === 'queued' ? '🕓 Queued on cloud' : crawlStatus === 'failed' ? '🔴 Failed — see logs' : crawlStatus === 'stopped' ? '⛔ Stopped' : crawlStatus === 'running' ? '🟢 Running' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '🟡 Pause' : crawlStatus === 'done' ? '🔵 Finished' : '⚪ Idle'}
                                     </span>
                                 </h2>
 
@@ -1242,7 +1002,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 {crawlStatus !== 'idle' && (
                                     <div className="mb-3">
                                         <div className="flex justify-between text-xs font-bold text-orange-400 mb-1">
-                                            <span>{crawlStatus === 'running' ? '⏳ Đang crawl...' : crawlStatus === 'paused' ? '⏸️ Tạm dừng' : '✅ Hoàn tất'}</span>
+                                            <span>{crawlStatus === 'queued' ? '🕓 Waiting for cloud worker...' : crawlStatus === 'failed' ? 'Failed' : crawlStatus === 'stopped' ? 'Stopped' : crawlStatus === 'running' ? '⏳ Crawling...' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '⏸️ Pause' : '✅ Finished'}</span>
                                             <span>{crawlProgress}%</span>
                                         </div>
                                         <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
@@ -1258,7 +1018,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                         {crawlLogs.length === 0 ? (
                                             <div className="flex flex-col items-center justify-center h-full text-gray-600 opacity-50">
                                                 <FaSpider className="text-5xl mb-3" />
-                                                <p>Nhấn "Bắt đầu Crawl" để bắt đầu thu thập dữ liệu từ KKPhim...</p>
+                                                <p>Nhấn "Start Cloud Crawl" để bắt đầu thu thập dữ liệu từ KKPhim...</p>
                                             </div>
                                         ) : (
                                             crawlLogs.map((log, idx) => (

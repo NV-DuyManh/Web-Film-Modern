@@ -1,3 +1,4 @@
+import { newestMoviesFirst } from '../../../../utils/movieRecency';
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo } from 'react';
@@ -20,11 +21,7 @@ function FilmNew(props) {
 
     const newMovies = useMemo(() => {
         if (!movies) return [];
-        return [...movies].sort((a, b) => {
-            const dateA = a.updatedAt ? new Date(a.updatedAt).getTime() : (a.createdAt ? new Date(a.createdAt).getTime() : 0);
-            const dateB = b.updatedAt ? new Date(b.updatedAt).getTime() : (b.createdAt ? new Date(b.createdAt).getTime() : 0);
-            return dateB - dateA;
-        }).slice(0, 15);
+        return [...movies].sort(newestMoviesFirst).slice(0, 15);
     }, [movies]);
 
     return (

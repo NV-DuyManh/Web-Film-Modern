@@ -1,3 +1,4 @@
+import { movieTime } from '../src/utils/movieRecency.js';
 import { parseEpisode, episodeKey, highestEpisode } from '../src/utils/episodes.js';
 import admin from 'firebase-admin';
 
@@ -250,7 +251,8 @@ export default async function handler(req, res) {
                     await movieRef.update({
                         endEpisode: Math.max(highestEp, Number(matchedMovie.endEpisode) || 1),
                         status: movieData?.status ? mapMovieStatus(movieData.status) : (matchedMovie.status || 'Đang chiếu'),
-                        updatedAt: new Date().toISOString()
+                        updatedAt: new Date().toISOString(),
+                        ...(movieTime(movieData.modified?.time) ? { sourceUpdatedAt: movieTime(movieData.modified.time) } : {})
                     });
                     stats.moviesUpdated++;
                     updatedMoviesList.push(`${matchedMovie.otherName || matchedMovie.name} (+${newEpsCountForThisMovie} tập mới)`);

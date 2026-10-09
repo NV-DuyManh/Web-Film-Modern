@@ -3,7 +3,7 @@ import { getFirestore, collection, query, orderBy, documentId, limit, startAfter
 import { SITEMAP_COLLECTIONS } from '../../src/utils/sitemap.js';
 
 let database;
-const PUBLIC_FIELDS = ['name', 'otherName', 'title', 'slug', 'createdAt', 'updatedAt', 'description',
+const PUBLIC_FIELDS = ['name', 'otherName', 'title', 'slug', 'createdAt', 'updatedAt', 'sourceUpdatedAt', 'description',
     'imgUrl', 'bannerUrl', 'avatar', 'releaseYear', 'year', 'duration', 'time', 'endEpisode',
     'hasSub', 'hasDub', 'hasVoice', 'countriesID', 'listCategory', 'categoryTypeID', 'status',
     'actor', 'actors', 'listActor', 'author', 'listAuthor', 'character', 'characters',

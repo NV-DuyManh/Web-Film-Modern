@@ -1,3 +1,4 @@
+import { movieTime } from '../utils/movieRecency';
 import { parseEpisode, episodeKey, highestEpisode } from '../utils/episodes';
 import { db } from '../config/firebaseConfig';
 import { collection, doc, setDoc, updateDoc, getDocs, query, where } from 'firebase/firestore';
@@ -179,7 +180,8 @@ export const syncSingleMovieEpisodes = async (movie, existingEpisodes = [], forc
             
             const updateData = {
                 endEpisode: Math.max(highestEp, Number(movie.endEpisode) || 1),
-                status: newStatus
+                status: newStatus,
+                ...(movieTime(movieData.modified?.time) ? { sourceUpdatedAt: movieTime(movieData.modified.time) } : {})
             };
 
             if (newEpsCount > 0) {

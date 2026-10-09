@@ -1,3 +1,4 @@
+import { newestMoviesFirst } from '../utils/movieRecency';
 import { stripRouteMetadata } from '../utils/nameRoutes';
 import { reportCatalogStatus } from '../utils/catalogStatus';
 import { resolveMovieImages, movieArtworkPatch } from '../utils/movieImages';
@@ -44,7 +45,7 @@ export const fetchDocumentsRealtime = (collectionName, callback) => {
     reportCatalogStatus(collectionName, 'loading');
     return onSnapshot(collection(db, collectionName), (snapshot) => {
         const documents = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        documents.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        documents.sort(collectionName === 'Movies' ? newestMoviesFirst : (a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         callback(documents);
         reportCatalogStatus(collectionName, 'ready');
     }, error => {

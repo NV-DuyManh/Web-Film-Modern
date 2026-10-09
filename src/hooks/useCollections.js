@@ -1,3 +1,4 @@
+import { newestMoviesFirst } from '../utils/movieRecency';
 import { useState, useEffect } from 'react';
 import { fetchDocumentsRealtime } from '../services/firebaseService';
 import { subscribeToCollection, getCachedData } from '../utils/appUtils';
@@ -51,7 +52,7 @@ function createCollectionHook(cacheKey, collectionName, processData) {
 
 
 function processMovies(movieList) {
-    return withNameRoutes(movieList, { preferSlug: true }).map(movie => {
+    return withNameRoutes([...movieList].sort(newestMoviesFirst), { preferSlug: true }).map(movie => {
         const images = resolveMovieImages(movie);
         return { ...movie, _artworkSource: { imgUrl: movie.imgUrl || '', bannerUrl: movie.bannerUrl || '' }, imgUrl: images.imgUrl || Logo6, bannerUrl: images.bannerUrl || Logo5 };
     });

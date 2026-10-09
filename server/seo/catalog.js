@@ -1,10 +1,10 @@
 import { createNameRouteIndex, withNameRoutes } from '../../src/utils/nameRoutes.js';
 import { resolveMovieImages } from '../../src/utils/movieImages.js';
+import { newestMoviesFirst } from '../../src/utils/movieRecency.js';
 import { STATIC_SEO, canonicalUrl, descriptionText, movieDescription, movieSchema, plainText, publicImage, breadcrumbSchema, isPrivatePath, isPaginatedPath, robotsForPath, pageTitle, siteSchemas } from '../../src/utils/seo.js';
 
 export const PREFIXES = { Movies: '/phim', Actors: '/dien-vien', Authors: '/tac-gia', Characters: '/nhan-vat', Topics: '/topic' };
 const list = value => Array.isArray(value) ? value : value ? [value] : [];
-const timestamp = value => value?.seconds ? value.seconds * 1000 : Date.parse(value) || 0;
 const label = item => plainText(item.otherName || item.title || item.name);
 const hasBio = item => plainText(item.description).length > 25 && !/^đang cập nhật/i.test(plainText(item.description));
 
@@ -55,7 +55,7 @@ export function listingMovies(path, prepared) {
     const typeId = text => catalog.CategoryTypes?.find(type => type.name?.toLowerCase().includes(text))?.id;
     const expand = items => items.length < 15 ? [...items, ...movies.filter(movie => !items.includes(movie))] : items;
     switch (path) {
-        case '/': case '/film-new': return [...movies].sort((a, b) => timestamp(b.updatedAt || b.createdAt) - timestamp(a.updatedAt || a.createdAt));
+        case '/': case '/film-new': return [...movies].sort(newestMoviesFirst);
         case '/singleMovies': return movies.filter(movie => typeId('lẻ') && movie.categoryTypeID === typeId('lẻ') && (!movie.endEpisode || Number(movie.endEpisode) < 2));
         case '/series': return movies.filter(movie => movie.categoryTypeID === typeId('bộ') || Number(movie.endEpisode) >= 2);
         case '/anime': return movies.filter(movie => movie.categoryTypeID === (typeId('anime') || typeId('hoạt hình')));

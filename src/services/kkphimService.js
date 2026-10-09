@@ -10,7 +10,7 @@ const buildUrl = (path, params = {}) => {
 
 /** Helper: fetch JSON */
 const fetchJson = async (url) => {
-    const res = await fetch(url, { headers: { 'accept': 'application/json' } });
+    const res = await fetch(url, { headers: { 'accept': 'application/json' }, signal: AbortSignal.timeout(15000) });
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     return res.json();
 };

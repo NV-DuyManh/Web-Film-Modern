@@ -1,3 +1,4 @@
+import { movieTime } from '../src/utils/movieRecency.js';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, getDocs, setDoc, updateDoc, query, where, getDoc, runTransaction, terminate } from "firebase/firestore";
 
@@ -117,6 +118,7 @@ async function runCloudSync() {
                     if (!dryRun) await updateDoc(movieRef, {
                         endEpisode: newEndEpisode,
                         status: newStatus,
+                        ...(movieTime(movieData.modified?.time) ? { sourceUpdatedAt: movieTime(movieData.modified.time) } : {}),
                         slug: activeSlug,
                         updatedAt: new Date().toISOString()
                     });
