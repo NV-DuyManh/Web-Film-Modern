@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { AuthContext } from '../contexts/AuthProvider';
@@ -6,6 +6,12 @@ import { routeSegment } from '../utils/nameRoutes';
 import { STATIC_SEO, SITE_TITLE, SITE_DESCRIPTION, canonicalUrl, pageTitle, descriptionText, publicImage, robotsForPath, breadcrumbSchema, safeJsonLd } from '../utils/seo';
 
 export default function SEO({ title, description, image, url, type = 'website', extra = {}, noindex = false, schema = [], items = [], fallback = false }) {
+    useLayoutEffect(() => {
+        // Helmet 3 uses React 19's metadata hoisting, which does not adopt the
+        // server's legacy Helmet tags. Keep them until this page's SEO mounts,
+        // then leave only the metadata owned by React for later navigation.
+        document.head.querySelectorAll('title[data-rh="true"], meta[data-rh="true"], link[data-rh="true"], script[data-rh="true"]').forEach(tag => tag.remove());
+    }, []);
     const location = useLocation();
     const { isLogin } = useContext(AuthContext);
     const base = STATIC_SEO[location.pathname];
