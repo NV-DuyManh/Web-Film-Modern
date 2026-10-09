@@ -24,17 +24,14 @@ export function openRecord(envelope, key, id) {
     } catch { return null; }
 }
 
-let database;
 async function documentRef(id) {
-    const { initializeApp, getApps } = await import('firebase/app');
-    const { getFirestore, doc } = await import('firebase/firestore');
-    database ||= getFirestore(getApps().find(app => app.name === 'ai-answer-memory') || initializeApp({ projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk' }, 'ai-answer-memory'));
-    return doc(database, 'AIAnswerMemory', id);
+    const { accountServices } = await import('../accounts/firebase.js');
+    return accountServices().db.collection('AIAnswerMemory').doc(id);
 }
 const cloud = {
-    async read(id) { const { getDoc } = await import('firebase/firestore'); return (await getDoc(await documentRef(id))).data(); },
-    async write(id, value) { const { setDoc } = await import('firebase/firestore'); await setDoc(await documentRef(id), value); },
-    async remove(id) { const { deleteDoc } = await import('firebase/firestore'); await deleteDoc(await documentRef(id)); },
+    async read(id) { return (await (await documentRef(id)).get()).data(); },
+    async write(id, value) { await (await documentRef(id)).set(value); },
+    async remove(id) { await (await documentRef(id)).delete(); },
 };
 
 export function createSharedMemory({ secret = resolveMemorySecret(), adapter = cloud, now = Date.now, timeoutMs = 1800 } = {}) {

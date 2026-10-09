@@ -91,7 +91,7 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                         autoComplete="new-password"
                         variant="outlined"
                         value={user.password || ''}
-                        helperText={error.password || (user.id ? 'Để trống để giữ nguyên mật khẩu hiện tại.' : '')}
+                        helperText={error.password || (user.id ? 'Leave blank to keep the current password.' : '')}
                         error={!!error.password}
                     />
                     

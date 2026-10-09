@@ -1,3 +1,4 @@
+import { authorizeCloud } from './lib/cloudAuth.mjs';
 import { backgroundFirestore } from './lib/backgroundFirestore.mjs';
 import { episodeSourceFingerprint } from '../src/utils/episodeSourceFingerprint.js';
 import { nextQuotaReset } from '../src/utils/backgroundQuota.js';
@@ -16,6 +17,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+await authorizeCloud(app);
 const db = getFirestore(app);
 let io;
 

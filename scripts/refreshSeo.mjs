@@ -1,3 +1,4 @@
+import { authorizeCloud } from './lib/cloudAuth.mjs';
 import { writeFile } from 'node:fs/promises';
 import { readPublicCatalog, closePublicCatalog, enableCatalogBudget } from './lib/publicCatalog.mjs';
 import { buildSitemap } from '../src/utils/sitemap.js';
@@ -7,7 +8,9 @@ import { backgroundFirestore } from './lib/backgroundFirestore.mjs';
 import { refreshCatalogDelta } from './lib/refreshCatalogDelta.mjs';
 
 if (process.argv.includes('--incremental')) {
-    const db = getFirestore(initializeApp({ projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk' }, 'catalog-delta'));
+    const app = initializeApp({ projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk' }, 'catalog-delta');
+    await authorizeCloud(app);
+    const db = getFirestore(app);
     let io;
     try { io = await backgroundFirestore(db, { initialReads: 0 }); await refreshCatalogDelta(db, io); }
     finally { try { await io?.flush(); } finally { await terminate(db); } }

@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import { FaFilm, FaStar, FaGift, FaCheck, FaCheckDouble, FaBell } from 'react-icons/fa';
-import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
+import { AuthContext } from '../../../../contexts/AuthProvider';
+import { SECURE_ACCOUNTS_ENABLED } from '../../../../services/accountService';
+import { fetchDataById, fetchDocumentsRealtime } from '../../../../services/firebaseService';
 
 function timeAgo(timestamp) {
     if (!timestamp) return 'Vừa xong';
@@ -18,6 +20,7 @@ function timeAgo(timestamp) {
 }
 
 function Notify(props) {
+    const { isLogin } = useContext(AuthContext);
     const [notifications, setNotifications] = useState([]);
     const [filter, setFilter] = useState('tat-ca');
     const [readIds, setReadIds] = useState(() => {
@@ -29,11 +32,13 @@ function Notify(props) {
     });
 
     useEffect(() => {
-        const unsubscribe = fetchDocumentsRealtime("Notifications", (data) => {
+        if (SECURE_ACCOUNTS_ENABLED && !isLogin?.id) return;
+        const subscribe = SECURE_ACCOUNTS_ENABLED ? (name, callback) => fetchDataById(name, 'userID', isLogin.id, callback) : fetchDocumentsRealtime;
+        const unsubscribe = subscribe("Notifications", (data) => {
             setNotifications(data);
         });
         return () => unsubscribe();
-    }, []);
+    }, [isLogin?.id]);
 
     const processedNotifications = notifications.map(n => {
         let icon = <FaBell className="text-slate-400" />;

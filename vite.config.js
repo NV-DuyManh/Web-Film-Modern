@@ -11,6 +11,21 @@ function vercelAiDevPlugin() {
     return {
         name: 'vercel-ai-dev-plugin',
         configureServer(server) {
+            server.middlewares.use('/api/accounts', async (req, res) => {
+                let body = '';
+                req.on('data', chunk => { body += chunk; if (body.length > 200_000) req.destroy(); });
+                req.on('end', async () => {
+                    try {
+                        const { default: handler } = await import('./api/accounts.js');
+                        const request = { method: req.method, headers: req.headers, socket: req.socket, body: body ? JSON.parse(body) : {} };
+                        await handler(request, {
+                            setHeader: (key, value) => res.setHeader(key, value),
+                            status(code) { res.statusCode = code; return this; },
+                            json(value) { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(value)); },
+                        });
+                    } catch { res.statusCode = 500; res.end(JSON.stringify({ error: 'Account request failed' })); }
+                });
+            });
             server.middlewares.use('/api/ai/chat', async (req, res) => {
                 if (req.method === 'POST') {
                     let body = '';

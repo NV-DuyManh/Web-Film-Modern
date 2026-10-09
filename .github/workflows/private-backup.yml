@@ -1,0 +1,33 @@
+name: Encrypted Account Backup
+
+on:
+  schedule:
+    - cron: '47 19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    if: vars.SECURE_ACCOUNTS_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: episode-cloud-sync
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Export and verify encrypted private records
+        env:
+          CLOUD_WORKER_TOKEN: ${{ secrets.CLOUD_WORKER_TOKEN }}
+        run: node scripts/privateBackup.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: encrypted-accounts-${{ github.run_id }}
+          path: private-backups.local/*.encrypted.json
+          retention-days: 7
+          if-no-files-found: error

@@ -123,8 +123,8 @@ import AuthProvider from './contexts/AuthProvider.jsx';
 import SubscriptionProvider from './contexts/SubscriptionProvider.jsx';
 
 const providers = [
-  UserProvider,
   AuthProvider,
+  UserProvider,
   CategoryProvider,
   CategoryTypeProvider,
   PlanProvider,

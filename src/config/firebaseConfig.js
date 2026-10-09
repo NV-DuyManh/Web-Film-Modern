@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, connectFirestoreEmulator } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, connectAuthEmulator } from 'firebase/auth';
 
 // Your Firebase configuration
 export const firebaseConfig = {
@@ -16,7 +16,8 @@ export const firebaseConfig = {
 
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const testProject = import.meta.env?.DEV && import.meta.env.VITE_MFILM_TEST_PROJECT?.startsWith('demo-') ? import.meta.env.VITE_MFILM_TEST_PROJECT : '';
+const app = initializeApp(testProject ? { ...firebaseConfig, projectId: testProject, apiKey: 'demo-key', authDomain: `${testProject}.firebaseapp.com` } : firebaseConfig);
 
 // Firebase services với bộ nhớ đệm IndexedDB đa tab (tiết kiệm tối đa lượt đọc Firestore)
 export const db = initializeFirestore(app, {
@@ -27,3 +28,7 @@ export const db = initializeFirestore(app, {
 export const storage = getStorage(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
+if (testProject) {
+    connectFirestoreEmulator(db, '127.0.0.1', 8089);
+    connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
+}

@@ -1,10 +1,13 @@
+import { authorizeCloud } from './lib/cloudAuth.mjs';
 import { backgroundFirestore } from './lib/backgroundFirestore.mjs';
 import { nextQuotaReset } from '../src/utils/backgroundQuota.js';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, doc, query, where, limit, getDocs, getDocFromServer, setDoc, terminate, orderBy, documentId, startAfter } from 'firebase/firestore';
 import { movieMaintenancePatch, exactDuplicateMovieGroups, canRetireEmptyImport } from '../src/utils/movieMaintenance.js';
 
-const db = getFirestore(initializeApp({ projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk' }, 'catalog-maintenance'));
+const app = initializeApp({ projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk' }, 'catalog-maintenance');
+await authorizeCloud(app);
+const db = getFirestore(app);
 const apply = process.argv.includes('--apply');
 const force = process.argv.includes('--force');
 const settingsRef = doc(db, 'Settings', 'CatalogMaintenance');

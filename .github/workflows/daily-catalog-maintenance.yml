@@ -20,6 +20,9 @@ permissions:
 
 jobs:
   maintain-catalog:
+    env:
+      CLOUD_WORKER_TOKEN: ${{ secrets.CLOUD_WORKER_TOKEN }}
+      SECURE_ACCOUNTS_ENABLED: ${{ vars.SECURE_ACCOUNTS_ENABLED }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     concurrency:

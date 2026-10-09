@@ -3,6 +3,7 @@ import { Dialog, DialogContent, TextField, InputAdornment, IconButton } from '@m
 import { IoClose, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 import { FcGoogle } from 'react-icons/fc';
 import Swal from 'sweetalert2';
+import { SECURE_ACCOUNTS_ENABLED, accountSession } from '../../../services/accountService';
 import Logo2 from '../../../assets/Logo2.png';
 import Logo5 from '../../../assets/Logo5.png';
 import { UserContext } from '../../../contexts/UserProvider';
@@ -113,6 +114,15 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
     const handleLogin = async () => {
         if (validation()) return;
 
+        if (SECURE_ACCOUNTS_ENABLED) {
+            try {
+                const session = await accountSession('login', formData);
+                loginByUser(session.user, session.firebaseUser);
+                handleCloseLogin();
+                showAuthSuccessToast(session.user);
+            } catch (error) { setErrors({ email: error.status === 401 ? 'Tài khoản hoặc mật khẩu không chính xác' : 'Chưa thể đăng nhập, vui lòng thử lại.' }); }
+            return;
+        }
         const userLogin = users.find((e) => e.email === formData.email.trim() && e.password === formData.password);
         
         if (userLogin) {
@@ -175,6 +185,13 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
                 throw new Error("Không thể lấy thông tin tài khoản Google.");
             }
 
+            if (SECURE_ACCOUNTS_ENABLED) {
+                const session = await accountSession('google', { token: await user.getIdToken() });
+                loginByUser(session.user, session.firebaseUser);
+                handleCloseLogin();
+                showAuthSuccessToast(session.user);
+                return;
+            }
             const targetEmail = user.email.toLowerCase().trim();
 
             // 1. Kiểm tra trong UserContext

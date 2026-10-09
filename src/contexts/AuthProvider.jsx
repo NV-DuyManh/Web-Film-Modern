@@ -1,5 +1,7 @@
-import React, { createContext, useEffect, useState, useContext, useCallback, useRef } from 'react';
-import { UserContext } from './UserProvider';
+import React, { createContext, useEffect, useState, useCallback } from 'react';
+import { SECURE_ACCOUNTS_ENABLED, accountRequest } from '../services/accountService';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { db } from '../config/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { rotateSessionId } from '../services/eventTracker';
@@ -16,52 +18,58 @@ function AuthProvider({ children }) {
     // the response arrives, the stale response is discarded — prevents Account A data
     // overwriting Account B after rapid account switches.
     const [authEpoch, setAuthEpoch] = useState(0);
-    const users = useContext(UserContext);
+
     const navigate = useNavigate();
     useEffect(() => {
         if (!isLogin?.id || !firebaseUser?.uid || !firebaseUser.email || firebaseUser.email.toLowerCase() !== isLogin.email?.toLowerCase()) return;
         return startProtectedResumeSync(isLogin.id, firebaseUser.uid);
     }, [isLogin?.id, isLogin?.email, firebaseUser?.uid, firebaseUser?.email]);
 
-    // 1. Listen for Firebase Auth initialization & session restoration
     useEffect(() => {
-        const auth = getAuth();
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        let generation = 0;
+        const load = async user => {
+            const current = ++generation;
             setFirebaseUser(user);
-            setFirebaseAuthReady(true);
-        });
-        return () => unsubscribe();
-    }, []);
-
-    // 2. Hydrate custom Firestore user session from localStorage
-    useEffect(() => {
-        try {
-            const user = JSON.parse(localStorage.getItem("isLogin"));
-            if (user) {
-                setIsLogin(user);
-            }
-        } catch {
-            localStorage.removeItem("isLogin");
-        }
-    }, []);
-
-    useEffect(() => {
-        if (isLogin && users && users.length > 0) {
-            const updatedUser = users.find(u => u.id === isLogin.id);
-            if (updatedUser) {
-                if (JSON.stringify(updatedUser) !== JSON.stringify(isLogin)) {
-                    setIsLogin(updatedUser);
-                    try {
-                        localStorage.setItem("isLogin", JSON.stringify(updatedUser));
-                    } catch {
-                        // ignore storage write errors
-                    }
+            if (SECURE_ACCOUNTS_ENABLED) {
+                let profile = null;
+                if (user) {
+                    try { profile = await accountRequest('me');
+                        const { resolveAccountAvatar } = await import('../utils/accountAvatar');
+                        profile = resolveAccountAvatar(profile); }
+                    catch { /* An unverified or revoked session must never restore an admin role. */ }
                 }
+                if (current !== generation) return;
+                setIsLogin(profile);
+                if (profile) localStorage.setItem('isLogin', JSON.stringify(profile));
+                else localStorage.removeItem('isLogin');
             }
-        }
-    }, [users, isLogin]);
+            setFirebaseAuthReady(true);
+        };
+        const unsubscribe = onAuthStateChanged(getAuth(), load);
+        const reload = () => load(getAuth().currentUser);
+        window.addEventListener('mfilm_account_changed', reload);
+        return () => { generation++; unsubscribe(); window.removeEventListener('mfilm_account_changed', reload); };
+    }, []);
+
+    useEffect(() => {
+        if (SECURE_ACCOUNTS_ENABLED) { localStorage.removeItem('isLogin'); return; }
+        try { setIsLogin(JSON.parse(localStorage.getItem('isLogin'))); }
+        catch { localStorage.removeItem('isLogin'); }
+    }, []);
+
+    useEffect(() => {
+        if (SECURE_ACCOUNTS_ENABLED || !isLogin?.id) return;
+        return onSnapshot(doc(db, 'Users', isLogin.id), snapshot => {
+            if (!snapshot.exists()) return;
+            const profile = { ...snapshot.data(), id: snapshot.id };
+            setIsLogin(profile);
+            localStorage.setItem('isLogin', JSON.stringify(profile));
+        });
+    }, [isLogin?.id]);
 
     const loginByUser = useCallback((data, fbUser = null) => {
+        if (SECURE_ACCOUNTS_ENABLED) data = { ...data };
+        if (SECURE_ACCOUNTS_ENABLED) delete data.password;
         // Retrieve last login fingerprint (UI-only state to detect account switch)
         let previousUid = null;
         try {

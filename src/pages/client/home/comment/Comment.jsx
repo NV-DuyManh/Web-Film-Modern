@@ -5,7 +5,10 @@ import { useComments, useMovies } from '../../../../hooks/useCollections';
 import { FaHeart, FaBolt, FaMinus, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 import { BiSolidMoviePlay } from 'react-icons/bi';
-import { UserContext } from '../../../../contexts/UserProvider';
+import usePublicUsers from '../../../../hooks/usePublicUsers';
+import { SECURE_ACCOUNTS_ENABLED } from '../../../../services/accountService';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../../config/firebaseConfig';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { timeAgo } from '../../../../utils/watchHistory';
 import { useNavigate } from 'react-router-dom';
@@ -13,7 +16,11 @@ import { useNavigate } from 'react-router-dom';
 function Comment() {
     const movies = useMovies() || [];
     const comments = useComments() || [];
-    const users = useContext(UserContext) || [];
+    const [publicFavorites, setPublicFavorites] = useState({});
+    React.useEffect(() => {
+        if (!SECURE_ACCOUNTS_ENABLED) return;
+        getDoc(doc(db, 'PublicStats', 'Favorites')).then(snapshot => setPublicFavorites(snapshot.data()?.counts || {})).catch(() => {});
+    }, []);
     const navigate = useNavigate();
 
     const [visibleCommented, setVisibleCommented] = useState(3);
@@ -29,7 +36,10 @@ function Comment() {
             });
     }, [comments]);
 
+    const users = usePublicUsers(latestComments.slice(0, visibleComments).map(comment => comment.userID));
+
     const favoriteCounts = useMemo(() => {
+        if (SECURE_ACCOUNTS_ENABLED) return publicFavorites;
         const counts = {};
         users.forEach(user => {
             if (user.listFavorite && Array.isArray(user.listFavorite)) {
@@ -39,7 +49,7 @@ function Comment() {
             }
         });
         return counts;
-    }, [users]);
+    }, [users, publicFavorites]);
 
     const topLovedMovies = useMemo(() => {
         return [...movies].sort((a, b) => {

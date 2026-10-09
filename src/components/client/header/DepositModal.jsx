@@ -1,3 +1,4 @@
+import { SECURE_ACCOUNTS_ENABLED, accountRequest, accountChanged } from '../../../services/accountService';
 import React, { useState } from 'react';
 import { IoClose } from 'react-icons/io5';
 import { PayPalButtons, PayPalScriptProvider } from '@paypal/react-paypal-js';
@@ -24,6 +25,10 @@ function DepositModal({ isOpen, onClose, isLogin }) {
             const currentRBalance = Number(isLogin?.rBalance) || 0;
             const newRBalance = currentRBalance + totalR;
 
+            if (SECURE_ACCOUNTS_ENABLED) {
+                await accountRequest('payment-demo', { kind: 'deposit', productId: String(selectedPackage.id), transactionId });
+                accountChanged();
+            } else {
             // Cập nhật số dư User
             await updateDocument("Users", {
                 id: isLogin.id,
@@ -40,6 +45,8 @@ function DepositModal({ isOpen, onClose, isLogin }) {
                 date: new Date(),
                 status: "Success"
             });
+
+            }
 
             Swal.fire({
                 title: 'Nạp thành công!',

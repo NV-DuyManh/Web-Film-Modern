@@ -1,0 +1,134 @@
+import assert from 'node:assert/strict';
+import { randomBytes } from 'node:crypto';
+import { initializeApp as initializeAdmin } from 'firebase-admin/app';
+import { getFirestore as adminFirestore, Timestamp } from 'firebase-admin/firestore';
+import { getAuth as adminAuth } from 'firebase-admin/auth';
+import { initializeApp } from 'firebase/app';
+import { getAuth, connectAuthEmulator, signInWithCustomToken, signInWithEmailAndPassword } from 'firebase/auth';
+import { getFirestore, connectFirestoreEmulator, doc, collection, getDoc, getDocs, setDoc, updateDoc, terminate } from 'firebase/firestore';
+import { createAccountService } from '../server/accounts/service.js';
+import { collectBackup, sealBackup, openBackup, restoreBackup } from '../server/accounts/backup.js';
+import { createPaymentService } from '../server/accounts/payments.js';
+
+if (process.env.FIRESTORE_EMULATOR_HOST !== '127.0.0.1:8089' || process.env.FIREBASE_AUTH_EMULATOR_HOST !== '127.0.0.1:9099') throw new Error('Run this test with the local Firebase emulator');
+const projectId = 'demo-mfilm-accounts';
+// Clear only the named disposable local integration database before each run.
+const reset = await fetch(`http://127.0.0.1:8089/emulator/v1/projects/${projectId}/databases/(default)/documents`, { method: 'DELETE' });
+if (!reset.ok) throw new Error('Local test reset failed');
+const adminApp = initializeAdmin({ projectId }, 'accounts-integration');
+const db = adminFirestore(adminApp), auth = adminAuth(adminApp);
+const key = randomBytes(32).toString('base64');
+const service = createAccountService({ db, auth, encryptionKey: key });
+const client = initializeApp({ projectId, apiKey: 'demo-key' }, 'accounts-client');
+const clientAuth = getAuth(client); connectAuthEmulator(clientAuth, 'http://127.0.0.1:9099', { disableWarnings: true });
+const clientDb = getFirestore(client); connectFirestoreEmulator(clientDb, '127.0.0.1', 8089);
+const pass = label => console.log(`PASS: ${label}`);
+const denied = promise => assert.rejects(promise, error => error.code === 'permission-denied');
+const id = prefix => `${prefix}-${Date.now()}`;
+
+try {
+    await db.collection('Users').doc('admin').set({ id: 'admin', name: 'Admin', email: 'admin@example.invalid', password: '123', role: 'admin', createdAt: 1 });
+    await denied(getDocs(collection(clientDb, 'Users')));
+    await denied(getDoc(doc(clientDb, 'AccountCredentials', 'admin')));
+    pass('guests cannot read Users or stored passwords');
+    await assert.rejects(service.login('admin@example.invalid', 'wrong'), error => error.status === 401);
+    const adminSession = await service.login('admin@example.invalid', '123');
+    assert.ok(!('password' in adminSession.user));
+    assert.equal((await db.collection('Users').doc('admin').get()).data().password, undefined);
+    await signInWithCustomToken(clientAuth, adminSession.customToken);
+    const adminIdentity = await service.identify(await clientAuth.currentUser.getIdToken());
+    assert.equal(adminIdentity.admin, true);
+    assert.equal((await service.get(adminIdentity, 'admin', true)).password, '123');
+    await denied(getDoc(doc(clientDb, 'AccountCredentials', 'admin')));
+    pass('legacy three-character admin password works and remains revealable only through the server');
+
+    const email = `${id('user')}@example.invalid`;
+    const normal = await service.register({ name: 'Test User', email, password: 'original-password', role: 'admin', planID: 'premium' });
+    assert.equal(normal.user.role, 'user'); assert.equal(normal.user.planID, undefined);
+    await signInWithCustomToken(clientAuth, normal.customToken);
+    const normalIdentity = await service.identify(await clientAuth.currentUser.getIdToken());
+    await denied(getDocs(collection(clientDb, 'Users')));
+    await denied(getDoc(doc(clientDb, 'Users', 'admin')));
+    await denied(updateDoc(doc(clientDb, 'Users', normal.user.id), { role: 'admin' }));
+    await assert.rejects(service.get(normalIdentity, 'admin'), error => error.status === 403);
+    await assert.rejects(service.get(normalIdentity, normal.user.id, true), error => error.status === 403);
+    await assert.rejects(service.directory(normalIdentity), error => error.status === 403);
+    await assert.rejects(service.identify('forged-admin-token'), error => error.status === 401);
+    pass('normal users cannot access other profiles, reveal passwords, read the admin index or impersonate admin');
+
+    const updated = await service.save(normalIdentity, { id: normal.user.id, name: 'Updated', role: 'admin', planID: 'premium', rentedMovies: ['premium'], listFavorite: ['film-one'] });
+    assert.equal(updated.role, 'user'); assert.equal(updated.planID, undefined); assert.equal(updated.rentedMovies, undefined);
+    assert.equal((await db.collection('PublicStats').doc('Favorites').get()).data().counts['film-one'], 1);
+    await service.save(normalIdentity, { listFavorite: ['film-one'] });
+    assert.equal((await db.collection('PublicStats').doc('Favorites').get()).data().counts['film-one'], 1);
+    pass('profile updates cannot grant paid access; aggregate favorites remain correct on repeated saves');
+
+    await service.save(adminIdentity, { id: normal.user.id, phone: 'test-phone', password: '' });
+    assert.equal((await service.get(adminIdentity, normal.user.id, true)).password, 'original-password');
+    const relogin = await service.login(email, 'original-password'); assert.equal(relogin.user.phone, 'test-phone');
+    await assert.rejects(service.changePassword(normalIdentity, 'wrong-password', 'new-password'), error => error.status === 400);
+    await service.changePassword(normalIdentity, 'original-password', 'new-password');
+    assert.equal((await service.get(adminIdentity, normal.user.id, true)).password, 'new-password');
+    await assert.rejects(service.login(email, 'original-password'), error => error.status === 401);
+    await service.login(email, 'new-password');
+    pass('blank admin edits preserve password; password changes validate current password and update login/reveal');
+
+    const directory = await service.directory(adminIdentity);
+    assert.equal(directory.length, 2); assert.ok(directory.every(user => !('password' in user) && !('passwordEnvelope' in user)));
+    const publicUser = await getDoc(doc(clientDb, 'PublicUsers', normal.user.id));
+    assert.equal(publicUser.data().email, undefined); assert.equal(publicUser.data().phone, undefined);
+    await denied(getDocs(collection(clientDb, 'PublicUsers')));
+    await denied(setDoc(doc(clientDb, 'RentMovies', 'fake-paid'), { userID: normal.user.id, status: 'Success' }));
+    await denied(setDoc(doc(clientDb, 'Subscriptions', 'fake-paid'), { userID: normal.user.id, planID: 'premium' }));
+    pass('directory/public comments do not expose credentials, email or phone; fake paid grants are denied');
+
+    // Exercise the actual database transaction and a fake provider: no real money or PayPal account.
+    await db.collection('Plans').doc('basic').set({ level: 1, price: 79000 });
+    await db.collection('Plans').doc('free').set({ level: 0, price: 0 });
+    await db.collection('Movies').doc('film-one').set({ planID: 'basic', rent: 26000, views: 0 });
+    await db.collection('Movies').doc('free-film').set({ planID: 'free', rent: 0 });
+    const payments = createPaymentService(db);
+    await assert.rejects(payments.recordDemo(normalIdentity, { kind: 'rental', productId: 'free-film', transactionId: 'ORDERDEMO0001' }), error => error.status === 400);
+    const purchase = { kind: 'rental', productId: 'film-one', transactionId: 'ORDERDEMO0002', price: 0.01 };
+    const grant = await payments.recordDemo(normalIdentity, purchase);
+    await assert.rejects(payments.recordDemo(adminIdentity, purchase), error => error.status === 403);
+    assert.ok(new Date(grant.expireDate).getTime() >= Date.now() + 29.99 * 86400_000);
+    const repeated = await payments.recordDemo(normalIdentity, purchase);
+    assert.equal(repeated.expireDate, grant.expireDate);
+    assert.equal((await db.collection('RentMovies').doc(grant.orderId).get()).data().price, '1.00');
+    assert.equal((await db.collection('RentMovies').doc(grant.orderId).get()).data().paymentMode, 'demo');
+    const renewed = await payments.recordDemo(normalIdentity, { ...purchase, transactionId: 'ORDERDEMO0003' });
+    assert.equal(new Date(renewed.expireDate) - new Date(grant.expireDate), 30 * 86400_000);
+    pass('demo rentals use server price, last 30 days and retries cannot double-grant; no PayPal secret or network request');
+    const deposit = await payments.recordDemo(normalIdentity, { kind: 'deposit', productId: '2', transactionId: 'ORDERDEMO0005' });
+    assert.equal(deposit.amountR, 110);
+    await payments.recordDemo(normalIdentity, { kind: 'deposit', productId: '2', transactionId: 'ORDERDEMO0005' });
+    assert.equal((await db.collection('Users').doc(normal.user.id).get()).data().rBalance, 110);
+    pass('demo deposits use the selected package and repeated approvals do not credit twice');
+    const premiumGrant = await payments.recordDemo(normalIdentity, { kind: 'subscription', productId: 'basic', packageId: '1', transactionId: 'ORDERDEMO0004' });
+    assert.ok(new Date(premiumGrant.expiryDate) > new Date());
+    await service.save(adminIdentity, { id: normal.user.id, phone: 'updated-after-payment', password: '' });
+    assert.equal((await db.collection('Users').doc(normal.user.id).get()).data().rentedMovies[0].expireDate, renewed.expireDate);
+    pass('subscriptions and profile edits preserve existing paid rentals');
+
+    await db.collection('Users').doc(normal.user.firebaseUid).collection('WatchProgress').doc('film-one').set({ position: 88, updatedAt: new Timestamp(123, 456) });
+    await denied(getDoc(doc(clientDb, 'Users', adminSession.user.firebaseUid, 'WatchProgress', 'film-one')));
+    const history = await getDoc(doc(clientDb, 'Users', normal.user.firebaseUid, 'WatchProgress', 'film-one'));
+    assert.equal(history.data().position, 88);
+    pass('watch progress is scoped to verified Firebase UID');
+    const backup = await collectBackup(db);
+    const envelope = sealBackup(backup, key); const opened = openBackup(envelope, key);
+    for (const item of opened.documents) await db.doc(item.path).delete();
+    const result = await restoreBackup(db, opened);
+    assert.equal(result.verified, backup.documents.length);
+    assert.equal((await service.get(adminIdentity, normal.user.id, true)).password, 'new-password');
+    assert.equal((await db.collection('Users').doc(normal.user.firebaseUid).collection('WatchProgress').doc('film-one').get()).data().position, 88);
+    assert.equal((await db.collection('RentMovies').get()).size, 2);
+    pass(`encrypted backup restores and verifies ${result.verified} documents, original passwords, payments and watch progress`);
+    await signInWithCustomToken(clientAuth, (await service.login('admin@example.invalid', '123')).customToken);
+    const cachedAdminToken = await clientAuth.currentUser.getIdToken();
+    await service.save(adminIdentity, { id: 'admin', role: 'user', password: '' });
+    await assert.rejects(service.directory(await service.identify(cachedAdminToken)), error => [401, 403].includes(error.status));
+    await denied(updateDoc(doc(clientDb, 'Movies', 'film-one'), { rent: 1 }));
+    pass('server rechecks current role instead of trusting a cached administrator flag');
+} finally { await terminate(clientDb); await db.terminate(); }

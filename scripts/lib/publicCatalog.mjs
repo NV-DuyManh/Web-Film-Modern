@@ -1,3 +1,4 @@
+import { authorizeCloud } from './cloudAuth.mjs';
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, collection, query, orderBy, documentId, limit, startAfter, getDocs, getDoc, doc, where, terminate } from 'firebase/firestore';
 import { SITEMAP_COLLECTIONS } from '../../src/utils/sitemap.js';
@@ -8,11 +9,12 @@ export { publicCatalogRecord } from '../../src/utils/publicCatalogFields.js';
 let database;
 let metered;
 function publicDocument(document) { return publicCatalogRecord({ ...document.data(), id: document.id }); }
-function getCatalogDatabase() {
+async function getCatalogDatabase() {
     if (!database) {
         const app = getApps().find(item => item.name === 'public-sitemap') || initializeApp({
             projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk',
         }, 'public-sitemap');
+        await authorizeCloud(app);
         database = getFirestore(app);
     }
     return database;
@@ -24,7 +26,7 @@ export async function readPublicCollection(name) {
     while (true) {
         const constraints = [orderBy(documentId()), limit(250)];
         if (cursor) constraints.push(startAfter(cursor));
-        const request = query(collection(getCatalogDatabase(), name), ...constraints);
+        const request = query(collection(await getCatalogDatabase(), name), ...constraints);
         const snapshot = metered ? await metered.query(request, 250) : await getDocs(request);
         for (const document of snapshot.docs) {
             // Only public catalog fields. Never export account, payment or AI memory collections.
@@ -41,7 +43,7 @@ export async function readPublicCatalog() {
     return Object.fromEntries(entries);
 }
 
-export async function enableCatalogBudget() { metered = await backgroundFirestore(getCatalogDatabase(), { initialReads: 0 }); }
+export async function enableCatalogBudget() { metered = await backgroundFirestore(await getCatalogDatabase(), { initialReads: 0 }); }
 
 export async function closePublicCatalog() {
     if (database) { try { await metered?.flush(); } finally { await terminate(database); database = null; metered = null; } }
@@ -52,7 +54,7 @@ export async function closePublicCatalog() {
 export async function readPublicMovie(slug) {
     if (typeof slug !== 'string' || slug.length > 200 || slug.includes('/')) return null;
     if (/^[a-zA-Z0-9]{20}$/.test(slug)) {
-        const document = await getDoc(doc(getCatalogDatabase(), 'Movies', slug));
+        const document = await getDoc(doc(await getCatalogDatabase(), 'Movies', slug));
         if (document.exists()) return publicDocument(document);
     }
     const result = await getDocs(query(collection(getCatalogDatabase(), 'Movies'), where('slug', '==', slug), limit(1)));

@@ -1,3 +1,4 @@
+import { SECURE_ACCOUNTS_ENABLED, accountRequest, accountChanged } from '../../../../services/accountService';
 import PaymentMethods from '../PaymentMethods';
 import { findRouteEntity, routeSegment } from '../../../../utils/nameRoutes';
 import React, { useState, useContext, useEffect, useRef } from 'react';
@@ -121,6 +122,7 @@ function PayVIP(props) {
 
     const createSubscription = async (transactionId) => {
         try {
+            if (!SECURE_ACCOUNTS_ENABLED) {
             await addDocument("Subscriptions", {
                 transactionID: transactionId,
                 userID: isLogin?.id,
@@ -131,6 +133,8 @@ function PayVIP(props) {
                 expiryDate: renewDate,
                 status: "Success"
             });
+            }
+            else { await accountRequest('payment-demo', { kind: 'subscription', productId: selectedPlanData.id, packageId: selectedDuration, transactionId }); accountChanged(); }
 
             const params = {
                 to_email: isLogin?.email,

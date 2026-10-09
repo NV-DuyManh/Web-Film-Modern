@@ -2,10 +2,11 @@ import { newestMoviesFirst } from '../utils/movieRecency';
 import { stripRouteMetadata } from '../utils/nameRoutes';
 import { reportCatalogStatus } from '../utils/catalogStatus';
 import { resolveMovieImages, movieArtworkPatch } from '../utils/movieImages';
-import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, query, where, limit, orderBy } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, updateDoc, query, where, limit, orderBy, increment } from "firebase/firestore";
 import { db } from "../config/firebaseConfig";
 import { uploadImageToCloudinary } from "../config/cloudinaryConfig";
 import { trackedSetDoc, trackedUpdateDoc, trackedDeleteDoc } from './catalogWrites.js';
+import { SECURE_ACCOUNTS_ENABLED, accountRequest, accountChanged } from './accountService';
 
 const CREATED_AT_COLLECTIONS = ["Movies", "Users", "Reviews", "Comments", "Favorites", "Folders", "MoviesSave", "WatchHistory"];
 
@@ -28,6 +29,9 @@ export const addDocument = async (collectionName, values) => {
             Object.assign(values, resolveMovieImages(values));
         }
         if (values.avatarUrl) values.avatarUrl = await uploadIfNeeded(values.avatarUrl, collectionName);
+        if (SECURE_ACCOUNTS_ENABLED && collectionName === 'Users') {
+            const result = await accountRequest('save', { user: values }); accountChanged(); return result;
+        }
         
         const docRef = doc(collection(db, collectionName));
         const finalData = {
@@ -66,6 +70,9 @@ export const fetchDocumentsRealtimePage = (collectionName, pageSize, callback) =
 
 export const updateDocument = async (collectionName, values, skipUpdatedAt = false) => {
     const { id, ...updatedValues } = stripRouteMetadata(values);
+    if (SECURE_ACCOUNTS_ENABLED && collectionName === 'Movies' && skipUpdatedAt && Object.keys(updatedValues).length === 1 && Object.hasOwn(updatedValues, 'views')) {
+        await updateDoc(doc(db, 'Movies', id), { views: increment(1) }); return;
+    }
     if (updatedValues.imgUrl) updatedValues.imgUrl = await uploadIfNeeded(updatedValues.imgUrl, collectionName);
     if (collectionName === 'Movies' && Object.keys(movieArtworkPatch(updatedValues)).length) {
         if (updatedValues.bannerUrl) updatedValues.bannerUrl = await uploadIfNeeded(updatedValues.bannerUrl, 'Banners');
@@ -74,6 +81,9 @@ export const updateDocument = async (collectionName, values, skipUpdatedAt = fal
         Object.assign(updatedValues, movieArtworkPatch(updatedValues, current));
     }
     if (updatedValues.avatarUrl) updatedValues.avatarUrl = await uploadIfNeeded(updatedValues.avatarUrl, collectionName);
+    if (SECURE_ACCOUNTS_ENABLED && collectionName === 'Users') {
+        const result = await accountRequest('save', { user: { id, ...updatedValues } }); accountChanged(); return result;
+    }
     if (!skipUpdatedAt) {
         updatedValues.updatedAt = Date.now();
     }
@@ -86,6 +96,9 @@ export const updateDocument = async (collectionName, values, skipUpdatedAt = fal
 
 export const deleteDocument = async (collectionName, values) => {
     const id = values.id;
+    if (SECURE_ACCOUNTS_ENABLED && collectionName === 'Users') {
+        await accountRequest('delete', { id }); accountChanged(); return;
+    }
 
     if (collectionName === "Movies") {
         const relatedCollections = ["Episodes", "ShowTimes", "Comments", "Reviews"];

@@ -1,3 +1,4 @@
+import { authorizeCloud } from './lib/cloudAuth.mjs';
 import { createHash } from 'node:crypto';
 import { readFile, appendFile } from 'node:fs/promises';
 import { backgroundFirestore } from './lib/backgroundFirestore.mjs';
@@ -26,7 +27,9 @@ const hash = value => createHash('sha256').update(value).digest('hex').slice(0, 
 const normalize = value => String(value || '').trim().toLowerCase();
 
 export async function crawlOnCloud({ dryRun = false, daily = false } = {}) {
-    const db = getFirestore(initializeApp({ projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk' }, 'kkphim-cloud-crawler'));
+    const app = initializeApp({ projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk' }, 'kkphim-cloud-crawler');
+await authorizeCloud(app);
+const db = getFirestore(app);
     let ref = doc(db, 'Settings', CRAWLER_SETTINGS_ID);
     let io;
     const read = async () => (await (io ? io.read(ref, true) : getDocFromServer(ref))).data();

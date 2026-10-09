@@ -10,9 +10,10 @@ import ProfileHeader from './ProfileHeader';
 import ProfileForm from './ProfileForm';
 import { getUserPlanInfo } from '../../../../utils/appUtils';
 import { getWatchedMoviesCount, getUniqueReviewsCount, getWatchlistCount, getFollowingCount } from '../../../../utils/accountStats';
+import { SECURE_ACCOUNTS_ENABLED, accountSession, accountChanged } from '../../../../services/accountService';
 
 function Profile() {
-    const { isLogin, setGlobalAvatarPreview } = useContext(AuthContext);
+    const { isLogin, setGlobalAvatarPreview, loginByUser } = useContext(AuthContext);
     const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
     const allReviews = useReviews() || [];
@@ -96,7 +97,7 @@ function Profile() {
 
     const handleSavePassword = async (passwordData) => {
         if (!isLogin) return false;
-        if (passwordData.currentPassword !== isLogin.password) {
+        if (!SECURE_ACCOUNTS_ENABLED && passwordData.currentPassword !== isLogin.password) {
             Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Mật khẩu hiện tại không đúng!', background: '#0f172a', color: '#fff', confirmButtonColor: '#22d3ee' });
             return false;
         }
@@ -109,7 +110,15 @@ function Profile() {
             return false;
         }
         
-        await updateDocument("Users", { id: isLogin.id, password: passwordData.newPassword });
+        if (SECURE_ACCOUNTS_ENABLED) {
+            try {
+                const session = await accountSession('change-password', passwordData);
+                loginByUser(session.user, session.firebaseUser); accountChanged();
+            } catch {
+                Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể đổi mật khẩu. Kiểm tra mật khẩu hiện tại và thử lại.', background: '#0f172a', color: '#fff' });
+                return false;
+            }
+        } else await updateDocument("Users", { id: isLogin.id, password: passwordData.newPassword });
         Swal.fire({ icon: 'success', title: 'Thành công', text: 'Đổi mật khẩu thành công!', background: '#0f172a', color: '#fff', confirmButtonColor: '#22d3ee' });
         return true;
     };

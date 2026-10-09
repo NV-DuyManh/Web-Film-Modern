@@ -14,6 +14,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { getUserPlanInfo, getThemeColorStyle, getExpiryDate } from '../../../../utils/appUtils';
+import { SECURE_ACCOUNTS_ENABLED, accountRequest } from '../../../../services/accountService';
 
 
 function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
@@ -54,7 +55,18 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
         );
     }, [search, users]);
 
-    const currentData = dataSearch?.slice(start, start + rowsPerPage) || [];
+    const visibleIds = (dataSearch?.slice(start, start + rowsPerPage) || []).map(item => item.id).join(',');
+    const [profiles, setProfiles] = useState({});
+    useEffect(() => {
+        if (!SECURE_ACCOUNTS_ENABLED || !visibleIds) return;
+        let active = true;
+        const reload = () => accountRequest('profiles', { ids: visibleIds.split(',') }).then(items => {
+            if (active) setProfiles(Object.fromEntries(items.map(item => [item.id, item])));
+        }).catch(() => { if (active) setProfiles({}); });
+        reload(); window.addEventListener('mfilm_account_changed', reload);
+        return () => { active = false; window.removeEventListener('mfilm_account_changed', reload); };
+    }, [visibleIds]);
+    const currentData = (dataSearch?.slice(start, start + rowsPerPage) || []).map(item => ({ ...item, ...profiles[item.id] }));
 
     useEffect(() => {
         setPage(1);

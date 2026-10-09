@@ -1,0 +1,66 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function admin() {
+      return signedIn() && request.auth.token.admin == true
+        && exists(/databases/$(database)/documents/Users/$(request.auth.token.userId))
+        && get(/databases/$(database)/documents/Users/$(request.auth.token.userId)).data.role == 'admin'
+        && get(/databases/$(database)/documents/Users/$(request.auth.token.userId)).data.firebaseUid == request.auth.uid;
+    }
+    function worker() { return signedIn() && request.auth.token.catalogWorker == true; }
+    function owns(data) { return signedIn() && data.userID == request.auth.token.userId; }
+    function publicCatalog(name) {
+      return name in ['Movies', 'Episodes', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes', 'Plans', 'Packages', 'Features', 'ShowTimes'];
+    }
+
+    match /{name}/{id} {
+      allow read: if publicCatalog(name);
+      allow write: if publicCatalog(name) && (admin() || worker());
+    }
+    match /Movies/{id} {
+      // Preserve the existing playback view counter without granting catalog editing.
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly(['views'])
+        && resource.data.get('views', 0) is number && request.resource.data.views == resource.data.get('views', 0) + 1;
+    }
+    match /Users/{id} {
+      allow read: if admin() || worker();
+      allow write: if false; // Accounts and recoverable passwords are managed by the server.
+      match /WatchProgress/{movieId} {
+        allow read, write: if signedIn() && request.auth.uid == id;
+      }
+    }
+    match /AccountCredentials/{id} { allow read, write: if false; }
+    match /AccountEmails/{id} { allow read, write: if false; }
+    match /AccountIdentities/{id} { allow read, write: if false; }
+    match /AccountDirectory/{id} { allow read, write: if false; }
+    match /AccountAttempts/{id} { allow read, write: if false; }
+    match /AccountAudit/{id} { allow read, write: if false; }
+    match /AIAnswerMemory/{id} { allow read, write: if false; }
+    match /PaymentLedger/{id} { allow read, write: if false; }
+    match /PendingPayments/{id} { allow read, write: if false; }
+    match /PublicUsers/{id} { allow get: if true; allow list, write: if false; }
+    match /{name}/{id} {
+      allow read: if name in ['Subscriptions', 'RentMovies', 'Deposits', 'Notifications', 'WatchHistory', 'Favorites', 'Folders', 'MoviesSave'] && (admin() || worker() || owns(resource.data));
+      allow write: if name in ['Subscriptions', 'RentMovies', 'Deposits', 'Notifications'] && admin();
+      allow create: if name in ['WatchHistory', 'Favorites', 'Folders', 'MoviesSave'] && (admin() || owns(request.resource.data));
+      allow update: if name in ['WatchHistory', 'Favorites', 'Folders', 'MoviesSave'] && (admin() || (owns(resource.data) && owns(request.resource.data)));
+      allow delete: if name in ['WatchHistory', 'Favorites', 'Folders', 'MoviesSave'] && (admin() || owns(resource.data));
+    }
+    match /{name}/{id} {
+      allow read: if name in ['Comments', 'Reviews'];
+      allow create: if name in ['Comments', 'Reviews'] && (admin() || owns(request.resource.data));
+      allow update: if name in ['Comments', 'Reviews'] && (admin() || (owns(resource.data) && owns(request.resource.data)));
+      allow delete: if name in ['Comments', 'Reviews'] && admin();
+    }
+    match /CatalogChanges/{id} { allow read, write: if admin() || worker(); }
+    match /Settings/{id} {
+      allow read: if admin() || worker();
+      allow write: if admin() || (worker() && id in ['BackgroundQuota', 'AutoSync', 'CloudEpisodeSync', 'CatalogMaintenance', 'KkphimCrawler', 'DailyKkphimCrawler', 'KKPhimCrawler']);
+    }
+    match /MovieMaintenanceArchive/{id} { allow read, write: if admin() || worker(); }
+    match /MovieArchive/{id} { allow read, write: if admin() || worker(); }
+    match /MovieArchives/{id} { allow read, write: if admin() || worker(); }
+    match /PublicStats/{id} { allow read: if true; allow write: if false; }
+  }
+}

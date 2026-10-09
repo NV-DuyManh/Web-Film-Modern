@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 *.local.json
+*.local.jpg
+private-backups.local/
+**/qa.local/
 
 # Editor directories and files
 .vscode/*

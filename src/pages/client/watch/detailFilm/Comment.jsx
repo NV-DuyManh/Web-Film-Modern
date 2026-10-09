@@ -1,7 +1,7 @@
 import React, { useState, useContext, useMemo } from 'react';
 import { useComments, useSubscriptions } from '../../../../hooks/useCollections';
 import { FaComment, FaPaperPlane, FaRegCommentDots } from 'react-icons/fa';
-import { UserContext } from '../../../../contexts/UserProvider';
+import usePublicUsers from '../../../../hooks/usePublicUsers';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { addDocument } from '../../../../services/firebaseService';
@@ -46,7 +46,7 @@ function Comment({ isLogin, onOpenLogin, movieId }) {
     const [commentText, setCommentText] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     
-    const users = useContext(UserContext) || [];
+
     const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
     const allComments = useComments() || [];
@@ -61,6 +61,8 @@ function Comment({ isLogin, onOpenLogin, movieId }) {
                 return timeB - timeA;
             });
     }, [allComments, movieId]);
+
+    const users = usePublicUsers(movieComments.map(comment => comment.userID));
 
     const handleSendComment = async () => {
         if (!commentText.trim() || !isLogin) return;

@@ -7,6 +7,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { addDocument, updateDocument } from '../../../../services/firebaseService';
 import LOGO from "../../../../assets/Logo.png";
 import { adminUserPasswordError, adminUserSubmitData } from '../../../../utils/adminUserForm';
+import { SECURE_ACCOUNTS_ENABLED, accountRequest } from '../../../../services/accountService';
 
 const inner = { name: "", email: "", password: "", phone: "", avatarUrl: LOGO, sexID: "", role: "user" };
 const innerError = { name: "", email: "", password: "", phone: "", avatarUrl: "", sexID: "", role: "" };
@@ -52,9 +53,12 @@ function Users() {
         setError(innerError);
     };
 
-    const handleView = (item) => {
-        setUserView(item);
-        setOpenView(true);
+    const handleView = async (item) => {
+        try {
+            const profile = SECURE_ACCOUNTS_ENABLED ? await accountRequest('get', { id: item.id, reveal: true }) : item;
+            setUserView(profile);
+            setOpenView(true);
+        } catch { alert('Unable to load account details. Please try again.'); }
     };
 
     const handleClose = () => {

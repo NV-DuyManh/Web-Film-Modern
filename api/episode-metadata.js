@@ -1,3 +1,5 @@
+import process from 'node:process';
+import { accountServices } from '../server/accounts/firebase.js';
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, doc, getDoc, getDocs, collection, query, where, setDoc } from 'firebase/firestore';
 import { normalizeEpisodes } from '../src/utils/episodes.js';
@@ -13,10 +15,10 @@ export const publicEpisodeMetadata = episodes => normalizeEpisodes(episodes).map
 }));
 
 export function createEpisodeMetadataHandler({
-    readMovie = async id => (await getDoc(doc(db(), 'Movies', id))).data(),
-    readCache = async id => (await getDoc(doc(db(), 'Settings', `EpisodeMetadata_${id}`))).data(),
-    readEpisodes = async id => (await getDocs(query(collection(db(), 'Episodes'), where('movieID', '==', id)))).docs.map(item => ({ ...item.data(), id: item.id })),
-    saveCache = (id, values) => setDoc(doc(db(), 'Settings', `EpisodeMetadata_${id}`), values), now = Date.now,
+    readMovie = async id => process.env.SECURE_ACCOUNTS_ENABLED === 'true' ? (await accountServices().db.collection('Movies').doc(id).get()).data() : (await getDoc(doc(db(), 'Movies', id))).data(),
+    readCache = async id => process.env.SECURE_ACCOUNTS_ENABLED === 'true' ? (await accountServices().db.collection('Settings').doc(`EpisodeMetadata_${id}`).get()).data() : (await getDoc(doc(db(), 'Settings', `EpisodeMetadata_${id}`))).data(),
+    readEpisodes = async id => (process.env.SECURE_ACCOUNTS_ENABLED === 'true' ? await accountServices().db.collection('Episodes').where('movieID', '==', id).get() : await getDocs(query(collection(db(), 'Episodes'), where('movieID', '==', id)))).docs.map(item => ({ ...item.data(), id: item.id })),
+    saveCache = (id, values) => process.env.SECURE_ACCOUNTS_ENABLED === 'true' ? accountServices().db.collection('Settings').doc(`EpisodeMetadata_${id}`).set(values) : setDoc(doc(db(), 'Settings', `EpisodeMetadata_${id}`), values), now = Date.now,
 } = {}) {
     const memory = new Map(), pending = new Map();
     return async (req, res) => {

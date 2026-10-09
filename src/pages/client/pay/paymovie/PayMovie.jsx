@@ -1,6 +1,7 @@
 import useMovie from '../../../../hooks/useMovie';
 import useMovieIndex from '../../../../hooks/useMovieIndex';
 import MovieImage from '../../../../components/MovieImage';
+import { SECURE_ACCOUNTS_ENABLED, accountRequest, accountChanged } from '../../../../services/accountService';
 import PaymentMethods from '../PaymentMethods';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
@@ -33,6 +34,7 @@ function PayMovie() {
 
     const createRent = async (transactionId) => {
         try {
+            if (SECURE_ACCOUNTS_ENABLED) { await accountRequest('payment-demo', { kind: 'rental', productId: movie.id, transactionId }); accountChanged(); setShowModal(true); return; }
             if (!movie?.id || !isLogin?.id || !validRentalPrice(movie.rent)) throw new Error('Thông tin thuê phim chưa sẵn sàng.');
             const now = Date.now();
             let newExpireDate;

@@ -3,6 +3,7 @@ import { Dialog, DialogContent, TextField, InputAdornment, IconButton } from '@m
 import { IoClose, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
 import { FcGoogle } from 'react-icons/fc';
 import Swal from 'sweetalert2';
+import { SECURE_ACCOUNTS_ENABLED, accountSession } from '../../../services/accountService';
 import Logo2 from '../../../assets/Logo2.png';
 import Logo5 from '../../../assets/Logo5.png';
 import { addDocument, updateDocument } from '../../../services/firebaseService';
@@ -91,7 +92,7 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
 
         if (!formData.name.trim()) newErrors.name = 'Vui lòng nhập tên hiển thị';
         if (!formData.email.trim()) newErrors.email = 'Vui lòng nhập email';
-        if (users.some(e => e.email == formData.email)) newErrors.email = 'Email đã được sử dụng';
+        if (!SECURE_ACCOUNTS_ENABLED && users.some(e => e.email == formData.email)) newErrors.email = 'Email đã được sử dụng';
         if (!formData.password) newErrors.password = 'Vui lòng nhập mật khẩu';
         if (!formData.confirmPassword) {
             newErrors.confirmPassword = 'Vui lòng xác nhận mật khẩu';
@@ -108,13 +109,22 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
         }
         setLoading(true);
         try {
-            const { confirmPassword, ...submitData } = formData;
+            if (SECURE_ACCOUNTS_ENABLED) {
+                const session = await accountSession('register', formData);
+                loginByUser(session.user, session.firebaseUser);
+                handleCloseRegister();
+                showAuthSuccessToast(session.user);
+                return;
+            }
+            let fbCred;
+            const submitData = { ...formData };
+            delete submitData.confirmPassword;
             const newUser = await addDocument("Users", submitData);
 
             // Provision Firebase Auth account so the user gets a verified identity
             // for personalized recommendations from their first session.
             try {
-                const fbCred = await createUserWithEmailAndPassword(auth, formData.email.trim(), formData.password);
+                fbCred = await createUserWithEmailAndPassword(auth, formData.email.trim(), formData.password);
                 // Store Firebase UID back to Firestore profile for future uid-based lookups
                 if (fbCred?.user?.uid && newUser?.id) {
                     updateDocument('Users', { id: newUser.id, firebaseUid: fbCred.user.uid }).catch(() => {});
@@ -173,6 +183,13 @@ function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
                 throw new Error("Không thể lấy thông tin tài khoản Google.");
             }
 
+            if (SECURE_ACCOUNTS_ENABLED) {
+                const session = await accountSession('google', { token: await user.getIdToken() });
+                loginByUser(session.user, session.firebaseUser);
+                handleCloseRegister();
+                showAuthSuccessToast(session.user);
+                return;
+            }
             const targetEmail = user.email.toLowerCase().trim();
 
             // 1. Kiểm tra trong UserContext trước
