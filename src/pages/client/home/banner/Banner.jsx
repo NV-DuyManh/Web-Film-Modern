@@ -59,7 +59,8 @@ function Banner() {
 
 
 
-    if (hotMovies.length === 0) return null;
+    if (movies === null) return <div className='slide-banner bg-white/5 animate-pulse' aria-hidden="true" />;
+    if (hotMovies.length === 0) return <div className="h-24" aria-hidden="true" />;
 
     return (
         <div className='slide-banner'>

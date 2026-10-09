@@ -24,7 +24,7 @@ export function useHomeCatalog(section) {
 export default function useHomeMovies(section = 'new') {
     const home = useHomeCatalog(section === 'hot' ? 'hot' : undefined);
     return useMemo(() => {
-        if (section === 'hot') return (home || []).map(movie => ({ ...movie, ...resolveMovieImages(movie) }));
+        if (section === 'hot') return home === null ? null : home.map(movie => ({ ...movie, ...resolveMovieImages(movie) }));
         const byID = new Map((home?.movies || []).map(movie => [movie.id, movie]));
         return (home?.sections[section] || []).map(id => byID.get(id)).filter(Boolean).map(movie => ({ ...movie, ...resolveMovieImages(movie) }));
     }, [home, section]);
