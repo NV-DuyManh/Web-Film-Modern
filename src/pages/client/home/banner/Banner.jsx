@@ -3,8 +3,9 @@ import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useState } from 'react';
 import ModalDetail from '../../watch/detailFilm/ModalDetail';
 import useHomeMovies from '../../../../hooks/useHomeMovies';
+import useCarouselAutoplay from '../../../../hooks/useCarouselAutoplay';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
-import { FreeMode, Navigation, Thumbs, EffectFade } from 'swiper/modules';
+import { FreeMode, Navigation, Thumbs, EffectFade, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
@@ -36,6 +37,7 @@ function Banner() {
     const navigate = useNavigate();
 
     const [loginDialog, setLoginDialog] = useState(false);
+    useCarouselAutoplay(mainSwiper, loginDialog || hotMovies.length < 2);
 
     const handleFavorite = async (e, movieId) => {
         e.stopPropagation();
@@ -63,7 +65,7 @@ function Banner() {
     if (hotMovies.length === 0) return <div className="h-24" aria-hidden="true" />;
 
     return (
-        <div className='slide-banner'>
+        <div className='slide-banner' data-carousel-autoplay>
             <Swiper
                 onSwiper={setMainSwiper}
                 observer={true}
@@ -75,13 +77,14 @@ function Banner() {
                 spaceBetween={0}
                 speed={800}
                 navigation={false}
-                loop={hotMovies.length >= 7}
+                loop={hotMovies.length > 1}
+                autoplay={{ delay: 3000, disableOnInteraction: false }}
                 effect={'fade'}
                 fadeEffect={{ crossFade: true }}
                 thumbs={{
                     swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
                 }}
-                modules={[FreeMode, Navigation, Thumbs, EffectFade]}
+                modules={[FreeMode, Navigation, Thumbs, EffectFade, Autoplay]}
                 className="mySwiper2"
             >
                 {hotMovies.map((e, index) => (
@@ -191,7 +194,7 @@ function Banner() {
                     watchSlidesProgress={true}
                     grabCursor={true}
                     allowTouchMove={true}
-                    loop={hotMovies.length >= 7}
+                    loop={false}
                     slideToClickedSlide={true}
                     modules={[FreeMode, Navigation, Thumbs]}
                     className="thumb-swiper"
