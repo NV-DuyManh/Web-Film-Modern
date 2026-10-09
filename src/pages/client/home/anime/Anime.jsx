@@ -5,12 +5,11 @@ import ModalDetail from '../../watch/detailFilm/ModalDetail';
 import useHomeMovies from '../../../../hooks/useHomeMovies';
 import useCarouselAutoplay from '../../../../hooks/useCarouselAutoplay';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
-import { FreeMode, Navigation, Thumbs, EffectFade, Autoplay } from 'swiper/modules';
+import { FreeMode, Navigation, Thumbs, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
-import 'swiper/css/effect-fade';
 import { FaPlay, FaHeart, FaRegHeart, FaInfoCircle, FaChevronRight, FaEye } from 'react-icons/fa';
 import './Anime.css';
 
@@ -109,13 +108,12 @@ function Anime() {
                         speed={800}
                         navigation={false}
                         loop={filteredMovies.length > 1}
-                        autoplay={{ delay: 3000, disableOnInteraction: false }}
-                        effect={'fade'}
-                        fadeEffect={{ crossFade: true }}
+                        autoplay={{ delay: 5000, disableOnInteraction: false }}
+                        effect={'slide'}
                         thumbs={{
                             swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
                         }}
-                        modules={[FreeMode, Navigation, Thumbs, EffectFade, Autoplay]}
+                        modules={[FreeMode, Navigation, Thumbs, Autoplay]}
                         className="anime-main-swiper"
                     >
                         {filteredMovies?.map((e) => (
@@ -130,11 +128,11 @@ function Anime() {
                                 <div className="anime-overlay"></div>
 
                                 <div className='anime-info-box'>
-                                    <h2 className='text-center lg:text-left text-xl sm:text-2xl lg:text-3xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
+                                    <h2 title={e.otherName || e.name} className='carousel-film-title text-center lg:text-left text-xl sm:text-2xl lg:text-3xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
                                         {e.otherName || "Đang cập nhật tên gốc"}
                                     </h2>
 
-                                    <h3 className='mt-1 lg:mt-1.5 text-center lg:text-left text-xs sm:text-sm font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
+                                    <h3 title={e.name} className='carousel-film-subtitle mt-1 lg:mt-1.5 text-center lg:text-left text-xs sm:text-sm font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
                                         {e.name}
                                     </h3>
 
@@ -157,7 +155,7 @@ function Anime() {
                                         </button>
                                     </div>
 
-                                    <div className='flex mt-1.5 lg:mt-2 flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
+                                    <div className='carousel-film-genres flex mt-1.5 lg:mt-2 flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
                                         {e.listCategory?.map((categoryId) => {
                                             const categoryName = getObjectById(categories, categoryId)?.name;
                                             if (!categoryName) return null;

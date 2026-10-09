@@ -95,7 +95,8 @@
 .banner-info-box {
     position: absolute;
     z-index: 30;
-    bottom: 100px;
+    top: 90px;
+    bottom: 85px;
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -103,10 +104,40 @@
     max-width: 500px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     text-align: center;
     box-sizing: border-box;
 }
+
+.banner-info-box > * { flex-shrink: 0; max-width: 100%; }
+.banner-info-box .carousel-film-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    width: 100%;
+}
+.banner-info-box .carousel-film-subtitle {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.banner-info-box .carousel-film-genres {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    width: 100%;
+}
+.banner-info-box .carousel-film-genres > div {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.mySwiper2 .swiper-wrapper { transition-timing-function: cubic-bezier(.22,.61,.36,1); }
 
 .mySwiper2 .swiper-slide:not(.swiper-slide-active) .banner-info-box,
 .mySwiper2 .swiper-slide:not(.swiper-slide-active) .banner-info-box * {
@@ -119,13 +150,19 @@
 
 @media (min-width: 768px) {
     .banner-info-box {
+        top: 100px;
         bottom: 130px;
     }
 }
 
+@media (max-width: 767px) {
+    .banner-info-box > div { margin-top: 8px; }
+}
+
 @media (min-width: 1024px) {
     .banner-info-box {
-        bottom: -40px;
+        top: 100px;
+        bottom: 90px;
         left: 50px;
         right: auto;
         margin: 0;
@@ -302,42 +339,6 @@
     .thumb-swiper .custom-thumb-active img {
         filter: brightness(1.0) contrast(1.0);
         transform: scale(1.08) translateZ(0);
-    }
-}
-
-@media (max-width: 1023px) {
-    .banner-info-box {
-        animation: slideInUp 0.8s ease-out forwards;
-    }
-}
-
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (min-width: 1024px) {
-    .banner-info-box {
-        animation: slideInLeft 0.8s ease-out forwards;
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
     }
 }
 

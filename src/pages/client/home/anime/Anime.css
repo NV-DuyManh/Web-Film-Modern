@@ -43,7 +43,7 @@
 
 @media (min-width: 1024px) {
     .anime-slide-wrapper {
-        height: 420px;
+        height: 460px;
     }
 }
 
@@ -112,6 +112,7 @@
 .anime-info-box {
     position: absolute;
     z-index: 30;
+    top: 20px;
     bottom: 100px;
     left: 0;
     right: 0;
@@ -120,10 +121,40 @@
     max-width: 500px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     text-align: center;
     box-sizing: border-box;
 }
+
+.anime-info-box > * { flex-shrink: 0; max-width: 100%; }
+.anime-info-box .carousel-film-title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+    width: 100%;
+}
+.anime-info-box .carousel-film-subtitle {
+    display: block;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.anime-info-box .carousel-film-genres {
+    flex-wrap: nowrap;
+    overflow: hidden;
+    width: 100%;
+}
+.anime-info-box .carousel-film-genres > div {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.anime-main-swiper .swiper-wrapper { transition-timing-function: cubic-bezier(.22,.61,.36,1); }
 
 .anime-main-swiper .swiper-slide:not(.swiper-slide-active) .anime-info-box,
 .anime-main-swiper .swiper-slide:not(.swiper-slide-active) .anime-info-box * {
@@ -142,6 +173,7 @@
 
 @media (min-width: 1024px) {
     .anime-info-box {
+        top: 24px;
         bottom: 80px;
         left: 50px;
         right: auto;
@@ -315,42 +347,6 @@
     .anime-thumb-swiper .custom-thumb-active img {
         filter: brightness(1.0) contrast(1.05);
         transform: scale(1.08) translateZ(0);
-    }
-}
-
-@media (max-width: 1023px) {
-    .anime-info-box {
-        animation: slideInUp 0.8s ease-out forwards;
-    }
-}
-
-@keyframes slideInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@media (min-width: 1024px) {
-    .anime-info-box {
-        animation: slideInLeft 0.8s ease-out forwards;
-    }
-}
-
-@keyframes slideInLeft {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
     }
 }
 

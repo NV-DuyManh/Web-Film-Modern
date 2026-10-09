@@ -5,12 +5,11 @@ import ModalDetail from '../../watch/detailFilm/ModalDetail';
 import useHomeMovies from '../../../../hooks/useHomeMovies';
 import useCarouselAutoplay from '../../../../hooks/useCarouselAutoplay';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
-import { FreeMode, Navigation, Thumbs, EffectFade, Autoplay } from 'swiper/modules';
+import { FreeMode, Navigation, Thumbs, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
-import 'swiper/css/effect-fade';
 import { FaPlay, FaHeart, FaRegHeart, FaInfoCircle, FaChevronRight } from 'react-icons/fa';
 import './Banner.css';
 
@@ -78,13 +77,12 @@ function Banner() {
                 speed={800}
                 navigation={false}
                 loop={hotMovies.length > 1}
-                autoplay={{ delay: 3000, disableOnInteraction: false }}
-                effect={'fade'}
-                fadeEffect={{ crossFade: true }}
+                autoplay={{ delay: 5000, disableOnInteraction: false }}
+                effect={'slide'}
                 thumbs={{
                     swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
                 }}
-                modules={[FreeMode, Navigation, Thumbs, EffectFade, Autoplay]}
+                modules={[FreeMode, Navigation, Thumbs, Autoplay]}
                 className="mySwiper2"
             >
                 {hotMovies.map((e, index) => (
@@ -104,11 +102,11 @@ function Banner() {
                         <div className="banner-overlay"></div>
 
                         <div className='banner-info-box'>
-                            <h2 className='text-center lg:text-left text-2xl sm:text-3xl lg:text-4xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
+                            <h2 title={e.otherName || e.name} className='carousel-film-title text-center lg:text-left text-2xl sm:text-3xl lg:text-4xl font-black leading-tight tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.9)]'>
                                 {e.otherName}
                             </h2>
 
-                            <h3 className='mt-1.5 lg:mt-2 text-center lg:text-left text-sm sm:text-base font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
+                            <h3 title={e.name} className='carousel-film-subtitle mt-1.5 lg:mt-2 text-center lg:text-left text-sm sm:text-base font-semibold text-yellow-300 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)]'>
                                 {e.name}
                             </h3>
 
@@ -128,7 +126,7 @@ function Banner() {
                                 </button>
                             </div>
 
-                            <div className='flex mt-1.5 lg:mt-2 flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
+                            <div className='carousel-film-genres flex mt-1.5 lg:mt-2 flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
                                 {e.listCategory?.map((categoryId) => {
                                     const categoryName = getObjectById(categories, categoryId)?.name;
                                     if (!categoryName) return null;
@@ -144,12 +142,12 @@ function Banner() {
                             </div>
 
                             <div className='hidden lg:block mt-3 lg:mt-4 max-w-130'>
-                                <p className='text-left text-sm leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-7'>
+                                <p className='text-left text-sm leading-6 text-gray-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] line-clamp-3'>
                                     {e.description || "Nội dung phim đang được cập nhật. Cùng đón chờ những tập phim mới nhất trên hệ thống của chúng tôi."}
                                 </p>
                             </div>
 
-                            <div className='mt-4 lg:mb-20 sm:mt-6 lg:-translate-y-2 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
+                            <div className='mt-4 sm:mt-6 flex items-center justify-center lg:justify-start gap-3 sm:gap-4'>
                                 <button aria-label="Xem phim" onClick={() => navigate(`/xem-phim/${routeSegment(e)}`)} className='group relative flex h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14 items-center justify-center rounded-full bg-linear-to-br from-amber-300 to-yellow-500 text-lg sm:text-xl text-slate-900 shadow-[0_0_20px_rgba(251,191,36,0.4)] transition duration-500 hover:-translate-y-1 hover:scale-110 hover:shadow-[0_0_40px_rgba(251,191,36,0.6)] active:scale-95 cursor-pointer'>
                                     <div className="absolute inset-0 bg-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                     <div className="absolute inset-0 rounded-full animate-ping opacity-0 group-hover:opacity-30 bg-amber-400"></div>
