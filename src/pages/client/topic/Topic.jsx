@@ -1,5 +1,5 @@
+import MovieImage from '../../../components/MovieImage';
 import { routeSegment } from '../../../utils/nameRoutes';
-import { getOptimizedUrl } from '../../../utils/cloudinary';
 import React, { useContext, useMemo, useState } from 'react';
 import { useTopics, useMovies } from '../../../hooks/useCollections';
 import { Link } from 'react-router-dom';
@@ -50,8 +50,8 @@ function CollectionCard({ collection, movies, index }) {
                     
                     <div className="absolute inset-0 flex items-start justify-center pt-5">
                         {previewMovies[0] ? (
-                            <img 
-                                src={getOptimizedUrl(previewMovies[0].bannerUrl || previewMovies[0].imgUrl, 480, 270, 'thumb')} 
+                            <MovieImage
+                                movie={previewMovies[0]} kind="banner" imageWidth={480} imageHeight={270} imageType="thumb"
                                 alt=""
                                 className="absolute w-[90%] h-[70%] object-cover object-center rounded-2xl shadow-2xl transition duration-500 opacity-100 group-hover:opacity-0 group-hover:scale-95 group-hover:-translate-y-2 z-50 border border-white/10"
                             />
@@ -62,29 +62,29 @@ function CollectionCard({ collection, movies, index }) {
 
                     <div className="absolute inset-0 flex items-start justify-center pt-5">
                         {previewMovies[3] && (
-                            <img 
-                                src={getOptimizedUrl(previewMovies[3].imgUrl, 300, 450, 'poster')} 
+                            <MovieImage
+                                movie={previewMovies[3]} kind="poster" imageWidth={300} imageHeight={450} imageType="poster"
                                 alt=""
                                 className="absolute w-2/5 h-4/5 object-cover object-top rounded-xl shadow-lg transition duration-500 opacity-0 group-hover:opacity-80 group-hover:-translate-x-24 group-hover:-translate-y-1 group-hover:-rotate-[20deg] z-10 border border-white/10"
                             />
                         )}
                         {previewMovies[2] && (
-                            <img 
-                                src={getOptimizedUrl(previewMovies[2].imgUrl, 300, 450, 'poster')} 
+                            <MovieImage
+                                movie={previewMovies[2]} kind="poster" imageWidth={300} imageHeight={450} imageType="poster"
                                 alt=""
                                 className="absolute w-2/5 h-4/5 object-cover object-top rounded-xl shadow-lg transition duration-500 opacity-0 group-hover:opacity-90 group-hover:-translate-x-10 group-hover:-translate-y-1 group-hover:-rotate-[5deg] group-hover:z-30 z-20 border border-white/10"
                             />
                         )}
                         {previewMovies[1] && (
-                            <img 
-                                src={getOptimizedUrl(previewMovies[1].imgUrl, 300, 450, 'poster')} 
+                            <MovieImage
+                                movie={previewMovies[1]} kind="poster" imageWidth={300} imageHeight={450} imageType="poster"
                                 alt=""
                                 className="absolute w-2/5 h-4/5 object-cover object-top rounded-xl shadow-xl transition duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-10 group-hover:-translate-y-1 group-hover:rotate-[5deg] group-hover:z-40 z-30 border border-white/10"
                             />
                         )}
                         {previewMovies[0] && (
-                            <img 
-                                src={getOptimizedUrl(previewMovies[0].imgUrl, 300, 450, 'poster')} 
+                            <MovieImage
+                                movie={previewMovies[0]} kind="poster" imageWidth={300} imageHeight={450} imageType="poster"
                                 alt=""
                                 className="absolute w-2/5 h-4/5 object-cover object-top rounded-xl shadow-2xl transition duration-500 opacity-0 group-hover:opacity-100 group-hover:translate-x-24 group-hover:-translate-y-1 group-hover:rotate-[20deg] z-40 group-hover:z-50 border border-white/10 group-hover:border-white/30"
                             />

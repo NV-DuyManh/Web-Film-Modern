@@ -1,10 +1,10 @@
+import MovieImage from '../../../components/MovieImage';
 import { canonicalUrl, plainText } from '../../../utils/seo';
 import { routeSegment } from '../../../utils/nameRoutes';
 import { useEffect, useMemo } from 'react';
 import { Link, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useActors, useAuthors, useCharacters, useMovies } from '../../../hooks/useCollections';
 import { getDefaultAvatar, getSafeEntityAvatar } from '../../../utils/appUtils';
-import { getOptimizedUrl } from '../../../utils/cloudinary';
 import { createNameRouteIndex } from '../../../utils/nameRoutes';
 import SEO from '../../../components/SEO';
 import { FaGlobe, FaVenusMars, FaInfoCircle, FaPlay, FaFilm } from 'react-icons/fa';
@@ -144,7 +144,7 @@ function ActorDetail({ type }) {
                                     className="entity-detail__movie group cursor-pointer flex flex-col h-full min-w-0"
                                 >
                                     <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                        <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.name} className="w-full h-full object-cover" loading="lazy" />
+                                        <MovieImage movie={m} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={m.name} className="w-full h-full object-cover" loading="lazy" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-40"></div>
                                         
                                         <div className="absolute top-2 right-2 flex gap-1.5">

@@ -1,9 +1,9 @@
+import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
 import { useMovies } from '../../../../hooks/useCollections';
 import { FaChevronLeft, FaChevronRight, FaClock, FaCalendarAlt, FaEye } from "react-icons/fa";
 import { getObjectById } from "../../../../services/firebaseResponse";
-import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { PlanContext } from "../../../../contexts/PlanProvider";
 import { Link } from 'react-router-dom';
 import { observeVisibleAnimation } from '../../../../utils/visibleAnimation';
@@ -243,8 +243,8 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                 >
                     <div className="group cursor-pointer flex flex-col h-full">
                         <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                            <img
-                                src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')}
+                            <MovieImage
+                                movie={e} kind="banner" imageWidth={480} imageHeight={270} imageType="thumb"
                                 alt=""
                                 draggable="false"
                                 className="w-full h-full object-cover pointer-events-none"

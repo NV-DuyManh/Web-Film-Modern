@@ -1,3 +1,4 @@
+import MovieImage from '../../../components/MovieImage';
 import { routeSegment } from '../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
@@ -5,7 +6,6 @@ import { useParams, Link , useSearchParams } from 'react-router-dom';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { getAgeRatingColorClass } from '../../../utils/appUtils';
-import { getOptimizedUrl } from '../../../utils/cloudinary';
 import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight, FaCalendarAlt, FaEye, FaShieldAlt, FaClock } from 'react-icons/fa';
 import { BsSearch } from 'react-icons/bs';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
@@ -17,7 +17,7 @@ const MovieCard = React.memo(({ movie, plans }) => {
     return (
         <Link to={`/phim/${routeSegment(movie)}`} className="group flex flex-col">
             <div className="relative rounded-xl overflow-hidden aspect-2/3 border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
-                <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" width={300} height={450} loading="lazy" decoding="async" />
+                <MovieImage movie={movie} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" width={300} height={450} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
                 
                 {movie.planID && (() => {

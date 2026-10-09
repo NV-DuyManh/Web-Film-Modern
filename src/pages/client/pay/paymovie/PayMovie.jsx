@@ -1,7 +1,7 @@
+import MovieImage from '../../../../components/MovieImage';
 import PaymentMethods from '../PaymentMethods';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
-import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useState } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -138,7 +138,7 @@ function PayMovie() {
                         <div className="flex flex-col sm:flex-row gap-6 mb-8">
                             <div className="w-full sm:w-1/3 aspect-3/4 sm:aspect-3/4 rounded-xl overflow-hidden shrink-0 border-2 border-slate-700 shadow-[0_0_20px_rgba(0,0,0,0.5)] relative group">
                                 {movie?.imgUrl ? (
-                                    <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                    <MovieImage movie={movie} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={movie.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                                 ) : (
                                     <>
                                         <div className="absolute inset-0 bg-linear-to-br from-rose-900 to-slate-900 group-hover:scale-105 transition-transform duration-500"></div>

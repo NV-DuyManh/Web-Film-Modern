@@ -1,4 +1,5 @@
 import { createNameRouteIndex, withNameRoutes } from '../../src/utils/nameRoutes.js';
+import { resolveMovieImages } from '../../src/utils/movieImages.js';
 import { STATIC_SEO, canonicalUrl, descriptionText, movieDescription, movieSchema, plainText, publicImage, breadcrumbSchema, isPrivatePath, isPaginatedPath, robotsForPath, pageTitle, siteSchemas } from '../../src/utils/seo.js';
 
 export const PREFIXES = { Movies: '/phim', Actors: '/dien-vien', Authors: '/tac-gia', Characters: '/nhan-vat', Topics: '/topic' };
@@ -10,7 +11,8 @@ const hasBio = item => plainText(item.description).length > 25 && !/^đang cập
 export function prepareCatalog(raw) {
     const catalog = { ...raw }, routes = {}, maps = {}, related = {};
     for (const [key, prefix] of Object.entries(PREFIXES)) {
-        catalog[key] = withNameRoutes(raw[key] || [], { preferSlug: key === 'Movies', fallback: key === 'Actors' ? 'dien-vien' : 'noi-dung' });
+        const items = key === 'Movies' ? (raw[key] || []).map(movie => ({ ...movie, ...resolveMovieImages(movie) })) : raw[key] || [];
+        catalog[key] = withNameRoutes(items, { preferSlug: key === 'Movies', fallback: key === 'Actors' ? 'dien-vien' : 'noi-dung' });
         routes[key] = createNameRouteIndex(catalog[key]);
         maps[key] = new Map(catalog[key].map(item => [item.id, item]));
         related[key] = new Map();

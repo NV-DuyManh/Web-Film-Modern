@@ -1,3 +1,4 @@
+import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
@@ -11,7 +12,6 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { Link } from 'react-router-dom';
 import { getAgeRatingColorClass } from '../../../../utils/appUtils';
-import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 function FilmNew(props) {
     const movies = useMovies();
@@ -61,7 +61,7 @@ function FilmNew(props) {
                                 <div className="group cursor-pointer flex flex-col">
                                     <div className="relative mb-2 w-full">
                                         <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                            <img src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')} className="w-full h-full object-cover" draggable="false" alt={e.name} width={480} height={270} loading="lazy" decoding="async" />
+                                            <MovieImage movie={e} kind="banner" imageWidth={480} imageHeight={270} imageType="thumb" className="w-full h-full object-cover" draggable="false" alt={e.name} width={480} height={270} loading="lazy" decoding="async" />
                                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
                                             {e.planID && (() => {

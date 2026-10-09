@@ -1,8 +1,8 @@
+import MovieImage from '../../../../components/MovieImage';
 import { movieDescription, movieSchema } from '../../../../utils/seo';
 import { normalizeEpisodes, episodeKey } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
-import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -308,8 +308,8 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
             <div className="w-full h-112.5 md:h-137.5 lg:h-162.5 relative z-0">
 
-                <img
-                    src={getOptimizedUrl(movie.bannerUrl || movie.imgUrl, 1280, 720, 'banner')}
+                <MovieImage
+                    movie={movie} kind="banner" imageWidth={1280} imageHeight={720} imageType="banner"
                     alt={`Bìa phim ${movie.otherName || movie.name}`}
                     fetchPriority="high"
                     width="1280" height="720"
@@ -324,8 +324,8 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                     <div className="lg:col-span-3 flex flex-col gap-6 lg:sticky lg:top-4 lg:self-start">
 
                         <div className="rounded-xl overflow-hidden shadow-2xl w-44 sm:w-52 lg:w-full mx-auto relative z-20 -mt-32 sm:-mt-52 lg:-mt-48 border-4 border-[#0f1322]">
-                            <img
-                                src={getOptimizedUrl(movie.imgUrl, 600, 900, 'poster')}
+                            <MovieImage
+                                movie={movie} kind="poster" imageWidth={600} imageHeight={900} imageType="poster"
                                 alt={movie.otherName || movie.name}
                                 className="w-full aspect-2/3 object-cover"
                             />
@@ -440,7 +440,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                             {index + 1}
                                         </div>
                                         <div className="w-10 h-14 rounded-lg overflow-hidden shrink-0 border border-slate-700/60">
-                                            <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.otherName || m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                            <MovieImage movie={m} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={m.otherName || m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                         </div>
                                         <div className="flex flex-col min-w-0 relative">
                                             <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.otherName || m.name}</h4>
@@ -608,7 +608,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                             className="group cursor-pointer flex flex-col h-full"
                                         >
                                             <div className="relative w-full aspect-3/4 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                                <img src={getOptimizedUrl(m.imgUrl, 300, 450, 'poster')} alt={m.otherName || m.name} className="w-full h-full object-cover" />
+                                                <MovieImage movie={m} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={m.otherName || m.name} className="w-full h-full object-cover" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
                                                 <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
                                                     <p className="bg-blue-600/90 backdrop-blur-md text-white text-[9px] font-bold px-1.5 py-0.5 rounded whitespace-nowrap">
@@ -642,8 +642,8 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                 {episodes.length > 0 && episodes[0]?.url && (
                                     <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
                                         <div className="absolute top-0 right-0 w-4/5 h-full z-0">
-                                            <img
-                                                src={movie.imgUrl || movie.bannerUrl}
+                                            <MovieImage
+                                                movie={movie}
                                                 alt="bg"
                                                 className="w-full h-full object-cover object-top opacity-50"
                                             />
@@ -675,8 +675,8 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                 {episodes.length > 0 && episodes[0]?.url2 && (
                                     <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
                                         <div className="absolute top-0 right-0 w-4/5 h-full z-0">
-                                            <img
-                                                src={movie.imgUrl || movie.bannerUrl}
+                                            <MovieImage
+                                                movie={movie}
                                                 alt="bg"
                                                 className="w-full h-full object-cover object-top opacity-50"
                                             />

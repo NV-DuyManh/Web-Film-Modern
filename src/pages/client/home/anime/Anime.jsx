@@ -1,3 +1,4 @@
+import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useState, useMemo, useEffect } from 'react';
 import ModalDetail from '../../watch/detailFilm/ModalDetail';
@@ -14,7 +15,6 @@ import './Anime.css';
 
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
 
 import { PlanContext } from '../../../../contexts/PlanProvider';
@@ -117,9 +117,9 @@ function Anime() {
                     >
                         {filteredMovies?.map((e) => (
                             <SwiperSlide key={e.id}>
-                                <img
+                                <MovieImage
                                     className="anime-main-img"
-                                    src={getOptimizedUrl(e.bannerUrl, 1920, 1080, 'banner')}
+                                    movie={e} kind="banner" imageWidth={1920} imageHeight={1080} imageType="banner"
                                     alt={e.name}
                                     draggable="false"
                                     width={1920} height={1080} loading="lazy" decoding="async" />
@@ -238,7 +238,7 @@ function Anime() {
                     >
                         {filteredMovies?.map((e, index) => (
                             <SwiperSlide key={e.id}>
-                                <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt={e.name} draggable="false" />
+                                <MovieImage movie={e} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={e.name} draggable="false" />
                             </SwiperSlide>
                         ))}
                     </Swiper>

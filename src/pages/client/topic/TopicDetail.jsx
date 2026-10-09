@@ -1,6 +1,6 @@
+import MovieImage from '../../../components/MovieImage';
 import useCanonicalPath from '../../../hooks/useCanonicalPath';
 import { routeSegment, findRouteEntity } from '../../../utils/nameRoutes';
-import { getOptimizedUrl } from '../../../utils/cloudinary';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useTopics, useMovies } from '../../../hooks/useCollections';
 import { useParams, Link, useNavigate , useSearchParams } from 'react-router-dom';
@@ -218,7 +218,7 @@ function TopicDetail() {
                                     >
                                         <Link to={`/phim/${routeSegment(movie)}`} className="group flex flex-col">
                                             <div className="relative rounded-xl overflow-hidden aspect-2/3 border-3 border-transparent group-hover:border-[#facc15] transition duration-300 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)] group-hover:-translate-y-2">
-                                                <img src={getOptimizedUrl(movie.imgUrl, 300, 450, 'poster')} alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" />
+                                                <MovieImage movie={movie} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={movie.name} className="w-full h-full object-cover transition-transform duration-500" />
                                                 <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
                                                 
                                                 {movie.planID && (() => {

@@ -1,3 +1,4 @@
+import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
@@ -7,7 +8,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaTicketAlt, FaListUl, FaEye } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
@@ -122,8 +122,8 @@ function TopFilm() {
                                         className="relative w-full aspect-2/3 transition duration-300 group-hover:-translate-y-2 filter drop-shadow-[0_10px_10px_rgba(0,0,0,0.3)] group-hover:drop-shadow-[0_12px_15px_rgba(250,204,21,0.3)]"
                                     >
                                         <div className={`absolute top-0 left-0 w-full h-[90%] rounded-xl overflow-hidden border-3 border-transparent group-hover:border-[#facc15] transform ${index % 2 === 0 ? 'skew-y-[8deg]' : 'skew-y-[-8deg]'} origin-center z-10 transition-colors duration-300`}>
-                                            <img
-                                                src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')}
+                                            <MovieImage
+                                                movie={e} kind="poster" imageWidth={300} imageHeight={450} imageType="poster"
                                                 alt={e.name}
                                                 className={`absolute left-0 w-full object-cover scale-[1.08] transform ${index % 2 === 0 ? 'skew-y-[-8deg]' : 'skew-y-[8deg]'} origin-center`}
                                                 style={{ height: 'calc(100% * 100 / 90)', top: '0' }}
@@ -135,8 +135,8 @@ function TopFilm() {
 
 
                                         <div className="absolute bottom-0 left-0 w-full h-[20%] rounded-b-xl overflow-hidden border-b-3 border-l-3 border-r-3 border-transparent group-hover:border-[#facc15] z-20 transition-colors duration-300">
-                                            <img
-                                                src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')}
+                                            <MovieImage
+                                                movie={e} kind="poster" imageWidth={300} imageHeight={450} imageType="poster"
                                                 alt={e.name}
                                                 className="absolute left-0 w-full object-cover scale-[1.08] origin-center"
                                                 style={{ height: 'calc(100% * 100 / 20)', top: 'calc(-100% * 80 / 20)' }}

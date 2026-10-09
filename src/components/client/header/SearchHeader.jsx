@@ -1,5 +1,5 @@
+import MovieImage from '../../MovieImage';
 import { routeSegment } from '../../../utils/nameRoutes';
-import { getOptimizedUrl } from '../../../utils/cloudinary';
 import React, { useMemo, useRef } from 'react';
 import { useMovies } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
@@ -55,7 +55,7 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
                                 className="w-full flex items-center gap-3.5 px-4 py-3 hover:bg-white/5 transition duration-200 cursor-pointer group/movie text-left"
                             >
                                 <div className="w-13 h-18 rounded-lg overflow-hidden shrink-0 border border-white/10 group-hover/movie:border-cyan-500/50 transition-colors duration-300 bg-slate-800">
-                                    <img src={getOptimizedUrl(movie.imgUrl, 100, 150, 'thumb')} alt={movie.name} className="w-full h-full object-cover" />
+                                    <MovieImage movie={movie} kind="poster" imageWidth={100} imageHeight={150} imageType="thumb" alt={movie.name} className="w-full h-full object-cover" />
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h4 className="text-white font-bold text-[15px] leading-snug line-clamp-2 group-hover/movie:text-cyan-400 transition-colors duration-200">

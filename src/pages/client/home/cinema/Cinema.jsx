@@ -1,3 +1,4 @@
+import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
@@ -8,7 +9,6 @@ import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaVideo, FaCalendarAlt, FaTicketAlt, FaEye } from 'react-icons/fa';
 
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
@@ -70,7 +70,7 @@ function Cinema() {
                                 <div className="group cursor-pointer flex flex-col">
                                     <div className="relative mb-2 w-full">
                                         <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                            <img src={getOptimizedUrl(e.bannerUrl, 480, 270, 'thumb')} className="w-full h-full object-cover" draggable="false" alt="" width={480} height={270} loading="lazy" decoding="async" />
+                                            <MovieImage movie={e} kind="banner" imageWidth={480} imageHeight={270} imageType="thumb" className="w-full h-full object-cover" draggable="false" alt="" width={480} height={270} loading="lazy" decoding="async" />
                                             <div className="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-40"></div>
 
                                             {e.planID && (() => {
@@ -127,7 +127,7 @@ function Cinema() {
                                         </div>
 
                                         <div className="absolute -bottom-6 left-4 w-16 md:w-20 aspect-2/3 rounded-lg overflow-hidden border-2 border-[#111827] shadow-[0_4px_15px_rgba(0,0,0,0.8)] transition duration-300 group-hover:-translate-y-4 group-hover:scale-105 group-hover:rotate-[-4deg] group-hover:border-[#22d3ee] group-hover:shadow-[0_8px_20px_rgba(34,211,238,0.5)]">
-                                            <img src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')} alt="" className="w-full h-full object-cover" draggable="false" />
+                                            <MovieImage movie={e} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt="" className="w-full h-full object-cover" draggable="false" />
                                         </div>
                                     </div>
 

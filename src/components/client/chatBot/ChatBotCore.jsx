@@ -1,4 +1,5 @@
 import { routeSegment, findMovieReference } from '../../../utils/nameRoutes';
+import MovieImage from '../../MovieImage';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaPlay, FaInfoCircle } from 'react-icons/fa';
@@ -1298,19 +1299,15 @@ export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo =
     }
     const badgeStyle = getPlanBadgeStyle(planInfo);
     const movieSlug = routeSegment(movie);
-    const posterUrl = movie.imgUrl || movie.poster || movie.image || '/assets/Logo6.png';
     const title = movie.otherName || movie.name;
     const epText = movie.endEpisode ? `${movie.endEpisode} tập` : '1 tập';
 
     return (
         <div className="my-1.5 p-2 rounded-xl bg-slate-900 text-white shadow-md border border-amber-500/20 hover:border-amber-500/50 transition-all flex items-center gap-2.5">
-            <img 
-                src={posterUrl} 
+            <MovieImage
+                movie={movie}
+                imageWidth={100} imageHeight={150}
                 alt={title}
-                onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.src = '/assets/Logo6.png';
-                }}
                 className="w-13 h-18 rounded-lg object-cover shrink-0 shadow-sm border border-slate-700 pointer-events-none select-none" 
             />
             <div className="min-w-0 flex-1 pr-1">

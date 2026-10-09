@@ -3,6 +3,7 @@ import { fetchDocumentsRealtime } from '../services/firebaseService';
 import { subscribeToCollection, getCachedData } from '../utils/appUtils';
 import { withNameRoutes } from '../utils/nameRoutes';
 import { reportCatalogStatus } from '../utils/catalogStatus';
+import { resolveMovieImages } from '../utils/movieImages';
 import Logo5 from '../assets/Logo5.png';
 import Logo6 from '../assets/Logo6.png';
 
@@ -51,11 +52,8 @@ function createCollectionHook(cacheKey, collectionName, processData) {
 
 function processMovies(movieList) {
     return withNameRoutes(movieList, { preferSlug: true }).map(movie => {
-        let finalImg = movie.imgUrl;
-        let finalBanner = movie.bannerUrl;
-        if (!finalImg || finalImg.includes('src/assets') || finalImg.includes('Logo5')) finalImg = Logo6;
-        if (!finalBanner || finalBanner.includes('src/assets') || finalBanner.includes('Logo')) finalBanner = Logo5;
-        return { ...movie, imgUrl: finalImg, bannerUrl: finalBanner };
+        const images = resolveMovieImages(movie);
+        return { ...movie, imgUrl: images.imgUrl || Logo6, bannerUrl: images.bannerUrl || Logo5 };
     });
 }
 

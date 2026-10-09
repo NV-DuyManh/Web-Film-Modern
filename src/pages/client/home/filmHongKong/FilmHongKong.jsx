@@ -1,3 +1,4 @@
+import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
@@ -7,7 +8,6 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaCheckCircle, FaClock, FaEye } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { getOptimizedUrl } from '../../../../utils/cloudinary';
 
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
@@ -62,8 +62,8 @@ function FilmHongKong() {
                                 <div className="group cursor-pointer flex flex-col h-full">
 
                                     <div className="relative w-full aspect-2/3 rounded-xl overflow-hidden bg-slate-800 shadow-lg border-3 border-transparent transition duration-300 group-hover:border-[#facc15] group-hover:-translate-y-2 group-hover:shadow-[0_12px_25px_rgba(250,204,21,0.3)]">
-                                        <img
-                                            src={getOptimizedUrl(e.imgUrl, 300, 450, 'poster')}
+                                        <MovieImage
+                                            movie={e} kind="poster" imageWidth={300} imageHeight={450} imageType="poster"
                                             alt={e.name}
                                             className="w-full h-full object-cover"
                                             draggable="false"

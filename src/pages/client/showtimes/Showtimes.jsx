@@ -2,7 +2,7 @@ import { routeSegment } from '../../../utils/nameRoutes';
 import React, { useContext, useState, useMemo, useRef, useEffect } from 'react';
 import { useShowTimes, useMovies } from '../../../hooks/useCollections';
 import { useNavigate } from 'react-router-dom';
-import { getOptimizedUrl } from '../../../utils/cloudinary';
+import MovieImage from '../../../components/MovieImage';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaTicketAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { MdLocalMovies, MdAccessTime, MdRoom } from 'react-icons/md';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
@@ -237,8 +237,9 @@ function Showtimes() {
                                 >
                                     
                                     <div className="w-16 h-24 sm:w-16 sm:h-24 md:w-20 md:h-28 shrink-0 rounded-lg overflow-hidden bg-[#1f222a] shadow-md">
-                                        <img 
-                                            src={movie.imgUrl || movie.posterUrl || movie.thumbUrl} 
+                                        <MovieImage
+                                            movie={movie}
+                                            imageWidth={300} imageHeight={450}
                                             alt={movie.name}
                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 select-none pointer-events-none"
                                             loading="lazy"
