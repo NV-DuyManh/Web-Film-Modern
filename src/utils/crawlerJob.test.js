@@ -45,6 +45,16 @@ test('dates accept ISO, milliseconds and Firestore timestamps; malformed dates c
     assert.deepEqual([{ id: 'old', createdAt: 2 }, { id: 'new', updatedAt: 4 }].sort(newestMoviesFirst).map(x => x.id), ['new', 'old']);
 });
 
+test('duplicate source entries and resumed completion receipts count each saved movie and its episodes once', async () => {
+    const f = fixture();
+    await f.run({ budgetMs: 1, importMovie: async () => { f.advance(2); return { movieId: 'same-film', movies: 1, episodes: 10 }; } });
+    assert.deepEqual(f.state().countedMovieIds, ['same-film']);
+    await f.run({ importMovie: async () => ({ movieId: 'same-film', movies: 1, episodes: 10 }) });
+    assert.equal(f.state().stats.movies, 1);
+    assert.equal(f.state().stats.episodes, 10);
+    assert.equal(f.state().stats.skipped, 3);
+});
+
 test('worker time slice resumes from a durable cursor in a new process without importing a film twice', async () => {
     const f = fixture();
     assert.equal((await f.run({ budgetMs: 1, importMovie: async item => { f.imported.push(item.slug); f.advance(2); return { movies: 1 }; } })).state, 'queued');

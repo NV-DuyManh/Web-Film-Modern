@@ -15,5 +15,5 @@ export function createCrawlerJob(options, jobId, now = Date.now()) {
     return { jobId, options: crawlOptions(options.pageStart, options.pageEnd, options.delayMs),
         status: 'queued', control: 'run', requestedAt: now, heartbeatAt: 0, lockUntil: 0,
         cursor: { page: Number(options.pageEnd), index: 0 }, pageItems: [], progress: 0,
-        stats: { ...EMPTY_CRAWL_STATS }, logs: [], failures: [] };
+        stats: { ...EMPTY_CRAWL_STATS }, logs: [], failures: [], countedMovieIds: [] };
 }

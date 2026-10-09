@@ -58,7 +58,7 @@ export async function crawlOnCloud({ dryRun = false } = {}) {
             if (live && live.crawlImportState !== 'pending') {
                 if (sourceTime && movieTime(live.sourceUpdatedAt) !== sourceTime) await updateDoc(movieRef, { sourceUpdatedAt: sourceTime });
                 // A prior worker can finish saving a film before its cursor checkpoint.
-                return live.crawlJobId === jobId ? { movies: 1, episodes: live.crawlImportedEpisodes || 0 } : { skipped: 1 };
+                return live.crawlJobId === jobId ? { movieId: movieRef.id, movies: 1, episodes: live.crawlImportedEpisodes || 0 } : { skipped: 1 };
             }
             const detail = await fetchMovieDetails(item.slug);
             const source = detail?.movie;
@@ -129,7 +129,7 @@ export async function crawlOnCloud({ dryRun = false } = {}) {
             await updateDoc(movieRef, { ...counts, ...(gallery.length ? { gallery } : {}), sourceUpdatedAt,
                 crawlImportState: 'complete', crawlJobId: jobId, crawlImportedEpisodes: stats.episodes });
             Object.assign(movie, { crawlImportState: 'complete' });
-            return stats;
+            return { ...stats, movieId: movieRef.id };
         };
         const result = await runCrawlerJob({ store, importMovie: importer,
             fetchPage: async page => {

@@ -16,6 +16,7 @@ export async function runCrawlerJob({ store, fetchPage, importMovie, now = Date.
     const started = now(), id = job.jobId;
     let stats = { ...job.stats }, logs = [...(job.logs || [])], failures = [...(job.failures || [])];
     let cursor = { ...job.cursor }, pageItems = [...(job.pageItems || [])];
+    const countedMovieIds = new Set(job.countedMovieIds || []);
     const log = (message, type = 'info') => {
         logs.unshift({ message, type, at: now(), time: new Date(now()).toLocaleTimeString('en-GB', { timeZone: 'Asia/Ho_Chi_Minh' }) });
         logs = logs.slice(0, 100);
@@ -23,7 +24,7 @@ export async function runCrawlerJob({ store, fetchPage, importMovie, now = Date.
     const checkpoint = async (extra = {}) => {
         const total = options.pageEnd - options.pageStart + 1;
         const completed = options.pageEnd - cursor.page + (pageItems.length ? cursor.index / pageItems.length : 0);
-        return store.patch(id, { cursor, pageItems, stats, logs, failures: failures.slice(-100),
+        return store.patch(id, { cursor, pageItems, stats, logs, countedMovieIds: [...countedMovieIds], failures: failures.slice(-100),
             progress: Math.min(99, Math.floor(completed / total * 100)), heartbeatAt: now(),
             lockUntil: now() + 20 * 60000, ...extra });
     };
@@ -62,7 +63,11 @@ export async function runCrawlerJob({ store, fetchPage, importMovie, now = Date.
             }
             const item = pageItems[cursor.index];
             try {
-                const delta = await importMovie(item, { jobId: id, page: cursor.page });
+                let delta = await importMovie(item, { jobId: id, page: cursor.page });
+                if (delta?.movies && delta.movieId) {
+                    if (countedMovieIds.has(delta.movieId)) delta = { skipped: 1 };
+                    else countedMovieIds.add(delta.movieId);
+                }
                 for (const [key, count] of Object.entries(delta || {})) if (key in stats) stats[key] += count;
                 log(`${delta?.skipped ? 'Already imported' : 'Saved'}: ${item.name || item.slug}`, 'success');
             } catch (error) {
