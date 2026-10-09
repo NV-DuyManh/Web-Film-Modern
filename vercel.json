@@ -1,43 +1,47 @@
 {
-  "rewrites": [
-    { "source": "/sitemap.xml", "destination": "/api/sitemap" },
-    {
-      "source": "/((?!api(?:/|$)|assets(?:/|$)|.*\\.[^/]+$).*)",
-      "destination": "/index.html"
+  "functions": {
+    "api/page.js": {
+      "includeFiles": "{dist/index.html,server/seo/catalog.json}"
+    },
+    "api/public-catalog.js": {
+      "includeFiles": "server/seo/catalog.json"
+    },
+    "api/sitemap.js": {
+      "includeFiles": "{public/sitemap.xml,server/seo/catalog.json}"
     }
-  ],
-  "headers": [
+  },
+  "routes": [
     {
-      "source": "/((?!api(?:/|$)|assets(?:/|$)|.*\\.[^/]+$).*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
-      ]
+      "src": "/sitemap.xml",
+      "dest": "/api/sitemap"
     },
     {
-      "source": "/index.html",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-        { "key": "Pragma", "value": "no-cache" },
-        { "key": "Expires", "value": "0" }
-      ]
+      "src": "/assets/(.*)",
+      "headers": {
+        "Cache-Control": "public, max-age=31536000, immutable"
+      },
+      "continue": true
     },
     {
-      "source": "/app-recovery.js",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
-      ]
+      "src": "/(?:index\\.html|app-recovery\\.js|sw\\.js)",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      },
+      "continue": true
     },
     {
-      "source": "/sw.js",
-      "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
-      ]
+      "src": "/((?!api(?:/|$)|assets(?:/|$)|.*\\.[^/]+$).*)",
+      "dest": "/api/page?path=/$1",
+      "headers": {
+        "Cache-Control": "no-cache, no-store, must-revalidate"
+      }
     },
     {
-      "source": "/assets/(.*)",
-      "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
-      ]
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "status": 404
     }
   ]
 }
