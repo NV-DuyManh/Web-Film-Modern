@@ -1,9 +1,10 @@
+import useMovie from '../../../../hooks/useMovie';
+import { useMovies } from '../../../../hooks/useCollections';
 import MovieImage from '../../../../components/MovieImage';
 import PaymentMethods from '../PaymentMethods';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState } from 'react';
-import { useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { updateDocument, addDocument } from '../../../../services/firebaseService';
@@ -19,11 +20,12 @@ function PayMovie() {
     const navigate = useNavigate();
     const { isLogin } = useContext(AuthContext);
     const { slug: routeValue } = useParams();
-    const movies = useMovies() || [];
     const catalogStatus = useCatalogStatus('Movies');
+    const movies = useMovies();
     const [showModal, setShowModal] = useState(false);
 
-    const movie = useMemo(() => findRouteEntity(movies, routeValue), [movies, routeValue]);
+    const currentMovie = useMovie(routeValue);
+    const movie = useMemo(() => currentMovie, [currentMovie]);
     useCanonicalPath(movie ? `/payMovie/${routeSegment(movie)}` : '');
 
     const rentPrice = Number(movie?.rent) || 0;
@@ -113,7 +115,7 @@ function PayMovie() {
         }
     };
 
-    if (!movie && movies.length === 0 && catalogStatus.status !== 'ready' && catalogStatus.status !== 'error') return <div className="bg-[#0f1322] pt-28"><PageLoadingSpinner text="Đang tải thông tin thuê phim..." /></div>;
+    if (!movie && (findRouteEntity(movies, routeValue) || (movies.length === 0 && catalogStatus.status !== 'ready' && catalogStatus.status !== 'error'))) return <div className="bg-[#0f1322] pt-28"><PageLoadingSpinner text="Đang tải thông tin thuê phim..." /></div>;
     if (!movie) return <div className="min-h-[60vh] bg-[#0f1322] pt-28 px-4 text-center text-white"><h1 className="text-xl font-bold">Không tìm thấy phim</h1><button className="mt-4 text-yellow-400" onClick={() => navigate('/')}>Về trang chủ</button></div>;
 
     return (

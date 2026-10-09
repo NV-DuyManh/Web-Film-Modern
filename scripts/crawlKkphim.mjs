@@ -1,7 +1,11 @@
 import { createHash } from 'node:crypto';
+import { readFile, appendFile } from 'node:fs/promises';
+import { backgroundFirestore } from './lib/backgroundFirestore.mjs';
+import { publishCatalog } from './lib/publishCatalog.mjs';
+import { importEpisodeBatches } from './lib/crawlerEpisodes.mjs';
 import { fileURLToPath } from 'node:url';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, doc, getDocs, getDocFromServer, setDoc, updateDoc, writeBatch, terminate } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDocs, getDocFromServer, query, where, limit, terminate } from 'firebase/firestore';
 import { runCrawlerJob } from './lib/crawlerRunner.mjs';
 import { CRAWLER_SETTINGS_ID } from '../src/utils/crawlerJob.js';
 import { kkphimDocumentID, randomMoviePlanID } from '../src/utils/movieMaintenance.js';
@@ -12,6 +16,8 @@ import { parseEpisode, highestEpisode, normalizeEpisodes } from '../src/utils/ep
 import { episodeSyncChanges } from '../src/utils/episodeSync.js';
 import { nameSlug } from '../src/utils/nameRoutes.js';
 import { detectGender } from '../src/utils/genderDetect.js';
+import { episodeSourceFingerprint } from '../src/utils/episodeSourceFingerprint.js';
+import { nextQuotaReset } from '../src/utils/backgroundQuota.js';
 import { fetchMoviesList, fetchMovieDetails, fetchMovieImages, getFullImageUrl,
     mapMovieType, mapMovieStatus, mapCountryName, parseDuration, stripHtml } from '../src/services/kkphimService.js';
 
@@ -21,42 +27,54 @@ const normalize = value => String(value || '').trim().toLowerCase();
 export async function crawlOnCloud({ dryRun = false } = {}) {
     const db = getFirestore(initializeApp({ projectId: 'manhfilm-105b3', apiKey: 'AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk' }, 'kkphim-cloud-crawler'));
     const ref = doc(db, 'Settings', CRAWLER_SETTINGS_ID);
-    const read = async () => (await getDocFromServer(ref)).data();
-    const initial = await read();
+    let io;
+    const read = async () => (await (io ? io.read(ref, true) : getDocFromServer(ref))).data();
     try {
+        const initial = await read();
         if (dryRun) {
             console.log(JSON.stringify({ dryRun: true, status: initial?.status || 'idle', options: initial?.options || null }));
             return;
         }
         if (!initial || !['queued', 'running', 'paused'].includes(initial.status)) { console.log('No queued KKPhim crawl.'); return; }
+        if (Number(initial.resumeAt) > Date.now()) { console.log('Daily background budget reached; waiting for reset.'); return; }
+        io = await backgroundFirestore(db);
         // This process must run within the same GitHub concurrency group as episode sync.
         // A browser never performs any import work or supplies a GitHub credential.
         if (process.env.GITHUB_ACTIONS !== 'true') throw new Error('Use the serialized cloud workflow for writes, or --dry-run locally.');
         const store = { read, patch: async (id, values) => {
             if ((await read())?.jobId !== id) return false;
-            await updateDoc(ref, values);
+            await io.update(ref, values, true);
             return true;
         } };
         let caches;
-        const load = async name => (await getDocs(collection(db, name))).docs.map(item => ({ ...item.data(), id: item.id }));
+        let catalogChanged = false;
         const catalog = async () => {
             if (!caches) {
-                const names = ['Movies', 'Plans', 'Categories', 'CategoryTypes', 'Actors', 'Authors'];
-                caches = Object.fromEntries(await Promise.all(names.map(async name => [name, await load(name)])));
+                const snapshot = JSON.parse(await readFile(new URL('../server/seo/catalog.json', import.meta.url), 'utf8')).catalog;
+                const plans = await io.query(query(collection(db, 'Plans'), limit(30)), 30);
+                caches = { ...snapshot, Plans: plans.docs.map(value => ({ ...value.data(), id: value.id })) };
+                for (const name of ['Movies', 'Categories', 'CategoryTypes', 'Actors', 'Authors']) caches[name] = [...(caches[name] || [])];
                 if (!caches.Plans.length || caches.Plans.some(plan => !rentalPriceRange(plan))) throw new Error('Valid movie plans and rental prices are required.');
             }
             return caches;
+        };
+        const lookup = async (name, field, value) => {
+            const found = await io.query(query(collection(db, name), where(field, '==', value), limit(1)), 1);
+            return found.docs[0] ? { ...found.docs[0].data(), id: found.docs[0].id } : null;
         };
         const importer = async (item, { jobId, page }) => {
             const data = await catalog();
             const sourceTime = movieTime(item.modified?.time);
             const candidateNames = [item.name, item.origin_name].map(normalize).filter(Boolean);
-            const existing = data.Movies.find(movie => movie.sourceSlug === item.slug || movie.slug === item.slug
+            let existing = data.Movies.find(movie => movie.sourceSlug === item.slug || movie.slug === item.slug
                 || [movie.name, movie.otherName].map(normalize).some(name => name && candidateNames.includes(name)));
+            if (!existing) existing = await lookup('Movies', 'sourceSlug', item.slug) || await lookup('Movies', 'slug', item.slug) || await lookup('Movies', 'otherName', item.name) || (item.origin_name ? await lookup('Movies', 'name', item.origin_name) : null);
             const movieRef = doc(db, 'Movies', existing?.id || kkphimDocumentID(item.slug));
-            let live = (await getDocFromServer(movieRef)).data();
+            let live = existing && !(data.Movies.includes(existing)) ? existing : (await io.read(movieRef)).data();
             if (live && live.crawlImportState !== 'pending') {
-                if (sourceTime && movieTime(live.sourceUpdatedAt) !== sourceTime) await updateDoc(movieRef, { sourceUpdatedAt: sourceTime });
+                if (sourceTime && movieTime(live.sourceUpdatedAt) !== sourceTime) { await io.update(movieRef, { sourceUpdatedAt: sourceTime }); live.sourceUpdatedAt = sourceTime; catalogChanged = true; }
+                const cached = data.Movies.find(value => value.id === movieRef.id);
+                if (cached) Object.assign(cached, live); else data.Movies.push({ ...live, id: movieRef.id });
                 // A prior worker can finish saving a film before its cursor checkpoint.
                 return live.crawlJobId === jobId ? { movieId: movieRef.id, movies: 1, episodes: live.crawlImportedEpisodes || 0 } : { skipped: 1 };
             }
@@ -67,9 +85,11 @@ export async function crawlOnCloud({ dryRun = false } = {}) {
             const entity = async (name, label, values, stat) => {
                 const old = data[name].find(value => normalize(value.name) === normalize(label));
                 if (old) return old.id;
+                const found = await lookup(name, 'name', label);
+                if (found) { data[name].push(found); return found.id; }
                 const id = `kkphim-${hash(`${name}:${normalize(label)}`)}`;
                 const record = { id, name: label, description: 'Đang cập nhật...', ...values };
-                await setDoc(doc(db, name, id), record);
+                await io.set(doc(db, name, id), record);
                 data[name].push(record);
                 if (stat) stats[stat]++;
                 return id;
@@ -106,16 +126,16 @@ export async function crawlOnCloud({ dryRun = false } = {}) {
                 sourceUpdatedAt, sourcePage: page, crawlJobId: jobId, crawlImportState: 'pending',
             };
             if (!live) {
-                await setDoc(movieRef, movie);
+                await io.set(movieRef, movie);
                 data.Movies.push(movie);
             }
             // Deterministic episode IDs make retry after a network failure safe.
             const changes = episodeSyncChanges(movie, firstEpisodes);
-            for (let offset = 0; offset < changes.creates.length; offset += 200) {
-                const batch = writeBatch(db);
-                for (const episode of changes.creates.slice(offset, offset + 200)) batch.set(doc(db, 'Episodes', episode.id), episode, { merge: true });
-                await batch.commit();
-            }
+            const signature = await episodeSourceFingerprint(source, servers);
+            await importEpisodeBatches({ episodes: changes.creates, signature, previous: movie,
+                write: episodes => io.batch(episodes.map(episode => ({ ref: doc(db, 'Episodes', episode.id), values: episode, merge: true }))),
+                saveProgress: async values => { await io.update(movieRef, values); Object.assign(movie, values); },
+            });
             stats.episodes = changes.creates.length;
             const counts = { episodeSub: 0, episodeDub: 0, episodeVoice: 0 };
             for (const server of servers) {
@@ -126,12 +146,21 @@ export async function crawlOnCloud({ dryRun = false } = {}) {
                 else counts.episodeSub += count;
             }
             const gallery = await fetchMovieImages(item.slug);
-            await updateDoc(movieRef, { ...counts, ...(gallery.length ? { gallery } : {}), sourceUpdatedAt,
-                crawlImportState: 'complete', crawlJobId: jobId, crawlImportedEpisodes: stats.episodes });
-            Object.assign(movie, { crawlImportState: 'complete' });
+            const completion = { ...counts, ...(gallery.length ? { gallery } : {}), sourceUpdatedAt, sourceEpisodesFingerprint: signature, crawlEpisodeCursor: 0,
+                crawlImportState: 'complete', crawlJobId: jobId, crawlImportedEpisodes: stats.episodes };
+            await io.update(movieRef, completion);
+            Object.assign(movie, completion);
+            const cachedMovie = data.Movies.find(value => value.id === movieRef.id);
+            if (cachedMovie) Object.assign(cachedMovie, movie, { id: movieRef.id });
+            else data.Movies.push({ ...movie, id: movieRef.id });
+            catalogChanged = true;
             return { ...stats, movieId: movieRef.id };
         };
         const result = await runCrawlerJob({ store, importMovie: importer,
+            budgetPauseAt: () => {
+                const budget = io.counter.snapshot();
+                return budget.reads + 8 >= budget.readLimit || budget.writes + 8 >= budget.writeLimit ? nextQuotaReset() : 0;
+            },
             fetchPage: async page => {
                 const response = await fetchMoviesList(page);
                 const items = response?.data?.items || response?.items;
@@ -140,7 +169,11 @@ export async function crawlOnCloud({ dryRun = false } = {}) {
                 return items.map(({ slug, name, origin_name, modified }) => ({ slug, name: name || '', origin_name: origin_name || '', modified: { time: modified?.time || '' } }));
             }, owner: process.env.GITHUB_RUN_ID || 'cloud' });
         console.log(JSON.stringify(result));
-    } finally { await terminate(db); }
+        if (catalogChanged) {
+            await publishCatalog(caches);
+            if (process.env.GITHUB_OUTPUT) await appendFile(process.env.GITHUB_OUTPUT, 'publish=true\n');
+        }
+    } finally { try { await io?.flush(); } finally { await terminate(db); } }
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {

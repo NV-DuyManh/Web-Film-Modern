@@ -1,17 +1,20 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getFirestore, collection, query, orderBy, documentId, limit, startAfter, getDocs, getDoc, doc, where, terminate } from 'firebase/firestore';
 import { SITEMAP_COLLECTIONS } from '../../src/utils/sitemap.js';
+import { backgroundFirestore } from './backgroundFirestore.mjs';
 
 let database;
+let metered;
 const PUBLIC_FIELDS = ['name', 'otherName', 'title', 'slug', 'createdAt', 'updatedAt', 'sourceUpdatedAt', 'description',
     'imgUrl', 'bannerUrl', 'avatar', 'releaseYear', 'year', 'duration', 'time', 'endEpisode',
-    'hasSub', 'hasDub', 'hasVoice', 'countriesID', 'listCategory', 'categoryTypeID', 'status',
+    'hasSub', 'hasDub', 'hasVoice', 'episodeSub', 'episodeDub', 'episodeVoice', 'countriesID', 'listCategory', 'categoryTypeID', 'status',
     'actor', 'actors', 'listActor', 'author', 'listAuthor', 'character', 'characters',
-    'listCharacter', 'sexID', 'movieID', 'isSmart', 'smartID', 'views', 'totalEpisodes'];
-function publicDocument(document) {
-    const data = document.data();
-    return { id: document.id, ...Object.fromEntries(PUBLIC_FIELDS.filter(key => data[key] !== undefined).map(key => [key, data[key]])) };
+    'listCharacter', 'sexID', 'movieID', 'isSmart', 'smartID', 'views', 'totalEpisodes',
+    'planID', 'rent', 'ageRating', 'isHot', 'hot', 'gallery', 'images', 'trailer_url', 'trailerUrl'];
+export function publicCatalogRecord(data) {
+    return { id: data.id, ...Object.fromEntries(PUBLIC_FIELDS.filter(key => data[key] !== undefined).map(key => [key, data[key]])) };
 }
+function publicDocument(document) { return publicCatalogRecord({ ...document.data(), id: document.id }); }
 function getCatalogDatabase() {
     if (!database) {
         const app = getApps().find(item => item.name === 'public-sitemap') || initializeApp({
@@ -26,24 +29,29 @@ export async function readPublicCollection(name) {
     const items = [];
     let cursor;
     while (true) {
-        const constraints = [orderBy(documentId()), limit(1000)];
+        const constraints = [orderBy(documentId()), limit(250)];
         if (cursor) constraints.push(startAfter(cursor));
-        const snapshot = await getDocs(query(collection(getCatalogDatabase(), name), ...constraints));
+        const request = query(collection(getCatalogDatabase(), name), ...constraints);
+        const snapshot = metered ? await metered.query(request, 250) : await getDocs(request);
         for (const document of snapshot.docs) {
             // Only public catalog fields. Never export account, payment or AI memory collections.
-            items.push(publicDocument(document));
+            if (document.data().crawlImportState !== 'pending') items.push(publicDocument(document));
         }
-        if (snapshot.size < 1000) return items;
+        if (snapshot.size < 250) return items;
         cursor = snapshot.docs.at(-1);
     }
 }
 
 export async function readPublicCatalog() {
-    return Object.fromEntries(await Promise.all([...Object.keys(SITEMAP_COLLECTIONS), 'Categories', 'CategoryTypes'].map(async name => [name, await readPublicCollection(name)])));
+    const entries = [];
+    for (const name of [...Object.keys(SITEMAP_COLLECTIONS), 'Categories', 'CategoryTypes']) entries.push([name, await readPublicCollection(name)]);
+    return Object.fromEntries(entries);
 }
 
+export async function enableCatalogBudget() { metered = await backgroundFirestore(getCatalogDatabase(), { initialReads: 0 }); }
+
 export async function closePublicCatalog() {
-    if (database) { await terminate(database); database = null; }
+    if (database) { try { await metered?.flush(); } finally { await terminate(database); database = null; metered = null; } }
 }
 
 // Newly imported films can be discovered before the daily full catalog refresh.

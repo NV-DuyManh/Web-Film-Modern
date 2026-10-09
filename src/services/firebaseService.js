@@ -35,6 +35,7 @@ export const addDocument = async (collectionName, values) => {
             ...(CREATED_AT_COLLECTIONS.includes(collectionName) ? { createdAt: Date.now() } : {})
         };
         await setDoc(docRef, finalData);
+        if (collectionName === 'Episodes' && finalData.movieID) await updateDoc(doc(db, 'Movies', finalData.movieID), { episodeMetadataVersion: Date.now() }).catch(error => console.warn('Episode metadata refresh delayed:', error.code));
         return finalData;
     } catch (error) {
         throw error;
@@ -76,6 +77,10 @@ export const updateDocument = async (collectionName, values, skipUpdatedAt = fal
         updatedValues.updatedAt = Date.now();
     }
     await updateDoc(doc(db, collectionName, id), updatedValues);
+    if (collectionName === 'Episodes') {
+        const movieID = updatedValues.movieID || (await getDoc(doc(db, collectionName, id))).data()?.movieID;
+        if (movieID) await updateDoc(doc(db, 'Movies', movieID), { episodeMetadataVersion: Date.now() }).catch(error => console.warn('Episode metadata refresh delayed:', error.code));
+    }
 };
 
 export const deleteDocument = async (collectionName, values) => {
@@ -106,6 +111,7 @@ export const deleteDocument = async (collectionName, values) => {
     }
 
     await deleteDoc(doc(db, collectionName, id));
+    if (collectionName === 'Episodes' && values.movieID) await updateDoc(doc(db, 'Movies', values.movieID), { episodeMetadataVersion: Date.now() }).catch(error => console.warn('Episode metadata refresh delayed:', error.code));
 };
 
 export const fetchDataById = (collectionName, fieldName, fieldValue, callback) => {

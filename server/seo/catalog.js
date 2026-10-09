@@ -57,8 +57,11 @@ export function listingMovies(path, prepared) {
     switch (path) {
         case '/': case '/film-new': return [...movies].sort(newestMoviesFirst);
         case '/singleMovies': return movies.filter(movie => typeId('lẻ') && movie.categoryTypeID === typeId('lẻ') && (!movie.endEpisode || Number(movie.endEpisode) < 2));
-        case '/series': return movies.filter(movie => movie.categoryTypeID === typeId('bộ') || Number(movie.endEpisode) >= 2);
-        case '/anime': return movies.filter(movie => movie.categoryTypeID === (typeId('anime') || typeId('hoạt hình')));
+        case '/series': return movies.filter(movie => (typeId('bộ') && movie.categoryTypeID === typeId('bộ')) || Number(movie.endEpisode) >= 2);
+        case '/anime': {
+            const animeType = catalog.CategoryTypes?.find(type => /anime|hoạt hình/i.test(type.name || ''));
+            return animeType ? movies.filter(movie => movie.categoryTypeID === animeType.id) : [];
+        }
         case '/cinema-movies': return expand(movies.filter(movie => movie.categoryTypeID === typeId('chiếu rạp')));
         case '/film-coming': return expand(movies.filter(movie => ['Sắp chiếu', 'trailer'].includes(movie.status)));
         case '/film-hongkong': return expand(movies.filter(movie => ['hồng kông', 'hong kong', 'hongkong'].includes(movie.countriesID?.toLowerCase())));

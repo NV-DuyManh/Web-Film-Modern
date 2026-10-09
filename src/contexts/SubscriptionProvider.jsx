@@ -1,18 +1,10 @@
-import React, { createContext, useEffect, useState } from 'react';
-import { fetchDocumentsRealtime } from '../services/firebaseService';
+import React, { createContext } from 'react';
+import { useSubscriptions } from '../hooks/useCollections';
 
 export const SubscriptionContext = createContext();
 
 function SubscriptionProvider({ children }) {
-    const [subscriptions, setSubscriptions] = useState([]);
-
-    useEffect(() => {
-        const unsubscribe = fetchDocumentsRealtime('Subscriptions', (data) => {
-            setSubscriptions(data);
-        });
-
-        return () => unsubscribe();
-    }, []);
+    const subscriptions = useSubscriptions();
 
     return (
         <SubscriptionContext.Provider value={subscriptions}>

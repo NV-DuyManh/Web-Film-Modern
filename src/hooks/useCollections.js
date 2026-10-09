@@ -1,6 +1,8 @@
+import { AuthContext } from '../contexts/AuthProvider';
+import { subscribePublicCatalog } from '../services/publicCatalogCache';
 import { newestMoviesFirst } from '../utils/movieRecency';
-import { useState, useEffect } from 'react';
-import { fetchDocumentsRealtime } from '../services/firebaseService';
+import { useState, useEffect, useContext } from 'react';
+import { fetchDocumentsRealtime, fetchDataById } from '../services/firebaseService';
 import { subscribeToCollection, getCachedData } from '../utils/appUtils';
 import { withNameRoutes } from '../utils/nameRoutes';
 import { reportCatalogStatus } from '../utils/catalogStatus';
@@ -19,11 +21,29 @@ const CATALOG_ENDPOINT_MAP = {
 
 function createCollectionHook(cacheKey, collectionName, processData) {
     return function useCollection(enabled = true) {
-        const [data, setData] = useState(() => getCachedData(cacheKey) ?? []);
+        const { isLogin } = useContext(AuthContext) || {};
+        const isAdmin = isLogin?.role === 'admin';
+        const privateCollection = ['Subscriptions', 'RentMovies'].includes(collectionName);
+        const key = privateCollection ? `${cacheKey}:${isAdmin ? 'admin' : isLogin?.id || 'guest'}` : `${cacheKey}:${isAdmin ? 'admin' : 'public'}`;
+        const [state, setState] = useState(() => ({ key, data: getCachedData(key) ?? [] }));
         useEffect(() => {
             if (!enabled) return;
             let isMounted = true;
             let fallbackUnsubscribe;
+            const setData = data => { if (isMounted) setState({ key, data }); };
+            if (privateCollection && !isAdmin) {
+                if (!isLogin?.id) return;
+                const unsubscribe = subscribeToCollection(key, collectionName, setData, (name, callback) => fetchDataById(name, 'userID', isLogin.id, callback), processData);
+                return () => { isMounted = false; unsubscribe(); };
+            }
+            if (!isAdmin && (!POSTGRES_CATALOG_ENABLED || !CATALOG_ENDPOINT_MAP[collectionName]) && ['Movies', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes'].includes(collectionName)) {
+                reportCatalogStatus(collectionName, 'loading');
+                const unsubscribe = subscribeToCollection(key, collectionName, setData, (name, callback) => subscribePublicCatalog(name, items => {
+                    callback(items);
+                    reportCatalogStatus(collectionName, 'ready');
+                }, error => reportCatalogStatus(collectionName, 'error', error)), processData);
+                return () => { isMounted = false; unsubscribe(); };
+            }
 
             if (POSTGRES_CATALOG_ENABLED && CATALOG_ENDPOINT_MAP[collectionName]) {
                 reportCatalogStatus(collectionName, 'loading');
@@ -38,15 +58,17 @@ function createCollectionHook(cacheKey, collectionName, processData) {
                         reportCatalogStatus(collectionName, 'ready');
                     })
                     .catch(err => {
-                        console.warn(`[Catalog Cutover] PostgreSQL read fallback to Firestore for [${collectionName}]:`, err.message);
-                        if (isMounted) fallbackUnsubscribe = subscribeToCollection(cacheKey, collectionName, setData, fetchDocumentsRealtime, processData);
+                        console.warn(`[Catalog Cutover] PostgreSQL read fallback for [${collectionName}]:`, err.message);
+                        if (isMounted) fallbackUnsubscribe = subscribeToCollection(key, collectionName, setData,
+                            isAdmin ? fetchDocumentsRealtime : (name, callback) => subscribePublicCatalog(name, callback, error => reportCatalogStatus(name, 'error', error)), processData);
                     });
                 return () => { isMounted = false; fallbackUnsubscribe?.(); };
             }
 
-            return subscribeToCollection(cacheKey, collectionName, setData, fetchDocumentsRealtime, processData);
-        }, [enabled]);
-        return data;
+            const unsubscribe = subscribeToCollection(key, collectionName, setData, fetchDocumentsRealtime, processData);
+            return () => { isMounted = false; unsubscribe(); };
+        }, [enabled, isAdmin, isLogin?.id, key, privateCollection]);
+        return state.key === key ? state.data : [];
     };
 }
 
@@ -62,6 +84,7 @@ export const useMovies        = createCollectionHook('movies',        'Movies', 
 export const useAuthors       = createCollectionHook('authors',       'Authors', withNameRoutes);
 export const useActors        = createCollectionHook('actors',        'Actors', items => withNameRoutes(items, { fallback: 'dien-vien' }));
 export const useCharacters    = createCollectionHook('characters',    'Characters', withNameRoutes);
+export const useCategoryTypes = createCollectionHook('categoryTypes', 'CategoryTypes');
 export const useCategories    = createCollectionHook('categories',    'Categories');
 export const useShowTimes     = createCollectionHook('showTimes',     'ShowTimes');
 export const useTopics        = createCollectionHook('topics',        'Topics', withNameRoutes);

@@ -1,6 +1,9 @@
+import { backgroundFirestore } from './lib/backgroundFirestore.mjs';
+import { episodeSourceFingerprint } from '../src/utils/episodeSourceFingerprint.js';
+import { nextQuotaReset } from '../src/utils/backgroundQuota.js';
 import { movieTime } from '../src/utils/movieRecency.js';
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc, getDocs, setDoc, updateDoc, query, where, getDoc, runTransaction, terminate } from "firebase/firestore";
+import { getFirestore, collection, doc, getDocs, setDoc, updateDoc, query, where, getDoc, runTransaction, terminate, limit, orderBy, documentId, startAfter } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB2Ond6N_MfRlTIWj8nWD5VZm5BQQGh5xk",
@@ -14,6 +17,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+let io;
 
 import { episodeSyncChanges } from '../src/utils/episodeSync.js';
 import { nameSlug } from '../src/utils/nameRoutes.js';
@@ -35,6 +39,10 @@ async function runCloudSync() {
     console.log(`[CloudSync] 🚀 Bắt đầu quét và đồng bộ tập mới trên Cloud...`);
     const lock = doc(db, 'Settings', 'CloudEpisodeSync');
     const settings = (await getDoc(lock)).data() || {};
+    const legacy = (await getDoc(doc(db, 'Settings', 'AutoSync'))).data();
+    if (legacy && Object.hasOwn(legacy, 'interval')) { settings.enabled = Number(legacy.interval) > 0; settings.intervalMinutes = Math.max(30, Number(legacy.interval) || 30); }
+    if (legacy?.syncPages) settings.syncPages = Number(legacy.syncPages);
+    if (Number(settings.resumeAt) > Date.now()) { console.log('[CloudSync] Waiting for daily background budget reset.'); return; }
     if (settings.enabled === false) {
         console.log('[CloudSync] Tự động đồng bộ tập phim đang tắt.');
         return;
@@ -52,16 +60,29 @@ async function runCloudSync() {
         await write({ runId, lastStartedAt: now, lockUntil: now + 30 * 60000 });
         return true;
     };
+    if (!dryRun && serializedRunner) {
+        io = await backgroundFirestore(db, { initialReads: 2 });
+        const budget = io.counter.snapshot();
+        if (budget.reads + 8 >= budget.readLimit || budget.writes + 8 >= budget.writeLimit) {
+            await io.update(lock, { resumeAt: nextQuotaReset() }, true);
+            console.log('[CloudSync] Waiting for daily background budget reset.');
+            return;
+        }
+    }
     const acquired = dryRun || (serializedRunner
-        ? await claim(() => getDoc(lock), values => setDoc(lock, values, { merge: true }))
+        ? await claim(() => io ? io.read(lock, true) : getDoc(lock), values => io ? io.set(lock, values, { merge: true }) : setDoc(lock, values, { merge: true }))
         : await runTransaction(db, tx => claim(() => tx.get(lock), values => tx.set(lock, values, { merge: true }))));
     if (!acquired) { console.log('[CloudSync] Đã chạy gần đây hoặc đang chạy ở nơi khác.'); return; }
     try {
         let targetMovies = [];
         if (process.argv.includes('--full')) {
-            const snapshot = await getDocs(collection(db, 'Movies'));
-            targetMovies = snapshot.docs.map(item => ({ ...item.data(), id: item.id }))
-                .filter(movie => !['hoàn thành', 'completed'].includes(String(movie.status || '').toLowerCase()));
+            let cursor;
+            while (true) {
+                const request = query(collection(db, 'Movies'), orderBy(documentId()), limit(250), ...(cursor ? [startAfter(cursor)] : []));
+                const snapshot = io ? await io.query(request, 250) : await getDocs(request);
+                targetMovies.push(...snapshot.docs.map(item => ({ ...item.data(), id: item.id })).filter(movie => !['hoàn thành', 'completed'].includes(String(movie.status || '').toLowerCase())));
+                if (snapshot.size < 250) break; cursor = snapshot.docs.at(-1);
+            }
         } else {
             const slugs = new Set();
             const pages = Math.min(10, Math.max(1, Number(settings?.syncPages) || 2));
@@ -73,7 +94,8 @@ async function runCloudSync() {
             }
             const slugList = [...slugs];
             for (let i = 0; i < slugList.length; i += 10) {
-                const snapshot = await getDocs(query(collection(db, 'Movies'), where('slug', 'in', slugList.slice(i, i + 10))));
+                const request = query(collection(db, 'Movies'), where('slug', 'in', slugList.slice(i, i + 10)), limit(30));
+                const snapshot = io ? await io.query(request, 30) : await getDocs(request);
                 for (const item of snapshot.docs) targetMovies.push({ ...item.data(), id: item.id });
             }
         }
@@ -97,49 +119,70 @@ async function runCloudSync() {
                 const episodesData = detail?.episodes || [];
                 if (!episodesData || episodesData.length === 0) continue;
 
-                // Lấy danh sách tập hiện có của phim trong Firestore
-                const epSnap = await getDocs(query(collection(db, "Episodes"), where("movieID", "==", movie.id)));
-                const currentEpisodes = epSnap.docs.map(item => ({ ...item.data(), id: item.id }));
+                const sourceFingerprint = await episodeSourceFingerprint(movieData, episodesData);
+                if (movie.sourceEpisodesFingerprint === sourceFingerprint) continue;
+                // Lấy danh sách tập chỉ khi nguồn thực sự đổi.
+                const currentEpisodes = []; let cursor;
+                while (true) {
+                    const episodeRequest = query(collection(db, 'Episodes'), where('movieID', '==', movie.id), orderBy(documentId()), limit(250), ...(cursor ? [startAfter(cursor)] : []));
+                    const epSnap = io ? await io.query(episodeRequest, 250) : await getDocs(episodeRequest);
+                    currentEpisodes.push(...epSnap.docs.map(item => ({ ...item.data(), id: item.id })));
+                    if (epSnap.size < 250) break; cursor = epSnap.docs.at(-1);
+                }
                 const changes = episodeSyncChanges(movie, episodesData[0]?.server_data || [], currentEpisodes);
                 const movieNewEps = changes.creates.length;
                 const movieFixedEps = changes.updates.length;
                 const highestEp = changes.highest;
-                for (const ep of changes.creates) if (!dryRun) await setDoc(doc(db, 'Episodes', ep.id), { ...ep, createdAt: new Date().toISOString() });
+                for (const ep of changes.creates) if (!dryRun) { const ref = doc(db, 'Episodes', ep.id), values = { ...ep, createdAt: new Date().toISOString() }; if (io) await io.set(ref, values); else await setDoc(ref, values); }
                 for (const ep of changes.updates) {
                     const { id, ...values } = ep;
-                    if (!dryRun) await updateDoc(doc(db, 'Episodes', id), { ...values, updatedAt: new Date().toISOString() });
+                    if (!dryRun) { const ref = doc(db, 'Episodes', id), patch = { ...values, updatedAt: new Date().toISOString() }; if (io) await io.update(ref, patch); else await updateDoc(ref, patch); }
                 }
                 totalNew += movieNewEps;
                 totalFixed += movieFixedEps;
                 const newStatus = movieData?.status ? mapMovieStatus(movieData.status) : movie.status;
                 const newEndEpisode = Math.max(highestEp, Number(movie.endEpisode) || 1);
-                if (movieNewEps > 0 || movieFixedEps > 0 || movie.status !== newStatus || newEndEpisode !== Number(movie.endEpisode)) {
+                if (sourceFingerprint !== movie.sourceEpisodesFingerprint || movieNewEps > 0 || movieFixedEps > 0 || movie.status !== newStatus || newEndEpisode !== Number(movie.endEpisode)) {
                     const movieRef = doc(db, "Movies", movie.id);
-                    if (!dryRun) await updateDoc(movieRef, {
+                    const patch = {
+                        sourceEpisodesFingerprint: sourceFingerprint,
                         endEpisode: newEndEpisode,
                         status: newStatus,
                         ...(movieTime(movieData.modified?.time) ? { sourceUpdatedAt: movieTime(movieData.modified.time) } : {}),
                         slug: activeSlug,
                         updatedAt: new Date().toISOString()
-                    });
+                    };
+                    if (!dryRun) { if (io) await io.update(movieRef, patch); else await updateDoc(movieRef, patch); }
                     totalUpdatedMovies++;
                     console.log(`[CloudSync] ${dryRun ? 'Dự kiến' : 'Đã cập nhật'} "${movie.otherName || movie.name}": +${movieNewEps} tập mới, sửa ${movieFixedEps} link tập.`);
                 }
             } catch (e) {
                 errors++;
-                if (e.code === 'resource-exhausted') throw e;
+                if (e.code === 'resource-exhausted' || e.code === 'background-quota') throw e;
                 console.error(`[CloudSync] ❌ Lỗi xử lý "${movie.name}":`, e.message);
             }
             await sleep(350);
         }
 
         if (errors) throw new Error(`Có ${errors} phim chưa đồng bộ được; sẽ thử lại ở lần chạy sau.`);
-        if (!dryRun) await setDoc(lock, { lastSuccessAt: Date.now(), lastSummary: { movies: totalUpdatedMovies, added: totalNew, fixed: totalFixed }, commit: process.env.GITHUB_SHA || '' }, { merge: true });
+        if (!dryRun) await (io ? io.set.bind(io) : setDoc)(lock, { resumeAt: 0, lastSuccessAt: Date.now(), lastSummary: { movies: totalUpdatedMovies, added: totalNew, fixed: totalFixed }, commit: process.env.GITHUB_SHA || '' }, { merge: true });
+        if (!dryRun) await (io ? io.set.bind(io) : setDoc)(doc(db, 'Settings', 'AutoSync'), { lastSyncTime: new Date().toISOString() }, { merge: true });
         console.log(`[CloudSync] 🏁 Hoàn tất! Cập nhật ${totalUpdatedMovies} phim (+${totalNew} tập mới, sửa ${totalFixed} link).`);
+    } catch (error) {
+        if (error.code === 'background-quota' || error.code === 'resource-exhausted') {
+            const values = { resumeAt: error.resumeAt || nextQuotaReset(), lastError: error.message };
+            if (io) await io.update(lock, values, true); else await updateDoc(lock, values);
+            console.log('[CloudSync] Daily budget reached; unchanged source signatures keep the next run incremental.');
+            return;
+        }
+        throw error;
     } finally {
         if (!dryRun && serializedRunner) {
-            const state = (await getDoc(lock)).data();
-            if (state?.runId === runId) await setDoc(lock, { lockUntil: 0 }, { merge: true });
+            const state = (await (io ? io.read(lock, true) : getDoc(lock))).data();
+            if (state?.runId === runId) {
+                if (io) await io.update(lock, { lockUntil: 0 }, true);
+                else await setDoc(lock, { lockUntil: 0 }, { merge: true });
+            }
         } else if (!dryRun) await runTransaction(db, async tx => {
             const state = (await tx.get(lock)).data();
             if (state?.runId === runId) tx.set(lock, { lockUntil: 0 }, { merge: true });
@@ -150,4 +193,4 @@ async function runCloudSync() {
 runCloudSync().catch(err => {
     console.error("[CloudSync] Fatal error:", err);
     process.exitCode = 1;
-}).finally(() => terminate(db));
+}).finally(async () => { try { await io?.flush(); } finally { await terminate(db); } });

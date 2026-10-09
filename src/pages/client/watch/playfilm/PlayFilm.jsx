@@ -1,14 +1,16 @@
+import { useMovieEpisodes, useEpisodeStream } from '../../../../hooks/useMovieEpisodes';
+import useMovie from '../../../../hooks/useMovie';
 import MovieImage from '../../../../components/MovieImage';
 import { normalizeEpisodes, episodeKey, episodeLabel, findEpisode } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
-import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
+import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
-import { useMovies, useSubscriptions, useRentMovies } from '../../../../hooks/useCollections';
+import { useSubscriptions, useRentMovies, useMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory, FaBolt } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { fetchDataById, updateDocument } from '../../../../services/firebaseService';
+import { updateDocument } from '../../../../services/firebaseService';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
 import { saveResume, clearResume, formatTime, timeAgo } from '../../../../utils/watchHistory';
@@ -36,7 +38,6 @@ function PlayFilm() {
     const serverParam = searchParams.get('server');
     const movies = useMovies();
     const plans = useContext(PlanContext);
-    const [episodes, setEpisodes] = useState([]);
     const lastProgressTimeRef = useRef(0);
     const completedEpisodeRef = useRef(null);
     const playerRef = useRef(null);
@@ -49,27 +50,25 @@ function PlayFilm() {
     });
     const [autoStartEpisodeId, setAutoStartEpisodeId] = useState(null);
 
-    const movie = useMemo(() => findRouteEntity(movies, slug) || {}, [movies, slug]);
+    const currentMovie = useMovie(slug);
+    const movie = useMemo(() => currentMovie || {}, [currentMovie]);
     useCanonicalPath(movie?.id ? `/xem-phim/${routeSegment(movie)}` : '');
     const realMovieId = movie?.id;
     const categoryTypes = useContext(CategoryTypeContext);
     const isSingle = isSingleMovie(movie, categoryTypes);
-    const canWatch = Number(getObjectById(plans, movie?.planID)?.level || 0) === 0 ||
+    const moviePlan = getObjectById(plans, movie?.planID);
+    const canWatch = !!realMovieId && !!moviePlan && (Number(moviePlan.level || 0) === 0 ||
         (!!isLogin && (getUserPlanInfo(isLogin, subscriptions, plans).level >= Number(getObjectById(plans, movie?.planID)?.level || 0) ||
-            rentals.some(rent => rent.movieID === realMovieId && rent.userID === isLogin.id && getExpiryDate(rent) > new Date())));
+            rentals.some(rent => rent.movieID === realMovieId && rent.userID === isLogin.id && getExpiryDate(rent) > new Date()))));
 
-    useEffect(() => {
-        if (!realMovieId) return;
-        const unsubscribe = fetchDataById("Episodes", "movieID", realMovieId, (data) => {
-            setEpisodes(data);
-        });
-        return () => unsubscribe();
-    }, [realMovieId]);
+    const episodes = useMovieEpisodes(realMovieId);
 
 
     const episodeShow = useMemo(() => normalizeEpisodes(episodes.filter(e => e.movieID === realMovieId)), [realMovieId, episodes]);
 
-    const playEpisodes = useMemo(() => findEpisode(episodeShow, tap) || episodeShow[0] || {}, [episodeShow, tap]);
+    const selectedEpisode = useMemo(() => findEpisode(episodeShow, tap) || episodeShow[0] || {}, [episodeShow, tap]);
+    const selectedStream = useEpisodeStream(selectedEpisode.id, canWatch);
+    const playEpisodes = useMemo(() => ({ ...selectedEpisode, url: '', url2: '', urlM3u8: '', ...(selectedStream || {}) }), [selectedEpisode, selectedStream]);
     const playingLabel = episodeLabel(playEpisodes, isSingle);
     const playingTitle = playingLabel === 'Full' ? 'Full' : `Tập ${playingLabel}`;
     const activeServer = serverParam === '2' && playEpisodes.url2 ? 2 : 1;
@@ -330,7 +329,7 @@ function PlayFilm() {
                             if (!canWatch) return;
                             setAutoStartEpisodeId(nextPrompt.id);
                             setNextPrompt(null);
-                            const server = activeServer === 2 && nextPrompt.url2 ? 2 : 1;
+                            const server = activeServer === 2 && nextPrompt.hasSecondServer ? 2 : 1;
                             navigate(`/xem-phim/${routeSegment(movie)}?tap=${episodeKey(nextPrompt)}&server=${server}`);
                         }} />}
 

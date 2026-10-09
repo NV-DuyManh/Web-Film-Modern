@@ -16,9 +16,9 @@ function ActorDetail({ type }) {
     const { slug } = useParams();
     const navigate = useNavigate();
     const location = useLocation();
-    const actors = useActors();
-    const authors = useAuthors();
-    const characters = useCharacters();
+    const actors = useActors(type === 'actor');
+    const authors = useAuthors(type === 'author');
+    const characters = useCharacters(type === 'character');
     const movies = useMovies();
     const entityList = type === 'actor' ? actors : type === 'author' ? authors : type === 'character' ? characters : EMPTY_ENTITIES;
     const entityTitle = type === 'actor' ? 'Diễn viên' : type === 'author' ? 'Tác giả' : type === 'character' ? 'Nhân vật' : '';

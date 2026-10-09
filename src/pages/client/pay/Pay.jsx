@@ -1,7 +1,8 @@
-import { routeSegment, findRouteEntity } from '../../../utils/nameRoutes';
+import useMovie from '../../../hooks/useMovie';
+import { routeSegment } from '../../../utils/nameRoutes';
 import useCanonicalPath from '../../../hooks/useCanonicalPath';
 import React, { useState, useContext, useMemo } from 'react';
-import { useFeatures, useMovies } from '../../../hooks/useCollections';
+import { useFeatures } from '../../../hooks/useCollections';
 import { FaCheckCircle, FaStar, FaCrown } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -13,9 +14,9 @@ function Pay(props) {
     const [selectedPlan, setSelectedPlan] = useState('rental');
     const plans = useContext(PlanContext) || [];
     const features = useFeatures() || [];
-    const movies = useMovies() || [];
 
-    const movie = useMemo(() => findRouteEntity(movies, routeValue), [movies, routeValue]);
+    const currentMovie = useMovie(routeValue);
+    const movie = useMemo(() => currentMovie, [currentMovie]);
     useCanonicalPath(movie ? `/pay/${routeSegment(movie)}` : '');
 
     const moviePlan = useMemo(() => getObjectById(plans, movie?.planID), [plans, movie]);

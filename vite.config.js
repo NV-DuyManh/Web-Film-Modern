@@ -3,6 +3,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { assetCachePlugin } from './src/utils/assetCache.js'
+import { resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
+import process from 'node:process'
 
 function vercelAiDevPlugin() {
     return {
@@ -47,11 +50,25 @@ function vercelAiDevPlugin() {
     };
 }
 
+function publicCatalogDevPlugin() {
+    const install = server => {
+        for (const name of ['catalog-page', 'public-catalog', 'episode-metadata']) server.middlewares.use(`/api/${name}`, async (req, res) => {
+            try {
+                const { default: handler } = await import(pathToFileURL(resolve(process.cwd(), 'api', `${name}.js`)).href);
+                await handler(req, { setHeader: (key, value) => res.setHeader(key, value),
+                    status(code) { res.statusCode = code; return this; }, end(body) { res.end(body); } });
+            } catch { res.statusCode = 503; res.end('Public catalog unavailable'); }
+        });
+    };
+    return { name: 'public-catalog-dev', configureServer: install, configurePreviewServer: install };
+}
+
 export default defineConfig({
     plugins: [
         tailwindcss(), 
         react(),
         vercelAiDevPlugin(),
+        publicCatalogDevPlugin(),
         VitePWA({
             registerType: 'autoUpdate',
             includeAssets: ['favicon.svg', 'robots.txt'],

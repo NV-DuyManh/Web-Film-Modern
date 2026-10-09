@@ -1,18 +1,11 @@
-import React, { createContext, useEffect, useState } from 'react';
-import { fetchDocumentsRealtime } from '../services/firebaseService';
+import React, { createContext } from 'react';
+import { useCategoryTypes } from '../hooks/useCollections';
 
 export const CategoryTypeContext = createContext();
 
 function CategoryTypeProvider({ children }) {
-    const [categoryTypes, setCategoryTypes] = useState([]);
+    const categoryTypes = useCategoryTypes();
 
-    useEffect(() => {
-        const unsubscribe = fetchDocumentsRealtime("CategoryTypes", (data) => {
-            setCategoryTypes(data);
-        });
-        
-        return () => unsubscribe();
-    }, []);
 
     return (
         <CategoryTypeContext.Provider value={categoryTypes}>

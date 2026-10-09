@@ -34,3 +34,32 @@ node scripts/crawlKkphim.mjs --dry-run
 The dry run only reads the current job; it never queues or imports films. Local
 writes are refused: use the serialized cloud workflow. This feature uses the
 project's existing Firebase access policy, without changing roles or rules.
+
+## Free-quota protection
+
+Scheduled catalog writers share `Settings/BackgroundQuota` with a daily budget of
+20,000 document reads and 6,000 writes. This meters the jobs' own SDK operations;
+it is not Firebase Console usage, and excludes visitor/admin traffic and billing
+from other existing services. Pacific-time midnight (including DST) resets the
+budget. A crawler reaching the budget saves its cursor and waits until reset.
+Episode batches also save their own cursor, so a series longer than the daily
+write allowance resumes after its last saved batch instead of starting again.
+The allowances leave headroom below Firestore's free daily limits, but cannot
+guarantee unlimited traffic or storage on a free project.
+
+Crawler matching uses the deployment snapshot and bounded lookups instead of
+scanning all movies/actors/authors. Episode sync hashes the source list and skips
+episode reads when it has not changed. Browser tabs do not launch another
+automatic episode writer; automatic sync remains in the cloud.
+
+Public discovery pages use 28-row cached API pages; the shared public catalog is
+generated into 250-row static CDN chunks during builds. Scheduled refreshes and
+incremental crawl publication update those snapshots. Page visits never trigger a
+full Firestore catalog scan. Root credentials, accounts, rentals, subscriptions
+and answer memory are excluded from public exports. Purchase/playback decisions
+still use a targeted live movie document and the current account's private data.
+
+Episode numbers/names use public memory/CDN and application-managed Firestore
+metadata caches; stream URLs are omitted and only the selected, permitted episode
+is read by the player. This does not enable a paid TTL/backup feature or a new
+service. No Firebase/Vercel/GitHub billing plan is changed by this implementation.

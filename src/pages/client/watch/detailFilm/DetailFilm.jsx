@@ -1,8 +1,10 @@
+import { useMovieEpisodes } from '../../../../hooks/useMovieEpisodes';
+import useMovie from '../../../../hooks/useMovie';
 import MovieImage from '../../../../components/MovieImage';
 import { movieDescription, movieSchema } from '../../../../utils/seo';
 import { normalizeEpisodes, episodeKey } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
-import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
+import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useEffect, useState } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -16,7 +18,7 @@ import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { CategoryContext } from '../../../../contexts/CategoryProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
-import { updateDocument, fetchDataById, getDocumentById } from '../../../../services/firebaseService';
+import { updateDocument, getDocumentById } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ListEpisodes from '../playfilm/ListEpisodes';
 import Comment from './Comment';
@@ -37,7 +39,6 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     const plans = useContext(PlanContext) || [];
     const categories = useContext(CategoryContext) || [];
-    const [episodes, setEpisodes] = useState([]);
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
     const subscriptions = useSubscriptions() || [];
@@ -47,21 +48,14 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
         window.scrollTo(0, 0);
     }, [slug]);
 
-    const movie = useMemo(() => {
-        return findRouteEntity(movies, slug);
-    }, [movies, slug]);
+    const currentMovie = useMovie(slug);
+    const movie = useMemo(() => currentMovie, [currentMovie]);
 
     useCanonicalPath(movie?.id ? `/phim/${routeSegment(movie)}` : '');
     const id = movie?.id;
     const realMovieId = movie?.id || id;
 
-    useEffect(() => {
-        if (!id) return;
-        const unsubscribe = fetchDataById("Episodes", "movieID", id, (data) => {
-            setEpisodes(data);
-        });
-        return () => unsubscribe();
-    }, [id]);
+    const episodes = useMovieEpisodes(id);
 
 
     useEffect(() => {
@@ -167,9 +161,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
         return [];
     }, [movie, characters]);
 
-    const recommendedMovies = useMemo(() => {
-        return movies?.filter(m => m.id !== realMovieId).slice(0, 8) || [];
-    }, [movies, realMovieId]);
+    const recommendedMovies = movies?.filter(m => m.id !== realMovieId).slice(0, 8) || [];
 
     const galleryImages = useMemo(() => {
         if (!movie) return [];
@@ -639,7 +631,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                             <h3 className="text-xl font-bold text-white">Các bản chiếu</h3>
 
                             <div className="flex flex-wrap gap-4">
-                                {episodes.length > 0 && episodes[0]?.url && (
+                                {episodes.length > 0 && episodes[0]?.hasFirstServer && (
                                     <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
                                         <div className="absolute top-0 right-0 w-4/5 h-full z-0">
                                             <MovieImage
@@ -672,7 +664,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                     </div>
                                 )}
 
-                                {episodes.length > 0 && episodes[0]?.url2 && (
+                                {episodes.length > 0 && episodes[0]?.hasSecondServer && (
                                     <div className="relative bg-[#3b415a] rounded-xl overflow-hidden w-full sm:w-80 shadow-lg">
                                         <div className="absolute top-0 right-0 w-4/5 h-full z-0">
                                             <MovieImage

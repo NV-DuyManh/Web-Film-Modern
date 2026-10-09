@@ -1,7 +1,7 @@
+import usePublicMoviePage from '../../../../hooks/usePublicMoviePage';
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
-import React, { useContext, useMemo, useState, useEffect } from 'react';
-import { useMovies } from '../../../../hooks/useCollections';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link , useSearchParams } from 'react-router-dom';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
@@ -11,13 +11,10 @@ import { FaPlay, FaFilter, FaChevronLeft, FaChevronRight, FaCalendarAlt, FaEye, 
 import { BsSearch } from 'react-icons/bs';
 import ParticleBackground from '../../../../components/client/background/ParticleBackground';
 import SEO from '../../../../components/SEO';
-import { searchTV } from '../../../../components/admin/search/SearchTV';
 import Pagination from '../../../../components/common/Pagination';
 
 function CinemaPage() {
-    const movies = useMovies() || [];
     const plans = useContext(PlanContext) || [];
-    const categoryTypes = useContext(CategoryTypeContext) || [];
 
     const [searchParams, setSearchParams] = useSearchParams();
     const page = parseInt(searchParams.get('page')) || 1;
@@ -37,29 +34,7 @@ function CinemaPage() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [page]);
 
-    const cinemaMovies = useMemo(() => {
-        if (!movies || movies.length === 0) return [];
-        let filtered = movies;
-        const cinemaType = categoryTypes?.find(ct => ct.name.toLowerCase().includes('chiếu rạp'));
-        if (cinemaType) {
-            filtered = movies.filter(m => m.categoryTypeID === cinemaType.id);
-            if (filtered.length < 15) {
-                const others = movies.filter(m => m.categoryTypeID !== cinemaType.id);
-                filtered = [...filtered, ...others];
-            }
-        }
-        if (searchTerm) {
-            filtered = filtered.filter(m => 
-                searchTV(m.name || '').includes(searchTV(searchTerm)) || 
-                searchTV(m.otherName || '').includes(searchTV(searchTerm))
-            );
-        }
-        return filtered;
-    }, [movies, categoryTypes, searchTerm]);
-
-    const totalPages = Math.ceil(cinemaMovies.length / moviesPerPage) || 1;
-    const safePage = Math.min(page, totalPages);
-    const currentMovies = cinemaMovies.slice((safePage - 1) * moviesPerPage, safePage * moviesPerPage);
+    const { items: currentMovies, total: totalMovies, totalPages, page: safePage, loading: catalogLoading } = usePublicMoviePage({ kind: 'cinema', page, limit: moviesPerPage, q: searchTerm });
 
     const handlePrev = () => {
         setPage(p => (p > 1 ? p - 1 : p));
@@ -98,7 +73,7 @@ function CinemaPage() {
                     </div>
                 </div>
 
-                {movies.length === 0 ? (
+                {catalogLoading ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
                         {Array.from({ length: 28 }).map((_, i) => (
                             <div key={i} className="flex flex-col gap-2 animate-pulse">
@@ -110,7 +85,7 @@ function CinemaPage() {
                             </div>
                         ))}
                     </div>
-                ) : cinemaMovies.length > 0 ? (
+                ) : totalMovies > 0 ? (
                     <>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-x-4 gap-y-8 mb-10">
                             {currentMovies.map(movie => (
@@ -201,7 +176,7 @@ function CinemaPage() {
                         <Pagination crawlable
                                 currentPage={safePage}
                                 totalPages={totalPages}
-                                totalItems={cinemaMovies.length}
+                                totalItems={totalMovies}
                                 itemsPerPage={moviesPerPage}
                                 onPageChange={(p) => setPage(p)}
                             />

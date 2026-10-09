@@ -123,12 +123,12 @@ import AuthProvider from './contexts/AuthProvider.jsx';
 import SubscriptionProvider from './contexts/SubscriptionProvider.jsx';
 
 const providers = [
+  UserProvider,
+  AuthProvider,
   CategoryProvider,
   CategoryTypeProvider,
   PlanProvider,
-  SubscriptionProvider,
-  UserProvider,
-  AuthProvider
+  SubscriptionProvider
 ];
 
 createRoot(document.getElementById('root')).render(

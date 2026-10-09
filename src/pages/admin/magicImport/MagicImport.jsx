@@ -1,15 +1,17 @@
+import useEpisodesForMovies from '../../../hooks/useEpisodesForMovies';
+import { episodeSourceFingerprint } from '../../../utils/episodeSourceFingerprint';
 import { movieTime } from '../../../utils/movieRecency';
 import { parseEpisode, episodeKey, highestEpisode } from '../../../utils/episodes';
 import { rentalPriceRange } from '../../../utils/importRentalPricing';
 import { randomMoviePlanID, movieMaintenancePatch } from '../../../utils/movieMaintenance';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
-import { useShowTimes, useMovies, useEpisodes } from '../../../hooks/useCollections';
-import React, { useState, useContext, useEffect, useRef, useCallback } from 'react';
+import { useShowTimes, useMovies } from '../../../hooks/useCollections';
+import React, { useState, useContext, useEffect, useRef, useCallback, useMemo } from 'react';
 import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser, FaPause, FaStop, FaGlobe, FaDatabase, FaSpider, FaSyncAlt, FaClock } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
-import { collection, doc, setDoc, updateDoc, onSnapshot, getDoc, getDocFromServer, serverTimestamp } from 'firebase/firestore';
+import { collection, doc, setDoc, updateDoc, onSnapshot, getDoc, getDocFromServer, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
 
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
@@ -84,15 +86,30 @@ const findMatchingMovie = (movieList, candidate) => {
 };
 
 function MagicImport() {
+    const [mainTab, setMainTab] = useState('MANUAL');
+    const [previewData, setPreviewData] = useState([]);
+    const [entityReady, setEntityReady] = useState({});
+    const needsEntities = mainTab === 'MANUAL' && previewData.length > 0;
     const [actors, setActors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, []);
+    useEffect(() => {
+        if (!needsEntities) return;
+        const unsub = fetchDocumentsRealtime("Actors", items => { setActors(items); setEntityReady(previous => ({ ...previous, Actors: true })); });
+        return () => unsub();
+    }, [needsEntities]);
     const [authors, setAuthors] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, []);
+    useEffect(() => {
+        if (!needsEntities) return;
+        const unsub = fetchDocumentsRealtime("Authors", items => { setAuthors(items); setEntityReady(previous => ({ ...previous, Authors: true })); });
+        return () => unsub();
+    }, [needsEntities]);
     const [characters, setCharacters] = useState([]);
-    useEffect(() => { const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, []);
+    useEffect(() => {
+        if (!needsEntities) return;
+        const unsub = fetchDocumentsRealtime("Characters", items => { setCharacters(items); setEntityReady(previous => ({ ...previous, Characters: true })); });
+        return () => unsub();
+    }, [needsEntities]);
 
     const [inputText, setInputText] = useState("");
-    const [previewData, setPreviewData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
@@ -112,7 +129,8 @@ function MagicImport() {
 
     const existingMovies = useMovies() || [];
     const existingShowtimes = useShowTimes() || [];
-    const existingEpisodes = useEpisodes() || [];
+    const matchingMovieIds = useMemo(() => previewData.map(row => findMatchingMovie(existingMovies, row)?.id).filter(Boolean), [previewData, existingMovies]);
+    const { episodes: existingEpisodes, ready: episodeReady } = useEpisodesForMovies(matchingMovieIds, needsEntities);
 
     useEffect(() => {
         let timer;
@@ -484,6 +502,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                             url: movie.epUrl
                         });
                         localEpisodes.push({ movieID: currentMovieId, numberEpisode: Number(movie.epNumber), nameEpisode: movie.epName });
+                        await updateDoc(doc(db, 'Movies', currentMovieId), { episodeMetadataVersion: Date.now() });
                         epsAdded++;
                     }
                 }
@@ -520,7 +539,6 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     };
 
     // ==================== KKPHIM CRAWLER ====================
-    const [mainTab, setMainTab] = useState('MANUAL'); // 'MANUAL' | 'CRAWLER'
     const [crawlPageStart, setCrawlPageStart] = useState(1);
     const [crawlPageEnd, setCrawlPageEnd] = useState(5);
     const [crawlDelay, setCrawlDelay] = useState(1500);
@@ -531,6 +549,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     const [crawlBusy, setCrawlBusy] = useState(false);
     const [crawlReady, setCrawlReady] = useState(false);
     const [crawlControl, setCrawlControl] = useState('run');
+    const [crawlResumeAt, setCrawlResumeAt] = useState(0);
     const addCrawlLog = useCallback((message, type = 'info') => {
         setCrawlLogs(prev => [{ message, type, time: new Date().toLocaleTimeString('en-GB') }, ...prev].slice(0, 100));
     }, []);
@@ -539,6 +558,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         setCrawlReady(true);
         setCrawlStatus(job?.status || 'idle');
         setCrawlControl(job?.control || 'run');
+        setCrawlResumeAt(Number(job?.resumeAt) || 0);
         setCrawlLogs(job?.logs || []);
         setCrawlStats({ ...EMPTY_CRAWL_STATS, ...job?.stats });
         setCrawlProgress(job?.progress || 0);
@@ -629,9 +649,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     }, []);
 
     const handleSetAutoCron = async (val) => {
+        val = val > 0 ? Math.max(30, val) : 0;
         setAutoCronInterval(val);
         const docRef = doc(db, "Settings", "AutoSync");
         await setDoc(docRef, { interval: val }, { merge: true });
+        await setDoc(doc(db, "Settings", "CloudEpisodeSync"), { enabled: val > 0, intervalMinutes: val || 30 }, { merge: true });
 
         if (val > 0) {
             addSyncLog(`⏰ Đã kích hoạt chế độ tự động kiểm tra tập mới mỗi ${val} phút (Đồng bộ Cloud).`, 'success');
@@ -644,6 +666,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         setSyncPages(val);
         const docRef = doc(db, "Settings", "AutoSync");
         await setDoc(docRef, { syncPages: val }, { merge: true });
+        await setDoc(doc(db, "Settings", "CloudEpisodeSync"), { syncPages: val }, { merge: true });
     };
 
     const handleStartSync = async (isAuto = false) => {
@@ -746,7 +769,10 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                     if (!episodesData || episodesData.length === 0) continue;
 
                     // Lấy danh sách tập hiện có của phim trong database
-                    const currentMovieEps = existingEpisodes.filter(e => e.movieID === matchedMovie.id);
+                    const fingerprint = await episodeSourceFingerprint(movieData, episodesData);
+                    if (matchedMovie.sourceEpisodesFingerprint === fingerprint) continue;
+                    const episodeSnapshot = await getDocs(query(collection(db, 'Episodes'), where('movieID', '==', matchedMovie.id)));
+                    const currentMovieEps = episodeSnapshot.docs.map(value => ({ ...value.data(), id: value.id }));
                     const currentEpMap = new Map(currentMovieEps.map(e => [episodeKey(e), e]));
 
                     let newEpsCountForThisMovie = 0;
@@ -804,10 +830,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         }
                     }
 
-                    if (newEpsCountForThisMovie > 0 || fixedEpsCountForThisMovie > 0) {
+                    if (newEpsCountForThisMovie > 0 || fixedEpsCountForThisMovie > 0 || matchedMovie.sourceEpisodesFingerprint !== fingerprint) {
                         // Cập nhật trạng thái và số tập của phim
                         const movieRef = doc(db, "Movies", matchedMovie.id);
                         const updatePayload = {
+                            sourceEpisodesFingerprint: fingerprint,
                             endEpisode: Math.max(highestEp, Number(matchedMovie.endEpisode) || 1),
                             status: movieData?.status ? mapMovieStatus(movieData.status) : (matchedMovie.status || 'Đang chiếu'),
                             updatedAt: new Date().toISOString(),
@@ -842,19 +869,9 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     };
 
     // Background auto cron sync timer
-    useEffect(() => {
-        if (!autoCronInterval || autoCronInterval <= 0) return;
+    // Automatic episode sync runs only in the serialized, budgeted cloud workflow.
+    // Opening an admin tab must not launch a second periodic writer.
 
-        const intervalMs = autoCronInterval * 60 * 1000;
-        const intervalTimer = setInterval(() => {
-            if (syncStatus !== 'running') {
-                console.log(`[AutoSync] Đang tự động kiểm tra tập mới (định kỳ mỗi ${autoCronInterval} phút)...`);
-                handleStartSync(true); // isAuto = true
-            }
-        }, intervalMs);
-
-        return () => clearInterval(intervalTimer);
-    }, [autoCronInterval, syncStatus, existingMovies, existingEpisodes]);
 
     return (
         <div className='p-6 min-h-screen text-white'>
@@ -1002,7 +1019,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 {crawlStatus !== 'idle' && (
                                     <div className="mb-3">
                                         <div className="flex justify-between text-xs font-bold text-orange-400 mb-1">
-                                            <span>{crawlStatus === 'queued' ? '🕓 Waiting for cloud worker...' : crawlStatus === 'failed' ? 'Failed' : crawlStatus === 'stopped' ? 'Stopped' : crawlStatus === 'running' ? '⏳ Crawling...' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '⏸️ Pause' : '✅ Finished'}</span>
+                                            <span>{crawlStatus === 'queued' ? crawlResumeAt ? `🕓 Daily budget reached. Auto-resume after ${new Date(crawlResumeAt).toLocaleString('en-GB')}` : '🕓 Waiting for cloud worker...' : crawlStatus === 'failed' ? 'Failed' : crawlStatus === 'stopped' ? 'Stopped' : crawlStatus === 'running' ? '⏳ Crawling...' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '⏸️ Pause' : '✅ Finished'}</span>
                                             <span>{crawlProgress}%</span>
                                         </div>
                                         <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
@@ -1533,7 +1550,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
 
                                         <button
                                             onClick={handleExecuteImport}
-                                            disabled={loading || previewData.length === 0}
+                                            disabled={loading || previewData.length === 0 || !episodeReady || !entityReady.Actors || !entityReady.Authors || !entityReady.Characters}
                                             className={`w-full py-3.5 rounded-xl font-bold tracking-wider uppercase transition-all flex items-center justify-center gap-2 text-xs text-white
                                     ${previewData.length > 0
                                                     ? (mode === 'IMPORT'

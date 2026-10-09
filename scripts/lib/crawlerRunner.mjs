@@ -3,9 +3,10 @@ import { crawlOptions, CRAWLER_ACTIVE } from '../../src/utils/crawlerJob.js';
 // Durable page snapshots and cursors let a different cloud process resume the same job.
 // The GitHub concurrency group serializes workers. jobId fences stale writes after replacement.
 export async function runCrawlerJob({ store, fetchPage, importMovie, now = Date.now,
-    sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), budgetMs = 10 * 60000, owner = 'worker' }) {
+    sleep = ms => new Promise(resolve => setTimeout(resolve, ms)), budgetMs = 10 * 60000, owner = 'worker', budgetPauseAt = () => 0 }) {
     let job = await store.read();
     if (!job || !CRAWLER_ACTIVE.includes(job.status)) return { state: 'idle' };
+    if (Number(job.resumeAt) > now()) return { state: 'budget-wait' };
     if (job.control === 'stop') {
         await store.patch(job.jobId, { status: 'stopped', lockUntil: 0 });
         return { state: 'stopped' };
@@ -29,9 +30,21 @@ export async function runCrawlerJob({ store, fetchPage, importMovie, now = Date.
             lockUntil: now() + 20 * 60000, ...extra });
     };
     log(`Cloud crawl started: pages ${options.pageEnd} → ${options.pageStart}. Newest films remain first.`);
-    if (!await checkpoint({ status: 'running', owner })) return { state: 'superseded' };
+    const waitingUntil = budgetPauseAt();
+    if (waitingUntil) {
+        log('Daily background budget reached. Waiting for quota reset.', 'warning');
+        await checkpoint({ status: 'queued', resumeAt: waitingUntil, lockUntil: 0 });
+        return { state: 'budget-wait', resumeAt: waitingUntil };
+    }
+    if (!await checkpoint({ status: 'running', owner, resumeAt: 0 })) return { state: 'superseded' };
     try {
         while (cursor.page >= options.pageStart) {
+            const resumeAt = budgetPauseAt();
+            if (resumeAt) {
+                log('Daily background budget reached. Progress saved until reset.', 'warning');
+                await checkpoint({ status: 'queued', resumeAt, lockUntil: 0 });
+                return { state: 'budget-wait', resumeAt };
+            }
             const control = await store.read();
             if (control?.jobId !== id) return { state: 'superseded' };
             if (control.control === 'stop' || control.control === 'pause') {
@@ -71,6 +84,12 @@ export async function runCrawlerJob({ store, fetchPage, importMovie, now = Date.
                 for (const [key, count] of Object.entries(delta || {})) if (key in stats) stats[key] += count;
                 log(`${delta?.skipped ? 'Already imported' : 'Saved'}: ${item.name || item.slug}`, 'success');
             } catch (error) {
+                if (error.code === 'background-quota' || error.code === 'resource-exhausted') {
+                    const resumeAt = error.resumeAt || now() + 24 * 3600000;
+                    log('Daily background budget reached. Progress saved; crawl will resume after reset.', 'warning');
+                    await checkpoint({ status: 'queued', resumeAt, lockUntil: 0 });
+                    return { state: 'budget-wait', resumeAt };
+                }
                 // Keep the failed item at its cursor. Retry on a later worker instead of abandoning a partially saved film.
                 const attempt = Number(job.retryCount || 0) + 1;
                 stats.errors++;

@@ -1,5 +1,6 @@
+import useMovie from '../../../../hooks/useMovie';
 import { normalizeEpisodes, episodeInfo, episodeKey, episodeLabel } from '../../../../utils/episodes';
-import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
+import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useId } from 'react';
 import { useRentMovies, useSubscriptions, useMovies } from '../../../../hooks/useCollections';
 import { FaLock, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -22,11 +23,12 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const { isLogin } = useContext(AuthContext);
     const subscriptions = useSubscriptions();
     const movies = useMovies();
+    const currentMovie = useMovie(slug);
     const plans = useContext(PlanContext);
     const allRent = useRentMovies();
 
     const movie = useMemo(() => {
-        let found = findRouteEntity(movies, slug);
+        let found = currentMovie;
         if (!found) {
             const ep = episodeShow?.find(e => e.id == slug);
             if (ep) {
@@ -34,7 +36,7 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
             }
         }
         return found;
-    }, [movies, episodeShow, slug]);
+    }, [currentMovie, movies, episodeShow, slug]);
 
     const categoryTypes = useContext(CategoryTypeContext);
     const isSingle = isSingleMovie(movie, categoryTypes);

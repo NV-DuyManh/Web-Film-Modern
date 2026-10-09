@@ -1,8 +1,9 @@
 import { writeFile } from 'node:fs/promises';
-import { readPublicCatalog, closePublicCatalog } from './lib/publicCatalog.mjs';
+import { readPublicCatalog, closePublicCatalog, enableCatalogBudget } from './lib/publicCatalog.mjs';
 import { buildSitemap } from '../src/utils/sitemap.js';
 
 try {
+    if (process.argv.includes('--budget')) await enableCatalogBudget();
     const catalog = await readPublicCatalog();
     if (!catalog.Movies?.length) throw new Error('Refusing to replace SEO snapshot with an empty movie catalog');
     const xml = buildSitemap(catalog);
