@@ -395,10 +395,6 @@ function ForYouPage() {
                         <h1 className="font-bold text-3xl md:text-4xl glow-text m-0 cursor-default">
                             Dành Cho Bạn
                         </h1>
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold">
-                            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                            AI Đề Xuất
-                        </span>
                     </div>
 
                     <div className="search lg:col-span-4">

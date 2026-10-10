@@ -303,16 +303,12 @@ function ForYouInner() {
         return (
             <div className="bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden">
                 <div className="flex justify-between items-center">
-                    <Link to="/for-you" className="flex items-center gap-2 sm:gap-3 pt-10 group cursor-pointer" aria-label="Xem thêm phim dành cho bạn">
+                    <Link to="/for-you" className="flex items-center gap-2 sm:gap-3 group cursor-pointer" aria-label="Xem thêm phim dành cho bạn">
                         <h2 className="font-bold text-2xl md:text-3xl glow-text-multi group-hover:text-[#facc15] transition-colors duration-300">
                             Dành Cho Bạn
                         </h2>
                         <FaChevronRight className="border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full group-hover:bg-yellow-400 group-hover:text-black transition-colors duration-300" />
                     </Link>
-                    <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold">
-                        <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                        AI Đề Xuất
-                    </span>
                 </div>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4 mt-5">
                     {[...Array(6)].map((_, i) => (
@@ -329,16 +325,12 @@ function ForYouInner() {
     return (
         <div className="bg-[#111827] w-full text-white py-5 px-6 md:px-10 overflow-hidden">
             <div className="flex justify-between items-center">
-                <Link to="/for-you" className="flex items-center gap-2 sm:gap-3 pt-10 group cursor-pointer" aria-label="Xem thêm phim dành cho bạn">
+                <Link to="/for-you" className="flex items-center gap-2 sm:gap-3 group cursor-pointer" aria-label="Xem thêm phim dành cho bạn">
                     <h2 className="font-bold text-2xl md:text-3xl glow-text-multi group-hover:text-[#facc15] transition-colors duration-300">
                         Dành Cho Bạn
                     </h2>
                     <FaChevronRight className="border w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-transparent text-yellow-400 border-yellow-400/50 p-1 sm:p-1.5 rounded-full group-hover:bg-yellow-400 group-hover:text-black transition-colors duration-300" />
                 </Link>
-                <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold">
-                    <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
-                    AI Đề Xuất
-                </span>
             </div>
 
             <div className="movie-slider-wrapper relative group/slider">
