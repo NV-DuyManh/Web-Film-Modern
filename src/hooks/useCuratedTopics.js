@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { AuthContext } from '../contexts/AuthProvider';
 import { db } from '../config/firebaseConfig';
-import { curatedTopics } from '../utils/curatedTopics';
+import { CURATED_TOPICS, curatedTopics } from '../utils/curatedTopics';
 
 // A single small control document stores visibility. The fixed definitions and
 // film selection rules are shared by the client, admin and SEO renderer.
@@ -21,7 +21,7 @@ export default function useCuratedTopics(enabled = true) {
                 const response = await fetch('/api/topics', { signal: AbortSignal.timeout(6000) });
                 if (!response.ok) throw new Error('Topic controls unavailable');
                 const data = await response.json();
-                if (active && data.items?.length === 16) setTopics(curatedTopics(Object.fromEntries(data.items.map(item => [item.id, item.enabled]))));
+                if (active && Array.isArray(data.items) && CURATED_TOPICS.every(topic => data.items.some(item => item.id === topic.id && typeof item.enabled === 'boolean'))) setTopics(curatedTopics(Object.fromEntries(data.items.map(item => [item.id, item.enabled]))));
             } catch { /* Keep the last confirmed state during network interruptions. */ }
         };
         refresh();

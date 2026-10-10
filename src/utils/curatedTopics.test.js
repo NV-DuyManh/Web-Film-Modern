@@ -6,11 +6,11 @@ import { prepareCatalog, resolvePublicPage, indexableCatalogPaths } from '../../
 import { createTopicControlsLoader } from '../../server/topics/controls.js';
 import { createPageHandler } from '../../api/page.js';
 
-test('All sixteen curated topics have actual matching films in the published catalog', async () => {
+test('All twenty curated topics have actual matching films in the published catalog', async () => {
     const { catalog } = JSON.parse(await readFile(new URL('../../server/seo/catalog.json', import.meta.url), 'utf8'));
     const topics = curatedTopics();
-    assert.equal(topics.length, 16);
-    assert.equal(new Set(topics.map(item => item.id)).size, 16);
+    assert.equal(topics.length, 20);
+    assert.equal(new Set(topics.map(item => item.id)).size, 20);
     for (const topic of topics) {
         const movies = selectTopicMovies(topic, catalog.Movies, catalog.Categories, catalog.CategoryTypes);
         assert.ok(movies.length > 0, topic.name);
@@ -24,6 +24,24 @@ test('Anime requires Japanese animation and a matching action/adventure genre', 
     const movies = [{ ...base, id: 'old', updatedAt: 100 }, { ...base, id: 'new', updatedAt: 200 }, { ...base, id: 'live-action', categoryTypeID: 'series' }, { ...base, id: 'china', countriesID: 'Trung Quốc' }, { ...base, id: 'wrong-genre', listCategory: ['romance'] }];
     assert.deepEqual(selectTopicMovies(topic, movies, [{ id: 'action', name: 'Hành Động' }], [{ id: 'anime', name: 'Hoạt Hình' }]).map(item => item.id), ['new', 'old']);
     assert.deepEqual(selectTopicMovies({ ...topic, enabled: false }, movies, [{ id: 'action', name: 'Hành Động' }], [{ id: 'anime', name: 'Hoạt Hình' }]), []);
+});
+
+test('New Vietnamese and animation topics select actual origin/type instead of matching unrelated titles', () => {
+    const topics = curatedTopics();
+    const movies = [
+        { id: 'viet', countriesID: 'Việt Nam', listCategory: [] },
+        { id: 'english-origin', countriesID: 'Vietnam', listCategory: [] },
+        { id: 'foreign', countriesID: 'Hàn Quốc', name: 'Phim Việt', listCategory: [] },
+        { id: 'animation-type', categoryTypeID: 'animation', listCategory: [] },
+        { id: 'animation-genre', categoryTypeID: 'series', listCategory: ['animated'] },
+        { id: 'documentary', listCategory: ['documentary'] },
+    ];
+    const categories = [{ id: 'animated', name: 'Hoạt Hình' }, { id: 'documentary', name: 'Tài Liệu' }];
+    const types = [{ id: 'animation', name: 'Hoạt Hình' }];
+    const selected = id => selectTopicMovies(topics.find(topic => topic.id === id), movies, categories, types).map(movie => movie.id).sort();
+    assert.deepEqual(selected('phim-viet'), ['english-origin', 'viet']);
+    assert.deepEqual(selected('hoat-hinh'), ['animation-genre', 'animation-type']);
+    assert.deepEqual(selected('tai-lieu'), ['documentary']);
 });
 
 test('Visibility accepts booleans for known topics and rejects arbitrary legacy definitions', () => {

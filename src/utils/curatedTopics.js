@@ -17,6 +17,10 @@ const definitions = [
     ['chien-tranh-lich-su', 'Chiến Tranh', 'Những cuộc chiến và câu chuyện trong các thời kỳ lịch sử.', ['Chiến Tranh', 'Lịch Sử', 'War & Politics'], 'from-amber-500 to-stone-400'],
     ['am-nhac-san-khau', 'Âm Nhạc', 'Giai điệu, biểu diễn và những câu chuyện theo đuổi đam mê.', ['Âm Nhạc'], 'from-fuchsia-400 to-pink-400'],
     ['doi-thuong-cam-dong', 'Đời Thường', 'Những lát cắt cuộc sống giản dị và câu chuyện chạm đến cảm xúc.', ['Đời Thường', 'Cảm Động'], 'from-teal-300 to-sky-400'],
+    ['tam-ly', 'Tâm Lý', 'Những câu chuyện nội tâm, lựa chọn khó khăn và số phận nhiều cảm xúc.', ['Tâm Lý', 'Chính Kịch', 'Drama'], 'from-indigo-400 to-violet-500'],
+    ['hoat-hinh', 'Hoạt Hình', 'Những thế giới hoạt hình sống động, từ anime đến các cuộc phiêu lưu.', ['Hoạt Hình'], 'from-lime-300 to-emerald-400'],
+    ['phim-viet', 'Phim Việt', 'Những câu chuyện, con người và nét văn hóa Việt Nam trên màn ảnh.', [], 'from-red-400 to-yellow-400'],
+    ['tai-lieu', 'Tài Liệu', 'Khám phá thiên nhiên, con người và những góc nhìn mới về thế giới.', ['Tài Liệu'], 'from-cyan-300 to-teal-500'],
 ];
 
 export const CURATED_TOPICS = definitions.map(([id, name, description, genres, gradient], order) => ({
@@ -44,7 +48,9 @@ export function selectTopicMovies(topic, movies = [], categories = [], categoryT
     const animationIds = new Set(categoryTypes.filter(item => ['hoat hinh', 'anime', 'animation'].includes(normalize(item.name))).map(item => String(item.id)));
     return movies.filter(movie => {
         if (definition.id === 'phim-han-chon-loc') return ['han quoc', 'south korea', 'korea'].includes(normalize(movie.countriesID));
+        if (definition.id === 'phim-viet') return ['viet nam', 'vietnam', 'viet', 'vn'].includes(normalize(movie.countriesID));
         const tags = Array.isArray(movie.listCategory) ? movie.listCategory : [];
+        if (definition.id === 'hoat-hinh') return animationIds.has(String(movie.categoryTypeID)) || tags.some(id => ids.has(String(id)));
         if (!tags.some(id => ids.has(String(id)))) return false;
         if (definition.id !== 'anime-hanh-dong') return true;
         return ['nhat ban', 'japan'].includes(normalize(movie.countriesID)) && animationIds.has(String(movie.categoryTypeID));

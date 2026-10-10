@@ -10,7 +10,7 @@ export default function TableTopic({ topics, search, onToggle, saving }) {
     const categories = useCatalogChoices('Categories', [], true);
     const categoryTypes = useCatalogChoices('CategoryTypes', [], true);
     const [page, setPage] = useState(1);
-    const [rowsPerPage, setRowsPerPage] = useState(8);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const rows = useMemo(() => topics.filter(topic => searchTV(`${topic.name} ${topic.description}`).includes(searchTV(search))), [topics, search]);
     const currentPage = Math.min(page, Math.max(1, Math.ceil(rows.length / rowsPerPage)));
     const start = (currentPage - 1) * rowsPerPage;
@@ -39,7 +39,7 @@ export default function TableTopic({ topics, search, onToggle, saving }) {
                 </table>
                 {rows.length === 0 && <p className="p-6 text-center text-slate-400">No topics found.</p>}
                 <div className="table-footer">
-                    <PaginationAdmin page={currentPage} setPage={setPage} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} totalItems={rows.length} rowsPerPageOptions={[8, 16]} />
+                    <PaginationAdmin page={currentPage} setPage={setPage} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} totalItems={rows.length} />
                 </div>
             </div></div>
         </div>
