@@ -23,7 +23,7 @@ const ICON_MAP = {
 import { motion } from 'framer-motion';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import SEO from '../../../components/SEO';
-import { SMART_FILTERS } from './Topic';
+import { selectTopicMovies } from '../../../utils/curatedTopics';
 import { searchTV } from '../../../components/admin/search/SearchTV';
 import Pagination from '../../../components/common/Pagination';
 
@@ -38,7 +38,7 @@ function TopicDetail() {
     const categoryTypes = useContext(CategoryTypeContext) || [];
     const customTopics = useTopics();
     const plans = useContext(PlanContext) || [];
-    const currentTopic = useMemo(() => findRouteEntity(customTopics, id), [customTopics, id]);
+    const currentTopic = useMemo(() => findRouteEntity(customTopics.filter(topic => topic.enabled !== false), id), [customTopics, id]);
     const topicPath = currentTopic ? `/topic/${routeSegment(currentTopic)}` : '';
     useCanonicalPath(topicPath);
 
@@ -63,13 +63,8 @@ function TopicDetail() {
     const collectionData = useMemo(() => {
         const customCol = currentTopic;
         if (customCol) {
-            let topicMovies = [];
-            if (customCol.isSmart && customCol.smartID && SMART_FILTERS[customCol.smartID]) {
-                topicMovies = SMART_FILTERS[customCol.smartID](movies, categoryTypes);
-            } else {
-                topicMovies = (customCol.movieID || []).map(mId => movies.find(m => m.id === mId)).filter(Boolean);
-            }
-            
+            const topicMovies = selectTopicMovies(customCol, movies, categories, categoryTypes);
+
             return {
                 id: customCol.id,
                 title: customCol.title || customCol.name,
@@ -98,6 +93,8 @@ function TopicDetail() {
     const safePage = Math.min(page, totalPages);
     const currentMovies = collectionMovies.slice((safePage - 1) * moviesPerPage, safePage * moviesPerPage);
 
+    if (!customTopics.length) return <div className="min-h-screen pt-32 text-center text-slate-300" role="status">Đang tải chủ đề...</div>;
+
     const handlePrev = () => {
         setPage(p => (p > 1 ? p - 1 : p));
     };
@@ -109,6 +106,7 @@ function TopicDetail() {
     if (!collectionData) {
         return (
             <div className="w-full min-h-screen bg-transparent flex items-center justify-center" style={{ paddingTop: '110px' }}>
+                <SEO title="Không tìm thấy chủ đề" noindex />
                 <div className="text-center">
                     <div className="text-6xl mb-4">🔍</div>
                     <h2 className="text-xl text-slate-400 font-semibold mb-4">Không tìm thấy chủ đề này</h2>

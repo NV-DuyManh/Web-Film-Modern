@@ -4,6 +4,7 @@ import { getFirestore, collection, query, orderBy, documentId, limit, startAfter
 import { SITEMAP_COLLECTIONS } from '../../src/utils/sitemap.js';
 import { backgroundFirestore } from './backgroundFirestore.mjs';
 import { publicCatalogRecord } from '../../src/utils/publicCatalogFields.js';
+import { curatedTopics } from '../../src/utils/curatedTopics.js';
 export { publicCatalogRecord } from '../../src/utils/publicCatalogFields.js';
 
 let database;
@@ -39,7 +40,10 @@ export async function readPublicCollection(name) {
 
 export async function readPublicCatalog() {
     const entries = [];
-    for (const name of [...Object.keys(SITEMAP_COLLECTIONS), 'Categories', 'CategoryTypes']) entries.push([name, await readPublicCollection(name)]);
+    for (const name of [...Object.keys(SITEMAP_COLLECTIONS), 'Categories', 'CategoryTypes'].filter(name => name !== 'Topics')) entries.push([name, await readPublicCollection(name)]);
+    const reference = doc(await getCatalogDatabase(), 'PublicCatalogControls', 'topics');
+    const control = metered ? await metered.read(reference) : await getDoc(reference);
+    entries.push(['Topics', curatedTopics(control.data()?.enabled)]);
     return Object.fromEntries(entries);
 }
 

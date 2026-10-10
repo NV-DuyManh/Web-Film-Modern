@@ -54,7 +54,7 @@ service cloud.firestore {
       allow delete: if name in ['Comments', 'Reviews'] && admin();
     }
     match /CatalogChanges/{id} { allow read, write: if admin() || worker(); }
-    match /PublicCatalogControls/{id} { allow read, write: if id == 'home' && (admin() || worker()); }
+    match /PublicCatalogControls/{id} { allow read, write: if id in ['home', 'topics'] && (admin() || worker()); }
     match /Settings/{id} {
       allow read: if admin() || worker();
       allow write: if admin() || (worker() && id in ['BackgroundQuota', 'AutoSync', 'CloudEpisodeSync', 'CatalogMaintenance', 'KkphimCrawler', 'DailyKkphimCrawler', 'KKPhimCrawler']);

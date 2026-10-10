@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- generatedAt: 2026-10-09T23:20:21.074Z -->
+<!-- generatedAt: 2026-10-10T14:43:22.544Z -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url><loc>https://www.mfilm.online/</loc></url>
   <url><loc>https://www.mfilm.online/film-new</loc></url>
@@ -8229,12 +8229,22 @@
   <url><loc>https://www.mfilm.online/nhan-vat/roy-mustang</loc></url>
   <url><loc>https://www.mfilm.online/nhan-vat/ram</loc></url>
   <url><loc>https://www.mfilm.online/nhan-vat/moc-vy</loc></url>
-  <url><loc>https://www.mfilm.online/topic/anime-dac-sac</loc></url>
-  <url><loc>https://www.mfilm.online/topic/phim-han-quoc</loc></url>
-  <url><loc>https://www.mfilm.online/topic/phim-moi-cap-nhat</loc></url>
-  <url><loc>https://www.mfilm.online/topic/phim-trung-quoc</loc></url>
-  <url><loc>https://www.mfilm.online/topic/phim-hot-nhat</loc></url>
-  <url><loc>https://www.mfilm.online/topic/phim-bo-dai-tap</loc></url>
+  <url><loc>https://www.mfilm.online/topic/tu-tien-co-trang</loc></url>
+  <url><loc>https://www.mfilm.online/topic/xuyen-khong-chuyen-sinh</loc></url>
+  <url><loc>https://www.mfilm.online/topic/anime-hanh-dong</loc></url>
+  <url><loc>https://www.mfilm.online/topic/bi-an-trinh-tham</loc></url>
+  <url><loc>https://www.mfilm.online/topic/kinh-di-giat-gan</loc></url>
+  <url><loc>https://www.mfilm.online/topic/tinh-cam-lang-man</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton</loc></url>
+  <url><loc>https://www.mfilm.online/topic/gia-dinh-am-ap</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phim-han-chon-loc</loc></url>
+  <url><loc>https://www.mfilm.online/topic/sieu-nhien-ky-ao</loc></url>
+  <url><loc>https://www.mfilm.online/topic/khoa-hoc-vien-tuong</loc></url>
+  <url><loc>https://www.mfilm.online/topic/vo-thuat-dinh-cao</loc></url>
+  <url><loc>https://www.mfilm.online/topic/chien-tranh-lich-su</loc></url>
+  <url><loc>https://www.mfilm.online/topic/am-nhac-san-khau</loc></url>
+  <url><loc>https://www.mfilm.online/topic/doi-thuong-cam-dong</loc></url>
   <url><loc>https://www.mfilm.online/category/C%E1%BA%A3m%20%C4%90%E1%BB%99ng</loc></url>
   <url><loc>https://www.mfilm.online/category/Tu%20Ti%C3%AAn</loc></url>
   <url><loc>https://www.mfilm.online/category/T%C3%A2m%20L%C3%BD</loc></url>
@@ -8671,6 +8681,53 @@
   <url><loc>https://www.mfilm.online/actors?page=208</loc></url>
   <url><loc>https://www.mfilm.online/actors?page=209</loc></url>
   <url><loc>https://www.mfilm.online/actors?page=210</loc></url>
+  <url><loc>https://www.mfilm.online/topic/tu-tien-co-trang?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/anime-hanh-dong?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/anime-hanh-dong?page=3</loc></url>
+  <url><loc>https://www.mfilm.online/topic/bi-an-trinh-tham?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/bi-an-trinh-tham?page=3</loc></url>
+  <url><loc>https://www.mfilm.online/topic/bi-an-trinh-tham?page=4</loc></url>
+  <url><loc>https://www.mfilm.online/topic/bi-an-trinh-tham?page=5</loc></url>
+  <url><loc>https://www.mfilm.online/topic/bi-an-trinh-tham?page=6</loc></url>
+  <url><loc>https://www.mfilm.online/topic/bi-an-trinh-tham?page=7</loc></url>
+  <url><loc>https://www.mfilm.online/topic/bi-an-trinh-tham?page=8</loc></url>
+  <url><loc>https://www.mfilm.online/topic/kinh-di-giat-gan?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/kinh-di-giat-gan?page=3</loc></url>
+  <url><loc>https://www.mfilm.online/topic/tinh-cam-lang-man?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/tinh-cam-lang-man?page=3</loc></url>
+  <url><loc>https://www.mfilm.online/topic/tinh-cam-lang-man?page=4</loc></url>
+  <url><loc>https://www.mfilm.online/topic/tinh-cam-lang-man?page=5</loc></url>
+  <url><loc>https://www.mfilm.online/topic/tinh-cam-lang-man?page=6</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=3</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=4</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=5</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=6</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=7</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=8</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=9</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=10</loc></url>
+  <url><loc>https://www.mfilm.online/topic/hai-huoc-thu-gian?page=11</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=3</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=4</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=5</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=6</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=7</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=8</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=9</loc></url>
+  <url><loc>https://www.mfilm.online/topic/gia-dinh-am-ap?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/gia-dinh-am-ap?page=3</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phim-han-chon-loc?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phim-han-chon-loc?page=3</loc></url>
+  <url><loc>https://www.mfilm.online/topic/khoa-hoc-vien-tuong?page=2</loc></url>
+  <url><loc>https://www.mfilm.online/topic/khoa-hoc-vien-tuong?page=3</loc></url>
+  <url><loc>https://www.mfilm.online/topic/khoa-hoc-vien-tuong?page=4</loc></url>
+  <url><loc>https://www.mfilm.online/topic/khoa-hoc-vien-tuong?page=5</loc></url>
+  <url><loc>https://www.mfilm.online/topic/khoa-hoc-vien-tuong?page=6</loc></url>
+  <url><loc>https://www.mfilm.online/topic/khoa-hoc-vien-tuong?page=7</loc></url>
+  <url><loc>https://www.mfilm.online/topic/khoa-hoc-vien-tuong?page=8</loc></url>
+  <url><loc>https://www.mfilm.online/topic/khoa-hoc-vien-tuong?page=9</loc></url>
   <url><loc>https://www.mfilm.online/category/T%C3%A2m%20L%C3%BD?page=2</loc></url>
   <url><loc>https://www.mfilm.online/category/T%C3%A2m%20L%C3%BD?page=3</loc></url>
   <url><loc>https://www.mfilm.online/category/T%C3%A2m%20L%C3%BD?page=4</loc></url>

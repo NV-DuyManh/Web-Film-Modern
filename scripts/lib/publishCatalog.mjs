@@ -1,3 +1,4 @@
+import { curatedTopics } from '../../src/utils/curatedTopics.js';
 import { readFile, writeFile } from 'node:fs/promises';
 import { buildSitemap } from '../../src/utils/sitemap.js';
 import { publicCatalogRecord } from './publicCatalog.mjs';
@@ -5,6 +6,7 @@ import { publicCatalogRecord } from './publicCatalog.mjs';
 export async function publishCatalog(catalog, metadata = {}) {
     const publicCatalog = Object.fromEntries(['Movies', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes'].map(name => [name,
         (catalog[name] || []).filter(item => item.crawlImportState !== 'pending').map(publicCatalogRecord)]));
+    publicCatalog.Topics = curatedTopics(Object.fromEntries((catalog.Topics || []).map(topic => [topic.id, topic.enabled])));
     if (!publicCatalog.Movies.length) throw new Error('Refusing an empty public cache.');
     const previous = JSON.parse(await readFile(new URL('../../server/seo/catalog.json', import.meta.url), 'utf8'));
     const snapshot = { ...previous, ...metadata, generatedAt: new Date().toISOString(), catalog: publicCatalog };

@@ -3,33 +3,16 @@ import { routeSegment } from '../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState } from 'react';
 import { useTopics, useMovies } from '../../../hooks/useCollections';
 import { Link } from 'react-router-dom';
+import { selectTopicMovies } from '../../../utils/curatedTopics';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
-import { FaFire, FaStar, FaFilm, FaGlobeAsia, FaTv, FaTheaterMasks, FaPlay, FaArrowRight } from 'react-icons/fa';
+import { FaArrowRight } from 'react-icons/fa';
 import { BsSearch } from 'react-icons/bs';
 import { motion } from 'framer-motion';
 import ParticleBackground from '../../../components/client/background/ParticleBackground';
 import SEO from '../../../components/SEO';
 import { searchTV } from '../../../components/admin/search/SearchTV';
 
-export const SMART_FILTERS = {
-    'phim-hot': (movies) => [...movies].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0)).slice(0, 20),
-    'phim-moi': (movies) => [...movies].sort((a, b) => {
-        const yearA = parseInt(a.year) || 0;
-        const yearB = parseInt(b.year) || 0;
-        return yearB - yearA;
-    }).slice(0, 20),
-    'anime-hay': (movies) => movies.filter(m => m.countriesID?.toLowerCase() === 'japan').sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0)).slice(0, 20),
-    'phim-han': (movies) => movies.filter(m => m.countriesID?.toLowerCase() === 'south korea').sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0)).slice(0, 20),
-    'phim-trung': (movies) => movies.filter(m => m.countriesID?.toLowerCase() === 'china').sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0)).slice(0, 20),
-    'phim-bo-dai-tap': (movies) => movies.filter(m => (Number(m.totalEpisodes) || 0) > 15).sort((a, b) => (Number(b.totalEpisodes) || 0) - (Number(a.totalEpisodes) || 0)).slice(0, 20),
-    'phim-le': (movies, categoryTypes) => {
-        const leId = categoryTypes?.find(c => c.name?.toLowerCase().includes('lẻ'))?.id;
-        if (!leId) return [];
-        return movies.filter(m => m.categoryTypeID === leId).sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0)).slice(0, 20);
-    },
-    'phim-viet': (movies) => movies.filter(m => m.countriesID?.toLowerCase() === 'vietnam' || m.countriesID?.toLowerCase() === 'việt nam').sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0)).slice(0, 20)
-};
 
 function CollectionCard({ collection, movies, index }) {
     const previewMovies = movies.slice(0, 4);
@@ -129,13 +112,8 @@ function Topic() {
     const collections = useMemo(() => {
         if (movies.length === 0) return [];
         
-        let customCols = customTopics.map(topic => {
-            let topicMovies = [];
-            if (topic.isSmart && topic.smartID && SMART_FILTERS[topic.smartID]) {
-                topicMovies = SMART_FILTERS[topic.smartID](movies, categoryTypes, categories);
-            } else {
-                topicMovies = (topic.movieID || []).map(id => movies.find(m => m.id === id)).filter(Boolean);
-            }
+        let customCols = customTopics.filter(topic => topic.enabled !== false).map(topic => {
+            const topicMovies = selectTopicMovies(topic, movies, categories, categoryTypes);
 
             return {
                 id: topic.id,
@@ -161,7 +139,7 @@ function Topic() {
         <div className="w-full min-h-screen bg-transparent relative overflow-hidden" style={{ paddingTop: '110px', paddingBottom: '60px' }}>
             <SEO 
                 title="Chủ Đề Phim - Bộ Sưu Tập Phim Hay"
-                description="Khám phá các bộ sưu tập phim theo chủ đề: Phim Hot, Anime, Phim Hàn, Phim Trung Quốc, Phim Bộ Dài Tập và nhiều hơn nữa tại MFILM."
+                description="Khám phá các bộ sưu tập phim theo chủ đề: Tu Tiên, Xuyên Không, Anime Hành Động, Bí Ẩn, Tình Cảm và nhiều hơn nữa tại MFILM."
                 url="/topic"
             />
             <ParticleBackground />
@@ -187,7 +165,7 @@ function Topic() {
                     </div>
                 </div>
 
-                {movies.length === 0 ? (
+                {movies.length === 0 || customTopics.length === 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                         {Array.from({ length: 8 }).map((_, i) => (
                             <div key={i} className="rounded-2xl aspect-4/3 bg-slate-800/50 animate-pulse"></div>

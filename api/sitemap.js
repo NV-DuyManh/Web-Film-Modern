@@ -1,10 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import { loadSeoCatalog } from '../server/seo/loadCatalog.js';
 import { buildSitemap } from '../src/utils/sitemap.js';
+import { loadTopicControls } from '../server/topics/controls.js';
 
 export const config = { maxDuration: 60 };
 
-export function createSitemapHandler({ readCatalog = loadSeoCatalog,
+export function createSitemapHandler({ readCatalog = loadSeoCatalog, readTopics = async () => null,
     readSnapshot = () => readFile(new URL('../public/sitemap.xml', import.meta.url), 'utf8'), now = Date.now } = {}) {
     let cached;
     let expiresAt = 0;
@@ -20,8 +21,8 @@ export function createSitemapHandler({ readCatalog = loadSeoCatalog,
                 } catch { /* Cold start without a snapshot: generate from the catalog. */ }
             }
             if (now() >= expiresAt && !(req.method === 'HEAD' && cached)) {
-                loading ||= readCatalog().then(catalog => {
-                    cached = buildSitemap(catalog);
+                loading ||= Promise.all([readCatalog(), readTopics()]).then(([catalog, topics]) => {
+                    cached = buildSitemap(topics ? { ...catalog, Topics: topics } : catalog);
                     expiresAt = now() + 86400000;
                 }).finally(() => { loading = null; });
                 await loading;
@@ -42,4 +43,4 @@ export function createSitemapHandler({ readCatalog = loadSeoCatalog,
         }
     };
 }
-export default createSitemapHandler();
+export default createSitemapHandler({ readTopics: loadTopicControls });

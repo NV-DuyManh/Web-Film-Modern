@@ -3,6 +3,7 @@ import { collection, doc, query, orderBy, documentId, limit, startAfter, Timesta
 import { PUBLIC_COLLECTIONS } from '../../src/utils/publicCatalogFields.js';
 import { applyCatalogChanges } from './catalogDelta.mjs';
 import { publishCatalog } from './publishCatalog.mjs';
+import { curatedTopics } from '../../src/utils/curatedTopics.js';
 
 export async function refreshCatalogDelta(db, io) {
     const snapshot = JSON.parse(await readFile(new URL('../../server/seo/catalog.json', import.meta.url), 'utf8'));
@@ -33,6 +34,14 @@ export async function refreshCatalogDelta(db, io) {
     const cursorChanged = JSON.stringify(result.changeCursor) !== JSON.stringify(snapshot.changeCursor || null);
     const auditChanged = JSON.stringify(reconcileCursor) !== JSON.stringify(snapshot.reconcileCursor);
     const catalog = result.materialize();
+    try {
+        const controls = await io.read(doc(db, 'PublicCatalogControls', 'topics'));
+        catalog.Topics = curatedTopics(controls.data()?.enabled);
+    } catch (error) {
+        if (!['background-quota', 'resource-exhausted'].includes(error.code)) throw error;
+        catalog.Topics = snapshot.catalog.Topics;
+        result.waiting = true;
+    }
     if (cursorChanged || auditChanged || JSON.stringify(catalog) !== JSON.stringify(snapshot.catalog)) {
         await publishCatalog(catalog, { changeCursor: result.changeCursor, reconcileCursor });
     }

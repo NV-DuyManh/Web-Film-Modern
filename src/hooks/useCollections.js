@@ -1,3 +1,4 @@
+import useCuratedTopics from './useCuratedTopics';
 import { AuthContext } from '../contexts/AuthProvider';
 import { subscribePublicCatalog } from '../services/publicCatalogCache';
 import { newestMoviesFirst } from '../utils/movieRecency';
@@ -87,7 +88,7 @@ export const useCharacters    = createCollectionHook('characters',    'Character
 export const useCategoryTypes = createCollectionHook('categoryTypes', 'CategoryTypes');
 export const useCategories    = createCollectionHook('categories',    'Categories');
 export const useShowTimes     = createCollectionHook('showTimes',     'ShowTimes');
-export const useTopics        = createCollectionHook('topics',        'Topics', withNameRoutes);
+export const useTopics        = useCuratedTopics;
 export const useSubscriptions = createCollectionHook('subscriptions', 'Subscriptions');
 export const useRentMovies    = createCollectionHook('rentMovies',    'RentMovies');
 export const useEpisodes      = createCollectionHook('episodes',      'Episodes');

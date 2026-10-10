@@ -1,3 +1,4 @@
+import { curatedTopics, selectTopicMovies } from '../../src/utils/curatedTopics.js';
 import { createNameRouteIndex, withNameRoutes } from '../../src/utils/nameRoutes.js';
 import { resolveMovieImages } from '../../src/utils/movieImages.js';
 import { newestMoviesFirst } from '../../src/utils/movieRecency.js';
@@ -11,9 +12,9 @@ const hasBio = item => plainText(item.description).length > 25 && !/^đang cập
 export function prepareCatalog(raw) {
     const catalog = { ...raw }, routes = {}, maps = {}, related = {};
     for (const [key, prefix] of Object.entries(PREFIXES)) {
-        const items = key === 'Movies' ? (raw[key] || []).map(movie => ({ ...movie, ...resolveMovieImages(movie) })) : raw[key] || [];
+        const items = key === 'Topics' ? curatedTopics(Object.fromEntries((raw.Topics || []).map(topic => [topic.id, topic.enabled]))) : key === 'Movies' ? (raw[key] || []).map(movie => ({ ...movie, ...resolveMovieImages(movie) })) : raw[key] || [];
         catalog[key] = withNameRoutes(items, { preferSlug: key === 'Movies', fallback: key === 'Actors' ? 'dien-vien' : 'noi-dung' });
-        routes[key] = createNameRouteIndex(catalog[key]);
+        routes[key] = createNameRouteIndex(key === 'Topics' ? catalog[key].filter(topic => topic.enabled) : catalog[key]);
         maps[key] = new Map(catalog[key].map(item => [item.id, item]));
         related[key] = new Map();
         for (const item of catalog[key]) item.publicPath = routes[key].path(prefix, item);
@@ -32,22 +33,6 @@ export function prepareCatalog(raw) {
     return { catalog, routes, maps, related };
 }
 
-function smartTopic(topic, catalog) {
-    const movies = catalog.Movies;
-    const hot = items => [...items].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0)).slice(0, 20);
-    const country = name => hot(movies.filter(movie => movie.countriesID?.toLowerCase() === name));
-    switch (topic.smartID) {
-        case 'phim-hot': return hot(movies);
-        case 'phim-moi': return [...movies].sort((a, b) => (parseInt(b.year) || 0) - (parseInt(a.year) || 0)).slice(0, 20);
-        case 'anime-hay': return country('japan');
-        case 'phim-han': return country('south korea');
-        case 'phim-trung': return country('china');
-        case 'phim-viet': return hot(movies.filter(movie => ['vietnam', 'việt nam'].includes(movie.countriesID?.toLowerCase())));
-        case 'phim-bo-dai-tap': return [...movies].filter(movie => Number(movie.totalEpisodes) > 15).sort((a, b) => Number(b.totalEpisodes) - Number(a.totalEpisodes)).slice(0, 20);
-        case 'phim-le': return hot(movies.filter(movie => movie.categoryTypeID === catalog.CategoryTypes?.find(type => type.name?.toLowerCase().includes('lẻ'))?.id));
-        default: return [];
-    }
-}
 
 export function listingMovies(path, prepared) {
     const { catalog } = prepared;
@@ -80,7 +65,7 @@ export function resolvePublicPage(input, prepared) {
     if (STATIC_SEO[path]) {
         [page.title, page.description] = STATIC_SEO[path];
         if (path === '/actors') page.items = catalog.Actors;
-        else if (path === '/topic') page.items = catalog.Topics;
+        else if (path === '/topic') page.items = catalog.Topics.filter(topic => topic.enabled);
         else if (!['/ho-tro', '/showtimes', '/category', '/country'].includes(path)) page.items = listingMovies(path, prepared);
         if (['/category', '/country'].includes(path)) {
             page.kind = 'hub';
@@ -131,7 +116,7 @@ export function resolvePublicPage(input, prepared) {
             } else if (key === 'Topics') {
                 page.title = `${label(item)} - Chủ đề phim`;
                 page.description = descriptionText(item.description || `Khám phá bộ sưu tập ${label(item)} tại MFILM.`);
-                page.items = item.isSmart ? smartTopic(item, catalog) : list(item.movieID).map(id => maps.Movies.get(id)).filter(Boolean);
+                page.items = selectTopicMovies(item, catalog.Movies, catalog.Categories, catalog.CategoryTypes);
             } else {
                 page.kind = 'entity';
                 const role = key === 'Actors' ? 'Diễn viên' : key === 'Authors' ? 'Tác giả' : 'Nhân vật';
@@ -178,6 +163,7 @@ function missingPage(path) {
 export function indexableCatalogPaths(prepared) {
     const paths = new Set(Object.keys(STATIC_SEO));
     for (const [key] of Object.entries(PREFIXES)) for (const item of prepared.catalog[key]) {
+        if (key === 'Topics' && !item.enabled) continue;
         if (!label(item)) continue;
         if (['Actors', 'Authors', 'Characters'].includes(key) && !hasBio(item) && !prepared.related[key].get(item.id)?.length) continue;
         paths.add(item.publicPath);

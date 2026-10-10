@@ -2,9 +2,10 @@ import { readFile } from 'node:fs/promises';
 import { prepareCatalog, resolvePublicPage } from '../server/seo/catalog.js';
 import { renderPageHtml } from '../server/seo/render.js';
 import { loadSeoCatalog } from '../server/seo/loadCatalog.js';
+import { loadTopicControls } from '../server/topics/controls.js';
 
 export const config = { maxDuration: 15 };
-export function createPageHandler({ readTemplate = () => readFile(new URL('../dist/index.html', import.meta.url), 'utf8'), readCatalog = loadSeoCatalog, lookupMovie = async () => null } = {}) {
+export function createPageHandler({ readTemplate = () => readFile(new URL('../dist/index.html', import.meta.url), 'utf8'), readCatalog = loadSeoCatalog, readTopics = async () => null, lookupMovie = async () => null } = {}) {
     let template, prepared, lastCatalog;
     const missingMovies = new Map();
     return async (req, res) => {
@@ -22,7 +23,9 @@ export function createPageHandler({ readTemplate = () => readFile(new URL('../di
             const query = new URLSearchParams(incoming.searchParams);
             query.delete('path');
             const path = `${originalPath.startsWith('/') ? originalPath : `/${originalPath}`}${query.size ? `?${query}` : ''}`;
-            let page = resolvePublicPage(path, prepared);
+            const topics = /^\/topic(?:\/|\?|$)/.test(path) ? await readTopics() : null;
+            const pageCatalog = topics ? prepareCatalog({ ...prepared.catalog, Topics: topics }) : prepared;
+            let page = resolvePublicPage(path, pageCatalog);
             const slugMatch = path.match(/^\/phim\/([^/?]+)(?:\?|$)/);
             let lookupSlug;
             try { lookupSlug = slugMatch && decodeURIComponent(slugMatch[1]); } catch { /* A malformed URL is a real 404. */ }
@@ -51,7 +54,7 @@ export function createPageHandler({ readTemplate = () => readFile(new URL('../di
         }
     };
 }
-export default createPageHandler({ lookupMovie: async slug => {
+export default createPageHandler({ readTopics: loadTopicControls, lookupMovie: async slug => {
     let timer;
     try {
         return await Promise.race([
