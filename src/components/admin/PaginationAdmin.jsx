@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItems }) {
+function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItems, rowsPerPageOptions = [5, 10, 15] }) {
     const totalPages = Math.ceil(totalItems / rowsPerPage);
     const from = totalItems === 0 ? 0 : (page - 1) * rowsPerPage + 1;
     const to = Math.min(page * rowsPerPage, totalItems);
@@ -86,9 +86,7 @@ function PaginationAdmin({ page, setPage, rowsPerPage, setRowsPerPage, totalItem
                         }
                     }}
                 >
-                    <MenuItem value={5}>5</MenuItem>
-                    <MenuItem value={10}>10</MenuItem>
-                    <MenuItem value={15}>15</MenuItem>
+                    {rowsPerPageOptions.map(value => <MenuItem key={value} value={value}>{value}</MenuItem>)}
                 </Select>
             </div>
 

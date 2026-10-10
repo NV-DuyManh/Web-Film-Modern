@@ -1,14 +1,21 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useMovies } from '../../../../hooks/useCollections';
 import useCatalogChoices from '../../../../hooks/useCatalogChoices';
 import { selectTopicMovies } from '../../../../utils/curatedTopics';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
+import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 
 export default function TableTopic({ topics, search, onToggle, saving }) {
     const movies = useMovies();
     const categories = useCatalogChoices('Categories', [], true);
     const categoryTypes = useCatalogChoices('CategoryTypes', [], true);
+    const [page, setPage] = useState(1);
+    const [rowsPerPage, setRowsPerPage] = useState(8);
     const rows = useMemo(() => topics.filter(topic => searchTV(`${topic.name} ${topic.description}`).includes(searchTV(search))), [topics, search]);
+    const currentPage = Math.min(page, Math.max(1, Math.ceil(rows.length / rowsPerPage)));
+    const start = (currentPage - 1) * rowsPerPage;
+    const currentRows = rows.slice(start, start + rowsPerPage);
+    useEffect(() => { setPage(1); }, [search]);
     const counts = useMemo(() => Object.fromEntries(topics.map(topic => [topic.id, selectTopicMovies({ ...topic, enabled: true }, movies, categories, categoryTypes).length])), [topics, movies, categories, categoryTypes]);
     return (
         <div className="p-5">
@@ -17,7 +24,7 @@ export default function TableTopic({ topics, search, onToggle, saving }) {
                     <thead className="table-header"><tr>
                         <th className="text-center">#</th><th>TITLE</th><th>DESCRIPTION</th><th className="text-center">MOVIES</th><th className="text-center">VISIBILITY</th>
                     </tr></thead>
-                    <tbody>{rows.map(topic => <tr key={topic.id} className="table-row">
+                    <tbody>{currentRows.map(topic => <tr key={topic.id} className="table-row">
                         <td className="table-cell text-center">{topic.order + 1}</td>
                         <td className="table-cell font-bold">{topic.name}</td>
                         <td className="table-cell">{topic.description}</td>
@@ -31,6 +38,9 @@ export default function TableTopic({ topics, search, onToggle, saving }) {
                     </tr>)}</tbody>
                 </table>
                 {rows.length === 0 && <p className="p-6 text-center text-slate-400">No topics found.</p>}
+                <div className="table-footer">
+                    <PaginationAdmin page={currentPage} setPage={setPage} rowsPerPage={rowsPerPage} setRowsPerPage={setRowsPerPage} totalItems={rows.length} rowsPerPageOptions={[8, 16]} />
+                </div>
             </div></div>
         </div>
     );
