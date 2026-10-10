@@ -138,7 +138,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.mySwiper2 .swiper-wrapper { transition-timing-function: cubic-bezier(.22,.61,.36,1); }
 
 .mySwiper2 .swiper-slide:not(.swiper-slide-active) .banner-info-box,
 .mySwiper2 .swiper-slide:not(.swiper-slide-active) .banner-info-box * {

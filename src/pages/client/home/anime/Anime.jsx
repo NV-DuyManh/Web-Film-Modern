@@ -5,11 +5,12 @@ import ModalDetail from '../../watch/detailFilm/ModalDetail';
 import useHomeMovies from '../../../../hooks/useHomeMovies';
 import useCarouselAutoplay from '../../../../hooks/useCarouselAutoplay';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
-import { FreeMode, Navigation, Thumbs, Autoplay } from 'swiper/modules';
+import { FreeMode, Navigation, Thumbs, EffectFade, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
+import 'swiper/css/effect-fade';
 import { FaPlay, FaHeart, FaRegHeart, FaInfoCircle, FaChevronRight, FaEye } from 'react-icons/fa';
 import './Anime.css';
 
@@ -109,11 +110,12 @@ function Anime() {
                         navigation={false}
                         loop={filteredMovies.length > 1}
                         autoplay={{ delay: 5000, disableOnInteraction: false }}
-                        effect={'slide'}
+                        effect={'fade'}
+                        fadeEffect={{ crossFade: true }}
                         thumbs={{
                             swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null
                         }}
-                        modules={[FreeMode, Navigation, Thumbs, Autoplay]}
+                        modules={[FreeMode, Navigation, Thumbs, EffectFade, Autoplay]}
                         className="anime-main-swiper"
                     >
                         {filteredMovies?.map((e) => (

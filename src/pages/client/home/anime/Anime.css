@@ -154,7 +154,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.anime-main-swiper .swiper-wrapper { transition-timing-function: cubic-bezier(.22,.61,.36,1); }
 
 .anime-main-swiper .swiper-slide:not(.swiper-slide-active) .anime-info-box,
 .anime-main-swiper .swiper-slide:not(.swiper-slide-active) .anime-info-box * {

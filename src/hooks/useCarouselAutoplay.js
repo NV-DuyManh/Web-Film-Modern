@@ -7,24 +7,25 @@ export default function useCarouselAutoplay(swiper, paused = false) {
         const document = root.ownerDocument;
         const view = document.defaultView;
         let visible = !view.IntersectionObserver;
-        let hovering = root.matches(':hover');
+        let interacting = false;
         let disposed = false;
         const update = () => {
             if (disposed || swiper.destroyed) return;
-            const shouldRun = visible && !document.hidden && !hovering && !paused && !root.contains(document.activeElement);
+            const shouldRun = visible && !document.hidden && !interacting && !paused && !root.contains(document.activeElement);
             if (shouldRun && !swiper.autoplay.running) swiper.autoplay.start();
             else if (!shouldRun && swiper.autoplay.running) swiper.autoplay.stop();
         };
-        const enter = () => { hovering = true; update(); };
-        const leave = () => { hovering = false; update(); };
+        const beginInteraction = () => { interacting = true; update(); };
+        const endInteraction = () => { interacting = false; update(); };
         const focusOut = () => { queueMicrotask(update); };
         const observer = view.IntersectionObserver && new view.IntersectionObserver(entries => {
             visible = entries.some(entry => entry.isIntersecting);
             update();
         });
         observer?.observe(root);
-        root.addEventListener('mouseenter', enter);
-        root.addEventListener('mouseleave', leave);
+        root.addEventListener('pointerdown', beginInteraction);
+        document.addEventListener('pointerup', endInteraction);
+        document.addEventListener('pointercancel', endInteraction);
         root.addEventListener('focusin', update);
         root.addEventListener('focusout', focusOut);
         document.addEventListener('visibilitychange', update);
@@ -32,8 +33,9 @@ export default function useCarouselAutoplay(swiper, paused = false) {
         return () => {
             disposed = true;
             observer?.disconnect();
-            root.removeEventListener('mouseenter', enter);
-            root.removeEventListener('mouseleave', leave);
+            root.removeEventListener('pointerdown', beginInteraction);
+            document.removeEventListener('pointerup', endInteraction);
+            document.removeEventListener('pointercancel', endInteraction);
             root.removeEventListener('focusin', update);
             root.removeEventListener('focusout', focusOut);
             document.removeEventListener('visibilitychange', update);
