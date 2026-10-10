@@ -30,8 +30,8 @@ export default function TableTopic({ topics, search, onToggle, saving }) {
                         <td className="table-cell">{topic.description}</td>
                         <td className="table-cell text-center">{movies.length && categories.length && categoryTypes.length ? counts[topic.id] : '…'}</td>
                         <td className="table-cell text-center">
-                            <button type="button" role="switch" aria-checked={topic.enabled} aria-label={`Show ${topic.name}`} disabled={saving !== null} onClick={() => onToggle(topic)} className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-bold text-xs cursor-pointer disabled:opacity-50 ${topic.enabled ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40' : 'bg-slate-700/40 text-slate-400 border border-slate-600'}`}>
-                                <span aria-hidden="true" className={`w-7 h-4 rounded-full p-0.5 ${topic.enabled ? 'bg-emerald-500' : 'bg-slate-600'}`}><span className={`block w-3 h-3 rounded-full bg-white transition-transform ${topic.enabled ? 'translate-x-3' : ''}`} /></span>
+                            <button type="button" role="switch" aria-checked={topic.enabled} aria-label={`Show ${topic.name}`} disabled={saving !== null} onClick={() => onToggle(topic)} className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-bold text-xs cursor-pointer disabled:opacity-50 ${topic.enabled ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/40' : 'bg-red-500/20 text-red-300 border border-red-400/40'}`}>
+                                <span aria-hidden="true" className={`w-7 h-4 rounded-full p-0.5 ${topic.enabled ? 'bg-emerald-500' : 'bg-red-500'}`}><span className={`block w-3 h-3 rounded-full bg-white transition-transform ${topic.enabled ? 'translate-x-3' : ''}`} /></span>
                                 {saving === topic.id ? 'Saving...' : topic.enabled ? 'Enabled' : 'Disabled'}
                             </button>
                         </td>
