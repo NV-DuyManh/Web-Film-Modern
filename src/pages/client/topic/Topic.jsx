@@ -77,10 +77,10 @@ function CollectionCard({ collection, movies, index }) {
                     <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#070b14] via-[#070b14]/80 to-transparent z-40 pointer-events-none"></div>
                     
                     <div className="relative z-50 p-5 md:p-6 pb-4 md:pb-5 w-full flex flex-col">
-                        <h3 className={`font-black text-xl md:text-2xl mb-1 bg-linear-to-r ${collection.gradient} text-transparent bg-clip-text drop-shadow-[0_2px_2px_rgba(0,0,0,1)] py-1 leading-tight group-hover:scale-105 origin-left transition-transform duration-500`}>
+                        <h3 title={collection.title} className={`font-black text-xl md:text-2xl mb-1 bg-linear-to-r ${collection.gradient} text-transparent bg-clip-text drop-shadow-[0_2px_2px_rgba(0,0,0,1)] py-1 leading-tight truncate`}>
                             {collection.title}
                         </h3>
-                        <p className="text-slate-200 text-xs md:text-sm line-clamp-2 mb-3 min-h-8 md:min-h-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] font-medium transition-colors group-hover:text-white">
+                        <p className="text-slate-200 text-xs md:text-sm line-clamp-2 mb-3 min-h-8 md:min-h-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] font-medium transition-opacity duration-300 group-hover:opacity-0">
                             {collection.description}
                         </p>
                         
