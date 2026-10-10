@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import TableTopic from './TableTopic';
 import { useTopics } from '../../../../hooks/useCollections';
 import { setCuratedTopicEnabled } from '../../../../hooks/useCuratedTopics';
@@ -7,13 +7,20 @@ import { BsSearch } from 'react-icons/bs';
 export default function Topics() {
     const topics = useTopics();
     const [search, setSearch] = useState('');
-    const [saving, setSaving] = useState(null);
+    const pending = useRef(new Set());
+    const [savingIds, setSavingIds] = useState(() => new Set());
     const [error, setError] = useState('');
     const toggle = async topic => {
-        setSaving(topic.id); setError('');
+        if (pending.current.has(topic.id)) return;
+        pending.current.add(topic.id);
+        setSavingIds(new Set(pending.current));
+        setError('');
         try { await setCuratedTopicEnabled(topic.id, !topic.enabled); }
         catch { setError('Could not save topic visibility. Please try again.'); }
-        finally { setSaving(null); }
+        finally {
+            pending.current.delete(topic.id);
+            setSavingIds(new Set(pending.current));
+        }
     };
     return (
         <div className="w-full">
@@ -25,7 +32,7 @@ export default function Topics() {
                 </div>
             </div>
             {error && <p role="alert" className="mx-5 p-3 text-red-300 bg-red-950/50 rounded-lg">{error}</p>}
-            <TableTopic topics={topics} search={search} onToggle={toggle} saving={saving} />
+            <TableTopic topics={topics} search={search} onToggle={toggle} savingIds={savingIds} />
         </div>
     );
 }
