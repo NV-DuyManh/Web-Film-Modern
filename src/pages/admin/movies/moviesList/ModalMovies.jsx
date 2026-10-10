@@ -1,5 +1,5 @@
-import { fetchDocumentsRealtime } from '../../../../services/firebaseService';
-import React, { useEffect,  useContext, useState } from 'react';
+import useCatalogChoices from '../../../../hooks/useCatalogChoices';
+import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel, IconButton } from '@mui/material';
 import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja, FaUserTie, FaTimes } from 'react-icons/fa';
 import { TbCategoryFilled } from 'react-icons/tb';
@@ -32,12 +32,9 @@ const AGE_RATING_OPTIONS = [
 ];
 
 function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange, addOrUpdateMovie, loading, progress, setMovie, error, setError }) {
-    const [actors, setActors] = useState([]);
-    useEffect(() => { if (!open) return; const unsub = fetchDocumentsRealtime("Actors", setActors); return () => unsub(); }, [open]);
-    const [authors, setAuthors] = useState([]);
-    useEffect(() => { if (!open) return; const unsub = fetchDocumentsRealtime("Authors", setAuthors); return () => unsub(); }, [open]);
-    const [characters, setCharacters] = useState([]);
-    useEffect(() => { if (!open) return; const unsub = fetchDocumentsRealtime("Characters", setCharacters); return () => unsub(); }, [open]);
+    const actors = useCatalogChoices('Actors', movie.listActor || [], open);
+    const authors = useCatalogChoices('Authors', movie.listAuthor || [], open);
+    const characters = useCatalogChoices('Characters', movie.listCharacter || [], open);
 
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);

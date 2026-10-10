@@ -19,3 +19,19 @@ export async function localAdminDatabase() {
             return new Firestore({ projectId: 'manhfilm-105b3', authClient: client });
     }
 }
+
+// Admin Listen reads a fresh server snapshot without the RunQuery RPC. Close
+// each listener after the first snapshot; it must not become a persistent feed.
+export async function readAdminSnapshot(reference, timeoutMs = 15000) {
+    let unsubscribe;
+    let timer;
+    try {
+        return await new Promise((resolve, reject) => {
+            timer = setTimeout(() => reject(new Error('Administrator snapshot timed out')), timeoutMs);
+            unsubscribe = reference.onSnapshot(resolve, reject);
+        });
+    } finally {
+        clearTimeout(timer);
+        unsubscribe?.();
+    }
+}

@@ -50,7 +50,7 @@ export function openBackup(envelope, secret) {
     return snapshot;
 }
 
-export async function collectBackup(db, chargeReads = async () => {}, maxDocuments = 5000) {
+export async function collectBackup(db, chargeReads = async () => {}, maxDocuments = 5000, { readQuery = request => request.get(), allowIncomplete = false } = {}) {
     const documents = [];
     async function scan(collection) {
         let cursor;
@@ -61,20 +61,26 @@ export async function collectBackup(db, chargeReads = async () => {}, maxDocumen
             let request = collection.orderBy(FieldPath.documentId()).limit(size);
             if (cursor) request = request.startAfter(cursor);
             await chargeReads(size);
-            const snapshot = await request.get();
+            const snapshot = await readQuery(request);
             for (const doc of snapshot.docs) documents.push({ path: doc.ref.path, data: encodeValue(doc.data()) });
             if (snapshot.size < size) break;
             cursor = snapshot.docs.at(-1);
         }
     }
     for (const name of BACKUP_COLLECTIONS) await scan(db.collection(name));
-    await scan(db.collectionGroup('WatchProgress'));
-    return { format: 'mfilm-private-backup-v1', projectId: db.projectId, createdAt: new Date().toISOString(), complete: true, documents };
+    const omissions = [];
+    try { await scan(db.collectionGroup('WatchProgress')); }
+    catch (error) {
+        if (!allowIncomplete) throw error;
+        omissions.push({ scope: 'Users/*/WatchProgress/*', reason: String(error.code || 'protected-scope-unavailable') });
+    }
+    return { format: 'mfilm-private-backup-v1', projectId: db.projectId, createdAt: new Date().toISOString(), complete: omissions.length === 0, ...(omissions.length ? { omissions } : {}), documents };
 }
 
-export async function restoreBackup(db, snapshot, { emulatorOnly = true } = {}) {
+export async function restoreBackup(db, snapshot, { emulatorOnly = true, verifyIncomplete = false } = {}) {
     if (emulatorOnly && !/^(127\.0\.0\.1|localhost):\d+$/.test(process.env.FIRESTORE_EMULATOR_HOST || '')) throw new Error('Restore verification is restricted to a local Firestore emulator');
-    if (!snapshot.complete || snapshot.format !== 'mfilm-private-backup-v1') throw new Error('Complete backup required');
+    const incompleteTest = verifyIncomplete && emulatorOnly && db.projectId?.startsWith('demo-') && Array.isArray(snapshot.omissions) && snapshot.omissions.length > 0;
+    if ((!snapshot.complete && !incompleteTest) || snapshot.format !== 'mfilm-private-backup-v1') throw new Error('Complete backup required');
     const seen = new Set();
     for (const item of snapshot.documents) {
         const root = item.path?.split('/')[0];

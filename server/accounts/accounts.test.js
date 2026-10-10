@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
 import { Timestamp, GeoPoint } from 'firebase-admin/firestore';
 import { encryptPassword, decryptPassword, passwordDigest, matchesPassword, safeProfile, directoryEntry, profilePatch } from './credentials.js';
-import { encodeValue, decodeValue, sealBackup, openBackup, restoreBackup } from './backup.js';
+import { encodeValue, decodeValue, sealBackup, openBackup, restoreBackup, collectBackup } from './backup.js';
 import { validWorkerSecret } from './worker.js';
 
 const secret = randomBytes(32).toString('base64');
@@ -60,4 +60,26 @@ test('Workers require a long private server credential', () => {
     assert.equal(validWorkerSecret(worker + 'x', worker), false);
     assert.equal(validWorkerSecret('123', '123'), false);
     assert.equal(validWorkerSecret(undefined, worker), false);
+});
+
+test('A protected-scope failure never creates a complete backup', async () => {
+    const source = name => ({ name, orderBy() { return this; }, limit() { return this; } });
+    const db = { projectId: 'source', collection: source, collectionGroup: source };
+    const readQuery = async ref => { if (ref.name === 'WatchProgress') throw Object.assign(new Error('Permission denied'), { code: 7 }); return { size: 0, docs: [] }; };
+    await assert.rejects(collectBackup(db, undefined, 5000, { readQuery }), /Permission denied/);
+    const incomplete = await collectBackup(db, undefined, 5000, { readQuery, allowIncomplete: true });
+    assert.equal(incomplete.complete, false);
+    assert.deepEqual(incomplete.omissions, [{ scope: 'Users/*/WatchProgress/*', reason: '7' }]);
+});
+
+test('Incomplete recovery verification requires an explicit local demo target', async () => {
+    const old = process.env.FIRESTORE_EMULATOR_HOST;
+    process.env.FIRESTORE_EMULATOR_HOST = '127.0.0.1:8089';
+    const snapshot = { format: 'mfilm-private-backup-v1', complete: false, omissions: [{ scope: 'WatchProgress' }], documents: [] };
+    try {
+        await assert.rejects(restoreBackup({ projectId: 'demo-restore' }, snapshot), /Complete backup required/);
+        await assert.rejects(restoreBackup({ projectId: 'production' }, snapshot, { verifyIncomplete: true }), /Complete backup required/);
+        await assert.rejects(restoreBackup({ projectId: 'demo-restore' }, snapshot, { emulatorOnly: false, verifyIncomplete: true }), /Complete backup required/);
+        assert.deepEqual(await restoreBackup({ projectId: 'demo-restore' }, snapshot, { verifyIncomplete: true }), { verified: 0 });
+    } finally { if (old) process.env.FIRESTORE_EMULATOR_HOST = old; else delete process.env.FIRESTORE_EMULATOR_HOST; }
 });

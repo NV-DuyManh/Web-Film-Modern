@@ -3,11 +3,31 @@
 ## Current status
 
 The implementation is staged. Production account flags and the private backup
-workflow are not enabled. The live Firestore rules were inspected on 2026-10-09:
-they still allow public reads and writes. The attempted private backup failed with
-`RESOURCE_EXHAUSTED: Quota exceeded`; no production accounts were migrated and no
-new Firestore rules were published. Never mark this rollout complete until the
-real backup, migration, rules and production login checks succeed.
+workflow are not enabled. The live Firestore rules inspected on 2026-10-09 still
+allow public root-collection reads and writes; nested WatchProgress remains
+restricted to its authenticated owner. No production accounts have been migrated
+and no new rules have been published.
+
+On 2026-10-10 the authorized CLI session was refreshed. Administrative RunQuery
+and transactional reads still returned `RESOURCE_EXHAUSTED: Quota exceeded`.
+One-shot Listen snapshots returned fresh root records, but the protected
+WatchProgress group returned permission denied. An explicitly incomplete,
+AES-256-GCM encrypted local backup now contains 39 production records: 17 Users,
+9 Subscriptions, 9 RentMovies and 4 Deposits. Recovery into a separate local
+`demo-mfilm-private-restore` namespace verified every nested field of all 39
+records. A second private local copy and checksum comparison succeeded. No
+credentials or backup payloads were committed to Git. The missing scope is
+recorded in the encrypted manifest; this snapshot cannot authorize migration.
+
+Never mark this rollout complete until the full protected-data backup, migration,
+rules and production login checks succeed. In particular, successful realtime
+catalog reads do not prove transactional account operations are available.
+
+The movie-edit form now loads actor/author/character choices from the public
+catalog cache and only subscribes to already-selected entities. It no longer
+starts three full collection listeners whenever that form opens. This reduces
+one known source of reads; it does not establish the source of every historical
+read or eliminate the current quota restriction.
 
 Admin retains the existing password reveal control. Original passwords are
 encrypted with AES-256-GCM in a separate server-only collection; scrypt digests
@@ -29,6 +49,14 @@ This endpoint intentionally grants simulated access; it is not a commerce API.
    Keep the encrypted snapshot and `private-backups.local/recovery-key.local.json`
    outside Git; keep a second private copy. Do not regenerate encryption keys
    after accounts have been prepared.
+   If complete export is unavailable, `--save-incomplete` preserves accessible
+   root records with `complete: false` and explicit omissions. Such files are
+   diagnostic recovery snapshots and must never be passed off as full backups.
+   To verify an encrypted file locally, run `scripts/verifyPrivateBackupLocal.mjs`
+   with `--backup=private-backups.local/<file>.encrypted.json` while the Firestore
+   emulator is running on `127.0.0.1:8089`. Incomplete verification additionally
+   requires `--verify-incomplete`, is confined to a demo emulator namespace, and
+   does not change the incomplete status.
 2. Configure Vercel server-only `ACCOUNT_ENCRYPTION_KEY`, `PRIVATE_BACKUP_KEY`
    and `CLOUD_WORKER_TOKEN` from the recovery file. Retain the existing Firebase
    Admin certificate variables (`FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`,
