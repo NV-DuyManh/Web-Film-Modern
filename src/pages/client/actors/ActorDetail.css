@@ -1,4 +1,6 @@
 .entity-detail {
+    position: relative;
+    isolation: isolate;
     --entity-accent: #facc15;
     --entity-panel: rgb(30 41 59 / 60%);
     --entity-border: rgb(234 179 8 / 50%);
@@ -7,6 +9,10 @@
     padding: 112px 0 48px;
     background: #000;
     color: #fff;
+}
+
+.entity-detail > .noel-bg {
+    z-index: -1;
 }
 
 .entity-detail--loading {

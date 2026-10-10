@@ -23,12 +23,12 @@ const NOEL_IMAGES = [
     "https://cdn-icons-png.flaticon.com/512/3468/3468386.png",
 ];
 
-function NoelBackground() {
+function NoelBackground({ snowOnly = false }) {
     const [items, setItems] = useState([]);
     const [snows, setSnows] = useState([]);
 
     useEffect(() => {
-        const generated = Array.from({ length: 15 }).map((_, i) => ({
+        const generated = Array.from({ length: snowOnly ? 0 : 15 }).map((_, i) => ({
             id: i,
             img: NOEL_IMAGES[Math.floor(Math.random() * NOEL_IMAGES.length)],
             left: Math.random() * 100,
@@ -45,10 +45,10 @@ function NoelBackground() {
             delay: Math.random() * 5
         }));
         setSnows(snowGenerated);
-    }, []);
+    }, [snowOnly]);
 
     return (
-        <div className="noel-bg">
+        <div className="noel-bg" aria-hidden="true">
             {/* Noel icon bay */}
             {items.map(item => (
                 <img

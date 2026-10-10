@@ -7,6 +7,7 @@ import { useActors, useAuthors, useCharacters, useMovies } from '../../../hooks/
 import { getDefaultAvatar, getSafeEntityAvatar } from '../../../utils/appUtils';
 import { createNameRouteIndex } from '../../../utils/nameRoutes';
 import SEO from '../../../components/SEO';
+import NoelBackground from '../../../components/admin/noelBackground/NoelBackground';
 import { FaGlobe, FaVenusMars, FaInfoCircle, FaPlay, FaFilm } from 'react-icons/fa';
 import './ActorDetail.css';
 
@@ -61,12 +62,13 @@ function ActorDetail({ type }) {
     }, [movies, entity, type]);
 
     if (!entityList || entityList.length === 0) {
-        return <div className="entity-detail entity-detail--loading" role="status" aria-label="Đang tải thông tin"><div className="animate-spin rounded-full h-10 w-10 border-2 border-yellow-500/20 border-t-yellow-400"></div></div>;
+        return <div className="entity-detail entity-detail--loading" role="status" aria-label="Đang tải thông tin"><NoelBackground snowOnly /><div className="relative z-10 animate-spin rounded-full h-10 w-10 border-2 border-yellow-500/20 border-t-yellow-400"></div></div>;
     }
 
     if (!entity) {
         return (
             <div className="entity-detail entity-detail--loading px-4 text-white">
+                <NoelBackground snowOnly />
                 <h1 className="text-4xl font-bold mb-4">Không tìm thấy {entityTitle.toLowerCase()}</h1>
                 <p className="text-slate-400 mb-8">Có thể dữ liệu đã bị xóa hoặc đường dẫn không chính xác.</p>
                 <button onClick={() => navigate(-1)} className="entity-detail__back">Quay lại</button>
@@ -78,6 +80,7 @@ function ActorDetail({ type }) {
 
     return (
         <div className="entity-detail">
+            <NoelBackground snowOnly />
             <SEO 
                 title={`${entity.name} - ${entityTitle} | MFILM`}
                 description={`Thông tin chi tiết và danh sách phim của ${entityTitle.toLowerCase()} ${entity.name}.`}
