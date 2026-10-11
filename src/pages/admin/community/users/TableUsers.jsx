@@ -16,12 +16,19 @@ import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
 import { getUserPlanInfo, getExpiryDate } from '../../../../utils/appUtils';
 import { SECURE_ACCOUNTS_ENABLED, accountRequest } from '../../../../services/accountService';
+import useUserPresence from '../../../../hooks/useUserPresence';
+import OnlineIndicator from '../../../../components/admin/OnlineIndicator';
+import DefaultAvatar from '../../../../assets/Logo5.png';
 
 
 function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
     const users = useContext(UserContext);
     const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
+    const { onlineIds, status: presenceStatus } = useUserPresence();
+    const [onlineOnly, setOnlineOnly] = useState(false);
+    const presenceAvailable = presenceStatus === 'ready';
+    const onlineCount = (users || []).filter(row => onlineIds.has(row.id)).length;
     
     const avatarGlowMap = {
         cyan: "ring-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.6)]",
@@ -44,17 +51,17 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
         return getUserPlanInfo(row, subscriptions, plans);
     };
 
-    const start = (page - 1) * rowsPerPage;
-
     const dataSearch = useMemo(() => {
         const keyword = search.toLowerCase();
-        return users?.filter(e =>
+        return users?.filter(e => (!onlineOnly || onlineIds.has(e.id)) && (
             e?.name?.toLowerCase().includes(keyword) ||
-            e?.name?.toLowerCase().includes(keyword) ||
+            e?.fullName?.toLowerCase().includes(keyword) ||
             e?.email?.toLowerCase().includes(keyword) ||
             e?.phone?.toLowerCase().includes(keyword)
-        );
-    }, [search, users]);
+        ));
+    }, [search, users, onlineOnly, onlineIds]);
+    const currentPage = Math.min(page, Math.max(1, Math.ceil((dataSearch?.length || 0) / rowsPerPage)));
+    const start = (currentPage - 1) * rowsPerPage;
 
     const visibleIds = (dataSearch?.slice(start, start + rowsPerPage) || []).map(item => item.id).join(',');
     const [profiles, setProfiles] = useState({});
@@ -71,9 +78,9 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
 
     useEffect(() => {
         setPage(1);
-    }, [search]);
+    }, [search, onlineOnly]);
 
-    const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, search);
+    const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, `${search}:${onlineOnly}`);
 
     const handleClickOpenDele = (row) => {
         setOpen(true);
@@ -138,6 +145,17 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
 
     return (
         <div className="p-5">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <span className="inline-flex items-center gap-2 rounded-full border border-emerald-400/25 bg-emerald-400/10 px-3 py-1.5 text-xs font-semibold text-emerald-300" aria-live="polite">
+                    <span aria-hidden="true" className={`h-2 w-2 rounded-full ${presenceAvailable ? 'bg-emerald-400' : 'bg-slate-500'}`} />
+                    {presenceAvailable ? `${onlineCount} online now` : presenceStatus === 'error' ? 'Online status unavailable' : 'Connecting to online status…'}
+                </span>
+                <div className="flex items-center gap-1 rounded-xl border border-slate-700 bg-slate-900 p-1" role="group" aria-label="Filter by online status">
+                    <button type="button" aria-pressed={!onlineOnly} onClick={() => setOnlineOnly(false)} className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${!onlineOnly ? 'bg-cyan-400/15 text-cyan-300' : 'text-slate-400 hover:text-white'}`}>All users</button>
+                    <button type="button" aria-pressed={onlineOnly} disabled={!presenceAvailable} onClick={() => setOnlineOnly(true)} className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer disabled:cursor-default ${onlineOnly ? 'bg-emerald-400/15 text-emerald-300' : 'text-slate-400 hover:text-white'}`}>Online only</button>
+                </div>
+            </div>
+            {presenceStatus === 'error' && <p role="alert" className="mb-3 text-xs text-amber-300">Online status could not be loaded. Account details and actions are still available.</p>}
             <DeleteBar count={selectedIds.length} onDelete={() => setOpenBulk(true)} />
             <div className="table-wrapper">
                 <div className="table-container">
@@ -183,7 +201,6 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                         </td>
                                     <td className="table-cell">
                                         <div className="flex justify-center items-center py-2">
-                                            {row.avatarUrl && (
                                                 <div className="relative shrink-0 cursor-pointer" onClick={() => handleView(row)}>
                                                     {row.role === 'admin' && (
                                                         <>
@@ -193,14 +210,14 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                                     )}
                                                     <div className={`group relative w-12 h-12 rounded-full overflow-hidden bg-slate-900 ring-2 ring-offset-2 ring-offset-slate-950 ${avatarGlowMap[pInfo.theme] || avatarGlowMap.blue} transition-all duration-500 z-10`}>
                                                         <img
-                                                            src={getOptimizedUrl(row.avatarUrl)}
+                                                            src={getOptimizedUrl(row.avatarUrl || DefaultAvatar)}
                                                             alt={row.name}
                                                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                                         />
                                                         <div className="absolute inset-0 rounded-full ring-inset ring-1 ring-white/10 pointer-events-none"></div>
                                                     </div>
+                                                    <OnlineIndicator online={onlineIds.has(row.id)} available={presenceAvailable} name={row.name || row.fullName} />
                                                 </div>
-                                            )}
                                         </div>
                                     </td>
                                     <td className="table-cell text-center font-bold text-white">
@@ -256,12 +273,13 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                     </tr>
                                 )
                             })}
+                            {currentData.length === 0 && <tr><td colSpan={9} className="p-8 text-center text-sm text-slate-400">{onlineOnly ? 'No online users match your search.' : 'No users match your search.'}</td></tr>}
                         </tbody>
                     </table>
 
                     <div className="table-footer">
                         <PaginationAdmin
-                            page={page}
+                            page={currentPage}
                             setPage={setPage}
                             rowsPerPage={rowsPerPage}
                             setRowsPerPage={setRowsPerPage}
@@ -291,6 +309,4 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
 }
 
 export default TableUsers;
-
-
 

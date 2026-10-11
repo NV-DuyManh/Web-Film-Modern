@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useState, useCallback } from 'react';
+import React, { createContext, useEffect, useState, useCallback, useRef } from 'react';
 import { SECURE_ACCOUNTS_ENABLED, accountRequest } from '../services/accountService';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import { rotateSessionId } from '../services/eventTracker';
 import { startProtectedResumeSync, flushActiveResumeSync } from '../services/resumeSyncService';
+import { createUserPresenceService, startUserPresence } from '../services/userPresence';
+
+const presenceService = createUserPresenceService(db);
 
 export const AuthContext = createContext();
 
@@ -18,6 +21,28 @@ function AuthProvider({ children }) {
     // the response arrives, the stale response is discarded — prevents Account A data
     // overwriting Account B after rapid account switches.
     const [authEpoch, setAuthEpoch] = useState(0);
+    const stopPresence = useRef(null);
+
+    useEffect(() => {
+        if (!isLogin?.id) return;
+        const stop = startUserPresence(presenceService, isLogin.id);
+        stopPresence.current = stop;
+        return () => { if (stopPresence.current === stop) stopPresence.current = null; void stop(); };
+    }, [isLogin?.id]);
+
+    useEffect(() => {
+        if (SECURE_ACCOUNTS_ENABLED) return;
+        const syncAccount = event => {
+            if (event.key !== 'isLogin') return;
+            try {
+                const profile = event.newValue ? JSON.parse(event.newValue) : null;
+                if (profile?.id !== isLogin?.id) setAuthEpoch(value => value + 1);
+                setIsLogin(profile);
+            } catch { /* Ignore invalid cross-tab account data. */ }
+        };
+        window.addEventListener('storage', syncAccount);
+        return () => window.removeEventListener('storage', syncAccount);
+    }, [isLogin?.id]);
 
     const navigate = useNavigate();
     useEffect(() => {
@@ -111,6 +136,9 @@ function AuthProvider({ children }) {
     }, []);
 
     const handleLogout = useCallback(async () => {
+        let presenceTimeout;
+        await Promise.race([stopPresence.current?.(), new Promise(resolve => { presenceTimeout = setTimeout(resolve, 1000); })]);
+        clearTimeout(presenceTimeout);
         await flushActiveResumeSync();
         // 1. Clear persisted session
         try {

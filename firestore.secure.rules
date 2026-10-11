@@ -80,5 +80,13 @@ service cloud.firestore {
     match /MovieArchive/{id} { allow read, write: if admin() || worker(); }
     match /MovieArchives/{id} { allow read, write: if admin() || worker(); }
     match /PublicStats/{id} { allow read: if true; allow write: if false; }
+    match /UserPresence/{id} {
+      allow get: if admin() || (signedIn() && id == request.auth.token.userId);
+      allow list: if admin();
+      allow create, update: if signedIn() && id == request.auth.token.userId
+        && request.resource.data.keys().hasOnly(['userID', 'sessions'])
+        && request.resource.data.userID == id && request.resource.data.sessions is map;
+      allow delete: if false;
+    }
   }
 }
