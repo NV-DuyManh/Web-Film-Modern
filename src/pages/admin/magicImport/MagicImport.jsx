@@ -24,6 +24,20 @@ import { EMPTY_CRAWL_STATS } from '../../../utils/crawlerJob';
 import { fetchMoviesList } from '../../../services/kkphimService';
 import { immediateKkphimImporter } from '../../../services/immediateKkphimImport';
 const CRAWLER_ACTIVE = ['running', 'paused'];
+const crawlErrorMessage = error => {
+    if (error.code === 'resource-exhausted') return 'Firebase đang giới hạn tài nguyên. Vui lòng thử lại sau.';
+    if (error.code === 'permission-denied') return 'Không có quyền lưu dữ liệu vào Firebase.';
+    if (error.code === 'unavailable' || error.message === 'Failed to fetch') return 'Không thể kết nối. Vui lòng kiểm tra mạng và thử lại.';
+    if (error.name === 'TimeoutError') return 'KKPhim phản hồi quá lâu. Vui lòng thử lại.';
+    const messages = {
+        'KKPhim returned an invalid movie list.': 'KKPhim trả về danh sách phim không hợp lệ.',
+        'KKPhim returned no movie details.': 'KKPhim không trả về thông tin phim.',
+        'Invalid KKPhim movie slug.': 'Đường dẫn phim KKPhim không hợp lệ.',
+        'Movie plan is unavailable.': 'Gói phim không khả dụng.',
+        'Check movie plans and rental prices before importing.': 'Vui lòng kiểm tra gói phim và giá thuê trước khi nhập phim.',
+    };
+    return messages[error.message] || `Không thể hoàn tất thao tác: ${error.message || 'Lỗi không xác định.'}`;
+};
 
 // Helper chuyển chuỗi tiếng Việt có dấu thành slug không dấu
 const slugify = (text) => {
@@ -570,7 +584,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         };
         const pages = selected ? 1 : pageEnd - pageStart + 1;
         let finishedPages = 0;
-        addCrawlLog(selected ? `Importing ${selected.length} selected movies now.` : `Crawling pages ${pageEnd} → ${pageStart} now.`);
+        addCrawlLog(selected ? `Bắt đầu nhập ${selected.length} phim đã chọn.` : `Bắt đầu cào từ trang ${pageEnd} → ${pageStart}.`);
         try {
             const importer = await immediateKkphimImporter();
             for (let page = selected ? 1 : pageEnd; page >= (selected ? 1 : pageStart); page--) {
@@ -585,14 +599,14 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                 for (let index = 0; index < items.length; index++) {
                     if (!await waitForControl()) break;
                     const item = items[index];
-                    addCrawlLog(`Importing: ${item.name || item.slug}`);
+                    addCrawlLog(`Đang nhập phim: ${item.name || item.slug}`);
                     try {
                         const delta = await importer(item, { jobId, page });
                         for (const [key, count] of Object.entries(delta)) if (key in stats) stats[key] += count;
-                        addCrawlLog(`${delta.skipped ? 'Already imported' : 'Saved'}: ${item.name || item.slug}`, 'success');
+                        addCrawlLog(`${delta.skipped ? 'Phim đã có, bỏ qua' : 'Đã lưu phim'}: ${item.name || item.slug}`, 'success');
                     } catch (error) {
                         stats.errors++;
-                        addCrawlLog(`${item.name || item.slug}: ${error.message}`, 'error');
+                        addCrawlLog(`Lỗi khi nhập ${item.name || item.slug}: ${crawlErrorMessage(error)}`, 'error');
                         if (error.code === 'resource-exhausted' || error.code === 'permission-denied' || selected?.length === 1) throw error;
                     }
                     setCrawlStats({ ...stats });
@@ -605,11 +619,11 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
             const stopped = importControl.current.stop;
             setCrawlStatus(stopped ? 'stopped' : 'done');
             if (!stopped) setCrawlProgress(100);
-            addCrawlLog(`${stopped ? 'Stopped' : 'Finished'}: ${stats.movies} movies, ${stats.episodes} episodes, ${stats.skipped} already saved, ${stats.errors} errors.`, stats.errors ? 'warning' : 'success');
+            addCrawlLog(`${stopped ? 'Đã dừng' : 'Hoàn tất'}: đã lưu ${stats.movies} phim, ${stats.episodes} tập; bỏ qua ${stats.skipped} phim đã có; ${stats.errors} lỗi.`, stats.errors ? 'warning' : 'success');
             return { ...stats, stopped };
         } catch (error) {
             setCrawlStatus('failed'); setCrawlStats({ ...stats });
-            addCrawlLog(error.message, 'error');
+            addCrawlLog(crawlErrorMessage(error), 'error');
             throw error;
         } finally { importControl.current.running = false; }
     };
@@ -624,7 +638,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     const handleStopCrawl = () => {
         importControl.current.stop = true;
         importControl.current.pause = false;
-        addCrawlLog('Stopping after the current movie has finished saving.', 'warning');
+        addCrawlLog('Sẽ dừng sau khi lưu xong phim hiện tại.', 'warning');
     };
 
     // === Auto Fix Missing Slugs ===
@@ -785,13 +799,13 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         <div className='table-wrapper h-full' style={{ background: 'linear-gradient(120deg, rgba(249, 115, 22, 0.25), rgba(239, 68, 68, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
                             <div className='table-container p-5 h-full flex flex-col' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
                                 <h2 className='text-orange-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between'>
-                                    <span className="flex items-center gap-2">📋 Live Logs</span>
+                                    <span className="flex items-center gap-2">📋 Nhật ký trực tiếp</span>
                                     <span className={`px-3 py-1 rounded-full text-xs border transition-all
                                     ${crawlStatus === 'running' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse' :
                                             (crawlStatus === 'paused' || crawlControl === 'pause') ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
                                                 crawlStatus === 'done' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
                                                     'bg-gray-500/20 text-gray-400 border-gray-500/30'}`}>
-                                        {crawlStatus === 'failed' ? '🔴 Failed — see logs' : crawlStatus === 'stopped' ? '⛔ Stopped' : crawlStatus === 'running' ? '🟢 Running' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '🟡 Pause' : crawlStatus === 'done' ? '🔵 Finished' : '⚪ Idle'}
+                                        {crawlStatus === 'failed' ? '🔴 Lỗi — xem nhật ký' : crawlStatus === 'stopped' ? '⛔ Đã dừng' : crawlStatus === 'running' ? '🟢 Đang chạy' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '🟡 Tạm dừng' : crawlStatus === 'done' ? '🔵 Hoàn tất' : '⚪ Chưa chạy'}
                                     </span>
                                 </h2>
 
@@ -799,7 +813,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 {crawlStatus !== 'idle' && (
                                     <div className="mb-3">
                                         <div className="flex justify-between text-xs font-bold text-orange-400 mb-1">
-                                            <span>{crawlStatus === 'failed' ? 'Failed' : crawlStatus === 'stopped' ? 'Stopped' : crawlStatus === 'running' ? '⏳ Crawling...' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '⏸️ Pause' : '✅ Finished'}</span>
+                                            <span>{crawlStatus === 'failed' ? 'Có lỗi xảy ra' : crawlStatus === 'stopped' ? 'Đã dừng' : crawlStatus === 'running' ? '⏳ Đang cào phim...' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '⏸️ Tạm dừng' : '✅ Hoàn tất'}</span>
                                             <span>{crawlProgress}%</span>
                                         </div>
                                         <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
