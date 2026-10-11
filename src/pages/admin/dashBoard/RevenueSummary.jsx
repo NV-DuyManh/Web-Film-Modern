@@ -29,6 +29,7 @@ export default function RevenueSummary({ period, setPeriod, subscriptions, renta
                 {['from', 'to'].map(key => <label key={key} className="min-w-0 grow basis-36 text-[11px] font-semibold text-slate-400">
                     <span className="mb-2 flex items-center gap-1.5"><FaCalendarAlt aria-hidden="true" /> {key === 'from' ? 'From date' : 'To date'}</span>
                     <input type="date" value={period[key]} max={key === 'from' ? period.to || undefined : undefined} min={key === 'to' ? period.from || undefined : undefined}
+                        onInput={e => setPeriod(p => ({ ...p, [key]: e.target.value }))}
                         onChange={e => setPeriod(p => ({ ...p, [key]: e.target.value }))} style={{ colorScheme: 'dark' }}
                         className="h-10 w-full min-w-0 rounded-xl border border-slate-600/60 bg-slate-900/70 px-3 text-sm text-slate-100 outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/15" />
                 </label>)}
