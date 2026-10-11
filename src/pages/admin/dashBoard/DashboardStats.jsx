@@ -21,14 +21,14 @@ export default function DashboardStats({ period, subscriptions, rentals, movieCo
                 <h2 className="bg-linear-to-r from-cyan-300 via-fuchsia-400 to-amber-200 bg-clip-text text-lg font-bold text-transparent">At a glance</h2>
                 <p className="text-[11px] text-slate-500">Payments follow the filters above · Movies and users are all-time totals</p>
             </div>
-            <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 min-[1600px]:grid-cols-6" aria-live="polite">
+            <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6" aria-live="polite">
                 {cards.map(({ title, value, detail, Icon, gradient, glow, text = 'text-white', global }) => (
                     <article key={title} className={`group relative min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-linear-to-br ${gradient} ${glow} ${text} px-3 py-5 text-center transition-transform duration-300 hover:-translate-y-1 motion-reduce:transform-none motion-reduce:transition-none sm:px-4`}>
                         <div aria-hidden="true" className="pointer-events-none absolute -right-5 -top-10 h-28 w-28 rounded-full border border-white/10 bg-white/5" />
                         <Icon aria-hidden="true" className="pointer-events-none absolute -bottom-3 -right-2 text-7xl opacity-[0.08] transition-transform duration-300 group-hover:rotate-6 motion-reduce:transition-none" />
                         <span className="relative mx-auto mb-3 flex h-9 w-9 items-center justify-center rounded-xl border border-white/15 bg-white/15"><Icon aria-hidden="true" className="text-lg" /></span>
                         <h3 className="relative text-[11px] font-bold sm:text-xs">{title}</h3>
-                        <p title={value} className="relative mt-1.5 break-words text-xl font-black tracking-tight tabular-nums sm:text-2xl">{invalidDates && !global ? '—' : value}</p>
+                        <p title={value} className="relative mt-1.5 break-words text-xl font-black tracking-tight tabular-nums sm:text-2xl xl:text-[clamp(1rem,1.35vw,1.5rem)]">{invalidDates && !global ? '—' : value}</p>
                         <p className="relative mt-2 text-[10px] font-medium opacity-85 sm:text-[11px]">{detail}</p>
                     </article>
                 ))}
