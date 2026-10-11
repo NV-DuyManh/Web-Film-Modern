@@ -7,6 +7,7 @@ import NotFound from '../pages/client/NotFound';
 
 const Home = lazyRetry(() => import('../pages/client/home/Home'));
 const Help = lazyRetry(() => import('../pages/client/help/Help'));
+const About = lazyRetry(() => import('../pages/client/help/About'));
 const DiscoverHub = lazyRetry(() => import('../pages/client/DiscoverHub'));
 const Topic = lazyRetry(() => import('../pages/client/topic/Topic'));
 const TopicDetail = lazyRetry(() => import('../pages/client/topic/TopicDetail'));
@@ -37,6 +38,7 @@ const ActorDetail = lazyRetry(() => import('../pages/client/actors/ActorDetail')
 function ClientRouters(props) {
     const clientRouter = [
         { path: '/ho-tro', element: <Help /> },
+        { path: '/gioi-thieu', element: <About /> },
         { path: '/category', element: <DiscoverHub type="category" /> },
         { path: '/country', element: <DiscoverHub type="country" /> },
         {

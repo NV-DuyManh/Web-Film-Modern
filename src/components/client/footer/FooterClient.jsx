@@ -51,7 +51,7 @@ function FooterClient() {
                             Gói thành viên
                         </Link>
 
-                        <Link to="/ho-tro#gioi-thieu" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
+                        <Link to="/gioi-thieu" className='relative transition duration-300 after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-yellow-300 after:transition after:duration-300 hover:text-yellow-300 hover:after:w-full'>
                             Giới thiệu
                         </Link>
                     </div>

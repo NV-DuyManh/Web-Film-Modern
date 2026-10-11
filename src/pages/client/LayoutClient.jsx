@@ -26,13 +26,17 @@ function LayoutClient() {
     }, [location.pathname]);
 
     useLayoutEffect(() => {
-        if (prevPath.current !== location.pathname) {
+        const opensAtTop = ['/ho-tro', '/gioi-thieu', '/upgrade', '/upgrade-vip'].includes(location.pathname);
+        if (opensAtTop) {
+            window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+            prevPath.current = location.pathname;
+        } else if (prevPath.current !== location.pathname) {
             const targetY = scrollMap.current[location.pathname] || 0;
 
             window.scrollTo(0, targetY);
             prevPath.current = location.pathname;
         }
-    }, [location.pathname]);
+    }, [location.pathname, location.key]);
 
     return (
         <>

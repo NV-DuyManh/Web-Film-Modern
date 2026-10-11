@@ -1,18 +1,21 @@
 import { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { FaChevronDown, FaQuestionCircle, FaMobileAlt } from 'react-icons/fa';
 import { SiZalo } from 'react-icons/si';
 import SEO from '../../../components/SEO';
+import { AboutContent } from './About';
 
 import { helpQuestions as questions } from '../../../utils/helpContent';
 
 
 export default function Help() {
-    const { hash } = useLocation();
+    const { hash, key } = useLocation();
     useEffect(() => {
+        if (hash === '#gioi-thieu') return;
         if (hash) document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' });
         else window.scrollTo(0, 0);
-    }, [hash]);
+    }, [hash, key]);
+    if (hash === '#gioi-thieu') return <Navigate to="/gioi-thieu" replace />;
     return (
         <div className="mx-auto max-w-6xl px-4 pb-16 pt-32 sm:px-6 lg:pt-40">
             <SEO title="Hỗ trợ & hỏi đáp" url="/ho-tro" description="Hướng dẫn xem phim, chọn tập, xem tiếp, thuê phim và sử dụng MFILM trên điện thoại." />
@@ -43,8 +46,7 @@ export default function Help() {
             </section>
             <section id="gioi-thieu" className="mt-8 scroll-mt-32 rounded-2xl border border-slate-700 bg-[#131a24] p-6 sm:p-8">
                 <h2 className="text-xl font-bold text-white">Giới thiệu MFILM</h2>
-                <p className="mt-4 leading-7 text-slate-300">MFILM giúp bạn tìm phim theo thể loại, quốc gia, diễn viên và chủ đề; lưu danh sách yêu thích và xem tiếp các phim đang theo dõi. Chất lượng hình ảnh, phụ đề và bản thuyết minh tùy thuộc từng phim và nguồn phát.</p>
-                <Link to="/film-new" className="mt-4 inline-block font-semibold text-yellow-400 hover:underline">Khám phá phim mới →</Link>
+                <AboutContent />
             </section>
         </div>
     );
