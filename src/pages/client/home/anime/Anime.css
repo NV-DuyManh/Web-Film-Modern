@@ -68,6 +68,7 @@
 }
 
 .anime-main-swiper .swiper-slide {
+    transition-timing-function: ease-in-out;
     position: relative;
     width: 100%;
     height: 100%;

@@ -1,4 +1,5 @@
 import PlanBadge from '../../../../components/PlanBadge.jsx';
+import CountryBadge from '../../../../components/CountryBadge.jsx';
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useState, useMemo, useEffect } from 'react';
@@ -107,7 +108,7 @@ function Anime() {
                             '--swiper-pagination-color': '#fff',
                         }}
                         spaceBetween={0}
-                        speed={800}
+                        speed={1600}
                         navigation={false}
                         loop={filteredMovies.length > 1}
                         autoplay={{ delay: 5000, disableOnInteraction: false }}
@@ -151,6 +152,7 @@ function Anime() {
                                         <button className='rounded-md border cursor-pointer border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
                                             {e.duration} Phút
                                         </button>
+                                        <CountryBadge country={e.countriesID} />
                                         <button className='rounded-md border cursor-pointer border-purple-400 bg-purple-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs font-bold text-purple-300 shadow-[0_0_8px_rgba(192,38,211,0.25)] transition duration-300 hover:bg-purple-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(192,38,211,0.7)] flex items-center gap-1'>
                                             <FaEye /> {(Number(e.views) || 0) + 100}
                                         </button>
