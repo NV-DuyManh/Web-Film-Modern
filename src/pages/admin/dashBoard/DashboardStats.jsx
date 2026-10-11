@@ -17,14 +17,10 @@ export default function DashboardStats({ period, subscriptions, rentals, movieCo
     ];
     return (
         <section aria-label="Dashboard totals">
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-2 px-1">
-                <h2 className="bg-linear-to-r from-cyan-300 via-fuchsia-400 to-amber-200 bg-clip-text text-lg font-bold text-transparent">At a glance</h2>
-                <p className="text-[11px] text-slate-500">Payments follow the filters above · Movies and users are all-time totals</p>
-            </div>
             <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6" aria-live="polite">
                 {cards.map(({ title, value, detail, Icon, gradient, glow, global }) => (
                     <article key={title} className={`min-w-0 rounded-xl bg-linear-to-br ${gradient} ${glow} flex min-h-32 flex-col items-center justify-center px-3 py-5 text-center text-white transition-transform duration-300 hover:-translate-y-1 motion-reduce:transform-none motion-reduce:transition-none sm:px-4`}>
-                        <h3 className="flex items-center justify-center gap-1.5 text-xs font-bold drop-shadow-[0_2px_3px_rgba(0,0,0,0.45)]"><Icon aria-hidden="true" className="shrink-0 text-[11px]" />{title}</h3>
+                        <h3 className="flex items-center justify-center gap-1.5 whitespace-nowrap text-sm font-bold drop-shadow-[0_2px_3px_rgba(0,0,0,0.45)] sm:text-base"><Icon aria-hidden="true" className="shrink-0 text-sm" />{title}</h3>
                         <p title={value} className="mt-2 break-words text-xl font-black tracking-tight tabular-nums drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)] sm:text-2xl xl:text-[clamp(1rem,1.35vw,1.5rem)]">{invalidDates && !global ? '—' : value}</p>
                         <p className="mt-2 text-[10px] font-semibold text-white/90 drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)] sm:text-[11px]">{detail}</p>
                     </article>

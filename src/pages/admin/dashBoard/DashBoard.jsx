@@ -8,11 +8,12 @@ import { getTop5Films, getTop5RentedFilms } from '../../../services/firebaseServ
 import TopFilms from "./TopFilms";
 import TopRents from "./TopRents";
 import RentalChart from './RentalChart';
-import RevenueSummary from './RevenueSummary';
 import DashboardStats from './DashboardStats';
 import { UserContext } from '../../../contexts/UserProvider';
 import useMovieIndex from '../../../hooks/useMovieIndex';
 import useCatalogStatus from '../../../hooks/useCatalogStatus';
+
+const REVENUE_PERIOD = { from: '', to: '', currency: 'USD' };
 
 function DashBoard() {
 
@@ -20,14 +21,11 @@ function DashBoard() {
     const users = useContext(UserContext);
     const movies = useMovieIndex();
     const movieStatus = useCatalogStatus('MovieIndex');
-    const [period, setPeriod] = useState({ from: "", to: "", currency: "USD" });
+    const period = REVENUE_PERIOD;
     const subscriptions = useMemo(() => completedPayments(allSubscriptions, period), [allSubscriptions, period]);
 
     const allRents = useRentMovies();
     const rentMovies = useMemo(() => completedPayments(allRents, period), [allRents, period]);
-    const currencyCounts = useMemo(() => Object.fromEntries(['USD', 'VND'].map(currency => [currency,
-        completedPayments(allSubscriptions, { ...period, currency }).length + completedPayments(allRents, { ...period, currency }).length,
-    ])), [allSubscriptions, allRents, period]);
 
     const [topFilms, setTopFilms] = useState([]);
     const [topRents, setTopRents] = useState([]);
@@ -107,7 +105,6 @@ function DashBoard() {
         >
 
 
-            <RevenueSummary period={period} setPeriod={setPeriod} subscriptions={subscriptions} rentals={rentMovies} counts={currencyCounts} />
             <DashboardStats period={period} subscriptions={subscriptions} rentals={rentMovies} movieCount={movieStatus.status === 'ready' ? movies.length : null} userCount={users?.length} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <motion.div variants={itemVariants}>
