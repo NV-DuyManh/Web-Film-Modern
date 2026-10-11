@@ -166,17 +166,17 @@ function TopFilm() {
                                         </div>
 
                                         <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1 z-30 transition duration-300">
-                                            {e.episodeSub && (
+                                            {Number(e.episodeSub) > 0 && (
                                                 <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-linear-to-r from-cyan-500 to-blue-500 text-white text-[8px] font-bold rounded shadow-md">
                                                     PĐ.{String(e.episodeSub).trim()}
                                                 </div>
                                             )}
-                                            {e.episodeVoice && (
+                                            {Number(e.episodeVoice) > 0 && (
                                                 <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-linear-to-r from-emerald-500 to-teal-500 text-white text-[8px] font-bold rounded shadow-md">
                                                     TM.{String(e.episodeVoice).trim()}
                                                 </div>
                                             )}
-                                            {e.episodeDub && (
+                                            {Number(e.episodeDub) > 0 && (
                                                 <div className="w-9 h-5 shrink-0 flex items-center justify-center bg-linear-to-r from-pink-500 to-rose-500 text-white text-[8px] font-bold rounded shadow-md">
                                                     LT.{String(e.episodeDub).trim()}
                                                 </div>
@@ -202,15 +202,15 @@ function TopFilm() {
                                             </p>
                                             <div className="flex flex-wrap items-center gap-2 mt-1.5 text-[9px] md:text-[10px] font-bold">
 
-                                                {e.rent != null && e.endEpisode && (
+                                                {e.rent != null && Number(e.endEpisode) > 0 && (
                                                     <span className="text-slate-500">•</span>
                                                 )}
-                                                {e.endEpisode && (
+                                                {Number(e.endEpisode) > 0 && (
                                                     <span className="flex items-center gap-1 text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)] transition-transform duration-300 group-hover:scale-105">
                                                         <FaListUl /> {e.endEpisode} Tập
                                                     </span>
                                                 )}
-                                                {e.endEpisode && (
+                                                {Number(e.endEpisode) > 0 && (
                                                     <span className="text-slate-500">•</span>
                                                 )}
                                                 <span className="flex items-center gap-1 text-purple-400 drop-shadow-[0_0_5px_rgba(192,38,211,0.5)] transition-transform duration-300 group-hover:scale-105">
