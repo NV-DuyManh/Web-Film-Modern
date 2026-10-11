@@ -5,7 +5,7 @@ import { applyCatalogChanges } from './catalogDelta.mjs';
 import { publishCatalog } from './publishCatalog.mjs';
 import { curatedTopics } from '../../src/utils/curatedTopics.js';
 
-export async function refreshCatalogDelta(db, io) {
+export async function refreshCatalogDelta(db, io, { audit = true } = {}) {
     const snapshot = JSON.parse(await readFile(new URL('../../server/seo/catalog.json', import.meta.url), 'utf8'));
     const result = await applyCatalogChanges(snapshot, {
         loadChanges: async (cursor, count) => {
@@ -19,7 +19,7 @@ export async function refreshCatalogDelta(db, io) {
     // A small rotating audit catches edits made directly in Firebase Console and
     // refreshes view counts. Its cost stays bounded as the catalog grows.
     let reconcileCursor = snapshot.reconcileCursor || { collection: 0, id: '' };
-    if (!result.waiting) {
+    if (audit && !result.waiting) {
         try {
             const name = PUBLIC_COLLECTIONS[reconcileCursor.collection] || 'Movies';
             const constraints = [orderBy(documentId()), limit(100)];

@@ -12,7 +12,7 @@ if (process.argv.includes('--incremental')) {
     await authorizeCloud(app);
     const db = getFirestore(app);
     let io;
-    try { io = await backgroundFirestore(db, { initialReads: 0 }); await refreshCatalogDelta(db, io); }
+    try { io = await backgroundFirestore(db, { initialReads: 0 }); await refreshCatalogDelta(db, io, { audit: !process.argv.includes('--changes-only') }); }
     finally { try { await io?.flush(); } finally { await terminate(db); } }
 } else {
 try {

@@ -34,7 +34,7 @@ jobs:
       - name: Refresh metadata changed by immediate imports
         if: ${{ !cancelled() }}
         continue-on-error: true
-        run: npm run seo:refresh -- --incremental --budget
+        run: npm run seo:refresh -- --incremental --budget --changes-only
       - name: Publish changed public cache without database scans
         if: ${{ !cancelled() }}
         run: |
