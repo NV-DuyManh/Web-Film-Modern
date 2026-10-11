@@ -1,7 +1,10 @@
 import MovieImage from '../../../../components/MovieImage';
+import PlanBadge from '../../../../components/PlanBadge';
+import { PlanContext } from '../../../../contexts/PlanProvider';
+import { getUserPlanInfo } from '../../../../utils/appUtils';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState } from 'react';
-import { useComments, useMovies } from '../../../../hooks/useCollections';
+import { useComments, useMovies, useSubscriptions } from '../../../../hooks/useCollections';
 import { FaHeart, FaBolt, FaMinus, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 import { BiSolidMoviePlay } from 'react-icons/bi';
@@ -16,6 +19,8 @@ import { useNavigate } from 'react-router-dom';
 function Comment() {
     const movies = useMovies() || [];
     const comments = useComments() || [];
+    const plans = useContext(PlanContext) || [];
+    const subscriptions = useSubscriptions() || [];
     const [publicFavorites, setPublicFavorites] = useState({});
     React.useEffect(() => {
         if (!SECURE_ACCOUNTS_ENABLED) return;
@@ -165,7 +170,13 @@ function Comment() {
 
                         <div className="flex flex-col gap-6 flex-1">
                             {latestComments.length > 0 ? latestComments.slice(0, visibleComments).map((comment, index) => {
-                                const user = getObjectById(users, comment.userID);
+                                const user = getObjectById(users, comment.userID) || comment.author;
+                                const assignedPlan = getObjectById(plans, user?.planID);
+                                const plan = user?.role === 'admin'
+                                    ? getUserPlanInfo(user, subscriptions, plans)
+                                    : assignedPlan || (comment.author
+                                        ? { name: comment.author.planName, level: comment.author.level }
+                                        : getUserPlanInfo(user, subscriptions, plans));
                                 const movie = getObjectById(movies, comment.movieID);
                                 return (
                                     <div key={comment.id || index} onClick={() => navigate(`/phim/${routeSegment(movie)}`)} className="flex gap-3 group cursor-pointer">
@@ -175,12 +186,15 @@ function Comment() {
                                             alt="Avatar" 
                                             className="w-10 h-10 rounded-full shrink-0 border border-gray-700 object-cover" 
                                         />
-                                        <div className="flex flex-col gap-1 w-full">
-                                            <div className="flex items-center justify-between">
-                                                <p className="text-sm font-bold text-gray-200 group-hover:text-yellow-400 transition-colors inline">
-                                                    {user?.name || 'Ẩn danh'}
-                                                </p>
-                                                <p className="text-xs text-gray-400 inline">
+                                        <div className="flex flex-col gap-1 w-full min-w-0">
+                                            <div className="flex items-start justify-between gap-2">
+                                                <div className="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
+                                                    <p className="text-sm font-bold text-gray-200 group-hover:text-yellow-400 transition-colors truncate max-w-32 sm:max-w-40">
+                                                        {user?.name || user?.fullName || 'Ẩn danh'}
+                                                    </p>
+                                                    <PlanBadge plan={plan} className="shrink-0 text-[9px] uppercase" />
+                                                </div>
+                                                <p className="text-[10px] sm:text-xs text-gray-400 shrink-0 whitespace-nowrap">
                                                     {comment.createdAt ? timeAgo(comment.createdAt.seconds ? comment.createdAt.seconds * 1000 : new Date(comment.createdAt).getTime()) : 'Vừa xong'}
                                                 </p>
                                             </div>
