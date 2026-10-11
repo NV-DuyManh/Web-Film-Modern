@@ -13,7 +13,7 @@ export function useHomeCatalog(section) {
         }).catch(error => { if (active) reportCatalogStatus('Movies', 'error', error); });
         reportCatalogStatus('Movies', 'loading'); update();
         const unsubscribe = publicCatalogCache.subscribe(name, data => { if (active) setHome(data); });
-        const timer = setInterval(update, section === 'hot' ? 60000 : 300000);
+        const timer = setInterval(update, 60000);
         const onVisible = () => { if (document.visibilityState === 'visible') update(); };
         document.addEventListener('visibilitychange', onVisible);
         return () => { active = false; clearInterval(timer); unsubscribe(); document.removeEventListener('visibilitychange', onVisible); };

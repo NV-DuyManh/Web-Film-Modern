@@ -1,10 +1,11 @@
 import { hotCatalogEdit, hotCatalogMovies } from '../utils/hotCatalog.js';
+import { applyRecentHome, applyRecentMovies, recentMoviesSince } from '../utils/recentCatalog.js';
 
 const allowed = ['Movies', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes'];
 const MAX_AGE = 5 * 60000;
 
 // Only public metadata is cached here. Account, payment, progress and AI memory data never enters this cache.
-export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, storage = null } = {}) {
+export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, storage = null, loadUpdates = null } = {}) {
     const records = new Map();
     const listeners = new Map();
     const indexEdits = new Map();
@@ -32,7 +33,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
         if (now() - manifestAt >= MAX_AGE) { manifestLoading = null; manifestAt = now(); }
         return manifestLoading ||= json('/catalog/manifest.json');
     };
-    const load = async name => {
+    const loadStatic = async name => {
         if (name === 'Hot') {
             const previous = records.get(name);
             if (previous?.items && now() - previous.loadedAt < 60000) return previous.items;
@@ -119,10 +120,36 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
         records.set(name, { ...previous, loading });
         return loading;
     };
+    let recent = [], recentLoading, recentAt = -Infinity;
+    const load = async name => {
+        const base = await loadStatic(name);
+        if (!loadUpdates || !['Home', 'Movies', 'MovieIndex'].includes(name)) return base;
+        if (now() - recentAt >= 60000) {
+            recentLoading ||= loadUpdates().then(result => {
+                if (!Array.isArray(result.updates)) throw new Error('Invalid catalog updates');
+                recent = result.updates;
+            }).catch(() => { /* The published catalog remains available during an outage. */ })
+                .finally(() => { recentAt = now(); recentLoading = null; });
+            await recentLoading;
+        }
+        let index;
+        try { index = await manifest(); } catch { return base; }
+        const movies = recentMoviesSince(recent, index.generatedAt, name === 'Home' ? undefined : base);
+        if (!movies.length) return base;
+        if (name === 'Home') return applyRecentHome(base, movies);
+        const merged = applyRecentMovies(base, movies, name === 'MovieIndex');
+        return name === 'MovieIndex' ? applyIndexEdits(merged, false) : merged;
+    };
     return { load,
         subscribe(name, callback) { if (!listeners.has(name)) listeners.set(name, new Set()); listeners.get(name).add(callback); return () => listeners.get(name)?.delete(callback); },
         patch(name, item, removed = false) {
             if (name === 'Movies') {
+                const home = records.get('Home');
+                if (home?.items && !removed && item.name) {
+                    const items = applyRecentHome(home.items, [item]);
+                    records.set('Home', { items, loadedAt: home.loadedAt });
+                    for (const callback of listeners.get('Home') || []) callback(items);
+                }
                 const hotEdit = hotCatalogEdit(item, removed);
                 if (hotEdit) {
                     hotEdits.set(item.id, hotEdit);
@@ -150,17 +177,21 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
             records.set(name, { items, loadedAt: now() });
             for (const callback of listeners.get(name) || []) callback(items);
         },
-        clear() { records.clear(); indexEdits.clear(); hotEdits.clear(); manifestLoading = null; } };
+        clear() { records.clear(); indexEdits.clear(); hotEdits.clear(); manifestLoading = null; recent = []; recentAt = -Infinity; } };
 }
 
 let browserStorage;
 try { browserStorage = typeof window === 'undefined' ? null : window.localStorage; } catch { browserStorage = null; }
-export const publicCatalogCache = createPublicCatalogCache({ storage: browserStorage });
+export const publicCatalogCache = createPublicCatalogCache({ storage: browserStorage, loadUpdates: async () => {
+    const response = await fetch('/api/catalog-updates', { signal: AbortSignal.timeout(5000) });
+    if (!response.ok) throw new Error('Catalog updates unavailable');
+    return response.json();
+} });
 export function subscribePublicCatalog(name, callback, onError) {
     let active = true;
     const update = () => publicCatalogCache.load(name).then(items => { if (active) callback(items); }).catch(error => { if (active) onError?.(error); });
     update();
     const unsubscribe = publicCatalogCache.subscribe(name, items => { if (active) callback(items); });
-    const timer = setInterval(update, MAX_AGE);
+    const timer = setInterval(update, ['Movies', 'MovieIndex'].includes(name) ? 60000 : MAX_AGE);
     return () => { active = false; clearInterval(timer); unsubscribe(); };
 }

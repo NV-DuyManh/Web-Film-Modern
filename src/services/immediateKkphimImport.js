@@ -1,10 +1,11 @@
-import { collection, getDocFromServer, getDocs, query, limit, writeBatch } from 'firebase/firestore';
+import { collection, doc, getDocFromServer, getDocs, query, limit, writeBatch, runTransaction } from 'firebase/firestore';
 import { db } from '../config/firebaseConfig';
 import { publicCatalogCache } from './publicCatalogCache';
 import { trackedSetDoc, trackedUpdateDoc, catalogChange } from './catalogWrites';
 import { createKkphimImporter } from '../utils/kkphimImporter';
 import { rentalPriceRange } from '../utils/importRentalPricing';
 import { publicCatalogRecord } from '../utils/publicCatalogFields';
+import { mergeRecentCatalog } from '../utils/recentCatalog';
 
 export async function immediateKkphimImporter() {
     let cached;
@@ -14,13 +15,24 @@ export async function immediateKkphimImporter() {
         return snapshot;
     };
     const savePending = async (reference, values, update = false) => {
-        const batch = writeBatch(db);
-        if (update) batch.update(reference, values);
-        else batch.set(reference, values);
-        const change = catalogChange(reference, values);
-        if (change) batch.set(change.ref, change.values);
-        await batch.commit();
         const movie = { ...pendingMovies.get(reference.id), ...values, id: reference.id };
+        const change = catalogChange(reference, values);
+        if (movie.crawlImportState === 'complete') {
+            await runTransaction(db, async transaction => {
+                const recentRef = doc(db, 'PublicCatalogControls', 'recent');
+                const recent = await transaction.get(recentRef);
+                const updates = mergeRecentCatalog(JSON.parse(recent.data()?.updatesJson || '[]'), movie);
+                transaction.update(reference, values);
+                if (change) transaction.set(change.ref, change.values);
+                transaction.set(recentRef, { updatesJson: JSON.stringify(updates) });
+            });
+        } else {
+            const batch = writeBatch(db);
+            if (update) batch.update(reference, values);
+            else batch.set(reference, values);
+            if (change) batch.set(change.ref, change.values);
+            await batch.commit();
+        }
         if (movie.crawlImportState === 'complete') {
             pendingMovies.delete(reference.id);
             publicCatalogCache.patch('Movies', publicCatalogRecord(movie));

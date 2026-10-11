@@ -1,20 +1,24 @@
 import { catalogPage } from '../src/utils/publicCatalogPage.js';
 import { readFile } from 'node:fs/promises';
 import { prepareCatalog } from '../server/seo/catalog.js';
+import { loadSeoCatalog } from '../server/seo/loadCatalog.js';
 
 export { catalogPage } from '../src/utils/publicCatalogPage.js';
 
-export function createCatalogPageHandler({ readSnapshot = () => readFile(new URL('../server/seo/catalog.json', import.meta.url), 'utf8') } = {}) {
-    let catalog;
+export function createCatalogPageHandler({ readSnapshot = () => readFile(new URL('../server/seo/catalog.json', import.meta.url), 'utf8'), readCatalog } = {}) {
+    let catalog, previous;
     return async (req, res) => {
         if (!['GET', 'HEAD'].includes(req.method)) return res.status(405).end();
         try {
-            catalog ||= prepareCatalog(JSON.parse(await readSnapshot()).catalog);
+            if (readCatalog) {
+                const current = await readCatalog();
+                if (current !== previous) { catalog = prepareCatalog(current); previous = current; }
+            } else catalog ||= prepareCatalog(JSON.parse(await readSnapshot()).catalog);
             const params = new URL(req.url, 'https://www.mfilm.online').searchParams;
             const result = catalogPage(catalog, params);
             res.setHeader('Content-Type', 'application/json; charset=utf-8');
             res.setHeader('X-Robots-Tag', 'noindex');
-            res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=3600, stale-while-revalidate=300');
+            res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=60, must-revalidate');
             return res.status(200).end(req.method === 'HEAD' ? '' : JSON.stringify(result));
         } catch (error) {
             res.setHeader('Cache-Control', 'no-store');
@@ -22,4 +26,4 @@ export function createCatalogPageHandler({ readSnapshot = () => readFile(new URL
         }
     };
 }
-export default createCatalogPageHandler();
+export default createCatalogPageHandler({ readCatalog: loadSeoCatalog });

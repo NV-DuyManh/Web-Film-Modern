@@ -57,10 +57,11 @@ export async function closePublicCatalog() {
 // This bounded lookup reads only the requested public movie, never the full collection.
 export async function readPublicMovie(slug) {
     if (typeof slug !== 'string' || slug.length > 200 || slug.includes('/')) return null;
+    const db = await getCatalogDatabase();
     if (/^[a-zA-Z0-9]{20}$/.test(slug)) {
-        const document = await getDoc(doc(await getCatalogDatabase(), 'Movies', slug));
-        if (document.exists()) return publicDocument(document);
+        const document = await getDoc(doc(db, 'Movies', slug));
+        if (document.exists() && document.data().crawlImportState !== 'pending') return publicDocument(document);
     }
-    const result = await getDocs(query(collection(getCatalogDatabase(), 'Movies'), where('slug', '==', slug), limit(1)));
-    return result.empty ? null : publicDocument(result.docs[0]);
+    const result = await getDocs(query(collection(db, 'Movies'), where('slug', '==', slug), limit(1)));
+    return result.empty || result.docs[0].data().crawlImportState === 'pending' ? null : publicDocument(result.docs[0]);
 }

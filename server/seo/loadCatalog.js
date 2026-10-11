@@ -1,5 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { SITE_ORIGIN } from '../../src/utils/seo.js';
+import { readRecentCatalog } from './recentCatalog.js';
+import { applyRecentMovies, recentMoviesSince } from '../../src/utils/recentCatalog.js';
 
 // A deployment snapshot makes navigation independent of database availability.
 // Once old, refresh through the CDN-cached public endpoint, rather than scanning
@@ -23,4 +25,16 @@ export function createCatalogLoader({ readSnapshot = () => readFile(new URL('./c
         return snapshot.catalog;
     };
 }
-export const loadSeoCatalog = createCatalogLoader();
+const loadSnapshot = createCatalogLoader();
+let recentVersion, snapshotVersion, liveCatalog;
+export async function loadSeoCatalog() {
+    const [catalog, updates] = await Promise.all([loadSnapshot(), readRecentCatalog()]);
+    if (catalog !== snapshotVersion || updates !== recentVersion) {
+        // Snapshot records published after an import are authoritative again.
+        const snapshot = JSON.parse(await readFile(new URL('./catalog.json', import.meta.url), 'utf8'));
+        const movies = recentMoviesSince(updates, snapshot.generatedAt, catalog.Movies);
+        liveCatalog = movies.length ? { ...catalog, Movies: applyRecentMovies(catalog.Movies, movies) } : catalog;
+        snapshotVersion = catalog; recentVersion = updates;
+    }
+    return liveCatalog;
+}
