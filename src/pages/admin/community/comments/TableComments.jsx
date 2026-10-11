@@ -1,5 +1,9 @@
 import React, { useContext, useState, useEffect, useMemo } from 'react';
-import { useComments, useMovies } from '../../../../hooks/useCollections';
+import { useComments, useMovies, useSubscriptions } from '../../../../hooks/useCollections';
+import { PlanContext } from '../../../../contexts/PlanProvider';
+import PlanBadge from '../../../../components/PlanBadge';
+import { getUserPlanInfo } from '../../../../utils/appUtils';
+import { commentTime, commentLikes } from '../../../../utils/commentThreads';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import ModalDelete from '../../../../components/admin/ModalDelete';
@@ -15,6 +19,8 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
     const comments = useComments();
     const movies = useMovies();
     const users = useContext(UserContext);
+    const plans = useContext(PlanContext) || [];
+    const subscriptions = useSubscriptions() || [];
     const [open, setOpen] = useState(false);
 
     const [page, setPage] = useState(1);
@@ -26,9 +32,7 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
         return comments
             ?.filter(e => searchTV(e?.description).includes(searchTV(search)))
             ?.sort((a, b) => {
-                const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-                const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-                return dateB - dateA;
+                return commentTime(b) - commentTime(a);
             });
     }, [search, comments]);
 
@@ -80,9 +84,9 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
         return m ? m.name : "Unknown Movie";
     };
 
-    const getUserName = (userID) => {
-        const u = users?.find(x => x.id === userID);
-        return u ? (u.name || u.name || u.email || "Unknown User") : "Unknown User";
+    const getUserName = (row) => {
+        const u = users?.find(x => x.id === row.userID);
+        return u?.name || u?.fullName || row.author?.name || "Unknown User";
     };
 
     return (
@@ -106,6 +110,7 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
                                 <th className="text-center">USER</th>
                                 <th className="text-center">MOVIE</th>
                                 <th className="text-center">DESCRIPTION</th>
+                                <th className="text-center">LIKES</th>
                                 <th className="text-center">DATE</th>
                                 <th className="w-[10%] text-center">ACTIONS</th>
                             </tr>
@@ -130,16 +135,22 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
                                         {start + index + 1}
                                     </td>
                                     <td className="table-cell text-center font-bold text-cyan-400">
-                                        {getUserName(row.userID)}
+                                        {getUserName(row)}
+                                        <div className="mt-1"><PlanBadge plan={(() => {
+                                            const user = users?.find(item => item.id === row.userID);
+                                            return user ? getUserPlanInfo(user, subscriptions, plans) : { name: row.author?.planName || 'Free', level: row.author?.level || 0 };
+                                        })()} /></div>
                                     </td>
                                     <td className="table-cell text-center font-bold text-fuchsia-400">
                                         {getMovieName(row.movieID)}
                                     </td>
                                     <td className="table-cell text-center truncate max-w-62.5" title={row.description}>
+                                        {row.parentID && <span className="block text-[10px] text-cyan-400 mb-1">Reply</span>}
                                         {row.description}
                                     </td>
+                                    <td className="table-cell text-center text-cyan-300 tabular-nums">{commentLikes(row).length}</td>
                                     <td className="table-cell text-center text-gray-400 text-xs">
-                                        {row.createdAt ? new Date(row.createdAt).toLocaleDateString('vi-VN') : ""}
+                                        {commentTime(row) ? new Date(commentTime(row)).toLocaleDateString('vi-VN') : ""}
                                     </td>
                                     <td className="table-cell text-center">
                                         <div className="flex justify-center! gap-2">
@@ -192,5 +203,4 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
 }
 
 export default TableComments;
-
 

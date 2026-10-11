@@ -48,10 +48,27 @@ service cloud.firestore {
       allow delete: if name in ['WatchHistory', 'Favorites', 'Folders', 'MoviesSave'] && (admin() || owns(resource.data));
     }
     match /{name}/{id} {
-      allow read: if name in ['Comments', 'Reviews'];
-      allow create: if name in ['Comments', 'Reviews'] && (admin() || owns(request.resource.data));
-      allow update: if name in ['Comments', 'Reviews'] && (admin() || (owns(resource.data) && owns(request.resource.data)));
-      allow delete: if name in ['Comments', 'Reviews'] && admin();
+      allow read: if name == 'Reviews';
+      allow create: if name == 'Reviews' && (admin() || owns(request.resource.data));
+      allow update: if name == 'Reviews' && (admin() || (owns(resource.data) && owns(request.resource.data)));
+      allow delete: if name == 'Reviews' && admin();
+    }
+    match /Comments/{id} {
+      function ownLikeChange() {
+        let before = resource.data.get('likedBy', []).toSet();
+        let after = request.resource.data.likedBy.toSet();
+        return signedIn() && request.auth.token.userId is string
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likedBy'])
+          && request.resource.data.likedBy is list
+          && after.difference(before).hasOnly([request.auth.token.userId])
+          && before.difference(after).hasOnly([request.auth.token.userId]);
+      }
+      allow read: if true;
+      allow create: if admin() || owns(request.resource.data);
+      allow update: if admin() || ownLikeChange()
+        || (owns(resource.data) && owns(request.resource.data)
+          && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['likedBy']));
+      allow delete: if admin();
     }
     match /CatalogChanges/{id} { allow read, write: if admin() || worker(); }
     match /PublicCatalogControls/{id} { allow read, write: if id in ['home', 'topics'] && (admin() || worker()); }
