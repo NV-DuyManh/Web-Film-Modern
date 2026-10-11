@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useState, useMemo, useEffect } from 'react';
@@ -139,9 +140,7 @@ function Anime() {
                                     </h3>
 
                                     <div className='mt-2 sm:mt-3 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
-                                        <button className='rounded-md cursor-pointer border border-yellow-400 bg-yellow-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-yellow-300 shadow-[0_0_8px_rgba(250,204,21,0.25)] transition duration-300 hover:bg-yellow-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(250,204,21,0.7)]'>
-                                            {getObjectById(plans, e.planID)?.name}
-                                        </button>
+                                        <PlanBadge plan={getObjectById(plans, e.planID)} className="sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs" />
 
 
 

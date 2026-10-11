@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, styled, TextField, Select, MenuItem, InputLabel } from '@mui/material';
 import Slide from '@mui/material/Slide';
@@ -226,7 +227,7 @@ function ModalUsers({ open, onChangeInput, handleClose, addUser, error, loading,
                                     }}
                                 >
                                     {sortedPlans.map((plan) => (
-                                        <MenuItem key={plan.id} value={plan.id}>{plan.name}</MenuItem>
+                                        <MenuItem key={plan.id} value={plan.id}><PlanBadge plan={plan} /></MenuItem>
                                     ))}
                                 </Select>
                             </>

@@ -1,3 +1,4 @@
+import { getPlanAppearance } from '../../../../utils/planAppearance.js';
 import React, { useState, useRef } from 'react';
 import { FaCamera, FaCrown, FaTimes, FaLock } from 'react-icons/fa';
 import Coder from '../../../../assets/Coder.png';
@@ -79,11 +80,10 @@ function ProfileHeader({ isLogin, currentPlanInfo, currentSelectedTheme, AVAILAB
                         <div className={`
                             relative px-6 py-2.5 rounded-full flex items-center gap-3 
                             bg-transparent
-                            text-${currentPlanInfo.theme}-400 text-[15px] font-black uppercase tracking-widest
-                            border border-${currentPlanInfo.theme}-400/50 hover:border-${currentPlanInfo.theme}-400
+                            ${getPlanAppearance(currentPlanInfo).className} text-[15px] font-black uppercase tracking-widest
+                            border
                             transition-colors duration-300
                         `}>
-                            <div className={`absolute inset-0 rounded-full bg-${currentPlanInfo.theme}-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
                             <FaCrown className="text-xl drop-shadow-[0_0_8px_currentColor] z-10" />
                             <span className="z-10 drop-shadow-[0_0_5px_currentColor]">
                                 Hạng hiện tại: {currentPlanInfo.name === 'PRENIUM' ? 'PREMIUM' : currentPlanInfo.name}

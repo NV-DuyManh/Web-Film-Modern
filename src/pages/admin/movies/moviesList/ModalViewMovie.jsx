@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import useLiveDocuments from '../../../../hooks/useLiveDocuments';
 import React, { useContext } from 'react';
@@ -238,7 +239,7 @@ function ModalViewMovie({ open, handleClose, movie, onEdit }) {
                                 <p className="text-gray-400 text-sm italic font-medium mb-3">{movie.name}</p>
                             )}
                             <div className="flex flex-wrap gap-2">
-                                {currentPlan && <NeonBadge icon={FaCrown} text={currentPlan.name} color="rose" />}
+                                {currentPlan && <PlanBadge plan={currentPlan} className="px-3.5 py-2 text-sm rounded-xl"><FaCrown />{currentPlan.name}</PlanBadge>}
                                 <NeonBadge text={movie.status} color={getStatusColor(movie.status)} />
                                 {currentCategoryType && <NeonBadge icon={FaFilm} text={currentCategoryType.name} color="blue" />}
                                 <NeonBadge text={movie.ageRating} color="red" />

@@ -1,3 +1,4 @@
+import { getPlanAppearance } from '../../../utils/planAppearance.js';
 import { routeSegment, findMovieReference } from '../../../utils/nameRoutes';
 import MovieImage from '../../MovieImage';
 import React from 'react';
@@ -1258,32 +1259,10 @@ const renderSingleLineText = (lineText, onLinkClick) => {
 /**
  * Lấy style và màu sắc badge chuẩn riêng biệt của từng gói cước
  */
-export const getPlanBadgeStyle = (planInfo) => {
-    const level = Number(planInfo?.level) || 0;
-    const name = String(planInfo?.planName || planInfo?.name || '').trim().toLowerCase();
-
-    if (level >= 3 || name === 'premium' || name === 'prenium') {
-        return {
-            text: 'PREMIUM',
-            className: 'bg-linear-to-r from-fuchsia-600 via-pink-400 to-rose-500 border border-pink-300 text-white shadow-[0_0_10px_rgba(236,72,153,0.7)] premium-laser'
-        };
-    } else if (level === 2 || name === 'plus') {
-        return {
-            text: 'PLUS',
-            className: 'bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border border-yellow-300 text-black shadow-[0_0_8px_rgba(245,158,11,0.6)]'
-        };
-    } else if (level === 1 || name === 'basic') {
-        return {
-            text: 'BASIC',
-            className: 'bg-linear-to-r from-blue-600 to-cyan-500 border border-cyan-300 text-white shadow-[0_0_8px_rgba(6,182,212,0.5)]'
-        };
-    } else {
-        return {
-            text: 'FREE',
-            className: 'bg-slate-700 border border-slate-500 text-white'
-        };
-    }
-};
+export const getPlanBadgeStyle = (planInfo) => ({
+    text: String(planInfo?.planName || planInfo?.name || "Free").replace(/prenium/i, "Premium").toUpperCase(),
+    className: `border ${getPlanAppearance(planInfo).className}`,
+});
 
 /**
  * Component hiển thị 1 thẻ phim mini trực quan ngay dưới dòng mô tả

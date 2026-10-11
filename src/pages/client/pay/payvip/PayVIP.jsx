@@ -1,3 +1,5 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
+import { getPlanAppearance } from '../../../../utils/planAppearance.js';
 import { SECURE_ACCOUNTS_ENABLED, accountRequest, accountChanged } from '../../../../services/accountService';
 import PaymentMethods from '../PaymentMethods';
 import { findRouteEntity, routeSegment } from '../../../../utils/nameRoutes';
@@ -13,7 +15,7 @@ import emailjs from '@emailjs/browser';
 import { addDocument } from '../../../../services/firebaseService';
 import Swal from 'sweetalert2';
 import ModalPayVIP from './ModalPayVIP';
-import { getThemeNameByIndex, getThemeColorStyle } from '../../../../utils/appUtils';
+
 function PayVIP(props) {
     const { isLogin } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -39,6 +41,7 @@ function PayVIP(props) {
 
     const packageInfo = {
         name: selectedPlanData?.name,
+        level: selectedPlanData?.level,
         basePrice: selectedPlanData?.price ? Number(selectedPlanData?.price) : 79000
     };
 
@@ -55,19 +58,9 @@ function PayVIP(props) {
         { id: '6', months: 6, discount: 25 },
     ];
 
-    const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
-    const selectedPlanIndex = sortedPlans.findIndex(p => p.id === selectedPlanData?.id);
-    const theme = getThemeNameByIndex(selectedPlanIndex);
+    const theme = getPlanAppearance(selectedPlanData).theme;
 
-    const getTextColor = (t) => {
-        switch (t) {
-            case 'blue': return 'text-blue-400';
-            case 'cyan': return 'text-cyan-400';
-            case 'yellow': return 'text-yellow-400';
-            case 'rose': return 'text-rose-400';
-            default: return 'text-cyan-400';
-        }
-    };
+    const getTextColor = () => getPlanAppearance(selectedPlanData).textColor;
 
     const [selectedDuration, setSelectedDuration] = useState(durations[0]?.id || '1');
     const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -261,7 +254,7 @@ function PayVIP(props) {
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <p className="text-slate-300 inline">Tên gói</p>
-                                    <p className={`${getTextColor(theme)} font-bold inline`}>{packageInfo.name}</p>
+                                    <PlanBadge plan={selectedPlanData} />
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <p className="text-slate-300 inline">Thời hạn *</p>
@@ -346,8 +339,6 @@ function PayVIP(props) {
             <ModalPayVIP 
                 show={showSuccessModal} 
                 packageInfo={packageInfo} 
-                theme={theme} 
-                getBadgeStyle={getThemeColorStyle} 
                 onClose={() => {
                     navigate('/');
                     window.location.reload();

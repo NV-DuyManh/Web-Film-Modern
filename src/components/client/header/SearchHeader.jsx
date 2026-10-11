@@ -1,3 +1,4 @@
+import PlanBadge from '../../PlanBadge.jsx';
 import MovieImage from '../../MovieImage';
 import { routeSegment } from '../../../utils/nameRoutes';
 import React, { useMemo, useRef } from 'react';
@@ -67,9 +68,7 @@ function SearchHeader({ searchQuery, isOpen, onClose }) {
                                     )}
                                     <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
                                         {getObjectById(plans, movie.planID) && (
-                                            <span className="px-1.5 py-0.5 text-[10px] font-bold rounded border border-yellow-500/50 text-yellow-400 bg-yellow-500/10">
-                                                {getObjectById(plans, movie.planID).name}
-                                            </span>
+                                            <PlanBadge plan={getObjectById(plans, movie.planID)} className="px-1.5" />
                                         )}
                                     </div>
                                 </div>

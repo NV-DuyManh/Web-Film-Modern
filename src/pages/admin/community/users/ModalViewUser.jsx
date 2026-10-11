@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 ﻿import React, { useContext, useMemo, useState } from 'react';
 import { useSubscriptions } from '../../../../hooks/useCollections';
 import { Dialog, Slide } from '@mui/material';
@@ -132,7 +133,7 @@ function ModalViewUser({ open, handleClose, user }) {
                             </h2>
                             <div className="flex flex-wrap gap-2">
                                 <NeonBadge icon={FaIdBadge} text={`ID: ${user.tableIndex || user.id.substring(0, 5)}`} color="emerald" />
-                                <NeonBadge icon={FaCrown} text={`${currentPlanInfo.name} PACKAGE`} color={currentPlanInfo.theme} />
+                                <PlanBadge plan={currentPlanInfo} className="px-3.5 py-2 text-sm rounded-xl"><FaCrown />{currentPlanInfo.name} PACKAGE</PlanBadge>
                             </div>
                         </div>
                     </div>

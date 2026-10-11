@@ -1,3 +1,4 @@
+import { getPlanAppearance } from '../../../../utils/planAppearance.js';
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { useSubscriptions, useReviews } from '../../../../hooks/useCollections';
 import { AuthContext } from '../../../../contexts/AuthProvider';
@@ -52,10 +53,9 @@ function Profile() {
 
     const AVAILABLE_FRAMES = React.useMemo(() => {
         const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
-        const themes = ['blue', 'cyan', 'yellow', 'rose', 'purple', 'emerald'];
         
         const frames = sortedPlans.map((plan, index) => ({
-            id: themes[index] || 'slate',
+            id: getPlanAppearance(plan).theme,
             label: plan.name,
             minLevel: plan.level
         }));

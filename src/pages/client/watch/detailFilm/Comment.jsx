@@ -1,3 +1,4 @@
+import { getPlanAppearance } from '../../../../utils/planAppearance.js';
 import React, { useState, useContext, useMemo } from 'react';
 import { useComments, useSubscriptions } from '../../../../hooks/useCollections';
 import { FaComment, FaPaperPlane, FaRegCommentDots } from 'react-icons/fa';
@@ -6,7 +7,7 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { addDocument } from '../../../../services/firebaseService';
 import { timeAgo } from '../../../../utils/watchHistory';
-import { getUserPlanInfo, getThemeColorStyle } from '../../../../utils/appUtils';
+import { getUserPlanInfo } from '../../../../utils/appUtils';
 import { trackEvent } from '../../../../services/eventTracker';
 function CommentItem({ comment, users, subscriptions, plans }) {
     const user = getObjectById(users, comment.userID);
@@ -14,7 +15,7 @@ function CommentItem({ comment, users, subscriptions, plans }) {
         return getUserPlanInfo(user, subscriptions, plans);
     }, [user, subscriptions, plans]);
     
-    const badgeColor = getThemeColorStyle(planInfo.theme);
+    const badgeColor = getPlanAppearance(planInfo).className;
 
     return (
         <div className="flex gap-4 p-4 hover:bg-[#161821] transition-colors rounded-xl group">

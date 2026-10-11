@@ -1,6 +1,7 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 import React from 'react';
 
-function ModalPayVIP({ show, packageInfo, theme, getBadgeStyle, onClose }) {
+function ModalPayVIP({ show, packageInfo, onClose }) {
     if (!show) return null;
 
     return (
@@ -52,7 +53,7 @@ function ModalPayVIP({ show, packageInfo, theme, getBadgeStyle, onClose }) {
                         </h3>
                         
                         <p className="text-slate-300 text-[15px] mb-8 leading-relaxed px-2">
-                            Chúc mừng bạn đã đăng ký gói <span className={`font-bold px-2 py-0.5 rounded-md border ${getBadgeStyle(theme)}`}>{packageInfo.name}</span>.<br/>
+                            Chúc mừng bạn đã đăng ký gói <PlanBadge plan={packageInfo} />.<br/>
                             Tận hưởng trải nghiệm xem phim không giới hạn ngay bây giờ!
                         </p>
 

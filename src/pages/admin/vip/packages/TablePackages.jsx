@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 ﻿import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { usePackages } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
@@ -102,7 +103,7 @@ function TablePackages({ handleClickOpen, setPackageItem, packageItem, search })
                                     </td>
                                     <td className="table-cell">{start + index + 1}</td>
                                     <td className="table-cell text-center font-bold text-cyan-400">
-                                        {getPlanName(row.planID)}
+                                        <PlanBadge plan={plans?.find(p => p.id === row.planID)} />
                                     </td>
                                     <td className="table-cell text-center text-green-400 font-bold">
                                         {row.discount} %

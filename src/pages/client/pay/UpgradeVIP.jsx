@@ -1,3 +1,5 @@
+import PlanBadge from '../../../components/PlanBadge.jsx';
+import { getPlanAppearance } from '../../../utils/planAppearance.js';
 import { routeSegment } from '../../../utils/nameRoutes';
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { useFeatures, useSubscriptions } from '../../../hooks/useCollections';
@@ -7,7 +9,7 @@ import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import Logo5 from '../../../assets/Logo5.png';
 import { getObjectById } from '../../../services/firebaseResponse';
-import { getUserPlanInfo, getThemeNameByIndex } from '../../../utils/appUtils';
+import { getUserPlanInfo } from '../../../utils/appUtils';
 import { WingedFrame } from '../../../components/client/header/AvatarFrames';
 
 function UpgradeVIP(props) {
@@ -21,7 +23,7 @@ function UpgradeVIP(props) {
     const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
 
     const displayPlans = sortedPlans.map((plan, index) => {
-        const theme = getThemeNameByIndex(index);
+        const theme = getPlanAppearance(plan).theme;
         const planFeatures = features.filter(f => f.planID === plan.id && f.available).map(f => f.description);
 
         return {
@@ -91,9 +93,7 @@ function UpgradeVIP(props) {
                                 <div className="flex items-center gap-3 text-[13px]">
                                     <div className="text-slate-400 flex items-center gap-1.5">
                                         Gói hiện tại:
-                                        <span className={`font-bold ${levelUser > 0 ? 'text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.6)]' : 'text-slate-300'}`}>
-                                            {currentPlanName}
-                                        </span>
+                                        <PlanBadge plan={{ name: currentPlanName, level: levelUser }} />
                                     </div>
                                     <div className="w-1.5 h-1.5 bg-cyan-500/50 rounded-full shadow-[0_0_5px_rgba(34,211,238,0.5)]"></div>
                                     <div className="text-slate-400 flex items-center gap-1.5">
@@ -143,7 +143,7 @@ function UpgradeVIP(props) {
                                 key={plan.id}
                                 onClick={() => canBuy && setSelectedPlan(plan.id)}
                                 className={`vip-card ${plan.themeClass} ${isSelected ? 'selected' : ''} relative rounded-3xl p-6 transition duration-300 overflow-hidden bg-slate-900/70 backdrop-blur-md flex flex-col group ${isSelected
-                                        ? `border-2 scale-105 z-10`
+                                        ? `border-2 ${getPlanAppearance(plan).borderColor} scale-105 z-10`
                                         : 'border-2 border-white/10'
                                     } ${canBuy
                                         ? 'cursor-pointer hover:border-white/30 hover:bg-slate-800/70'
@@ -151,7 +151,7 @@ function UpgradeVIP(props) {
                                     }`}
                             >
                                 {isSelected && (
-                                    <div className="vip-glow-bg absolute -top-10 -right-10 w-32 h-32 blur-3xl rounded-full"></div>
+                                    <div className={`${getPlanAppearance(plan).glowColor} absolute -top-10 -right-10 w-32 h-32 blur-3xl rounded-full`}></div>
                                 )}
 
                                 {plan.best && (
@@ -161,7 +161,7 @@ function UpgradeVIP(props) {
                                 )}
 
                                 <div className="flex justify-between items-start mb-6 relative z-10">
-                                    <h3 className={`vip-text text-xl font-black tracking-wide ${isSelected ? 'selected' : 'text-slate-200'}`}>{plan.name}</h3>
+                                    <h3 className={`vip-text text-xl font-black tracking-wide ${getPlanAppearance(plan).textColor}`}>{plan.name}</h3>
                                     {plan.rawPrice === 0 ? (
                                         <></>
                                     ) : (

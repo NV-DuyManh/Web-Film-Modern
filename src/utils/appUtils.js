@@ -1,3 +1,4 @@
+import { getPlanAppearance } from './planAppearance.js';
 import MALE_AVATAR from '../assets/Male.png';
 import FEMALE_AVATAR from '../assets/Female.png';
 import OTHER_AVATAR from '../assets/Other.png';
@@ -53,7 +54,7 @@ export const getExpiryDate = (p) => {
 };
 
 export const getUserPlanInfo = (user, subscriptions, plans) => {
-    if (!user) return { name: 'FREE', level: 0, theme: 'blue' };
+    if (!user) return { name: 'FREE', level: 0, theme: 'slate' };
     if (user.role === 'admin') return { name: 'ADMIN', level: 999, theme: 'admin' };
 
     let highestPlan = null;
@@ -64,7 +65,7 @@ export const getUserPlanInfo = (user, subscriptions, plans) => {
 
     if (!highestPlan) {
         const userSubs = subscriptions.filter(p => p.userID === user.id && getExpiryDate(p) > new Date());
-        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'blue' };
+        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'slate' };
 
         const highestSub = userSubs.reduce((max, item) => {
             const currentPlan = getObjectById(plans, item.planID);
@@ -77,12 +78,7 @@ export const getUserPlanInfo = (user, subscriptions, plans) => {
 
     if (!highestPlan) return { name: 'VIP', level: 1, theme: 'cyan' };
 
-    const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
-    const index = sortedPlans.findIndex(p => p.id === highestPlan.id);
-    const themeNames = ['blue', 'cyan', 'yellow', 'rose', 'purple', 'emerald'];
-    const theme = themeNames[index] || 'blue';
-
-    return { name: highestPlan.name, level: highestPlan.level, theme: theme };
+    return { name: highestPlan.name, level: highestPlan.level, theme: getPlanAppearance(highestPlan).theme };
 };
 
 export const getThemeBadgeStyle = (theme) => {

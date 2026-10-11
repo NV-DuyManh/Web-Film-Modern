@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 import { useMovieEpisodes, useEpisodeStream } from '../../../../hooks/useMovieEpisodes';
 import useMovie from '../../../../hooks/useMovie';
 import MovieImage from '../../../../components/MovieImage';
@@ -447,7 +448,7 @@ function PlayFilm() {
                                     </div>
                                     <div className="flex flex-col justify-center py-1">
                                         <h3 className="text-[15px] font-bold text-gray-200 line-clamp-2 group-hover:text-yellow-400 transition-colors leading-snug">{e.otherName || e.name}</h3>
-                                        <p className="text-xs text-amber-300 line-clamp-1 mt-1">{getObjectById(plans, e.planID)?.name}</p>
+                                        <PlanBadge plan={getObjectById(plans, e.planID)} className="mt-1" />
                                         <div className="flex items-center gap-2 mt-2">
                                             <p className="text-[11px] text-gray-400 inline">{e.countriesID}</p>
                                             <p className="w-1 h-1 rounded-full bg-gray-600 inline"></p>

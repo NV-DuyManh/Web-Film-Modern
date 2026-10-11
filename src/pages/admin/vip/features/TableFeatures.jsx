@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 ﻿import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { useFeatures } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
@@ -112,7 +113,7 @@ function TableFeatures({ handleClickOpen, setFeature, feature, search }) {
                                         {start + index + 1}
                                     </td>
                                     <td className="table-cell text-center font-bold text-cyan-400">
-                                        {getPlanName(row.planID)}
+                                        <PlanBadge plan={plans?.find(p => p.id === row.planID)} />
                                     </td>
                                     <td className="table-cell text-center max-w-50 whitespace-normal text-xs text-gray-400" title={row.description}>
                                         <div className="line-clamp-3 leading-relaxed text-center">

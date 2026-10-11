@@ -1,3 +1,4 @@
+import PlanBadge from '../../PlanBadge.jsx';
 import React, { useContext, useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { useSubscriptions } from '../../../hooks/useCollections';
 import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown, FaChevronDown, FaFilm } from 'react-icons/fa';
@@ -21,7 +22,7 @@ import Category from '../../../pages/client/category/Category';
 import Country from '../../../pages/client/country/Country';
 import './HeaderClient.css';
 import { WingedFrame } from './AvatarFrames';
-import { getUserPlanInfo, getThemeBadgeStyle } from '../../../utils/appUtils';
+import { getUserPlanInfo } from '../../../utils/appUtils';
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
     const [openCate, setOpenCate] = useState(false);
@@ -260,9 +261,7 @@ function HeaderClient() {
                                                 <p className="text-base font-bold text-white truncate tracking-wide max-w-30">
                                                     {isLogin?.name || 'Nguyễn Văn A'}
                                                 </p>
-                                                <span className={`px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded-md shrink-0 ${getThemeBadgeStyle(currentPlanInfo.theme)}`}>
-                                                    {currentPlanInfo.name}
-                                                </span>
+                                                <PlanBadge plan={currentPlanInfo} className="uppercase tracking-wider shrink-0" />
                                             </div>
                                             <p className="text-[13px] text-slate-400 truncate w-full">
                                                 {isLogin?.email || 'user@example.com'}

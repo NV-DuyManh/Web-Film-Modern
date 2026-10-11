@@ -1,3 +1,5 @@
+import { getPlanAppearance } from '../../../../utils/planAppearance.js';
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 ﻿import { FaTimes } from 'react-icons/fa';
 import { useSubscriptions } from '../../../../hooks/useCollections';
 import React, { useContext } from "react";
@@ -69,6 +71,7 @@ function ModalSubscriptions({ open, onChangeInput, handleClose, addSubscription,
                     className="modal-input-x"
                     disablePortal
                     options={plans || []}
+                    sx={{ '& input': { color: getPlanAppearance(plans?.find(p => p.id === subscription.planID)).color } }} renderOption={(props, option) => { const { key, ...optionProps } = props; return <li key={key} {...optionProps}><PlanBadge plan={option} /></li>; }}
                     getOptionLabel={(option) => option.name || ""}
                     fullWidth
                     classes={{ paper: "neon-paper", listbox: "neon-listbox", option: "neon-option" }}

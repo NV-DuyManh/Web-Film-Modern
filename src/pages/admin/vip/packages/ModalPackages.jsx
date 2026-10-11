@@ -1,3 +1,5 @@
+import { getPlanAppearance } from '../../../../utils/planAppearance.js';
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 import { FaTimes } from 'react-icons/fa';
 import * as React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Slide, Autocomplete } from '@mui/material';
@@ -51,6 +53,7 @@ function ModalPackages({ open, onChangeInput, handleClose, addPackage, error, lo
             <DialogContent className="modal-body-x">
                 <Autocomplete
                     options={plans || []}
+                    sx={{ '& input': { color: getPlanAppearance(plans?.find(p => p.id === packageItem.planID)).color } }} renderOption={(props, option) => { const { key, ...optionProps } = props; return <li key={key} {...optionProps}><PlanBadge plan={option} /></li>; }}
                     getOptionLabel={(opt) => opt?.name || ""}
                     value={plans?.find(p => p.id === packageItem.planID) || null}
                     onChange={(e, val) => onChangeInput({ target: { name: "planID", value: val?.id || "" } })}

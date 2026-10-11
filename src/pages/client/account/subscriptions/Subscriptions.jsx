@@ -1,10 +1,12 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
+import { getPlanAppearance } from '../../../../utils/planAppearance.js';
 ﻿import React, { useContext } from 'react';
 import { useSubscriptions } from '../../../../hooks/useCollections';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { FaCrown, FaCalendarAlt, FaHistory, FaRegCreditCard } from 'react-icons/fa';
-import { getThemeNameByIndex, getThemeColorStyle } from '../../../../utils/appUtils';
+
 function Subscriptions() {
     const { isLogin } = useContext(AuthContext);
     const subscriptions = useSubscriptions();
@@ -44,16 +46,7 @@ function Subscriptions() {
         };
     }).sort((a, b) => b.expiryDate.getTime() - a.expiryDate.getTime());
 
-    const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
-    
-    const getThemeByPlan = (planData) => {
-        const index = sortedPlans.findIndex(p => p.id === planData?.id);
-        return getThemeNameByIndex(index);
-    };
-
-    const getCardStyle = () => {
-        return 'bg-linear-to-b from-[#0f172a]/90 to-[#020617]/90 backdrop-blur-xl border border-cyan-500/30 shadow-[0_8px_30px_rgba(6,182,212,0.08)]';
-    };
+    const getCardStyle = () => "bg-linear-to-b from-[#0f172a]/90 to-[#020617]/90 backdrop-blur-xl border shadow-[0_8px_30px_rgba(6,182,212,0.08)]";
 
     const formatDate = (dateObj) => {
         if (!dateObj) return 'N/A';
@@ -77,16 +70,14 @@ function Subscriptions() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5 relative z-10">
                 {displaySubs.length > 0 ? displaySubs.map((s) => {
                     const plan = getObjectById(plans, s.planID);
-                    const theme = getThemeByPlan(plan);
+                    const appearance = getPlanAppearance(plan);
 
                     return (
-                        <div key={s.id} className={`rounded-2xl relative overflow-hidden flex flex-col ${getCardStyle()}`}>
-                            <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-transparent via-cyan-400 to-transparent opacity-60"></div>
+                        <div key={s.id} className={`rounded-2xl relative overflow-hidden flex flex-col ${getCardStyle()} ${appearance.borderColor}`}>
+                            <div className={`absolute top-0 left-0 w-full h-1 ${appearance.dotBg} opacity-60`}></div>
                             
                             <div className="p-6 flex flex-col items-center border-b border-white/5">
-                                <div className={`inline-flex font-black px-6 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 text-cyan-400 text-lg tracking-widest uppercase shadow-[0_0_15px_rgba(6,182,212,0.2)]`}>
-                                    {plan?.name || 'Gói chưa xác định'}
-                                </div>
+                                <PlanBadge plan={plan || { name: "Gói chưa xác định" }} className="px-6 py-1.5 rounded-full text-lg tracking-widest uppercase" />
                             </div>
 
                             <div className="p-6 space-y-4 flex-1">
@@ -109,7 +100,7 @@ function Subscriptions() {
 
                             <div className="px-6 py-4 bg-cyan-950/30 border-t border-cyan-500/10 flex items-center justify-between">
                                 <span className="text-[13px] font-bold text-slate-400 uppercase tracking-wider">Tổng thanh toán</span>
-                                <div className={`font-black text-xl tracking-wide flex items-center gap-1.5 text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]`}>
+                                <div className={`font-black text-xl tracking-wide flex items-center gap-1.5 ${appearance.textColor}`}>
                                     <FaRegCreditCard className="text-lg opacity-80" /> 
                                     ${s.price}
                                 </div>

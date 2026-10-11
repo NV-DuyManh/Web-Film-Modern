@@ -1,3 +1,4 @@
+import { getPlanAppearance } from '../../../../utils/planAppearance.js';
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useRef, useState, useEffect, useLayoutEffect, useCallback } from "react";
@@ -258,17 +259,9 @@ function FilmCountry({ title, countryName, titleClass, speed = 40, reverse, inde
                             {e.planID && (() => {
                                 const plan = getObjectById(plans, e.planID);
                                 if (!plan) return null;
-                                const level = Number(plan.level) || 0;
-                                let cls = "bg-slate-600 border-slate-500 text-white";
-                                let text = plan.name;
+                                const cls = getPlanAppearance(plan).className;
+                                const text = plan.name;
 
-                                if (level >= 3) {
-                                    cls = "bg-linear-to-r from-fuchsia-600 via-pink-400 to-rose-500 border-pink-300 text-white shadow-[0_0_15px_rgba(236,72,153,0.8)] premium-laser";
-                                } else if (level === 2) {
-                                    cls = "bg-linear-to-r from-yellow-400 via-amber-500 to-yellow-500 border-yellow-300 text-black shadow-[0_0_12px_rgba(245,158,11,0.7)]";
-                                } else if (level === 1) {
-                                    cls = "bg-linear-to-r from-blue-600 to-cyan-500 border-cyan-300 text-white shadow-[0_0_10px_rgba(6,182,212,0.5)]";
-                                }
 
                                 return (
                                     <div className="absolute top-2 right-2 flex gap-1.5 z-10 group-hover:scale-105 transition-transform duration-300">

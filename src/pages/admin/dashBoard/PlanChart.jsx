@@ -1,3 +1,5 @@
+import { PlanContext } from '../../../contexts/PlanProvider.jsx';
+import { getPlanAppearance } from '../../../utils/planAppearance.js';
 import React from 'react';
 
 import {
@@ -13,18 +15,7 @@ import {
 } from 'recharts';
 
 
-const RAINBOW_COLORS = [
-    '#FF6B6B',
-    '#FECA57',
-    '#48DBFB',
-    '#FF9FF3',
-    '#54A0FF',
-    '#5F27CD',
-    '#01A3A4',
-    '#FF6348',
-    '#2ED573',
-    '#FFA502',
-];
+
 
 
 const CustomTooltip = ({ active, payload, label }) => {
@@ -89,6 +80,8 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 
 function PlanChart({ data = [] }) {
+    const plans = React.useContext(PlanContext) || [];
+    const colors = data.map(entry => getPlanAppearance(plans.find(plan => plan.id === entry.planID || plan.name === entry.planID) || { name: entry.planID }).color);
 
     return (
 
@@ -144,7 +137,7 @@ function PlanChart({ data = [] }) {
                         >
 
                             <defs>
-                                {RAINBOW_COLORS.map((color, index) => (
+                                {colors.map((color, index) => (
                                     <linearGradient
                                         key={`barGrad-${index}`}
                                         id={`barGrad-${index}`}
@@ -222,9 +215,9 @@ function PlanChart({ data = [] }) {
                                 {data.map((entry, index) => (
                                     <Cell
                                         key={`cell-${index}`}
-                                        fill={`url(#barGrad-${index % RAINBOW_COLORS.length})`}
+                                        fill={`url(#barGrad-${index})`}
                                         style={{
-                                            filter: `drop-shadow(0 4px 8px ${RAINBOW_COLORS[index % RAINBOW_COLORS.length]}44)`,
+                                            filter: `drop-shadow(0 4px 8px ${colors[index]}44)`,
                                         }}
                                     />
                                 ))}

@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 ﻿import React, { useContext, useState, useEffect, useMemo } from "react";
 import { useSubscriptions } from '../../../../hooks/useCollections';
 import { CiEdit } from "react-icons/ci";
@@ -133,7 +134,7 @@ function TableSubscriptions({ handleClickOpen, setSubscription, subscription, se
                                         {getUserName(row.userID)}
                                     </td>
                                     <td className="table-cell text-center font-bold text-fuchsia-400">
-                                        {getPlanName(row.planID)}
+                                        <PlanBadge plan={plans?.find(p => p.id === row.planID)} />
                                     </td>
                                     <td className="table-cell text-center font-bold text-emerald-400">
                                         ${row.price}

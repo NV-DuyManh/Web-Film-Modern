@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 import { useMovieEpisodes } from '../../../../hooks/useMovieEpisodes';
 import useMovie from '../../../../hooks/useMovie';
 import MovieImage from '../../../../components/MovieImage';
@@ -334,7 +335,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                         </div>
 
                         <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 text-[10px] font-bold">
-                            <p className="px-1.5 py-0.5 border border-yellow-500 text-yellow-500 rounded inline">{getObjectById(plans, movie.planID)?.name}</p>
+                            <PlanBadge plan={getObjectById(plans, movie.planID)} />
                             <p className="px-1.5 py-0.5 bg-white text-black rounded inline">Vietsub</p>
                             <p className="px-1.5 py-0.5 border border-slate-600 text-slate-300 rounded inline">{movie.releaseYear || movie.year || '—'}</p>
                             <p className="px-1.5 py-0.5 border border-slate-600 text-slate-300 rounded inline">{movie.endEpisode || 0} Tập</p>

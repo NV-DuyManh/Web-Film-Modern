@@ -1,3 +1,4 @@
+import { getPlanAppearance } from '../../../utils/planAppearance.js';
 import useMovie from '../../../hooks/useMovie';
 import { routeSegment } from '../../../utils/nameRoutes';
 import useCanonicalPath from '../../../hooks/useCanonicalPath';
@@ -28,11 +29,6 @@ function Pay(props) {
             .sort((a, b) => Number(a.level) - Number(b.level));
     }, [plans, moviePlanLevel]);
 
-    const themeList = [
-        { textColor: 'text-yellow-400', borderColor: 'border-yellow-400', shadowColor: 'shadow-[0_0_25px_rgba(250,204,21,0.15)]', glowColor: 'bg-yellow-400/10', dotShadow: 'shadow-[0_0_8px_rgba(250,204,21,0.8)]', dotBg: 'bg-yellow-400', badgeBg: 'bg-yellow-500', icon: <FaStar />, badgeText: 'Lựa chọn tốt nhất' },
-        { textColor: 'text-rose-400', borderColor: 'border-rose-400', shadowColor: 'shadow-[0_0_25px_rgba(244,63,94,0.15)]', glowColor: 'bg-rose-400/10', dotShadow: 'shadow-[0_0_8px_rgba(244,63,94,0.8)]', dotBg: 'bg-rose-400', badgeBg: 'bg-rose-500', icon: <FaCrown />, badgeText: 'Premium VIP' },
-        { textColor: 'text-cyan-400', borderColor: 'border-cyan-400', shadowColor: 'shadow-[0_0_25px_rgba(34,211,238,0.15)]', glowColor: 'bg-cyan-400/10', dotShadow: 'shadow-[0_0_8px_rgba(34,211,238,0.8)]', dotBg: 'bg-cyan-400', badgeBg: 'bg-cyan-500', icon: <FaStar />, badgeText: 'Cao cấp' },
-    ];
 
     const rentPrice = Number(movie?.rent) || 0;
 
@@ -90,14 +86,14 @@ function Pay(props) {
 
                         <div className={`grid grid-cols-1 ${comboPlans.length >= 2 ? 'md:grid-cols-2' : ''} ${comboPlans.length >= 3 ? 'lg:grid-cols-3' : ''} gap-6`}>
                             {comboPlans.map((plan, index) => {
-                                const theme = themeList[index % themeList.length];
+                                const theme = { ...getPlanAppearance(plan), icon: Number(plan.level) >= 3 ? <FaCrown /> : <FaStar />, badgeText: plan.name };
                                 const planFeatures = features.filter(f => f.planID === plan.id && f.available);
 
                                 return (
                                     <div 
                                         key={plan.id}
                                         onClick={() => setSelectedPlan(plan.id)}
-                                        className={`relative rounded-3xl p-6 cursor-pointer transition duration-300 border-2 overflow-hidden bg-slate-900/60 backdrop-blur-md flex flex-col h-full group ${selectedPlan === plan.id ? `${theme.borderColor} ${theme.shadowColor} scale-[1.02]` : 'border-white/10 hover:border-white/30 hover:bg-slate-800/60'}`}
+                                        className={`relative rounded-3xl p-6 cursor-pointer transition duration-300 border-2 overflow-hidden bg-slate-900/60 backdrop-blur-md flex flex-col h-full group ${selectedPlan === plan.id ? `${theme.borderColor}  scale-[1.02]` : 'border-white/10 hover:border-white/30 hover:bg-slate-800/60'}`}
                                     >
                                         {selectedPlan === plan.id && (
                                             <div className={`absolute -top-10 -right-10 w-40 h-40 ${theme.glowColor} blur-3xl rounded-full`}></div>
@@ -106,9 +102,9 @@ function Pay(props) {
                                             {theme.icon} {theme.badgeText}
                                         </div>
                                         <div className="flex justify-between items-start mb-4 mt-2 relative z-10">
-                                            <h3 className={`text-2xl font-black tracking-wide ${selectedPlan === plan.id ? theme.textColor : 'text-slate-200'}`}>{plan.name}</h3>
+                                            <h3 className={`text-2xl font-black tracking-wide ${theme.textColor}`}>{plan.name}</h3>
                                             <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${selectedPlan === plan.id ? theme.borderColor : 'border-slate-500'}`}>
-                                                {selectedPlan === plan.id && <div className={`w-3 h-3 ${theme.dotBg} rounded-full ${theme.dotShadow}`}></div>}
+                                                {selectedPlan === plan.id && <div className={`w-3 h-3 ${theme.dotBg} rounded-full `}></div>}
                                             </div>
                                         </div>
                                         <div className="mb-4 relative z-10">

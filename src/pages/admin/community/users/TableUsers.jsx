@@ -1,3 +1,4 @@
+import PlanBadge from '../../../../components/PlanBadge.jsx';
 ﻿import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useSubscriptions } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
@@ -13,7 +14,7 @@ import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
-import { getUserPlanInfo, getThemeColorStyle, getExpiryDate } from '../../../../utils/appUtils';
+import { getUserPlanInfo, getExpiryDate } from '../../../../utils/appUtils';
 import { SECURE_ACCOUNTS_ENABLED, accountRequest } from '../../../../services/accountService';
 
 
@@ -224,9 +225,7 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                             {(() => {
                                                 const pInfo = getPlanInfo(row);
                                                 return (
-                                                    <p className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider ${getThemeColorStyle(pInfo.theme)}`}>
-                                                        {pInfo.name}
-                                                    </p>
+                                                    <PlanBadge plan={pInfo} className="rounded-full uppercase tracking-wider" />
                                                 );
                                             })()}
                                         </td>
