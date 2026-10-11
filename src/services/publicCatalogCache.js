@@ -183,7 +183,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
 let browserStorage;
 try { browserStorage = typeof window === 'undefined' ? null : window.localStorage; } catch { browserStorage = null; }
 export const publicCatalogCache = createPublicCatalogCache({ storage: browserStorage, loadUpdates: async () => {
-    const response = await fetch('/api/catalog-updates', { signal: AbortSignal.timeout(5000) });
+    const response = await fetch('/api/public-catalog?updates=1', { signal: AbortSignal.timeout(5000) });
     if (!response.ok) throw new Error('Catalog updates unavailable');
     return response.json();
 } });

@@ -1,10 +1,18 @@
 import { readFile } from 'node:fs/promises';
+import { readRecentCatalog } from '../server/seo/recentCatalog.js';
 
 export const config = { maxDuration: 60 };
-export function createPublicCatalogHandler({ readSnapshot = () => readFile(new URL('../server/seo/catalog.json', import.meta.url), 'utf8'), readCatalog, now = Date.now } = {}) {
+export function createPublicCatalogHandler({ readSnapshot = () => readFile(new URL('../server/seo/catalog.json', import.meta.url), 'utf8'), readCatalog, readUpdates = async () => [], now = Date.now } = {}) {
     let cached, loading, retryAt = 0;
     return async (req, res) => {
         if (!['GET', 'HEAD'].includes(req.method)) return res.status(405).end();
+        if (new URL(req.url || '/api/public-catalog', 'https://www.mfilm.online').searchParams.get('updates') === '1') {
+            const updates = await readUpdates();
+            res.setHeader('Content-Type', 'application/json; charset=utf-8');
+            res.setHeader('Cache-Control', 'public, max-age=0, s-maxage=60, must-revalidate');
+            res.setHeader('X-Robots-Tag', 'noindex');
+            return res.status(200).end(req.method === 'HEAD' ? '' : JSON.stringify({ updates }));
+        }
         cached ||= JSON.parse(await readSnapshot());
         let stale = now() - Date.parse(cached.generatedAt) >= 86400000;
         // Scheduled, budgeted jobs refresh deployment snapshots. Page visits never scan Firestore.
@@ -26,4 +34,4 @@ export function createPublicCatalogHandler({ readSnapshot = () => readFile(new U
         return res.status(200).end(req.method === 'HEAD' ? '' : JSON.stringify(cached));
     };
 }
-export default createPublicCatalogHandler();
+export default createPublicCatalogHandler({ readUpdates: readRecentCatalog });

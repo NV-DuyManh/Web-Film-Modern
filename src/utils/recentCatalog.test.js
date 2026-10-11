@@ -4,6 +4,7 @@ import { mergeRecentCatalog, recentMoviesSince, applyRecentMovies, applyRecentHo
 import { createPublicCatalogCache } from '../services/publicCatalogCache.js';
 import { createRecentCatalogReader } from '../../server/seo/recentCatalog.js';
 import { createCatalogPageHandler } from '../../api/catalog-page.js';
+import { createPublicCatalogHandler } from '../../api/public-catalog.js';
 
 const movie = { id: 'imported', name: 'All of Us Are Dead', otherName: 'Ngôi Trường Xác Sống', slug: 'ngoi-truong-xac-song', createdAt: '2026-10-11T04:18:12Z', countriesID: 'Hàn Quốc', categoryTypeID: 'series', endEpisode: 12 };
 const publishedAt = '2026-10-11T03:00:00Z';
@@ -75,4 +76,13 @@ test('public listing refresh includes the imported movie when live metadata chan
     catalog = { ...catalog, Movies: [movie] };
     const second = response(); await handler({ method: 'GET', url: '/api/catalog-page?kind=new&q=ngoi+truong+xac+song' }, second);
     assert.equal(JSON.parse(second.body).items[0].id, movie.id);
+});
+
+test('recent metadata uses the existing public endpoint without loading the full snapshot', async () => {
+    const updates = mergeRecentCatalog([], movie, importedAt);
+    const handler = createPublicCatalogHandler({ readSnapshot: async () => { throw new Error('Snapshot must not be read'); }, readUpdates: async () => updates });
+    const response = { status(code) { this.code = code; return this; }, setHeader() {}, end(body) { this.body = body; return this; } };
+    await handler({ method: 'GET', url: '/api/public-catalog?updates=1' }, response);
+    assert.equal(response.code, 200);
+    assert.equal(JSON.parse(response.body).updates[0].movie.id, movie.id);
 });
