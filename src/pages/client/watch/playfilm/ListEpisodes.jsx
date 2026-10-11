@@ -3,7 +3,7 @@ import { normalizeEpisodes, episodeInfo, episodeKey, episodeLabel } from '../../
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useId } from 'react';
 import { useRentMovies, useSubscriptions } from '../../../../hooks/useCollections';
-import { FaLock, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
@@ -12,6 +12,7 @@ import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { getExpiryDate, getUserPlanInfo, isSingleMovie } from '../../../../utils/appUtils';
 import ModalDetail from '../detailFilm/ModalDetail';
 import EpisodeRangeDropdown from './EpisodeRangeDropdown';
+import EpisodeLockOverlay from './EpisodeLockOverlay';
 
 function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
     const { slug } = useParams();
@@ -115,20 +116,23 @@ function ListEpisodes({ episodeShow, playEpisodes, handleClickEpisodes }) {
                 {currentEpisodes.map((e) => {
                     const isActive = episodeKey(playEpisodes) === episodeKey(e);
                     const label = episodeLabel(e, isSingle);
+                    const accessibleLabel = label === 'Full' ? 'Xem phim đầy đủ' : `Tập ${label}`;
                     return (
                         <button
                             key={e.id}
                             onClick={() => checkShow ? handleClickEpisodes(e) : (!isLogin ? setOpenLoginDialog(true) : navigate(`/pay/${routeSegment(movie)}`))}
-                            aria-label={label === 'Full' ? 'Xem phim đầy đủ' : `Tập ${label}`}
+                            aria-label={`${accessibleLabel}${checkShow ? '' : ' — Đang khóa'}`}
                             aria-current={isActive ? 'true' : undefined}
-                            title={label === 'Full' ? 'Full' : `Tập ${label}`}
-                            className={`group relative flex w-full min-w-0 h-10 sm:h-11 items-center justify-center px-2 rounded-xl text-xs sm:text-sm font-bold tabular-nums transition-colors cursor-pointer border whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 ${isActive
-                                ? "ep-btn-active bg-linear-to-r from-amber-400 to-yellow-400 text-slate-950 border-amber-300 ring-2 ring-amber-400/40"
-                                : "bg-slate-800/80 text-slate-200 border-slate-600/50 hover:border-amber-400/70 hover:bg-amber-400/10 hover:text-amber-300"
+                            title={`${label === 'Full' ? 'Full' : `Tập ${label}`}${checkShow ? '' : ' · Đăng nhập hoặc nâng cấp gói để xem'}`}
+                            className={`group relative flex w-full min-w-0 items-center px-2 rounded-xl text-xs sm:text-sm font-bold tabular-nums transition-colors cursor-pointer border whitespace-nowrap focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-yellow-400 ${!checkShow
+                                ? "h-16 justify-center pt-2 pb-9 overflow-hidden bg-linear-to-b from-slate-800 to-slate-900 text-slate-200 border-amber-400/45 shadow-[0_0_10px_rgba(251,191,36,0.06),inset_0_1px_0_rgba(255,255,255,0.08)] hover:border-amber-300 hover:shadow-[0_0_14px_rgba(251,191,36,0.18)] hover:text-amber-100"
+                                : isActive
+                                ? "h-10 sm:h-11 justify-center ep-btn-active bg-linear-to-r from-amber-400 to-yellow-400 text-slate-950 border-amber-300 ring-2 ring-amber-400/40"
+                                : "h-10 sm:h-11 justify-center bg-slate-800/80 text-slate-200 border-slate-600/50 hover:border-amber-400/70 hover:bg-amber-400/10 hover:text-amber-300"
                                 }`}
                         >
-                            {!checkShow && <FaLock aria-hidden="true" className="absolute top-1 right-1 text-[8px] text-rose-400" />}
-                            <span>{label}</span>
+                            {!checkShow && <EpisodeLockOverlay />}
+                            <span className="relative">{label}</span>
                         </button>
                     );
                 })}
