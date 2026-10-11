@@ -9,10 +9,17 @@ import TopFilms from "./TopFilms";
 import TopRents from "./TopRents";
 import RentalChart from './RentalChart';
 import RevenueSummary from './RevenueSummary';
+import DashboardStats from './DashboardStats';
+import { UserContext } from '../../../contexts/UserProvider';
+import useMovieIndex from '../../../hooks/useMovieIndex';
+import useCatalogStatus from '../../../hooks/useCatalogStatus';
 
 function DashBoard() {
 
     const allSubscriptions = useContext(SubscriptionContext);
+    const users = useContext(UserContext);
+    const movies = useMovieIndex();
+    const movieStatus = useCatalogStatus('MovieIndex');
     const [period, setPeriod] = useState({ from: "", to: "", currency: "USD" });
     const subscriptions = useMemo(() => completedPayments(allSubscriptions, period), [allSubscriptions, period]);
 
@@ -101,6 +108,7 @@ function DashBoard() {
 
 
             <RevenueSummary period={period} setPeriod={setPeriod} subscriptions={subscriptions} rentals={rentMovies} counts={currencyCounts} />
+            <DashboardStats period={period} subscriptions={subscriptions} rentals={rentMovies} movieCount={movieStatus.status === 'ready' ? movies.length : null} userCount={users?.length} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <motion.div variants={itemVariants}>
                     <RevenueChart data={chartData} currency={period.currency} />
@@ -134,28 +142,28 @@ function DashBoard() {
 
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                         <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3.5">
-                            <p className="text-slate-400 text-xs font-semibold mb-1">Tỷ lệ giật/lag (Buffer Ratio)</p>
+                            <p className="text-slate-400 text-xs font-semibold mb-1">Buffer event ratio</p>
                             <p className="text-xl md:text-2xl font-black text-amber-400">
                                 {(qoeData.bufferEventRatio * 100).toFixed(2)}%
                             </p>
-                            <p className="text-[11px] text-slate-500 mt-0.5">Mục tiêu &lt; 2.0%</p>
+                            <p className="text-[11px] text-slate-500 mt-0.5">Target &lt; 2.0%</p>
                         </div>
                         <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3.5">
-                            <p className="text-slate-400 text-xs font-semibold mb-1">Tỷ lệ xem trọn vẹn</p>
+                            <p className="text-slate-400 text-xs font-semibold mb-1">Completion rate</p>
                             <p className="text-xl md:text-2xl font-black text-emerald-400">
                                 {(qoeData.completionRate * 100).toFixed(1)}%
                             </p>
-                            <p className="text-[11px] text-slate-500 mt-0.5">Stream hoàn tất</p>
+                            <p className="text-[11px] text-slate-500 mt-0.5">Completed streams</p>
                         </div>
                         <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3.5">
-                            <p className="text-slate-400 text-xs font-semibold mb-1">Tiến độ xem trung bình</p>
+                            <p className="text-slate-400 text-xs font-semibold mb-1">Average playback progress</p>
                             <p className="text-xl md:text-2xl font-black text-cyan-400">
                                 {qoeData.avgPlaybackProgressPercent}%
                             </p>
-                            <p className="text-[11px] text-slate-500 mt-0.5">Thời lượng xem / tập</p>
+                            <p className="text-[11px] text-slate-500 mt-0.5">Watch time per episode</p>
                         </div>
                         <div className="bg-slate-800/60 border border-slate-700/50 rounded-xl p-3.5">
-                            <p className="text-slate-400 text-xs font-semibold mb-1">Phiên phát đã phân tích</p>
+                            <p className="text-slate-400 text-xs font-semibold mb-1">Streams analyzed</p>
                             <p className="text-xl md:text-2xl font-black text-white">
                                 {Number(qoeData.totalStreamsAnalyzed).toLocaleString('vi-VN')}
                             </p>

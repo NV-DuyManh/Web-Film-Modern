@@ -68,7 +68,7 @@ function Packages() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            alert("An error occurred. Please try again.");
             setLoading(false);
             setProgress(0);
         }

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useContext } from 'react';
+import { adminMovieStatus } from '../../../../utils/adminLabels';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
 import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
@@ -234,7 +235,7 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
                                         <td className="table-cell text-center whitespace-normal">
                                             <div className="flex flex-col gap-1 items-center justify-center">
                                                 <p className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getStatusStyle(row.status)} inline`}>
-                                                    {row.status}
+                                                    {adminMovieStatus(row.status)}
                                                 </p>
                                                 <p className={`px-2 py-0.5 rounded text-[10px] font-bold border ${getAgeRatingStyle(row.ageRating)} inline`}>
                                                     {row.ageRating}

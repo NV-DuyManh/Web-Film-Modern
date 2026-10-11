@@ -1,19 +1,9 @@
-import { FaWallet, FaCrown, FaFilm, FaReceipt, FaCalendarAlt, FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
-import { formatAdminMoney } from '../../../utils/adminRevenue';
-
-const total = rows => rows.reduce((sum, row) => sum + Number(row.price), 0);
-const paymentCount = count => `${count} ${count === 1 ? 'payment' : 'payments'}`;
+import { FaCalendarAlt, FaCheckCircle, FaInfoCircle } from 'react-icons/fa';
 
 export default function RevenueSummary({ period, setPeriod, subscriptions, rentals, counts }) {
     const invalidDates = period.from && period.to && period.from > period.to;
     const transactions = subscriptions.length + rentals.length;
     const otherCurrency = period.currency === 'VND' ? 'USD' : 'VND';
-    const cards = [
-        { title: 'Total revenue', value: formatAdminMoney(total(subscriptions) + total(rentals), period.currency), detail: 'Successful payments only', Icon: FaWallet, color: 'text-cyan-300', bg: 'bg-cyan-400/10', border: 'border-cyan-400/20' },
-        { title: 'Memberships', value: formatAdminMoney(total(subscriptions), period.currency), detail: paymentCount(subscriptions.length), Icon: FaCrown, color: 'text-amber-300', bg: 'bg-amber-400/10', border: 'border-amber-400/20' },
-        { title: 'Movie rentals', value: formatAdminMoney(total(rentals), period.currency), detail: paymentCount(rentals.length), Icon: FaFilm, color: 'text-fuchsia-300', bg: 'bg-fuchsia-400/10', border: 'border-fuchsia-400/20' },
-        { title: 'Transactions', value: transactions.toLocaleString('en-US'), detail: `Paid in ${period.currency}`, Icon: FaReceipt, color: 'text-emerald-300', bg: 'bg-emerald-400/10', border: 'border-emerald-400/20' },
-    ];
     return (
         <section className="relative overflow-hidden rounded-3xl border border-cyan-400/20 bg-linear-to-br from-[#121e32] via-[#101728] to-[#141329] p-5 sm:p-6">
             <div className="pointer-events-none absolute -right-16 -top-28 h-72 w-72 rounded-full bg-cyan-500/5 blur-3xl" />
@@ -45,13 +35,6 @@ export default function RevenueSummary({ period, setPeriod, subscriptions, renta
                 <button type="button" onClick={() => setPeriod(p => ({ ...p, from: '', to: '' }))} className="h-10 rounded-xl border border-slate-600/60 px-4 text-xs font-semibold text-slate-300 hover:border-cyan-400/60 hover:text-cyan-300 cursor-pointer">All time</button>
             </div>
             {invalidDates && <p role="alert" className="mt-3 text-sm text-rose-300">Start date must be on or before end date.</p>}
-            <div className="relative mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-live="polite">
-                {cards.map(({ title, value, detail, Icon, color, bg, border }) => <div key={title} className={`min-w-0 rounded-2xl border ${border} bg-slate-950/30 p-4`}>
-                    <div className="flex items-center justify-between gap-2"><p className="text-xs font-medium text-slate-400">{title}</p><span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${bg} ${color}`}><Icon aria-hidden="true" className="text-sm" /></span></div>
-                    <p className={`mt-3 break-words text-2xl font-bold tracking-tight tabular-nums ${color}`}>{invalidDates ? '—' : value}</p>
-                    <p className="mt-2 text-[11px] text-slate-500">{detail}</p>
-                </div>)}
-            </div>
             <div className="relative mt-4 flex items-start gap-2 text-[11px] leading-5 text-slate-400"><FaInfoCircle aria-hidden="true" className="mt-1 shrink-0 text-cyan-400" />
                 <p>Amounts stay in their original payment currency. Selecting VND filters VND payments; it does not convert USD.
                     {!invalidDates && transactions === 0 && counts[otherCurrency] > 0 && <><br /><button type="button" onClick={() => setPeriod(p => ({ ...p, currency: otherCurrency }))} className="font-semibold text-cyan-300 hover:underline cursor-pointer">View {counts[otherCurrency]} {otherCurrency} payments in this period →</button></>}

@@ -72,13 +72,13 @@ function ModalEpisodes({ open, onChangeInput, handleClose, addEpisode, addBulkEp
                             <button onClick={() => setBulkTarget('both')} className={`px-3 py-1.5 text-xs font-bold rounded-md transition-all ${bulkTarget === 'both' ? 'bg-cyan-500 text-black shadow-[0_0_10px_rgba(34,211,238,0.5)]' : 'bg-slate-800 text-slate-400 hover:text-white border border-white/10'}`}>Both</button>
                         </div>
                         <label className="text-sm font-bold text-slate-300 mb-2 block">
-                            Bulk Episode Format {bulkTarget === 'both' ? '(Tập 01|URL 1|URL 2)' : '(Tập 01|URL)'}
+                            Bulk Episode Format {bulkTarget === 'both' ? '(Episode 01|URL 1|URL 2)' : '(Episode 01|URL)'}
                         </label>
                         <textarea
                             value={bulkText}
                             onChange={(e) => setBulkText(e.target.value)}
                             className="w-full h-40 bg-slate-900/50 border border-white/10 rounded-xl p-4 text-slate-300 text-sm focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 font-mono resize-none"
-                            placeholder={bulkTarget === 'both' ? "Tập 01|https://link-m3u8...|https://link-embed...\nTập 02|https://link-m3u8...|https://link-embed..." : "Tập 01|https://link...\nTập 02|https://link..."}
+                            placeholder={bulkTarget === 'both' ? "Episode 01|https://link-m3u8...|https://link-embed...\nEpisode 02|https://link-m3u8...|https://link-embed..." : "Episode 01|https://link...\nEpisode 02|https://link..."}
                         />
                     </div>
                 ) : (

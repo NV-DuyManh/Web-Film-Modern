@@ -71,7 +71,7 @@ function Comments() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            alert("Đã xảy ra lỗi, vui lòng thử lại!");
+            alert("An error occurred. Please try again.");
             setLoading(false);
             setProgress(0);
         }

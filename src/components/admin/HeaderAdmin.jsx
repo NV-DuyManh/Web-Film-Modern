@@ -90,10 +90,10 @@ function HeaderAdmin() {
 
                                     <div className="p-2">
                                         <Link to="/profile" onClick={() => setIsDropdownOpen(false)} className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition duration-200 cursor-pointer">
-                                            <FaUser className="text-cyan-400 text-lg" /> Hồ sơ của tôi
+                                            <FaUser className="text-cyan-400 text-lg" /> My profile
                                         </Link>
                                         <button className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-800 rounded-lg transition duration-200 cursor-pointer">
-                                            <FaCog className="text-yellow-400 text-lg" /> Cài đặt
+                                            <FaCog className="text-yellow-400 text-lg" /> Settings
                                         </button>
 
                                         <div className="h-1 bg-slate-700/50 my-1 mx-2"></div>
@@ -105,7 +105,7 @@ function HeaderAdmin() {
                                             }}
                                             className="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-bold text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded-lg transition duration-200 cursor-pointer"
                                         >
-                                            <FaSignOutAlt className="text-lg" /> Đăng xuất
+                                            <FaSignOutAlt className="text-lg" /> Sign out
                                         </button>
                                     </div>
                                 </div>

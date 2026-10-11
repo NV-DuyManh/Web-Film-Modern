@@ -105,7 +105,7 @@ function Episodes() {
 
     const validation = () => {
         const newError = {};
-        newError.numberEpisode = parseEpisode(episode.numberEpisode) ? "" : "Vui lòng nhập số tập hợp lệ (ví dụ: 12, 12.5 hoặc 39-40)";
+        newError.numberEpisode = parseEpisode(episode.numberEpisode) ? "" : "Enter a valid episode number (e.g. 12, 12.5 or 39-40)";
         newError.movieID = episode.movieID ? "" : "Please select a movie";
         newError.url = episode.url ? "" : "Please enter episode url";
 
@@ -161,7 +161,7 @@ function Episodes() {
                 setProgress(0);
             }, 500);
         } catch (err) {
-            alert("Có lỗi xảy ra, vui lòng thử lại!");
+            alert("An error occurred. Please try again.");
             setLoading(false);
             setProgress(0);
         }
@@ -169,11 +169,11 @@ function Episodes() {
 
     const addBulkEpisodes = async () => {
         if (!episode.movieID) {
-            setError({ ...inner, movieID: "Vui lòng chọn phim trước" });
+            setError({ ...inner, movieID: "Select a movie first" });
             return;
         }
         if (!bulkText.trim()) {
-            alert("Vui lòng nhập nội dung!");
+            alert("Please enter the episode data.");
             return;
         }
 
@@ -204,7 +204,7 @@ function Episodes() {
                     }
 
                     const parsedEpisode = parseEpisode(epName);
-                    if (!parsedEpisode) throw new Error(`Số tập không hợp lệ ở dòng ${i + 1}: ${epName}`);
+                    if (!parsedEpisode) throw new Error(`Invalid episode number on row ${i + 1}: ${epName}`);
                     const numberEpisode = parsedEpisode.number;
 
                     const existingEp = episodes?.find(e => e.movieID === episode.movieID && episodeKey(e) === parsedEpisode.key);
@@ -265,7 +265,7 @@ function Episodes() {
 
         } catch (err) {
 
-            alert("Có lỗi xảy ra trong quá trình thêm hàng loạt!");
+            alert("An error occurred during bulk import.");
             setLoading(false);
             setProgress(0);
         }

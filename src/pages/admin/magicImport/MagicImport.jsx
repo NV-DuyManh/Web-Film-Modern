@@ -1,6 +1,7 @@
 import { trackedSetDoc as setDoc, trackedUpdateDoc as updateDoc } from '../../../services/catalogWrites';
 import useEpisodesForMovies from '../../../hooks/useEpisodesForMovies';
 import { episodeKey } from '../../../utils/episodes';
+import { adminMovieStatus } from '../../../utils/adminLabels';
 import { rentalPriceRange } from '../../../utils/importRentalPricing';
 import { randomMoviePlanID, movieMaintenancePatch } from '../../../utils/movieMaintenance';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
@@ -25,18 +26,18 @@ import { fetchMoviesList } from '../../../services/kkphimService';
 import { immediateKkphimImporter } from '../../../services/immediateKkphimImport';
 const CRAWLER_ACTIVE = ['running', 'paused'];
 const crawlErrorMessage = error => {
-    if (error.code === 'resource-exhausted') return 'Firebase đang giới hạn tài nguyên. Vui lòng thử lại sau.';
-    if (error.code === 'permission-denied') return 'Không có quyền lưu dữ liệu vào Firebase.';
-    if (error.code === 'unavailable' || error.message === 'Failed to fetch') return 'Không thể kết nối. Vui lòng kiểm tra mạng và thử lại.';
-    if (error.name === 'TimeoutError') return 'KKPhim phản hồi quá lâu. Vui lòng thử lại.';
+    if (error.code === 'resource-exhausted') return 'Firebase resource limit reached. Please try again later.';
+    if (error.code === 'permission-denied') return 'Permission denied when saving to Firebase.';
+    if (error.code === 'unavailable' || error.message === 'Failed to fetch') return 'Connection failed. Check your network and try again.';
+    if (error.name === 'TimeoutError') return 'KKPhim took too long to respond. Please try again.';
     const messages = {
-        'KKPhim returned an invalid movie list.': 'KKPhim trả về danh sách phim không hợp lệ.',
-        'KKPhim returned no movie details.': 'KKPhim không trả về thông tin phim.',
-        'Invalid KKPhim movie slug.': 'Đường dẫn phim KKPhim không hợp lệ.',
-        'Movie plan is unavailable.': 'Gói phim không khả dụng.',
-        'Check movie plans and rental prices before importing.': 'Vui lòng kiểm tra gói phim và giá thuê trước khi nhập phim.',
+        'KKPhim returned an invalid movie list.': 'KKPhim returned an invalid movie list.',
+        'KKPhim returned no movie details.': 'KKPhim returned no movie details.',
+        'Invalid KKPhim movie slug.': 'Invalid KKPhim movie slug.',
+        'Movie plan is unavailable.': 'Movie plan is unavailable.',
+        'Check movie plans and rental prices before importing.': 'Check movie plans and rental prices before importing.',
     };
-    return messages[error.message] || `Không thể hoàn tất thao tác: ${error.message || 'Lỗi không xác định.'}`;
+    return messages[error.message] || `Could not complete the operation: ${error.message || 'Unknown error.'}`;
 };
 
 // Helper chuyển chuỗi tiếng Việt có dấu thành slug không dấu
@@ -176,14 +177,14 @@ function MagicImport() {
 
     const handleParse = () => {
         if (!inputText || !inputText.trim()) {
-            setErrorMsg("⚠️ Vui lòng dán dữ liệu vào ô Data Input Area trước khi Parse!");
+            setErrorMsg("⚠️ Paste data into the Data Input Area before parsing.");
             setTimeout(() => setErrorMsg(""), 4000);
             return;
         }
 
         const rawData = parseTSV(inputText);
         if (!rawData || rawData.length === 0) {
-            setErrorMsg("⚠️ Không tìm thấy dữ liệu hợp lệ. Vui lòng kiểm tra lại cấu trúc copy từ Excel!");
+            setErrorMsg("⚠️ No valid data found. Check the structure copied from Excel.");
             setTimeout(() => setErrorMsg(""), 4000);
             return;
         }
@@ -208,7 +209,7 @@ function MagicImport() {
                 const wb = XLSX.read(bstr, { type: 'binary' });
                 const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
                 if (!data || data.length === 0) {
-                    setErrorMsg("⚠️ File Excel trống hoặc không hợp lệ!");
+                    setErrorMsg("⚠️ The Excel file is empty or invalid.");
                     setTimeout(() => setErrorMsg(""), 4000);
                     return;
                 }
@@ -225,7 +226,7 @@ function MagicImport() {
                 setSuccessMsg("");
                 setErrorMsg("");
             } catch (err) {
-                setErrorMsg("⚠️ Đã có lỗi xảy ra khi đọc file Excel!");
+                setErrorMsg("⚠️ Failed to read the Excel file.");
                 setTimeout(() => setErrorMsg(""), 4000);
             }
         };
@@ -243,7 +244,7 @@ function MagicImport() {
         setRowStatuses({});
         setVisualProgress(0);
         setCurrentImportIdx(-1);
-        setSuccessMsg("Đã dọn dẹp sạch sẽ dữ liệu!");
+        setSuccessMsg("Data cleared.");
         setTimeout(() => setSuccessMsg(""), 3000);
     };
 
@@ -466,7 +467,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         if (movie.description !== "Đang cập nhật...") updateData.description = movie.description;
                         if (movie.duration > 0) updateData.duration = movie.duration;
                         const liveMovie = (await getDocFromServer(movieRef)).data();
-                        if (!liveMovie) throw new Error('Phim cần cập nhật không còn tồn tại.');
+                        if (!liveMovie) throw new Error('The movie to update no longer exists.');
                         Object.assign(updateData, resolveMovieImages({
                             ...liveMovie,
                             ...(movieArtwork(movie.imgUrl) ? { imgUrl: movie.imgUrl } : {}),
@@ -584,7 +585,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         };
         const pages = selected ? 1 : pageEnd - pageStart + 1;
         let finishedPages = 0;
-        addCrawlLog(selected ? `Bắt đầu nhập ${selected.length} phim đã chọn.` : `Bắt đầu cào từ trang ${pageEnd} → ${pageStart}.`);
+        addCrawlLog(selected ? `Starting import of ${selected.length} selected movies.` : `Starting crawl from page ${pageEnd} → ${pageStart}.`);
         try {
             const importer = await immediateKkphimImporter();
             for (let page = selected ? 1 : pageEnd; page >= (selected ? 1 : pageStart); page--) {
@@ -599,14 +600,14 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                 for (let index = 0; index < items.length; index++) {
                     if (!await waitForControl()) break;
                     const item = items[index];
-                    addCrawlLog(`Đang nhập phim: ${item.name || item.slug}`);
+                    addCrawlLog(`Importing movie: ${item.name || item.slug}`);
                     try {
                         const delta = await importer(item, { jobId, page });
                         for (const [key, count] of Object.entries(delta)) if (key in stats) stats[key] += count;
-                        addCrawlLog(`${delta.skipped ? 'Phim đã có, bỏ qua' : 'Đã lưu phim'}: ${item.name || item.slug}`, 'success');
+                        addCrawlLog(`${delta.skipped ? 'Already imported, skipping' : 'Movie saved'}: ${item.name || item.slug}`, 'success');
                     } catch (error) {
                         stats.errors++;
-                        addCrawlLog(`Lỗi khi nhập ${item.name || item.slug}: ${crawlErrorMessage(error)}`, 'error');
+                        addCrawlLog(`Failed to import ${item.name || item.slug}: ${crawlErrorMessage(error)}`, 'error');
                         if (error.code === 'resource-exhausted' || error.code === 'permission-denied' || selected?.length === 1) throw error;
                     }
                     setCrawlStats({ ...stats });
@@ -619,7 +620,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
             const stopped = importControl.current.stop;
             setCrawlStatus(stopped ? 'stopped' : 'done');
             if (!stopped) setCrawlProgress(100);
-            addCrawlLog(`${stopped ? 'Đã dừng' : 'Hoàn tất'}: đã lưu ${stats.movies} phim, ${stats.episodes} tập; bỏ qua ${stats.skipped} phim đã có; ${stats.errors} lỗi.`, stats.errors ? 'warning' : 'success');
+            addCrawlLog(`${stopped ? 'Stopped' : 'Completed'}: saved ${stats.movies} movies and ${stats.episodes} episodes; skipped ${stats.skipped} existing movies; ${stats.errors} errors.`, stats.errors ? 'warning' : 'success');
             return { ...stats, stopped };
         } catch (error) {
             setCrawlStatus('failed'); setCrawlStats({ ...stats });
@@ -638,7 +639,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     const handleStopCrawl = () => {
         importControl.current.stop = true;
         importControl.current.pause = false;
-        addCrawlLog('Sẽ dừng sau khi lưu xong phim hiện tại.', 'warning');
+        addCrawlLog('Stopping after the current movie has been saved.', 'warning');
     };
 
     // === Auto Fix Missing Slugs ===
@@ -799,13 +800,13 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         <div className='table-wrapper h-full' style={{ background: 'linear-gradient(120deg, rgba(249, 115, 22, 0.25), rgba(239, 68, 68, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
                             <div className='table-container p-5 h-full flex flex-col' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
                                 <h2 className='text-orange-400 font-bold mb-3 uppercase tracking-wider text-sm flex items-center justify-between'>
-                                    <span className="flex items-center gap-2">📋 Nhật ký trực tiếp</span>
+                                    <span className="flex items-center gap-2">📋 Live logs</span>
                                     <span className={`px-3 py-1 rounded-full text-xs border transition-all
                                     ${crawlStatus === 'running' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30 animate-pulse' :
                                             (crawlStatus === 'paused' || crawlControl === 'pause') ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
                                                 crawlStatus === 'done' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
                                                     'bg-gray-500/20 text-gray-400 border-gray-500/30'}`}>
-                                        {crawlStatus === 'failed' ? '🔴 Lỗi — xem nhật ký' : crawlStatus === 'stopped' ? '⛔ Đã dừng' : crawlStatus === 'running' ? '🟢 Đang chạy' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '🟡 Tạm dừng' : crawlStatus === 'done' ? '🔵 Hoàn tất' : '⚪ Chưa chạy'}
+                                        {crawlStatus === 'failed' ? '🔴 Failed — see logs' : crawlStatus === 'stopped' ? '⛔ Stopped' : crawlStatus === 'running' ? '🟢 Running' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '🟡 Paused' : crawlStatus === 'done' ? '🔵 Completed' : '⚪ Idle'}
                                     </span>
                                 </h2>
 
@@ -813,7 +814,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 {crawlStatus !== 'idle' && (
                                     <div className="mb-3">
                                         <div className="flex justify-between text-xs font-bold text-orange-400 mb-1">
-                                            <span>{crawlStatus === 'failed' ? 'Có lỗi xảy ra' : crawlStatus === 'stopped' ? 'Đã dừng' : crawlStatus === 'running' ? '⏳ Đang cào phim...' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '⏸️ Tạm dừng' : '✅ Hoàn tất'}</span>
+                                            <span>{crawlStatus === 'failed' ? 'An error occurred' : crawlStatus === 'stopped' ? 'Stopped' : crawlStatus === 'running' ? '⏳ Crawling movies...' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '⏸️ Paused' : '✅ Completed'}</span>
                                             <span>{crawlProgress}%</span>
                                         </div>
                                         <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
@@ -829,7 +830,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                         {crawlLogs.length === 0 ? (
                                             <div className="flex flex-col items-center justify-center h-full text-gray-600 opacity-50">
                                                 <FaSpider className="text-5xl mb-3" />
-                                                <p>Nhấn "Start Crawl" để bắt đầu thu thập dữ liệu từ KKPhim...</p>
+                                                <p>Click "Start Crawl" to import movies from KKPhim...</p>
                                             </div>
                                         ) : (
                                             crawlLogs.map((log, idx) => (
@@ -901,7 +902,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                     <input
                                         type="number"
                                         className="w-12 bg-transparent border-none p-2.5 text-xs text-center text-gray-300 focus:outline-none focus:bg-white/5 transition-all"
-                                        placeholder="Số lượng"
+                                        placeholder="Number of movies"
                                         value={promptCount}
                                         onChange={(e) => setPromptCount(e.target.value)}
                                     />
@@ -914,7 +915,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 <input
                                     type="text"
                                     className="w-44 lg:w-56 bg-transparent border-none p-2.5 text-xs text-gray-300 focus:outline-none focus:bg-white/5 transition-all"
-                                    placeholder="Nhập thể loại (VD: Marvel, Anime...)"
+                                    placeholder="Enter a theme (e.g. Marvel, Anime...)"
                                     value={promptTheme}
                                     onChange={(e) => setPromptTheme(e.target.value)}
                                 />
@@ -1143,7 +1144,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                                                                 </div>
                                                                             </td>
                                                                             <td className='p-3 text-center align-middle'>
-                                                                                <p className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)} inline`}>{row.status}</p>
+                                                                                <p className={`px-2 py-1 rounded text-[11px] font-bold border ${getStatusStyle(row.status)} inline`}>{adminMovieStatus(row.status)}</p>
                                                                             </td>
                                                                         </tr>
                                                                     );

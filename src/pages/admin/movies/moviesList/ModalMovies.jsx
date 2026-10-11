@@ -20,9 +20,9 @@ const Transition = React.forwardRef((props, ref) => <Slide direction="up" ref={r
 const VisuallyHiddenInput = styled('input')({ clip: 'rect(0 0 0 0)', height: 1, position: 'absolute', width: 1 });
 
 const STATUS_OPTIONS = [
-    { id: "Sắp chiếu", name: "Sắp chiếu" },
-    { id: "Đang chiếu", name: "Đang chiếu" },
-    { id: "Hoàn thành", name: "Hoàn thành" }
+    { id: "Sắp chiếu", name: "Upcoming" },
+    { id: "Đang chiếu", name: "Ongoing" },
+    { id: "Hoàn thành", name: "Completed" }
 ];
 
 const AGE_RATING_OPTIONS = [
