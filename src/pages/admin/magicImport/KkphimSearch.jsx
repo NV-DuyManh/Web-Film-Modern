@@ -7,7 +7,6 @@ const types = { single: 'Movie', series: 'Series', hoathinh: 'Animation', tvshow
 
 export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, crawlStats, crawlLogs, crawlProgress, onImport, onViewJob }) {
     const [keyword, setKeyword] = useState('');
-    const [composing, setComposing] = useState(false);
     const [query, setQuery] = useState('');
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -41,13 +40,20 @@ export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, 
         request.current?.abort();
         const term = keyword.trim();
         setQuery(term); setResult(null); setError('');
-        setLoading(Boolean(term) && !composing);
-        if (!term || composing) return;
+        setLoading(Boolean(term));
+        if (!term) return;
         const timer = setTimeout(() => search(term), 250);
         return () => { clearTimeout(timer); request.current?.abort(); };
-    }, [keyword, composing, search]);
+    }, [keyword, search]);
 
     useEffect(() => () => request.current?.abort(), []);
+
+    const handleKeywordInput = event => {
+        const value = event.currentTarget.value;
+        if (value === keyword) return;
+        request.current?.abort();
+        setKeyword(value);
+    };
 
     const toggle = item => {
         setMessage('');
@@ -75,8 +81,7 @@ export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, 
                 <div className="relative">
                     <FaSearch aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                     <input aria-label="Movie name on KKPhim" aria-describedby="kkphim-live-search-hint" value={keyword}
-                        onChange={event => { request.current?.abort(); setKeyword(event.target.value); }}
-                        onCompositionStart={() => { request.current?.abort(); setComposing(true); }} onCompositionEnd={() => setComposing(false)} maxLength={150}
+                        onInput={handleKeywordInput} onChange={handleKeywordInput} maxLength={150}
                         placeholder="Type a Vietnamese or original movie name..." className="w-full rounded-xl bg-black/30 border border-white/15 pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-emerald-400" />
                 </div>
                 <p id="kkphim-live-search-hint" className="text-xs text-slate-400 mt-3">Results update as you type. Select as many movies as you want, across searches and pages.</p>
