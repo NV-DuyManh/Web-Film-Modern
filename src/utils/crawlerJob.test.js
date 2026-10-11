@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createCrawlerJob, crawlOptions, selectedMovieOptions } from './crawlerJob.js';
+import { createCrawlerJob, crawlOptions } from './crawlerJob.js';
 import { newestMoviesFirst, movieTime } from './movieRecency.js';
 import { runCrawlerJob } from '../../scripts/lib/crawlerRunner.mjs';
 
@@ -115,30 +115,4 @@ test('validate job bounds; an empty source page finishes instead of looping or i
     assert.equal(f.state().stats.pages, 2);
     assert.equal(f.state().stats.movies, 0);
     assert.equal(f.state().status, 'done');
-});
-
-test('selected imports only save chosen movies, resume safely and never fetch catalog pages', async () => {
-    const f = fixture();
-    f.change(createCrawlerJob(selectedMovieOptions([
-        { slug: 'chosen-one', name: 'One', poster_url: 'not stored' },
-        { slug: 'chosen-two', name: 'Two' },
-    ]), 'chosen-job', 1000));
-    assert.equal(f.state().options.movies[0].poster_url, undefined);
-    await f.run({ budgetMs: 1, importMovie: async item => { f.imported.push(item.slug); f.advance(2); return { movies: 1 }; } });
-    assert.equal(f.state().cursor.index, 1);
-    assert.equal(f.state().status, 'queued');
-    await f.run();
-    assert.deepEqual(f.imported, ['chosen-one', 'chosen-two']);
-    assert.deepEqual(f.pages, []);
-    assert.equal(f.state().progress, 100);
-    assert.equal(f.state().stats.movies, 2);
-});
-
-test('selected queue rejects empty, oversized, duplicate and invalid source selections', () => {
-    assert.throws(() => selectedMovieOptions([]));
-    assert.throws(() => selectedMovieOptions(Array.from({ length: 21 }, (_, i) => ({ slug: `movie-${i}` }))));
-    assert.throws(() => selectedMovieOptions([{ slug: 'same' }, { slug: 'same' }]));
-    assert.throws(() => selectedMovieOptions([{ slug: '../../bad' }]));
-    assert.throws(() => selectedMovieOptions([{ slug: 'valid' }], 1));
-    assert.deepEqual(selectedMovieOptions([{ slug: 'valid' }]).movies, [{ slug: 'valid', name: '', origin_name: '', modified: { time: '' } }]);
 });

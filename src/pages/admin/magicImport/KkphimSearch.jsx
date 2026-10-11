@@ -2,24 +2,22 @@ import React, { useEffect, useRef, useState } from 'react';
 import { FaSearch, FaCloudDownloadAlt, FaCheck, FaSpinner, FaTimes } from 'react-icons/fa';
 import { searchMovies, getFullImageUrl } from '../../../services/kkphimService';
 import { searchResults, existingSourceMovie } from '../../../utils/kkphimSearch';
-import { selectedMovieOptions, CRAWLER_ACTIVE } from '../../../utils/crawlerJob';
-import { queueCrawlerJob } from '../../../services/crawlerJobService';
 
 const types = { single: 'Movie', series: 'Series', hoathinh: 'Animation', tvshows: 'TV Show' };
 
-export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, crawlStats, crawlLogs, crawlProgress, onViewJob }) {
+export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, crawlStats, crawlLogs, crawlProgress, onImport, onViewJob }) {
     const [keyword, setKeyword] = useState('');
     const [query, setQuery] = useState('');
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [selection, setSelection] = useState([]);
-    const [queueing, setQueueing] = useState(false);
-    const [queued, setQueued] = useState(false);
+    const [importing, setImporting] = useState(false);
+    const [started, setStarted] = useState(false);
     const [message, setMessage] = useState('');
     const request = useRef(null);
-    const queueLock = useRef(false);
-    const active = CRAWLER_ACTIVE.includes(crawlStatus);
+    const importLock = useRef(false);
+    const active = ['running', 'paused'].includes(crawlStatus);
 
     useEffect(() => () => request.current?.abort(), []);
 
@@ -44,18 +42,18 @@ export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, 
         setMessage('');
         setSelection(previous => previous.some(movie => movie.slug === item.slug)
             ? previous.filter(movie => movie.slug !== item.slug)
-            : previous.length < 20 ? [...previous, item] : previous);
+            : [...previous, item]);
     };
 
     const importSelected = async () => {
-        if (queueLock.current || !selection.length || active || !crawlReady) return;
-        queueLock.current = true; setQueueing(true); setError(''); setMessage('');
+        if (importLock.current || !selection.length || active || !crawlReady) return;
+        importLock.current = true; setImporting(true); setStarted(true); setError(''); setMessage('');
         try {
-            await queueCrawlerJob(selectedMovieOptions(selection));
-            setQueued(true); setSelection([]);
-            setMessage('Import queued. The background worker starts on its next run, usually within a few minutes. You can close this page.');
-        } catch (err) { setError(`Could not queue import: ${err.message}`); }
-        finally { queueLock.current = false; setQueueing(false); }
+            const result = await onImport([...selection]);
+            setSelection([]);
+            setMessage(`${result.stopped ? 'Import stopped' : 'Import finished'}: ${result.movies} movies saved, ${result.episodes} episodes, ${result.skipped} already imported, ${result.errors} errors.`);
+        } catch (err) { setError(`Import failed: ${err.message}`); }
+        finally { importLock.current = false; setImporting(false); }
     };
 
     return (
@@ -75,18 +73,18 @@ export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, 
 
             <div className="rounded-2xl border border-white/10 bg-slate-900/90 p-4 space-y-3">
                 <div className="flex items-center justify-between gap-3 flex-wrap">
-                    <span className="text-sm font-semibold">Selected: {selection.length}/20</span>
-                    <button onClick={importSelected} disabled={!selection.length || queueing || active || !crawlReady}
+                    <span className="text-sm font-semibold">Selected: {selection.length}</span>
+                    <button onClick={importSelected} disabled={!selection.length || importing || active || !crawlReady}
                         className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-emerald-500 to-teal-600 font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">
-                        {queueing ? <FaSpinner className="animate-spin" /> : <FaCloudDownloadAlt />} {queueing ? 'Queueing...' : 'Import selected'}
+                        {importing ? <FaSpinner className="animate-spin" /> : <FaCloudDownloadAlt />} {importing ? 'Importing...' : 'Import selected'}
                     </button>
                 </div>
-                {selection.length > 0 && <div className="flex gap-2 flex-wrap">{selection.map(item => <button key={item.slug} onClick={() => toggle(item)} disabled={queueing}
+                {selection.length > 0 && <div className="flex gap-2 flex-wrap">{selection.map(item => <button key={item.slug} onClick={() => toggle(item)} disabled={importing || active}
                     className="flex items-center gap-2 max-w-full rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 px-3 py-1.5 text-xs cursor-pointer">
                     <span className="truncate">{item.name}</span><FaTimes aria-label="Remove selection" className="shrink-0" />
                 </button>)}</div>}
-                {active && <p className="text-xs text-amber-300">A background import is {crawlStatus}. Wait for it to finish before starting another import.</p>}
-                {(active || queued) && <div className="text-sm text-slate-300 border-t border-white/10 pt-3">
+                <p className="text-xs text-slate-400">Imports start immediately. Keep this browser tab open until they finish.</p>
+                {(active || started) && <div className="text-sm text-slate-300 border-t border-white/10 pt-3">
                     <div className="flex justify-between gap-3 flex-wrap"><span>Import status: {crawlStatus} · {crawlProgress}% · {crawlStats.movies} imported · {crawlStats.skipped || 0} already saved · {crawlStats.errors} errors</span>
                         <button onClick={onViewJob} className="text-emerald-300 hover:text-white cursor-pointer">View import logs →</button></div>
                     {crawlLogs[0] && <p className="text-xs text-slate-400 mt-2">{crawlLogs[0].message}</p>}
@@ -117,7 +115,7 @@ export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, 
                                     <p className="text-xs text-emerald-300 mt-2">{item.year || '—'} · {types[item.type] || 'Movie'} {item.quality ? `· ${item.quality}` : ''}</p>
                                     {existing && <span className="text-xs text-slate-400 mt-2">Already in MFILM</span>}
                                     <button onClick={() => toggle(item)} aria-label={`${selected ? 'Deselect' : 'Select'} ${item.name}`} aria-pressed={selected}
-                                        disabled={!!existing || queueing || (!selected && selection.length >= 20)}
+                                        disabled={!!existing || importing || active}
                                         className={`mt-auto pt-3 text-sm font-semibold flex items-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${selected ? 'text-emerald-300' : 'text-white'}`}>
                                         {selected && <FaCheck />} {existing ? 'Already imported' : selected ? 'Selected' : 'Select movie'}
                                     </button>

@@ -1,4 +1,4 @@
-import { crawlOptions, selectedMovieOptions, CRAWLER_ACTIVE } from '../../src/utils/crawlerJob.js';
+import { crawlOptions, CRAWLER_ACTIVE } from '../../src/utils/crawlerJob.js';
 
 // Durable page snapshots and cursors let a different cloud process resume the same job.
 // The GitHub concurrency group serializes workers. jobId fences stale writes after replacement.
@@ -13,8 +13,7 @@ export async function runCrawlerJob({ store, fetchPage, importMovie, now = Date.
     }
     if (job.control === 'pause' || job.status === 'paused') return { state: 'paused' };
     if (Number(job.lockUntil) > now()) return { state: 'busy' };
-    const options = job.options.type === 'selected' ? selectedMovieOptions(job.options.movies, job.options.delayMs)
-        : crawlOptions(job.options.pageStart, job.options.pageEnd, job.options.delayMs);
+    const options = crawlOptions(job.options.pageStart, job.options.pageEnd, job.options.delayMs);
     const started = now(), id = job.jobId;
     let stats = { ...job.stats }, logs = [...(job.logs || [])], failures = [...(job.failures || [])];
     let cursor = { ...job.cursor }, pageItems = [...(job.pageItems || [])];
@@ -30,8 +29,7 @@ export async function runCrawlerJob({ store, fetchPage, importMovie, now = Date.
             progress: Math.min(99, Math.floor(completed / total * 100)), heartbeatAt: now(),
             lockUntil: now() + 20 * 60000, ...extra });
     };
-    log(options.type === 'selected' ? `Importing ${options.movies.length} selected KKPhim movies.`
-        : `Cloud crawl started: pages ${options.pageEnd} → ${options.pageStart}. Newest films remain first.`);
+    log(`Cloud crawl started: pages ${options.pageEnd} → ${options.pageStart}. Newest films remain first.`);
     const waitingUntil = budgetPauseAt();
     if (waitingUntil) {
         log('Daily background budget reached. Waiting for quota reset.', 'warning');
@@ -61,9 +59,9 @@ export async function runCrawlerJob({ store, fetchPage, importMovie, now = Date.
                 return { state: 'queued' };
             }
             if (!pageItems.length) {
-                const items = options.type === 'selected' ? options.movies : await fetchPage(cursor.page);
+                const items = await fetchPage(cursor.page);
                 // KKPhim lists newest first; import oldest first, INCLUDING within each page.
-                pageItems = (options.type === 'selected' ? [...items] : [...items].reverse()).filter(item => typeof item.slug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.slug));
+                pageItems = [...items].reverse().filter(item => typeof item.slug === 'string' && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(item.slug));
                 cursor.index = 0;
                 log(`Page ${cursor.page}: ${pageItems.length} films.`);
                 if (!await checkpoint()) return { state: 'superseded' };

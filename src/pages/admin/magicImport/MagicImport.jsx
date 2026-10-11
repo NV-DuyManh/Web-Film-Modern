@@ -5,7 +5,7 @@ import { rentalPriceRange } from '../../../utils/importRentalPricing';
 import { randomMoviePlanID, movieMaintenancePatch } from '../../../utils/movieMaintenance';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
 import { useShowTimes, useMovies } from '../../../hooks/useCollections';
-import React, { useState, useContext, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useContext, useEffect, useRef, useCallback, useMemo } from 'react';
 import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser, FaPause, FaStop, FaGlobe, FaDatabase, FaSpider, FaSearch } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
@@ -20,8 +20,10 @@ import KkphimSearch from './KkphimSearch';
 
 import { resolveMovieImages, movieArtwork } from '../../../utils/movieImages';
 import { detectGender } from '../../../utils/genderDetect';
-import { CRAWLER_ACTIVE, EMPTY_CRAWL_STATS, crawlOptions } from '../../../utils/crawlerJob';
-import { subscribeCrawlerJob, queueCrawlerJob, controlCrawlerJob } from '../../../services/crawlerJobService';
+import { EMPTY_CRAWL_STATS } from '../../../utils/crawlerJob';
+import { fetchMoviesList } from '../../../services/kkphimService';
+import { immediateKkphimImporter } from '../../../services/immediateKkphimImport';
+const CRAWLER_ACTIVE = ['running', 'paused'];
 
 // Helper chuyển chuỗi tiếng Việt có dấu thành slug không dấu
 const slugify = (text) => {
@@ -545,49 +547,85 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     const [crawlLogs, setCrawlLogs] = useState([]);
     const [crawlStats, setCrawlStats] = useState({ movies: 0, episodes: 0, categories: 0, actors: 0, directors: 0, pages: 0, errors: 0 });
     const [crawlProgress, setCrawlProgress] = useState(0);
-    const [crawlBusy, setCrawlBusy] = useState(false);
-    const [crawlReady, setCrawlReady] = useState(false);
-    const [crawlControl, setCrawlControl] = useState('run');
-    const [crawlResumeAt, setCrawlResumeAt] = useState(0);
+    const crawlBusy = false;
+    const crawlReady = true;
+    const crawlControl = crawlStatus === 'paused' ? 'pause' : 'run';
+    const importControl = useRef({ running: false, pause: false, stop: false });
     const addCrawlLog = useCallback((message, type = 'info') => {
         setCrawlLogs(prev => [{ message, type, time: new Date().toLocaleTimeString('en-GB') }, ...prev].slice(0, 100));
     }, []);
-    useEffect(() => subscribeCrawlerJob(job => {
-        setCrawlReady(true);
-        setCrawlStatus(job?.status || 'idle');
-        setCrawlControl(job?.control || 'run');
-        setCrawlResumeAt(Number(job?.resumeAt) || 0);
-        setCrawlLogs(job?.logs || []);
-        setCrawlStats({ ...EMPTY_CRAWL_STATS, ...job?.stats });
-        setCrawlProgress(job?.progress || 0);
-        if (job && job.options?.type !== 'selected' && CRAWLER_ACTIVE.includes(job.status)) {
-            setCrawlPageStart(job.options.pageStart);
-            setCrawlPageEnd(job.options.pageEnd);
-            setCrawlDelay(job.options.delayMs);
-        }
-    }, error => {
-        setCrawlReady(false);
-        addCrawlLog(`Cannot read cloud crawl status: ${error.message}`, 'error');
-    }), [addCrawlLog]);
-    const handleStartCrawl = async () => {
-        if (crawlBusy || !crawlReady || CRAWLER_ACTIVE.includes(crawlStatus)) return;
-        setCrawlBusy(true);
+    const runImmediateImport = async (selected) => {
+        if (importControl.current.running) throw new Error('An import is already running.');
+        const pageStart = Number(crawlPageStart), pageEnd = Number(crawlPageEnd), delay = Number(crawlDelay);
+        if (!selected && (!Number.isInteger(pageStart) || !Number.isInteger(pageEnd) || pageStart < 1 || pageEnd < pageStart || !Number.isFinite(delay) || delay < 0)) throw new Error('Choose a valid page range and delay.');
+        importControl.current = { running: true, pause: false, stop: false };
+        setCrawlStatus('running'); setCrawlLogs([]); setCrawlProgress(0);
+        const stats = { ...EMPTY_CRAWL_STATS };
+        setCrawlStats(stats);
+        const jobId = crypto.randomUUID();
+        const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+        const waitForControl = async () => {
+            while (importControl.current.pause && !importControl.current.stop) await sleep(150);
+            return !importControl.current.stop;
+        };
+        const pages = selected ? 1 : pageEnd - pageStart + 1;
+        let finishedPages = 0;
+        addCrawlLog(selected ? `Importing ${selected.length} selected movies now.` : `Crawling pages ${pageEnd} → ${pageStart} now.`);
         try {
-            const options = crawlOptions(crawlPageStart, crawlPageEnd, crawlDelay);
-            if (!plans.length || plans.some(plan => !rentalPriceRange(plan))) throw new Error('Check movie plans and rental prices before starting.');
-            await queueCrawlerJob(options);
-        } catch (error) { addCrawlLog(error.message, 'error'); }
-        finally { setCrawlBusy(false); }
+            const importer = await immediateKkphimImporter();
+            for (let page = selected ? 1 : pageEnd; page >= (selected ? 1 : pageStart); page--) {
+                if (!await waitForControl()) break;
+                let items = selected;
+                if (!items) {
+                    const response = await fetchMoviesList(page);
+                    const source = response?.data?.items || response?.items;
+                    if (!Array.isArray(source)) throw new Error('KKPhim returned an invalid movie list.');
+                    items = [...source].reverse();
+                }
+                for (let index = 0; index < items.length; index++) {
+                    if (!await waitForControl()) break;
+                    const item = items[index];
+                    addCrawlLog(`Importing: ${item.name || item.slug}`);
+                    try {
+                        const delta = await importer(item, { jobId, page });
+                        for (const [key, count] of Object.entries(delta)) if (key in stats) stats[key] += count;
+                        addCrawlLog(`${delta.skipped ? 'Already imported' : 'Saved'}: ${item.name || item.slug}`, 'success');
+                    } catch (error) {
+                        stats.errors++;
+                        addCrawlLog(`${item.name || item.slug}: ${error.message}`, 'error');
+                        if (error.code === 'resource-exhausted' || error.code === 'permission-denied' || selected?.length === 1) throw error;
+                    }
+                    setCrawlStats({ ...stats });
+                    setCrawlProgress(Math.round((finishedPages + (index + 1) / Math.max(1, items.length)) / pages * 100));
+                }
+                if (importControl.current.stop) break;
+                finishedPages++; stats.pages++; setCrawlStats({ ...stats });
+                if (!selected && page > pageStart && delay) await sleep(delay);
+            }
+            const stopped = importControl.current.stop;
+            setCrawlStatus(stopped ? 'stopped' : 'done');
+            if (!stopped) setCrawlProgress(100);
+            addCrawlLog(`${stopped ? 'Stopped' : 'Finished'}: ${stats.movies} movies, ${stats.episodes} episodes, ${stats.skipped} already saved, ${stats.errors} errors.`, stats.errors ? 'warning' : 'success');
+            return { ...stats, stopped };
+        } catch (error) {
+            setCrawlStatus('failed'); setCrawlStats({ ...stats });
+            addCrawlLog(error.message, 'error');
+            throw error;
+        } finally { importControl.current.running = false; }
     };
-    const controlCrawl = async action => {
-        if (crawlBusy) return;
-        setCrawlBusy(true);
-        try { await controlCrawlerJob(action); }
-        catch (error) { addCrawlLog(error.message, 'error'); }
-        finally { setCrawlBusy(false); }
+    const handleStartCrawl = async () => {
+        try { await runImmediateImport(); }
+        catch { /* The actual error is displayed in live logs. */ }
     };
-    const handlePauseCrawl = () => controlCrawl(crawlControl === 'pause' || crawlStatus === 'paused' ? 'run' : 'pause');
-    const handleStopCrawl = () => controlCrawl('stop');
+    const handlePauseCrawl = () => {
+        importControl.current.pause = !importControl.current.pause;
+        setCrawlStatus(importControl.current.pause ? 'paused' : 'running');
+    };
+    const handleStopCrawl = () => {
+        importControl.current.stop = true;
+        importControl.current.pause = false;
+        addCrawlLog('Stopping after the current movie has finished saving.', 'warning');
+    };
 
     // === Auto Fix Missing Slugs ===
     const autoFixSlugs = useCallback(async () => {
@@ -670,9 +708,9 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 {/* Delay */}
                                 <div className="mb-4">
                                     <label className="text-[10px] uppercase tracking-wider text-gray-500 font-bold block mb-1">Delay between pages (ms)</label>
-                                    <input type="number" min="500" step="100" disabled={CRAWLER_ACTIVE.includes(crawlStatus) || crawlBusy} value={crawlDelay} onChange={e => setCrawlDelay(Math.max(500, parseInt(e.target.value) || 1500))}
+                                    <input type="number" min="0" step="100" disabled={CRAWLER_ACTIVE.includes(crawlStatus) || crawlBusy} value={crawlDelay} onChange={e => setCrawlDelay(Math.max(0, parseInt(e.target.value) || 0))}
                                         className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-orange-400" />
-                                    <p className="text-[10px] text-gray-600 mt-1">Recommended: 1500ms. Minimum: 500ms.</p>
+                                    <p className="text-[10px] text-gray-600 mt-1">Delay is optional. Use 0 to crawl without a pause between pages.</p>
                                 </div>
 
                                 {/* Info */}
@@ -681,13 +719,13 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                     <p className="text-[11px] text-orange-300 mt-1">⏱️ Estimated processing time: ~<span className="font-bold text-white">{Math.round(((crawlPageEnd - crawlPageStart + 1) * 24 * (crawlDelay / 2 + 300) + (crawlPageEnd - crawlPageStart + 1) * crawlDelay) / 60000)}</span> minutes.</p>
                                 </div>
 
-                                <p className="text-[11px] text-orange-300 mb-3">Cloud crawl continues after you leave. Start may take a few minutes. Order: {crawlPageEnd} → {crawlPageStart}, oldest to newest.</p>
+                                <p className="text-[11px] text-orange-300 mb-3">Starts immediately. Keep this browser tab open while importing. Order: {crawlPageEnd} → {crawlPageStart}, oldest to newest.</p>
                                 {/* Action Buttons */}
                                 <div className="flex flex-col gap-2">
                                     {!CRAWLER_ACTIVE.includes(crawlStatus) ? (
                                         <button onClick={handleStartCrawl} disabled={!crawlReady || crawlBusy}
                                             className="w-full py-3 rounded-xl bg-linear-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(249,115,22,0.4)] transition-all disabled:opacity-50">
-                                            <FaPlay /> Start Cloud Crawl
+                                            <FaPlay /> Start Crawl
                                         </button>
                                     ) : (
                                         <div className="grid grid-cols-2 gap-2">
@@ -753,7 +791,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                             (crawlStatus === 'paused' || crawlControl === 'pause') ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' :
                                                 crawlStatus === 'done' ? 'bg-blue-500/20 text-blue-400 border-blue-500/30' :
                                                     'bg-gray-500/20 text-gray-400 border-gray-500/30'}`}>
-                                        {crawlStatus === 'queued' ? '🕓 Queued on cloud' : crawlStatus === 'failed' ? '🔴 Failed — see logs' : crawlStatus === 'stopped' ? '⛔ Stopped' : crawlStatus === 'running' ? '🟢 Running' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '🟡 Pause' : crawlStatus === 'done' ? '🔵 Finished' : '⚪ Idle'}
+                                        {crawlStatus === 'failed' ? '🔴 Failed — see logs' : crawlStatus === 'stopped' ? '⛔ Stopped' : crawlStatus === 'running' ? '🟢 Running' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '🟡 Pause' : crawlStatus === 'done' ? '🔵 Finished' : '⚪ Idle'}
                                     </span>
                                 </h2>
 
@@ -761,7 +799,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                 {crawlStatus !== 'idle' && (
                                     <div className="mb-3">
                                         <div className="flex justify-between text-xs font-bold text-orange-400 mb-1">
-                                            <span>{crawlStatus === 'queued' ? crawlResumeAt ? `🕓 Daily budget reached. Auto-resume after ${new Date(crawlResumeAt).toLocaleString('en-GB')}` : '🕓 Waiting for cloud worker...' : crawlStatus === 'failed' ? 'Failed' : crawlStatus === 'stopped' ? 'Stopped' : crawlStatus === 'running' ? '⏳ Crawling...' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '⏸️ Pause' : '✅ Finished'}</span>
+                                            <span>{crawlStatus === 'failed' ? 'Failed' : crawlStatus === 'stopped' ? 'Stopped' : crawlStatus === 'running' ? '⏳ Crawling...' : (crawlStatus === 'paused' || crawlControl === 'pause') ? '⏸️ Pause' : '✅ Finished'}</span>
                                             <span>{crawlProgress}%</span>
                                         </div>
                                         <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
@@ -777,7 +815,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                                         {crawlLogs.length === 0 ? (
                                             <div className="flex flex-col items-center justify-center h-full text-gray-600 opacity-50">
                                                 <FaSpider className="text-5xl mb-3" />
-                                                <p>Nhấn "Start Cloud Crawl" để bắt đầu thu thập dữ liệu từ KKPhim...</p>
+                                                <p>Nhấn "Start Crawl" để bắt đầu thu thập dữ liệu từ KKPhim...</p>
                                             </div>
                                         ) : (
                                             crawlLogs.map((log, idx) => (
@@ -798,7 +836,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                 </div>
             ) : mainTab === 'SEARCH' ? (
                 <KkphimSearch existingMovies={existingMovies} crawlReady={crawlReady} crawlStatus={crawlStatus}
-                    crawlStats={crawlStats} crawlLogs={crawlLogs} crawlProgress={crawlProgress} onViewJob={() => setMainTab('CRAWLER')} />
+                    crawlStats={crawlStats} crawlLogs={crawlLogs} crawlProgress={crawlProgress} onImport={runImmediateImport} onViewJob={() => setMainTab('CRAWLER')} />
             ) : (
                 /* ==================== MANUAL IMPORT UI (existing) ==================== */
                 <>

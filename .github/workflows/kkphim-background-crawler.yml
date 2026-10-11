@@ -2,7 +2,7 @@ name: KKPhim Background Crawler
 
 on:
   schedule:
-    # Resume the admin queue first, then the once-daily discovery queue.
+    # Continue daily discovery and publish changes made by immediate admin imports.
     - cron: '7-59/5 * * * *'
   workflow_dispatch:
 
@@ -28,17 +28,21 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Continue requested crawl
+      - name: Continue daily discovery
         id: crawl
         run: node scripts/crawlKkphim.mjs
+      - name: Refresh metadata changed by immediate imports
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: npm run seo:refresh -- --incremental --budget
       - name: Publish changed public cache without database scans
-        if: steps.crawl.outputs.publish == 'true'
+        if: ${{ !cancelled() }}
         run: |
           git config user.name "MFILM Catalog"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add server/seo/catalog.json public/sitemap.xml
           if ! git diff --cached --quiet; then
-            git commit -m "chore: publish crawled public catalog"
+            git commit -m "chore: publish updated public catalog"
             git pull --rebase origin main
             git push origin HEAD:main
           fi
