@@ -1,24 +1,22 @@
 import { trackedSetDoc as setDoc, trackedUpdateDoc as updateDoc } from '../../../services/catalogWrites';
 import useEpisodesForMovies from '../../../hooks/useEpisodesForMovies';
-import { episodeSourceFingerprint } from '../../../utils/episodeSourceFingerprint';
-import { movieTime } from '../../../utils/movieRecency';
-import { parseEpisode, episodeKey, highestEpisode } from '../../../utils/episodes';
+import { episodeKey } from '../../../utils/episodes';
 import { rentalPriceRange } from '../../../utils/importRentalPricing';
 import { randomMoviePlanID, movieMaintenancePatch } from '../../../utils/movieMaintenance';
 import { fetchDocumentsRealtime } from '../../../services/firebaseService';
 import { useShowTimes, useMovies } from '../../../hooks/useCollections';
-import React, { useState, useContext, useEffect, useRef, useCallback, useMemo } from 'react';
-import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser, FaPause, FaStop, FaGlobe, FaDatabase, FaSpider, FaSyncAlt, FaClock } from 'react-icons/fa';
+import React, { useState, useContext, useEffect, useCallback, useMemo } from 'react';
+import { FaMagic, FaCloudUploadAlt, FaCheckCircle, FaFileExcel, FaTrash, FaExchangeAlt, FaRobot, FaCopy, FaPlay, FaEraser, FaPause, FaStop, FaGlobe, FaDatabase, FaSpider, FaSearch } from 'react-icons/fa';
 import * as XLSX from 'xlsx';
 import { parseTSV, mapMovieData } from './MagicParser';
 import { db } from '../../../config/firebaseConfig';
-import { collection, doc, onSnapshot, getDoc, getDocFromServer, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
+import { collection, doc, getDocFromServer } from 'firebase/firestore';
 
 import { CategoryContext } from '../../../contexts/CategoryProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 
-import { fetchMoviesList, fetchMovieDetails, mapMovieStatus } from '../../../services/kkphimService';
+import KkphimSearch from './KkphimSearch';
 
 import { resolveMovieImages, movieArtwork } from '../../../utils/movieImages';
 import { detectGender } from '../../../utils/genderDetect';
@@ -87,7 +85,7 @@ const findMatchingMovie = (movieList, candidate) => {
 };
 
 function MagicImport() {
-    const [mainTab, setMainTab] = useState('MANUAL');
+    const [mainTab, setMainTab] = useState('SEARCH');
     const [previewData, setPreviewData] = useState([]);
     const [entityReady, setEntityReady] = useState({});
     const needsEntities = mainTab === 'MANUAL' && previewData.length > 0;
@@ -554,7 +552,6 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
     const addCrawlLog = useCallback((message, type = 'info') => {
         setCrawlLogs(prev => [{ message, type, time: new Date().toLocaleTimeString('en-GB') }, ...prev].slice(0, 100));
     }, []);
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
     useEffect(() => subscribeCrawlerJob(job => {
         setCrawlReady(true);
         setCrawlStatus(job?.status || 'idle');
@@ -563,7 +560,7 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         setCrawlLogs(job?.logs || []);
         setCrawlStats({ ...EMPTY_CRAWL_STATS, ...job?.stats });
         setCrawlProgress(job?.progress || 0);
-        if (job && CRAWLER_ACTIVE.includes(job.status)) {
+        if (job && job.options?.type !== 'selected' && CRAWLER_ACTIVE.includes(job.status)) {
             setCrawlPageStart(job.options.pageStart);
             setCrawlPageEnd(job.options.pageEnd);
             setCrawlDelay(job.options.delayMs);
@@ -621,259 +618,6 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
         }
     }, [existingMovies]);
 
-    // ==================== KKPHIM AUTO-SYNC EPISODES ====================
-    const [syncPages, setSyncPages] = useState(2); // Số trang phim mới quét (1 trang ~ 24 phim)
-    const [syncStatus, setSyncStatus] = useState('idle'); // idle | running | done
-    const [syncLogs, setSyncLogs] = useState([]);
-    const [syncStats, setSyncStats] = useState({ checked: 0, moviesUpdated: 0, newEpisodes: 0, errors: 0 });
-    const [syncProgress, setSyncProgress] = useState(0);
-    const [autoCronInterval, setAutoCronInterval] = useState(0);
-    const [lastSyncTime, setLastSyncTime] = useState('');
-    const syncAbortRef = useRef(false);
-
-    const addSyncLog = useCallback((message, type = 'info') => {
-        setSyncLogs(prev => [{ message, type, time: new Date().toLocaleTimeString('vi-VN') }, ...prev].slice(0, 500));
-    }, []);
-
-    // Lắng nghe cấu hình AutoSync từ Firebase Realtime
-    useEffect(() => {
-        const docRef = doc(db, "Settings", "AutoSync");
-        const unsub = onSnapshot(docRef, (snap) => {
-            if (snap.exists()) {
-                const data = snap.data();
-                setAutoCronInterval(Number(data.interval) || 0);
-                if (data.lastSyncTime) setLastSyncTime(data.lastSyncTime);
-                if (data.syncPages) setSyncPages(Number(data.syncPages));
-            }
-        });
-        return () => unsub();
-    }, []);
-
-    const handleSetAutoCron = async (val) => {
-        val = val > 0 ? Math.max(30, val) : 0;
-        setAutoCronInterval(val);
-        const docRef = doc(db, "Settings", "AutoSync");
-        await setDoc(docRef, { interval: val }, { merge: true });
-        await setDoc(doc(db, "Settings", "CloudEpisodeSync"), { enabled: val > 0, intervalMinutes: val || 30 }, { merge: true });
-
-        if (val > 0) {
-            addSyncLog(`⏰ Đã kích hoạt chế độ tự động kiểm tra tập mới mỗi ${val} phút (Đồng bộ Cloud).`, 'success');
-        } else {
-            addSyncLog(`⏹️ Đã tắt chế độ tự động kiểm tra tập mới.`, 'warning');
-        }
-    };
-
-    const handleSetSyncPages = async (val) => {
-        setSyncPages(val);
-        const docRef = doc(db, "Settings", "AutoSync");
-        await setDoc(docRef, { syncPages: val }, { merge: true });
-        await setDoc(doc(db, "Settings", "CloudEpisodeSync"), { syncPages: val }, { merge: true });
-    };
-
-    const handleStartSync = async (isAuto = false) => {
-        if (syncStatus === 'running') return;
-
-        // Cơ chế Distributed Lock (Khóa phân tán chống chạy đè)
-        if (isAuto && autoCronInterval > 0) {
-            try {
-                const docRef = doc(db, "Settings", "AutoSync");
-                const snap = await getDoc(docRef);
-                if (snap.exists()) {
-                    const data = snap.data();
-                    if (data.lastSyncTime) {
-                        const lastSyncDate = new Date(data.lastSyncTime);
-                        const now = new Date();
-                        const diffMins = (now - lastSyncDate) / (1000 * 60);
-                        // Cho phép sai số 1 phút (để bù trừ độ trễ)
-                        if (diffMins < (autoCronInterval - 1)) {
-                            console.log(`[AutoSync] Bỏ qua do đã có máy khác chạy cách đây ${diffMins.toFixed(1)} phút.`);
-                            return; // Dừng lại, nhường máy khác chạy
-                        }
-                    }
-                }
-            } catch (err) {
-                console.error("Lỗi khi kiểm tra Lock:", err);
-            }
-        }
-
-        syncAbortRef.current = false;
-        setSyncStatus('running');
-        setSyncLogs([]);
-        setSyncProgress(0);
-        const stats = { checked: 0, moviesUpdated: 0, newEpisodes: 0, errors: 0 };
-        setSyncStats(stats);
-
-        // Khóa ngay lập tức trên Firebase để báo cho các máy khác biết "Tôi đang chạy"
-        try {
-            const nowISO = new Date().toISOString();
-            await setDoc(doc(db, "Settings", "AutoSync"), { lastSyncTime: nowISO }, { merge: true });
-        } catch (err) {
-            console.error("Lỗi set lock:", err);
-        }
-
-        addSyncLog(`🚀 Bắt đầu quét tập mới từ ${syncPages} trang mới nhất của KKPhim (~${syncPages * 24} phim)...`, 'info');
-
-        try {
-            for (let page = 1; page <= syncPages; page++) {
-                if (syncAbortRef.current) { addSyncLog('⛔ Đã dừng đồng bộ.', 'error'); break; }
-
-                addSyncLog(`📄 Đang kiểm tra trang ${page}/${syncPages}...`);
-                let listData;
-                try {
-                    listData = await fetchMoviesList(page);
-                } catch (err) {
-                    addSyncLog(`❌ Lỗi tải trang ${page}: ${err.message}`, 'error');
-                    stats.errors++;
-                    setSyncStats({ ...stats });
-                    await sleep(1000);
-                    continue;
-                }
-
-                const items = listData?.data?.items || [];
-                if (items.length === 0) continue;
-
-                for (let i = 0; i < items.length; i++) {
-                    if (syncAbortRef.current) break;
-
-                    const currentProgress = ((page - 1) / syncPages) * 100 + ((i + 1) / items.length) * (100 / syncPages);
-                    setSyncProgress(Math.round(currentProgress));
-
-                    const item = items[i];
-                    stats.checked++;
-                    setSyncStats({ ...stats });
-
-                    // Kiểm tra xem phim này có trong database của ta không
-                    const matchedMovie = findMatchingMovie(existingMovies, {
-                        name: item.origin_name || item.name,
-                        otherName: item.name,
-                        slug: item.slug
-                    });
-
-                    if (!matchedMovie) {
-                        // Phim này chưa có trong kho phim -> bỏ qua
-                        continue;
-                    }
-
-                    // Nếu có phim trong kho -> Lấy chi tiết tập phim từ KKPhim
-                    let detail;
-                    try {
-                        detail = await fetchMovieDetails(item.slug);
-                        await sleep(Math.max(250, crawlDelay / 3));
-                    } catch (err) {
-                        stats.errors++;
-                        setSyncStats({ ...stats });
-                        continue;
-                    }
-
-                    const movieData = detail?.movie;
-                    const episodesData = detail?.episodes || [];
-                    if (!episodesData || episodesData.length === 0) continue;
-
-                    // Lấy danh sách tập hiện có của phim trong database
-                    const fingerprint = await episodeSourceFingerprint(movieData, episodesData);
-                    if (matchedMovie.sourceEpisodesFingerprint === fingerprint) continue;
-                    const episodeSnapshot = await getDocs(query(collection(db, 'Episodes'), where('movieID', '==', matchedMovie.id)));
-                    const currentMovieEps = episodeSnapshot.docs.map(value => ({ ...value.data(), id: value.id }));
-                    const currentEpMap = new Map(currentMovieEps.map(e => [episodeKey(e), e]));
-
-                    let newEpsCountForThisMovie = 0;
-                    let fixedEpsCountForThisMovie = 0;
-                    let highestEp = highestEpisode(currentMovieEps);
-
-                    const firstServer = episodesData[0];
-                    const serverData = firstServer?.server_data || [];
-
-                    for (const ep of serverData) {
-                        const parsedEpisode = parseEpisode(ep.name);
-                        if (!parsedEpisode) continue;
-                        const epNum = parsedEpisode.number;
-                        highestEp = Math.max(highestEp, parsedEpisode.end);
-
-                        const existingEp = currentEpMap.get(parsedEpisode.key);
-
-                        if (!existingEp) {
-                            // 1. Thêm tập mới chưa có
-                            const epRef = doc(collection(db, "Episodes"));
-                            await setDoc(epRef, {
-                                id: epRef.id,
-                                movieID: matchedMovie.id,
-                                title: matchedMovie.name,
-                                numberEpisode: epNum,
-                                nameEpisode: ep.name || `Tập ${epNum}`,
-                                url: ep.link_embed || '',
-                                urlM3u8: ep.link_m3u8 || '',
-                                description: "Đang cập nhật...",
-                                createdAt: new Date().toISOString(),
-                            });
-                            currentEpMap.set(parsedEpisode.key, { id: epRef.id, numberEpisode: epNum, nameEpisode: ep.name, url: ep.link_embed, urlM3u8: ep.link_m3u8 });
-                            newEpsCountForThisMovie++;
-                            stats.newEpisodes++;
-                            setSyncStats({ ...stats });
-                        } else {
-                            // 2. Sửa lại link nếu link cũ bị sai, rác ("vdvdfv") hoặc không chuẩn
-                            const isDummyOrBroken = Number(existingEp.numberEpisode) !== epNum || !existingEp.url ||
-                                !existingEp.url.startsWith('http') ||
-                                existingEp.url !== ep.link_embed ||
-                                existingEp.urlM3u8 !== ep.link_m3u8;
-
-                            if (isDummyOrBroken && (ep.link_embed || ep.link_m3u8)) {
-                                const epRef = doc(db, "Episodes", existingEp.id);
-                                await updateDoc(epRef, {
-                                    numberEpisode: epNum,
-                                    url: ep.link_embed || existingEp.url || '',
-                                    urlM3u8: ep.link_m3u8 || existingEp.urlM3u8 || '',
-                                    nameEpisode: ep.name || existingEp.nameEpisode || `Tập ${epNum}`,
-                                    title: matchedMovie.name || existingEp.title || '',
-                                    updatedAt: new Date().toISOString()
-                                });
-                                fixedEpsCountForThisMovie++;
-                            }
-                        }
-                    }
-
-                    if (newEpsCountForThisMovie > 0 || fixedEpsCountForThisMovie > 0 || matchedMovie.sourceEpisodesFingerprint !== fingerprint) {
-                        // Cập nhật trạng thái và số tập của phim
-                        const movieRef = doc(db, "Movies", matchedMovie.id);
-                        const updatePayload = {
-                            sourceEpisodesFingerprint: fingerprint,
-                            endEpisode: Math.max(highestEp, Number(matchedMovie.endEpisode) || 1),
-                            status: movieData?.status ? mapMovieStatus(movieData.status) : (matchedMovie.status || 'Đang chiếu'),
-                            updatedAt: new Date().toISOString(),
-                            ...(movieTime(movieData.modified?.time) ? { sourceUpdatedAt: movieTime(movieData.modified.time) } : {})
-                        };
-                        await updateDoc(movieRef, updatePayload);
-
-                        stats.moviesUpdated++;
-                        setSyncStats({ ...stats });
-                        addSyncLog(`🎉 CẬP NHẬT THÀNH CÔNG: "${matchedMovie.otherName || matchedMovie.name}" (+${newEpsCountForThisMovie} tập mới, sửa ${fixedEpsCountForThisMovie} link tập)`, 'success');
-                    } else {
-                        addSyncLog(`✔️ "${matchedMovie.otherName || matchedMovie.name}" đã chuẩn xác đủ ${currentEpMap.size} tập, không cần sửa.`);
-                    }
-                }
-                await sleep(500);
-            }
-
-            const nowStr = new Date().toLocaleString('vi-VN');
-            setSyncStatus('done');
-            setSyncProgress(100);
-            addSyncLog(`🏁 Hoàn tất đồng bộ! Đã kiểm tra ${stats.checked} phim: Cập nhật ${stats.moviesUpdated} phim (+${stats.newEpisodes} tập mới).`, 'success');
-        } catch (err) {
-            console.error("Lỗi khi auto-sync tập mới:", err);
-            addSyncLog(`❌ Lỗi đồng bộ: ${err.message}`, 'error');
-            setSyncStatus('idle');
-        }
-    };
-
-    const handleStopSync = () => {
-        syncAbortRef.current = true;
-        setSyncStatus('idle');
-    };
-
-    // Background auto cron sync timer
-    // Automatic episode sync runs only in the serialized, budgeted cloud workflow.
-    // Opening an admin tab must not launch a second periodic writer.
-
-
     return (
         <div className='p-6 min-h-screen text-white'>
             {/* ======= TOP-LEVEL TAB SWITCHER ======= */}
@@ -889,13 +633,10 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         ${mainTab === 'CRAWLER' ? 'bg-linear-to-r from-orange-500 to-red-600 text-white shadow-[0_0_20px_rgba(249,115,22,0.4)]' : 'bg-slate-800/60 text-gray-400 hover:text-white hover:bg-slate-700/60 border border-white/10'}`}>
                         <FaSpider /> KKPhim Crawler
                     </button>
-                    <button onClick={() => setMainTab('SYNC')}
+                    <button onClick={() => setMainTab('SEARCH')}
                         className={`flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition-all cursor-pointer
-                        ${mainTab === 'SYNC' ? 'bg-linear-to-r from-emerald-500 to-teal-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'bg-slate-800/60 text-gray-400 hover:text-white hover:bg-slate-700/60 border border-white/10'}`}>
-                        <FaSyncAlt className={syncStatus === 'running' ? 'animate-spin' : ''} /> Auto-Sync Tập Mới
-                        {autoCronInterval > 0 && (
-                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse ml-1" title={`Tự động quét mỗi ${autoCronInterval} phút`} />
-                        )}
+                        ${mainTab === 'SEARCH' ? 'bg-linear-to-r from-emerald-500 to-teal-600 text-white shadow-[0_0_20px_rgba(16,185,129,0.4)]' : 'bg-slate-800/60 text-gray-400 hover:text-white hover:bg-slate-700/60 border border-white/10'}`}>
+                        <FaSearch /> KKPhim Search
                     </button>
                 </div>
 
@@ -1055,168 +796,9 @@ Hãy tạo dữ liệu thật phong phú và tự nhiên. Tùy cơ ứng biến 
                         </div>
                     </div>
                 </div>
-            ) : mainTab === 'SYNC' ? (
-                /* ==================== AUTO-SYNC EPISODES UI ==================== */
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    {/* LEFT: Controls & Settings */}
-                    <div className="col-span-1 lg:col-span-4 flex flex-col gap-4">
-                        <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(16, 185, 129, 0.25), rgba(20, 184, 166, 0.25))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
-                            <div className='table-container p-5' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                                <h2 className='text-emerald-400 font-bold mb-4 uppercase tracking-wider text-sm flex items-center gap-2'>
-                                    <FaSyncAlt className={`text-xl ${syncStatus === 'running' ? 'animate-spin' : ''}`} /> Auto-Sync Tập Mới
-                                </h2>
-
-                                {/* Scope of sync */}
-                                <div className="mb-4">
-                                    <label className="text-[10px] uppercase tracking-wider text-gray-400 font-bold block mb-1">Số trang quét (Phim Mới Cập Nhật)</label>
-                                    <select
-                                        value={syncPages}
-                                        onChange={e => setSyncPages(Number(e.target.value))}
-                                        className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
-                                    >
-                                        <option value={1} className="bg-slate-900">1 Trang (~24 phim mới nhất)</option>
-                                        <option value={2} className="bg-slate-900">2 Trang (~48 phim mới nhất)</option>
-                                        <option value={3} className="bg-slate-900">3 Trang (~72 phim mới nhất - Khuyến nghị)</option>
-                                        <option value={5} className="bg-slate-900">5 Trang (~120 phim mới nhất)</option>
-                                    </select>
-                                </div>
-
-                                {/* Auto Cron Background Timer */}
-                                <div className="mb-4 p-3.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <label className="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-                                            <FaClock className="text-sm" /> Tự động quét ngầm định kỳ
-                                        </label>
-                                        {autoCronInterval > 0 && (
-                                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                                                Đang bật
-                                            </span>
-                                        )}
-                                    </div>
-                                    <select
-                                        value={autoCronInterval}
-                                        onChange={e => handleSetAutoCron(Number(e.target.value))}
-                                        className="w-full bg-black/40 border border-emerald-500/30 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-400 cursor-pointer"
-                                    >
-                                        <option value={0} className="bg-slate-900">Tắt (Chỉ quét khi bấm nút)</option>
-                                        <option value={15} className="bg-slate-900">Mỗi 15 phút (Cập nhật siêu tốc)</option>
-                                        <option value={30} className="bg-slate-900">Mỗi 30 phút (Khuyến nghị)</option>
-                                        <option value={60} className="bg-slate-900">Mỗi 60 phút (1 tiếng)</option>
-                                    </select>
-                                    <p className="text-[10px] text-gray-400 mt-2">
-                                        Khi bật, hệ thống sẽ tự động định kỳ quét KKPhim và chèn các tập mới nhất vào phim mà không cần thao tác tay.
-                                    </p>
-                                </div>
-
-                                {/* Action Buttons */}
-                                <div className="flex flex-col gap-2 mb-4">
-                                    {syncStatus !== 'running' ? (
-                                        <button
-                                            onClick={handleStartSync}
-                                            className="w-full py-3 rounded-xl bg-linear-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all"
-                                        >
-                                            <FaPlay /> Quét & Cập nhật tập mới ngay
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={handleStopSync}
-                                            className="w-full py-3 rounded-xl bg-red-600/80 hover:bg-red-600 text-white font-bold uppercase tracking-wider text-xs flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all"
-                                        >
-                                            <FaStop /> Dừng đồng bộ
-                                        </button>
-                                    )}
-                                </div>
-
-                                {/* Last Sync Info */}
-                                {lastSyncTime && (
-                                    <div className="text-[11px] text-gray-400 flex items-center justify-between border-t border-white/5 pt-3">
-                                        <span>Lần cập nhật gần nhất:</span>
-                                        <span className="font-semibold text-emerald-300">
-                                            {new Date(lastSyncTime).toLocaleString('vi-VN')}
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* RIGHT: Live Monitor & Logs */}
-                    <div className="col-span-1 lg:col-span-8 flex flex-col gap-4">
-                        <div className='table-wrapper' style={{ background: 'linear-gradient(120deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2))', boxShadow: '0 8px 25px rgba(0,0,0,0.5)' }}>
-                            <div className='table-container p-5 flex flex-col h-full' style={{ background: 'rgba(15, 23, 42, 0.92)' }}>
-                                {/* Stats Counters */}
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                                    <div className="bg-black/30 border border-white/10 rounded-xl p-3 text-center">
-                                        <div className="text-xl font-bold text-gray-200">{syncStats.checked}</div>
-                                        <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Phim đã quét</div>
-                                    </div>
-                                    <div className="bg-black/30 border border-emerald-500/30 rounded-xl p-3 text-center bg-emerald-500/5">
-                                        <div className="text-xl font-bold text-emerald-400">{syncStats.moviesUpdated}</div>
-                                        <div className="text-[10px] text-emerald-300 uppercase tracking-wider mt-0.5">Phim có tập mới</div>
-                                    </div>
-                                    <div className="bg-black/30 border border-teal-500/30 rounded-xl p-3 text-center bg-teal-500/5">
-                                        <div className="text-xl font-bold text-teal-400">{syncStats.newEpisodes}</div>
-                                        <div className="text-[10px] text-teal-300 uppercase tracking-wider mt-0.5">Tập mới đã thêm</div>
-                                    </div>
-                                    <div className="bg-black/30 border border-red-500/30 rounded-xl p-3 text-center">
-                                        <div className="text-xl font-bold text-red-400">{syncStats.errors}</div>
-                                        <div className="text-[10px] text-gray-400 uppercase tracking-wider mt-0.5">Lỗi</div>
-                                    </div>
-                                </div>
-
-                                {/* Progress Bar */}
-                                {syncStatus === 'running' && (
-                                    <div className="mb-3">
-                                        <div className="flex justify-between text-xs font-bold text-emerald-400 mb-1">
-                                            <span>⏳ Đang đồng bộ tập mới...</span>
-                                            <span>{syncProgress}%</span>
-                                        </div>
-                                        <div className="w-full bg-black/40 rounded-full h-3 overflow-hidden border border-white/10">
-                                            <div className="bg-linear-to-r from-emerald-400 via-teal-500 to-cyan-500 h-full rounded-full transition-[width] duration-500 ease-out"
-                                                style={{ width: `${syncProgress}%` }} />
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Log Console */}
-                                <div className="flex-1 bg-black/30 border border-white/10 rounded-xl overflow-hidden flex flex-col">
-                                    <div className="flex items-center justify-between px-3 py-2 bg-white/5 border-b border-white/10 text-xs font-bold text-gray-300">
-                                        <span className="flex items-center gap-1.5">
-                                            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                                            Nhật ký Đồng bộ (Live Sync Log)
-                                        </span>
-                                        {syncLogs.length > 0 && (
-                                            <button
-                                                onClick={() => setSyncLogs([])}
-                                                className="text-[10px] text-gray-400 hover:text-white px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 cursor-pointer"
-                                            >
-                                                Xóa log
-                                            </button>
-                                        )}
-                                    </div>
-                                    <div className="h-[450px] overflow-y-auto custom-scrollbar p-3 font-mono text-xs space-y-1">
-                                        {syncLogs.length === 0 ? (
-                                            <div className="flex flex-col items-center justify-center h-full text-gray-500 opacity-60">
-                                                <FaSyncAlt className="text-4xl mb-3 text-emerald-400 opacity-40" />
-                                                <p className="text-center">Bấm "Quét & Cập nhật tập mới ngay" hoặc bật chế độ tự động ngầm để bắt đầu.</p>
-                                            </div>
-                                        ) : (
-                                            syncLogs.map((log, idx) => (
-                                                <div key={idx} className={`py-1 px-2 rounded transition-all
-                                                ${log.type === 'error' ? 'text-red-400 bg-red-500/5' :
-                                                        log.type === 'success' ? 'text-emerald-400 bg-emerald-500/10 font-semibold' :
-                                                            log.type === 'warning' ? 'text-yellow-400 bg-yellow-500/5' :
-                                                                'text-gray-400'}`}>
-                                                    <span className="text-gray-600 mr-2">[{log.time}]</span>{log.message}
-                                                </div>
-                                            ))
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            ) : mainTab === 'SEARCH' ? (
+                <KkphimSearch existingMovies={existingMovies} crawlReady={crawlReady} crawlStatus={crawlStatus}
+                    crawlStats={crawlStats} crawlLogs={crawlLogs} crawlProgress={crawlProgress} onViewJob={() => setMainTab('CRAWLER')} />
             ) : (
                 /* ==================== MANUAL IMPORT UI (existing) ==================== */
                 <>

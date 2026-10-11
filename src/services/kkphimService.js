@@ -9,8 +9,9 @@ const buildUrl = (path, params = {}) => {
 };
 
 /** Helper: fetch JSON */
-const fetchJson = async (url) => {
-    const res = await fetch(url, { headers: { 'accept': 'application/json' }, signal: AbortSignal.timeout(15000) });
+const fetchJson = async (url, { signal } = {}) => {
+    const timeout = AbortSignal.timeout(15000);
+    const res = await fetch(url, { headers: { 'accept': 'application/json' }, signal: signal ? AbortSignal.any([signal, timeout]) : timeout });
     if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
     return res.json();
 };
@@ -53,8 +54,8 @@ export const fetchMoviesByCountry = async (slug, page = 1, filters = {}) => {
  * Tìm kiếm phim theo từ khóa
  * Endpoint: /v1/api/tim-kiem?keyword={keyword}
  */
-export const searchMovies = async (keyword, page = 1, limit = 24) => {
-    return fetchJson(buildUrl('/v1/api/tim-kiem', { keyword, page, limit }));
+export const searchMovies = async (keyword, page = 1, limit = 24, options = {}) => {
+    return fetchJson(buildUrl('/v1/api/tim-kiem', { keyword: keyword.trim(), page, limit }), options);
 };
 
 // ==================== CHI TIẾT PHIM ====================
