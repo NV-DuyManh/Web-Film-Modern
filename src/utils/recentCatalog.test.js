@@ -44,7 +44,7 @@ test('a completed import reaches fresh browser search, collection and homepage d
 });
 
 test('same-tab completion updates the homepage immediately and failures preserve the published catalog', async () => {
-    const home = { movies: [], sections: { new: [] }, categoryTypes: [] };
+    const home = { movies: [], sections: { new: [] }, categoryTypes: [], categoryIDs: ['not-on-homepage'] };
     const version = '1234567890abcdef';
     const cache = createPublicCatalogCache({ loadUpdates: async () => { throw new Error('quota'); }, fetchFn: async url => ({ ok: true, json: async () => url.endsWith('manifest.json') ? { version, generatedAt: publishedAt } : { version, ...home } }) });
     await cache.load('Home');
@@ -52,6 +52,7 @@ test('same-tab completion updates the homepage immediately and failures preserve
     cache.subscribe('Home', value => { notified = value; });
     cache.patch('Movies', movie);
     assert.equal(notified.sections.new[0], movie.id);
+    assert.ok(notified.categoryIDs.includes('not-on-homepage'));
     assert.equal((await cache.load('Home')).movies[0].id, movie.id);
     assert.equal(applyRecentHome(home, []).movies.length, 0);
 });

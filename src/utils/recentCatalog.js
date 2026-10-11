@@ -25,5 +25,6 @@ export function applyRecentMovies(items, updates, indexOnly = false) {
 
 export function applyRecentHome(home, movies) {
     if (!movies.length) return home;
-    return { ...home, ...homeCatalog({ catalog: { Movies: applyRecentMovies(home.movies, movies), CategoryTypes: home.categoryTypes || [] } }) };
+    const next = homeCatalog({ catalog: { Movies: applyRecentMovies(home.movies, movies), CategoryTypes: home.categoryTypes || [] } });
+    return { ...home, ...next, categoryIDs: [...new Set([...(home.categoryIDs || []), ...next.categoryIDs])] };
 }
