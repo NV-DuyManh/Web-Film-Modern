@@ -1,4 +1,4 @@
-import { completedPayments, dailyRevenue, formatAdminMoney } from '../../../utils/adminRevenue';
+import { completedPayments, dailyRevenue } from '../../../utils/adminRevenue';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import RevenueChart from './RevenueChart';
@@ -8,6 +8,7 @@ import { getTop5Films, getTop5RentedFilms } from '../../../services/firebaseServ
 import TopFilms from "./TopFilms";
 import TopRents from "./TopRents";
 import RentalChart from './RentalChart';
+import RevenueSummary from './RevenueSummary';
 
 function DashBoard() {
 
@@ -17,6 +18,9 @@ function DashBoard() {
 
     const allRents = useRentMovies();
     const rentMovies = useMemo(() => completedPayments(allRents, period), [allRents, period]);
+    const currencyCounts = useMemo(() => Object.fromEntries(['USD', 'VND'].map(currency => [currency,
+        completedPayments(allSubscriptions, { ...period, currency }).length + completedPayments(allRents, { ...period, currency }).length,
+    ])), [allSubscriptions, allRents, period]);
 
     const [topFilms, setTopFilms] = useState([]);
     const [topRents, setTopRents] = useState([]);
@@ -96,16 +100,7 @@ function DashBoard() {
         >
 
 
-            <section className="rounded-2xl border border-cyan-500/20 bg-slate-900/80 p-4">
-                <h2 className="font-bold text-cyan-300 mb-3">Successful Payment Revenue</h2>
-                <div className="flex flex-wrap gap-4 items-end">
-                    {['from', 'to'].map(key => <label key={key} className="text-sm text-slate-300">{key === 'from' ? 'From date' : 'To date'}<input type="date" value={period[key]} onChange={e => setPeriod(p => ({ ...p, [key]: e.target.value }))} className="block rounded-lg bg-slate-800 border border-slate-600 p-2 mt-1 text-white" /></label>)}
-                    <label className="text-sm text-slate-300">Currency<select value={period.currency} onChange={e => setPeriod(p => ({ ...p, currency: e.target.value }))} className="block rounded-lg bg-slate-800 border border-slate-600 p-2 mt-1"><option>USD</option><option>VND</option></select></label>
-                    <button className="text-amber-300 p-2" onClick={() => setPeriod({ from: '', to: '', currency: 'USD' })}>All time</button>
-                </div>
-                {period.from && period.to && period.from > period.to ? <p role="alert" className="text-red-300 mt-3">Start date must be on or before end date.</p> : <p className="text-xl font-bold text-amber-300 mt-3">{formatAdminMoney([...subscriptions, ...rentMovies].reduce((sum, row) => sum + Number(row.price), 0), period.currency)} <span className="text-sm font-normal text-slate-400">· {subscriptions.length + rentMovies.length} transactions</span></p>}
-                <p className="text-xs text-slate-400 mt-2">Only successful payments are included. USD and VND are reported separately without automatic conversion.</p>
-            </section>
+            <RevenueSummary period={period} setPeriod={setPeriod} subscriptions={subscriptions} rentals={rentMovies} counts={currencyCounts} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <motion.div variants={itemVariants}>
                     <RevenueChart data={chartData} currency={period.currency} />

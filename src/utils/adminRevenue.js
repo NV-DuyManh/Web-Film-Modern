@@ -28,5 +28,5 @@ export function dailyRevenue(records, key = 'revenue') {
 }
 
 export function formatAdminMoney(amount, currency = 'USD') {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency, maximumFractionDigits: currency === 'VND' ? 0 : 2 }).format(Number(amount) || 0);
+    return new Intl.NumberFormat(currency === 'VND' ? 'vi-VN' : 'en-US', { style: 'currency', currency, maximumFractionDigits: currency === 'VND' ? 0 : 2 }).format(Number(amount) || 0);
 }
