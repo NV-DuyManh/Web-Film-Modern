@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { FaSearch, FaCloudDownloadAlt, FaCheck, FaSpinner, FaTimes } from 'react-icons/fa';
 import { searchMovies, getFullImageUrl } from '../../../services/kkphimService';
 import { searchResults, existingSourceMovie } from '../../../utils/kkphimSearch';
@@ -7,6 +7,7 @@ const types = { single: 'Movie', series: 'Series', hoathinh: 'Animation', tvshow
 
 export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, crawlStats, crawlLogs, crawlProgress, onImport, onViewJob }) {
     const [keyword, setKeyword] = useState('');
+    const [composing, setComposing] = useState(false);
     const [query, setQuery] = useState('');
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -19,12 +20,10 @@ export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, 
     const importLock = useRef(false);
     const active = ['running', 'paused'].includes(crawlStatus);
 
-    useEffect(() => () => request.current?.abort(), []);
-
-    const search = async (text, page = 1) => {
+    const search = useCallback(async (text, page = 1) => {
         const term = text.trim();
         request.current?.abort();
-        if (!term) { setError('Enter a movie name to search KKPhim.'); return; }
+        if (!term) return;
         const controller = new AbortController();
         request.current = controller;
         setQuery(term); setLoading(true); setError(''); setResult(null);
@@ -34,9 +33,21 @@ export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, 
         } catch (err) {
             if (!controller.signal.aborted) setError(err.name === 'TimeoutError' ? 'KKPhim took too long to respond. Please try again.' : `Search failed: ${err.message}`);
         } finally {
-            if (request.current === controller) setLoading(false);
+            if (request.current === controller && !controller.signal.aborted) setLoading(false);
         }
-    };
+    }, []);
+
+    useEffect(() => {
+        request.current?.abort();
+        const term = keyword.trim();
+        setQuery(term); setResult(null); setError('');
+        setLoading(Boolean(term) && !composing);
+        if (!term || composing) return;
+        const timer = setTimeout(() => search(term), 250);
+        return () => { clearTimeout(timer); request.current?.abort(); };
+    }, [keyword, composing, search]);
+
+    useEffect(() => () => request.current?.abort(), []);
 
     const toggle = item => {
         setMessage('');
@@ -61,11 +72,14 @@ export default function KkphimSearch({ existingMovies, crawlReady, crawlStatus, 
             <div className="rounded-2xl border border-emerald-500/25 bg-slate-900/90 p-5 md:p-6">
                 <h2 className="flex items-center gap-2 text-emerald-400 text-lg font-bold"><FaSearch /> Search KKPhim</h2>
                 <p className="text-sm text-slate-400 mt-2 mb-5">Find movies in the KKPhim library and select the ones you want to import into MFILM.</p>
-                <form onSubmit={event => { event.preventDefault(); search(keyword); }} className="flex gap-3 flex-wrap">
-                    <input aria-label="Movie name on KKPhim" value={keyword} onChange={event => setKeyword(event.target.value)} maxLength={150}
-                        placeholder="Enter a Vietnamese or original movie name..." className="min-w-0 flex-1 basis-64 rounded-xl bg-black/30 border border-white/15 px-4 py-3 text-sm focus:outline-none focus:border-emerald-400" />
-                    <button type="submit" className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold cursor-pointer"><FaSearch /> Search</button>
-                </form>
+                <div className="relative">
+                    <FaSearch aria-hidden="true" className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                    <input aria-label="Movie name on KKPhim" aria-describedby="kkphim-live-search-hint" value={keyword}
+                        onChange={event => { request.current?.abort(); setKeyword(event.target.value); }}
+                        onCompositionStart={() => { request.current?.abort(); setComposing(true); }} onCompositionEnd={() => setComposing(false)} maxLength={150}
+                        placeholder="Type a Vietnamese or original movie name..." className="w-full rounded-xl bg-black/30 border border-white/15 pl-11 pr-4 py-3 text-sm focus:outline-none focus:border-emerald-400" />
+                </div>
+                <p id="kkphim-live-search-hint" className="text-xs text-slate-400 mt-3">Results update as you type. Select as many movies as you want, across searches and pages.</p>
             </div>
 
             {error && <p role="alert" className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">{error}</p>}
