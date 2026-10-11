@@ -13,7 +13,7 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import 'swiper/css/effect-fade';
-import { FaPlay, FaHeart, FaRegHeart, FaInfoCircle, FaChevronRight, FaEye } from 'react-icons/fa';
+import { FaPlay, FaHeart, FaRegHeart, FaInfoCircle, FaChevronRight, FaLayerGroup, FaClock } from 'react-icons/fa';
 import './Anime.css';
 
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
@@ -141,21 +141,18 @@ function Anime() {
                                     </h3>
 
                                     <div className='mt-2 sm:mt-3 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
-                                        <PlanBadge plan={getObjectById(plans, e.planID)} className="sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs" />
+                                        <PlanBadge showIcon plan={getObjectById(plans, e.planID)} className="gap-1 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs" />
 
 
 
                                         <button className='rounded-md border cursor-pointer border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[10px] lg:text-[11px] font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
-                                            {e.endEpisode} Tập
+                                            <FaLayerGroup aria-hidden="true" className="inline-block mr-1 align-[-0.1em]" />{e.endEpisode} Tập
                                         </button>
 
                                         <button className='rounded-md border cursor-pointer border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
-                                            {e.duration} Phút
+                                            <FaClock aria-hidden="true" className="inline-block mr-1 align-[-0.1em]" />{e.duration} Phút
                                         </button>
                                         <CountryBadge country={e.countriesID} />
-                                        <button className='rounded-md border cursor-pointer border-purple-400 bg-purple-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs font-bold text-purple-300 shadow-[0_0_8px_rgba(192,38,211,0.25)] transition duration-300 hover:bg-purple-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(192,38,211,0.7)] flex items-center gap-1'>
-                                            <FaEye /> {(Number(e.views) || 0) + 100}
-                                        </button>
                                     </div>
 
                                     <div className='carousel-film-genres flex mt-1.5 lg:mt-2 flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>

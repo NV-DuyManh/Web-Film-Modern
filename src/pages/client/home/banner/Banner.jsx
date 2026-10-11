@@ -13,7 +13,7 @@ import 'swiper/css/free-mode';
 import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
 import 'swiper/css/effect-fade';
-import { FaPlay, FaHeart, FaRegHeart, FaInfoCircle, FaChevronRight } from 'react-icons/fa';
+import { FaPlay, FaHeart, FaRegHeart, FaInfoCircle, FaChevronRight, FaLayerGroup, FaClock } from 'react-icons/fa';
 import './Banner.css';
 
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
@@ -115,16 +115,16 @@ function Banner() {
                             </h3>
 
                             <div className='mt-3 sm:mt-4 flex flex-wrap justify-center lg:justify-start gap-1.5 sm:gap-2'>
-                                <PlanBadge plan={getObjectById(plans, e.planID)} className="sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs" />
+                                <PlanBadge showIcon plan={getObjectById(plans, e.planID)} className="gap-1 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs" />
 
 
 
                                 <button className='rounded-md cursor-pointer border border-green-400 bg-green-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs font-bold text-green-300 shadow-[0_0_8px_rgba(74,222,128,0.25)] transition duration-300 hover:bg-green-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(74,222,128,0.7)]'>
-                                    {e.endEpisode} Tập
+                                    <FaLayerGroup aria-hidden="true" className="inline-block mr-1 align-[-0.1em]" />{e.endEpisode} Tập
                                 </button>
 
                                 <button className='rounded-md cursor-pointer border border-pink-400 bg-pink-400/20 px-1.5 py-0.5 sm:px-2.5 sm:py-1 text-[9px] sm:text-[11px] lg:text-xs font-bold text-pink-300 shadow-[0_0_8px_rgba(244,114,182,0.25)] transition duration-300 hover:bg-pink-400 hover:text-gray-900 hover:shadow-[0_0_15px_rgba(244,114,182,0.7)]'>
-                                    {e.duration} Phút
+                                    <FaClock aria-hidden="true" className="inline-block mr-1 align-[-0.1em]" />{e.duration} Phút
                                 </button>
                                 <CountryBadge country={e.countriesID} />
                             </div>
