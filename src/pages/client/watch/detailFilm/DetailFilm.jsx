@@ -336,7 +336,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                         <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 text-[10px] font-bold">
                             <p className="px-1.5 py-0.5 border border-yellow-500 text-yellow-500 rounded inline">{getObjectById(plans, movie.planID)?.name}</p>
                             <p className="px-1.5 py-0.5 bg-white text-black rounded inline">Vietsub</p>
-                            <p className="px-1.5 py-0.5 border border-slate-600 text-slate-300 rounded inline">{movie.year || '2024'}</p>
+                            <p className="px-1.5 py-0.5 border border-slate-600 text-slate-300 rounded inline">{movie.releaseYear || movie.year || '—'}</p>
                             <p className="px-1.5 py-0.5 border border-slate-600 text-slate-300 rounded inline">{movie.endEpisode || 0} Tập</p>
                         </div>
 
@@ -437,7 +437,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                         </div>
                                         <div className="flex flex-col min-w-0 relative">
                                             <h4 className="text-[13px] font-bold text-slate-200 group-hover:text-yellow-400 transition-colors truncate">{m.otherName || m.name}</h4>
-                                            <p className="text-[11px] text-slate-400 mt-0.5">{m.year || 2024} • {m.endEpisode} Tập</p>
+                                            <p className="text-[11px] text-slate-400 mt-0.5">{m.releaseYear || m.year || '—'} • {m.endEpisode} Tập</p>
 
                                             <div className="absolute top-0 left-0 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:translate-y-[-110%] transition duration-300 z-50 pointer-events-none whitespace-nowrap">
                                                 <div className="bg-[#0f1322]/95 backdrop-blur-md text-yellow-400 text-[11px] font-bold px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_5px_20px_rgba(250,204,21,0.2)]">
@@ -618,7 +618,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                                 </p>
                                                 <div className="flex items-center justify-center gap-2 mt-1 w-full font-bold">
                                                     <div className="flex items-center text-white bg-linear-to-r from-blue-500 to-cyan-500 px-1.5 py-0.5 rounded-full shadow-md text-[8px] md:text-[9px] whitespace-nowrap">
-                                                        {m.year || 2024}
+                                                        {m.releaseYear || m.year || '—'}
                                                     </div>
                                                 </div>
                                             </div>
