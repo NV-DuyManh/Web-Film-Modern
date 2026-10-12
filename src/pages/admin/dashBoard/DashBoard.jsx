@@ -1,9 +1,15 @@
-import { completedPayments, dailyRevenue } from '../../../utils/adminRevenue';
+import { completedPayments } from '../../../utils/adminRevenue';
+import { monthlyRevenue, membershipMix, movieOrigins, genreMix, libraryPlans } from '../../../utils/dashboardCharts';
+import { MembershipChart, OriginsChart, GenreChart, LibraryPlanChart } from './DashboardCharts';
+import { PlanContext } from '../../../contexts/PlanProvider';
+import { CategoryContext } from '../../../contexts/CategoryProvider';
+import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
+import { getUserPlanInfo } from '../../../utils/appUtils';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import RevenueChart from './RevenueChart';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
-import { useRentMovies } from '../../../hooks/useCollections';
+import { useRentMovies, useMovies } from '../../../hooks/useCollections';
 import useDashboardRankings from '../../../hooks/useDashboardRankings';
 import TopFilms from "./TopFilms";
 import TopRents from "./TopRents";
@@ -21,6 +27,17 @@ function DashBoard() {
     const users = useContext(UserContext);
     const movies = useMovieIndex();
     const movieStatus = useCatalogStatus('MovieIndex');
+    const library = useMovies();
+    const libraryStatus = useCatalogStatus('Movies');
+    const plans = useContext(PlanContext) || [];
+    const categories = useContext(CategoryContext) || [];
+    const types = useContext(CategoryTypeContext) || [];
+    const plansStatus = useCatalogStatus('Plans');
+    const userStatus = useCatalogStatus('Users');
+    const subscriptionStatus = useCatalogStatus('Subscriptions');
+    const rentalStatus = useCatalogStatus('RentMovies');
+    const categoryStatus = useCatalogStatus('Categories');
+    const typeStatus = useCatalogStatus('CategoryTypes');
     const period = REVENUE_PERIOD;
     const subscriptions = useMemo(() => completedPayments(allSubscriptions, period), [allSubscriptions, period]);
 
@@ -57,7 +74,13 @@ function DashBoard() {
 
 
 
-    const chartData = useMemo(() => dailyRevenue(subscriptions), [subscriptions]);
+    const chartData = useMemo(() => monthlyRevenue(subscriptions, rentMovies), [subscriptions, rentMovies]);
+    const mixData = useMemo(() => membershipMix(users || [], user => getUserPlanInfo(user, allSubscriptions || [], plans)), [users, allSubscriptions, plans]);
+    const originsData = useMemo(() => movieOrigins(library), [library]);
+    const genresData = useMemo(() => genreMix(library, categories, types), [library, categories, types]);
+    const libraryPlanData = useMemo(() => libraryPlans(library, plans), [library, plans]);
+    const pending = status => !['ready', 'error'].includes(status.status);
+    const libraryLoading = pending(libraryStatus) && !library.length;
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -95,13 +118,20 @@ function DashBoard() {
             <DashboardStats period={period} subscriptions={subscriptions} rentals={rentMovies} movieCount={movieStatus.status === 'ready' ? movies.length : null} userCount={users?.length} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <motion.div variants={itemVariants}>
-                    <RevenueChart data={chartData} currency={period.currency} />
+                    <RevenueChart data={chartData} currency={period.currency} loading={pending(subscriptionStatus) || pending(rentalStatus)} error={subscriptionStatus.status === 'error' || rentalStatus.status === 'error'} />
                 </motion.div>
                 <motion.div variants={itemVariants}>
                     <RentalChart rentMovies={rentMovies} currency={period.currency} />
                 </motion.div>
             </div>
 
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <motion.div variants={itemVariants}><MembershipChart data={mixData} loading={pending(plansStatus) || pending(subscriptionStatus) || (pending(userStatus) && !users?.length)} error={plansStatus.status === 'error' || userStatus.status === 'error'} /></motion.div>
+                <motion.div variants={itemVariants}><OriginsChart data={originsData} loading={libraryLoading} error={libraryStatus.status === 'error'} /></motion.div>
+                <motion.div variants={itemVariants}><GenreChart data={genresData} loading={libraryLoading || (pending(categoryStatus) && !categories.length) || (pending(typeStatus) && !types.length)} error={libraryStatus.status === 'error'} /></motion.div>
+                <motion.div variants={itemVariants}><LibraryPlanChart data={libraryPlanData} loading={libraryLoading || pending(plansStatus)} error={libraryStatus.status === 'error' || plansStatus.status === 'error'} /></motion.div>
+            </div>
 
             {qoeData && (
                 <motion.div variants={itemVariants} className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
