@@ -1,5 +1,6 @@
 import React from "react";
 import MovieImage from '../../../components/MovieImage';
+import RankingLoading from './RankingLoading';
 
 const RANK_STYLES = [
     {
@@ -38,7 +39,7 @@ const PROGRESS_COLORS = [
 ];
 
 
-function TopRents({ films = [] }) {
+function TopRents({ films = [], loading = false, error = false }) {
 
     const formatCount = (count) => {
         const number = Number(count) || 0;
@@ -81,10 +82,10 @@ function TopRents({ films = [] }) {
 
             <div className="space-y-3">
 
-                {films.length === 0 ? (
+                {loading ? <RankingLoading /> : films.length === 0 ? (
 
                     <div className="h-50 flex items-center justify-center text-gray-500">
-                        No rent data available
+                        {error ? 'Unable to load rental rankings. Please try again.' : 'No rent data available'}
                     </div>
 
                 ) : (

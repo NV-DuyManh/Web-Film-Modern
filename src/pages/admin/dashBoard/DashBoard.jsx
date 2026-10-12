@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import RevenueChart from './RevenueChart';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { useRentMovies } from '../../../hooks/useCollections';
-import { getTop5Films, getTop5RentedFilms } from '../../../services/firebaseService';
+import useDashboardRankings from '../../../hooks/useDashboardRankings';
 import TopFilms from "./TopFilms";
 import TopRents from "./TopRents";
 import RentalChart from './RentalChart';
@@ -27,23 +27,12 @@ function DashBoard() {
     const allRents = useRentMovies();
     const rentMovies = useMemo(() => completedPayments(allRents, period), [allRents, period]);
 
-    const [topFilms, setTopFilms] = useState([]);
-    const [topRents, setTopRents] = useState([]);
+    const { topFilms, topRents, filmsLoading, filmsError, rentsLoading, rentsError } = useDashboardRankings(allRents);
     const [qoeData, setQoeData] = useState(null);
 
     const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
 
     useEffect(() => {
-
-        const fetchTopFilms = async () => {
-            const data = await getTop5Films();
-            setTopFilms(data);
-        };
-
-        const fetchTopRents = async () => {
-            const data = await getTop5RentedFilms();
-            setTopRents(data);
-        };
 
         const fetchQoE = async () => {
             try {
@@ -59,8 +48,6 @@ function DashBoard() {
             }
         };
 
-        fetchTopFilms();
-        fetchTopRents();
         fetchQoE();
 
     }, [API_BASE_URL]);
@@ -173,10 +160,10 @@ function DashBoard() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                 <motion.div variants={itemVariants}>
-                    <TopFilms films={topFilms} />
+                    <TopFilms films={topFilms} loading={filmsLoading} error={filmsError} />
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                    <TopRents films={topRents} />
+                    <TopRents films={topRents} loading={rentsLoading} error={rentsError} />
                 </motion.div>
             </div>
 
