@@ -56,8 +56,7 @@ Dịch vụ phải có API tương thích OpenAI tại `chat/completions`. URL t
 
 ```powershell
 npm run ai:train
-node --test src/ai/*.test.js server/ai/*.test.js src/components/client/chatBot/localCatalogAnswer.test.js api/ai/chat.test.js
 npm run build
 ```
 
-Các kiểm thử bao gồm trả lời không có mạng/API key, câu hỏi mới học lại trên phiên khác, chống dùng dữ liệu riêng trong đáp án chung, hết hạn, giả mạo ciphertext, quyền xóa, ngữ cảnh phim và dự phòng khi nguồn AI/lưu trữ lỗi.
+Sau khi build, kiểm tra trực tiếp trả lời khi không có mạng/API key, học lại trên phiên khác, cách ly dữ liệu riêng, quyền xóa, ngữ cảnh phim và dự phòng khi nguồn AI/lưu trữ lỗi.

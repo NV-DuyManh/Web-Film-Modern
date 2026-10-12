@@ -16,11 +16,7 @@
     "reconcile:catalog": "ts-node src/scripts/reconcile-catalog.ts",
     "migrate:user-state": "ts-node src/scripts/migrate-user-state.ts",
     "build:interactions": "ts-node src/scripts/build-interaction-dataset.ts",
-    "audit:interactions": "ts-node src/scripts/audit-interaction-readiness.ts",
-    "benchmark:recommendations": "ts-node src/scripts/benchmark-recommendations.ts",
-    "benchmark:serving": "ts-node src/scripts/benchmark-serving.ts",
-    "test:dual-write": "ts-node src/scripts/test-dual-write-live.ts",
-    "test": "jest -c jest.config.json"
+    "audit:interactions": "ts-node src/scripts/audit-interaction-readiness.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
@@ -46,14 +42,10 @@
   },
   "devDependencies": {
     "@nestjs/cli": "^10.4.9",
-    "@nestjs/testing": "^10.4.15",
     "@types/express": "^5.0.0",
-    "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
     "@types/pg": "^8.11.10",
     "@types/uuid": "^10.0.0",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
   }

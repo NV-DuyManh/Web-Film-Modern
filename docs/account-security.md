@@ -97,13 +97,11 @@ profiles. This cannot bound all project reads or prove the cause of the historic
 
 ## Validation
 
-`firebase.accounts-test.json` restricts tests to local emulators. Start with
-`npx firebase-tools@14.22.0 emulators:start --project demo-mfilm-accounts --config firebase.accounts-test.json`.
-Run `scripts/testAccounts.mjs` with Firestore host `127.0.0.1:8089` and Auth host
-`127.0.0.1:9099`. It resets only the disposable test database, checks access
-denials and admin reveal, and restores and compares full encrypted documents.
-`scripts/testResumeSync.mjs` verifies two isolated clients, concurrency, offline
-retry, logout, seek-backwards and account isolation under the actual rules.
+The temporary automated test harnesses and emulator configurations have been
+removed during repository cleanup. Before activating secure account rules,
+validate account isolation, access denials, admin reveal, backup recovery,
+concurrent playback, offline retry, logout and seek-backwards in an isolated
+environment. Keep production data separate from validation fixtures.
 
 UI checks used a synthetic 90-second video on localhost: admin login/reveal,
 directory phone search, server switching, reload/resume and a 390-pixel viewport.

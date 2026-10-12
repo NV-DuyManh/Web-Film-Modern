@@ -10,6 +10,10 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+dev-dist
+backend/dist/
+coverage/
+*.tsbuildinfo
 *.local
 *.local.json
 *.local.jpg

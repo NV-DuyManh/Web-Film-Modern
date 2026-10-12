@@ -28,7 +28,6 @@ The default social PNG is a byte-for-byte copy of the existing MFILM logo. Origi
 
 - `npm run build`: build the original client application.
 - `npm run seo:audit`: verify every snapshot canonical route has one title, description and canonical, valid JSON-LD and a valid application entry.
-- `node --test server/seo/seo.test.js api/sitemap.test.js src/utils/assetCache.test.js`: exercise escaping, redirects, real 404s, pagination, caching, failure recovery and asset routing.
 - `npm run seo:refresh`: explicitly refresh the deployment snapshot and sitemap from the public catalog. Run deliberately because this reads the catalog from Firestore.
 - `npm run seo:submit`: preview an IndexNow submission. Add `-- --submit` after deployment to submit canonical URLs to participating search engines. `--recent` selects genuinely modified URLs from the live sitemap; the existing daily maintenance workflow uses that mode.
 

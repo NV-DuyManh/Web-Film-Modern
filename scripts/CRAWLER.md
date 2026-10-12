@@ -27,7 +27,6 @@ response fails the job visibly. A new request can be started after a terminal jo
 Verification:
 
 ```sh
-node --test src/utils/crawlerJob.test.js
 node scripts/crawlKkphim.mjs --dry-run
 ```
 
