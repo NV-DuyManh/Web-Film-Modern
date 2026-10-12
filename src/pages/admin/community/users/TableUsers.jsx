@@ -1,5 +1,5 @@
 import PlanBadge from '../../../../components/PlanBadge.jsx';
-﻿import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { useSubscriptions } from '../../../../hooks/useCollections';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -10,7 +10,6 @@ import PaginationAdmin from '../../../../components/admin/PaginationAdmin';
 import "../../../../App.scss";
 import { UserContext } from '../../../../contexts/UserProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
-import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
@@ -19,6 +18,7 @@ import { SECURE_ACCOUNTS_ENABLED, accountRequest } from '../../../../services/ac
 import useUserPresence from '../../../../hooks/useUserPresence';
 import OnlineIndicator from '../../../../components/admin/OnlineIndicator';
 import DefaultAvatar from '../../../../assets/Logo5.png';
+import { filterAdminUsers } from '../../../../utils/adminUserList';
 
 
 function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
@@ -26,7 +26,7 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
     const subscriptions = useSubscriptions() || [];
     const plans = useContext(PlanContext) || [];
     const { onlineIds, status: presenceStatus } = useUserPresence();
-    const [onlineOnly, setOnlineOnly] = useState(false);
+    const [roleFilter, setRoleFilter] = useState('all');
     const presenceAvailable = presenceStatus === 'ready';
     const onlineCount = (users || []).filter(row => onlineIds.has(row.id)).length;
     
@@ -51,15 +51,7 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
         return getUserPlanInfo(row, subscriptions, plans);
     };
 
-    const dataSearch = useMemo(() => {
-        const keyword = search.toLowerCase();
-        return users?.filter(e => (!onlineOnly || onlineIds.has(e.id)) && (
-            e?.name?.toLowerCase().includes(keyword) ||
-            e?.fullName?.toLowerCase().includes(keyword) ||
-            e?.email?.toLowerCase().includes(keyword) ||
-            e?.phone?.toLowerCase().includes(keyword)
-        ));
-    }, [search, users, onlineOnly, onlineIds]);
+    const dataSearch = useMemo(() => filterAdminUsers(users || [], { search, role: roleFilter, onlineIds }), [search, users, roleFilter, onlineIds]);
     const currentPage = Math.min(page, Math.max(1, Math.ceil((dataSearch?.length || 0) / rowsPerPage)));
     const start = (currentPage - 1) * rowsPerPage;
 
@@ -78,9 +70,9 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
 
     useEffect(() => {
         setPage(1);
-    }, [search, onlineOnly]);
+    }, [search, roleFilter]);
 
-    const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, `${search}:${onlineOnly}`);
+    const { selectedIds, openBulk, setOpenBulk, isAllSelected, isIndeterminate, handleSelectAll, handleSelectRow, clearSelected } = useSelectRows(currentData, `${search}:${roleFilter}`);
 
     const handleClickOpenDele = (row) => {
         setOpen(true);
@@ -150,9 +142,10 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                     <span aria-hidden="true" className={`h-2 w-2 rounded-full ${presenceAvailable ? 'bg-emerald-400' : 'bg-slate-500'}`} />
                     {presenceAvailable ? `${onlineCount} online now` : presenceStatus === 'error' ? 'Online status unavailable' : 'Connecting to online status…'}
                 </span>
-                <div className="flex items-center gap-1 rounded-xl border border-slate-700 bg-slate-900 p-1" role="group" aria-label="Filter by online status">
-                    <button type="button" aria-pressed={!onlineOnly} onClick={() => setOnlineOnly(false)} className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer ${!onlineOnly ? 'bg-cyan-400/15 text-cyan-300' : 'text-slate-400 hover:text-white'}`}>All users</button>
-                    <button type="button" aria-pressed={onlineOnly} disabled={!presenceAvailable} onClick={() => setOnlineOnly(true)} className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer disabled:cursor-default ${onlineOnly ? 'bg-emerald-400/15 text-emerald-300' : 'text-slate-400 hover:text-white'}`}>Online only</button>
+                <div className="flex items-center gap-1 rounded-xl border border-slate-700 bg-slate-900 p-1" role="group" aria-label="Filter users by role">
+                    {[['all', 'All users'], ['admin', 'Admin'], ['client', 'Client']].map(([value, label]) => (
+                        <button key={value} type="button" aria-pressed={roleFilter === value} onClick={() => setRoleFilter(value)} className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-cyan-300 ${roleFilter === value ? 'bg-cyan-400/15 text-cyan-300' : 'text-slate-400 hover:text-white'}`}>{label}</button>
+                    ))}
                 </div>
             </div>
             {presenceStatus === 'error' && <p role="alert" className="mb-3 text-xs text-amber-300">Online status could not be loaded. Account details and actions are still available.</p>}
@@ -273,7 +266,7 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                     </tr>
                                 )
                             })}
-                            {currentData.length === 0 && <tr><td colSpan={9} className="p-8 text-center text-sm text-slate-400">{onlineOnly ? 'No online users match your search.' : 'No users match your search.'}</td></tr>}
+                            {currentData.length === 0 && <tr><td colSpan={9} className="p-8 text-center text-sm text-slate-400">No users match your filters.</td></tr>}
                         </tbody>
                     </table>
 
