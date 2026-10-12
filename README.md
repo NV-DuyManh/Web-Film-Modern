@@ -425,8 +425,7 @@ FILM_MANAGEMENT/
 │   ├── services/
 │   │   ├── firebaseService.js     # CRUD operations Firestore
 │   │   ├── firebaseResponse.js    # Helper responses
-│   │   ├── kkphimService.js       # KKPhim API integration
-│   │   └── autoEpisodeSyncService.js  # Auto-sync episodes
+│   │   └── kkphimService.js       # KKPhim API integration
 │   └── utils/
 │       ├── Constants.jsx          # App constants & configs
 │       ├── appUtils.js            # Helper functions
