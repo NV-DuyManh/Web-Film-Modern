@@ -1,13 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { monthlyRevenue, membershipMix, libraryPlans, movieOrigins, genreMix, polarSector } from './dashboardCharts.js';
-import { completedPayments } from './adminRevenue.js';
+import { movieFormatMix, membershipMix, libraryPlans, movieOrigins, genreMix, polarSector } from './dashboardCharts.js';
 
-test('Monthly stacked revenue preserves paid totals, currency and chronological order', () => {
-    const records = [{ status: 'paid', price: .1, paidAt: '2026-08-01' }, { status: 'success', price: .2, paidAt: '2026-08-22' }, { status: 'pending', price: 500, paidAt: '2026-08-01' }, { status: 'paid', price: 25000, currency: 'VND', paidAt: '2026-08-01' }];
-    assert.deepEqual(monthlyRevenue(completedPayments(records), [{ price: 4, paidAt: '2026-09-01' }, { price: 2, paidAt: '2026-08-08' }]), [
-        { month: '2026-08', memberships: .3, rentals: 2 }, { month: '2026-09', memberships: 0, rentals: 4 },
-    ]);
+test('Format distribution counts each title once and retains unknown formats in Other', () => {
+    const types = [{ id: 'f', name: 'Phim Lẻ' }, { id: 's', name: 'Phim Bộ' }, { id: 'a', name: 'Hoạt Hình' }, { id: 'tv', name: 'TV Shows' }];
+    const movies = ['f', 's', 's', 'a', 'tv', 'missing'].map(categoryTypeID => ({ categoryTypeID }));
+    const result = movieFormatMix(movies, types);
+    assert.deepEqual(result, [{ name: 'Films', value: 1 }, { name: 'Series', value: 2 }, { name: 'Animation', value: 1 }, { name: 'TV Shows', value: 1 }, { name: 'Other', value: 1 }]);
+    assert.equal(result.reduce((sum, row) => sum + row.value, 0), movies.length);
+    assert.deepEqual(movieFormatMix([], types), []);
 });
 
 test('Each client and each movie counts once, with consistent tier colors and unknown IDs retained', () => {

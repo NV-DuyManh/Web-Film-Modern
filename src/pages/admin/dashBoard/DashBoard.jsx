@@ -1,5 +1,5 @@
 import { completedPayments } from '../../../utils/adminRevenue';
-import { monthlyRevenue, membershipMix, movieOrigins, genreMix, libraryPlans } from '../../../utils/dashboardCharts';
+import { movieFormatMix, membershipMix, movieOrigins, genreMix, libraryPlans } from '../../../utils/dashboardCharts';
 import { MembershipChart, OriginsChart, GenreChart, LibraryPlanChart } from './DashboardCharts';
 import { PlanContext } from '../../../contexts/PlanProvider';
 import { CategoryContext } from '../../../contexts/CategoryProvider';
@@ -7,7 +7,7 @@ import { CategoryTypeContext } from '../../../contexts/CategoryTypeProvider';
 import { getUserPlanInfo } from '../../../utils/appUtils';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import RevenueChart from './RevenueChart';
+import LibraryFormatChart from './LibraryFormatChart';
 import { SubscriptionContext } from '../../../contexts/SubscriptionProvider';
 import { useRentMovies, useMovies } from '../../../hooks/useCollections';
 import useDashboardRankings from '../../../hooks/useDashboardRankings';
@@ -35,7 +35,6 @@ function DashBoard() {
     const plansStatus = useCatalogStatus('Plans');
     const userStatus = useCatalogStatus('Users');
     const subscriptionStatus = useCatalogStatus('Subscriptions');
-    const rentalStatus = useCatalogStatus('RentMovies');
     const categoryStatus = useCatalogStatus('Categories');
     const typeStatus = useCatalogStatus('CategoryTypes');
     const period = REVENUE_PERIOD;
@@ -74,7 +73,7 @@ function DashBoard() {
 
 
 
-    const chartData = useMemo(() => monthlyRevenue(subscriptions, rentMovies), [subscriptions, rentMovies]);
+    const formatData = useMemo(() => movieFormatMix(library, types), [library, types]);
     const mixData = useMemo(() => membershipMix(users || [], user => getUserPlanInfo(user, allSubscriptions || [], plans)), [users, allSubscriptions, plans]);
     const originsData = useMemo(() => movieOrigins(library), [library]);
     const genresData = useMemo(() => genreMix(library, categories, types), [library, categories, types]);
@@ -118,7 +117,7 @@ function DashBoard() {
             <DashboardStats period={period} subscriptions={subscriptions} rentals={rentMovies} movieCount={movieStatus.status === 'ready' ? movies.length : null} userCount={users?.length} />
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <motion.div variants={itemVariants}>
-                    <RevenueChart data={chartData} currency={period.currency} loading={pending(subscriptionStatus) || pending(rentalStatus)} error={subscriptionStatus.status === 'error' || rentalStatus.status === 'error'} />
+                    <LibraryFormatChart data={formatData} loading={libraryLoading || (pending(typeStatus) && !types.length)} error={libraryStatus.status === 'error' || typeStatus.status === 'error'} />
                 </motion.div>
                 <motion.div variants={itemVariants}>
                     <RentalChart rentMovies={rentMovies} currency={period.currency} />

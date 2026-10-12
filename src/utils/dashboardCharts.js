@@ -1,4 +1,3 @@
-import { paymentDay } from './adminRevenue.js';
 import { getPlanAppearance } from './planAppearance.js';
 
 export const CHART_COLORS = ['#22d3ee', '#f472b6', '#facc15', '#a78bfa', '#34d399', '#fb923c'];
@@ -26,20 +25,15 @@ const genres = {
     'ky ao': 'Fantasy', 'vo thuat': 'Martial arts', 'phim ngan': 'Shorts', drama: 'Drama', ecchi: 'Ecchi', soap: 'Soap',
 };
 
-export function monthlyRevenue(memberships = [], rentals = []) {
-    const months = new Map();
-    for (const [records, key] of [[memberships, 'memberships'], [rentals, 'rentals']]) {
-        for (const record of records) {
-            const day = paymentDay(record), amount = Number(record.price);
-            if (!day || !Number.isFinite(amount) || amount < 0) continue;
-            const month = day.slice(0, 7);
-            if (!months.has(month)) months.set(month, { month, memberships: 0, rentals: 0 });
-            months.get(month)[key] += amount;
-        }
+export function movieFormatMix(movies = [], types = []) {
+    const labels = { 'phim le': 'Films', film: 'Films', movie: 'Films', 'phim bo': 'Series', series: 'Series', 'hoat hinh': 'Animation', animation: 'Animation', anime: 'Animation', 'tv shows': 'TV Shows' };
+    const names = new Map(types.map(type => [type.id, labels[normalize(type.name)] || 'Other']));
+    const counts = new Map();
+    for (const movie of movies) {
+        const name = names.get(movie.categoryTypeID) || 'Other';
+        counts.set(name, (counts.get(name) || 0) + 1);
     }
-    return [...months.values()].sort((a, b) => a.month.localeCompare(b.month)).map(row => ({ ...row,
-        memberships: Math.round(row.memberships * 100) / 100, rentals: Math.round(row.rentals * 100) / 100,
-    }));
+    return ['Films', 'Series', 'Animation', 'TV Shows', 'Other'].filter(name => counts.has(name)).map(name => ({ name, value: counts.get(name) }));
 }
 
 function planGroup(info) {
