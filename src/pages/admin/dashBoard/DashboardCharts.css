@@ -1,0 +1,11 @@
+.admin-chart-split{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.85fr);align-items:center;gap:24px}
+.admin-chart-key{display:grid;gap:10px}
+.admin-chart-key button{display:block;width:100%;text-align:left;padding:12px;border-radius:12px;border:1px solid rgba(148,163,184,.12);background:rgba(30,41,59,.25)}
+.admin-chart-key button:hover,.admin-chart-key button[aria-pressed=true]{background:rgba(51,65,85,.4);border-color:rgba(148,163,184,.3)}
+.admin-chart-key .key-head{display:flex;align-items:center;gap:8px;color:#cbd5e1;font-size:13px}
+.admin-chart-key .key-value{margin-left:auto;font-size:16px;font-weight:700;color:#f1f5f9;font-variant-numeric:tabular-nums}
+.admin-chart-key .key-detail{display:flex;justify-content:space-between;gap:8px;margin-top:6px;color:#94a3b8;font-size:11px}
+.admin-chart-key .key-track{height:3px;border-radius:3px;background:rgba(100,116,139,.2);margin-top:8px;overflow:hidden}
+.admin-chart-key .key-track>span{display:block;height:100%;border-radius:3px}
+@container (max-width:560px){.admin-chart-split{grid-template-columns:1fr;gap:6px}.admin-chart-key{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@container (max-width:340px){.admin-chart-key{grid-template-columns:1fr}.admin-chart-key button{padding:10px}}

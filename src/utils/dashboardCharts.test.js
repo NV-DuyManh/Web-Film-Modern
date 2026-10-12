@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { movieFormatMix, membershipMix, libraryPlans, movieOrigins, genreMix, polarSector } from './dashboardCharts.js';
+import { movieFormatMix, membershipMix, libraryPlans, movieOrigins, genreMix, genreBalance, polarSector } from './dashboardCharts.js';
 
 test('Format distribution counts each title once and retains unknown formats in Other', () => {
     const types = [{ id: 'f', name: 'Phim Lẻ' }, { id: 's', name: 'Phim Bộ' }, { id: 'a', name: 'Hoạt Hình' }, { id: 'tv', name: 'TV Shows' }];
@@ -42,4 +42,13 @@ test('Polar sectors scale area with count and render a full disk for a single gr
     assert.equal((polarSector(0, 1, 100, 100).match(/ A /g) || []).length, 2);
     assert.deepEqual(movieOrigins([]), []);
     assert.deepEqual(genreMix([]), []);
+});
+
+test('Radar balances each genre to 100 percent while preserving original title counts', () => {
+    const raw = [{ name: 'Drama', films: 4, series: 12 }, { name: 'Comedy', films: 2, series: 1 }, { name: 'Empty', films: 0, series: 0 }];
+    const result = genreBalance(raw);
+    assert.equal(result.length, 2);
+    assert.deepEqual(result[0], { name: 'Drama', films: 4, series: 12, filmShare: 25, seriesShare: 75 });
+    assert.equal(result[1].filmShare + result[1].seriesShare, 100);
+    assert.equal(raw[0].filmShare, undefined);
 });

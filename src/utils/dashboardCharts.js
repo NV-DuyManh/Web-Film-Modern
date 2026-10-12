@@ -86,6 +86,14 @@ export function genreMix(movies = [], categories = [], types = []) {
     return [...counts.values()].sort((a, b) => b.films + b.series - a.films - a.series).slice(0, 6);
 }
 
+export function genreBalance(data = []) {
+    return data.filter(row => row.films + row.series > 0).map(row => {
+        const total = row.films + row.series;
+        const filmShare = Math.round(row.films / total * 1000) / 10;
+        return { ...row, filmShare, seriesShare: Math.round((100 - filmShare) * 10) / 10 };
+    });
+}
+
 export function polarSector(index, count, value, maximum, radius = 104, center = 140) {
     const r = radius * Math.sqrt(value / Math.max(maximum, 1));
     const start = index * 2 * Math.PI / count, end = (index + 1) * 2 * Math.PI / count;
