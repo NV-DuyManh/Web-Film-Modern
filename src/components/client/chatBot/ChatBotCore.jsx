@@ -1371,7 +1371,7 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = [], userPl
 
         // Chuẩn hóa gạch đầu dòng/chấm tròn bị lặp hoặc ghép đôi (ví dụ: "- •", "• -", "- -", "* •")
         cleanLine = cleanLine
-            .replace(/^[-*•\s]*[-*•]\s*[-*•]\s*/, '• ')
+            .replace(/^(?:[-*•]\s+){2,}/, '• ')
             .replace(/^[-*]\s+/, '• ');
 
         // Kiểm tra xem dòng này có link /phim/slug không
