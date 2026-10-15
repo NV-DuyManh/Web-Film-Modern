@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { knowledgeBase, KNOWLEDGE_VERSION } from '../src/ai/knowledgeBase.js';
 import websiteKnowledge from '../src/ai/websiteKnowledge.json' with { type: 'json' };
 import { retrieveKnowledge, normalizeQuestion } from '../src/ai/knowledgeEngine.js';
+import { CHAT_TRAINING_INSTRUCTION, conversationExamples } from '../src/ai/chatResponsePolicy.js';
 const samples = [], questions = new Map(), ids = new Set();
 const latestQuestions = websiteKnowledge.flatMap(entry => entry.questions);
 assert.ok(latestQuestions.length >= 1000, 'At least 1000 new MFILM website questions required.');
@@ -14,13 +15,15 @@ for (const entry of knowledgeBase) {
         assert.ok(!questions.has(normalized), `Duplicate question: ${question}`); questions.set(normalized, entry.id);
         for (const variant of new Set([question, normalized, `Bạn giúp tôi ${question.toLowerCase()} nhé`])) {
             assert.equal(retrieveKnowledge(variant)?.knowledgeId, entry.id, `Failed retrieval: ${variant}`);
-            samples.push({ id: entry.id, version: KNOWLEDGE_VERSION, messages: [{ role: 'system', content: 'Bạn là trợ lý MFILM. Hướng dẫn sử dụng web, tìm phim trong kho. Không đoán giá, số tập, quyền cá nhân hoặc trạng thái giao dịch từ kiến thức cố định.' }, { role: 'user', content: variant }, { role: 'assistant', content: entry.answer }] });
+            samples.push({ id: entry.id, version: KNOWLEDGE_VERSION, messages: [{ role: 'system', content: 'Hướng dẫn sử dụng web, tìm phim trong kho. Không đoán giá, số tập, quyền cá nhân hoặc trạng thái giao dịch từ kiến thức cố định.\n' + CHAT_TRAINING_INSTRUCTION }, { role: 'user', content: variant }, { role: 'assistant', content: entry.answer }] });
         }
     }
 }
 const output = new URL('../data/ai/', import.meta.url); await mkdir(output, { recursive: true });
 await writeFile(new URL('mfilm-training.jsonl', output), samples.map(sample => JSON.stringify(sample)).join('\n') + '\n');
 const report = { version: KNOWLEDGE_VERSION, topics: knowledgeBase.length, uniqueQuestions: questions.size, latestBatchQuestions: latestQuestions.length, websiteGuideQuestions: websiteKnowledge.filter(entry => entry.scope === 'website').flatMap(entry => entry.questions).length, filmGuideQuestions: websiteKnowledge.filter(entry => entry.scope === 'film-guide').length, realMoviesCovered: new Set(websiteKnowledge.map(entry => entry.publicPath).filter(Boolean)).size, samples: samples.length, retrievalPassed: samples.length, excludedLegacyGroups: ['125 older broad-topic entries', '1000 older general knowledge entries'], runtime: 'Reviewed answer retrieval, not model weight training' };
+report.conversationQuestions = conversationExamples.flatMap(entry => entry.questions).length;
+report.answerStyle = 'Friendly, relevant, context-aware; ranked lists use real metrics';
 await writeFile(new URL('training-report.json', output), JSON.stringify(report, null, 2) + '\n');
 let number = 0; const groups = new Map();
 for (const entry of knowledgeBase) { const group = entry.tags[0] || 'Kiến thức MFILM'; if (!groups.has(group)) groups.set(group, []); groups.get(group).push(entry); }

@@ -1,4 +1,5 @@
 import { normalizeQuestion, KNOWLEDGE_VERSION } from './knowledgeEngine.js';
+import { rankingIntent } from './chatRanking.js';
 
 export const MEMORY_VERSION = 1;
 const PRIVATE = /\b(mat khau|password|api key|token|otp|so the|tai khoan ngan hang|dia chi nha|email cua|ten toi|toi ten|tai khoan cua|goi cua|goi hien tai|ho so|thong tin ca nhan|toi song|toi o|toi bi|toi thich|minh song|minh o|minh bi|minh thich)\b/i;
@@ -8,11 +9,13 @@ const containsSensitiveText = text => /[\w.+-]+@[\w.-]+\.[a-z]{2,}|\b\d{9,}\b|\b
 export function memoryPolicy(prompt, reply = '') {
     const question = normalizeQuestion(prompt);
     if (question.length < 10 || question.length > 1500 || !String(reply || '').trim() && reply !== '') return null;
-    if (containsSensitiveText(prompt) || (reply && containsSensitiveText(reply)) || TRANSIENT.test(question) || isContextualQuestion(prompt)) return null;
+    if (containsSensitiveText(prompt) || (reply && containsSensitiveText(reply)) || TRANSIENT.test(question) || isContextualQuestion(prompt)
+        || /\b(thu roi|lam roi|van khong|van bi loi|con cach khac|chua hieu|chua ro|noi tiep|noi them)\b/.test(question)
+        || /\b(tra loi|hieu)\b.*\b(sai|khong dung|khong lien quan|coc loc|tho lo|kho chiu|lech y)\b|\b(khong dung y|khong phai y|y toi la|y minh la|noi lich su|noi de hieu|dung y toi)\b/.test(question)) return null;
     if (/\b(ignore|bo qua chi dan|bo qua huong dan|system prompt|developer message|jailbreak|gia vo|hay tra loi rang)\b/i.test(question)) return null;
     if (reply && (reply.length > 12000 || /Hệ thống báo lỗi|đang bảo trì|chưa được kích hoạt|không thể trả lời|tôi không biết|mình không biết|javascript:|data:text\/html|<script/i.test(reply))) return null;
     // Availability and access depend on live data; general film discussion can be shared.
-    const catalog = /\b(mfilm|tren web|trong web|bao nhieu tap|may tap|goi|vip|premium|basic|plus|free|thue|server|gia ve)\b/.test(question);
+    const catalog = Boolean(rankingIntent(prompt)) || /\b(mfilm|tren web|trong web|bao nhieu tap|may tap|goi|vip|premium|basic|plus|free|thue|server|gia ve)\b/.test(question);
     const film = /\b(phim|movie|conan|dien vien|dao dien|nhan vat)\b/.test(question);
     return { question, shared: !catalog, ttlMs: catalog || film ? 86400000 : 90 * 86400000 };
 }

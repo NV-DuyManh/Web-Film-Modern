@@ -3,12 +3,14 @@ import React, { useEffect, useRef, useState, useContext, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { useMovies, useCharacters, useCategories, useSubscriptions, useActors, useAuthors } from '../../../hooks/useCollections';
-import { localKnowledgeAnswer } from '../../../ai/knowledgeEngine.js';
+import { useMovies, useCharacters, useCategories, useCategoryTypes, useSubscriptions, useActors, useAuthors } from '../../../hooks/useCollections';
+import { localKnowledgeAnswer, normalizeQuestion } from '../../../ai/knowledgeEngine.js';
 import { createAnswerMemory, memoryPolicy } from '../../../ai/answerMemory.js';
 import { answerFromCatalog, catalogContext } from './localCatalogAnswer.js';
 import useCatalogStatus from '../../../hooks/useCatalogStatus';
 import { createChatCatalogGate } from '../../../utils/chatCatalogGate.js';
+import { rankingIntent } from '../../../ai/chatRanking.js';
+import { loadChatRankingStats } from '../../../services/chatRankingStats.js';
 import { getUserPlanInfo } from '../../../utils/appUtils';
 import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots, FaMicrophone, FaStop, FaPaperPlane } from 'react-icons/fa';
 import {
@@ -29,7 +31,7 @@ const createNewSession = () => ({
     createdAt: Date.now(),
     updatedAt: Date.now(),
     messages: [
-        { id: 1, text: 'Xin chào! Tôi là trợ lý AI. Tôi có thể giúp gì cho bạn?', sender: 'ai' }
+        { id: 1, text: 'Chào bạn! Mình là trợ lý MFILM AI. Bạn muốn tìm phim, xem bảng top hay cần hỗ trợ khi xem phim?', sender: 'ai' }
     ]
 });
 
@@ -55,24 +57,26 @@ export default function GroqChatBot({ initiallyOpen = false }) {
     const movies = useMovies(isChatOpen);
     const characters = useCharacters(isChatOpen) || EMPTY_CATALOG;
     const categories = useCategories(isChatOpen) || EMPTY_CATALOG;
+    const categoryTypes = useCategoryTypes(isChatOpen) || EMPTY_CATALOG;
     const actors = useActors(isChatOpen) || EMPTY_CATALOG;
     const authors = useAuthors(isChatOpen) || EMPTY_CATALOG;
     const movieStatus = useCatalogStatus('Movies');
     const categoryStatus = useCatalogStatus('Categories');
+    const categoryTypeStatus = useCatalogStatus('CategoryTypes');
     const actorStatus = useCatalogStatus('Actors');
     const authorStatus = useCatalogStatus('Authors');
     const characterStatus = useCatalogStatus('Characters');
     const planStatus = useCatalogStatus('Plans');
     const catalogGate = useMemo(() => createChatCatalogGate(), []);
     useEffect(() => {
-        const collections = [[movies, movieStatus], [categories, categoryStatus], [actors, actorStatus],
+        const collections = [[movies, movieStatus], [categories, categoryStatus], [categoryTypes, categoryTypeStatus], [actors, actorStatus],
             [authors, authorStatus], [characters, characterStatus], [plans, planStatus]];
         const ready = collections.every(([items, state]) => items?.length > 0 || state.status === 'ready');
         const failed = collections.find(([items, state]) => !items?.length && state.status === 'error');
-        catalogGate.update({ movies, categories, actors, authors, characters, plans, subscriptions, ready,
+        catalogGate.update({ movies, categories, categoryTypes, actors, authors, characters, plans, subscriptions, ready,
             error: failed ? new Error('catalog-unavailable') : null });
-    }, [catalogGate, movies, categories, actors, authors, characters, plans, subscriptions,
-        movieStatus, categoryStatus, actorStatus, authorStatus, characterStatus, planStatus]);
+    }, [catalogGate, movies, categories, categoryTypes, actors, authors, characters, plans, subscriptions,
+        movieStatus, categoryStatus, categoryTypeStatus, actorStatus, authorStatus, characterStatus, planStatus]);
 
     const userPlanInfo = useMemo(() => {
         return getUserPlanInfo(isLogin, subscriptions, plans);
@@ -386,18 +390,25 @@ export default function GroqChatBot({ initiallyOpen = false }) {
             const knowledge = localKnowledgeAnswer(textToSend);
             // Keep the first question pending until the rendered catalog snapshot is ready.
             // Reading the arrays captured before await would still use the empty first render.
-            const loaded = knowledge ? { movies, categories, actors, authors, characters, plans, subscriptions }
+            const loaded = knowledge ? { movies, categories, categoryTypes, actors, authors, characters, plans, subscriptions }
                 : await catalogGate.wait({ signal: abortController.signal });
             if (abortController.signal.aborted) return;
             const { movies: loadedMovies, categories: loadedCategories, actors: loadedActors,
-                authors: loadedAuthors, characters: loadedCharacters, plans: loadedPlans } = loaded;
+                authors: loadedAuthors, characters: loadedCharacters, plans: loadedPlans, categoryTypes: loadedCategoryTypes } = loaded;
             const freshPlanInfo = getUserPlanInfo(isLogin, loaded.subscriptions || [], loadedPlans);
             const freshMovie = cleanSlug ? findMovieReference(loadedMovies, cleanSlug) : null;
             const freshContext = catalogContext(loadedMovies, loadedPlans, freshPlanInfo, freshMovie);
+            const isMore = text => /^(tiep|them|nua|goi y tiep|phim khac|them phim|doi phim)( di| nhe| nha| nua)?$/.test(normalizeQuestion(text));
+            const previousRequest = [...currentSessionMessages].reverse().find(item => item.sender === 'user' && !isMore(item.text));
+            const ranking = rankingIntent(isMore(textToSend) ? previousRequest?.text : textToSend);
+            const rankingStats = !knowledge && ranking ? await loadChatRankingStats(ranking.kind, { signal: abortController.signal }) : {};
+            if (abortController.signal.aborted) return;
             const local = knowledge || answerFromCatalog({
                 prompt: textToSend, movies: loadedMovies, categories: loadedCategories, actors: loadedActors,
                 authors: loadedAuthors, characters: loadedCharacters, plans: loadedPlans, currentMovie: freshMovie,
                 history: currentSessionMessages, userPlanInfo: freshPlanInfo, isLogin, catalogReady: true,
+                rankingStats,
+                categoryTypes: loadedCategoryTypes,
             }) || (!sharedQuestion && answerMemory.get(textToSend, freshContext));
             // Lọc trước danh sách ứng viên phim theo quyền truy cập của gói cước người dùng (Pre-AI filtering)
             const candidateMovies = isPlanQuery
@@ -501,16 +512,16 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                 return;
             }
             console.error("Groq AI Error:", error);
-            let errorMessage = "Hệ thống báo lỗi: Không rõ nguyên nhân";
+            let errorMessage = 'Mình gặp trục trặc khi xử lý câu hỏi này. Bạn thử lại sau một chút nhé.';
             if (error && error.message) {
-                if (error.message.startsWith('catalog-')) {
+                if (error.message.startsWith('ranking-')) {
+                    errorMessage = 'Mình chưa lấy được số liệu xếp hạng lúc này, nên chưa thể đưa ra một bảng top đáng tin cậy. Bạn có thể thử top lượt xem hoặc quay lại sau một chút nhé.';
+                } else if (error.message.startsWith('catalog-')) {
                     errorMessage = 'Mình chưa kết nối được kho phim. Bạn kiểm tra mạng rồi thử lại giúp mình nhé.';
                 } else if (error.message.includes("429") || error.message.includes("Rate limit") || error.message.includes("Quota exceeded")) {
-                    errorMessage = "Hệ thống báo lỗi: Trợ lý AI đang xử lý nhiều lượt yêu cầu cùng lúc. Bạn vui lòng đợi 1-2 giây rồi gửi lại nhé!";
+                    errorMessage = 'Hiện có nhiều lượt hỏi cùng lúc nên mình chưa xử lý kịp. Bạn đợi một chút rồi thử lại giúp mình nhé.';
                 } else if (error.message.includes("Failed to fetch") || error.message.includes("NetworkError")) {
-                    errorMessage = "Hệ thống báo lỗi: Không thể kết nối đến máy chủ AI. Vui lòng kiểm tra mạng hoặc API Key!";
-                } else {
-                    errorMessage = `Hệ thống báo lỗi: ${error.message}`;
+                    errorMessage = 'Mình chưa kết nối được với dịch vụ trả lời. Bạn kiểm tra kết nối mạng rồi thử lại; nếu mạng vẫn bình thường, bạn có thể quay lại sau một chút nhé.';
                 }
             }
             updateSessionMessages(targetSessionId, prev => [

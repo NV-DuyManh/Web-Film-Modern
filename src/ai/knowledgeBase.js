@@ -1,7 +1,8 @@
 import { extendedKnowledge } from './extendedKnowledge.js';
 import websiteKnowledge from './websiteKnowledge.json' with { type: 'json' };
+import { conversationExamples, friendlyReviewedAnswer } from './chatResponsePolicy.js';
 // Reviewed MFILM knowledge. Variants train retrieval, never change model weights.
-export const KNOWLEDGE_VERSION = '2026-10-09.website.1';
+export const KNOWLEDGE_VERSION = '2026-10-15.conversation.2';
 const item = (id, questions, answer, tags = []) => ({ id, questions, answer, tags });
 export const knowledgeBase = [
     item('identity', ['Bạn là ai?', 'MFILM AI là gì?', 'Bạn làm được gì?', 'Bạn giúp được gì cho tôi?'], 'Mình là trợ lý MFILM. Mình có thể tìm phim trong kho, gợi ý theo thể loại hoặc gói xem, giải thích thông tin phim và hướng dẫn sử dụng web. Bạn muốn tìm phim hay cần hỗ trợ việc gì?'),
@@ -11,9 +12,9 @@ export const knowledgeBase = [
     item('rent-versus-plan', ['Thuê phim khác gói thành viên thế nào?', 'Thuê phim và VIP khác gì nhau?'], 'Thuê phim cấp quyền xem một phim trong 30 ngày. Gói thành viên cấp quyền xem các phim thuộc cấp gói trong thời hạn đăng ký. Hãy xem yêu cầu gói trên trang chi tiết từng phim.'),
     item('membership', ['Mua VIP ở đâu?', 'Nâng cấp VIP thế nào?', 'Đăng ký gói thành viên ở đâu?', 'Gói thành viên là gì?'], 'Mở [Gói thành viên](/upgrade-vip) để xem các gói, giá và thời hạn hiện tại. Sau khi đăng nhập, chọn gói phù hợp rồi làm theo hướng dẫn thanh toán.'),
     item('plans-price', ['VIP giá bao nhiêu?', 'Gói Premium bao nhiêu tiền?', 'Giá gói thành viên là bao nhiêu?', 'Giá VIP ở đâu?'], 'Giá có thể thay đổi theo gói và thời hạn. Xem mức giá đang áp dụng tại [Gói thành viên](/upgrade-vip) để chọn chính xác.'),
-    item('payment-help', ['Thanh toán bị lỗi thì làm sao?', 'Đã trả tiền mà chưa có VIP?', 'Thanh toán xong chưa được xem phim'], 'Kiểm tra trạng thái giao dịch và tải lại thông tin tài khoản. Nếu đã thanh toán nhưng quyền xem chưa cập nhật, liên hệ MFILM qua Zalo ở trang [Hỗ trợ](/ho-tro), kèm mã giao dịch. Không gửi mật khẩu hoặc thông tin thẻ trong chat.'),
-    item('playback-error', ['Phim không phát thì làm sao?', 'Không xem được phim', 'Phim bị lỗi', 'Video không chạy', 'Màn hình phim bị đen'], 'Thử đổi giữa **Server 1 và Server 2**, chọn lại tập và kiểm tra mạng. Nếu vẫn lỗi, liên hệ MFILM qua Zalo tại [Hỗ trợ](/ho-tro), gửi tên phim, tập và server bị lỗi.'),
-    item('buffering', ['Phim tải chậm', 'Xem phim bị giật lag', 'Phim cứ xoay vòng', 'Video bị đứng hình'], 'Kiểm tra kết nối mạng, tạm dừng một lúc để video tải thêm rồi thử đổi server. Đóng các tác vụ tải nặng và dùng chất lượng thấp hơn nếu trình phát có lựa chọn. Nếu chỉ một tập bị lỗi, gửi tên phim và tập cho MFILM.'),
+    item('payment-help', ['Thanh toán bị lỗi thì làm sao?', 'Đã trả tiền mà chưa có VIP?', 'Thanh toán xong chưa được xem phim'], 'Mình hiểu việc đã thanh toán mà chưa xem được phim rất bất tiện. Bạn kiểm tra lần lượt nhé:\n1. Mở thông tin giao dịch và kiểm tra thanh toán đã thành công chưa.\n2. Kiểm tra bạn đang đăng nhập đúng tài khoản vừa mua gói, rồi tải lại trang.\n3. Nếu giao dịch thành công nhưng quyền xem vẫn chưa cập nhật, liên hệ MFILM qua [Hỗ trợ](/ho-tro), kèm mã giao dịch để được đối chiếu.\nMình không thể xác nhận trạng thái thanh toán chỉ từ tin nhắn này. Bạn không cần gửi mật khẩu hoặc thông tin thẻ trong chat.'),
+    item('playback-error', ['Phim không phát thì làm sao?', 'Không xem được phim', 'Phim bị lỗi', 'Video không chạy', 'Màn hình phim bị đen'], 'Mình sẽ giúp bạn kiểm tra lỗi phát phim nhé. Bạn thử theo thứ tự này:\n1. Ở mục **Server**, đổi sang nguồn phát khác nếu tập đó có nhiều nguồn, rồi chọn lại tập.\n2. Tải lại trang và kiểm tra xem một phim khác có phát bình thường không. Cách này giúp phân biệt lỗi riêng của tập với lỗi kết nối.\n3. Nếu vẫn không xem được, cho mình biết **tên phim, số tập, server và thông báo lỗi** bạn đang thấy. Bạn cũng có thể gửi các thông tin đó qua [Hỗ trợ MFILM](/ho-tro) để kiểm tra nguồn phát.'),
+    item('buffering', ['Phim tải chậm', 'Xem phim bị giật lag', 'Phim cứ xoay vòng', 'Video bị đứng hình'], 'Phim giật hoặc xoay vòng thường cần kiểm tra cả kết nối lẫn nguồn phát. Bạn thử tạm dừng vài giây cho video tải thêm, đóng tác vụ đang tải nặng, rồi đổi server nếu có nguồn khác. Nếu trình phát cho chọn chất lượng, giảm một mức để thử.\nNếu chỉ một tập bị lỗi còn các phim khác vẫn chạy bình thường, cho mình biết tên phim và số tập để khoanh vùng đúng nguồn cần kiểm tra nhé.'),
     item('servers', ['Server 1 và 2 khác gì nhau?', 'SV1 SV2 là gì?', 'Đổi server ở đâu?'], 'Các server là những nguồn phát khác nhau cho cùng tập phim. Chọn nút **Server** ở trang xem phim để đổi nguồn khi một nguồn không phát được. Chất lượng và tính năng trình phát có thể khác nhau.'),
     item('episodes', ['Tìm tập phim thế nào?', 'Chọn tập phim ở đâu?', 'Mỗi trang có bao nhiêu tập?', 'Danh sách tập chia thế nào?'], 'Mỗi nhóm hiển thị tối đa **120 tập**. Mở bộ chọn nhóm, nhập số tập cần tìm rồi chọn nhóm tương ứng. Dùng hai nút mũi tên để chuyển nhóm trước hoặc sau.'),
     item('episode-range', ['Tập 603-605 là gì?', 'Tại sao số tập có dấu gạch ngang?', 'Tập gộp là gì?'], 'Nhãn như **603–605** thường là một video gộp nhiều tập từ nguồn phát. MFILM giữ nguyên khoảng tập để tránh biến thành một số rất lớn hoặc tạo thêm các tập không có video riêng.'),
@@ -55,4 +56,5 @@ export const knowledgeBase = [
     // eligible as canned answers. Keep only the five MFILM usage groups.
     ...extendedKnowledge.filter(entry => /^(discover|account|payments|playback|episodes)-/.test(entry.id)),
     ...websiteKnowledge,
-];
+    ...conversationExamples,
+].map(entry => ({ ...entry, answer: friendlyReviewedAnswer(entry.answer) }));

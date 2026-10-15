@@ -1,16 +1,18 @@
 {
-  "version": "2026-10-09.website.1",
-  "topics": 1254,
-  "uniqueQuestions": 1600,
+  "version": "2026-10-15.conversation.2",
+  "topics": 1259,
+  "uniqueQuestions": 1613,
   "latestBatchQuestions": 1328,
   "websiteGuideQuestions": 328,
   "filmGuideQuestions": 1000,
   "realMoviesCovered": 200,
-  "samples": 4800,
-  "retrievalPassed": 4800,
+  "samples": 4839,
+  "retrievalPassed": 4839,
   "excludedLegacyGroups": [
     "125 older broad-topic entries",
     "1000 older general knowledge entries"
   ],
-  "runtime": "Reviewed answer retrieval, not model weight training"
+  "runtime": "Reviewed answer retrieval, not model weight training",
+  "conversationQuestions": 13,
+  "answerStyle": "Friendly, relevant, context-aware; ranked lists use real metrics"
 }

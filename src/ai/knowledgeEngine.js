@@ -22,6 +22,8 @@ export function retrieveKnowledge(prompt) {
     const unwrapped = q.replace(/^(?:(?:toi|minh) )?(?:muon biet|can biet|muon hoi|can hoi|cho toi biet|cho minh biet|hay giai thich|giai thich)(?: cho (?:toi|minh))? /, '');
     const exact = exactQuestions.get(q) || exactQuestions.get(unwrapped);
     if (exact) return { reply: exact.answer, source: 'knowledge', confidence: 1, knowledgeId: exact.id };
+    // A fixed answer to one sub-question must not swallow a multi-part request.
+    if (/\b(va|dong thoi|voi lai|tien the)\b/.test(q) && (q.match(/\b(la gi|o dau|the nao|tai sao|vi sao|bao nhieu|lam sao|cach|duoc khong)\b/g) || []).length > 1) return null;
     const tokens = questionTokens(q);
     let best;
     let runner = 0;

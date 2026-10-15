@@ -1,5 +1,6 @@
 import { searchTV, detectCountryInQuery, isMovieMatchCountry, getMoviePlanInfo, detectPlanInQuery, isPlanAppropriateQuery, filterMoviesByEntitlement, getFranchiseStats } from './ChatBotCore.jsx';
 import { routeSegment, findMovieReference } from '../../../utils/nameRoutes.js';
+import { rankingIntent, rankingValue, rankingMetric, rankingLabel } from '../../../ai/chatRanking.js';
 
 const result = reply => ({ reply, source: 'catalog', confidence: 1 });
 const title = movie => movie.otherName || movie.name || 'Phim';
@@ -14,17 +15,19 @@ export function catalogContext(movies = [], plans = [], userPlanInfo = {}, curre
     return `catalog-v1-${hash >>> 0}`;
 }
 
-export function answerFromCatalog({ prompt, movies = [], categories = [], actors = [], authors = [], characters = [], plans = [], currentMovie, history = [], userPlanInfo = { name: 'FREE', level: 0 }, isLogin, catalogReady = true }) {
+export function answerFromCatalog({ prompt, movies = [], categories = [], categoryTypes = [], actors = [], authors = [], characters = [], plans = [], currentMovie, history = [], userPlanInfo = { name: 'FREE', level: 0 }, isLogin, catalogReady = true, rankingStats = {} }) {
     let q = searchTV(prompt).replace(/[^a-z0-9\s-]/g, ' ').replace(/\s+/g, ' ').trim();
     if (/\b(goi cua toi|goi hien tai|toi dang dung goi|tai khoan.*goi gi)\b/.test(q) && !/phim|goi y|xem/.test(q)) {
         return result(isLogin ? `Gói hiện tại của bạn là **${userPlanInfo.name}**. Xem chi tiết tại [Gói thành viên](/upgrade-vip).` : 'Bạn cần đăng nhập để mình kiểm tra gói hiện tại của tài khoản.');
     }
-    const previousUser = [...history].reverse().find(message => message.sender === 'user');
+    const isContinuation = text => /^(tiep|them|nua|goi y tiep|phim khac|them phim|doi phim)( di| nhe| nha| nua)?$/.test(searchTV(text).trim());
+    const previousUser = [...history].reverse().find(message => message.sender === 'user' && !isContinuation(message.text));
     const continuation = /^(tiep|them|nua|goi y tiep|phim khac|them phim|doi phim)( di| nhe| nha| nua)?$/.test(q);
     if (continuation) {
         if (!previousUser) return null;
         q = searchTV(previousUser.text);
     }
+    const ranking = rankingIntent(q);
     const excluded = new Set(continuation ? history.flatMap(message => message.sender === 'ai' ? [...String(message.text).matchAll(/\/phim\/([^\s)\]?#]+)/g)].map(match => match[1]) : []) : []);
     const genreNames = categories.map(category => searchTV(category.name)).filter(name => ` ${q} `.includes(` ${name} `));
     const queryTitles = movies.filter(movie => [movie.name, movie.otherName].some(name => {
@@ -73,18 +76,22 @@ export function answerFromCatalog({ prompt, movies = [], categories = [], actors
     const country = detectCountryInQuery(q);
     const discovery = /\b(goi y|de xuat|tim|top|danh sach|xem gi|xem phim gi|phim nao hay|phim hay|xin phim|phim de xem|phim moi|co phim|phu hop|hop goi|nhieu tap nhat|it tap nhat|xem nhieu nhat|nhieu phan nhat)\b/.test(q)
         || (matchedCategories.length && /\b(phim|anime)\b/.test(q)) || mood || continuation || partial.length || namedActors.length || namedAuthors.length || namedCharacters.length;
-    if (!discovery || /\b(tai sao|vi sao|giai thich|so sanh|phan tich|ket thuc|review|danh gia)\b/.test(q)) return null;
+    if (!discovery || /\b(tai sao|vi sao|giai thich|so sanh|phan tich|ket thuc|review)\b/.test(q) || (!ranking && /\bdanh gia\b/.test(q))) return null;
     if (!catalogReady) return result('Kho phim đang tải dữ liệu. Bạn gửi lại câu hỏi sau vài giây để mình gợi ý đúng phim trên web nhé.');
     if (/nhieu phan nhat|nhieu season nhat/.test(q)) {
         const candidates = isPlanAppropriateQuery(prompt) ? filterMoviesByEntitlement(movies, plans, userPlanInfo) : movies;
         const franchise = getFranchiseStats(candidates)[0];
         if (franchise) return result(`Series có nhiều phần nhất trong danh mục này là **${franchise.baseName}**, gồm **${franchise.totalParts} phần**:\n${franchise.movies.slice(0, 10).map(movie => `• ${link(movie)}`).join('\n')}`);
     }
-    let selected = movies.filter(movie => !excluded.has(routeSegment(movie)));
+    let selected = [...movies];
+    const animationTypes = new Set(categoryTypes.filter(type => /^(hoat hinh|anime|animation)$/.test(searchTV(type.name))).map(type => String(type.id)));
+    const animationGenres = new Set(categories.filter(category => /^(hoat hinh|anime|animation)$/.test(searchTV(category.name))).map(category => String(category.id)));
+    if (/\banime\b/.test(q)) selected = selected.filter(movie => animationTypes.has(String(movie.categoryTypeID)) || (movie.listCategory || []).some(id => animationGenres.has(String(id))));
     if (partial.length) selected = selected.filter(movie => partial.includes(movie));
     if (matchedCategories.length) selected = selected.filter(movie => matchedCategories.every(category => {
         const negative = new RegExp(`(?:khong|dung|tranh|bo) (?:xem |phim )?${searchTV(category.name)}`).test(q);
-        const has = (movie.listCategory || []).some(id => String(id) === String(category.id));
+        const has = (movie.listCategory || []).some(id => String(id) === String(category.id))
+            || (animationGenres.has(String(category.id)) && animationTypes.has(String(movie.categoryTypeID)));
         return negative ? !has : has;
     }));
     if (country && !partial.length) selected = selected.filter(movie => isMovieMatchCountry(movie, country));
@@ -93,20 +100,47 @@ export function answerFromCatalog({ prompt, movies = [], categories = [], actors
     if (namedCharacters.length) selected = selected.filter(movie => namedCharacters.every(character => (movie.listCharacter || movie.characters || movie.character || []).includes(character.id)));
     const year = q.match(/\b((?:19|20)\d{2})\b/)?.[1];
     if (year) selected = selected.filter(movie => String(movie.releaseYear || movie.year) === year);
-    const requestedPlan = detectPlanInQuery(q);
+    const planQuery = ranking?.kind === 'ratings' ? q.replace(/\b(?:danh gia|cham diem|diem)(?: cao)? nhat\b|\btot nhat\b/g, '') : q;
+    const requestedPlan = detectPlanInQuery(planQuery);
     if (isPlanAppropriateQuery(prompt) || (continuation && isPlanAppropriateQuery(previousUser.text))) selected = filterMoviesByEntitlement(selected, plans, userPlanInfo);
     else if (requestedPlan?.targetLevel != null) selected = selected.filter(movie => getMoviePlanInfo(movie, plans).level === requestedPlan.targetLevel);
     else if (requestedPlan?.isFree) selected = selected.filter(movie => getMoviePlanInfo(movie, plans).isFree);
     else if (requestedPlan?.isPaid) selected = selected.filter(movie => !getMoviePlanInfo(movie, plans).isFree);
     if (/phim le/.test(q)) selected = selected.filter(movie => Number(movie.endEpisode) <= 1);
     if (/phim bo/.test(q)) selected = selected.filter(movie => Number(movie.endEpisode) > 1);
-    selected.sort((a, b) => /nhieu tap nhat|dai nhat/.test(q) ? (Number(b.endEpisode) || 0) - (Number(a.endEpisode) || 0)
+    if (ranking) {
+        if (ranking.kind === 'ratings' || ranking.kind === 'favorites') {
+            selected = selected.filter(movie => rankingValue(movie, ranking.kind, rankingStats) > 0);
+            if (!selected.length) return result(ranking.kind === 'ratings'
+                ? 'Mình chưa có đủ dữ liệu đánh giá cho nhóm phim bạn hỏi để xếp hạng chính xác. Mình có thể gợi ý theo lượt xem hoặc thể loại bạn thích; bạn muốn chọn hướng nào?'
+                : 'Nhóm phim bạn hỏi chưa có lượt yêu thích được ghi nhận để lập bảng top. Bạn có thể chọn top lượt xem, hoặc nói thể loại bạn thích để mình tìm lựa chọn phù hợp hơn nhé.');
+        }
+        if (['episodes', 'shortest', 'newest'].includes(ranking.kind)) selected = selected.filter(movie => rankingValue(movie, ranking.kind, rankingStats) > 0);
+        selected.sort((a, b) => (ranking.kind === 'shortest' ? 1 : -1) * (rankingValue(a, ranking.kind, rankingStats) - rankingValue(b, ranking.kind, rankingStats))
+            || (ranking.kind === 'ratings' ? (rankingStats.ratings[b.id]?.count || 0) - (rankingStats.ratings[a.id]?.count || 0) : 0)
+            || String(a.id).localeCompare(String(b.id)));
+    } else selected.sort((a, b) => /nhieu tap nhat|dai nhat/.test(q) ? (Number(b.endEpisode) || 0) - (Number(a.endEpisode) || 0)
         : /it tap nhat|ngan nhat/.test(q) ? (Number(a.endEpisode) || 0) - (Number(b.endEpisode) || 0)
             : /moi nhat|phim moi/.test(q) ? (Number(b.releaseYear || b.year) || 0) - (Number(a.releaseYear || a.year) || 0)
                 : (Number(b.views) || 0) - (Number(a.views) || 0));
-    const count = Math.min(10, Math.max(1, Number(q.match(/\b(?:top )?(\d+)\s*(?:phim|bo|anime)/)?.[1]) || 5));
-    const chosen = selected.slice(0, count);
-    if (!chosen.length) return result('Mình chưa tìm thấy phim trong danh mục hiện tại khớp đủ các yêu cầu này. Bạn thử đổi thể loại, quốc gia hoặc tên phim nhé.');
-    const rows = chosen.map(movie => `• ${link(movie)} | ${episodeText(movie)} | ${getMoviePlanInfo(movie, plans).planName}`);
-    return result(`${mood ? 'Bạn có thể thử những phim này để thư giãn nhé! 🍿' : 'Mình tìm được các phim này trên MFILM:'}\n${rows.join('\n')}${selected.length > count ? '\nNhắn **tiếp** để xem những phim khác.' : ''}`);
+    const count = ranking?.count || Math.min(10, Math.max(1, Number(q.match(/\b(?:top )?(\d+)\s*(?:phim|bo|anime)/)?.[1]) || 5));
+    const remaining = selected.filter(movie => !excluded.has(routeSegment(movie)));
+    const chosen = remaining.slice(0, count);
+    if (!chosen.length) return result(continuation
+        ? 'Mình đã giới thiệu hết các phim đang khớp những điều kiện này rồi. Bạn muốn mở rộng sang thể loại hoặc quốc gia khác để có thêm lựa chọn không?'
+        : 'Mình chưa tìm thấy phim khớp đầy đủ yêu cầu của bạn trong kho hiện tại. Bạn có thể cho mình tên khác của phim, hoặc chọn nới một điều kiện như năm phát hành để mình tìm tiếp nhé.');
+    const scope = ranking?.anime ? 'anime' : /phim le/.test(q) ? 'phim lẻ' : /phim bo/.test(q) ? 'phim bộ' : 'phim';
+    const filters = [country && !ranking?.anime ? chosen[0].countriesID || chosen[0].country : '',
+        ...matchedCategories.filter(category => !/anime|hoat hinh/.test(searchTV(category.name)) && !new RegExp(`(?:khong|dung|tranh|bo) (?:xem |phim )?${searchTV(category.name)}`).test(q)).map(category => category.name.toLowerCase()), year].filter(Boolean).join(' · ');
+    const opening = ranking
+        ? continuation ? `Đây là các ${scope} tiếp theo trong bảng xếp hạng ${rankingLabel(ranking.kind)}${filters ? ` (${filters})` : ''}:`
+            : `Đây là **top ${chosen.length} ${scope} ${rankingLabel(ranking.kind)}${filters ? ` (${filters})` : ''}** trên MFILM${ranking.kind === 'ratings' ? ', xếp theo điểm trung bình của người xem; số lượt đánh giá được ghi kèm để bạn cân nhắc' : ''}:`
+        : mood ? 'Nếu bạn đang muốn thư giãn một chút, mình gợi ý những phim dưới đây nhé. Bạn có thể xem phần giới thiệu để chọn bộ hợp tâm trạng nhất. 🍿'
+            : partial.length ? 'Mình tìm thấy các phim và phần phim khớp tên bạn hỏi. Bạn có thể mở từng thẻ để xem nội dung và chọn đúng phần muốn xem:'
+                : `Dựa theo yêu cầu của bạn, mình gợi ý ${chosen.length} ${scope}${filters ? ` (${filters})` : ''} dưới đây. Mình ghi kèm thông tin để bạn dễ chọn:`;
+    const rows = chosen.map(movie => ranking
+        ? `${selected.indexOf(movie) + 1}. ${link(movie)} | ${rankingMetric(movie, ranking.kind, rankingStats)}`
+        : `• ${link(movie)} | ${episodeText(movie)} | ${getMoviePlanInfo(movie, plans).planName}${movie.description ? `\n${String(movie.description).replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim().slice(0, 170)}${movie.description.length > 170 ? '…' : ''}` : ''}`);
+    const fewer = !continuation && ranking && chosen.length < count ? `\nHiện có ${chosen.length} phim khớp điều kiện và có đủ số liệu, nên mình giữ đúng số phim tìm được.` : '';
+    return result(`${opening}\n${rows.join('\n')}${fewer}${remaining.length > count ? '\nBạn có thể nhắn **tiếp** để xem thêm các phim trong cùng nhóm nhé.' : ''}`);
 }

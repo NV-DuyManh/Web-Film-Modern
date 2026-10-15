@@ -1,4 +1,5 @@
 import { getPlanAppearance } from '../../../utils/planAppearance.js';
+import { CHAT_RESPONSE_INSTRUCTION } from '../../../ai/chatResponsePolicy.js';
 import { routeSegment, findMovieReference } from '../../../utils/nameRoutes';
 import MovieImage from '../../MovieImage';
 import React from 'react';
@@ -219,7 +220,7 @@ export const detectCountryInQuery = (str) => {
         return 'han quoc';
     }
     // 3. Nhật Bản: phim nhật, anime, xứ hoa anh đào, xứ phù tang, japan, wibu, tokyo, manga...
-    if (/\b(nhat ban|phim nhat|nhat|japan|japanese|anime|wibu|otaku|isekai|manga|j-drama|jdrama|j drama|hoa anh dao|xu hoa anh dao|phu tang|xu phu tang|live action|tokyo)\b/i.test(s)) {
+    if (s.trim() === 'nhat' || /\b(nhat ban|phim nhat|nuoc nhat|japan|japanese|anime|wibu|otaku|isekai|manga|j-drama|jdrama|j drama|hoa anh dao|xu hoa anh dao|phu tang|xu phu tang|live action|tokyo)\b/i.test(s)) {
         return 'nhat ban';
     }
     // 4. Việt Nam: phim việt, nước mình, nước nhà, phim nhà mình, trong nước, vn, vtv...
@@ -460,7 +461,7 @@ export const validateAndFilterAiResponse = (responseText, movies = [], plans = [
     let sanitized = validLines.join('\n').trim();
 
     // Nếu AI sinh toàn phim vượt quyền hoặc bị loại hết, thay thế bằng danh sách phim hợp lệ thực tế
-    if (validMovieCount === 0) {
+    if (validMovieCount === 0 && lines.some(line => /\/phim\//.test(line))) {
         const allowedList = (movies || [])
             .filter(m => getMoviePlanInfo(m, plans).level <= userLevel)
             .sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0))
@@ -646,7 +647,7 @@ QUY TẮC CỐT LÕI & NGUYÊN TẮC ỨNG BIẾN LINH HOẠT:
 1. TÙY CƠ ỨNG BIẾN THEO MỤC ĐÍCH CÂU CHUYỆN (KHÔNG MÁY MÓC SPAM 5 PHIM):
    - KHI TRÒ CHUYỆN THÔNG THƯỜNG / CHÀO HỎI / HỎI THĂM / TÁN GẪU: Trả lời tự nhiên, hóm hỉnh, vui vẻ như một người bạn thân. TUYỆT ĐỐI KHÔNG tự tiện chèn danh sách 5 phim hay card phim nếu người dùng không yêu cầu.
    - KHI NGƯỜI DÙNG HỎI CÂU HỎI ĐƠN LẺ / THÔNG TIN CỤ THỂ (ví dụ: "phim nào nhiều phần nhất?", "phim này ai đóng?", "nội dung phim X", "phim này chiếu năm nào?"):
-     + Hãy trả lời trực tiếp, chính xác thông tin bộ phim đó. Đi thẳng vào vấn đề, ngắn gọn, súc tích.
+     + Trả lời đúng thông tin được hỏi, bằng câu đầy đủ; giải thích thêm khi cần để người dùng hiểu. Không tự biến câu hỏi cụ thể thành danh sách gợi ý.
    - KHI TÌM KIẾM MỘT PHIM HOẶC MỘT SERIES CỤ THỂ (ví dụ: "có phim đặc nhiệm không?", "tìm phim slime", "naruto"):
      + CHỈ hiển thị đúng các phần của bộ phim/series đó mà tool \`tra_cuu_phim\` trả về. KHÔNG chèn thêm các phim ngẫu nhiên khác.
    - CHỈ HIỂN THỊ DANH SÁCH GỢI Ý 5 PHIM KHI người dùng thật sự yêu cầu danh sách / xin gợi ý phim (ví dụ: "gợi ý vài phim hay", "top phim kinh dị", "phim hot hiện nay").
@@ -672,11 +673,9 @@ QUY TẮC CỐT LÕI & NGUYÊN TẮC ỨNG BIẾN LINH HOẠT:
 5. THỐNG KÊ MFILM: Tổng số phim: ${totalMovies} (Free: ${freeMoviesCount}, Có phí: ${paidMoviesCount}). Tổng số tập phim toàn web: ${totalEpisodes} tập.
 ${planBreakdown}
 ${planRule6}
-7. GIAO TIẾP TỰ NHIÊN, NGẮN GỌN, DỄ HIỂU:
-   - Trả lời ngắn gọn, súc tích, đi thẳng vào câu trả lời, dùng emoji nhẹ nhàng 🍿🎬.
-   - TUYỆT ĐỐI KHÔNG nói dài dòng, TUYỆT ĐỐI KHÔNG lặp đi lặp lại những câu giải thích rườm rà trong ngoặc đơn (như "(Bạn đang dùng gói Free, nên phim này hiện chưa thể xem được. Bạn có thể nâng cấp...)").
-   - Khi giới thiệu phim: Chỉ cần tên phim, số tập, thể loại ngắn gọn (1 dòng).
-   - TUYỆT ĐỐI KHÔNG dùng bảng markdown (|). Khi liệt kê dùng dấu gạch ngang "-" duy nhất. Dùng cú pháp [Tên Phim](/phim/slug-chinh-xac).
+7. GIAO TIẾP TỰ NHIÊN, ĐỦ Ý, DỄ HIỂU:
+${CHAT_RESPONSE_INSTRUCTION}
+   - Không dùng bảng markdown. Hướng dẫn và bảng xếp hạng dùng danh sách đánh số; gợi ý thông thường dùng dấu gạch đầu dòng. Dùng cú pháp [Tên Phim](/phim/slug-chinh-xac).
    - BẮT BUỘC giữ đường dẫn /phim/ trong mọi gợi ý phim. KHÔNG trả về mã phim dạng [slug] "Tên Phim" hoặc chỉ [slug].
 8. ĐIỀU KHIỂN WEB: Dùng tool \`dieu_khien_website\` khi người dùng yêu cầu mở phim, tìm kiếm, đăng nhập hoặc nâng cấp VIP.
 9. QUY TẮC BẢO ĐẢM ĐÚNG QUỐC GIA & NGỮ CẢNH HỘI THOẠI:
@@ -1267,7 +1266,7 @@ export const getPlanBadgeStyle = (planInfo) => ({
 /**
  * Component hiển thị 1 thẻ phim mini trực quan ngay dưới dòng mô tả
  */
-export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo = null, isPlanSpecific = false }) => {
+export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo = null, isPlanSpecific = false, rank = null, rankMetric = '' }) => {
     if (!movie) return null;
     const planInfo = getMoviePlanInfo(movie, plans);
     if (isPlanSpecific && userPlanInfo) {
@@ -1280,19 +1279,26 @@ export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo =
     const movieSlug = routeSegment(movie);
     const title = movie.otherName || movie.name;
     const epText = movie.endEpisode ? `${movie.endEpisode} tập` : '1 tập';
+    const rankColor = rank === 1 ? 'from-red-400 to-orange-500' : rank === 2 ? 'from-orange-400 to-amber-400'
+        : rank === 3 ? 'from-amber-200 to-yellow-500' : rank === 4 ? 'from-pink-400 to-fuchsia-500' : 'from-cyan-300 to-blue-500';
 
     return (
-        <div className="my-1.5 p-2 rounded-xl bg-slate-900 text-white shadow-md border border-amber-500/20 hover:border-amber-500/50 transition-all flex items-center gap-2.5">
+        <div className={`group my-2 p-2.5 rounded-xl bg-linear-to-br from-slate-800 to-slate-950 text-white shadow-md border transition-all flex items-center gap-3 ${rank ? 'border-amber-400/40 hover:border-amber-300' : 'border-amber-500/20 hover:border-amber-500/50'}`}>
+            <div className="relative shrink-0">
             <MovieImage
                 movie={movie}
                 imageWidth={100} imageHeight={150}
                 alt={title}
                 className="w-13 h-18 rounded-lg object-cover shrink-0 shadow-sm border border-slate-700 pointer-events-none select-none" 
             />
+                {rank && <span aria-label={`Hạng ${rank}`} className={`absolute -left-2 -bottom-1 bg-linear-to-b ${rankColor} bg-clip-text text-transparent text-4xl font-black italic leading-none drop-shadow-lg`} style={{ WebkitTextStroke: '1px rgba(15,23,42,.35)' }}>{rank}</span>}
+            </div>
             <div className="min-w-0 flex-1 pr-1">
+                {rank && <p className="mb-1 text-amber-300 text-[9px] font-black tracking-widest">TOP {rank}</p>}
                 <h4 className="font-bold text-[11.5px] text-white truncate group-hover:text-amber-400 transition-colors" title={title}>
                     {title}
                 </h4>
+                {rankMetric && <p className="mt-1 text-[10px] font-semibold text-cyan-200 leading-relaxed">{rankMetric}</p>}
                 <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[9.5px]">
                     <span className={`text-[8px] font-extrabold px-1.5 py-0.25 rounded uppercase tracking-wider inline ${badgeStyle.className}`}>
                         {badgeStyle.text}
@@ -1370,6 +1376,8 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = [], userPl
 
         // Kiểm tra xem dòng này có link /phim/slug không
         const movieSlugMatch = cleanLine.match(/\/phim\/([^/?#\s)\]]+)/i);
+        const rank = Number(cleanLine.match(/^(\d{1,3})[.)]\s*\[/)?.[1]) || null;
+        const rankMetric = rank ? cleanLine.split(' | ').slice(1).join(' · ') : '';
         let movieForThisLine = null;
         if (movieSlugMatch && movies && movies.length > 0) {
             const slug = movieSlugMatch[1].toLowerCase();
@@ -1386,7 +1394,7 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = [], userPl
 
         return (
             <div key={`line-${i}`} className="leading-relaxed">
-                <div>{renderSingleLineText(cleanLine, onLinkClick)}</div>
+                {!(rank && movieForThisLine) && <div>{renderSingleLineText(cleanLine, onLinkClick)}</div>}
                 {movieForThisLine && (
                     <SingleMovieCard 
                         movie={movieForThisLine} 
@@ -1394,6 +1402,8 @@ export const renderMessage = (text, onLinkClick, movies = [], plans = [], userPl
                         onLinkClick={onLinkClick} 
                         userPlanInfo={userPlanInfo}
                         isPlanSpecific={isPlanSpecific}
+                        rank={rank}
+                        rankMetric={rankMetric}
                     />
                 )}
             </div>
