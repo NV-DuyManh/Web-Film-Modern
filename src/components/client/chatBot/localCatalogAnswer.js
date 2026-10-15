@@ -74,7 +74,7 @@ export function answerFromCatalog({ prompt, movies = [], categories = [], catego
     const namedAuthors = authors.filter(author => author.name && searchTV(author.name).length >= 4 && q.includes(searchTV(author.name)));
     const namedCharacters = characters.filter(character => character.name && searchTV(character.name).length >= 4 && q.includes(searchTV(character.name)));
     const country = detectCountryInQuery(q);
-    const discovery = /\b(goi y|de xuat|tim|top|danh sach|xem gi|xem phim gi|phim nao hay|phim hay|xin phim|phim de xem|phim moi|co phim|phu hop|hop goi|nhieu tap nhat|it tap nhat|xem nhieu nhat|nhieu phan nhat)\b/.test(q)
+    const discovery = Boolean(ranking) || /\b(goi y|de xuat|tim|top|danh sach|xem gi|xem phim gi|phim nao hay|phim hay|xin phim|phim de xem|phim moi|co phim|phu hop|hop goi|nhieu tap nhat|it tap nhat|xem nhieu nhat|nhieu phan nhat)\b/.test(q)
         || (matchedCategories.length && /\b(phim|anime)\b/.test(q)) || mood || continuation || partial.length || namedActors.length || namedAuthors.length || namedCharacters.length;
     if (!discovery || /\b(tai sao|vi sao|giai thich|so sanh|phan tich|ket thuc|review)\b/.test(q) || (!ranking && /\bdanh gia\b/.test(q))) return null;
     if (!catalogReady) return result('Kho phim đang tải dữ liệu. Bạn gửi lại câu hỏi sau vài giây để mình gợi ý đúng phim trên web nhé.');
