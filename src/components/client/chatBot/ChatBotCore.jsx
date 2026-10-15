@@ -1297,7 +1297,7 @@ export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo =
                 <h4 className="font-bold text-[11.5px] text-white truncate group-hover:text-amber-400 transition-colors" title={title}>
                     {title}
                 </h4>
-                {rankMetric && <p className="mt-1 text-[10px] font-semibold text-cyan-200 leading-relaxed">{rankMetric}</p>}
+                {rankMetric && !/lượt xem/i.test(rankMetric) && <p className="mt-1 text-[10px] font-semibold text-cyan-200 leading-relaxed">{rankMetric}</p>}
                 <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[9.5px]">
                     <span className={`text-[8px] font-extrabold px-1.5 py-0.25 rounded uppercase tracking-wider inline ${badgeStyle.className}`}>
                         {badgeStyle.text}
