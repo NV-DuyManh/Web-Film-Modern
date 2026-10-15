@@ -8,7 +8,7 @@ import { getDefaultAvatar, getSafeEntityAvatar } from '../../../utils/appUtils';
 import { createNameRouteIndex } from '../../../utils/nameRoutes';
 import SEO from '../../../components/SEO';
 import NoelBackground from '../../../components/admin/noelBackground/NoelBackground';
-import { FaGlobe, FaVenusMars, FaInfoCircle, FaPlay, FaFilm } from 'react-icons/fa';
+import { FaGlobe, FaVenusMars, FaInfoCircle, FaFilm } from 'react-icons/fa';
 import './ActorDetail.css';
 
 const EMPTY_ENTITIES = [];
@@ -156,9 +156,6 @@ function ActorDetail({ type }) {
                                             </p>
                                         </div>
 
-                                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-[#facc15] rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 scale-50 group-hover:scale-100 transition-all duration-300 shadow-[0_0_20px_rgba(250,204,21,0.6)]">
-                                            <FaPlay className="text-black ml-1" />
-                                        </div>
                                     </div>
                                     <div className="pt-2 px-1 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-1">
                                         <h3 className="m-0 text-sm md:text-base font-bold text-white truncate w-full transition-colors group-hover:text-[#facc15]">{m.name}</h3>
