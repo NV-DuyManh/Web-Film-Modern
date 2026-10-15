@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { FaChevronRight, FaChevronLeft, FaTicketAlt, FaListUl, FaEye } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaListUl, FaEye } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
 
 import { PlanContext } from '../../../../contexts/PlanProvider';
@@ -184,40 +184,34 @@ function TopFilm() {
                                         </div>
                                     </div>
 
-                                    <div className="pt-2 flex items-start gap-2 md:gap-3 transition-transform duration-300 group-hover:-translate-y-1">
-                                        <p className={`text-3xl md:text-4xl font-black italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ${index === 0 ? 'text-red-600' :
-                                            index === 1 ? 'text-orange-500' :
-                                                index === 2 ? 'text-yellow-400' :
-                                                    'text-pink-500'
-                                            }`}>
-                                            {index + 1}
-                                        </p>
-
-                                        <div className="flex flex-col min-w-0 mt-1">
-                                            <h3 className="text-white font-bold text-xs md:text-sm truncate transition-colors group-hover:text-[#facc15]">
-                                                {e.otherName}
-                                            </h3>
-                                            <p className="text-slate-400 text-[9px] md:text-[11px] truncate mt-0.5 transition-colors group-hover:text-slate-200">
-                                                {e.name}
+                                    <div className="pt-2 transition-transform duration-300 group-hover:-translate-y-1">
+                                        <div className="flex items-start gap-2 md:gap-3">
+                                            <p className={`text-3xl md:text-4xl font-black italic drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] ${index === 0 ? 'text-red-600' :
+                                                index === 1 ? 'text-orange-500' :
+                                                    index === 2 ? 'text-yellow-400' :
+                                                        'text-pink-500'
+                                                }`}>
+                                                {index + 1}
                                             </p>
-                                            <div className="flex flex-wrap items-center gap-2 mt-1.5 text-[9px] md:text-[10px] font-bold">
 
-                                                {e.rent != null && Number(e.endEpisode) > 0 && (
-                                                    <span className="text-slate-500">•</span>
-                                                )}
-                                                {Number(e.endEpisode) > 0 && (
-                                                    <span className="flex items-center gap-1 text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)] transition-transform duration-300 group-hover:scale-105">
-                                                        <FaListUl /> {e.endEpisode} Tập
-                                                    </span>
-                                                )}
-                                                {Number(e.endEpisode) > 0 && (
-                                                    <span className="text-slate-500">•</span>
-                                                )}
-                                                <span className="flex items-center gap-1 text-purple-400 drop-shadow-[0_0_5px_rgba(192,38,211,0.5)] transition-transform duration-300 group-hover:scale-105">
-                                                    <FaEye /> {(Number(e.views) || 0) + 100}
-                                                </span>
+                                            <div className="flex flex-1 flex-col min-w-0 mt-1">
+                                                <h3 className="text-white font-bold text-xs md:text-sm truncate transition-colors group-hover:text-[#facc15]">
+                                                    {e.otherName}
+                                                </h3>
+                                                <p className="text-slate-400 text-[9px] md:text-[11px] truncate mt-0.5 transition-colors group-hover:text-slate-200">
+                                                    {e.name}
+                                                </p>
                                             </div>
-
+                                        </div>
+                                        <div className="flex w-full flex-wrap items-center justify-center gap-2.5 mt-2 text-[9px] md:text-[10px] font-bold">
+                                            {Number(e.endEpisode) > 0 && (
+                                                <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-emerald-400 to-green-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(16,185,129,0.6)] whitespace-nowrap">
+                                                    <FaListUl /> {e.endEpisode} Tập
+                                                </span>
+                                            )}
+                                            <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] whitespace-nowrap">
+                                                <FaEye /> {(Number(e.views) || 0) + 100}
+                                            </span>
                                         </div>
                                     </div>
 
