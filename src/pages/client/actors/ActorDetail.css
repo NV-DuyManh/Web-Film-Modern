@@ -82,11 +82,15 @@
 }
 
 .entity-detail__fact {
-    min-width: 160px;
-    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    min-width: 0;
+    padding: 10px 14px;
     border: 1px solid rgb(234 179 8 / 30%);
-    border-radius: 12px;
-    background: rgb(0 0 0 / 20%);
+    border-radius: 999px;
+    background: linear-gradient(135deg, rgb(234 179 8 / 8%), rgb(0 0 0 / 20%));
 }
 
 .entity-detail__fact dt,
@@ -101,10 +105,20 @@
     text-transform: uppercase;
 }
 
+.entity-detail__fact dt {
+    flex-shrink: 0;
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+}
+
 .entity-detail__fact svg,
 .entity-detail__bio svg,
 .entity-detail__section-heading svg { color: #eab308; flex-shrink: 0; }
-.entity-detail__fact dd { margin: 8px 0 0; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.entity-detail__fact dd { min-width: 0; margin: 0; color: #f8fafc; font-size: 14px; font-weight: 700; overflow-wrap: anywhere; }
 .entity-detail__bio { border-top: 1px solid rgb(6 182 212 / 20%); padding-top: 20px; }
 .entity-detail__bio h2 { margin: 0 0 12px; font-size: 14px; }
 .entity-detail__bio p { margin: 0; color: #cbd5e1; font-size: 14px; line-height: 1.8; white-space: pre-line; overflow-wrap: anywhere; }
@@ -149,9 +163,9 @@
     .entity-detail__portrait { width: 144px; margin: 0 auto; }
     .entity-detail__role, .entity-detail__name { text-align: center; }
     .entity-detail__name { margin-bottom: 20px; }
-    .entity-detail__facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-    .entity-detail__fact { min-width: 0; padding: 12px; }
-    .entity-detail__fact dt { font-size: 10px; }
+    .entity-detail__facts { justify-content: center; gap: 10px; }
+    .entity-detail__fact { padding: 9px 12px; }
+    .entity-detail__fact dt { font-size: 12px; }
     .entity-detail__fact dd { font-size: 13px; }
     .entity-detail__section-heading { gap: 10px; margin-bottom: 20px; }
     .entity-detail__section-heading h2 { gap: 8px; font-size: 18px; }

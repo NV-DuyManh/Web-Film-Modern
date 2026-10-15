@@ -110,13 +110,13 @@ function ActorDetail({ type }) {
                         <dl className="entity-detail__facts">
                             {entity.countriesID && (
                                 <div className="entity-detail__fact">
-                                    <dt><FaGlobe aria-hidden="true" /> Quốc gia</dt>
+                                    <dt><FaGlobe aria-hidden="true" /> Quốc gia:</dt>
                                     <dd>{entity.countriesID}</dd>
                                 </div>
                             )}
                             {genderText && (
                                 <div className="entity-detail__fact">
-                                    <dt><FaVenusMars aria-hidden="true" /> Giới tính</dt>
+                                    <dt><FaVenusMars aria-hidden="true" /> Giới tính:</dt>
                                     <dd>{genderText}</dd>
                                 </div>
                             )}
