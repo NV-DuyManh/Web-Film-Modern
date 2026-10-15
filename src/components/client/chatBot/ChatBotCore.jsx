@@ -1193,7 +1193,7 @@ const renderTextWithNewlines = (text) => {
 
         // Chuẩn hóa gạch đầu dòng/chấm tròn bị lặp hoặc ghép đôi (ví dụ: "- •", "• -", "- -", "* •")
         cleanLine = cleanLine
-            .replace(/^[-*•\s]*[-*•]\s*[-*•]\s*/, '• ')
+            .replace(/^(?:[-*•]\s+){2,}/, '• ')
             .replace(/^[-*]\s+/, '• ');
 
         return (
