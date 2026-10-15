@@ -4,16 +4,17 @@ import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import useHomeMovies from '../../../../hooks/useHomeMovies';
+import { useMovies } from '../../../../hooks/useCollections';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
-import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaClock, FaEye } from 'react-icons/fa';
+import { FaChevronRight, FaChevronLeft, FaCalendarAlt, FaClock, FaEye, FaListUl } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { Link } from 'react-router-dom';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import { trackEvent, getSessionId } from '../../../../services/eventTracker';
 
 // ─── Minimal Error Boundary ────────────────────────────────────────────────────
@@ -44,6 +45,7 @@ function ForYouInner() {
     const authEpoch = authContext?.authEpoch ?? 0;
 
     const [recommendations, setRecommendations] = useState([]);
+    const catalogMovies = useMovies(recommendations.length > 0);
     const [loading, setLoading] = useState(true);
     const viewedMoviesRef = useRef(new Set());
     // Track the abort controller for the current in-flight request
@@ -189,9 +191,10 @@ function ForYouInner() {
 
                 const itemSlug = typeof item.slug === 'string' ? item.slug.trim() : '';
 
-                // Enrich from catalog if movies from useMovies() are already loaded
-                const catalogMovie = Array.isArray(movies) && movies.length > 0
-                    ? movies.find((m) => {
+                // Recommendations can reference older films outside the homepage's new releases.
+                const availableMovies = catalogMovies.length ? catalogMovies : movies;
+                const catalogMovie = Array.isArray(availableMovies) && availableMovies.length > 0
+                    ? availableMovies.find((m) => {
                         const mId = String(m?.id || '').trim();
                         const mSlug = String(m?.slug || '').trim();
                         return (mId && mId === stableId) || (itemSlug && mSlug && mSlug === itemSlug);
@@ -200,6 +203,7 @@ function ForYouInner() {
 
                 if (catalogMovie) {
                     return {
+                        ...item,
                         ...catalogMovie,
                         id: stableId,
                         slug: itemSlug || catalogMovie.slug,
@@ -219,6 +223,7 @@ function ForYouInner() {
                 // Self-sufficient fallback directly from API payload
                 if (item.name && resolveMovieImages({ ...item, imgUrl: item.imgUrl || item.img_url }).imgUrl) {
                     return {
+                        ...item,
                         id: stableId,
                         slug: itemSlug || stableId,
                         name: item.name,
@@ -242,7 +247,7 @@ function ForYouInner() {
             // Defensive: if any mapping error occurs, hide section rather than crash homepage
             return [];
         }
-    }, [recommendations, movies]);
+    }, [recommendations, movies, catalogMovies]);
 
     const activeMovies = useMemo(() => {
         if (displayMovies && displayMovies.length > 0) return displayMovies;
@@ -440,6 +445,12 @@ function ForYouInner() {
                                                 <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-blue-500 to-cyan-500 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(6,182,212,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                                                     <FaCalendarAlt /> {e.releaseYear}
                                                 </div>
+                                            )}
+
+                                            {Number(e.endEpisode || e.totalEpisodes) > 0 && (
+                                                <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-emerald-400 to-green-600 px-2.5 py-0.5 rounded-full shadow-md text-[9px] md:text-[10px] whitespace-nowrap">
+                                                    <FaListUl aria-hidden="true" /> {e.endEpisode || e.totalEpisodes} Tập
+                                                </span>
                                             )}
 
                                             <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">

@@ -8,7 +8,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { FaCalendarAlt, FaEye, FaShieldAlt } from 'react-icons/fa';
+import { FaCalendarAlt, FaEye, FaShieldAlt, FaListUl } from 'react-icons/fa';
 import { BsSearch } from 'react-icons/bs';
 import { getAuth } from 'firebase/auth';
 import ParticleBackground from '../../../../components/client/background/ParticleBackground';
@@ -110,6 +110,11 @@ const MovieCard = React.memo(({ movie, plans, onMovieClick }) => {
                             <FaCalendarAlt /> {movie.releaseYear}
                         </div>
                     )}
+                    {Number(movie.endEpisode || movie.totalEpisodes) > 0 && (
+                        <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-emerald-400 to-green-600 px-2.5 py-0.5 rounded-full shadow-md text-[9px] md:text-[10px] whitespace-nowrap">
+                            <FaListUl aria-hidden="true" /> {movie.endEpisode || movie.totalEpisodes} Tập
+                        </span>
+                    )}
                     <div className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] text-[9px] md:text-[10px] whitespace-nowrap">
                         <FaEye /> {(Number(movie.views) || 0) + 100}
                     </div>
@@ -120,7 +125,7 @@ const MovieCard = React.memo(({ movie, plans, onMovieClick }) => {
 });
 
 function ForYouPage() {
-    const movies = useMovies() || [];
+    const movies = useMovies();
     const plans = useContext(PlanContext) || [];
     const authContext = useContext(AuthContext);
     const isLogin = authContext?.isLogin;
@@ -284,6 +289,7 @@ function ForYouPage() {
 
                 if (catalogMovie) {
                     return {
+                        ...item,
                         ...catalogMovie,
                         id: stableId,
                         slug: itemSlug || catalogMovie.slug,
@@ -302,6 +308,7 @@ function ForYouPage() {
 
                 if (item.name && resolveMovieImages({ ...item, imgUrl: item.imgUrl || item.img_url }).imgUrl) {
                     return {
+                        ...item,
                         id: stableId,
                         slug: itemSlug || stableId,
                         name: item.name,
