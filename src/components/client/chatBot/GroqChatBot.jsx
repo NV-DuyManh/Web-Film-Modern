@@ -7,7 +7,8 @@ import { useMovies, useCharacters, useCategories, useSubscriptions, useActors, u
 import { localKnowledgeAnswer } from '../../../ai/knowledgeEngine.js';
 import { createAnswerMemory, memoryPolicy } from '../../../ai/answerMemory.js';
 import { answerFromCatalog, catalogContext } from './localCatalogAnswer.js';
-import { getCatalogStatus } from '../../../utils/catalogStatus.js';
+import useCatalogStatus from '../../../hooks/useCatalogStatus';
+import { createChatCatalogGate } from '../../../utils/chatCatalogGate.js';
 import { getUserPlanInfo } from '../../../utils/appUtils';
 import { FaPlus, FaHistory, FaTimes, FaTrashAlt, FaRegCommentDots, FaMicrophone, FaStop, FaPaperPlane } from 'react-icons/fa';
 import {
@@ -20,6 +21,7 @@ import {
 
 const CHAT_OPEN_KEY = 'mfilm_chatbot_is_open';
 const EMPTY_MESSAGES = [];
+const EMPTY_CATALOG = [];
 
 const createNewSession = () => ({
     id: `session_${Date.now()}`,
@@ -51,10 +53,26 @@ export default function GroqChatBot({ initiallyOpen = false }) {
     const subscriptions = useSubscriptions(isChatOpen);
     const plans = useContext(PlanContext);
     const movies = useMovies(isChatOpen);
-    const characters = useCharacters(isChatOpen) || [];
-    const categories = useCategories(isChatOpen) || [];
-    const actors = useActors(isChatOpen) || [];
-    const authors = useAuthors(isChatOpen) || [];
+    const characters = useCharacters(isChatOpen) || EMPTY_CATALOG;
+    const categories = useCategories(isChatOpen) || EMPTY_CATALOG;
+    const actors = useActors(isChatOpen) || EMPTY_CATALOG;
+    const authors = useAuthors(isChatOpen) || EMPTY_CATALOG;
+    const movieStatus = useCatalogStatus('Movies');
+    const categoryStatus = useCatalogStatus('Categories');
+    const actorStatus = useCatalogStatus('Actors');
+    const authorStatus = useCatalogStatus('Authors');
+    const characterStatus = useCatalogStatus('Characters');
+    const planStatus = useCatalogStatus('Plans');
+    const catalogGate = useMemo(() => createChatCatalogGate(), []);
+    useEffect(() => {
+        const collections = [[movies, movieStatus], [categories, categoryStatus], [actors, actorStatus],
+            [authors, authorStatus], [characters, characterStatus], [plans, planStatus]];
+        const ready = collections.every(([items, state]) => items?.length > 0 || state.status === 'ready');
+        const failed = collections.find(([items, state]) => !items?.length && state.status === 'error');
+        catalogGate.update({ movies, categories, actors, authors, characters, plans, subscriptions, ready,
+            error: failed ? new Error('catalog-unavailable') : null });
+    }, [catalogGate, movies, categories, actors, authors, characters, plans, subscriptions,
+        movieStatus, categoryStatus, actorStatus, authorStatus, characterStatus, planStatus]);
 
     const userPlanInfo = useMemo(() => {
         return getUserPlanInfo(isLogin, subscriptions, plans);
@@ -265,10 +283,6 @@ export default function GroqChatBot({ initiallyOpen = false }) {
             ? location.pathname.replace('/xem-phim/', '').split('?')[0]
             : null;
     const cleanSlug = currentSlug ? decodeURIComponent(currentSlug).replace(/\/$/, '') : null;
-    const currentMovie = cleanSlug
-        ? (findMovieReference(movies, cleanSlug) || findMovieReference(movies, currentSlug))
-        : null;
-    const memoryContext = useMemo(() => catalogContext(movies, plans, userPlanInfo, currentMovie), [movies, plans, userPlanInfo, currentMovie]);
     useEffect(() => () => { abortControllerRef.current?.abort(); recognitionRef.current?.stop(); }, []);
 
     // Tính năng nhận diện giọng nói (Web Speech API)
@@ -358,20 +372,6 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                 setIsTyping(false);
                 return;
             }
-
-            if (!plans || plans.length === 0) {
-                const newAiId = Date.now() + 1;
-                setLastAiMsgId(newAiId);
-                const aiMsg = {
-                    id: newAiId,
-                    text: "Chưa xác định được gói hiện tại của tài khoản. Vui lòng tải lại thông tin tài khoản.",
-                    sender: 'ai',
-                    isPlanSpecific: false
-                };
-                updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
-                setIsTyping(false);
-                return;
-            }
         }
 
         // Hủy request trước đó nếu còn đang chạy
@@ -383,26 +383,37 @@ export default function GroqChatBot({ initiallyOpen = false }) {
 
         try {
             const sharedQuestion = memoryPolicy(textToSend)?.shared;
-            const local = localKnowledgeAnswer(textToSend) || answerFromCatalog({
-                prompt: textToSend, movies, categories, actors, authors, characters, plans, currentMovie,
-                history: currentSessionMessages, userPlanInfo, isLogin,
-                catalogReady: movies.length > 0 && getCatalogStatus('Movies').status !== 'loading',
-            }) || (!sharedQuestion && answerMemory.get(textToSend, memoryContext));
+            const knowledge = localKnowledgeAnswer(textToSend);
+            // Keep the first question pending until the rendered catalog snapshot is ready.
+            // Reading the arrays captured before await would still use the empty first render.
+            const loaded = knowledge ? { movies, categories, actors, authors, characters, plans, subscriptions }
+                : await catalogGate.wait({ signal: abortController.signal });
+            if (abortController.signal.aborted) return;
+            const { movies: loadedMovies, categories: loadedCategories, actors: loadedActors,
+                authors: loadedAuthors, characters: loadedCharacters, plans: loadedPlans } = loaded;
+            const freshPlanInfo = getUserPlanInfo(isLogin, loaded.subscriptions || [], loadedPlans);
+            const freshMovie = cleanSlug ? findMovieReference(loadedMovies, cleanSlug) : null;
+            const freshContext = catalogContext(loadedMovies, loadedPlans, freshPlanInfo, freshMovie);
+            const local = knowledge || answerFromCatalog({
+                prompt: textToSend, movies: loadedMovies, categories: loadedCategories, actors: loadedActors,
+                authors: loadedAuthors, characters: loadedCharacters, plans: loadedPlans, currentMovie: freshMovie,
+                history: currentSessionMessages, userPlanInfo: freshPlanInfo, isLogin, catalogReady: true,
+            }) || (!sharedQuestion && answerMemory.get(textToSend, freshContext));
             // Lọc trước danh sách ứng viên phim theo quyền truy cập của gói cước người dùng (Pre-AI filtering)
             const candidateMovies = isPlanQuery
-                ? filterMoviesByEntitlement(movies, plans, userPlanInfo)
-                : movies;
+                ? filterMoviesByEntitlement(loadedMovies, loadedPlans, freshPlanInfo)
+                : loadedMovies;
 
             const systemInstruction = local || sharedQuestion ? '' : buildSystemInstruction({
                 movies: candidateMovies,
-                currentMovie,
-                characters,
-                categories,
-                actors,
-                authors,
-                plans,
+                currentMovie: freshMovie,
+                characters: loadedCharacters,
+                categories: loadedCategories,
+                actors: loadedActors,
+                authors: loadedAuthors,
+                plans: loadedPlans,
                 isLogin,
-                userPlanInfo,
+                userPlanInfo: freshPlanInfo,
                 isPlanSpecific: isPlanQuery
             });
 
@@ -448,7 +459,7 @@ export default function GroqChatBot({ initiallyOpen = false }) {
             }
 
             if (!backendSuccess) {
-                const offline = answerMemory.get(textToSend, memoryContext);
+                const offline = answerMemory.get(textToSend, freshContext);
                 if (offline) {
                     finalAiMsgText = offline.reply;
                     backendSuccess = true;
@@ -462,12 +473,12 @@ export default function GroqChatBot({ initiallyOpen = false }) {
             // Hậu kiểm và lọc bỏ phim vượt quyền / sai lệch khỏi câu trả lời của AI (Post-AI validation)
             const sanitizedAiText = validateAndFilterAiResponse(
                 finalAiMsgText,
-                movies,
-                plans,
-                userPlanInfo,
+                loadedMovies,
+                loadedPlans,
+                freshPlanInfo,
                 isPlanQuery
             );
-            if (backendSuccess && !local) answerMemory.remember(textToSend, sanitizedAiText, { context: memoryContext, source: replySource, receipt: memoryReceipt });
+            if (backendSuccess && !local) answerMemory.remember(textToSend, sanitizedAiText, { context: freshContext, source: replySource, receipt: memoryReceipt });
 
             const newAiId = Date.now() + 1;
             setLastAiMsgId(newAiId);
@@ -477,10 +488,10 @@ export default function GroqChatBot({ initiallyOpen = false }) {
                 sender: 'ai',
                 source: replySource,
                 question: textToSend,
-                memoryContext,
+                memoryContext: freshContext,
                 memoryReceipt,
                 isPlanSpecific: isPlanQuery,
-                userPlanInfo
+                userPlanInfo: freshPlanInfo
             };
             updateSessionMessages(targetSessionId, prev => [...prev, aiMsg]);
         } catch (error) {
@@ -492,7 +503,9 @@ export default function GroqChatBot({ initiallyOpen = false }) {
             console.error("Groq AI Error:", error);
             let errorMessage = "Hệ thống báo lỗi: Không rõ nguyên nhân";
             if (error && error.message) {
-                if (error.message.includes("429") || error.message.includes("Rate limit") || error.message.includes("Quota exceeded")) {
+                if (error.message.startsWith('catalog-')) {
+                    errorMessage = 'Mình chưa kết nối được kho phim. Bạn kiểm tra mạng rồi thử lại giúp mình nhé.';
+                } else if (error.message.includes("429") || error.message.includes("Rate limit") || error.message.includes("Quota exceeded")) {
                     errorMessage = "Hệ thống báo lỗi: Trợ lý AI đang xử lý nhiều lượt yêu cầu cùng lúc. Bạn vui lòng đợi 1-2 giây rồi gửi lại nhé!";
                 } else if (error.message.includes("Failed to fetch") || error.message.includes("NetworkError")) {
                     errorMessage = "Hệ thống báo lỗi: Không thể kết nối đến máy chủ AI. Vui lòng kiểm tra mạng hoặc API Key!";
