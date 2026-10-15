@@ -123,7 +123,7 @@ export function answerFromCatalog({ prompt, movies = [], categories = [], catego
         : /it tap nhat|ngan nhat/.test(q) ? (Number(a.endEpisode) || 0) - (Number(b.endEpisode) || 0)
             : /moi nhat|phim moi/.test(q) ? (Number(b.releaseYear || b.year) || 0) - (Number(a.releaseYear || a.year) || 0)
                 : (Number(b.views) || 0) - (Number(a.views) || 0));
-    const count = ranking?.count || Math.min(10, Math.max(1, Number(q.match(/\b(?:top )?(\d+)\s*(?:phim|bo|anime)/)?.[1]) || 5));
+    const count = ranking?.count || Math.max(1, Number(q.match(/\b(?:top )?(\d+)\s*(?:phim|bo|anime)/)?.[1]) || 5);
     const remaining = selected.filter(movie => !excluded.has(routeSegment(movie)));
     const chosen = remaining.slice(0, count);
     if (!chosen.length) return result(continuation

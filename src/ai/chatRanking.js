@@ -8,7 +8,7 @@ export function rankingIntent(prompt) {
             : /nhieu tap|dai nhat/.test(q) ? 'episodes'
                 : /it tap|ngan nhat/.test(q) ? 'shortest'
                     : /moi nhat|moi cap nhat/.test(q) ? 'newest' : 'views';
-    return { kind, count: Math.min(10, Math.max(1, Number(q.match(/\btop\s*(\d+)/)?.[1] || q.match(/\b(\d+)\s*(?:phim|bo|anime)/)?.[1]) || 5)), anime: /\banime\b/.test(q) };
+    return { kind, count: Math.max(1, Number(q.match(/\btop\s*(\d+)/)?.[1] || q.match(/\b(\d+)\s*(?:phim|bo|anime)/)?.[1]) || 5), anime: /\banime\b/.test(q) };
 }
 
 const number = value => new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 1 }).format(value);

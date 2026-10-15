@@ -1076,7 +1076,7 @@ export const executeMovieLookup = ({
     let limit = 5;
     if (isSingleQuestion && !requestedLimit) {
         limit = 1;
-    } else if (requestedLimit && requestedLimit > 0 && requestedLimit <= 5) {
+    } else if (requestedLimit && requestedLimit > 0) {
         limit = requestedLimit;
     } else if (isSpecificSearch && !requestedLimit) {
         limit = Math.min(filtered.length, 5);
@@ -1294,7 +1294,6 @@ export const SingleMovieCard = ({ movie, plans = [], onLinkClick, userPlanInfo =
                 {rank && <span aria-label={`Hạng ${rank}`} className={`absolute -left-2 -bottom-1 bg-linear-to-b ${rankColor} bg-clip-text text-transparent text-4xl font-black italic leading-none drop-shadow-lg`} style={{ WebkitTextStroke: '1px rgba(15,23,42,.35)' }}>{rank}</span>}
             </div>
             <div className="min-w-0 flex-1 pr-1">
-                {rank && <p className="mb-1 text-amber-300 text-[9px] font-black tracking-widest">TOP {rank}</p>}
                 <h4 className="font-bold text-[11.5px] text-white truncate group-hover:text-amber-400 transition-colors" title={title}>
                     {title}
                 </h4>
