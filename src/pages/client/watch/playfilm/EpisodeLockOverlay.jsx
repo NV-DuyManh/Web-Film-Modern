@@ -5,18 +5,18 @@ const chainImage = `url("data:image/svg+xml,%3Csvg width='22' height='10' viewBo
 export default function EpisodeLockOverlay() {
     return (
         <span aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden rounded-[inherit]">
-            <span className="absolute inset-0 bg-linear-to-b from-transparent to-slate-950/65" />
+            <span className="absolute inset-0 bg-linear-to-b from-transparent to-slate-950/40" />
             <span className="absolute inset-x-3 top-0 h-px bg-linear-to-r from-transparent via-amber-200/60 to-transparent" />
-            <span className="absolute inset-x-0 bottom-1.5 flex h-7 items-center justify-center">
-                {[14, -14].map(angle => (
-                    <span key={angle} className="absolute h-2.5 w-[140%] opacity-80" style={{
+            <span className="absolute inset-x-0 bottom-0 flex h-3 items-center justify-center">
+                {[8, -8].map(angle => (
+                    <span key={angle} className="absolute h-1.5 w-[110%] opacity-35" style={{
                         backgroundImage: chainImage, backgroundRepeat: 'repeat-x', backgroundPosition: 'center',
-                        transform: `rotate(${angle}deg)`, filter: 'drop-shadow(0 2px 2px rgba(0,0,0,0.8))',
+                        backgroundSize: '15px 7px', transform: `rotate(${angle}deg)`,
                     }} />
                 ))}
-                <span className="relative flex h-7 w-7 items-center justify-center rounded-full border border-amber-300/70 bg-linear-to-b from-slate-700 to-slate-950 shadow-[0_2px_8px_rgba(0,0,0,0.8),inset_0_1px_2px_rgba(255,255,255,0.25)] transition-transform duration-200 group-hover:scale-110 group-hover:border-amber-200 motion-reduce:transition-none">
-                    <FaLock className="text-[11px] text-amber-300 drop-shadow-[0_1px_1px_black]" />
-                </span>
+            </span>
+            <span className="absolute bottom-1 right-1.5 flex h-4 w-4 items-center justify-center rounded-full border border-amber-300/60 bg-linear-to-b from-slate-700 to-slate-950 shadow-sm transition-colors duration-200 group-hover:border-amber-200 motion-reduce:transition-none">
+                <FaLock className="text-[8px] text-amber-300" />
             </span>
         </span>
     );
