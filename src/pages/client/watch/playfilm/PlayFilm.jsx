@@ -21,7 +21,7 @@ import VideoPlayer from './VideoPlayer';
 import { AuthContext } from '../../../../contexts/AuthProvider';
 import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { isSingleMovie, formatEpisodeName, getUserPlanInfo, getExpiryDate } from '../../../../utils/appUtils';
-import { nextPlayableEpisode, episodeSource } from '../../../../utils/playback';
+import { nextPlayableEpisode, playableEpisodeServer, episodeSource } from '../../../../utils/playback';
 import NextEpisodePrompt from './NextEpisodePrompt';
 import Comment from '../detailFilm/Comment';
 import SEO from '../../../../components/SEO';
@@ -332,7 +332,7 @@ function PlayFilm() {
                             if (!canWatch) return;
                             setAutoStartEpisodeId(nextPrompt.id);
                             setNextPrompt(null);
-                            const server = activeServer === 2 && nextPrompt.hasSecondServer ? 2 : 1;
+                            const server = playableEpisodeServer(nextPrompt, activeServer);
                             navigate(`/xem-phim/${routeSegment(movie)}?tap=${episodeKey(nextPrompt)}&server=${server}`);
                         }} />}
 
