@@ -1,6 +1,8 @@
 import MovieImage from '../../../../components/MovieImage';
 import PlanBadge from '../../../../components/PlanBadge';
+import FramedUserAvatar from '../../../../components/FramedUserAvatar';
 import { PlanContext } from '../../../../contexts/PlanProvider';
+import { AuthContext } from '../../../../contexts/AuthProvider';
 import { getUserPlanInfo } from '../../../../utils/appUtils';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState } from 'react';
@@ -20,6 +22,7 @@ function Comment() {
     const movies = useMovies() || [];
     const comments = useComments() || [];
     const plans = useContext(PlanContext) || [];
+    const { isLogin } = useContext(AuthContext) || {};
     const subscriptions = useSubscriptions() || [];
     const [publicFavorites, setPublicFavorites] = useState({});
     React.useEffect(() => {
@@ -170,7 +173,8 @@ function Comment() {
 
                         <div className="flex flex-col gap-6 flex-1">
                             {latestComments.length > 0 ? latestComments.slice(0, visibleComments).map((comment, index) => {
-                                const user = getObjectById(users, comment.userID) || comment.author;
+                                const profile = getObjectById(users, comment.userID);
+                                const user = { ...comment.author, ...profile, ...(comment.userID === isLogin?.id ? isLogin : {}) };
                                 const assignedPlan = getObjectById(plans, user?.planID);
                                 const plan = user?.role === 'admin'
                                     ? getUserPlanInfo(user, subscriptions, plans)
@@ -180,12 +184,7 @@ function Comment() {
                                 const movie = getObjectById(movies, comment.movieID);
                                 return (
                                     <div key={comment.id || index} onClick={() => navigate(`/phim/${routeSegment(movie)}`)} className="flex gap-3 group cursor-pointer">
-                                        <img 
-                                            src={user?.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=random`} 
-                                            onError={(e) => { e.target.onerror = null; e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || 'User')}&background=random`; }}
-                                            alt="Avatar" 
-                                            className="w-10 h-10 rounded-full shrink-0 border border-gray-700 object-cover" 
-                                        />
+                                        <FramedUserAvatar user={user} plan={plan} />
                                         <div className="flex flex-col gap-1 w-full min-w-0">
                                             <div className="flex items-start justify-between gap-2">
                                                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">

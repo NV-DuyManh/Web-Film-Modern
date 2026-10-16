@@ -5,28 +5,12 @@ import usePublicUsers from '../../../../hooks/usePublicUsers';
 import useMovieComments, { movieCommentService } from '../../../../hooks/useMovieComments';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import PlanBadge from '../../../../components/PlanBadge';
-import { WingedFrame } from '../../../../components/client/header/AvatarFrames';
+import Avatar from '../../../../components/FramedUserAvatar';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { getDefaultAvatar, getUserPlanInfo } from '../../../../utils/appUtils';
-import { getPlanAppearance } from '../../../../utils/planAppearance';
+import { getUserPlanInfo } from '../../../../utils/appUtils';
 import { buildCommentThreads, commentLikes, commentTime, commentErrorMessage } from '../../../../utils/commentThreads';
 import { timeAgo } from '../../../../utils/watchHistory';
 import { trackEvent } from '../../../../services/eventTracker';
-
-function Avatar({ user, plan, small = false }) {
-    const theme = user?.selectedFrame || getPlanAppearance(plan).theme;
-    const decorated = theme !== 'slate';
-    const size = decorated ? (small ? 28 : 40) : (small ? 32 : 44);
-    const space = decorated ? (small ? 48 : 64) : size;
-    return (
-        <span data-avatar-frame={theme} className="relative flex shrink-0 items-center justify-center" style={{ width: space, height: space }}>
-            <WingedFrame theme={theme} size={size}>
-                <img src={user?.avatarUrl || getDefaultAvatar(user?.sexID)} alt="" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = getDefaultAvatar(user?.sexID); }}
-                    className="h-full w-full rounded-full bg-slate-800 object-cover" />
-            </WingedFrame>
-        </span>
-    );
-}
 
 function Composer({ value, onChange, onSend, busy, user, plan, replyTo, onCancel }) {
     return (
