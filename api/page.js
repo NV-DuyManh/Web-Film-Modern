@@ -44,7 +44,13 @@ export function createPageHandler({ readTemplate = () => readFile(new URL('../di
                 return res.status(308).end();
             }
             res.setHeader('X-Robots-Tag', page.robots);
-            return res.status(page.status).end(req.method === 'HEAD' ? '' : renderPageHtml(template, page));
+            const body = req.method === 'HEAD' ? '' : renderPageHtml(template, page);
+            // This HTML contains only the public catalog, never account/session data.
+            // Cache successful indexable pages at the edge while browsers stay fresh.
+            if (page.status === 200 && page.robots.startsWith('index')) {
+                res.setHeader('Vercel-CDN-Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+            }
+            return res.status(page.status).end(body);
         } catch (error) {
             console.error('Public page rendering failed:', error.message);
             // A transient catalog/template failure is retryable, never a false 404.

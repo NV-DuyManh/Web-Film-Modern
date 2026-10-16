@@ -520,6 +520,21 @@ VITE_GROQ_API_KEYS="your_groq_api_key"
 
 ---
 
+## 🔎 SEO và Google Search Console
+
+Các trang công khai trả HTML có tiêu đề, mô tả, canonical, nội dung phim và liên kết ngay từ server. Thẻ phim liên quan dùng liên kết thật để người dùng và công cụ tìm kiếm truy cập được. Trang quản trị, tài khoản, trình phát và danh sách trống không được lập chỉ mục.
+
+- Tên miền chuẩn: `https://www.mfilm.online/`.
+- Sitemap gửi trong Search Console: `https://www.mfilm.online/sitemap.xml`. `lastmod` lấy từ thời điểm cập nhật dữ liệu thực tế, bỏ qua ngày không hợp lệ hoặc nằm trong tương lai.
+- Sau khi triển khai, dùng **Kiểm tra URL → Kiểm tra URL đang hoạt động** với trang chủ và một vài trang phim quan trọng, rồi chọn **Yêu cầu lập chỉ mục** nếu đủ điều kiện. Xem **Lập chỉ mục → Trang** để biết lý do URL chưa được Google lập chỉ mục.
+- Chạy `npm run build` rồi `npm run seo:audit` để kiểm tra HTML, canonical, robots, structured data và các liên kết công khai.
+- HTML công khai có cache CDN ngắn; phản hồi riêng tư, lỗi, chuyển hướng và `noindex` không dùng cache này. Khi dữ liệu thay đổi, bản HTML ở CDN có thể cũ tối đa khoảng 6 phút; dữ liệu tương tác vẫn tải theo luồng hiện có.
+- `npm run seo:submit` dùng IndexNow cho các công cụ hỗ trợ; đây không phải thao tác gửi URL cho Google. Google tự quyết định việc lập chỉ mục và thứ hạng.
+
+Tài liệu: [Liên kết có thể thu thập dữ liệu](https://developers.google.com/search/docs/crawling-indexing/links-crawlable), [yêu cầu Google thu thập lại trang](https://developers.google.com/search/docs/crawling-indexing/ask-google-to-recrawl).
+
+---
+
 ## 🌐 Deploy
 
 Dự án đang được deploy trên **Vercel** tại [mfilm.online](https://mfilm.online).

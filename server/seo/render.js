@@ -38,7 +38,8 @@ function renderPublicContent(page) {
     const heading = page.entity ? name(page.entity) : page.title.replace(/ \| MFILM$/, '');
     const cards = (page.visibleItems || []).map(item => `<li>${link(item.publicPath, name(item))}${item.imgUrl && !item.imgUrl.includes('/assets/') ? `<img src="${e(publicImage(item.imgUrl))}" alt="${e(name(item))}" width="180" height="270" loading="lazy">` : ''}${item.releaseYear ? `<small>${e(item.releaseYear)}</small>` : ''}</li>`).join('');
     const genres = (page.links || []).map(item => link(item.path, item.name)).join(' ');
-    const credits = Object.entries(page.credits || {}).map(([key, items]) => items.length ? `<section><h2>${key === 'Actors' ? 'Diễn viên' : key === 'Authors' ? 'Tác giả' : 'Nhân vật'}</h2><p>${items.map(item => link(item.publicPath, item.name)).join(', ')}</p></section>` : '').join('');
+    const related = page.relatedMovies?.length ? `<section><h2>Phim liên quan</h2><ul>${page.relatedMovies.map(item => `<li>${link(item.publicPath, name(item))}</li>`).join('')}</ul></section>` : '';
+    const credits = Object.entries(page.credits || {}).map(([key, items]) => items.length ? `<section><h2>${key === 'Actors' ? 'Diễn viên' : key === 'Authors' ? 'Tác giả' : 'Nhân vật'}</h2><p>${items.map(item => link(item.publicPath, item.name)).join(', ')}</p></section>` : '').join('') + related;
     const pagination = page.totalPages > 1 ? `<nav aria-label="Phân trang">${page.pageNumber > 1 ? link(`${page.path}${page.pageNumber > 2 ? `?page=${page.pageNumber - 1}` : ''}`, '← Trang trước') : ''} <span>Trang ${page.pageNumber} / ${page.totalPages}</span> ${page.pageNumber < page.totalPages ? link(`${page.path}?page=${page.pageNumber + 1}`, 'Trang sau →') : ''} ${page.totalPages > page.pageNumber + 1 ? link(`${page.path}?page=${page.totalPages}`, 'Trang cuối') : ''}</nav>` : '';
     const movie = page.entity;
     const facts = page.kind === 'movie' ? `<dl>${[

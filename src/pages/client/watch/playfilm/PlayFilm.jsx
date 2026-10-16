@@ -8,7 +8,7 @@ import { routeSegment } from '../../../../utils/nameRoutes';
 import { relatedMovies } from '../../../../utils/relatedMovies';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { useMovies, useSubscriptions, useRentMovies } from '../../../../hooks/useCollections';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory, FaBolt } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
@@ -448,7 +448,7 @@ function PlayFilm() {
                                 </p>
                             )}
                             {recommendedMovies.map((e) => (
-                                <div key={e.id} onClick={() => navigate(`/phim/${routeSegment(e)}`)} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
+                                <Link key={e.id} to={`/phim/${routeSegment(e)}`} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
                                     <div className="w-18 h-26.25 shrink-0 overflow-hidden rounded-md border border-gray-800 group-hover:border-gray-600">
                                         <MovieImage movie={e} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={e.otherName || e.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                     </div>
@@ -461,7 +461,7 @@ function PlayFilm() {
                                             <p className="text-[11px] text-gray-400 inline">{e.duration} phút</p>
                                         </div>
                                     </div>
-                                </div>
+                                </Link>
                             ))}
                         </div>
                     </div>

@@ -448,8 +448,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                             </h3>
                             <div className="flex flex-col gap-4">
                                 {topMovies.map((m, index) => (
-                                    <div key={index} onClick={() => {
-                                        navigate(`/phim/${routeSegment(m)}`);
+                                    <Link key={m.id} to={`/phim/${routeSegment(m)}`} onClick={() => {
                                         window.scrollTo({ top: 0, behavior: 'smooth' });
                                     }} className="flex items-center gap-3 group cursor-pointer">
                                         <div
@@ -477,7 +476,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </Link>
                                 ))}
                             </div>
                         </div>
@@ -628,11 +627,11 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                             {relatedCatalog.length ? 'Chưa tìm thấy phim liên quan phù hợp trong kho.' : 'Đang tìm phim liên quan...'}
                                         </p>
                                     )}
-                                    {recommendedMovies.map((m, idx) => (
-                                        <div
-                                            key={idx}
+                                    {recommendedMovies.map((m) => (
+                                        <Link
+                                            key={m.id}
+                                            to={`/phim/${routeSegment(m)}`}
                                             onClick={() => {
-                                                navigate(`/phim/${routeSegment(m)}`);
                                                 window.scrollTo({ top: 0, behavior: 'smooth' });
                                             }}
                                             className="group cursor-pointer flex flex-col h-full"
@@ -659,7 +658,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </Link>
                                     ))}
                                 </div>
                             )}

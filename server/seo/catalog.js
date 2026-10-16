@@ -2,6 +2,7 @@ import { curatedTopics, selectTopicMovies } from '../../src/utils/curatedTopics.
 import { createNameRouteIndex, withNameRoutes } from '../../src/utils/nameRoutes.js';
 import { resolveMovieImages } from '../../src/utils/movieImages.js';
 import { newestMoviesFirst } from '../../src/utils/movieRecency.js';
+import { relatedMovies } from '../../src/utils/relatedMovies.js';
 import { STATIC_SEO, canonicalUrl, descriptionText, movieDescription, movieSchema, plainText, publicImage, breadcrumbSchema, isPrivatePath, isPaginatedPath, robotsForPath, pageTitle, siteSchemas } from '../../src/utils/seo.js';
 
 export const PREFIXES = { Movies: '/phim', Actors: '/dien-vien', Authors: '/tac-gia', Characters: '/nhan-vat', Topics: '/topic' };
@@ -15,17 +16,18 @@ export function prepareCatalog(raw) {
         const items = key === 'Topics' ? curatedTopics(Object.fromEntries((raw.Topics || []).map(topic => [topic.id, topic.enabled]))) : key === 'Movies' ? (raw[key] || []).map(movie => ({ ...movie, ...resolveMovieImages(movie) })) : raw[key] || [];
         catalog[key] = withNameRoutes(items, { preferSlug: key === 'Movies', fallback: key === 'Actors' ? 'dien-vien' : 'noi-dung' });
         routes[key] = createNameRouteIndex(key === 'Topics' ? catalog[key].filter(topic => topic.enabled) : catalog[key]);
-        maps[key] = new Map(catalog[key].map(item => [item.id, item]));
+        maps[key] = new Map(catalog[key].map(item => [String(item.id), item]));
         related[key] = new Map();
         for (const item of catalog[key]) item.publicPath = routes[key].path(prefix, item);
     }
     for (const movie of catalog.Movies) {
         const references = {
-            Actors: movie.actor || movie.actors || movie.listActor,
-            Authors: [...list(movie.author), ...list(movie.listAuthor)],
-            Characters: movie.character || movie.characters || movie.listCharacter,
+            Actors: [...list(movie.actor), ...list(movie.actors), ...list(movie.listActor)],
+            Authors: [...list(movie.author), ...list(movie.authors), ...list(movie.listAuthor)],
+            Characters: [...list(movie.character), ...list(movie.characters), ...list(movie.listCharacter)],
         };
-        for (const [key, ids] of Object.entries(references)) for (const id of new Set(list(ids))) {
+        for (const [key, ids] of Object.entries(references)) for (const id of new Set(ids.map(value => String(value?.id ?? value ?? '').trim()).filter(Boolean))) {
+            if (!maps[key].has(id)) continue;
             if (!related[key].has(id)) related[key].set(id, []);
             related[key].get(id).push(movie);
         }
@@ -109,7 +111,8 @@ export function resolvePublicPage(input, prepared) {
                 page.description = movieDescription(item);
                 page.bodyDescription = plainText(item.description);
                 page.credits = Object.fromEntries(['Actors', 'Authors', 'Characters'].map(key => [key, [...related[key]].filter(([, movies]) => movies.includes(item)).map(([id]) => maps[key].get(id)).filter(Boolean)]));
-                const genres = list(item.listCategory).map(id => catalog.Categories?.find(category => category.id === id)).filter(Boolean);
+                page.relatedMovies = relatedMovies(item, catalog.Movies);
+                const genres = list(item.listCategory).map(id => catalog.Categories?.find(category => String(category.id) === String(id))).filter(Boolean);
                 page.links = genres.map(category => ({ name: category.name, path: `/category/${encodeURIComponent(category.name)}` }));
                 if (item.countriesID) page.links.push({ name: `Phim ${item.countriesID}`, path: `/country/${encodeURIComponent(item.countriesID)}` });
                 page.schemas.push(movieSchema(item, { actors: page.credits.Actors, authors: page.credits.Authors, categories: genres }));
@@ -121,7 +124,7 @@ export function resolvePublicPage(input, prepared) {
                 page.kind = 'entity';
                 const role = key === 'Actors' ? 'Diễn viên' : key === 'Authors' ? 'Tác giả' : 'Nhân vật';
                 page.title = `${label(item)} - ${role} và phim tham gia`;
-                page.items = related[key].get(item.id) || [];
+                page.items = related[key].get(String(item.id)) || [];
                 page.description = descriptionText(`Thông tin ${role.toLowerCase()} ${label(item)} và danh sách phim đã tham gia tại MFILM. ${hasBio(item) ? item.description : ''}`);
                 page.bodyDescription = hasBio(item) ? plainText(item.description) : '';
                 page.noindex = !hasBio(item) && page.items.length === 0;
@@ -132,6 +135,7 @@ export function resolvePublicPage(input, prepared) {
         if (path !== page.path) page.redirect = page.path + (url.searchParams.get('page') ? `?page=${encodeURIComponent(url.searchParams.get('page'))}` : '');
     }
     const paginated = page.kind === 'listing';
+    if (paginated && page.items.length === 0) page.noindex = true;
     const size = path === '/actors' ? 36 : 28;
     page.totalPages = paginated ? Math.max(1, Math.ceil(page.items.length / size)) : 1;
     const rawPage = url.searchParams.get('page');
@@ -165,7 +169,7 @@ export function indexableCatalogPaths(prepared) {
     for (const [key] of Object.entries(PREFIXES)) for (const item of prepared.catalog[key]) {
         if (key === 'Topics' && !item.enabled) continue;
         if (!label(item)) continue;
-        if (['Actors', 'Authors', 'Characters'].includes(key) && !hasBio(item) && !prepared.related[key].get(item.id)?.length) continue;
+        if (['Actors', 'Authors', 'Characters'].includes(key) && !hasBio(item) && !prepared.related[key].get(String(item.id))?.length) continue;
         paths.add(item.publicPath);
     }
     for (const link of publicCategoryLinks(prepared)) paths.add(link.path);
@@ -175,6 +179,7 @@ export function indexableCatalogPaths(prepared) {
         if (!isPaginatedPath(path)) continue;
         const page = resolvePublicPage(path, prepared);
         if (page.kind !== 'listing') continue;
+        if (page.noindex) { paths.delete(path); continue; }
         for (let number = 2; number <= page.totalPages; number++) paths.add(`${path}?page=${number}`);
     }
     return [...paths];
