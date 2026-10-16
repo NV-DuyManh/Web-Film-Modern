@@ -6,8 +6,9 @@ import { movieDescription, movieSchema } from '../../../../utils/seo';
 import { normalizeEpisodes, episodeKey } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment } from '../../../../utils/nameRoutes';
+import { relatedMovies } from '../../../../utils/relatedMovies';
 import React, { useContext, useMemo, useEffect, useState } from 'react';
-import { useRentMovies, useSubscriptions } from '../../../../hooks/useCollections';
+import { useMovies, useRentMovies, useSubscriptions } from '../../../../hooks/useCollections';
 import useHomeMovies from '../../../../hooks/useHomeMovies';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { FaPlay, FaHeart, FaPlus, FaShare, FaComment, FaStar, FaPaperPlane, FaCrown, FaArrowLeft } from 'react-icons/fa';
@@ -31,6 +32,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
     const [showListDropdown, setShowListDropdown] = useState(false);
     const [loginDialogState, setLoginDialogState] = useState({ open: false, title: "Yêu cầu đăng nhập", description: "Bạn cần đăng nhập tài khoản để mua hoặc thuê phim này" });
     const movies = useHomeMovies('new');
+    const relatedCatalog = useMovies(activeTab === 'recommend');
 
     const [authorsMap, setAuthorsMap] = useState({});
     const [actorsMap, setActorsMap] = useState({});
@@ -163,7 +165,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
         return [];
     }, [movie, characters]);
 
-    const recommendedMovies = movies?.filter(m => m.id !== realMovieId).slice(0, 8) || [];
+    const recommendedMovies = useMemo(() => relatedMovies(movie, relatedCatalog, 8), [movie, relatedCatalog]);
 
     const galleryImages = useMemo(() => {
         if (!movie) return [];
@@ -592,6 +594,11 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                             {activeTab === 'actors' && <ActorCast actors={movieActors} />}
                             {activeTab === 'recommend' && (
                                 <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-3 py-2">
+                                    {recommendedMovies.length === 0 && (
+                                        <p className="col-span-full py-8 text-center text-sm text-slate-400">
+                                            {relatedCatalog.length ? 'Chưa tìm thấy phim liên quan phù hợp trong kho.' : 'Đang tìm phim liên quan...'}
+                                        </p>
+                                    )}
                                     {recommendedMovies.map((m, idx) => (
                                         <div
                                             key={idx}

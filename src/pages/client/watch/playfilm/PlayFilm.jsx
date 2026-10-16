@@ -5,9 +5,9 @@ import MovieImage from '../../../../components/MovieImage';
 import { normalizeEpisodes, episodeKey, episodeLabel, findEpisode } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment } from '../../../../utils/nameRoutes';
+import { relatedMovies } from '../../../../utils/relatedMovies';
 import React, { useContext, useMemo, useState, useEffect, useRef, useCallback } from 'react';
-import { useSubscriptions, useRentMovies } from '../../../../hooks/useCollections';
-import useHomeMovies from '../../../../hooks/useHomeMovies';
+import { useMovies, useSubscriptions, useRentMovies } from '../../../../hooks/useCollections';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory, FaBolt } from 'react-icons/fa';
@@ -38,7 +38,7 @@ function PlayFilm() {
     
     const [activeAudio, setActiveAudio] = useState('vietsub');
     const serverParam = searchParams.get('server');
-    const movies = useHomeMovies('new');
+    const movies = useMovies();
     const plans = useContext(PlanContext);
     const lastProgressTimeRef = useRef(0);
     const completedEpisodeRef = useRef(null);
@@ -54,6 +54,7 @@ function PlayFilm() {
 
     const currentMovie = useMovie(slug);
     const movie = useMemo(() => currentMovie || {}, [currentMovie]);
+    const recommendedMovies = useMemo(() => relatedMovies(movie, movies, 5), [movie, movies]);
     useCanonicalPath(movie?.id ? `/xem-phim/${routeSegment(movie)}` : '');
     const realMovieId = movie?.id;
     const categoryTypes = useContext(CategoryTypeContext);
@@ -441,7 +442,12 @@ function PlayFilm() {
                     <div className="w-full lg:w-80 xl:w-90 shrink-0">
                         <h2 className="text-xl font-bold text-white mb-6">Đề xuất cho bạn</h2>
                         <div className="flex flex-col gap-4">
-                            {movies.slice(0, 5).map((e) => (
+                            {recommendedMovies.length === 0 && (
+                                <p className="py-4 text-sm text-slate-400">
+                                    {movies.length ? 'Chưa tìm thấy phim liên quan phù hợp trong kho.' : 'Đang tìm phim liên quan...'}
+                                </p>
+                            )}
+                            {recommendedMovies.map((e) => (
                                 <div key={e.id} onClick={() => navigate(`/phim/${routeSegment(e)}`)} className="flex gap-4 bg-transparent p-2 rounded-lg hover:bg-[#161821] transition-colors cursor-pointer group">
                                     <div className="w-18 h-26.25 shrink-0 overflow-hidden rounded-md border border-gray-800 group-hover:border-gray-600">
                                         <MovieImage movie={e} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={e.otherName || e.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
