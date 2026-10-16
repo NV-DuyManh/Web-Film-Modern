@@ -96,7 +96,8 @@ export default defineConfig({
                 navigateFallback: null,
                 // Cache modules when visited, rather than downloading every admin,
                 // player and account screen on each new service-worker install.
-                globPatterns: [],
+                // The entry hash also makes worker updates detect a new release.
+                globPatterns: ['assets/index-*.js'],
                 globIgnores: ['**/index.html', '**/app-recovery.js', '**/sitemap.xml'],
                 runtimeCaching: [
                     {

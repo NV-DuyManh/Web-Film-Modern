@@ -537,7 +537,7 @@ Tài liệu: [Liên kết có thể thu thập dữ liệu](https://developers.g
 
 ## 📉 Giảm CDN Requests
 
-- Service worker chỉ tải sẵn favicon và biểu tượng PWA. Các trang admin, trình phát, chatbot và tài khoản được tải khi sử dụng, rồi cache theo URL có hash.
+- Service worker chỉ tải sẵn entry JS chính, favicon, biểu tượng PWA và manifest. Hash của entry giúp phát hiện bản ứng dụng mới; các trang admin, trình phát, chatbot và tài khoản được tải khi sử dụng, rồi cache theo URL có hash.
 - Kiểm tra bản cập nhật service worker tối đa mỗi 15 phút khi tab đang hiển thị và có mạng; dùng một `registration.update()`, bỏ lần fetch trùng.
 - Tạm dừng các lần tự làm mới danh sách công khai khi tab nằm nền/offline. Khi quay lại, làm mới nếu đã đến hạn; dữ liệu phim mới vẫn kiểm tra mỗi phút khi đang sử dụng.
 - Các file `/catalog/<version>/...` không thay đổi tại cùng URL: dùng browser cache lâu dài và giữ dữ liệu trong bộ nhớ khi manifest chưa đổi phiên bản. Manifest vẫn được kiểm tra định kỳ, các phim mới nhập vẫn đi qua luồng cập nhật riêng.
