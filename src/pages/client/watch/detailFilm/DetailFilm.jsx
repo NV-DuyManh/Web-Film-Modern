@@ -82,7 +82,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     useEffect(() => {
         if (!movie) return;
-        const actorList = movie.actor || movie.actors || movie.listActor || [];
+        const actorList = [movie.actor, movie.actors, movie.listActor].flatMap(list => Array.isArray(list) ? list : []);
         const actorIds = [...new Set(actorList)].filter(id => typeof id === 'string' && !actorsMap[id]);
 
         if (actorIds.length > 0) {
@@ -95,7 +95,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     useEffect(() => {
         if (!movie) return;
-        const charList = movie.character || movie.characters || movie.listCharacter || [];
+        const charList = [movie.character, movie.characters, movie.listCharacter].flatMap(list => Array.isArray(list) ? list : []);
         const charIds = [...new Set(charList)].filter(id => typeof id === 'string' && !charactersMap[id]);
 
         if (charIds.length > 0) {
@@ -147,9 +147,10 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     const movieActors = useMemo(() => {
         if (!movie) return [];
-        let actorList = movie.actor || movie.actors || movie.listActor || [];
+        const actorList = [movie.actor, movie.actors, movie.listActor].flatMap(list => Array.isArray(list) ? list : []);
         if (Array.isArray(actorList) && actorList.length > 0) {
-            const resolved = actorList.map(c => typeof c === 'string' ? getObjectById(actors, c) : c).filter(Boolean);
+            const resolved = [...new Map(actorList.map(c => typeof c === 'string' ? getObjectById(actors, c) : c)
+                .filter(c => typeof c?.name === 'string' && c.name.trim()).map(c => [c.id || c.name, c])).values()];
             if (resolved.length > 0) return resolved;
         }
         return [];
@@ -157,9 +158,10 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     const movieCharacters = useMemo(() => {
         if (!movie) return [];
-        let charList = movie.character || movie.characters || movie.listCharacter || [];
+        const charList = [movie.character, movie.characters, movie.listCharacter].flatMap(list => Array.isArray(list) ? list : []);
         if (Array.isArray(charList) && charList.length > 0) {
-            const resolved = charList.map(c => typeof c === 'string' ? getObjectById(characters, c) : c).filter(Boolean);
+            const resolved = [...new Map(charList.map(c => typeof c === 'string' ? getObjectById(characters, c) : c)
+                .filter(c => typeof c?.name === 'string' && c.name.trim()).map(c => [c.id || c.name, c])).values()];
             if (resolved.length > 0) return resolved;
         }
         return [];
@@ -384,6 +386,33 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                         </div>
                                     )}
                                 </div>
+
+                            {movieActors.length > 0 && (
+                                <div>
+                                    <h3 className="text-base font-bold text-white mb-2">Diễn viên</h3>
+                                    <div className="flex flex-wrap gap-4">
+                                        {movieActors.map(actor => (
+                                            <Link
+                                                key={actor.id || actor.name}
+                                                to={`/dien-vien/${actor.id ? encodeURIComponent(actor.id) : routeSegment(actor)}`}
+                                                title={actor.name}
+                                                className="group relative flex w-14 flex-col items-center gap-1.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-cyan-400"
+                                            >
+                                                <div className="h-12 w-12 overflow-hidden rounded-full border-2 border-slate-600 transition duration-300 group-hover:scale-110 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.5)]">
+                                                    <img
+                                                        src={getSafeEntityAvatar(actor.imgUrl, actor.sexID)}
+                                                        alt={actor.name}
+                                                        className="h-full w-full object-cover"
+                                                        loading="lazy"
+                                                        onError={event => { event.target.onerror = null; event.target.src = getDefaultAvatar(actor.sexID); }}
+                                                    />
+                                                </div>
+                                                <p className="w-full truncate text-center text-[10px] text-slate-300 transition-colors group-hover:text-cyan-300">{actor.name}</p>
+                                            </Link>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             {movieCharacters.length > 0 && (
                                 <div>
