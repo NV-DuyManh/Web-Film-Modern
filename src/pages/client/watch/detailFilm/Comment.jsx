@@ -5,6 +5,7 @@ import usePublicUsers from '../../../../hooks/usePublicUsers';
 import useMovieComments, { movieCommentService } from '../../../../hooks/useMovieComments';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import PlanBadge from '../../../../components/PlanBadge';
+import { WingedFrame } from '../../../../components/client/header/AvatarFrames';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getDefaultAvatar, getUserPlanInfo } from '../../../../utils/appUtils';
 import { getPlanAppearance } from '../../../../utils/planAppearance';
@@ -13,9 +14,18 @@ import { timeAgo } from '../../../../utils/watchHistory';
 import { trackEvent } from '../../../../services/eventTracker';
 
 function Avatar({ user, plan, small = false }) {
-    return <img src={user?.avatarUrl || getDefaultAvatar(user?.sexID)} alt="" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = getDefaultAvatar(user?.sexID); }}
-        style={{ borderColor: getPlanAppearance(plan).color }}
-        className={`${small ? 'w-8 h-8' : 'w-10 h-10 sm:w-11 sm:h-11'} shrink-0 rounded-full border-2 object-cover bg-slate-800 p-0.5`} />;
+    const theme = user?.selectedFrame || getPlanAppearance(plan).theme;
+    const decorated = theme !== 'slate';
+    const size = decorated ? (small ? 28 : 40) : (small ? 32 : 44);
+    const space = decorated ? (small ? 48 : 64) : size;
+    return (
+        <span data-avatar-frame={theme} className="relative flex shrink-0 items-center justify-center" style={{ width: space, height: space }}>
+            <WingedFrame theme={theme} size={size}>
+                <img src={user?.avatarUrl || getDefaultAvatar(user?.sexID)} alt="" onError={event => { event.currentTarget.onerror = null; event.currentTarget.src = getDefaultAvatar(user?.sexID); }}
+                    className="h-full w-full rounded-full bg-slate-800 object-cover" />
+            </WingedFrame>
+        </span>
+    );
 }
 
 function Composer({ value, onChange, onSend, busy, user, plan, replyTo, onCancel }) {
@@ -82,7 +92,11 @@ function CommentSection({ isLogin, onOpenLogin, movieId }) {
     const users = usePublicUsers(comments.map(comment => comment.userID));
     const threads = useMemo(() => buildCommentThreads(comments, sort), [comments, sort]);
     const currentPlan = getUserPlanInfo(isLogin, subscriptions, plans);
-    const displayUser = comment => getObjectById(users, comment.userID) || (comment.userID === isLogin?.id ? isLogin : comment.author) || { name: 'Thành viên' };
+    const displayUser = comment => {
+        const profile = getObjectById(users, comment.userID);
+        if (comment.userID === isLogin?.id) return { ...comment.author, ...profile, ...isLogin };
+        return profile ? { ...comment.author, ...profile } : comment.author || { name: 'Thành viên' };
+    };
     const displayPlan = comment => {
         const user = displayUser(comment);
         const assignedPlan = getObjectById(plans, user?.planID);

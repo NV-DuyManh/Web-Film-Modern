@@ -21,6 +21,7 @@ export function createMovieCommentService(database) {
                 author: {
                     name: String(user.name || user.fullName || 'Thành viên'),
                     avatarUrl: String(user.avatarUrl || ''),
+                    selectedFrame: String(user.selectedFrame || ''),
                     planID: String(user.planID || ''),
                     planName: String(plan?.name || 'Free'),
                     level: Number(plan?.level) || 0,
