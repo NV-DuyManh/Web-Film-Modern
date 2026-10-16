@@ -452,7 +452,7 @@ function PlayFilm() {
                                     <div className="w-18 h-26.25 shrink-0 overflow-hidden rounded-md border border-gray-800 group-hover:border-gray-600">
                                         <MovieImage movie={e} kind="poster" imageWidth={300} imageHeight={450} imageType="poster" alt={e.otherName || e.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                                     </div>
-                                    <div className="flex flex-col justify-center py-1">
+                                    <div className="flex min-w-0 flex-1 flex-col justify-center py-1">
                                         <h3 className="text-[15px] font-bold text-gray-200 line-clamp-2 group-hover:text-yellow-400 transition-colors leading-snug">{e.otherName || e.name}</h3>
                                         <PlanBadge plan={getObjectById(plans, e.planID)} className="mt-1" />
                                         <div className="flex items-center gap-2 mt-2">
