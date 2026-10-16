@@ -1,5 +1,6 @@
 import { hotCatalogEdit, hotCatalogMovies } from '../utils/hotCatalog.js';
 import { applyRecentHome, applyRecentMovies, recentMoviesSince } from '../utils/recentCatalog.js';
+import { startVisiblePolling } from '../utils/visiblePolling.js';
 
 const allowed = ['Movies', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes'];
 const MAX_AGE = 5 * 60000;
@@ -33,6 +34,11 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
         if (now() - manifestAt >= MAX_AGE) { manifestLoading = null; manifestAt = now(); }
         return manifestLoading ||= json('/catalog/manifest.json');
     };
+    const reuseVersion = (name, previous, version) => {
+        if (!previous?.items || previous.version !== version) return null;
+        records.set(name, { items: previous.items, version, loadedAt: now() });
+        return previous.items;
+    };
     const loadStatic = async name => {
         if (name === 'Hot') {
             const previous = records.get(name);
@@ -64,10 +70,12 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
                 try {
                     const index = await manifest();
                     if (!/^[a-f0-9]{16}$/.test(index.version)) throw new Error('Invalid public catalog manifest');
+                    const unchanged = reuseVersion(name, previous, index.version);
+                    if (unchanged) return unchanged;
                     const result = await json(`/catalog/${index.version}/movie-index.json`);
                     if (result.version !== index.version || !Array.isArray(result.items)) throw new Error('Invalid movie index');
                     const items = applyIndexEdits(result.items);
-                    records.set(name, { items, loadedAt: now() }); return items;
+                    records.set(name, { items, version: index.version, loadedAt: now() }); return items;
                 } catch (error) { records.delete(name); if (previous?.items) return previous.items; throw error; }
             })();
             records.set(name, { ...previous, loading }); return loading;
@@ -80,9 +88,11 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
                 try {
                     const index = await manifest();
                     if (!/^[a-f0-9]{16}$/.test(index.version)) throw new Error('Invalid public catalog manifest');
+                    const unchanged = reuseVersion(name, previous, index.version);
+                    if (unchanged) return unchanged;
                     const home = await json(`/catalog/${index.version}/home.json`);
                     if (home.version !== index.version || !Array.isArray(home.movies) || !home.sections) throw new Error('Invalid home catalog');
-                    records.set(name, { items: home, loadedAt: now() });
+                    records.set(name, { items: home, version: index.version, loadedAt: now() });
                     return home;
                 } catch (error) { records.delete(name); if (previous?.items) return previous.items; throw error; }
             })();
@@ -98,6 +108,8 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
                 const index = await manifest();
                 const info = index.collections?.[name];
                 if (!/^[a-f0-9]{16}$/.test(index.version) || !info || !Number.isInteger(info.pages) || info.pages < 1 || info.pages > 1000) throw new Error('Invalid public catalog manifest');
+                const unchanged = reuseVersion(name, previous, index.version);
+                if (unchanged) return unchanged;
                 const chunks = [];
                 for (let start = 1; start <= info.pages; start += 4) {
                     const group = await Promise.all(Array.from({ length: Math.min(4, info.pages - start + 1) }, (_, offset) => json(`/catalog/${index.version}/${name}-${start + offset}.json`)));
@@ -106,7 +118,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
                         chunks.push(...chunk.items);
                     }
                 }
-                records.set(name, { items: chunks, loadedAt: now() });
+                records.set(name, { items: chunks, version: index.version, loadedAt: now() });
                 try { const saved = JSON.stringify(chunks); if (saved.length <= 1000000) storage?.setItem(`mfilm-public-${name}`, saved); } catch { /* Large datasets stay in memory/CDN instead of blocking the UI on localStorage. */ }
                 return chunks;
             } catch (error) {
@@ -147,7 +159,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
                 const home = records.get('Home');
                 if (home?.items && !removed && item.name) {
                     const items = applyRecentHome(home.items, [item]);
-                    records.set('Home', { items, loadedAt: home.loadedAt });
+                    records.set('Home', { items, version: home.version, loadedAt: home.loadedAt });
                     for (const callback of listeners.get('Home') || []) callback(items);
                 }
                 const hotEdit = hotCatalogEdit(item, removed);
@@ -166,7 +178,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
                 const index = records.get('MovieIndex');
                 if (Array.isArray(index?.items)) {
                     const items = applyIndexEdits(index.items, false);
-                    records.set('MovieIndex', { items, loadedAt: now() });
+                    records.set('MovieIndex', { items, version: index.version, loadedAt: now() });
                     for (const callback of listeners.get('MovieIndex') || []) callback(items);
                 }
             }
@@ -174,7 +186,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
             if (!Array.isArray(previous?.items)) return;
             const items = previous.items.filter(value => value.id !== item.id);
             if (!removed) items.push({ ...previous.items.find(value => value.id === item.id), ...item });
-            records.set(name, { items, loadedAt: now() });
+            records.set(name, { items, version: previous.version, loadedAt: now() });
             for (const callback of listeners.get(name) || []) callback(items);
         },
         clear() { records.clear(); indexEdits.clear(); hotEdits.clear(); manifestLoading = null; recent = []; recentAt = -Infinity; } };
@@ -190,8 +202,7 @@ export const publicCatalogCache = createPublicCatalogCache({ storage: browserSto
 export function subscribePublicCatalog(name, callback, onError) {
     let active = true;
     const update = () => publicCatalogCache.load(name).then(items => { if (active) callback(items); }).catch(error => { if (active) onError?.(error); });
-    update();
     const unsubscribe = publicCatalogCache.subscribe(name, items => { if (active) callback(items); });
-    const timer = setInterval(update, ['Movies', 'MovieIndex'].includes(name) ? 60000 : MAX_AGE);
-    return () => { active = false; clearInterval(timer); unsubscribe(); };
+    const stop = startVisiblePolling(update, { intervalMs: ['Movies', 'MovieIndex'].includes(name) ? 60000 : MAX_AGE });
+    return () => { active = false; stop(); unsubscribe(); };
 }

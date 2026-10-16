@@ -3,6 +3,7 @@ import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { AuthContext } from '../contexts/AuthProvider';
 import { db } from '../config/firebaseConfig';
 import { CURATED_TOPICS, curatedTopics } from '../utils/curatedTopics';
+import { startVisiblePolling } from '../utils/visiblePolling';
 
 // A single small control document stores visibility. The fixed definitions and
 // film selection rules are shared by the client, admin and SEO renderer.
@@ -24,11 +25,8 @@ export default function useCuratedTopics(enabled = true) {
                 if (active && Array.isArray(data.items) && CURATED_TOPICS.every(topic => data.items.some(item => item.id === topic.id && typeof item.enabled === 'boolean'))) setTopics(curatedTopics(Object.fromEntries(data.items.map(item => [item.id, item.enabled]))));
             } catch { /* Keep the last confirmed state during network interruptions. */ }
         };
-        refresh();
-        const timer = setInterval(() => { if (document.visibilityState === 'visible') refresh(); }, 30000);
-        const onVisibility = () => { if (document.visibilityState === 'visible') refresh(); };
-        document.addEventListener('visibilitychange', onVisibility);
-        return () => { active = false; clearInterval(timer); document.removeEventListener('visibilitychange', onVisibility); };
+        const stop = startVisiblePolling(refresh, { intervalMs: 30000 });
+        return () => { active = false; stop(); };
     }, [admin, enabled]);
     return topics;
 }

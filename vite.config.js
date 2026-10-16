@@ -86,7 +86,7 @@ export default defineConfig({
         publicCatalogDevPlugin(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.svg', 'robots.txt'],
+            includeAssets: ['favicon.svg'],
             workbox: {
                 disableDevLogs: true,
                 cleanupOutdatedCaches: true,
@@ -94,6 +94,9 @@ export default defineConfig({
                 skipWaiting: true,
                 // Không cache navigation requests (index.html) - luôn lấy từ network
                 navigateFallback: null,
+                // Cache modules when visited, rather than downloading every admin,
+                // player and account screen on each new service-worker install.
+                globPatterns: [],
                 globIgnores: ['**/index.html', '**/app-recovery.js', '**/sitemap.xml'],
                 runtimeCaching: [
                     {
@@ -110,7 +113,16 @@ export default defineConfig({
                         },
                     },
                     {
-                        // Cache hình ảnh
+                        // Hashed local artwork never changes at the same URL.
+                        urlPattern: ({ url, sameOrigin }) => sameOrigin && /^\/assets\/.*\.(png|jpg|jpeg|svg|gif|webp|avif|ico)$/i.test(url.pathname),
+                        handler: 'CacheFirst',
+                        options: {
+                            cacheName: 'asset-images-cache',
+                            expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 365 },
+                        },
+                    },
+                    {
+                        // Mutable avatars/posters still revalidate for freshness.
                         urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif|ico)$/i,
                         handler: 'StaleWhileRevalidate',
                         options: {

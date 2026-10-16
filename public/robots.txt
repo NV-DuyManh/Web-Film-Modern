@@ -3,3 +3,10 @@ Allow: /
 Disallow: /api/
 
 Sitemap: https://www.mfilm.online/sitemap.xml
+
+# Keep search indexing open while avoiding optional bulk audit/AI crawls.
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: Reflectionbot
+User-agent: KeenableBot
+Disallow: /

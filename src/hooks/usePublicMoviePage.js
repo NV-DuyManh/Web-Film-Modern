@@ -2,6 +2,7 @@ import { catalogPage } from '../utils/publicCatalogPage';
 import { useEffect, useState } from 'react';
 import { resolveMovieImages } from '../utils/movieImages';
 import { publicCatalogCache } from '../services/publicCatalogCache';
+import { startVisiblePolling } from '../utils/visiblePolling';
 
 const cache = new Map();
 export default function usePublicMoviePage({ kind, page = 1, limit = 28, q = '', name = '', enabled = true }) {
@@ -30,13 +31,12 @@ export default function usePublicMoviePage({ kind, page = 1, limit = 28, q = '',
                 promise = { loading, expiresAt: Date.now() + 60000 }; cache.set(key, promise);
                 if (cache.size > 100) cache.delete(cache.keys().next().value);
             }
-            promise.loading.then(result => { if (active) setState({ ...result, key, items: result.items.map(movie => ({ ...movie, ...resolveMovieImages(movie) })) }); }).catch(() => {
+            return promise.loading.then(result => { if (active) setState({ ...result, key, items: result.items.map(movie => ({ ...movie, ...resolveMovieImages(movie) })) }); }).catch(() => {
                 if (active) setState(previous => ({ ...previous, key }));
             });
         };
-        update();
-        const timer = setInterval(update, 60000);
-        return () => { active = false; clearInterval(timer); };
+        const stop = startVisiblePolling(update);
+        return () => { active = false; stop(); };
     }, [key, enabled]);
     if (!enabled) return { items: [], total: 0, page: 1, totalPages: 1, loading: false };
     return state.key === key && settledQuery === q ? { ...state, loading: false } : { ...state, items: [], total: 0, page: 1, totalPages: 1, loading: true };

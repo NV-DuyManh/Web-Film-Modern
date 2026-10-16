@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { publicCatalogCache } from '../services/publicCatalogCache';
 import { resolveMovieImages } from '../utils/movieImages';
 import { reportCatalogStatus } from '../utils/catalogStatus';
+import { startVisiblePolling } from '../utils/visiblePolling';
 
 export function useHomeCatalog(section) {
     const [home, setHome] = useState(null);
@@ -11,12 +12,10 @@ export function useHomeCatalog(section) {
         const update = () => publicCatalogCache.load(name).then(data => {
             if (active) { setHome(data); reportCatalogStatus('Movies', 'ready'); }
         }).catch(error => { if (active) reportCatalogStatus('Movies', 'error', error); });
-        reportCatalogStatus('Movies', 'loading'); update();
+        reportCatalogStatus('Movies', 'loading');
         const unsubscribe = publicCatalogCache.subscribe(name, data => { if (active) setHome(data); });
-        const timer = setInterval(update, 60000);
-        const onVisible = () => { if (document.visibilityState === 'visible') update(); };
-        document.addEventListener('visibilitychange', onVisible);
-        return () => { active = false; clearInterval(timer); unsubscribe(); document.removeEventListener('visibilitychange', onVisible); };
+        const stop = startVisiblePolling(update);
+        return () => { active = false; stop(); unsubscribe(); };
     }, [section]);
     return home;
 }

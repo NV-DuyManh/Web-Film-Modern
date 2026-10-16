@@ -1,4 +1,4 @@
-import { StrictMode } from 'react';
+import { createElement, StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -6,30 +6,17 @@ import { HelmetProvider } from 'react-helmet-async';
 import './index.css';
 import App from './App.jsx';
 import { registerSW } from 'virtual:pwa-register';
+import { startVisiblePolling } from './utils/visiblePolling';
 
-// Kiểm tra và cập nhật Service Worker mỗi 60 giây
+// Check only while visible; registration.update() already fetches the worker.
 // Khi phát hiện bản mới → hiện thông báo nhỏ, KHÔNG tự reload
 const updateSW = registerSW({
   immediate: true,
-  onRegisteredSW(swUrl, registration) {
+  onRegisteredSW(_swUrl, registration) {
     if (registration) {
-      // Kiểm tra update mỗi 60 giây
-      setInterval(async () => {
-        if (!(!registration.installing && navigator)) return;
-        if ('connection' in navigator && !navigator.onLine) return;
-
-        try {
-          const resp = await fetch(swUrl, {
-            cache: 'no-store',
-            headers: { 'cache-control': 'no-cache' },
-          });
-          if (resp?.status === 200) {
-            await registration.update();
-          }
-        } catch {
-          // Bỏ qua lỗi network
-        }
-      }, 60 * 1000); // 60 giây
+      startVisiblePolling(() => registration.installing ? undefined : registration.update(), {
+        intervalMs: 15 * 60000, immediate: false,
+      });
     }
   },
   onNeedRefresh() {
@@ -136,7 +123,7 @@ createRoot(document.getElementById('root')).render(
     <HelmetProvider>
       <BrowserRouter>
         {providers.reduceRight((children, Provider) => {
-          return <Provider>{children}</Provider>;
+          return createElement(Provider, null, children);
         }, <App />)}
       </BrowserRouter>
     </HelmetProvider>

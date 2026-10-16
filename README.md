@@ -535,6 +535,17 @@ Tài liệu: [Liên kết có thể thu thập dữ liệu](https://developers.g
 
 ---
 
+## 📉 Giảm CDN Requests
+
+- Service worker chỉ tải sẵn favicon và biểu tượng PWA. Các trang admin, trình phát, chatbot và tài khoản được tải khi sử dụng, rồi cache theo URL có hash.
+- Kiểm tra bản cập nhật service worker tối đa mỗi 15 phút khi tab đang hiển thị và có mạng; dùng một `registration.update()`, bỏ lần fetch trùng.
+- Tạm dừng các lần tự làm mới danh sách công khai khi tab nằm nền/offline. Khi quay lại, làm mới nếu đã đến hạn; dữ liệu phim mới vẫn kiểm tra mỗi phút khi đang sử dụng.
+- Các file `/catalog/<version>/...` không thay đổi tại cùng URL: dùng browser cache lâu dài và giữ dữ liệu trong bộ nhớ khi manifest chưa đổi phiên bản. Manifest vẫn được kiểm tra định kỳ, các phim mới nhập vẫn đi qua luồng cập nhật riêng.
+- `robots.txt` yêu cầu AhrefsBot, SemrushBot, Reflectionbot và KeenableBot không quét. Đây là chỉ dẫn cho bot tuân thủ, không phải tường lửa; Google/Bing vẫn được phép truy cập trang công khai.
+- Cache tại CDN giúp giảm tải server nhưng request tới CDN vẫn được tính. Giảm tổng request cần tránh tải trước không cần thiết, polling thừa và tải lại tài nguyên; số đã dùng trong chu kỳ không được hoàn lại sau khi sửa.
+
+---
+
 ## 🌐 Deploy
 
 Dự án đang được deploy trên **Vercel** tại [mfilm.online](https://mfilm.online).
