@@ -1,7 +1,7 @@
 import PlanBadge from '../../PlanBadge.jsx';
 import React, { useContext, useState, useRef, useEffect, lazy, Suspense } from 'react';
 import { useSubscriptions } from '../../../hooks/useCollections';
-import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaWallet, FaCrown, FaChevronDown, FaFilm } from 'react-icons/fa';
+import { FaUser, FaRegHeart, FaList, FaHistory, FaSignOutAlt, FaCrown, FaChevronDown, FaFilm } from 'react-icons/fa';
 import { FiSearch } from 'react-icons/fi';
 import { HiMenuAlt3 } from 'react-icons/hi';
 import { IoClose, IoCloseCircle } from 'react-icons/io5';
@@ -272,21 +272,9 @@ function HeaderClient() {
 
 
                                     <div className="px-4 py-4 border-b border-slate-700/80">
-                                        <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 mb-4 text-sm font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5 cursor-pointer">
+                                        <button onClick={() => { navigate('/upgrade'); setIsDropdownOpen(false); }} className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-bold text-green-900 bg-linear-to-r from-green-400 to-emerald-400 rounded-xl hover:from-green-300 hover:to-emerald-300 transition duration-300 shadow-[0_0_15px_rgba(52,211,153,0.4)] hover:shadow-[0_0_20px_rgba(52,211,153,0.6)] hover:-translate-y-0.5 cursor-pointer">
                                             <FaCrown className="text-lg" /> Nâng cấp gói
                                         </button>
-
-                                        <div className="flex justify-between items-center px-1">
-                                            <div className="flex items-center gap-2 text-sm text-gray-300 font-medium">
-                                                <FaWallet className="text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)] text-lg" /> Số dư
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                <p className="font-bold text-yellow-400 drop-shadow-[0_0_5px_rgba(250,204,21,0.5)] text-[15px]">0 R</p>
-                                                <button className="flex items-center gap-1 bg-white/10 hover:bg-white/20 text-white px-3 py-1 rounded-lg text-[13px] font-bold transition border border-white/20 hover:border-yellow-400 hover:text-yellow-400 cursor-pointer">
-                                                    + Nạp
-                                                </button>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     <div className="px-3 flex flex-col">

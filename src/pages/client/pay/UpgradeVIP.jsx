@@ -89,13 +89,6 @@ function UpgradeVIP(props) {
                                         Gói hiện tại:
                                         <PlanBadge plan={{ name: currentPlanName, level: levelUser }} />
                                     </div>
-                                    <div className="w-1.5 h-1.5 bg-cyan-500/50 rounded-full shadow-[0_0_5px_rgba(34,211,238,0.5)]"></div>
-                                    <div className="text-slate-400 flex items-center gap-1.5">
-                                        Số dư:
-                                        <span className="text-yellow-400 font-black drop-shadow-[0_0_8px_rgba(250,204,21,0.6)] tracking-wide">
-                                            {isLogin?.balance ? isLogin.balance.toLocaleString('vi-VN') : '0'}₫
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
                         </div>
