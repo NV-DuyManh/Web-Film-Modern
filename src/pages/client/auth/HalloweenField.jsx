@@ -1,8 +1,17 @@
-import { useEffect, useId, useRef, useState } from 'react';
+import { memo, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
 import owlArtwork from '../../../assets/auth-halloween/images/owl.svg?raw';
 import flashlight from '../../../assets/auth-halloween/images/flashlight.svg';
+
+const owlHues = [0, 35, 85, 145, 190, 235, 280, 320, 115, 210];
+const EmailOwls = memo(function EmailOwls() {
+    return <div className="mfilm-owl-perch" aria-hidden="true">
+        {owlHues.map((hue, index) => <span key={hue} className="email-owl"
+            style={{ '--owl-hue': `${hue}deg`, '--owl-delay': `${index * -.47}s` }}
+            dangerouslySetInnerHTML={{ __html: owlArtwork }} />)}
+    </div>;
+});
 
 function PasswordLight({ field, value }) {
     const beam = useRef(null);
@@ -13,11 +22,15 @@ function PasswordLight({ field, value }) {
         const input = field.current.querySelector('input');
         const button = field.current.querySelector('button');
         const root = input.closest('.mfilm-halloween');
-        const owl = root.querySelector('.email-owl');
+        const owls = [...root.querySelectorAll('.email-owl')];
         const characters = [...overlay.current.querySelectorAll('.reveal-char')];
         const reactions = [...root.querySelectorAll('.pumpkin-reaction, .summit-stage')];
         const setStyles = (node, styles) => {
-            for (const [name, next] of Object.entries(styles)) if (node.style[name] !== next) node.style[name] = next;
+            for (const [name, next] of Object.entries(styles)) {
+                if (name.startsWith('--')) {
+                    if (node.style.getPropertyValue(name) !== next) node.style.setProperty(name, next);
+                } else if (node.style[name] !== next) node.style[name] = next;
+            }
         };
         const toggle = (node, name, enabled) => {
             if (node.classList.contains(name) !== enabled) node.classList.toggle(name, enabled);
@@ -30,7 +43,7 @@ function PasswordLight({ field, value }) {
             const eye = button.getBoundingClientRect();
             const rect = input.getBoundingClientRect();
             const advance = characters[0]?.getBoundingClientRect().width || 0;
-            const owlBounds = owl?.getBoundingClientRect();
+            const owlBounds = owls.map(owl => owl.getBoundingClientRect());
             const reactionBounds = reactions.map(node => node.getBoundingClientRect());
             const ox = eye.left + eye.width / 2, oy = eye.top + eye.height / 2;
             pointer.current ??= { x: rect.left, y: oy };
@@ -54,13 +67,13 @@ function PasswordLight({ field, value }) {
                 const lit = String(lightAt(x, oy));
                 if (char.style.getPropertyValue('--lit') !== lit) char.style.setProperty('--lit', lit);
             });
-            if (owl) {
-                const lit = lightAt(owlBounds.left + owlBounds.width / 2, owlBounds.top + owlBounds.height / 2);
-                owl.style.opacity = String(lit);
+            owls.forEach((owl, index) => {
+                const bounds = owlBounds[index];
+                const lit = lightAt(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+                setStyles(owl, { opacity: String(.75 + lit * .25) });
                 toggle(owl, 'is-lit', lit > .08);
-                owl.style.setProperty('--owl-gaze-x', `${ux * -70}px`);
-                owl.style.setProperty('--owl-gaze-y', `${uy * -45}px`);
-            }
+                setStyles(owl, { '--owl-gaze-x': `${ux * -70}px`, '--owl-gaze-y': `${uy * -45}px` });
+            });
             reactions.forEach((node, index) => {
                 const bounds = reactionBounds[index];
                 toggle(node, 'is-beam-lit', lightAt(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2) > .08);
@@ -83,7 +96,12 @@ function PasswordLight({ field, value }) {
             controller.abort();
             resize.disconnect();
             cancelAnimationFrame(queued);
-            if (owl) { owl.style.opacity = ''; owl.classList.remove('is-lit'); }
+            owls.forEach(owl => {
+                owl.style.opacity = '';
+                owl.style.removeProperty('--owl-gaze-x');
+                owl.style.removeProperty('--owl-gaze-y');
+                owl.classList.remove('is-lit');
+            });
             root.querySelectorAll('.is-beam-lit').forEach(node => node.classList.remove('is-beam-lit'));
         };
     }, [field, value]);
@@ -112,10 +130,10 @@ export default function HalloweenField({ label, name, type = 'text', value, onCh
         return () => observer.disconnect();
     }, []);
     const lit = password && reveal && night;
-    return <div ref={field} className={`field mfilm-auth-field ${password ? 'password' : ''} ${lit ? 'mfilm-field-lit' : ''}`}>
+    return <div ref={field} className={`field mfilm-auth-field ${owl ? 'mfilm-has-owls' : ''} ${password ? 'password' : ''} ${lit ? 'mfilm-field-lit' : ''}`}>
         <label htmlFor={id}>{label}</label>
         <div className="mfilm-input-wrap">
-            {owl && <div className="email-owl" aria-hidden="true" dangerouslySetInnerHTML={{ __html: owlArtwork }} />}
+            {owl && <EmailOwls />}
             <input id={id} name={name} type={password && reveal && !night ? 'text' : type}
                 value={value} onChange={onChange} autoComplete={autoComplete}
                 aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} />
