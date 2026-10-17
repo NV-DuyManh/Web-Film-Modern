@@ -33,6 +33,20 @@ function vercelAiDevPlugin() {
     return {
         name: 'vercel-ai-dev-plugin',
         configureServer(server) {
+            server.middlewares.use('/api/password-recovery', async (req, res) => {
+                let body = '';
+                req.on('data', chunk => { body += chunk; if (body.length > 4000) req.destroy(); });
+                req.on('end', async () => {
+                    try {
+                        const { default: handler } = await import('./api/password-recovery.js');
+                        await handler({ method: req.method, headers: req.headers, socket: req.socket, body }, {
+                            setHeader: (key, value) => res.setHeader(key, value),
+                            status(code) { res.statusCode = code; return this; },
+                            json(value) { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(value)); },
+                        });
+                    } catch { res.statusCode = 503; res.end(JSON.stringify({ error: 'RECOVERY_UNAVAILABLE' })); }
+                });
+            });
             server.middlewares.use('/api/accounts', async (req, res) => {
                 let body = '';
                 req.on('data', chunk => { body += chunk; if (body.length > 200_000) req.destroy(); });

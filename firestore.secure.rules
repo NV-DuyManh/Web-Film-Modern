@@ -36,6 +36,7 @@ service cloud.firestore {
     match /AccountDirectory/{id} { allow read, write: if false; }
     match /AccountAttempts/{id} { allow read, write: if false; }
     match /AccountAudit/{id} { allow read, write: if false; }
+    match /AccountRecovery/private/{document=**} { allow read, write: if false; }
     match /AIAnswerMemory/{id} { allow read, write: if false; }
     match /PaymentLedger/{id} { allow read, write: if false; }
     match /PendingPayments/{id} { allow read, write: if false; }

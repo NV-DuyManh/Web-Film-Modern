@@ -2,8 +2,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { IoArrowForward } from 'react-icons/io5';
 import HalloweenAuthDialog from './HalloweenAuthDialog';
 import HalloweenField from './HalloweenField';
+import PasswordRecoveryForm from './PasswordRecoveryForm';
 import { FcGoogle } from 'react-icons/fc';
-import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { SECURE_ACCOUNTS_ENABLED, accountSession } from '../../../services/accountService';
 import Logo5 from '../../../assets/Logo5.png';
@@ -68,7 +68,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
 
     const [errors, setErrors] = useState({});
     const [submitting, setSubmitting] = useState(false);
-    const [forgotHint, setForgotHint] = useState(false);
+    const [recovering, setRecovering] = useState(false);
 
     useEffect(() => {
         if (!openLogin) {
@@ -78,7 +78,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
             });
             setErrors({});
             setSubmitting(false);
-            setForgotHint(false);
+            setRecovering(false);
             setLoadingGoogle(false);
         }
     }, [openLogin]);
@@ -126,7 +126,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
             } catch (error) { setErrors({ email: error.status === 401 ? 'Tài khoản hoặc mật khẩu không chính xác' : 'Chưa thể đăng nhập, vui lòng thử lại.' }); }
             return;
         }
-        const userLogin = users.find((e) => e.email === formData.email.trim() && e.password === formData.password);
+        const userLogin = users.find((e) => e.email?.trim().toLowerCase() === formData.email.trim().toLowerCase() && e.password === formData.password);
         
         if (userLogin) {
             // Establish verified Firebase Auth session so the user gets personalized
@@ -268,6 +268,9 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
 
     return (
         <HalloweenAuthDialog open={openLogin} onClose={handleCloseLogin}>
+            {recovering ? <PasswordRecoveryForm initialEmail={formData.email} onBack={email => {
+                setFormData({ email, password: '' }); setErrors({}); setRecovering(false);
+            }} /> : <>
             <p className="mfilm-auth-eyebrow">CHÀO MỪNG TRỞ LẠI</p>
             <h1 id="mfilm-login-title">Đăng nhập</h1>
             <p className="mfilm-auth-intro">Chưa có tài khoản? <button type="button" className="text-action" onClick={handleOpenRegister}>Đăng ký ngay</button></p>
@@ -279,8 +282,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
             }}>
                 <HalloweenField label="Email" name="email" type="email" value={formData.email} onChange={handleChange} error={errors.email} autoComplete="username" owl />
                 <HalloweenField label="Mật khẩu" name="password" type="password" value={formData.password} onChange={handleChange} error={errors.password} autoComplete="current-password" />
-                <button type="button" className="text-action forgot" onClick={() => setForgotHint(value => !value)} aria-expanded={forgotHint}>Quên mật khẩu?</button>
-                {forgotHint && <p className="mfilm-forgot-hint" role="status">Nếu dùng Google, hãy khôi phục qua Google. Với tài khoản email, xem <Link to="/ho-tro" onClick={handleCloseLogin}>hỗ trợ MFilm</Link> để được hướng dẫn.</p>}
+                <button type="button" className="text-action forgot" disabled={submitting || loadingGoogle} onClick={() => setRecovering(true)}>Quên mật khẩu?</button>
                 <button type="submit" className="submit" disabled={submitting || loadingGoogle}>{submitting ? 'Đang đăng nhập...' : 'Đăng nhập'} <IoArrowForward size={17} /></button>
                 <div className="mfilm-auth-divider">hoặc tiếp tục với</div>
                 <button type="button" className="mfilm-auth-google" onClick={signInWithGoogle} disabled={loadingGoogle || submitting}>
@@ -288,6 +290,7 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
                 </button>
             </form>
             <p className="mfilm-auth-note">Lưu phim yêu thích · Đồng bộ xem tiếp · Khám phá theo gu</p>
+            </>}
         </HalloweenAuthDialog>
     );
 }

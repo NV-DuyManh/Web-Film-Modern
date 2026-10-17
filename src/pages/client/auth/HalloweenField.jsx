@@ -115,7 +115,7 @@ function PasswordLight({ field, value }) {
     </div>, document.body);
 }
 
-export default function HalloweenField({ label, name, type = 'text', value, onChange, error, autoComplete, owl = false }) {
+export default function HalloweenField({ label, name, type = 'text', value, onChange, error, autoComplete, owl = false, ...inputProps }) {
     const id = useId();
     const field = useRef(null);
     const [reveal, setReveal] = useState(false);
@@ -135,7 +135,7 @@ export default function HalloweenField({ label, name, type = 'text', value, onCh
         <label htmlFor={id}>{label}</label>
         <div className="mfilm-input-wrap">
             {owl && <EmailOwls />}
-            <input id={id} name={name} type={password && reveal && !night ? 'text' : type}
+            <input {...inputProps} id={id} name={name} type={password && reveal && !night ? 'text' : type}
                 value={value} onChange={onChange} autoComplete={autoComplete}
                 aria-invalid={!!error} aria-describedby={error ? `${id}-error` : undefined} />
             {password && <button type="button" className="eye" aria-controls={id} aria-pressed={reveal}

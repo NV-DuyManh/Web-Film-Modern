@@ -12,5 +12,9 @@ service cloud.firestore {
       allow read, write: if request.auth != null
                          && request.auth.uid == authUid;
     }
+    // Recovery codes, grants and throttles are server-only, even during legacy login.
+    match /AccountRecovery/private/{document=**} {
+      allow read, write: if false;
+    }
   }
 }
