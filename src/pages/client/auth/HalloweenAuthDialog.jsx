@@ -11,6 +11,7 @@ import wolfRoute from '../../../assets/auth-halloween/images/wolf-frames/keyfram
 import { startHalloweenSpider } from './halloweenSpider';
 import { fitVineArtwork } from './halloweenVines';
 import { readAuthNight, saveAuthNight } from './authTheme';
+import { startHalloweenMeteors } from './halloweenMeteors';
 import './HalloweenAuth.css';
 
 const wolfImages = import.meta.glob('../../../assets/auth-halloween/images/wolf-transparent/*.png', {
@@ -56,9 +57,9 @@ function DaySky() {
                 {[0, 1, 2].map(index => <DayCloud index={index} key={index} />)}
             </div>)}
         </div>
-        <div className="mfilm-day-track day-bird-track">
+        {[{ direction: 'left', birds: [0, 2, 4] }, { direction: 'right', birds: [1, 3] }].map(group => <div className={`mfilm-day-track day-bird-track day-bird-track-${group.direction}`} key={group.direction}>
             {[0, 1].map(tile => <div className="mfilm-day-tile" key={tile}>
-                {[0, 1, 2, 3, 4].map(index => <span className={`mfilm-day-bird day-bird-${index + 1}`} key={index}>
+                {group.birds.map(index => <span className={`mfilm-day-bird day-bird-${index + 1}`} key={index}>
                     <svg viewBox="0 0 36 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path className="day-wing day-wing-left" d="M18 15Q10 3 2 8Q11 8 18 15" />
                         <path className="day-wing day-wing-right" d="M18 15Q26 3 34 8Q25 8 18 15" />
@@ -66,8 +67,16 @@ function DaySky() {
                     </svg>
                 </span>)}
             </div>)}
-        </div>
+        </div>)}
     </div>;
+}
+
+function NightMeteors({ night }) {
+    const layer = useRef(null);
+    useEffect(() => {
+        if (night) return startHalloweenMeteors(layer.current);
+    }, [night]);
+    return <div ref={layer} className="mfilm-night-meteors" aria-hidden="true" />;
 }
 
 const Landscape = memo(function Landscape() {
@@ -184,6 +193,7 @@ function HalloweenContent({ mode, onClose, children }) {
             <div className="login-card">
                 <section className="scene-panel" aria-label="Đêm phim Halloween cùng MFilm">
                     <Landscape />
+                    <NightMeteors night={night} />
                     <Wolf night={night} />
                     <button className="theme-toggle" type="button" onClick={toggleTheme}
                         aria-pressed={night} aria-label={night ? 'Chuyển sang ban ngày' : 'Bật đêm Halloween'}>
