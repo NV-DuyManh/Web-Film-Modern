@@ -20,6 +20,8 @@
 }
 
 .mfilm-halloween-dialog .mfilm-halloween-dimmer { background: rgb(5 8 17 / 42%); }
+.mfilm-halloween-dialog .MuiDialog-container { scrollbar-width: none; overscroll-behavior: contain; }
+.mfilm-halloween-dialog .MuiDialog-container::-webkit-scrollbar { display: none; }
 .mfilm-halloween {
     --sky-mask: url('../../../assets/auth-halloween/images/sky-mask.svg');
     --beam-mask: url('../../../assets/auth-halloween/images/beam-mask.svg');
