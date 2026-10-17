@@ -1,10 +1,12 @@
 import React from 'react';
 import { GiCrown } from 'react-icons/gi';
 import { FaGem } from 'react-icons/fa';
+import { getAvatarFrameTheme } from '../../../utils/planAppearance';
 
-export function WingedFrame({ children, theme, size = 48 }) {
+export function WingedFrame({ children, theme: selectedTheme, size = 48 }) {
+    const theme = getAvatarFrameTheme({ selectedFrame: selectedTheme });
 
-    let primaryColor, secondaryColor, accentColor, glowColor, gemColor;
+    let primaryColor, accentColor, glowColor, gemColor;
 
     switch (theme) {
         case 'admin':
@@ -13,7 +15,6 @@ export function WingedFrame({ children, theme, size = 48 }) {
             glowColor = 'rgba(147, 51, 234, 0.9)';
             gemColor = '#f59e0b';
             break;
-        case 'red':
         case 'blue':
             primaryColor = '#3b82f6';
             accentColor = '#60a5fa';
@@ -47,9 +48,9 @@ export function WingedFrame({ children, theme, size = 48 }) {
         case 'cyberpunk':
         case 'cyber_radar':
         case 'cyber_pulse':
-            primaryColor = '#06b6d4'; secondaryColor = '#0891b2'; accentColor = '#22d3ee'; glowColor = 'rgba(6,182,212,0.8)'; gemColor = '#06b6d4'; break;
+            primaryColor = '#06b6d4'; accentColor = '#22d3ee'; glowColor = 'rgba(6,182,212,0.8)'; gemColor = '#06b6d4'; break;
         default:
-            primaryColor = '#64748b'; secondaryColor = '#1e293b'; accentColor = '#cbd5e1'; glowColor = 'rgba(100,116,139,0)'; gemColor = '#64748b';
+            primaryColor = '#64748b'; accentColor = '#cbd5e1'; glowColor = 'rgba(100,116,139,0)'; gemColor = '#64748b';
     }
 
     const isTopTier = ['rose', 'admin'].includes(theme);
@@ -57,7 +58,7 @@ export function WingedFrame({ children, theme, size = 48 }) {
     const isUltra = ['red', 'yellow', 'rose', 'admin'].includes(theme);
 
     return (
-        <div className="relative inline-flex justify-center items-center group" style={{ width: size, height: size }}>
+        <div data-avatar-frame={theme} className="relative inline-flex justify-center items-center group" style={{ width: size, height: size }}>
 
             {isTopTier && (
                 <>
@@ -195,7 +196,7 @@ export function WingedFrame({ children, theme, size = 48 }) {
 
                 {isPremium && (
                     <div className="absolute inset-0 z-20 pointer-events-none rounded-full overflow-hidden">
-                        <div className="absolute top-0 bottom-0 w-[150%] bg-linear-to-r from-transparent via-white/40 to-transparent animate-avatar-shine" />
+                        <div className="absolute top-0 bottom-0 w-3/2 bg-linear-to-r from-transparent via-white/40 to-transparent animate-avatar-shine" />
                     </div>
                 )}
             </div>

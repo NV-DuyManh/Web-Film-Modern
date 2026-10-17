@@ -2,7 +2,7 @@
 // tier itself, so filtering or reordering a plan list cannot change its color.
 const appearances = {
     free: {
-        theme: 'slate', color: '#94a3b8', textColor: 'text-slate-300', borderColor: 'border-slate-400',
+        theme: 'blue', color: '#94a3b8', textColor: 'text-slate-300', borderColor: 'border-slate-400',
         glowColor: 'bg-slate-400/10', dotBg: 'bg-slate-400', badgeBg: 'bg-slate-500',
         className: 'bg-slate-600 border-slate-500 text-white',
     },
@@ -39,4 +39,13 @@ export function getPlanAppearance(plan) {
         return appearances.free;
     }
     return appearances[name === 'prenium' ? 'premium' : name] || appearances.free;
+}
+
+// Old Free selections used "slate"; keep their blue frame without rewriting profiles.
+export function getAvatarFrameTheme(user, plan) {
+    const selected = user?.selectedFrame;
+    if (selected === 'slate') return 'blue';
+    if (['cyberpunk', 'cyber_radar', 'cyber_pulse'].includes(selected)) return 'cyan';
+    if (['blue', 'cyan', 'yellow', 'red', 'rose', 'admin'].includes(selected)) return selected;
+    return getPlanAppearance(user?.role === 'admin' ? { name: 'admin' } : plan).theme;
 }

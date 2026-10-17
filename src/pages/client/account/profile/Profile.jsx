@@ -1,4 +1,4 @@
-import { getPlanAppearance } from '../../../../utils/planAppearance.js';
+import { getPlanAppearance, getAvatarFrameTheme } from '../../../../utils/planAppearance.js';
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { useSubscriptions, useReviews } from '../../../../hooks/useCollections';
 import { AuthContext } from '../../../../contexts/AuthProvider';
@@ -54,11 +54,15 @@ function Profile() {
     const AVAILABLE_FRAMES = React.useMemo(() => {
         const sortedPlans = [...plans].sort((a, b) => Number(a.level) - Number(b.level));
         
-        const frames = sortedPlans.map((plan, index) => ({
+        const frames = sortedPlans.map(plan => ({
             id: getPlanAppearance(plan).theme,
             label: plan.name,
             minLevel: plan.level
         }));
+
+        if (!frames.some(frame => frame.id === 'blue')) {
+            frames.unshift({ id: 'blue', label: 'Free', minLevel: 0 });
+        }
 
         if (isLogin?.role === 'admin') {
             frames.push({
@@ -71,7 +75,7 @@ function Profile() {
         return frames;
     }, [plans, isLogin]);
 
-    const currentSelectedTheme = isLogin?.selectedFrame || currentPlanInfo.theme;
+    const currentSelectedTheme = getAvatarFrameTheme(isLogin, currentPlanInfo);
 
     const handleAvatarChange = async (file) => {
         if (!isLogin) return;

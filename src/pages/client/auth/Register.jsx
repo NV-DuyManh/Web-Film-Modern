@@ -14,49 +14,10 @@ import { signInWithPopup, createUserWithEmailAndPassword } from 'firebase/auth';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { auth, googleProvider, db } from '../../../config/firebaseConfig';
 
-const showAuthSuccessToast = (customer, message = 'Đăng ký thành công') => {
-    const avatar = customer.avatarUrl || customer.imgUrl || Logo5;
-    const name = customer.name || customer.displayName || 'Người dùng';
-    
-    Swal.fire({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        background: 'transparent',
-        html: `
-            <div style="display: flex; align-items: center; gap: 14px; text-align: left;">
-                <div style="position: relative; flex-shrink: 0;">
-                    <img src="${avatar}" style="width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #eab308; box-shadow: 0 0 15px rgba(234,179,8,0.4);" />
-                    <span style="position: absolute; bottom: -2px; right: -2px; width: 12px; height: 12px; background-color: #10b981; border-radius: 50%; border: 2px solid #0f172a;"></span>
-                </div>
-                <div style="display: flex; flex-direction: column; overflow: hidden; min-width: 0;">
-                    <div style="display: flex; align-items: center; gap: 6px;">
-                        <span style="font-size: 10px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; color: #eab308; background: rgba(234, 179, 8, 0.15); padding: 2px 8px; border-radius: 9999px; border: 1px solid rgba(234, 179, 8, 0.3);">
-                            ${message}
-                        </span>
-                    </div>
-                    <span style="font-size: 14px; font-weight: 700; color: #ffffff; margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 190px;">
-                        ${name}
-                    </span>
-                    <span style="font-size: 11px; color: #94a3b8;">
-                        Chào mừng bạn đến với MFILM!
-                    </span>
-                </div>
-            </div>
-        `,
-        customClass: {
-            popup: 'swal2-toast-mfilm'
-        },
-        didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-        }
-    });
-};
+import useAuthSuccessToast from '../../../components/useAuthSuccessToast';
 
 function Register({ openRegister, handleCloseRegister, handleOpenLogin }) {
+    const showAuthSuccessToast = useAuthSuccessToast('Đăng ký thành công');
     const users = useContext(UserContext);
     const { loginByUser } = useContext(AuthContext);
     const [loading, setLoading] = useState(false);

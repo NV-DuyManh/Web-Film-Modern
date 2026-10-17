@@ -12,12 +12,11 @@ import { UserContext } from '../../../../contexts/UserProvider';
 import DeleteBar, { useSelectRows } from '../../../../components/admin/DeleteBar';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import FramedUserAvatar from '../../../../components/FramedUserAvatar';
 import { getUserPlanInfo, getExpiryDate } from '../../../../utils/appUtils';
 import { SECURE_ACCOUNTS_ENABLED, accountRequest } from '../../../../services/accountService';
 import useUserPresence from '../../../../hooks/useUserPresence';
 import OnlineIndicator from '../../../../components/admin/OnlineIndicator';
-import DefaultAvatar from '../../../../assets/Logo5.png';
 import { filterAdminUsers } from '../../../../utils/adminUserList';
 
 
@@ -30,17 +29,6 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
     const presenceAvailable = presenceStatus === 'ready';
     const onlineCount = (users || []).filter(row => onlineIds.has(row.id)).length;
     
-    const avatarGlowMap = {
-        cyan: "ring-cyan-500 shadow-[0_0_15px_rgba(6,182,212,0.6)]",
-        yellow: "ring-yellow-500 shadow-[0_0_15px_rgba(234,179,8,0.6)]",
-        red: "ring-red-500 shadow-[0_0_15px_rgba(239,68,68,0.6)]",
-        rose: "ring-rose-500 shadow-[0_0_15px_rgba(244,63,94,0.6)]",
-        blue: "ring-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.6)]",
-        emerald: "ring-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.6)]",
-        purple: "ring-purple-500 shadow-[0_0_15px_rgba(168,85,247,0.6)]",
-        pink: "ring-pink-500 shadow-[0_0_15px_rgba(236,72,153,0.6)]",
-        fuchsia: "ring-fuchsia-500 shadow-[0_0_15px_rgba(217,70,239,0.6)]",
-    };
 
     const [open, setOpen] = useState(false);
 
@@ -195,20 +183,7 @@ function TableUsers({ handleClickOpen, handleView, setUser, user, search }) {
                                     <td className="table-cell">
                                         <div className="flex justify-center items-center py-2">
                                                 <div className="relative shrink-0 cursor-pointer" onClick={() => handleView(row)}>
-                                                    {row.role === 'admin' && (
-                                                        <>
-                                                            <div className="absolute -inset-1.5 rounded-full border border-dashed border-red-500 shadow-[0_0_10px_rgba(239,68,68,0.5)] animate-[spin_6s_linear_infinite] pointer-events-none z-0"></div>
-                                                            <div className="absolute -inset-3 rounded-full border-2 border-dotted border-red-500 shadow-[0_0_15px_rgba(239,68,68,0.6)] animate-[spin_4s_linear_infinite_reverse] pointer-events-none z-0"></div>
-                                                        </>
-                                                    )}
-                                                    <div className={`group relative w-12 h-12 rounded-full overflow-hidden bg-slate-900 ring-2 ring-offset-2 ring-offset-slate-950 ${avatarGlowMap[pInfo.theme] || avatarGlowMap.blue} transition-all duration-500 z-10`}>
-                                                        <img
-                                                            src={getOptimizedUrl(row.avatarUrl || DefaultAvatar)}
-                                                            alt={row.name}
-                                                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                                        />
-                                                        <div className="absolute inset-0 rounded-full ring-inset ring-1 ring-white/10 pointer-events-none"></div>
-                                                    </div>
+                                                    <FramedUserAvatar user={row} plan={pInfo} alt={row.name} />
                                                     <OnlineIndicator online={onlineIds.has(row.id)} available={presenceAvailable} name={row.name || row.fullName} />
                                                 </div>
                                         </div>

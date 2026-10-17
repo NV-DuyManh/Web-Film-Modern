@@ -11,6 +11,7 @@ import Logo5 from '../../../assets/Logo5.png';
 import { getObjectById } from '../../../services/firebaseResponse';
 import { getUserPlanInfo } from '../../../utils/appUtils';
 import { WingedFrame } from '../../../components/client/header/AvatarFrames';
+import FramedUserAvatar from '../../../components/FramedUserAvatar';
 
 function UpgradeVIP(props) {
     const navigate = useNavigate();
@@ -74,14 +75,7 @@ function UpgradeVIP(props) {
                         <div className="relative flex items-center gap-4 bg-[#0a0f1d]/80 backdrop-blur-xl py-3 px-6 rounded-full border border-cyan-500/30 shadow-[0_0_25px_rgba(34,211,238,0.15)] hover:shadow-[0_0_35px_rgba(34,211,238,0.3)] hover:border-cyan-400/50 hover:-translate-y-1 transition duration-500 overflow-hidden group cursor-pointer">
                             <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
 
-                            <div className="relative">
-                                <img
-                                    src={isLogin?.avatarUrl || Logo5}
-                                    alt="Avatar"
-                                    className="w-14 h-14 rounded-full object-cover border-2 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.5)] group-hover:scale-105 transition-transform duration-300"
-                                />
-                                <div className="absolute inset-0 rounded-full border border-cyan-300/30 animate-ping opacity-20" />
-                            </div>
+                            <FramedUserAvatar user={isLogin} plan={getUserPlanInfo(isLogin, subscriptions, plans)} alt="Avatar" />
 
                             <div className="relative z-10 pr-2">
                                 <div className="flex items-center gap-2 mb-1">

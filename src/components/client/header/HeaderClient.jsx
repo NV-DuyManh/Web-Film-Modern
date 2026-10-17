@@ -14,7 +14,6 @@ const LogIn = lazy(() => import('../../../pages/client/auth/LogIn'));
 const Register = lazy(() => import('../../../pages/client/auth/Register'));
 import { AuthContext } from '../../../contexts/AuthProvider';
 import { PlanContext } from '../../../contexts/PlanProvider';
-import { getObjectById } from '../../../services/firebaseResponse';
 
 
 import { IoMdArrowDropdown } from 'react-icons/io';
@@ -23,6 +22,7 @@ import Country from '../../../pages/client/country/Country';
 import './HeaderClient.css';
 import { WingedFrame } from './AvatarFrames';
 import { getUserPlanInfo } from '../../../utils/appUtils';
+import { getAvatarFrameTheme } from '../../../utils/planAppearance';
 function HeaderClient() {
     const [openMenu, setOpenMenu] = useState(false);
     const [openCate, setOpenCate] = useState(false);
@@ -60,7 +60,7 @@ function HeaderClient() {
         return getUserPlanInfo(isLogin, subscriptions, plans);
     }, [isLogin, subscriptions, plans]);
 
-    const displayTheme = isLogin?.selectedFrame || currentPlanInfo.theme;
+    const displayTheme = getAvatarFrameTheme(isLogin, currentPlanInfo);
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);

@@ -54,7 +54,7 @@ export const getExpiryDate = (p) => {
 };
 
 export const getUserPlanInfo = (user, subscriptions, plans) => {
-    if (!user) return { name: 'FREE', level: 0, theme: 'slate' };
+    if (!user) return { name: 'FREE', level: 0, theme: getPlanAppearance().theme };
     if (user.role === 'admin') return { name: 'ADMIN', level: 999, theme: 'admin' };
 
     let highestPlan = null;
@@ -65,7 +65,7 @@ export const getUserPlanInfo = (user, subscriptions, plans) => {
 
     if (!highestPlan) {
         const userSubs = subscriptions.filter(p => p.userID === user.id && getExpiryDate(p) > new Date());
-        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: 'slate' };
+        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: getPlanAppearance().theme };
 
         const highestSub = userSubs.reduce((max, item) => {
             const currentPlan = getObjectById(plans, item.planID);

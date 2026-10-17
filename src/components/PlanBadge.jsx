@@ -1,7 +1,7 @@
 import { getPlanAppearance } from '../utils/planAppearance';
 import { FaTicketAlt, FaShieldAlt, FaCrown, FaGem } from 'react-icons/fa';
 
-const planIcons = { slate: FaTicketAlt, cyan: FaShieldAlt, yellow: FaCrown, rose: FaGem, admin: FaShieldAlt };
+const planIcons = { slate: FaTicketAlt, blue: FaTicketAlt, cyan: FaShieldAlt, yellow: FaCrown, rose: FaGem, admin: FaShieldAlt };
 
 export default function PlanBadge({ plan, className = '', children, showIcon = false }) {
     if (!plan) return null;
