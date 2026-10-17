@@ -43,26 +43,32 @@
 .mfilm-halloween .mfilm-season-label { font-size: 9px; font-weight: 700; letter-spacing: 2.6px; color: #f8cd96; }
 .mfilm-halloween .mfilm-scene-caption { position: absolute; z-index: 4; bottom: 24px; width: 100%; text-align: center; font-size: 10px; letter-spacing: 1.1px; color: #d8c4d6b3; }
 .mfilm-halloween .sky-witch { --witch-left: 8%; --witch-right: 80%; --witch-top: 12%; }
-.mfilm-halloween .mfilm-day-sky { position: absolute; z-index: 3; inset: 0 0 55%; overflow: hidden; container-type: inline-size; pointer-events: none; opacity: 1; transition: opacity 1.4s ease; }
+.mfilm-halloween .mfilm-day-sky { position: absolute; z-index: 3; inset: 0 0 55%; overflow: hidden; pointer-events: none; opacity: 1; transition: opacity 1.4s ease; }
 .mfilm-halloween.night .mfilm-day-sky { opacity: 0; }
+.mfilm-halloween .mfilm-day-track { position: absolute; inset: 0 auto 0 0; display: flex; width: 200%; animation: mfilm-day-drift var(--day-duration) linear infinite; animation-play-state: paused; }
+.mfilm-halloween .mfilm-day-tile { position: relative; flex: 0 0 50%; height: 100%; }
+.mfilm-halloween .day-cloud-track { --day-duration: 90s; }
+.mfilm-halloween .day-bird-track { --day-duration: 38s; }
 .mfilm-halloween .mfilm-day-cloud,
-.mfilm-halloween .mfilm-day-bird { position: absolute; left: 0; display: block; animation: mfilm-day-drift var(--day-duration) linear infinite; animation-delay: var(--day-delay); animation-play-state: paused; }
-.mfilm-halloween:not(.night) .mfilm-day-cloud,
-.mfilm-halloween:not(.night) .mfilm-day-bird,
+.mfilm-halloween .mfilm-day-bird { position: absolute; display: block; }
+.mfilm-halloween:not(.night) .mfilm-day-track,
+.mfilm-halloween:not(.night) .mfilm-day-bird svg,
 .mfilm-halloween:not(.night) .day-wing { animation-play-state: running; }
-.mfilm-halloween .mfilm-day-cloud { color: #ffffffb8; width: var(--cloud-width); }
+.mfilm-halloween .mfilm-day-cloud { width: var(--cloud-width); }
 .mfilm-halloween .mfilm-day-sky svg { display: block; width: 100%; overflow: visible; }
-.mfilm-halloween .day-cloud-1 { top: 15%; --cloud-width: 112px; --day-duration: 47s; --day-delay: -12s; }
-.mfilm-halloween .day-cloud-2 { top: 47%; --cloud-width: 142px; --day-duration: 65s; --day-delay: -35s; opacity: .8; }
-.mfilm-halloween .day-cloud-3 { top: 72%; --cloud-width: 88px; --day-duration: 54s; --day-delay: -19s; opacity: .65; }
+.mfilm-halloween .day-cloud-1 { left: 5%; top: 12%; --cloud-width: 152px; }
+.mfilm-halloween .day-cloud-2 { left: 56%; top: 43%; --cloud-width: 176px; opacity: .8; }
+.mfilm-halloween .day-cloud-3 { left: 28%; top: 70%; --cloud-width: 118px; opacity: .65; }
 .mfilm-halloween .mfilm-day-bird { width: var(--bird-width, 25px); color: #385a70; }
-.mfilm-halloween .day-bird-1 { top: 12%; --day-duration: 21s; --day-delay: -5s; }
-.mfilm-halloween .day-bird-2 { top: 36%; --day-duration: 25s; --day-delay: -12s; --bird-width: 20px; }
-.mfilm-halloween .day-bird-3 { top: 58%; --day-duration: 28s; --day-delay: -19s; --bird-width: 18px; opacity: .75; }
-.mfilm-halloween .day-bird-4 { top: 69%; --day-duration: 24s; --day-delay: -8s; --bird-width: 23px; }
-.mfilm-halloween .day-bird-5 { top: 24%; --day-duration: 32s; --day-delay: -23s; --bird-width: 16px; opacity: .7; }
-.mfilm-halloween .day-wing { transform-origin: 18px 15px; animation: mfilm-day-flap .7s ease-in-out infinite alternate; animation-delay: var(--day-delay); animation-play-state: paused; }
-@keyframes mfilm-day-drift { from { transform: translateX(-160px); } to { transform: translateX(calc(100cqw + 160px)); } }
+.mfilm-halloween .day-bird-1 { left: 8%; top: 12%; --wing-duration: .8s; --day-delay: -.3s; }
+.mfilm-halloween .day-bird-2 { left: 34%; top: 36%; --wing-duration: .95s; --day-delay: -1.1s; --bird-width: 20px; }
+.mfilm-halloween .day-bird-3 { left: 61%; top: 58%; --wing-duration: 1.1s; --day-delay: -.5s; --bird-width: 18px; opacity: .75; }
+.mfilm-halloween .day-bird-4 { left: 82%; top: 69%; --wing-duration: .85s; --day-delay: -1.7s; --bird-width: 23px; }
+.mfilm-halloween .day-bird-5 { left: 45%; top: 24%; --wing-duration: 1.2s; --day-delay: -.8s; --bird-width: 16px; opacity: .7; }
+.mfilm-halloween .mfilm-day-bird svg { animation: mfilm-day-glide 4.8s ease-in-out infinite alternate; animation-delay: var(--day-delay); animation-play-state: paused; }
+.mfilm-halloween .day-wing { transform-origin: 18px 15px; animation: mfilm-day-flap var(--wing-duration) ease-in-out infinite alternate; animation-delay: var(--day-delay); animation-play-state: paused; }
+@keyframes mfilm-day-drift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes mfilm-day-glide { from { transform: translateY(-2px); } to { transform: translateY(2px); } }
 @keyframes mfilm-day-flap { from { transform: scaleY(.45); } to { transform: scaleY(1.1); } }
 .mfilm-halloween .theme-toggle { height: 76px; width: 40px; top: 24px; right: 22px; }
 .mfilm-halloween .theme-toggle-thumb { width: 30px; height: 30px; }
@@ -192,13 +198,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .mfilm-halloween .day-cloud-1 { left: 4%; }
-    .mfilm-halloween .day-cloud-2 { left: 52%; }
-    .mfilm-halloween .day-cloud-3 { left: 28%; }
-    .mfilm-halloween .day-bird-1 { left: 20%; }
-    .mfilm-halloween .day-bird-2 { left: 58%; }
-    .mfilm-halloween .day-bird-3 { left: 74%; }
-    .mfilm-halloween .day-bird-4 { left: 38%; }
-    .mfilm-halloween .day-bird-5 { left: 86%; }
     .mfilm-halloween *, .mfilm-halloween *::before, .mfilm-halloween *::after { animation: none !important; transition-duration: .01ms !important; }
 }

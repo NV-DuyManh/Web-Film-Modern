@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useId, useRef, useState } from 'react';
 import { Dialog } from '@mui/material';
 import { IoClose, IoMoonOutline, IoSunnyOutline } from 'react-icons/io5';
 import panelDay from '../../../assets/auth-halloween/images/panel-day.svg';
@@ -26,18 +26,46 @@ function SkyFlight() {
     </div>;
 }
 
+function DayCloud({ index }) {
+    const gradient = useId();
+    return <span className={`mfilm-day-cloud day-cloud-${index + 1}`}>
+        <svg viewBox="0 0 220 86" fill="none">
+            <defs><radialGradient id={gradient} cx="45%" cy="35%" r="65%">
+                <stop stopColor="#fff" stopOpacity=".9" />
+                <stop offset=".48" stopColor="#f8fcff" stopOpacity=".72" />
+                <stop offset=".82" stopColor="#e8f2f6" stopOpacity=".28" />
+                <stop offset="1" stopColor="#edf7fb" stopOpacity="0" />
+            </radialGradient></defs>
+            <g fill={`url(#${gradient})`}>
+                <ellipse cx="49" cy="52" rx="36" ry="22" />
+                <ellipse cx="81" cy="38" rx="34" ry="27" />
+                <ellipse cx="115" cy="33" rx="36" ry="30" />
+                <ellipse cx="149" cy="45" rx="33" ry="25" />
+                <ellipse cx="180" cy="55" rx="30" ry="19" />
+                <ellipse cx="116" cy="62" rx="88" ry="18" />
+            </g>
+        </svg>
+    </span>;
+}
+
 function DaySky() {
     return <div className="mfilm-day-sky" aria-hidden="true">
-        {[0, 1, 2].map(index => <span className={`mfilm-day-cloud day-cloud-${index + 1}`} key={index}>
-            <svg viewBox="0 0 160 64" fill="none"><path d="M23 57C10 57 4 50 4 41C4 30 14 23 25 25C28 12 40 6 52 11C63-3 88 1 94 20C108 12 128 19 130 34C145 30 156 37 156 46C156 54 149 57 138 57Z" fill="currentColor" /></svg>
-        </span>)}
-        {[0, 1, 2, 3, 4].map(index => <span className={`mfilm-day-bird day-bird-${index + 1}`} key={index}>
-            <svg viewBox="0 0 36 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path className="day-wing day-wing-left" d="M18 15Q10 3 2 8Q11 8 18 15" />
-                <path className="day-wing day-wing-right" d="M18 15Q26 3 34 8Q25 8 18 15" />
-                <path d="M17 15L18 18L20 15" />
-            </svg>
-        </span>)}
+        <div className="mfilm-day-track day-cloud-track">
+            {[0, 1].map(tile => <div className="mfilm-day-tile" key={tile}>
+                {[0, 1, 2].map(index => <DayCloud index={index} key={index} />)}
+            </div>)}
+        </div>
+        <div className="mfilm-day-track day-bird-track">
+            {[0, 1].map(tile => <div className="mfilm-day-tile" key={tile}>
+                {[0, 1, 2, 3, 4].map(index => <span className={`mfilm-day-bird day-bird-${index + 1}`} key={index}>
+                    <svg viewBox="0 0 36 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path className="day-wing day-wing-left" d="M18 15Q10 3 2 8Q11 8 18 15" />
+                        <path className="day-wing day-wing-right" d="M18 15Q26 3 34 8Q25 8 18 15" />
+                        <path d="M17 15L18 18L20 15" />
+                    </svg>
+                </span>)}
+            </div>)}
+        </div>
     </div>;
 }
 
