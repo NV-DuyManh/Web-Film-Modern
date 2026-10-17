@@ -216,7 +216,8 @@ function HalloweenContent({ mode, onClose, children }) {
 }
 
 export default function HalloweenAuthDialog({ open, onClose, mode = 'login', children }) {
-    return <Dialog open={open} onClose={onClose} maxWidth={false} fullWidth scroll="body"
+    // Keep the page scrollbar so fixed navigation does not expand when the dialog opens.
+    return <Dialog open={open} onClose={onClose} maxWidth={false} fullWidth scroll="body" disableScrollLock
         aria-labelledby={`mfilm-${mode}-title`} className="mfilm-halloween-dialog"
         sx={{ zIndex: 10020 }}
         slotProps={{ paper: { className: 'mfilm-halloween-paper' }, backdrop: { className: 'mfilm-halloween-dimmer' } }}>
