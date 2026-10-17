@@ -1,0 +1,1432 @@
+/* Adapted from the reviewed Halloween UI; all selectors and animations are scoped. */
+.mfilm-halloween  {
+  font-family: 'MFilm Halloween', Georgia, serif;
+  color: #172b33;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mfilm-halloween *  {
+  box-sizing: border-box;
+}
+
+.mfilm-halloween button, .mfilm-halloween input  {
+  font: inherit;
+}
+
+.mfilm-halloween button  {
+  cursor: pointer;
+}
+
+.mfilm-halloween .login-card  {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 43% 57%;
+  min-height: 480px;
+  padding: 12px;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 68%);
+  border-radius: 32px;
+  background: rgb(244 252 255 / 36%);
+  -webkit-backdrop-filter: blur(28px) saturate(135%);
+  backdrop-filter: blur(28px) saturate(135%);
+  box-shadow: 0 32px 90px rgb(15 50 69 / 22%), 0 8px 24px rgb(15 50 69 / 10%), inset 0 1px 0 rgb(255 255 255 / 90%);
+}
+
+.mfilm-halloween .login-card::before  {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(125deg, rgb(255 255 255 / 24%), transparent 35%, transparent 65%, rgb(255 255 255 / 8%));
+  content: "";
+  pointer-events: none;
+}
+
+.mfilm-halloween .scene-panel  {
+  position: relative;
+  min-height: 456px;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 58%);
+  border-radius: 22px;
+  background: #16374b;
+  box-shadow: 0 8px 24px rgb(6 35 50 / 12%), inset 0 0 0 1px rgb(255 255 255 / 18%);
+}
+
+.mfilm-halloween .landscape-scene  {
+  --celestial-drop: 260px;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 23% 17%, rgb(255 235 202 / 65%), transparent 48%), linear-gradient(#94b5ce, #cededc 48%, #789bad);
+}
+
+.mfilm-halloween .landscape-scene::before  {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 75% 18%, rgb(172 87 85 / 20%), transparent 46%), linear-gradient(#160e25, #292039 49%, #31263c 74%, #140f22);
+  content: "";
+  opacity: 0;
+  transition: opacity 1400ms ease;
+}
+
+.mfilm-halloween .landscape-scene::after  {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  background: linear-gradient(118deg, transparent 9%, rgb(255 255 255 / 15%) 10%, rgb(255 255 255 / 2%) 34%, transparent 35%, transparent 69%, rgb(255 255 255 / 9%) 70%, transparent 88%), radial-gradient(ellipse at 0 0, rgb(255 255 255 / 24%), transparent 60%);
+  content: "";
+  pointer-events: none;
+}
+
+.mfilm-halloween .scene-sky-objects  {
+  mask: var(--sky-mask) 0 0 / 100% 100% no-repeat;
+  -webkit-mask: var(--sky-mask) 0 0 / 100% 100% no-repeat;
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+}
+
+.mfilm-halloween .scene-sun, .mfilm-halloween .scene-moon  {
+  position: absolute;
+  z-index: 1;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+}
+
+.mfilm-halloween .scene-sun  {
+  top: 15%;
+  left: 23%;
+  border: 1px solid rgb(255 254 231 / 88%);
+  background: url("../../../assets/auth-halloween/images/sun.svg") center / cover;
+  box-shadow: inset 2px 3px 8px rgb(255 255 255 / 80%), inset -3px -5px 10px rgb(214 147 67 / 24%), 0 0 35px 12px rgb(255 225 148 / 24%);
+  transition: transform 1100ms cubic-bezier(.4,0,.2,1) 300ms;
+}
+
+.mfilm-halloween .scene-moon  {
+  top: 14%;
+  right: 19%;
+  border: 1px solid rgb(255 219 170 / 84%);
+  background: url("../../../assets/auth-halloween/images/moon-halloween.svg") center / cover;
+  box-shadow: inset 2px 3px 7px rgb(255 238 209 / 70%), inset -4px -5px 10px rgb(180 80 33 / 28%), 0 0 34px 10px rgb(255 163 78 / 18%);
+  transform: translate(-24px, var(--celestial-drop));
+  transition: transform 1100ms cubic-bezier(.4,0,.2,1);
+}
+
+.mfilm-halloween .scene-land  {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity 1400ms ease;
+}
+
+.mfilm-halloween .scene-day  {
+  opacity: 1;
+}
+
+.mfilm-halloween .scene-night  {
+  opacity: 0;
+}
+
+.mfilm-halloween.night .scene-day  {
+  opacity: 0;
+}
+
+.mfilm-halloween.night .scene-night  {
+  opacity: 1;
+}
+
+.mfilm-halloween .scene-panel::after  {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  background: linear-gradient(transparent 36%, rgb(3 20 34 / 16%) 53%, rgb(3 20 34 / 74%) 100%);
+  content: "";
+  pointer-events: none;
+}
+
+.mfilm-halloween.night .landscape-scene::before  {
+  opacity: 1;
+}
+
+.mfilm-halloween .landscape-scene::after, .mfilm-halloween .login-card::before  {
+  transition: opacity 1400ms ease;
+}
+
+.mfilm-halloween.night .landscape-scene::after  {
+  opacity: .18;
+}
+
+.mfilm-halloween.night .login-card::before  {
+  opacity: .2;
+}
+
+.mfilm-halloween.night .scene-panel  {
+  border-color: transparent;
+  box-shadow: inset 0 0 0 1px #b67b481a;
+}
+
+.mfilm-halloween.night .scene-sun  {
+  transform: translate(26px, var(--celestial-drop));
+  transition-delay: 0ms;
+}
+
+.mfilm-halloween.night .scene-moon  {
+  transform: translate(0, 0);
+  transition-delay: 350ms;
+}
+
+.mfilm-halloween .page-landscape  {
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.mfilm-halloween .page-landscape::after  {
+  background: linear-gradient(118deg, transparent 12%, rgb(255 255 255 / 9%) 13%, transparent 38%, transparent 72%, rgb(255 255 255 / 5%) 73%, transparent 95%), linear-gradient(transparent 50%, rgb(3 20 34 / 16%) 100%);
+}
+
+.mfilm-halloween .scene-copy  {
+  position: absolute;
+  z-index: 4;
+  top: 75%;
+  left: 50%;
+  width: min(82%, 250px);
+  color: #fff;
+  text-align: center;
+  transform: translate(-50%, -50%);
+  text-shadow: 0 2px 12px rgb(0 10 25 / 24%);
+}
+
+.mfilm-halloween .scene-copy h2  {
+  margin: 0 0 19px;
+  font-size: clamp(20px, 2.5vw, 25px);
+  line-height: 1.2;
+}
+
+.mfilm-halloween .scene-copy p  {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.mfilm-halloween .form-panel  {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 82px clamp(28px, 4vw, 46px) 40px;
+  border-radius: 22px;
+  background: rgb(255 255 255 / 12%);
+}
+
+.mfilm-halloween .login-form  {
+  width: 100%;
+}
+
+.mfilm-halloween h1  {
+  margin: 0 0 42px;
+  color: #173e4b;
+  font-size: 30px;
+  text-align: center;
+}
+
+.mfilm-halloween .field  {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.mfilm-halloween .email-owl  {
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  bottom: calc(100% - 3.5px);
+  width: 50.4px;
+  height: 58.8px;
+  opacity: 0;
+  pointer-events: none;
+  filter: drop-shadow(0 2.8px 4.2px rgb(0 0 0 / 30%));
+  transition: opacity 220ms ease;
+}
+
+.mfilm-halloween .owl-vector  {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.mfilm-halloween .owl-breath  {
+  transform-origin: 1500px 3100px;
+}
+
+.mfilm-halloween .owl-head  {
+  transform-origin: 1500px 1850px;
+  transform: translate(var(--owl-head-x, 0px), var(--owl-head-y, 0px)) rotate(var(--owl-tilt, 0deg));
+  transition: transform 500ms cubic-bezier(.2,.8,.2,1);
+}
+
+.mfilm-halloween .owl-gaze  {
+  transform: translate(var(--owl-gaze-x, 0px), var(--owl-gaze-y, 0px));
+  transition: transform 260ms ease-out;
+}
+
+.mfilm-halloween .owl-eyes  {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.mfilm-halloween .email-owl.is-lit .owl-breath  {
+  animation: mfilm-hw-owl-breathe 3.6s ease-in-out infinite;
+}
+
+.mfilm-halloween .email-owl.is-lit .owl-eyes  {
+  animation: mfilm-hw-owl-blink 4.8s ease-in-out infinite;
+}
+
+.mfilm-halloween .email-owl.just-lit .owl-vector  {
+  animation: mfilm-hw-owl-startle 650ms cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes mfilm-hw-owl-breathe  {
+  0%,100%  {
+    transform: translateY(0) scale(1);
+  }
+  50%  {
+    transform: translateY(-16px) scale(1.014,1.018);
+  }
+}
+
+@keyframes mfilm-hw-owl-blink  {
+  0%,5%,11%,55%,61%,100%  {
+    transform: scaleY(1);
+  }
+  8%,58%  {
+    transform: scaleY(.06);
+  }
+}
+
+@keyframes mfilm-hw-owl-startle  {
+  0%,100%  {
+    transform: translateY(0);
+  }
+  35%  {
+    transform: translateY(-4px) rotate(-3deg);
+  }
+  65%  {
+    transform: translateY(-1px) rotate(2deg);
+  }
+}
+
+.mfilm-halloween .sr-only  {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+  border: 0;
+}
+
+.mfilm-halloween .field input  {
+  display: block;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  border: 1px solid rgb(255 255 255 / 78%);
+  border-radius: 14px;
+  outline: none;
+  background: rgb(255 255 255 / 34%);
+  color: #173e4b;
+  font-size: 16px;
+  box-shadow: inset 0 1px 1px rgb(255 255 255 / 50%), 0 4px 12px rgb(15 50 69 / 4%);
+}
+
+.mfilm-halloween .field input::placeholder  {
+  color: #526f7b;
+}
+
+.mfilm-halloween .field input:focus  {
+  border-color: #238997;
+  box-shadow: 0 0 0 3px rgb(20 129 144 / 14%), inset 0 1px 0 rgb(255 255 255 / 70%);
+}
+
+.mfilm-halloween .field.password input  {
+  padding-right: 46px;
+  font-family: inherit;
+}
+
+.mfilm-halloween .field.password input::placeholder  {
+  font-family: inherit;
+}
+
+.mfilm-halloween .eye  {
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  display: grid;
+  width: 35px;
+  height: 35px;
+  place-items: center;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  transform: translateY(-50%);
+}
+
+.mfilm-halloween .eye:hover img  {
+  filter: brightness(1.25);
+}
+
+.mfilm-halloween .eye img  {
+  width: 18px;
+  height: 18px;
+}
+
+.mfilm-halloween.night.flashlight-on .eye img  {
+  opacity: 0;
+}
+
+.mfilm-halloween:not(.night) .eye[aria-pressed="true"]  {
+  background: rgb(20 129 144 / 12%);
+}
+
+.mfilm-halloween .text-action  {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #176978;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.mfilm-halloween .text-action:hover  {
+  color: #104e5d;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.mfilm-halloween .forgot  {
+  display: block;
+  margin: 0 0 24px auto;
+}
+
+.mfilm-halloween .submit  {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 52px;
+  border: 1px solid rgb(255 255 255 / 32%);
+  border-radius: 14px;
+  background: linear-gradient(135deg, #148d9d, #136a7b);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 8px 20px rgb(16 110 127 / 23%), inset 0 1px 0 rgb(255 255 255 / 22%);
+}
+
+.mfilm-halloween .submit img  {
+  width: 17px;
+  height: 17px;
+  transition: transform 180ms ease;
+}
+
+.mfilm-halloween .submit:hover  {
+  transform: translateY(-1px);
+  box-shadow: 0 11px 24px rgb(16 110 127 / 30%), inset 0 1px 0 rgb(255 255 255 / 30%);
+}
+
+.mfilm-halloween .submit:hover img  {
+  transform: translateX(3px);
+}
+
+.mfilm-halloween .submit:active  {
+  transform: translateY(0);
+}
+
+.mfilm-halloween .signup-row  {
+  margin: 23px 0 0;
+  color: #425f6b;
+  font-size: 14px;
+  text-align: center;
+}
+
+.mfilm-halloween .status  {
+  margin: 14px 0 0;
+  color: #256a75;
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.mfilm-halloween .status:empty  {
+  display: none;
+}
+
+.mfilm-halloween.night .login-card  {
+  border-color: #98623940;
+  box-shadow: 0 32px 90px #06020c80, 0 8px 24px #06020c50,
+  inset 0 1px 0 #c48a5014, inset 0 -1px 0 #b875470d;
+}
+
+.mfilm-halloween.night .form-panel  {
+  background-color: rgb(21 13 31 / 40%);
+  box-shadow: inset 0 0 0 1px #b67b481a;
+}
+
+.mfilm-halloween.night h1  {
+  color: #f5f8fa;
+}
+
+.mfilm-halloween.night .field input  {
+  border-color: #ac774a45;
+  background-color: rgb(32 23 43 / 68%);
+  color: #f5f8fa;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 5%), 0 4px 12px rgb(0 8 20 / 6%);
+}
+
+.mfilm-halloween.night .field input::placeholder  {
+  color: #b1c7d4;
+}
+
+.mfilm-halloween.night.flashlight-on #password  {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  caret-color: #e5f7f5;
+}
+
+.mfilm-halloween.night.flashlight-on #password::placeholder  {
+  -webkit-text-fill-color: #b1c7d4;
+}
+
+.mfilm-halloween.night .eye img  {
+  filter: brightness(2);
+}
+
+.mfilm-halloween.night .signup-row  {
+  color: #c1cbd2;
+}
+
+.mfilm-halloween.night .status  {
+  color: #a1e4e9;
+}
+
+.mfilm-halloween .flash-beam  {
+  position: fixed;
+  z-index: 5;
+  pointer-events: none;
+  filter: blur(12px);
+  transform-origin: 0 50%;
+}
+
+.mfilm-halloween .flash-beam::before  {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(255 224 156 / 75.4%) 0%, rgb(255 219 145 / 55.9%) 16%, rgb(255 214 140 / 32.5%) 35%, rgb(255 207 130 / 14.3%) 55%, rgb(255 202 124 / 3.9%) 75%, rgb(255 202 124 / 0%) 96%, transparent 100%);
+  mask: var(--beam-mask) 0 0 / 100% 100% no-repeat;
+  -webkit-mask: var(--beam-mask) 0 0 / 100% 100% no-repeat;
+  content: "";
+}
+
+.mfilm-halloween .password-reveal  {
+  position: fixed;
+  z-index: 6;
+  overflow: hidden;
+  color: #e9fbf9;
+  font: 16px 'MFilm Halloween', Georgia, serif;
+  pointer-events: none;
+}
+
+.mfilm-halloween .password-reveal > span  {
+  position: absolute;
+  top: 0;
+  left: 17px;
+  display: block;
+  height: 52px;
+  line-height: 52px;
+  white-space: pre;
+}
+
+.mfilm-halloween .password-reveal .reveal-char  {
+  --lit: 0;
+  position: relative;
+  display: inline-block;
+  width: 1ch;
+  height: 100%;
+  vertical-align: top;
+}
+
+.mfilm-halloween .reveal-char .masked-char, .mfilm-halloween .reveal-char .plain-char  {
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  transition: opacity 90ms linear;
+}
+
+.mfilm-halloween .reveal-char .masked-char  {
+  opacity: calc(1 - var(--lit));
+  color: #f5f8fa;
+}
+
+.mfilm-halloween .reveal-char .plain-char  {
+  opacity: var(--lit);
+}
+
+.mfilm-halloween .flashlight  {
+  position: fixed;
+  z-index: 7;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px rgb(255 246 157 / 80%));
+  transform-origin: center;
+}
+
+.mfilm-halloween .flashlight img  {
+  width: 33px;
+  height: 33px;
+}
+
+.mfilm-halloween .flash-beam, .mfilm-halloween .flashlight, .mfilm-halloween .password-reveal  {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 700ms ease, visibility 0s linear 700ms;
+}
+
+.mfilm-halloween.night.flashlight-on .flash-beam, .mfilm-halloween.night.flashlight-on .flashlight, .mfilm-halloween.night.flashlight-on .password-reveal  {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.mfilm-halloween :focus-visible  {
+  outline: 3px solid #05c4d6;
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px)  {
+  .mfilm-halloween .login-card  {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    border-radius: 26px;
+  }
+  .mfilm-halloween .scene-panel  {
+    min-height: 220px;
+    border-radius: 18px;
+  }
+  .mfilm-halloween .scene-copy  {
+    width: min(88%, 340px);
+  }
+  .mfilm-halloween .scene-copy h2  {
+    margin-bottom: 7px;
+    font-size: 21px;
+  }
+  .mfilm-halloween .scene-copy p  {
+    font-size: 11px;
+  }
+  .mfilm-halloween .form-panel  {
+    padding: 26px 22px 24px;
+  }
+  .mfilm-halloween h1  {
+    margin-bottom: 22px;
+    font-size: 28px;
+  }
+  .mfilm-halloween .field  {
+    margin-bottom: 14px;
+  }
+  .mfilm-halloween .forgot  {
+    margin-bottom: 18px;
+  }
+  .mfilm-halloween .signup-row  {
+    margin-top: 18px;
+  }
+}
+
+@media (max-width: 380px)  {
+  .mfilm-halloween .form-panel  {
+    padding-inline: 19px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce)  {
+  .mfilm-halloween *, .mfilm-halloween *::before, .mfilm-halloween *::after  {
+    transition-duration: .01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .mfilm-halloween .email-owl *  {
+    animation: none !important;
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))  {
+  .mfilm-halloween .login-card  {
+    background-color: rgb(236 247 250 / 95%);
+  }
+  .mfilm-halloween.night .login-card  {
+    background-color: rgb(4 12 23 / 97%);
+  }
+}
+
+.mfilm-halloween .summit-stage  {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: opacity 1400ms ease;
+}
+
+.mfilm-halloween .summit-stage > svg  {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.mfilm-halloween.night .summit-stage  {
+  opacity: 1;
+}
+
+.mfilm-halloween .theme-toggle  {
+  opacity: .95;
+  position: absolute;
+  z-index: 5;
+  top: 18px;
+  right: 18px;
+  width: 44px;
+  height: 86px;
+  padding: 0;
+  border: 1px solid #e6f7f4bd;
+  border-radius: 24px;
+  background: linear-gradient(160deg, #e2efecb8, #79a4b2ad);
+  box-shadow: inset 0 1px 0 #ffffff9c, inset 0 -2px 7px #345e6e1a, 0 5px 14px #264f6024;
+}
+
+.mfilm-halloween .theme-toggle:hover  {
+  box-shadow: inset 0 1px 0 #ffffffb3, inset 0 -2px 7px #345e6e1a, 0 6px 18px #264f6030, 0 0 0 3px #e4f8f130;
+}
+
+.mfilm-halloween .theme-toggle-thumb  {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 25%, #ffffff, #e7f4f0);
+  box-shadow: inset 0 1px 0 #ffffffed, 0 2px 5px #244b6030;
+}
+
+.mfilm-halloween .theme-toggle svg  {
+  position: absolute;
+  left: 10px;
+  width: 22px;
+  height: 22px;
+}
+
+.mfilm-halloween .theme-toggle .theme-sun  {
+  top: 10px;
+  color: #3f7584;
+}
+
+.mfilm-halloween .theme-toggle .theme-moon  {
+  bottom: 10px;
+  color: #3d667b80;
+}
+
+.mfilm-halloween.night .theme-toggle  {
+  border-color: #b47c55a0;
+  box-shadow: inset 0 2px 7px #08040f70, inset 0 -2px 7px #08040f20, 0 4px 16px #08040f55;
+}
+
+.mfilm-halloween.night .theme-toggle:hover  {
+  box-shadow: inset 0 2px 7px #08040f70, inset 0 -2px 7px #08040f20, 0 4px 16px #08040f55, 0 0 0 3px #d18b4230;
+}
+
+.mfilm-halloween.night .theme-toggle-thumb  {
+  transform: translateY(42px);
+  box-shadow: inset 0 1px 0 #ffffffb0, 0 0 12px #ffc37b30, 0 2px 5px #09041360;
+}
+
+.mfilm-halloween.night .theme-toggle .theme-sun  {
+  color: #e8ad6e70;
+}
+
+.mfilm-halloween.night .theme-toggle .theme-moon  {
+  color: #623956;
+}
+
+.mfilm-halloween.night .submit  {
+  border-color: #f4ae6266;
+  box-shadow: 0 8px 22px #b54f2829, inset 0 1px 0 #ffdfa438;
+  color: #241222;
+}
+
+.mfilm-halloween.night .text-action  {
+  color: #ffc48d;
+}
+
+.mfilm-halloween.night .text-action:hover  {
+  color: #ffe2bc;
+}
+
+.mfilm-halloween.night .field input:focus  {
+  border-color: #eaa267;
+  box-shadow: 0 0 0 3px #eea26222;
+}
+
+@media (max-width: 640px)  {
+  .mfilm-halloween .theme-toggle  {
+    top: 14px;
+    right: 14px;
+  }
+}
+
+.mfilm-halloween .login-shell  {
+  position: relative;
+  z-index: 1;
+  width: min(860px, 100%);
+}
+
+.mfilm-halloween .login-shell .login-card  {
+  width: 100%;
+}
+
+.mfilm-halloween .halloween-vines  {
+  position: absolute;
+  z-index: 3;
+  inset: -42px -44px;
+  pointer-events: none;
+}
+
+.mfilm-halloween .halloween-vines > svg  {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+@media (max-width: 640px)  {
+  .mfilm-halloween .login-shell  {
+    width: min(430px, 100%);
+  }
+  .mfilm-halloween .halloween-vines  {
+    inset: -25px -27px;
+  }
+}
+
+.mfilm-halloween .lantern-flame  {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+.mfilm-halloween.night .lantern-flame  {
+  animation: mfilm-hw-candle-flame 870ms ease-in-out infinite alternate;
+}
+
+.mfilm-halloween.night .lantern-glass  {
+  animation: mfilm-hw-candle-glass 1730ms ease-in-out infinite;
+}
+
+.mfilm-halloween.night .lantern-halo  {
+  animation: mfilm-hw-candle-halo 2190ms ease-in-out infinite;
+}
+
+.mfilm-halloween.night .pumpkin-glow  {
+  animation: mfilm-hw-pumpkin-light 3100ms ease-in-out infinite;
+}
+
+.mfilm-halloween.night .lantern-swing  {
+  transform-origin: 0px -25px;
+  animation: mfilm-hw-lantern-sway 4700ms ease-in-out infinite;
+}
+
+.mfilm-halloween.night .lantern-ember  {
+  animation: mfilm-hw-candle-ember 1900ms ease-out infinite;
+}
+
+.mfilm-halloween.night .halloween-vines .lantern-flame  {
+  animation-delay: var(--fire-delay, 0ms);
+}
+
+.mfilm-halloween.night .halloween-vines .lantern-halo, .mfilm-halloween.night .halloween-vines .lantern-glass  {
+  animation-delay: var(--glow-delay, 0ms);
+}
+
+@keyframes mfilm-hw-candle-flame  {
+  0%  {
+    transform: scale(.9, 1.05) skewX(-5deg);
+    opacity: .9;
+  }
+  22%  {
+    transform: scale(1.08, .88) skewX(4deg);
+  }
+  45%  {
+    transform: scale(.85, 1.16) skewX(-3deg);
+    opacity: 1;
+  }
+  68%  {
+    transform: scale(1.03, .97) skewX(6deg);
+  }
+  100%  {
+    transform: scale(.92, 1.1) skewX(-4deg);
+    opacity: .94;
+  }
+}
+
+@keyframes mfilm-hw-candle-glass  {
+  0%,100%  {
+    opacity: .62;
+  }
+  15%,54%  {
+    opacity: .78;
+  }
+  34%,72%  {
+    opacity: .57;
+  }
+  86%  {
+    opacity: .73;
+  }
+}
+
+@keyframes mfilm-hw-candle-halo  {
+  0%,100%  {
+    opacity: .18;
+  }
+  31%  {
+    opacity: .32;
+  }
+  51%  {
+    opacity: .22;
+  }
+  76%  {
+    opacity: .29;
+  }
+}
+
+@keyframes mfilm-hw-pumpkin-light  {
+  0%,100%  {
+    opacity: .75;
+  }
+  43%  {
+    opacity: 1;
+  }
+  68%  {
+    opacity: .83;
+  }
+}
+
+@keyframes mfilm-hw-lantern-sway  {
+  0%,100%  {
+    transform: rotate(-1.4deg);
+  }
+  50%  {
+    transform: rotate(1.4deg);
+  }
+}
+
+@keyframes mfilm-hw-candle-ember  {
+  0%  {
+    transform: translate(0,0);
+    opacity: 0;
+  }
+  20%  {
+    opacity: .8;
+  }
+  100%  {
+    transform: translate(3px,-20px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 640px)  {
+}
+
+@media (prefers-reduced-motion: reduce)  {
+  .mfilm-halloween .halloween-vines *  {
+    animation: none !important;
+  }
+}
+
+.mfilm-halloween #halloween-spider  {
+  position: fixed;
+  z-index: 4;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 450ms ease;
+}
+
+.mfilm-halloween #halloween-spider.is-active  {
+  opacity: 1;
+}
+
+.mfilm-halloween .scene-sun::before, .mfilm-halloween .scene-moon::before, .mfilm-halloween .scene-sun::after, .mfilm-halloween .scene-moon::after  {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.mfilm-halloween .scene-sun::before, .mfilm-halloween .scene-moon::before  {
+  inset: -27px;
+  background: radial-gradient(circle, #ffdda43b 12%, #ffd79318 45%, transparent 72%);
+  animation: mfilm-hw-celestial-breathe 4800ms ease-in-out infinite;
+}
+
+.mfilm-halloween .scene-sun::after, .mfilm-halloween .scene-moon::after  {
+  inset: -10px;
+  border: 1px solid #ffe1b922;
+  box-shadow: 0 0 12px #ffd79720;
+  animation: mfilm-hw-celestial-ring 4800ms ease-out infinite;
+}
+
+.mfilm-halloween .scene-sun::before  {
+  background: radial-gradient(circle, #ffe68166, #ffd76330 43%, transparent 72%);
+  animation-duration: 3900ms;
+}
+
+.mfilm-halloween .scene-sun::after  {
+  border-color: #fff1b43b;
+  animation-duration: 3900ms;
+}
+
+@keyframes mfilm-hw-celestial-breathe  {
+  0%,100%  {
+    transform: scale(.92);
+    opacity: .5;
+  }
+  50%  {
+    transform: scale(1.17);
+    opacity: 1;
+  }
+}
+
+@keyframes mfilm-hw-celestial-ring  {
+  0%  {
+    transform: scale(.85);
+    opacity: 0;
+  }
+  20%  {
+    opacity: .55;
+  }
+  100%  {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+.mfilm-halloween .sky-flight  {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1400ms ease;
+}
+
+.mfilm-halloween.night .sky-flight  {
+  opacity: 1;
+}
+
+.mfilm-halloween .sky-bat, .mfilm-halloween .sky-witch  {
+  position: absolute;
+  left: -18%;
+  top: var(--fly-height, 24%);
+  width: var(--fly-size, 30px);
+  color: #100919;
+  animation: mfilm-hw-sky-roam var(--fly-duration, 19s) linear infinite;
+  animation-delay: var(--fly-delay, 0s);
+  animation-play-state: paused;
+}
+
+.mfilm-halloween .flyer-facing  {
+  display: block;
+  width: 100%;
+  animation: mfilm-hw-flight-turn var(--fly-duration, 19s) steps(1) infinite;
+  animation-delay: var(--fly-delay, 0s);
+  animation-play-state: paused;
+}
+
+.mfilm-halloween .sky-flight svg  {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.mfilm-halloween .bat-wing  {
+  transform-origin: 0 1px;
+  animation: mfilm-hw-bat-flap 220ms ease-in-out infinite alternate;
+  animation-play-state: paused;
+}
+
+.mfilm-halloween .bat-wing-right  {
+  animation-name: mfilm-hw-bat-flap-right;
+}
+
+.mfilm-halloween.night .sky-bat, .mfilm-halloween.night .sky-witch, .mfilm-halloween.night .flyer-facing, .mfilm-halloween.night .bat-wing  {
+  animation-play-state: running;
+}
+
+.mfilm-halloween .bat-1  {
+  --fly-height: 18%;
+  --fly-duration: 23s;
+  --fly-delay: -4s;
+  --fly-size: 29px;
+}
+
+.mfilm-halloween .bat-2  {
+  --fly-height: 31%;
+  --fly-duration: 29s;
+  --fly-delay: -12s;
+  --fly-size: 23px;
+  opacity: .78;
+}
+
+.mfilm-halloween .bat-3  {
+  --fly-height: 9%;
+  --fly-duration: 18s;
+  --fly-delay: -9s;
+  --fly-size: 19px;
+  opacity: .68;
+}
+
+.mfilm-halloween .bat-4  {
+  --fly-height: 25%;
+  --fly-duration: 26s;
+  --fly-delay: -18s;
+  --fly-size: 34px;
+}
+
+.mfilm-halloween .bat-5  {
+  --fly-height: 13%;
+  --fly-duration: 31s;
+  --fly-delay: -6s;
+  --fly-size: 17px;
+  opacity: .65;
+}
+
+.mfilm-halloween .bat-6  {
+  --fly-height: 35%;
+  --fly-duration: 22s;
+  --fly-delay: -15s;
+  --fly-size: 25px;
+}
+
+.mfilm-halloween .scene-panel .sky-bat  {
+  --fly-size: 20px;
+}
+
+.mfilm-halloween .scene-panel .bat-2  {
+  --fly-size: 16px;
+}
+
+.mfilm-halloween .scene-panel .bat-3  {
+  --fly-size: 13px;
+}
+
+.mfilm-halloween .sky-witch  {
+  --fly-duration: 38s;
+  --fly-delay: -7s;
+}
+
+@keyframes mfilm-hw-sky-roam  {
+  0%  {
+    left: -18%;
+    transform: translateY(0) rotate(-3deg);
+  }
+  12%  {
+    transform: translateY(-12px) rotate(3deg);
+  }
+  25%  {
+    transform: translateY(9px) rotate(-4deg);
+  }
+  38%  {
+    transform: translateY(-8px) rotate(2deg);
+  }
+  50%  {
+    left: 112%;
+    transform: translateY(0);
+  }
+  62%  {
+    transform: translateY(10px) rotate(-2deg);
+  }
+  75%  {
+    transform: translateY(-13px) rotate(3deg);
+  }
+  88%  {
+    transform: translateY(7px) rotate(-3deg);
+  }
+  100%  {
+    left: -18%;
+    transform: translateY(0);
+  }
+}
+
+@keyframes mfilm-hw-flight-turn  {
+  0%  {
+    transform: scaleX(1);
+  }
+  50%  {
+    transform: scaleX(-1);
+  }
+}
+
+@keyframes mfilm-hw-bat-flap  {
+  from  {
+    transform: rotate(-13deg) scaleY(.58);
+  }
+  to  {
+    transform: rotate(15deg) scaleY(1);
+  }
+}
+
+@keyframes mfilm-hw-bat-flap-right  {
+  from  {
+    transform: rotate(13deg) scaleY(.58);
+  }
+  to  {
+    transform: rotate(-15deg) scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce)  {
+  .mfilm-halloween .scene-sun::before, .mfilm-halloween .scene-moon::before, .mfilm-halloween .scene-sun::after, .mfilm-halloween .scene-moon::after, .mfilm-halloween .sky-flight *  {
+    animation: none !important;
+  }
+  .mfilm-halloween .sky-bat  {
+    left: 22%;
+  }
+  .mfilm-halloween .bat-2  {
+    left: 72%;
+  }
+  .mfilm-halloween .bat-3  {
+    left: 48%;
+  }
+  .mfilm-halloween .bat-4, .mfilm-halloween .bat-5, .mfilm-halloween .bat-6, .mfilm-halloween .sky-witch  {
+    display: none;
+  }
+}
+
+.mfilm-halloween .sky-witch  {
+  --fly-size: 100px;
+  left: var(--witch-left);
+  top: var(--witch-top);
+  animation-name: mfilm-hw-witch-roam;
+  filter: drop-shadow(0 1px 0 #ae7b9655);
+}
+
+@keyframes mfilm-hw-witch-roam  {
+  0%,100%  {
+    left: var(--witch-left);
+    transform: translateY(0) rotate(-3deg);
+  }
+  12%,62%  {
+    transform: translateY(-8px) rotate(2deg);
+  }
+  25%,75%  {
+    transform: translateY(7px) rotate(-2deg);
+  }
+  38%,88%  {
+    transform: translateY(-5px) rotate(2deg);
+  }
+  50%  {
+    left: var(--witch-right);
+    transform: translateY(0) rotate(3deg);
+  }
+}
+
+.mfilm-halloween .sky-witch img  {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: scaleX(-1);
+}
+
+.mfilm-halloween.night .field input:hover:not(:focus)  {
+  border-color: #c697736e;
+}
+
+.mfilm-halloween.night :focus-visible  {
+  outline-color: #efae74;
+}
+
+.mfilm-halloween .pumpkin-face-normal, .mfilm-halloween .pumpkin-face-smile  {
+  transition: opacity 240ms ease;
+}
+
+.mfilm-halloween .pumpkin-face-smile  {
+  opacity: 0;
+}
+
+.mfilm-halloween .pumpkin-reaction.is-beam-lit .pumpkin-face-normal  {
+  opacity: 0;
+}
+
+.mfilm-halloween .pumpkin-reaction.is-beam-lit .pumpkin-face-smile  {
+  opacity: 1;
+}
+
+.mfilm-halloween .pumpkin-reaction  {
+  transform-origin: 0 30px;
+}
+
+.mfilm-halloween .pumpkin-reaction.is-beam-lit  {
+  animation: mfilm-hw-pumpkin-chuckle 1100ms ease-in-out infinite;
+}
+
+@keyframes mfilm-hw-pumpkin-chuckle  {
+  0%, 52%, 100%  {
+    transform: translateY(0) rotate(0) scale(1);
+  }
+  16%  {
+    transform: translateY(-1.5px) rotate(-2deg) scale(1.025,.985);
+  }
+  30%  {
+    transform: translateY(0) rotate(1.5deg) scale(.99,1.015);
+  }
+  42%  {
+    transform: translateY(-.7px) rotate(-1deg) scale(1.012,.992);
+  }
+}
+
+.mfilm-halloween .leaf-reaction  {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
+.mfilm-halloween.night-exiting .sky-bat, .mfilm-halloween.night-exiting .sky-witch, .mfilm-halloween.night-exiting .flyer-facing  {
+  animation-play-state: paused;
+}
+
+.mfilm-halloween.night-exiting .theme-toggle-thumb  {
+  transform: translateY(0);
+}
+
+.mfilm-halloween.night-exiting .scene-moon  {
+  transform: translate(-24px, var(--celestial-drop));
+  transition-delay: 2200ms;
+}
+
+.mfilm-halloween.night-exiting .scene-sun  {
+  transform: translate(0, 0);
+  transition-delay: 2700ms;
+}
+
+.mfilm-halloween h1, .mfilm-halloween .scene-copy h2  {
+  font-family: 'MFilm Halloween', Georgia, serif;
+  font-weight: 600;
+  font-synthesis: none;
+  letter-spacing: .6px;
+}
+
+.mfilm-halloween .submit  {
+  font-size: 16px;
+}
+
+.mfilm-halloween  {
+  --theme-duration: 1400ms;
+  --theme-easing: cubic-bezier(.4,0,.2,1);
+}
+
+.mfilm-halloween .login-card::after  {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: -1px;
+  border: 1px solid transparent;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(145deg, #25172eed, #160e22f2 60%, #211329ed) padding-box, linear-gradient(135deg, #d99a647d, #76536b70 27%, #36273e 52%, #9a604a88 78%, #e6ac7666) border-box;
+  opacity: 0;
+  transition: opacity var(--theme-duration) var(--theme-easing);
+}
+
+.mfilm-halloween .login-card::before  {
+  z-index: 1;
+}
+
+.mfilm-halloween .login-card > .scene-panel, .mfilm-halloween .login-card > .form-panel  {
+  z-index: 2;
+}
+
+.mfilm-halloween .theme-toggle::before, .mfilm-halloween .theme-toggle-thumb::before, .mfilm-halloween .submit::before  {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--theme-duration) var(--theme-easing);
+}
+
+.mfilm-halloween .theme-toggle::before  {
+  background: linear-gradient(160deg, #21132f, #3b2144);
+}
+
+.mfilm-halloween .theme-toggle-thumb  {
+  z-index: 1;
+}
+
+.mfilm-halloween .theme-toggle-thumb::before  {
+  background: radial-gradient(circle at 35% 25%, #fff7de, #f2cf9d);
+}
+
+.mfilm-halloween .theme-toggle svg  {
+  z-index: 2;
+}
+
+.mfilm-halloween .submit  {
+  position: relative;
+  isolation: isolate;
+  background-clip: padding-box;
+}
+
+.mfilm-halloween .submit::before  {
+  z-index: -1;
+  background: linear-gradient(135deg, #f69b49, #ce622b);
+}
+
+.mfilm-halloween.night .login-card::after, .mfilm-halloween.night .theme-toggle::before, .mfilm-halloween.night .theme-toggle-thumb::before, .mfilm-halloween.night .submit::before  {
+  opacity: 1;
+}
+
+.mfilm-halloween .login-card, .mfilm-halloween .form-panel, .mfilm-halloween .scene-panel, .mfilm-halloween .field input  {
+  transition: background-color var(--theme-duration) var(--theme-easing), border-color var(--theme-duration) var(--theme-easing), box-shadow var(--theme-duration) var(--theme-easing), color var(--theme-duration) var(--theme-easing);
+}
+
+.mfilm-halloween .submit  {
+  transition: transform 180ms ease, border-color var(--theme-duration) var(--theme-easing), box-shadow var(--theme-duration) var(--theme-easing), color var(--theme-duration) var(--theme-easing);
+}
+
+.mfilm-halloween .theme-toggle  {
+  transition: border-color var(--theme-duration) var(--theme-easing), box-shadow var(--theme-duration) var(--theme-easing);
+}
+
+.mfilm-halloween .theme-toggle-thumb  {
+  transition: transform 600ms cubic-bezier(.22,1,.36,1), box-shadow var(--theme-duration) var(--theme-easing);
+}
+
+.mfilm-halloween h1, .mfilm-halloween .signup-row, .mfilm-halloween .status, .mfilm-halloween .text-action, .mfilm-halloween .field input::placeholder, .mfilm-halloween .theme-toggle svg  {
+  transition: color var(--theme-duration) var(--theme-easing);
+}
+
+.mfilm-halloween .eye  {
+  transition: background-color var(--theme-duration) var(--theme-easing);
+}
+
+.mfilm-halloween .eye img  {
+  transition: opacity 700ms ease, filter var(--theme-duration) var(--theme-easing);
+}

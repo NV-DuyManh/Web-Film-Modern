@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="ridge-distant" x2="0" y2="1"><stop stop-color="#a4c6d0" /><stop offset="1" stop-color="#6a9db0" /></linearGradient>
+  <linearGradient id="ridge-middle" x2="0" y2="1"><stop stop-color="#72a0b0" /><stop offset="1" stop-color="#447a90" /></linearGradient>
+  <linearGradient id="summit-stone" x1="0" y1="0" x2=".6" y2="1"><stop stop-color="#648995" /><stop offset="1" stop-color="#294f64" /></linearGradient>
+  <linearGradient id="valley-mist" x2="0" y2="1"><stop stop-color="#e4ecdf" stop-opacity=".19" /><stop offset=".5" stop-color="#e4ecdf" stop-opacity=".035" /><stop offset="1" stop-color="#e4ecdf" stop-opacity="0" /></linearGradient>
+  <g id="fir"><path d="M0 0-7 12H-3L-11 23H-5L-15 36H-2V41H2V36H15L5 23H11L3 12H7Z" /></g>
+<linearGradient id="cloud-soft" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fffdf1" stop-opacity=".65" /><stop offset=".55" stop-color="#fffdf1" stop-opacity=".28" /><stop offset="1" stop-color="#c8dce2" stop-opacity=".03" /></linearGradient>
+<filter id="cloud-feather" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="1.6" /></filter>
+<g id="cloud-puff" fill="url(#cloud-soft)" filter="url(#cloud-feather)"><path d="M20 69C-3 68-5 44 14 36c-1-22 21-34 40-25C68-12 106-6 118 16c19-12 44-1 46 19 18-7 38 1 42 16 13-8 36-2 36 11 24-2 35 7 28 17C231 90 57 91 20 69Z" /><path d="M44 44C61 31 84 33 98 40c12-11 34-13 48 1 24-3 40 4 43 13-52 13-109 6-145-10Z" opacity=".28" /></g></defs><style>.cloud-drift { animation: cloud-float 26s ease-in-out infinite alternate; } .cloud-drift.slow { animation-duration: 37s; animation-delay: -13s; } .cloud-drift.far { animation-duration: 31s; animation-delay: -8s; } @keyframes cloud-float { from { transform: translate(-14px, 3px); } to { transform: translate(24px, -7px); } } @media (prefers-reduced-motion: reduce) { .cloud-drift { animation: none; } }</style>
+
+
+<g class="sky-clouds" opacity=".75"><g transform="translate(-35 104) scale(0.58)"><g class="cloud-drift slow"><use ns1:href="#cloud-puff" /></g></g><g transform="translate(260 74) scale(0.42)"><g class="cloud-drift far"><use ns1:href="#cloud-puff" /></g></g><g transform="translate(155 169) scale(0.38)"><g class="cloud-drift "><use ns1:href="#cloud-puff" /></g></g></g>
+<path class="distant-ridge" d="M0 300 62 244 113 278 160 268 204 295 257 265 305 286 355 225 400 259V500H0Z" fill="url(#ridge-distant)" opacity=".65" />
+<path class="middle-ridge" d="M0 352 42 328 98 340 152 315 205 341 252 310 295 337 350 284 400 313V500H0Z" fill="url(#ridge-middle)" opacity=".88" />
+<g><path d="M0 327 56 305 104 271 147 250 164 225H224L226 244 236 241 284 308 340 352 400 370V500H0Z" fill="url(#summit-stone)" />
+<path d="M164 225H224L208 271 171 298 135 350 98 500H30L84 337 104 271 147 250Z" fill="#c3d3c8" opacity=".22" />
+<path d="M224 225 226 244 236 241 284 308 340 352 400 370V500H202L229 333 208 271Z" fill="#3c6578" opacity=".76" />
+<path d="M147 250 164 225 171 298 135 350 105 406 98 500H68L116 350Z" fill="#3c6578" opacity=".32" />
+<path d="M236 241 284 308 257 330 229 333 208 271 226 244Z" fill="#c3d3c8" opacity=".09" />
+<path d="M172 240 169 267 150 292m68-39-17 22 12 27-14 20m-54 28-10 26 4 17m106-73 16 11 6 23" fill="none" stroke="#3c6578" stroke-opacity=".6" stroke-width="1" />
+<path d="M104 271 147 250 164 225H224L226 244" fill="none" stroke="#e2e8cb" stroke-opacity="0.8" stroke-width="1" stroke-linejoin="round" /></g>
+<g fill="#224b59" opacity=".82"><use ns1:href="#fir" transform="translate(15 387) scale(1.0)" /><use ns1:href="#fir" transform="translate(34 405) scale(0.64)" /><use ns1:href="#fir" transform="translate(58 420) scale(0.6)" /><use ns1:href="#fir" transform="translate(294 409) scale(0.75)" /><use ns1:href="#fir" transform="translate(320 386) scale(1.1)" /><use ns1:href="#fir" transform="translate(343 411) scale(0.68)" /><use ns1:href="#fir" transform="translate(374 375) scale(0.9)" /><use ns1:href="#fir" transform="translate(394 402) scale(0.7)" /><use ns1:href="#fir" transform="translate(6 482) scale(1.2)" /><use ns1:href="#fir" transform="translate(358 487) scale(1.1)" /></g>
+<path d="M0 345Q75 322 169 350T400 336V402Q310 376 220 399T0 389Z" fill="url(#valley-mist)" />
+<path d="M0 444Q70 408 144 461T279 462T400 434V500H0Z" fill="#224b59" opacity=".85" />
+</svg>

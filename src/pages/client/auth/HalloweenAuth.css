@@ -1,0 +1,154 @@
+@import './HalloweenArtwork.css';
+
+@font-face {
+    font-family: 'MFilm Halloween';
+    src: url('../../../assets/auth-halloween/fonts/GrenzeGotisch.ttf') format('truetype');
+    font-weight: 100 900;
+    font-display: swap;
+}
+
+.mfilm-halloween-dialog .mfilm-halloween-paper {
+    width: min(960px, calc(100% - 112px));
+    max-width: 960px;
+    max-height: none;
+    margin: 56px;
+    overflow: visible;
+    border-radius: 32px;
+    background: transparent;
+    background-image: none;
+    box-shadow: none;
+}
+
+.mfilm-halloween-dialog .mfilm-halloween-dimmer { background: rgb(5 8 17 / 42%); }
+.mfilm-halloween {
+    --sky-mask: url('../../../assets/auth-halloween/images/sky-mask.svg');
+    --beam-mask: url('../../../assets/auth-halloween/images/beam-mask.svg');
+    position: relative;
+    isolation: isolate;
+    display: block;
+    width: 100%;
+    padding: 0;
+    color: #173e4b;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.mfilm-halloween .login-shell { width: 100%; }
+.mfilm-halloween .login-card { min-height: 580px; grid-template-columns: 43% 57%; }
+.mfilm-halloween .scene-panel { min-height: 554px; }
+.mfilm-halloween .form-panel { padding: 36px 44px 24px; min-width: 0; }
+.mfilm-halloween .scene-copy { top: 73%; width: 90%; max-width: 310px; }
+.mfilm-halloween .scene-copy h2 { margin: 12px 0 16px; font-size: clamp(27px, 3vw, 37px); line-height: 1.12; }
+.mfilm-halloween .scene-copy p { font: 13px/1.8 Inter, system-ui, sans-serif; color: #e8dde9; }
+.mfilm-halloween .mfilm-season-label { font-size: 9px; font-weight: 700; letter-spacing: 2.6px; color: #f8cd96; }
+.mfilm-halloween .mfilm-scene-caption { position: absolute; z-index: 4; bottom: 24px; width: 100%; text-align: center; font-size: 10px; letter-spacing: 1.1px; color: #d8c4d6b3; }
+.mfilm-halloween .sky-witch { --witch-left: 8%; --witch-right: 80%; --witch-top: 12%; }
+.mfilm-halloween .theme-toggle { height: 76px; width: 40px; top: 24px; right: 22px; }
+.mfilm-halloween .theme-toggle-thumb { width: 30px; height: 30px; }
+.mfilm-halloween .theme-toggle svg { left: 9px; width: 20px; height: 20px; }
+.mfilm-halloween .theme-toggle .theme-sun { top: 9px; }
+.mfilm-halloween .theme-toggle .theme-moon { bottom: 9px; }
+.mfilm-halloween.night .theme-toggle-thumb { transform: translateY(34px); }
+.mfilm-halloween .mfilm-auth-close { position: absolute; right: 25px; top: 42px; z-index: 20; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid #708b972e; background: #49647810; color: #46636e; transition: background .2s; }
+.mfilm-halloween.night .mfilm-auth-close { color: #ddc9dd; background: #fff1; border-color: #bb8e642f; }
+.mfilm-halloween .mfilm-auth-close:hover { background: #d4914933; }
+.mfilm-halloween .mfilm-auth-eyebrow { margin: 0 0 7px; font-size: 10px; letter-spacing: 2.8px; font-weight: 700; color: #287785; }
+.mfilm-halloween.night .mfilm-auth-eyebrow { color: #dca572; }
+.mfilm-halloween h1 { margin: 0 0 10px; text-align: left; font-size: 36px; line-height: 1.2; }
+.mfilm-halloween .mfilm-auth-intro { margin: 0 0 28px; color: #4d6a76; font-size: 12px; line-height: 1.8; }
+.mfilm-halloween.night .mfilm-auth-intro { color: #b4a5b9; }
+.mfilm-halloween .mfilm-auth-intro button { margin-left: 3px; font-size: inherit; }
+.mfilm-halloween .mfilm-auth-field { margin: 0 0 18px; }
+.mfilm-halloween .mfilm-auth-field label { display: block; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: #244e5b; }
+.mfilm-halloween.night .mfilm-auth-field label { color: #d7c7dc; }
+.mfilm-halloween .mfilm-input-wrap { position: relative; }
+.mfilm-halloween .mfilm-auth-field input { height: 50px; font-family: inherit; font-size: 14px; }
+.mfilm-halloween .mfilm-auth-field input[aria-invalid='true'] { border-color: #dc6b7f; }
+.mfilm-halloween .mfilm-auth-field .mfilm-field-error { margin: 7px 0 0; color: #bb264f; font-size: 11px; line-height: 1.5; }
+.mfilm-halloween.night .mfilm-auth-field .mfilm-field-error { color: #ff9ba8; }
+.mfilm-halloween .mfilm-input-wrap .eye { color: #567784; }
+.mfilm-halloween.night .mfilm-input-wrap .eye { color: #cfa6bc; }
+.mfilm-halloween .eye svg { width: 19px; height: 19px; }
+.mfilm-halloween .mfilm-field-lit input { color: transparent; -webkit-text-fill-color: transparent; caret-color: #e5f7f5; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; }
+.mfilm-halloween .password-reveal { font: 14px ui-monospace, SFMono-Regular, Consolas, monospace; }
+.mfilm-halloween .password-reveal > span { height: 50px; line-height: 50px; }
+.mfilm-halloween .mfilm-light-active { opacity: 1; visibility: visible; transition: none; }
+.mfilm-halloween .mfilm-field-lit .eye svg { visibility: hidden; }
+.mfilm-halloween-light-portal { position: fixed; inset: 0; z-index: 10021; pointer-events: none; }
+.mfilm-halloween .forgot { margin: -4px 0 22px auto; font-size: 11px; font-weight: 500; }
+.mfilm-halloween .submit { height: 48px; font-family: inherit; font-size: 13px; font-weight: 750; }
+.mfilm-halloween .submit:disabled { opacity: .6; cursor: wait; }
+.mfilm-halloween .mfilm-auth-divider { display: flex; align-items: center; gap: 14px; margin: 18px 0; color: #55717c; font-size: 10px; }
+.mfilm-halloween .mfilm-auth-divider::before, .mfilm-halloween .mfilm-auth-divider::after { content: ''; flex: 1; height: 1px; background: #5974822c; }
+.mfilm-halloween.night .mfilm-auth-divider { color: #9c859f; }
+.mfilm-halloween.night .mfilm-auth-divider::before, .mfilm-halloween.night .mfilm-auth-divider::after { background: #b18a6b26; }
+.mfilm-halloween .mfilm-auth-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 46px; border: 1px solid #6b8c9845; border-radius: 13px; background: #fff4; color: #244b59; font-size: 12px; font-weight: 600; transition: background .2s, border-color .2s; }
+.mfilm-halloween.night .mfilm-auth-google { border-color: #9d745946; background: #ffffff04; color: #e8dfe9; }
+.mfilm-halloween .mfilm-auth-google:hover { border-color: #d49863; background: #d4986315; }
+.mfilm-halloween .mfilm-auth-google:disabled { opacity: .55; cursor: wait; }
+.mfilm-halloween .mfilm-auth-note { margin: 18px 0 0; text-align: center; font-size: 10px; color: #63828f; line-height: 1.6; }
+.mfilm-halloween.night .mfilm-auth-note { color: #a18ca5; }
+.mfilm-halloween .mfilm-forgot-hint { margin: -10px 0 18px; font-size: 11px; line-height: 1.7; color: #9f8daa; }
+.mfilm-halloween .mfilm-forgot-hint a { color: #dca572; text-decoration: underline; }
+.mfilm-halloween .email-owl { width: 43px; height: 50px; left: 12px; }
+.mfilm-halloween-spider { position: fixed; z-index: 4; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity .45s; }
+.mfilm-halloween-spider.is-active { opacity: 1; }
+.mfilm-halloween .form-panel { z-index: 5; }
+.mfilm-halloween .halloween-vines { z-index: 6; }
+
+/* Keep the day form readable over every movie poster behind the dialog. */
+.mfilm-halloween:not(.night) .login-card { background: #e5eff2; border-color: #c0d3da; }
+.mfilm-halloween:not(.night) .form-panel { background: #f4f8fa; }
+.mfilm-halloween:not(.night) h1,
+.mfilm-halloween:not(.night) .mfilm-auth-field label { color: #173e4b; }
+.mfilm-halloween:not(.night) .mfilm-auth-eyebrow { color: #176575; }
+.mfilm-halloween:not(.night) .mfilm-auth-intro,
+.mfilm-halloween:not(.night) .mfilm-auth-note,
+.mfilm-halloween:not(.night) .mfilm-auth-divider,
+.mfilm-halloween:not(.night) .mfilm-forgot-hint { color: #49616d; }
+.mfilm-halloween:not(.night) .text-action,
+.mfilm-halloween:not(.night) .mfilm-forgot-hint a { color: #096274; }
+.mfilm-halloween:not(.night) .text-action:hover,
+.mfilm-halloween:not(.night) .mfilm-forgot-hint a:hover { color: #064553; }
+.mfilm-halloween:not(.night) .mfilm-auth-field input {
+    background: #fff;
+    border-color: #829da9;
+    color: #173e4b;
+    box-shadow: inset 0 1px 2px rgb(23 62 75 / 5%);
+}
+.mfilm-halloween:not(.night) .mfilm-auth-field input::placeholder { color: #526c78; }
+.mfilm-halloween:not(.night) .mfilm-auth-field input:focus { border-color: #087286; box-shadow: 0 0 0 3px rgb(8 114 134 / 16%); }
+.mfilm-halloween:not(.night) .mfilm-auth-field input[aria-invalid='true'] { border-color: #bb264f; }
+.mfilm-halloween:not(.night) .mfilm-input-wrap .eye { color: #365f70; }
+.mfilm-halloween:not(.night) .submit { background: linear-gradient(135deg, #08788a, #10586b); border-color: #0b6273; }
+.mfilm-halloween:not(.night) .submit:hover { background: linear-gradient(135deg, #096777, #0c495a); }
+.mfilm-halloween:not(.night) .mfilm-auth-google { background: #fff; border-color: #829da9; color: #173e4b; }
+.mfilm-halloween:not(.night) .mfilm-auth-google:hover { background: #e7f0f4; border-color: #176575; }
+.mfilm-halloween:not(.night) .mfilm-auth-divider::before,
+.mfilm-halloween:not(.night) .mfilm-auth-divider::after { background: #bacbd2; }
+.mfilm-halloween:not(.night) .mfilm-auth-close { background: #e5eef2; border-color: #bacbd2; color: #365563; }
+.mfilm-halloween:not(.night) .mfilm-auth-close:hover { background: #d4e3ea; }
+.mfilm-halloween:not(.night) .mfilm-scene-caption { color: #e2edf2; }
+
+@media (max-width: 700px) {
+    .mfilm-halloween-dialog .mfilm-halloween-paper { width: calc(100% - 40px); margin: 36px 20px; border-radius: 26px; }
+    .mfilm-halloween .login-card { grid-template-columns: 1fr; min-height: 0; padding: 8px; border-radius: 26px; }
+    .mfilm-halloween .scene-panel { min-height: 210px; border-radius: 19px; }
+    .mfilm-halloween .form-panel { padding: 32px 25px 24px; }
+    .mfilm-halloween .scene-copy { top: 64%; max-width: 280px; }
+    .mfilm-halloween .scene-copy h2 { font-size: 27px; margin: 7px 0; }
+    .mfilm-halloween .scene-copy h2 br { display: none; }
+    .mfilm-halloween .scene-copy p { font-size: 10px; line-height: 1.5; }
+    .mfilm-halloween .theme-toggle { top: 15px; right: 15px; }
+    .mfilm-halloween .mfilm-scene-caption { display: none; }
+    .mfilm-halloween h1 { font-size: 31px; }
+    .mfilm-halloween .mfilm-auth-intro { margin-bottom: 24px; }
+    .mfilm-halloween .mfilm-season-label { font-size: 8px; letter-spacing: 2px; }
+    .mfilm-halloween .mfilm-auth-close { right: 18px; top: 232px; }
+    .mfilm-halloween .summit-stage { opacity: .45; }
+    .mfilm-halloween .halloween-vines { inset: -21px -17px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mfilm-halloween *, .mfilm-halloween *::before, .mfilm-halloween *::after { animation: none !important; transition-duration: .01ms !important; }
+}

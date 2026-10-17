@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice">
+<style>.animated-celestial-halo { transform-box: fill-box; transform-origin: center; animation: halo-pulse 5s ease-in-out infinite; } @keyframes halo-pulse { 0%,100% { transform: scale(1); opacity: .55; } 50% { transform: scale(1.3); opacity: 1; } } @media (prefers-reduced-motion: reduce) { .animated-celestial-halo { animation: none; } }</style><defs>
+  <linearGradient id="ridge-distant" x2="0" y2="1"><stop stop-color="#665883" /><stop offset="1" stop-color="#322943" /></linearGradient>
+  <linearGradient id="ridge-middle" x2="0" y2="1"><stop stop-color="#413550" /><stop offset="1" stop-color="#241c32" /></linearGradient>
+  <linearGradient id="summit-stone" x1="0" y1="0" x2=".6" y2="1"><stop stop-color="#3d3049" /><stop offset="1" stop-color="#110d1c" /></linearGradient>
+  <linearGradient id="valley-mist" x2="0" y2="1"><stop stop-color="#b39aa2" stop-opacity=".19" /><stop offset=".5" stop-color="#b39aa2" stop-opacity=".035" /><stop offset="1" stop-color="#b39aa2" stop-opacity="0" /></linearGradient>
+  <radialGradient id="celestial-halo"><stop stop-color="#ffc487" stop-opacity=".22" /><stop offset="1" stop-color="#ffc487" stop-opacity="0" /></radialGradient>
+  <g id="fir"><path d="M0 0-7 12H-3L-11 23H-5L-15 36H-2V41H2V36H15L5 23H11L3 12H7Z" /></g>
+<linearGradient id="cloud-soft" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b7a5c5" stop-opacity=".65" /><stop offset=".55" stop-color="#b7a5c5" stop-opacity=".28" /><stop offset="1" stop-color="#63516f" stop-opacity=".03" /></linearGradient>
+<filter id="cloud-feather" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="1.6" /></filter>
+<g id="cloud-puff" fill="url(#cloud-soft)" filter="url(#cloud-feather)"><path d="M20 69C-3 68-5 44 14 36c-1-22 21-34 40-25C68-12 106-6 118 16c19-12 44-1 46 19 18-7 38 1 42 16 13-8 36-2 36 11 24-2 35 7 28 17C231 90 57 91 20 69Z" /><path d="M44 44C61 31 84 33 98 40c12-11 34-13 48 1 24-3 40 4 43 13-52 13-109 6-145-10Z" opacity=".28" /></g></defs><style>.cloud-drift { animation: cloud-float 26s ease-in-out infinite alternate; } .cloud-drift.slow { animation-duration: 37s; animation-delay: -13s; } .cloud-drift.far { animation-duration: 31s; animation-delay: -8s; } @keyframes cloud-float { from { transform: translate(-14px, 3px); } to { transform: translate(24px, -7px); } } @media (prefers-reduced-motion: reduce) { .cloud-drift { animation: none; } }</style>
+<g fill="#e1cded" opacity=".7"><circle cx="80" cy="75" r="2" /><circle cx="186" cy="186" r="1.5" /><circle cx="365" cy="55" r="1.5" /><circle cx="499" cy="170" r="2" /><circle cx="615" cy="66" r="1.2" /><circle cx="737" cy="117" r="1.8" /><circle cx="911" cy="51" r="1.4" /><circle cx="1010" cy="196" r="2" /><circle cx="1180" cy="75" r="1.4" /><circle cx="1392" cy="99" r="1.7" /><circle cx="1538" cy="241" r="1.5" /><circle cx="68" cy="296" r="1.5" /><circle cx="368" cy="307" r="1.1" /><circle cx="873" cy="258" r="1.4" /></g>
+<g opacity="0.8"><circle cx="1250" cy="177" r="83" class="animated-celestial-halo" fill="url(#celestial-halo)" /><circle cx="1250" cy="177" r="37" fill="#ffb76f" /><g fill="#c77b4b" opacity=".3"><circle cx="1239" cy="164" r="8" /><circle cx="1264" cy="190" r="6" /><circle cx="1229" cy="190" r="4" /></g></g>
+
+
+
+<g class="sky-clouds" opacity=".46"><g transform="translate(-55 215) scale(1.25)"><g class="cloud-drift slow"><use ns1:href="#cloud-puff" /></g></g><g transform="translate(615 90) scale(1.05)"><g class="cloud-drift far"><use ns1:href="#cloud-puff" /></g></g><g transform="translate(1280 338) scale(1.05)"><g class="cloud-drift "><use ns1:href="#cloud-puff" /></g></g></g>
+<path class="distant-ridge" d="M0 645 116 559 231 594 406 535 521 579 696 501 807 564 954 510 1053 577 1194 455 1330 531 1463 431 1600 525V1000H0Z" fill="url(#ridge-distant)" opacity=".65" />
+<path class="middle-ridge" d="M0 727 172 670 325 714 491 636 621 690 794 624 927 691 1110 607 1258 674 1430 596 1600 656V1000H0Z" fill="url(#ridge-middle)" opacity=".88" />
+<g><path d="M0 626 100 586 185 525 250 483 270 438H370L378 466 399 459 494 557 605 635 702 698 864 743 1054 725 1253 785 1437 754 1600 812V1000H0Z" fill="url(#summit-stone)" />
+<path d="M270 438H370L332 529 283 589 212 697 151 1000H0V804L126 651 185 525 250 483Z" fill="#956982" opacity=".23" />
+<path d="M370 438 378 466 399 459 494 557 605 635 702 698 864 743 1054 725 1253 785 1437 754 1600 812V1000H305L360 646 332 529Z" fill="#211729" opacity=".75" />
+<path d="M250 483 270 438 283 589 212 697 177 812 151 1000H93L176 716Z" fill="#211729" opacity=".32" />
+<path d="M399 459 494 557 439 615 360 646 332 529 378 466Z" fill="#956982" opacity=".10" />
+<path d="M286 469 279 531 252 565m102-58-33 41 23 62-22 46m-109 51-22 67 10 25m237-163 21 28 42 12 24 49" fill="none" stroke="#211729" stroke-opacity=".6" stroke-width="1.3" />
+</g>
+<g fill="#130d1b" opacity=".82"><use ns1:href="#fir" transform="translate(32 766) scale(1.8)" /><use ns1:href="#fir" transform="translate(94 803) scale(1.2)" /><use ns1:href="#fir" transform="translate(604 789) scale(1.8)" /><use ns1:href="#fir" transform="translate(647 769) scale(1.1)" /><use ns1:href="#fir" transform="translate(702 819) scale(1.0)" /><use ns1:href="#fir" transform="translate(1214 850) scale(1.4)" /><use ns1:href="#fir" transform="translate(1337 815) scale(2.1)" /><use ns1:href="#fir" transform="translate(1389 858) scale(1.3)" /><use ns1:href="#fir" transform="translate(1452 819) scale(1.7)" /><use ns1:href="#fir" transform="translate(1518 876) scale(1.2)" /><use ns1:href="#fir" transform="translate(25 985) scale(2.6)" /><use ns1:href="#fir" transform="translate(1519 981) scale(2.2)" /></g>
+<path d="M0 711Q281 656 596 731T1139 723T1600 682V841Q1334 783 978 833T0 828Z" fill="url(#valley-mist)" />
+<path d="M0 925Q183 831 376 938T717 936T1065 890T1395 931T1600 875V1000H0Z" fill="#130d1b" opacity=".85" />
+<path d="M1480 940q-8-71-2-152m-1 38-26-27m28 12 16-38m-17 36-8-25M55 913q9-53 5-107m0 29-19-17m18 7 14-26" fill="none" stroke="#170f20" stroke-width="5" stroke-linecap="round" />
+
+</svg>

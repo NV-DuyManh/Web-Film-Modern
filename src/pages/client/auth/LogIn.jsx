@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Dialog, DialogContent, TextField, InputAdornment, IconButton } from '@mui/material';
-import { IoClose, IoEyeOutline, IoEyeOffOutline } from 'react-icons/io5';
+import { IoArrowForward } from 'react-icons/io5';
+import HalloweenAuthDialog from './HalloweenAuthDialog';
+import HalloweenField from './HalloweenField';
 import { FcGoogle } from 'react-icons/fc';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { SECURE_ACCOUNTS_ENABLED, accountSession } from '../../../services/accountService';
-import Logo2 from '../../../assets/Logo2.png';
 import Logo5 from '../../../assets/Logo5.png';
 import { UserContext } from '../../../contexts/UserProvider';
 import { AuthContext } from '../../../contexts/AuthProvider';
@@ -57,7 +58,6 @@ const showAuthSuccessToast = (customer, message = 'Đăng nhập thành công') 
 };
 
 function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
-    const [showPassword, setShowPassword] = useState(false);
     const users = useContext(UserContext);
     const { loginByUser } = useContext(AuthContext);
     const [loadingGoogle, setLoadingGoogle] = useState(false);
@@ -67,6 +67,8 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
     });
 
     const [errors, setErrors] = useState({});
+    const [submitting, setSubmitting] = useState(false);
+    const [forgotHint, setForgotHint] = useState(false);
 
     useEffect(() => {
         if (!openLogin) {
@@ -75,7 +77,8 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
                 password: ''
             });
             setErrors({});
-            setShowPassword(false);
+            setSubmitting(false);
+            setForgotHint(false);
             setLoadingGoogle(false);
         }
     }, [openLogin]);
@@ -264,109 +267,28 @@ function LogIn({ openLogin, handleCloseLogin, handleOpenRegister }) {
     };
 
     return (
-        <Dialog
-            open={openLogin}
-            onClose={handleCloseLogin}
-            maxWidth="md"
-            fullWidth
-            disableScrollLock={true}
-            sx={{
-                '& .MuiDialog-paper': { backgroundColor: '#0f172a', backgroundImage: 'none' },
-                '& .MuiDialogContent-root': { backgroundColor: '#0f172a', padding: 0 }
-            }}
-            PaperProps={{
-                className: "rounded-2xl overflow-hidden bg-slate-900 text-white border border-slate-800 shadow-2xl"
-            }}
-        >
-            <DialogContent className="p-0 flex flex-col md:flex-row overflow-hidden">
-                <div className="hidden md:flex w-1/2 bg-slate-950 border-r border-slate-900 flex-col items-center p-10 relative overflow-hidden text-center ">
-                    <div className="drop-shadow-[0_0_25px_rgba(255,255,255,0.05)] relative z-10">
-                        <img src={Logo2} alt="MFILM" className="h-28 w-auto object-contain" />
-                    </div>
-                    <div className="flex-1 flex flex-col justify-center items-center space-y-4 relative z-10">
-                        <p className="text-[13px] font-bold tracking-widest px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shadow-[0_0_15px_rgba(234,179,8,0.1)] inline">
-                            PHIM HAY ĐỈNH CAO
-                        </p>
-                        <h2 className="text-3xl font-black leading-tight text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.1)]">
-                            Chào mừng<br />đến với <p className="text-yellow-400 inline">MFILM</p>
-                        </h2>
-                    </div>
-                </div>
-
-                <div className="w-full md:w-1/2 pt-12 pb-8 px-8 relative bg-slate-900 flex flex-col justify-center">
-                    <button onClick={handleCloseLogin} className="absolute cursor-pointer right-5 top-5 flex h-8 w-8 items-center justify-center rounded-full bg-red-500 text-white shadow-lg transition duration-300 hover:scale-110 hover:bg-red-600 active:scale-95">
-                        <IoClose size={22} />
-                    </button>
-
-                    <h2 className="text-2xl font-bold mb-3 text-white">Đăng nhập</h2>
-                    <p className="text-sm mb-8 text-slate-400">
-                        Chưa có tài khoản?{' '}
-                        <button onClick={handleOpenRegister} className="font-semibold cursor-pointer text-yellow-400 hover:underline transition-colors">
-                            Đăng ký ngay
-                        </button>
-                    </p>
-
-                    <div className="space-y-5" onKeyDown={(e) => e.key === 'Enter' && handleLogin()}>
-                        <TextField
-                            className="modal-input-x" fullWidth variant="outlined" type="email"
-                            label="Email" name="email"
-                            value={formData.email} onChange={handleChange}
-                            error={!!errors.email} helperText={errors.email}
-                        />
-
-                        <TextField
-                            className="modal-input-x" fullWidth variant="outlined"
-                            label="Mật khẩu" name="password"
-                            type={showPassword ? "text" : "password"}
-                            value={formData.password} onChange={handleChange}
-                            error={!!errors.password} helperText={errors.password}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton onClick={() => setShowPassword(!showPassword)} edge="end" sx={{ color: '#94a3b8' }}>
-                                            {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                )
-                            }}
-                        />
-                    </div>
-
-                    <div className="text-right mt-3">
-                        <button className="text-xs cursor-pointer text-slate-400 hover:text-yellow-400 transition-colors">
-                            Quên mật khẩu?
-                        </button>
-                    </div>
-
-                    <button onClick={handleLogin} className="w-full cursor-pointer font-bold py-3 mt-6 rounded-xl text-sm tracking-wide bg-yellow-400 hover:bg-yellow-500 text-black transition shadow-[0_4px_14px_rgba(250,204,21,0.2)]">
-                        Đăng nhập
-                    </button>
-
-                    <div className="my-6 flex items-center gap-3 text-xs text-slate-500">
-                        <div className="h-px flex-1 bg-slate-700" />
-                        <p className='text-white'>Hoặc</p>
-                        <div className="h-px flex-1 bg-slate-700" />
-                    </div>
-
-                    <button 
-                        onClick={signInWithGoogle} 
-                        disabled={loadingGoogle}
-                        className="flex cursor-pointer items-center justify-center gap-3 w-full font-semibold py-3 rounded-xl text-sm text-white bg-slate-800 border border-slate-700 hover:bg-slate-700 hover:border-slate-600 transition disabled:opacity-60 disabled:cursor-not-allowed"
-                    >
-                        {loadingGoogle ? (
-                            <span className="flex items-center gap-2">
-                                <span className="inline-block w-4 h-4 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></span>
-                                Đang xử lý đăng nhập...
-                            </span>
-                        ) : (
-                            <>
-                                <FcGoogle size={18} /> Đăng nhập với Google
-                            </>
-                        )}
-                    </button>
-                </div>
-            </DialogContent>
-        </Dialog>
+        <HalloweenAuthDialog open={openLogin} onClose={handleCloseLogin}>
+            <p className="mfilm-auth-eyebrow">CHÀO MỪNG TRỞ LẠI</p>
+            <h1 id="mfilm-login-title">Đăng nhập</h1>
+            <p className="mfilm-auth-intro">Chưa có tài khoản? <button type="button" className="text-action" onClick={handleOpenRegister}>Đăng ký ngay</button></p>
+            <form method="post" noValidate onSubmit={async event => {
+                event.preventDefault();
+                if (submitting || loadingGoogle) return;
+                setSubmitting(true);
+                try { await handleLogin(); } finally { setSubmitting(false); }
+            }}>
+                <HalloweenField label="Email" name="email" type="email" value={formData.email} onChange={handleChange} error={errors.email} autoComplete="username" owl />
+                <HalloweenField label="Mật khẩu" name="password" type="password" value={formData.password} onChange={handleChange} error={errors.password} autoComplete="current-password" />
+                <button type="button" className="text-action forgot" onClick={() => setForgotHint(value => !value)} aria-expanded={forgotHint}>Quên mật khẩu?</button>
+                {forgotHint && <p className="mfilm-forgot-hint" role="status">Nếu dùng Google, hãy khôi phục qua Google. Với tài khoản email, xem <Link to="/ho-tro" onClick={handleCloseLogin}>hỗ trợ MFilm</Link> để được hướng dẫn.</p>}
+                <button type="submit" className="submit" disabled={submitting || loadingGoogle}>{submitting ? 'Đang đăng nhập...' : 'Đăng nhập'} <IoArrowForward size={17} /></button>
+                <div className="mfilm-auth-divider">hoặc tiếp tục với</div>
+                <button type="button" className="mfilm-auth-google" onClick={signInWithGoogle} disabled={loadingGoogle || submitting}>
+                    <FcGoogle size={20} /> {loadingGoogle ? 'Đang xử lý đăng nhập...' : 'Đăng nhập với Google'}
+                </button>
+            </form>
+            <p className="mfilm-auth-note">Lưu phim yêu thích · Đồng bộ xem tiếp · Khám phá theo gu</p>
+        </HalloweenAuthDialog>
     );
 }
 

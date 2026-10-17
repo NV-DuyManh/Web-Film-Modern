@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54">
+  <defs>
+    <radialGradient id="sun-glass" cx=".28" cy=".22" r="1">
+      <stop stop-color="#fffef1"/>
+      <stop offset=".46" stop-color="#ffeca6" stop-opacity=".78"/>
+      <stop offset="1" stop-color="#f5bc60" stop-opacity=".45"/>
+    </radialGradient>
+    <filter id="soft-shine"><feGaussianBlur stdDeviation="1"/></filter>
+  </defs>
+  <circle cx="27" cy="27" r="27" fill="url(#sun-glass)"/>
+  <ellipse cx="22" cy="12" rx="12" ry="5" transform="rotate(-35 22 12)" fill="#ffffff" opacity=".75" filter="url(#soft-shine)"/>
+</svg>

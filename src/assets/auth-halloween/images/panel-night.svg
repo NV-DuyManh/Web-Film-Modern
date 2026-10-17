@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:ns1="http://www.w3.org/1999/xlink" viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice">
+<defs>
+  <linearGradient id="ridge-distant" x2="0" y2="1"><stop stop-color="#665883" /><stop offset="1" stop-color="#322943" /></linearGradient>
+  <linearGradient id="ridge-middle" x2="0" y2="1"><stop stop-color="#413550" /><stop offset="1" stop-color="#241c32" /></linearGradient>
+  <linearGradient id="summit-stone" x1="0" y1="0" x2=".6" y2="1"><stop stop-color="#3d3049" /><stop offset="1" stop-color="#110d1c" /></linearGradient>
+  <linearGradient id="valley-mist" x2="0" y2="1"><stop stop-color="#b39aa2" stop-opacity=".19" /><stop offset=".5" stop-color="#b39aa2" stop-opacity=".035" /><stop offset="1" stop-color="#b39aa2" stop-opacity="0" /></linearGradient>
+  <g id="fir"><path d="M0 0-7 12H-3L-11 23H-5L-15 36H-2V41H2V36H15L5 23H11L3 12H7Z" /></g>
+<g id="pumpkin"><path d="M-2-10q-2-7 3-9l3 1q-5 2-3 8" fill="#5d5835" /><ellipse cx="0" cy="2" rx="19" ry="15" fill="#df782d" /><ellipse cx="0" cy="2" rx="12" ry="15" fill="#f39946" /><ellipse cx="0" cy="2" rx="6" ry="15" fill="#f6a852" /><path d="m-12-1 7-5 2 6Zm24 0-7-5-2 6ZM-12 5l5 2 3-2 4 4 4-4 3 2 5-2-4 7H-8Z" fill="#ffe7a0" /><path d="M-12 5l5 2 3-2 4 4 4-4 3 2 5-2" fill="none" stroke="#b9501d" stroke-width="1" /></g>
+<linearGradient id="cloud-soft" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b7a5c5" stop-opacity=".65" /><stop offset=".55" stop-color="#b7a5c5" stop-opacity=".28" /><stop offset="1" stop-color="#63516f" stop-opacity=".03" /></linearGradient>
+<filter id="cloud-feather" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="1.6" /></filter>
+<g id="cloud-puff" fill="url(#cloud-soft)" filter="url(#cloud-feather)"><path d="M20 69C-3 68-5 44 14 36c-1-22 21-34 40-25C68-12 106-6 118 16c19-12 44-1 46 19 18-7 38 1 42 16 13-8 36-2 36 11 24-2 35 7 28 17C231 90 57 91 20 69Z" /><path d="M44 44C61 31 84 33 98 40c12-11 34-13 48 1 24-3 40 4 43 13-52 13-109 6-145-10Z" opacity=".28" /></g></defs><style>.cloud-drift { animation: cloud-float 26s ease-in-out infinite alternate; } .cloud-drift.slow { animation-duration: 37s; animation-delay: -13s; } .cloud-drift.far { animation-duration: 31s; animation-delay: -8s; } @keyframes cloud-float { from { transform: translate(-14px, 3px); } to { transform: translate(24px, -7px); } } @media (prefers-reduced-motion: reduce) { .cloud-drift { animation: none; } }</style>
+<g fill="#e1cded" opacity=".7"><circle cx="24" cy="34" r="1" /><circle cx="71" cy="58" r="1.1" /><circle cx="140" cy="31" r="0.9" /><circle cx="182" cy="68" r="1.2" /><circle cx="220" cy="35" r="0.8" /><circle cx="366" cy="39" r="1.2" /><circle cx="333" cy="154" r="0.8" /><circle cx="107" cy="136" r="0.8" /><circle cx="270" cy="53" r="0.8" /><circle cx="47" cy="165" r="1" /></g>
+
+
+
+
+<g class="sky-clouds" opacity=".46"><g transform="translate(-35 104) scale(0.58)"><g class="cloud-drift slow"><use ns1:href="#cloud-puff" /></g></g><g transform="translate(260 74) scale(0.42)"><g class="cloud-drift far"><use ns1:href="#cloud-puff" /></g></g><g transform="translate(155 169) scale(0.38)"><g class="cloud-drift "><use ns1:href="#cloud-puff" /></g></g></g>
+<path class="distant-ridge" d="M0 300 62 244 113 278 160 268 204 295 257 265 305 286 355 225 400 259V500H0Z" fill="url(#ridge-distant)" opacity=".65" />
+<path class="middle-ridge" d="M0 352 42 328 98 340 152 315 205 341 252 310 295 337 350 284 400 313V500H0Z" fill="url(#ridge-middle)" opacity=".88" />
+<g><path d="M0 327 56 305 104 271 147 250 164 225H224L226 244 236 241 284 308 340 352 400 370V500H0Z" fill="url(#summit-stone)" />
+<path d="M164 225H224L208 271 171 298 135 350 98 500H30L84 337 104 271 147 250Z" fill="#956982" opacity=".22" />
+<path d="M224 225 226 244 236 241 284 308 340 352 400 370V500H202L229 333 208 271Z" fill="#211729" opacity=".76" />
+<path d="M147 250 164 225 171 298 135 350 105 406 98 500H68L116 350Z" fill="#211729" opacity=".32" />
+<path d="M236 241 284 308 257 330 229 333 208 271 226 244Z" fill="#956982" opacity=".09" />
+<path d="M172 240 169 267 150 292m68-39-17 22 12 27-14 20m-54 28-10 26 4 17m106-73 16 11 6 23" fill="none" stroke="#211729" stroke-opacity=".6" stroke-width="1" />
+</g>
+<g fill="#130d1b" opacity=".82"><use ns1:href="#fir" transform="translate(15 387) scale(1.0)" /><use ns1:href="#fir" transform="translate(34 405) scale(0.64)" /><use ns1:href="#fir" transform="translate(58 420) scale(0.6)" /><use ns1:href="#fir" transform="translate(294 409) scale(0.75)" /><use ns1:href="#fir" transform="translate(320 386) scale(1.1)" /><use ns1:href="#fir" transform="translate(343 411) scale(0.68)" /><use ns1:href="#fir" transform="translate(374 375) scale(0.9)" /><use ns1:href="#fir" transform="translate(394 402) scale(0.7)" /><use ns1:href="#fir" transform="translate(6 482) scale(1.2)" /><use ns1:href="#fir" transform="translate(358 487) scale(1.1)" /></g>
+<path d="M0 345Q75 322 169 350T400 336V402Q310 376 220 399T0 389Z" fill="url(#valley-mist)" />
+<path d="M0 444Q70 408 144 461T279 462T400 434V500H0Z" fill="#130d1b" opacity=".85" />
+<path d="M17 429q6-36 1-70m1 23-11-14m11 2 9-18m-8 8-5-12M389 433q-6-30-1-61m-1 17-12-11m12 6 8-15" fill="none" stroke="#170f20" stroke-width="2.5" stroke-linecap="round" />
+<use ns1:href="#pumpkin" transform="translate(34 434) scale(0.7)" /><use ns1:href="#pumpkin" transform="translate(367 448) scale(0.6)" />
+</svg>

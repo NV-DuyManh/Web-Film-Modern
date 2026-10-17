@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 54">
+  <defs>
+    <radialGradient id="moon-glass" cx=".28" cy=".22" r="1">
+      <stop stop-color="#fff3da" stop-opacity=".94"/>
+      <stop offset=".5" stop-color="#ffd09a" stop-opacity=".68"/>
+      <stop offset="1" stop-color="#ed8b45" stop-opacity=".32"/>
+    </radialGradient>
+    <filter id="soft-shine"><feGaussianBlur stdDeviation="1"/></filter>
+  </defs>
+  <circle cx="27" cy="27" r="27" fill="url(#moon-glass)"/>
+  <g fill="#b66938">
+    <circle cx="17.5" cy="17.5" r="5.5" opacity=".18"/>
+    <circle cx="35.5" cy="24.5" r="3.5" opacity=".15"/>
+    <circle cx="23.5" cy="40.5" r="6.5" opacity=".12"/>
+  </g>
+  <ellipse cx="22" cy="12" rx="12" ry="5" transform="rotate(-35 22 12)" fill="#fff3da" opacity=".75" filter="url(#soft-shine)"/>
+</svg>

@@ -7,6 +7,28 @@ import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import process from 'node:process'
 
+// Firebase authorizes localhost for OAuth; keep local page navigation on that origin.
+function localAuthOriginPlugin() {
+    return {
+        name: 'local-auth-origin',
+        configureServer(server) {
+            server.middlewares.use((req, res, next) => {
+                const loopback = /^127\.0\.0\.1(?::(\d+))?$/.exec(req.headers.host || '');
+                if (!loopback || req.method !== 'GET' || !req.headers.accept?.includes('text/html')) {
+                    next();
+                    return;
+                }
+                const port = loopback[1] ? `:${loopback[1]}` : '';
+                res.writeHead(302, {
+                    Location: `http://localhost${port}${req.url || '/'}`,
+                    'Cache-Control': 'no-store',
+                });
+                res.end();
+            });
+        },
+    };
+}
+
 function vercelAiDevPlugin() {
     return {
         name: 'vercel-ai-dev-plugin',
@@ -80,6 +102,7 @@ function publicCatalogDevPlugin() {
 
 export default defineConfig({
     plugins: [
+        localAuthOriginPlugin(),
         tailwindcss(), 
         react(),
         vercelAiDevPlugin(),
