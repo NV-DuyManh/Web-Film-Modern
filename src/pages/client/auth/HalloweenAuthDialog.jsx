@@ -10,6 +10,7 @@ import vineFrames from '../../../assets/auth-halloween/images/vine-styles/outer/
 import wolfRoute from '../../../assets/auth-halloween/images/wolf-frames/keyframes.json';
 import { startHalloweenSpider } from './halloweenSpider';
 import { fitVineArtwork } from './halloweenVines';
+import { readAuthNight, saveAuthNight } from './authTheme';
 import './HalloweenAuth.css';
 
 const wolfImages = import.meta.glob('../../../assets/auth-halloween/images/wolf-transparent/*.png', {
@@ -168,9 +169,14 @@ const Wolf = memo(function Wolf({ night }) {
 });
 
 function HalloweenContent({ mode, onClose, children }) {
-    const [night, setNight] = useState(true);
+    const [night, setNight] = useState(readAuthNight);
     const root = useRef(null);
     useEffect(() => startHalloweenSpider(root.current), []);
+    const toggleTheme = () => {
+        const nextNight = !night;
+        saveAuthNight(nextNight);
+        setNight(nextNight);
+    };
     return <div ref={root} className={`mfilm-halloween ${night ? 'night' : ''}`}>
         <button className="mfilm-auth-close" type="button" onClick={onClose} aria-label="Đóng hộp thoại"><IoClose size={22} /></button>
         <div className="login-shell">
@@ -179,7 +185,7 @@ function HalloweenContent({ mode, onClose, children }) {
                 <section className="scene-panel" aria-label="Đêm phim Halloween cùng MFilm">
                     <Landscape />
                     <Wolf night={night} />
-                    <button className="theme-toggle" type="button" onClick={() => setNight(value => !value)}
+                    <button className="theme-toggle" type="button" onClick={toggleTheme}
                         aria-pressed={night} aria-label={night ? 'Chuyển sang ban ngày' : 'Bật đêm Halloween'}>
                         <span className="theme-toggle-thumb" /><IoSunnyOutline className="theme-sun" /><IoMoonOutline className="theme-moon" />
                     </button>

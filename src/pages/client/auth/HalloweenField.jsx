@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom';
 import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
 import owlArtwork from '../../../assets/auth-halloween/images/owl.svg?raw';
 import flashlight from '../../../assets/auth-halloween/images/flashlight.svg';
+import { readAuthNight } from './authTheme';
 
 const owlHues = [0, 35, 85, 145, 190, 235, 280, 320, 115, 210];
 const EmailOwls = memo(function EmailOwls() {
@@ -118,7 +119,7 @@ export default function HalloweenField({ label, name, type = 'text', value, onCh
     const id = useId();
     const field = useRef(null);
     const [reveal, setReveal] = useState(false);
-    const [night, setNight] = useState(true);
+    const [night, setNight] = useState(readAuthNight);
     const password = type === 'password';
     useEffect(() => {
         const root = field.current.closest('.mfilm-halloween');
