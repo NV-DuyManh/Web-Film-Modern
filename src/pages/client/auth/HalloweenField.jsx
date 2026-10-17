@@ -70,7 +70,7 @@ function PasswordLight({ field, value }) {
             owls.forEach((owl, index) => {
                 const bounds = owlBounds[index];
                 const lit = lightAt(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
-                setStyles(owl, { opacity: String(.75 + lit * .25) });
+                setStyles(owl, { opacity: String(lit) });
                 toggle(owl, 'is-lit', lit > .08);
                 setStyles(owl, { '--owl-gaze-x': `${ux * -70}px`, '--owl-gaze-y': `${uy * -45}px` });
             });

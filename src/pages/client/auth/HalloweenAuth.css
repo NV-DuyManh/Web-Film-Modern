@@ -90,13 +90,23 @@
 .mfilm-halloween.night .mfilm-auth-note { color: #a18ca5; }
 .mfilm-halloween .mfilm-forgot-hint { margin: -10px 0 18px; font-size: 11px; line-height: 1.7; color: #9f8daa; }
 .mfilm-halloween .mfilm-forgot-hint a { color: #dca572; text-decoration: underline; }
-.mfilm-halloween .mfilm-has-owls label { margin-bottom: 50px; }
-.mfilm-halloween .mfilm-owl-perch { position: absolute; inset: auto 8px calc(100% - 2px); height: 42px; display: flex; align-items: end; justify-content: space-between; gap: 3px; pointer-events: none; }
-.mfilm-halloween .mfilm-owl-perch .email-owl { position: relative; inset: auto; flex: 0 1 36px; width: 36px; height: 42px; min-width: 0; opacity: 1; }
-.mfilm-halloween.night .mfilm-owl-perch .email-owl { opacity: .75; }
-.mfilm-halloween .mfilm-owl-perch .owl-vector { filter: hue-rotate(var(--owl-hue)) saturate(1.25) brightness(1.15); }
+.mfilm-halloween .mfilm-has-owls { container: mfilm-email / inline-size; }
+.mfilm-halloween .mfilm-has-owls label { width: max-content; margin-bottom: 8px; }
+.mfilm-halloween .mfilm-owl-perch { position: absolute; inset: auto 8px calc(100% - 3.5px) 56px; height: 50px; display: flex; align-items: end; justify-content: space-between; gap: 3px; pointer-events: none; }
+.mfilm-halloween .mfilm-owl-perch .email-owl { position: relative; inset: auto; flex: 0 0 43px; width: 43px; height: 50px; opacity: 0; }
+.mfilm-halloween .mfilm-owl-perch .owl-vector { filter: hue-rotate(var(--owl-hue)); }
 .mfilm-halloween .mfilm-owl-perch .owl-eyes,
 .mfilm-halloween .mfilm-owl-perch .owl-breath { animation-delay: var(--owl-delay); }
+
+/* Keep the original owl size; only show as many as fit beside the label. */
+@container mfilm-email (max-width: 520px) { .mfilm-owl-perch .email-owl:nth-child(n + 10) { display: none; } }
+@container mfilm-email (max-width: 474px) { .mfilm-owl-perch .email-owl:nth-child(n + 9) { display: none; } }
+@container mfilm-email (max-width: 428px) { .mfilm-owl-perch .email-owl:nth-child(n + 8) { display: none; } }
+@container mfilm-email (max-width: 382px) { .mfilm-owl-perch .email-owl:nth-child(n + 7) { display: none; } }
+@container mfilm-email (max-width: 336px) { .mfilm-owl-perch .email-owl:nth-child(n + 6) { display: none; } }
+@container mfilm-email (max-width: 290px) { .mfilm-owl-perch .email-owl:nth-child(n + 5) { display: none; } }
+@container mfilm-email (max-width: 244px) { .mfilm-owl-perch .email-owl:nth-child(n + 4) { display: none; } }
+@container mfilm-email (max-width: 198px) { .mfilm-owl-perch .email-owl:nth-child(n + 3) { display: none; } }
 .mfilm-halloween-spider { position: fixed; z-index: 4; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity .45s; }
 .mfilm-halloween-spider.is-active { opacity: 1; }
 .mfilm-halloween .form-panel { z-index: 5; }
@@ -137,7 +147,6 @@
 .mfilm-halloween:not(.night) .mfilm-scene-caption { color: #e2edf2; }
 
 @media (max-width: 700px) {
-    .mfilm-halloween .mfilm-owl-perch .email-owl:nth-child(n + 7) { display: none; }
     .mfilm-halloween-dialog .mfilm-halloween-paper { width: calc(100% - 40px); margin: 36px 20px; border-radius: 26px; }
     .mfilm-halloween .login-card { grid-template-columns: 1fr; min-height: 0; padding: 8px; border-radius: 26px; }
     .mfilm-halloween .scene-panel { min-height: 210px; border-radius: 19px; }
