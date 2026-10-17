@@ -26,11 +26,27 @@ function SkyFlight() {
     </div>;
 }
 
+function DaySky() {
+    return <div className="mfilm-day-sky" aria-hidden="true">
+        {[0, 1, 2].map(index => <span className={`mfilm-day-cloud day-cloud-${index + 1}`} key={index}>
+            <svg viewBox="0 0 160 64" fill="none"><path d="M23 57C10 57 4 50 4 41C4 30 14 23 25 25C28 12 40 6 52 11C63-3 88 1 94 20C108 12 128 19 130 34C145 30 156 37 156 46C156 54 149 57 138 57Z" fill="currentColor" /></svg>
+        </span>)}
+        {[0, 1, 2, 3, 4].map(index => <span className={`mfilm-day-bird day-bird-${index + 1}`} key={index}>
+            <svg viewBox="0 0 36 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path className="day-wing day-wing-left" d="M18 15Q10 3 2 8Q11 8 18 15" />
+                <path className="day-wing day-wing-right" d="M18 15Q26 3 34 8Q25 8 18 15" />
+                <path d="M17 15L18 18L20 15" />
+            </svg>
+        </span>)}
+    </div>;
+}
+
 const Landscape = memo(function Landscape() {
     return <div className="landscape-scene" aria-hidden="true">
         <div className="scene-sky-objects"><div className="scene-sun" /><div className="scene-moon" /></div>
         <img className="scene-land scene-day" src={panelDay} alt="" />
         <img className="scene-land scene-night" src={panelNight} alt="" />
+        <DaySky />
         <SkyFlight />
     </div>;
 });
