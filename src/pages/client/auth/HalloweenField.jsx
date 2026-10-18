@@ -4,6 +4,7 @@ import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
 import owlArtwork from '../../../assets/auth-halloween/images/owl.svg?raw';
 import flashlight from '../../../assets/auth-halloween/images/flashlight.svg';
 import { readAuthNight } from './authTheme';
+import { bindFlashlightPointer } from './halloweenControls';
 
 const owlHues = [0, 35, 85, 145, 190, 235, 280, 320, 115, 210];
 const EmailOwls = memo(function EmailOwls() {
@@ -21,7 +22,8 @@ function PasswordLight({ field, value }) {
     const pointer = useRef(null);
     useEffect(() => {
         const input = field.current.querySelector('input');
-        const button = field.current.querySelector('button');
+        const button = field.current.querySelector('.eye');
+        const pad = field.current.querySelector('.mfilm-light-pad');
         const root = input.closest('.mfilm-halloween');
         const owls = [...root.querySelectorAll('.email-owl')];
         const characters = [...overlay.current.querySelectorAll('.reveal-char')];
@@ -48,7 +50,9 @@ function PasswordLight({ field, value }) {
             const reactionBounds = reactions.map(node => node.getBoundingClientRect());
             const ox = eye.left + eye.width / 2, oy = eye.top + eye.height / 2;
             pointer.current ??= { x: rect.left, y: oy };
-            const angle = Math.atan2(pointer.current.y - oy, pointer.current.x - ox);
+            const aimX = pointer.current.x - ox, aimY = pointer.current.y - oy;
+            // A tap on the lamp itself keeps it pointing across the password.
+            const angle = Math.hypot(aimX, aimY) < 24 ? Math.PI : Math.atan2(aimY, aimX);
             const ux = Math.cos(angle), uy = Math.sin(angle);
             const length = Math.max(200, Math.min(1600, Math.hypot(pointer.current.x - ox, pointer.current.y - oy) * 1.65));
             const height = length * .38;
@@ -80,14 +84,15 @@ function PasswordLight({ field, value }) {
                 toggle(node, 'is-beam-lit', lightAt(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2) > .08);
             });
         };
-        const schedule = event => {
-            if (event?.type === 'pointermove') pointer.current = { x: event.clientX, y: event.clientY };
+        const schedule = () => {
             if (!queued) queued = requestAnimationFrame(paint);
         };
         const controller = new AbortController();
         const options = { signal: controller.signal, passive: true };
-        document.addEventListener('pointermove', schedule, options);
+        const unbindPointer = bindFlashlightPointer({ root, pad, onAim: point => { pointer.current = point; schedule(); } });
         window.addEventListener('resize', schedule, options);
+        window.visualViewport?.addEventListener('resize', schedule, options);
+        window.visualViewport?.addEventListener('scroll', schedule, options);
         document.addEventListener('scroll', schedule, { ...options, capture: true });
         input.addEventListener('scroll', schedule, options);
         const resize = new ResizeObserver(schedule);
@@ -95,6 +100,7 @@ function PasswordLight({ field, value }) {
         paint();
         return () => {
             controller.abort();
+            unbindPointer();
             resize.disconnect();
             cancelAnimationFrame(queued);
             owls.forEach(owl => {
@@ -143,6 +149,9 @@ export default function HalloweenField({ label, name, type = 'text', value, onCh
                 onClick={() => setReveal(current => !current)}>{reveal ? <IoEyeOffOutline /> : <IoEyeOutline />}</button>}
         </div>
         {error && <p className="mfilm-field-error" id={`${id}-error`} role="alert">{error}</p>}
+        {lit && <button type="button" className="mfilm-light-pad" aria-label="Chạm và kéo tại đây để hướng đèn pin">
+            <span aria-hidden="true">✧</span> Chạm và kéo để hướng đèn
+        </button>}
         {lit && <PasswordLight field={field} value={value} />}
     </div>;
 }

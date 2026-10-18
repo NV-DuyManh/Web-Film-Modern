@@ -157,6 +157,23 @@
 .mfilm-halloween-spider.is-active { opacity: 1; }
 .mfilm-halloween .form-panel { z-index: 5; }
 .mfilm-halloween .halloween-vines { z-index: 6; }
+.mfilm-halloween .mfilm-motion-controls { display: none; position: absolute; z-index: 7; top: 12px; left: 12px; max-width: calc(100% - 82px); }
+.mfilm-halloween .mfilm-motion-actions { display: flex; align-items: center; gap: 5px; }
+.mfilm-halloween .mfilm-motion-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 44px; padding: 7px 10px; border: 1px solid #e6b87466; border-radius: 13px; background: #1b1129e6; color: #ffdb9f; font: 600 10px/1.4 Inter, system-ui, sans-serif; touch-action: manipulation; }
+.mfilm-halloween .mfilm-motion-actions button:disabled { opacity: .75; }
+.mfilm-halloween .mfilm-motion-actions svg { flex: none; width: 17px; height: 17px; }
+.mfilm-halloween .mfilm-motion-controls [role='status'] { display: block; padding: 4px 3px; color: #ffe7be; font-size: 9px; line-height: 1.4; text-shadow: 0 1px 3px #160b20; }
+.mfilm-halloween .mfilm-light-pad { display: none; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 58px; margin-top: 10px; border: 1px dashed #e5b97866; border-radius: 13px; background: radial-gradient(ellipse at center, #efbd6424, #20162a88); color: #f3cf97; font: 500 11px/1.4 Inter, system-ui, sans-serif; touch-action: none; user-select: none; -webkit-user-select: none; cursor: crosshair; }
+.mfilm-halloween .mfilm-light-pad:active { border-color: #ffe1a5; background-color: #efbd6424; }
+.mfilm-halloween .mfilm-light-pad > span { font-size: 22px; }
+
+@media (any-pointer: coarse), (max-width: 700px) {
+    .mfilm-halloween .mfilm-motion-controls { display: block; }
+    .mfilm-halloween .mfilm-light-pad { display: flex; }
+    .mfilm-halloween .mfilm-input-wrap .eye { width: 44px; height: 44px; right: 2px; touch-action: manipulation; }
+    /* Avoid browser zoom changing the aim when focusing an iPhone input. */
+    .mfilm-halloween .mfilm-auth-field input, .mfilm-halloween .password-reveal { font-size: 16px; }
+}
 
 /* Keep the day form readable over every movie poster behind the dialog. */
 .mfilm-halloween:not(.night) .login-card { background: #e5eff2; border-color: #c0d3da; }
@@ -217,5 +234,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .mfilm-halloween .mfilm-motion-controls { display: none; }
     .mfilm-halloween *, .mfilm-halloween *::before, .mfilm-halloween *::after { animation: none !important; transition-duration: .01ms !important; }
 }
