@@ -1,6 +1,7 @@
 import { getPlanAppearance } from '../../../../utils/planAppearance.js';
 import PlanBadge from '../../../../components/PlanBadge.jsx';
 import useCatalogChoices from '../../../../hooks/useCatalogChoices';
+import { seriesSettingsError } from '../../../../utils/movieParts';
 import React, { useContext, useState } from 'react';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, styled, Slide, Autocomplete, Checkbox, FormControlLabel, IconButton } from '@mui/material';
 import { FaCloudUploadAlt, FaTimesCircle, FaLink, FaUsers, FaUserNinja, FaUserTie, FaTimes } from 'react-icons/fa';
@@ -193,6 +194,24 @@ function ModalMovies({ open, handleClose, movie, onChangeInput, onCheckboxChange
                             />
                             <TextField variant="outlined" className="modal-input-x" name="releaseYear" onChange={handleNumberChange} label="Release Year" value={movie.releaseYear} error={!!error?.releaseYear} helperText={error?.releaseYear} />
                         </div>
+                    </div>
+
+                    <div className="relative space-y-4 rounded-2xl border border-amber-500/20 bg-white/2 p-5">
+                        <p className="text-xs font-bold uppercase tracking-widest text-amber-400">Series &amp; Watch Order</p>
+                        <Autocomplete
+                            options={['auto', 'manual', 'none']} value={movie.seriesMode || 'auto'} disableClearable
+                            getOptionLabel={value => ({ auto: 'Automatic matching', manual: 'Manual series', none: 'Standalone / exclude from series' })[value] || value}
+                            onChange={(_event, value) => setMovie(previous => ({ ...previous, seriesMode: value }))}
+                            renderInput={params => <TextField {...params} label="Series grouping" className="modal-input-x" helperText="Automatic matching uses explicit Part / Season names. Use manual grouping for different titles." />}
+                        />
+                        {movie.seriesMode === 'manual' && <>
+                            <TextField className="modal-input-x" fullWidth label="Series title" name="seriesTitle" value={movie.seriesTitle || ''} onChange={onChangeInput} helperText="Use the same series title for every related movie." />
+                            <div className="grid grid-cols-2 gap-4">
+                                <TextField className="modal-input-x" label="Part / Season number" name="seasonNumber" value={movie.seasonNumber || ''} onChange={handleNumberChange} />
+                                <TextField className="modal-input-x" label="Watch order" name="watchOrder" value={movie.watchOrder || ''} onChange={handleNumberChange} helperText="1, 2, 3… in viewing order" />
+                            </div>
+                            {(error?.series || seriesSettingsError(movie)) && <p className="text-xs text-amber-300">{error?.series || seriesSettingsError(movie)}</p>}
+                        </>}
                     </div>
 
                     <div className="relative bg-white/2 p-5 rounded-2xl border border-purple-500/20 overflow-hidden shadow-[0_0_15px_rgba(168,85,247,0.05)]">

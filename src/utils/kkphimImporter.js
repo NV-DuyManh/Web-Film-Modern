@@ -9,6 +9,7 @@ import { nameSlug } from './nameRoutes.js';
 import { detectGender } from './genderDetect.js';
 import { episodeSourceFingerprint } from './episodeSourceFingerprint.js';
 import { importEpisodeBatches } from './importEpisodeBatches.js';
+import { findKkphimMovie } from './kkphimIdentity.js';
 import { fetchMovieDetails, fetchMovieImages, getFullImageUrl,
     mapMovieType, mapMovieStatus, mapCountryName, parseDuration, stripHtml } from '../services/kkphimService.js';
 
@@ -24,10 +25,18 @@ export function createKkphimImporter({ db, io, catalog, onChange = () => {} }) {
         if (!kkphimDocumentID(item?.slug)) throw new Error('Invalid KKPhim movie slug.');
         const data = await catalog();
         const sourceTime = movieTime(item.modified?.time);
-        const candidateNames = [item.name, item.origin_name].map(normalize).filter(Boolean);
-        let existing = data.Movies.find(movie => movie.sourceSlug === item.slug || movie.slug === item.slug
-            || [movie.name, movie.otherName].map(normalize).some(name => name && candidateNames.includes(name)));
-        if (!existing) existing = await lookup('Movies', 'sourceSlug', item.slug) || await lookup('Movies', 'slug', item.slug) || await lookup('Movies', 'otherName', item.name) || (item.origin_name ? await lookup('Movies', 'name', item.origin_name) : null);
+        let existing = findKkphimMovie(data.Movies, item);
+        if (!existing) {
+            existing = await lookup('Movies', 'sourceSlug', item.slug);
+            if (!existing) {
+                for (const [field, value] of [['slug', item.slug], ['otherName', item.name], ['name', item.origin_name]]) {
+                    if (!value) continue;
+                    const found = await io.query(query(collection(db, 'Movies'), where(field, '==', value), limit(20)), 20);
+                    existing = findKkphimMovie(found.docs.map(document => ({ ...document.data(), id: document.id })), item);
+                    if (existing) break;
+                }
+            }
+        }
         const movieRef = doc(db, 'Movies', existing?.id || kkphimDocumentID(item.slug));
         let live = existing && !(data.Movies.includes(existing)) ? existing : (await io.read(movieRef)).data();
         if (live && live.crawlImportState !== 'pending') {

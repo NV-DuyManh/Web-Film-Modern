@@ -3,6 +3,7 @@ import { createNameRouteIndex, withNameRoutes } from '../../src/utils/nameRoutes
 import { resolveMovieImages } from '../../src/utils/movieImages.js';
 import { newestMoviesFirst } from '../../src/utils/movieRecency.js';
 import { relatedMovies } from '../../src/utils/relatedMovies.js';
+import { uniqueKkphimMovies } from '../../src/utils/kkphimIdentity.js';
 import { STATIC_SEO, canonicalUrl, descriptionText, movieDescription, movieSchema, plainText, publicImage, breadcrumbSchema, isPrivatePath, isPaginatedPath, robotsForPath, pageTitle, siteSchemas } from '../../src/utils/seo.js';
 
 export const PREFIXES = { Movies: '/phim', Actors: '/dien-vien', Authors: '/tac-gia', Characters: '/nhan-vat', Topics: '/topic' };
@@ -13,7 +14,7 @@ const hasBio = item => plainText(item.description).length > 25 && !/^đang cập
 export function prepareCatalog(raw) {
     const catalog = { ...raw }, routes = {}, maps = {}, related = {};
     for (const [key, prefix] of Object.entries(PREFIXES)) {
-        const items = key === 'Topics' ? curatedTopics(Object.fromEntries((raw.Topics || []).map(topic => [topic.id, topic.enabled]))) : key === 'Movies' ? (raw[key] || []).map(movie => ({ ...movie, ...resolveMovieImages(movie) })) : raw[key] || [];
+        const items = key === 'Topics' ? curatedTopics(Object.fromEntries((raw.Topics || []).map(topic => [topic.id, topic.enabled]))) : key === 'Movies' ? uniqueKkphimMovies(raw[key] || []).map(movie => ({ ...movie, ...resolveMovieImages(movie) })) : raw[key] || [];
         catalog[key] = withNameRoutes(items, { preferSlug: key === 'Movies', fallback: key === 'Actors' ? 'dien-vien' : 'noi-dung' });
         routes[key] = createNameRouteIndex(key === 'Topics' ? catalog[key].filter(topic => topic.enabled) : catalog[key]);
         maps[key] = new Map(catalog[key].map(item => [String(item.id), item]));

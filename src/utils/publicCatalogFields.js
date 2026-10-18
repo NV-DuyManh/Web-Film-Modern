@@ -4,7 +4,8 @@ const fields = ['name', 'otherName', 'title', 'slug', 'createdAt', 'updatedAt', 
     'hasSub', 'hasDub', 'hasVoice', 'episodeSub', 'episodeDub', 'episodeVoice', 'countriesID', 'listCategory', 'categoryTypeID', 'status',
     'actor', 'actors', 'listActor', 'author', 'listAuthor', 'character', 'characters', 'listCharacter', 'sexID',
     'movieID', 'isSmart', 'smartID', 'views', 'totalEpisodes', 'planID', 'rent', 'ageRating', 'isHot', 'hot',
-    'gallery', 'images', 'trailer_url', 'trailerUrl', 'sourceSlug', 'importSource'];
+    'gallery', 'images', 'trailer_url', 'trailerUrl', 'sourceSlug', 'importSource',
+    'seriesMode', 'seriesTitle', 'seriesKey', 'seasonNumber', 'watchOrder', 'aliases', 'episodeAliases'];
 export function publicCatalogRecord(data) {
     return { id: data.id, ...Object.fromEntries(fields.filter(key => data[key] !== undefined).map(key => [key, data[key]])) };
 }
@@ -18,5 +19,5 @@ export function movieSummary(movie) {
     return { ...summary, ...(description ? { description: String(description).slice(0, 400) } : {}) };
 }
 export function movieIndexRecord(movie) {
-    return Object.fromEntries(['id', 'name', 'otherName', 'slug', 'routeSlug'].filter(key => movie[key] !== undefined).map(key => [key, movie[key]]));
+    return Object.fromEntries(['id', 'name', 'otherName', 'slug', 'routeSlug', 'updatedAt', 'seriesMode', 'seriesTitle', 'seriesKey', 'seasonNumber', 'watchOrder', 'aliases'].filter(key => movie[key] !== undefined).map(key => [key, movie[key]]));
 }

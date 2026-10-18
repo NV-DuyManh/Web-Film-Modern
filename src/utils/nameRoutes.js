@@ -13,7 +13,7 @@ export function createNameRouteIndex(items = [], { preferSlug = false, fallback 
         if (!groups.has(base)) groups.set(base, []);
         groups.get(base).push(item);
         byId.set(item.id, item);
-        for (const alias of [item.slug, item.name, item.title, item.otherName,
+        for (const alias of [item.slug, item.name, item.title, item.otherName, ...(Array.isArray(item.aliases) ? item.aliases.filter(alias => typeof alias === 'string') : []),
             ...[item.name, item.title, item.otherName].filter(Boolean).map(value => nameSlug(value))]) {
             if (alias && !aliases.has(alias)) aliases.set(alias, item);
         }

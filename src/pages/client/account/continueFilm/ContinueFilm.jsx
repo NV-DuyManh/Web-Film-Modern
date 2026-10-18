@@ -12,16 +12,16 @@ import { isSingleMovie, formatEpisodeName } from '../../../../utils/appUtils';
 import ModalDelete from '../ModalDelete';
 import { clearResume, getResumeStore } from '../../../../utils/watchHistory';
 
-function ContinueFilm(props) {
+function ContinueFilm() {
     const { isLogin } = useContext(AuthContext);
-    const moviesData = useMovies() || [];
+    const moviesData = useMovies();
     const categoryTypes = useContext(CategoryTypeContext);
     const [viewMode, setViewMode] = useState('grid');
     const [searchQuery, setSearchQuery] = useState('');
     const [resumeData, setResumeData] = useState({});
 
     useEffect(() => {
-        const refresh = () => setResumeData(getResumeStore(isLogin?.id));
+        const refresh = () => setResumeData(getResumeStore(isLogin?.id, moviesData));
         refresh();
         window.addEventListener('mfilm_resume_updated', refresh);
         window.addEventListener('storage', refresh);
@@ -29,7 +29,7 @@ function ContinueFilm(props) {
             window.removeEventListener('mfilm_resume_updated', refresh);
             window.removeEventListener('storage', refresh);
         };
-    }, [isLogin?.id]);
+    }, [isLogin?.id, moviesData]);
 
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [itemToDelete, setItemToDelete] = useState(null);
@@ -45,7 +45,7 @@ function ContinueFilm(props) {
         if (!itemToDelete) return;
         try {
             clearResume(itemToDelete, null, isLogin?.id);
-            setResumeData(getResumeStore(isLogin?.id));
+            setResumeData(getResumeStore(isLogin?.id, moviesData));
             
             setIsDeleteDialogOpen(false);
             setItemToDelete(null);

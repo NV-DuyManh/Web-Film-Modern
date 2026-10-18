@@ -2,6 +2,9 @@ import PlanBadge from '../../../../components/PlanBadge.jsx';
 import { useMovieEpisodes, useEpisodeStream } from '../../../../hooks/useMovieEpisodes';
 import useMovie from '../../../../hooks/useMovie';
 import MovieImage from '../../../../components/MovieImage';
+import MovieParts from '../../../../components/MovieParts';
+import useMovieParts from '../../../../hooks/useMovieParts';
+import { nextPartAfterCompletion } from '../../../../utils/movieParts';
 import { normalizeEpisodes, episodeKey, episodeLabel, findEpisode } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
 import { routeSegment } from '../../../../utils/nameRoutes';
@@ -23,6 +26,7 @@ import { CategoryTypeContext } from '../../../../contexts/CategoryTypeProvider';
 import { isSingleMovie, formatEpisodeName, getUserPlanInfo, getExpiryDate } from '../../../../utils/appUtils';
 import { nextPlayableEpisode, playableEpisodeServer, episodeSource } from '../../../../utils/playback';
 import NextEpisodePrompt from './NextEpisodePrompt';
+import NextPartPrompt from './NextPartPrompt';
 import Comment from '../detailFilm/Comment';
 import SEO from '../../../../components/SEO';
 import PageLoadingSpinner from '../../../../components/common/PageLoadingSpinner';
@@ -47,6 +51,7 @@ function PlayFilm() {
     const subscriptions = useSubscriptions();
     const rentals = useRentMovies();
     const [pendingNext, setNextPrompt] = useState(null);
+    const [finished, setFinished] = useState(null);
     const [autoNext, setAutoNext] = useState(() => {
         try { return localStorage.getItem('mfilm_auto_next') !== 'false'; } catch { return true; }
     });
@@ -54,6 +59,7 @@ function PlayFilm() {
 
     const currentMovie = useMovie(slug);
     const movie = useMemo(() => currentMovie || {}, [currentMovie]);
+    const partGroup = useMovieParts(movie);
     const recommendedMovies = useMemo(() => relatedMovies(movie, movies, 5), [movie, movies]);
     useCanonicalPath(movie?.id ? `/xem-phim/${routeSegment(movie)}` : '');
     const realMovieId = movie?.id;
@@ -76,6 +82,7 @@ function PlayFilm() {
     const playingTitle = playingLabel === 'Full' ? 'Full' : `Tập ${playingLabel}`;
     const activeServer = serverParam === '2' && playEpisodes.url2 ? 2 : 1;
     const nextPrompt = pendingNext?.fromEpisodeId === playEpisodes.id ? pendingNext : null;
+    const nextPartPrompt = nextPartAfterCompletion(finished, movie, playEpisodes, episodeShow, partGroup, canWatch);
     useEffect(() => { lastProgressTimeRef.current = 0; completedEpisodeRef.current = null; }, [realMovieId, playEpisodes?.id]);
 
     useEffect(() => {
@@ -93,7 +100,7 @@ function PlayFilm() {
     }, [realMovieId, playEpisodes?.id]);
 
 
-    const savedResume = useResumeEntry(realMovieId, isLogin?.id);
+    const savedResume = useResumeEntry(realMovieId, isLogin?.id, movie);
     const [resumeDialog, setResumeDialog] = useState(null);
     const [startedEpisodeId, setStartedEpisodeId] = useState(null);
     const resumeData = savedResume?.episodes?.[playEpisodes.id] > 5 ? { ...savedResume, seconds: savedResume.episodes[playEpisodes.id] } : null;
@@ -139,6 +146,7 @@ function PlayFilm() {
 
     const handlePlay = useCallback((seconds) => {
         setStartedEpisodeId(playEpisodes?.id);
+        setFinished(null);
         if (seconds < (playerRef.current?.getDuration?.() || Infinity) - 1) completedEpisodeRef.current = null;
         if (realMovieId && playEpisodes?.id) {
             trackEvent('play', realMovieId, playEpisodes.id, { positionSeconds: Math.floor(seconds || 0) });
@@ -162,11 +170,12 @@ function PlayFilm() {
     }, [realMovieId, playEpisodes]);
 
     const handleEnded = useCallback(() => {
-        if (realMovieId && playEpisodes?.id) {
+        if (realMovieId && playEpisodes?.id && completedEpisodeRef.current !== playEpisodes.id) {
             const finalDuration = playerRef.current?.getDuration?.() || (Number(movie?.duration) * 60) || 3600;
             trackEvent('complete', realMovieId, playEpisodes.id, { durationSeconds: Math.floor(finalDuration) });
             completedEpisodeRef.current = playEpisodes.id;
             clearResume(realMovieId, playEpisodes.id, isLogin?.id);
+            setFinished({ movieId: realMovieId, episodeId: playEpisodes.id });
             const next = nextPlayableEpisode(episodeShow, playEpisodes);
             if (autoNext && canWatch && next) setNextPrompt({ ...next, fromEpisodeId: playEpisodes.id });
         }
@@ -212,6 +221,7 @@ function PlayFilm() {
     const handleClickEpisodes = (ep) => {
         setAutoStartEpisodeId(null);
         setNextPrompt(null);
+        setFinished(null);
         const time = playerRef.current?.getTime?.() || 0;
         if (playEpisodes?.id && realMovieId && time > 0 && completedEpisodeRef.current !== playEpisodes.id) {
             saveResume(realMovieId, {
@@ -338,6 +348,10 @@ function PlayFilm() {
 
 
 
+                    {nextPartPrompt && canWatch && <NextPartPrompt
+                        current={partGroup.parts.find(part => part.id === realMovieId)} next={nextPartPrompt}
+                        onCancel={() => setFinished(null)} />}
+
                     {showModal && resumeData && (
                         <div className="absolute inset-0 z-999 bg-black flex items-center justify-center p-4">
                             <div className="resume-modal">
@@ -376,7 +390,7 @@ function PlayFilm() {
                     }} /> Tự chuyển tập
                 </label>}
                 <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
-                    <div className="flex-1 w-full">
+                    <div className="min-w-0 flex-1 w-full">
                         <div className="flex flex-col md:flex-row gap-4 justify-between items-start border-b border-gray-800 pb-6">
                             <div className="md:w-1/3">
                                 <h1 className="text-2xl font-bold text-white">{movie.otherName || movie.name}</h1>
@@ -388,6 +402,7 @@ function PlayFilm() {
                             </div>
                         </div>
 
+                        {partGroup.parts.length > 1 && <div className="mt-6"><MovieParts movie={movie} group={partGroup} watching /></div>}
                         <div className="mt-6 bg-linear-to-r from-[#4b6cb7] via-[#7b2ff7] to-[#b83280] rounded-lg p-5 flex gap-4 items-start shadow-lg">
                             <div className="mt-1 shrink-0 text-yellow-400"><FaBell className="text-xl" /></div>
                             <div className="text-sm text-white space-y-1 font-medium">

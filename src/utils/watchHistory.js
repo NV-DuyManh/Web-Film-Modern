@@ -7,8 +7,16 @@ export function configureResumeSync(userId, publish) {
     return () => { if (syncTarget === target) syncTarget = null; };
 }
 
-export function getResumeStore(userId = null) {
-    try { return JSON.parse(localStorage.getItem(userId ? `${STORAGE_KEY}_${userId}` : STORAGE_KEY) || '{}'); }
+export function getResumeStore(userId = null, movies = []) {
+    try {
+        const store = JSON.parse(localStorage.getItem(userId ? `${STORAGE_KEY}_${userId}` : STORAGE_KEY) || '{}');
+        for (const movie of movies) if (movie.aliases?.length) {
+            const merged = movieResume(store, movie.id, movie);
+            for (const alias of movie.aliases) delete store[alias];
+            if (merged) store[movie.id] = merged;
+        }
+        return store;
+    }
     catch { return {}; }
 }
 
@@ -35,6 +43,25 @@ export function mergeResumeEntry(local, remote) {
         episodeUpdatedAt[id] = timestamp;
     }
     return { ...latest, episodes, episodeUpdatedAt, deletedAt };
+}
+
+// Old cloud progress stays in the owner's protected namespace. Resolve it on
+// the client after duplicate films are merged, without reading other accounts.
+export function movieResume(store, movieId, movie = {}) {
+    const map = movie.episodeAliases || {};
+    let result = null;
+    for (const id of [...(movie.aliases || []), movieId]) {
+        const entry = store?.[id]; if (!entry) continue;
+        const episodes = {}, episodeUpdatedAt = {};
+        for (const [oldId, seconds] of Object.entries(entry.episodes || {})) {
+            const target = map[oldId] || oldId;
+            const at = Number(entry.episodeUpdatedAt?.[oldId] ?? entry.updatedAt) || 0;
+            if (!Object.hasOwn(episodes, target) || at >= episodeUpdatedAt[target]) { episodes[target] = seconds; episodeUpdatedAt[target] = at; }
+        }
+        result = mergeResumeEntry(result, { ...entry, episodes, episodeUpdatedAt,
+            ...(entry.latestEpisodeId ? { latestEpisodeId: map[entry.latestEpisodeId] || entry.latestEpisodeId } : {}) });
+    }
+    return result;
 }
 
 export function mergeRemoteResume(movieId, remote, userId) {

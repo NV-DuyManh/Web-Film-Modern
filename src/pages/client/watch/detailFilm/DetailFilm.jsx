@@ -2,6 +2,8 @@ import PlanBadge from '../../../../components/PlanBadge.jsx';
 import { useMovieEpisodes } from '../../../../hooks/useMovieEpisodes';
 import useMovie from '../../../../hooks/useMovie';
 import MovieImage from '../../../../components/MovieImage';
+import MovieParts from '../../../../components/MovieParts';
+import useMovieParts from '../../../../hooks/useMovieParts';
 import { movieDescription, movieSchema } from '../../../../utils/seo';
 import { normalizeEpisodes, episodeKey } from '../../../../utils/episodes';
 import useCanonicalPath from '../../../../hooks/useCanonicalPath';
@@ -54,6 +56,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     const currentMovie = useMovie(slug);
     const movie = useMemo(() => currentMovie, [currentMovie]);
+    const partGroup = useMovieParts(movie);
 
     useCanonicalPath(movie?.id ? `/phim/${routeSegment(movie)}` : '');
     const id = movie?.id;
@@ -483,7 +486,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
                     </div>
 
-                    <div className="lg:col-span-9 flex flex-col gap-6">
+                    <div className="min-w-0 lg:col-span-9 flex flex-col gap-6">
 
                         <div className="bg-[#1a2035] rounded-3xl p-6 lg:p-8 flex flex-col gap-8 shadow-lg">
 
@@ -552,6 +555,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
                                 </button>
                             </div>
 
+                            <MovieParts movie={movie} group={partGroup} />
                             <div className="flex items-center gap-6 md:gap-8 border-b border-slate-700/60 pb-1">
                                 <button
                                     onClick={() => setActiveTab('episodes')}

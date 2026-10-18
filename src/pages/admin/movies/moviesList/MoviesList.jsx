@@ -1,5 +1,5 @@
 import { routeSegment, findRouteEntity } from '../../../../utils/nameRoutes';
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import useMovieIndex from '../../../../hooks/useMovieIndex';
 import { useSearchParams } from 'react-router-dom';
 import Search from '../../../../components/admin/search/Search';
@@ -11,6 +11,7 @@ import { addDocument, updateDocument, deleteDocument } from '../../../../service
 import { uploadImageToCloudinary } from '../../../../config/cloudinaryConfig';
 import { slugify } from '../../../../utils/appUtils';
 import { resolveMovieImages } from '../../../../utils/movieImages';
+import { movieSeriesKey, seriesSettingsError } from '../../../../utils/movieParts';
 import { doc, getDocFromServer } from 'firebase/firestore';
 import { db } from '../../../../config/firebaseConfig';
 
@@ -124,6 +125,7 @@ function MoviesList() {
         newError.rent = movie.rent !== "" ? "" : "Please enter rent";
         newError.listCategory = movie.listCategory?.length > 0 ? "" : "Please select category";
         newError.categoryTypeID = movie.categoryTypeID ? "" : "Please select category type";
+        newError.series = seriesSettingsError(movie);
         setError(newError);
         return Object.values(newError).some(e => e !== "");
     };
@@ -167,6 +169,11 @@ function MoviesList() {
             submitData.episodeSub = submitData.hasSub ? Number(submitData.episodeSub) : 0;
             submitData.episodeDub = submitData.hasDub ? Number(submitData.episodeDub) : 0;
             submitData.episodeVoice = submitData.hasVoice ? Number(submitData.episodeVoice) : 0;
+            submitData.seriesMode = submitData.seriesMode || 'auto';
+            submitData.seriesTitle = submitData.seriesMode === 'manual' ? submitData.seriesTitle.trim() : '';
+            submitData.seriesKey = movieSeriesKey(submitData.seriesTitle);
+            submitData.seasonNumber = submitData.seriesMode === 'manual' ? Number(submitData.seasonNumber) : null;
+            submitData.watchOrder = submitData.seriesMode === 'manual' ? Number(submitData.watchOrder) : null;
 
             if (!movie.id) {
                 submitData.createdAt = new Date().toISOString();
@@ -185,7 +192,7 @@ function MoviesList() {
                 setProgress(0);
             }, 500);
 
-        } catch (err) {
+        } catch {
             clearInterval(progressInterval);
             alert("An error occurred. Please try again.");
             setLoading(false);
