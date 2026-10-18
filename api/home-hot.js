@@ -6,30 +6,34 @@ import { hotCatalogMovies } from '../src/utils/hotCatalog.js';
 
 export const config = { maxDuration: 15 };
 
+// Close the single-document listener after its first server snapshot. The REST
+// get endpoint can be quota-limited while Listen still serves this document.
+// Each warm function refreshes at most once a minute, not once per visitor.
+export async function readHotControlSnapshot(reference, timeoutMs = 2500) {
+    let unsubscribe, timer;
+    try {
+        const snapshot = await new Promise((resolve, reject) => {
+            timer = setTimeout(() => reject(new Error('Hot controls snapshot timed out')), timeoutMs);
+            unsubscribe = reference.onSnapshot(resolve, reject);
+        });
+        return snapshot.data()?.hot || {};
+    } finally {
+        clearTimeout(timer);
+        unsubscribe?.();
+    }
+}
+
 async function readLocalHotEdits() {
-    const { localAdminDatabase, readAdminSnapshot } = await import('../scripts/lib/privateAdmin.mjs');
+    const { localAdminDatabase } = await import('../scripts/lib/privateAdmin.mjs');
     const db = await localAdminDatabase();
     try {
-        const snapshot = await readAdminSnapshot(db.collection('PublicCatalogControls').doc('home'), 2500);
-        return snapshot.data()?.hot || {};
+        return await readHotControlSnapshot(db.collection('PublicCatalogControls').doc('home'));
     } finally { await db.terminate(); }
 }
 
 async function readRemoteHotEdits() {
-    // One small shared control document, not a Movies query/listener per visitor.
-    // REST bounds quota-error latency without the SDK's long automatic retries.
-    const { auth } = accountServices();
-    const token = await auth.app.options.credential.getAccessToken();
-    const response = await fetch('https://firestore.googleapis.com/v1/projects/manhfilm-105b3/databases/(default)/documents/PublicCatalogControls/home', {
-        headers: { Authorization: `Bearer ${token.access_token}` }, signal: AbortSignal.timeout(2500),
-    });
-    if (response.status === 404) return {};
-    if (!response.ok) throw new Error(`Public Hot controls HTTP ${response.status}`);
-    const data = await response.json();
-    return Object.fromEntries(Object.entries(data.fields?.hot?.mapValue?.fields || {}).map(([id, value]) => [id, {
-        isHot: value.mapValue?.fields?.isHot?.booleanValue,
-        movieJson: value.mapValue?.fields?.movieJson?.stringValue,
-    }]));
+    const { db } = accountServices();
+    return readHotControlSnapshot(db.collection('PublicCatalogControls').doc('home'));
 }
 
 // Local development reuses the developer's Firebase CLI session. Deployment

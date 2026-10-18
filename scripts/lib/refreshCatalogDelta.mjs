@@ -4,6 +4,7 @@ import { PUBLIC_COLLECTIONS } from '../../src/utils/publicCatalogFields.js';
 import { applyCatalogChanges } from './catalogDelta.mjs';
 import { publishCatalog } from './publishCatalog.mjs';
 import { curatedTopics } from '../../src/utils/curatedTopics.js';
+import { applyHotFlags } from '../../src/utils/hotCatalog.js';
 
 export async function refreshCatalogDelta(db, io, { audit = true } = {}) {
     const snapshot = JSON.parse(await readFile(new URL('../../server/seo/catalog.json', import.meta.url), 'utf8'));
@@ -40,6 +41,13 @@ export async function refreshCatalogDelta(db, io, { audit = true } = {}) {
     } catch (error) {
         if (!['background-quota', 'resource-exhausted'].includes(error.code)) throw error;
         catalog.Topics = snapshot.catalog.Topics;
+        result.waiting = true;
+    }
+    try {
+        const controls = await io.read(doc(db, 'PublicCatalogControls', 'home'));
+        catalog.Movies = applyHotFlags(catalog.Movies, controls.data()?.hot);
+    } catch (error) {
+        if (!['background-quota', 'resource-exhausted'].includes(error.code)) throw error;
         result.waiting = true;
     }
     if (cursorChanged || auditChanged || JSON.stringify(catalog) !== JSON.stringify(snapshot.catalog)) {

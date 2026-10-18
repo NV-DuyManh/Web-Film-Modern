@@ -5,6 +5,7 @@ import { SITEMAP_COLLECTIONS } from '../../src/utils/sitemap.js';
 import { backgroundFirestore } from './backgroundFirestore.mjs';
 import { publicCatalogRecord } from '../../src/utils/publicCatalogFields.js';
 import { curatedTopics } from '../../src/utils/curatedTopics.js';
+import { applyHotFlags } from '../../src/utils/hotCatalog.js';
 export { publicCatalogRecord } from '../../src/utils/publicCatalogFields.js';
 
 let database;
@@ -44,7 +45,11 @@ export async function readPublicCatalog() {
     const reference = doc(await getCatalogDatabase(), 'PublicCatalogControls', 'topics');
     const control = metered ? await metered.read(reference) : await getDoc(reference);
     entries.push(['Topics', curatedTopics(control.data()?.enabled)]);
-    return Object.fromEntries(entries);
+    const homeReference = doc(await getCatalogDatabase(), 'PublicCatalogControls', 'home');
+    const homeControl = metered ? await metered.read(homeReference) : await getDoc(homeReference);
+    const catalog = Object.fromEntries(entries);
+    catalog.Movies = applyHotFlags(catalog.Movies, homeControl.data()?.hot);
+    return catalog;
 }
 
 export async function enableCatalogBudget() { metered = await backgroundFirestore(await getCatalogDatabase(), { initialReads: 0 }); }

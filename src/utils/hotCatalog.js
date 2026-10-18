@@ -7,6 +7,12 @@ export function hotCatalogEdit(movie, removed = false) {
         ...(!removed && movie.isHot === true && movie.name ? { movieJson: JSON.stringify(movieSummary(publicCatalogRecord(movie))) } : {}) };
 }
 
+// Keep the published fallback aligned with saved admin choices as well.
+export function applyHotFlags(movies, edits = {}) {
+    return movies.map(movie => typeof edits[movie.id]?.isHot === 'boolean'
+        ? { ...movie, isHot: edits[movie.id].isHot } : movie);
+}
+
 // Explicit admin choices override the deployment snapshot, including false.
 export function hotCatalogMovies(movies, edits = {}) {
     const byID = new Map(movies.map(movie => [movie.id, movie]));
