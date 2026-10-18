@@ -6,15 +6,16 @@ export function tiltDirection(sample, origin, screenAngle = 0) {
     const x = angleDelta(sample.gamma, origin.gamma);
     const y = angleDelta(sample.beta, origin.beta);
     const radians = screenAngle * Math.PI / 180;
-    const axis = value => Math.sign(value) * clamp((Math.abs(value) - 2.5) / 22.5, 0, 1);
+    const axis = value => Math.sign(value) * clamp((Math.abs(value) - 1) / 14, 0, 1);
     const dx = axis(x * Math.cos(radians) + y * Math.sin(radians));
     const dy = axis(y * Math.cos(radians) - x * Math.sin(radians));
     const length = Math.max(1, Math.hypot(dx, dy));
     return { x: dx / length, y: dy / length };
 }
 
-export function createSpiderTilt({ onDirection, onState, win = window, doc = document }) {
+export function createSpiderTilt({ onDirection, onState = () => {}, win = window, doc = document }) {
     let listening = false, disposed = false, pending = false, origin = null, timer, generation = 0;
+    let permission = null;
     const stop = () => {
         generation++;
         listening = false;
@@ -36,7 +37,17 @@ export function createSpiderTilt({ onDirection, onState, win = window, doc = doc
         if (!origin) { origin = { beta: event.beta, gamma: event.gamma }; onState('enabled'); }
         onDirection(tiltDirection(event, origin, win.screen?.orientation?.angle ?? win.orientation ?? 0));
     }
-    return {
+    const firstTouch = event => {
+        if (event.isTrusted && !listening && permission !== 'denied') void controls.enable();
+    };
+    const controls = {
+        start() {
+            if (disposed || listening || pending) return;
+            doc.addEventListener('pointerup', firstTouch, { capture: true, passive: true });
+            // Android starts immediately. iOS asks during the first real touch,
+            // because its permission API requires a user gesture.
+            if (typeof win.DeviceOrientationEvent?.requestPermission !== 'function' || permission === 'granted') void controls.enable();
+        },
         async enable() {
             if (disposed || pending) return;
             if (listening) { calibrate(); return; }
@@ -46,8 +57,7 @@ export function createSpiderTilt({ onDirection, onState, win = window, doc = doc
             const attempt = ++generation;
             onState('requesting');
             try {
-                // iOS requires this call directly inside the user's button click.
-                const permission = typeof orientation.requestPermission === 'function'
+                permission ??= typeof orientation.requestPermission === 'function'
                     ? await orientation.requestPermission() : 'granted';
                 if (disposed || attempt !== generation) return;
                 if (permission !== 'granted') { onState('denied'); return; }
@@ -62,61 +72,67 @@ export function createSpiderTilt({ onDirection, onState, win = window, doc = doc
                 if (!disposed && attempt === generation) { stop(); onState('denied'); }
             } finally { pending = false; }
         },
-        disable() { stop(); onState('idle'); },
-        destroy() { disposed = true; stop(); },
+        disable() { doc.removeEventListener('pointerup', firstTouch, true); stop(); onState('idle'); },
+        destroy() { disposed = true; doc.removeEventListener('pointerup', firstTouch, true); stop(); },
     };
+    return controls;
 }
 
-export function flashlightPadPoint(point, pad, bounds) {
-    return {
-        x: bounds.left + clamp((point.clientX - pad.left) / Math.max(1, pad.width), 0, 1) * bounds.width,
-        y: bounds.top + clamp((point.clientY - pad.top) / Math.max(1, pad.height), 0, 1) * bounds.height,
-    };
-}
-
-// Only the dedicated pad owns a drag. Inputs and the rest of the dialog retain
-// native focus, selection and scrolling; a single tap can also aim the light.
-export function bindFlashlightPointer({ root, pad, onAim, doc = document, win = window }) {
-    let touchID = null, padID = null;
-    const aim = event => {
-        if (padID === event.pointerId) {
-            const rect = root.getBoundingClientRect();
-            const viewport = win.visualViewport;
-            const viewportTop = viewport?.offsetTop || 0;
-            const top = Math.max(rect.top, viewportTop);
-            const bottom = Math.min(rect.bottom, viewportTop + (viewport?.height || win.innerHeight));
-            onAim(flashlightPadPoint(event, pad.getBoundingClientRect(), {
-                left: rect.left, top, width: rect.width, height: Math.max(1, bottom - top),
-            }));
-        } else onAim({ x: event.clientX, y: event.clientY });
-    };
+// Capture decorative surfaces so the beam stays under the finger even when a
+// drag crosses the form. Actual inputs/buttons retain native editing and clicks.
+export function bindFlashlightPointer({ root, onAim, doc = document }) {
+    let touchID = null, capturedID = null;
+    let lampDrag = null, suppressLampClick = null;
+    const aim = event => onAim({ x: event.clientX, y: event.clientY });
     const down = event => {
         if (event.isPrimary === false || !root.contains(event.target)) return;
+        suppressLampClick = null;
         if (event.pointerType === 'touch') touchID = event.pointerId;
-        if (pad?.contains(event.target)) {
-            padID = event.pointerId;
-            pad.setPointerCapture(event.pointerId);
+        const eye = event.target.closest('.eye');
+        lampDrag = eye && event.pointerType === 'touch'
+            ? { eye, id: event.pointerId, x: event.clientX, y: event.clientY, moved: false } : null;
+        if (event.pointerType === 'touch' && !event.target.closest('input, textarea, button, a, [contenteditable="true"]')) {
+            capturedID = event.pointerId;
+            root.setPointerCapture(event.pointerId);
         }
         aim(event);
     };
     const move = event => {
         if (event.isPrimary === false || (event.pointerType === 'touch' && event.pointerId !== touchID)) return;
+        if (lampDrag?.id === event.pointerId && Math.hypot(event.clientX-lampDrag.x, event.clientY-lampDrag.y) > 8) lampDrag.moved = true;
         aim(event);
     };
     const end = event => {
-        if (event.pointerId === padID) padID = null;
+        if (lampDrag?.id === event.pointerId) {
+            suppressLampClick = event.type === 'pointerup' && lampDrag.moved ? lampDrag.eye : null;
+            lampDrag = null;
+        }
+        if (event.pointerId === capturedID) {
+            if (root.hasPointerCapture(capturedID)) root.releasePointerCapture(capturedID);
+            capturedID = null;
+        }
         if (event.pointerId === touchID) touchID = null;
+    };
+    const click = event => {
+        const suppress = suppressLampClick;
+        suppressLampClick = null;
+        if (suppress && event.target.closest('.eye') === suppress) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
     };
     const options = { passive: true };
     doc.addEventListener('pointerdown', down, options);
     doc.addEventListener('pointermove', move, options);
     doc.addEventListener('pointerup', end, options);
     doc.addEventListener('pointercancel', end, options);
+    doc.addEventListener('click', click, true);
     return () => {
-        if (padID !== null && pad.hasPointerCapture(padID)) pad.releasePointerCapture(padID);
+        if (capturedID !== null && root.hasPointerCapture(capturedID)) root.releasePointerCapture(capturedID);
         doc.removeEventListener('pointerdown', down);
         doc.removeEventListener('pointermove', move);
         doc.removeEventListener('pointerup', end);
         doc.removeEventListener('pointercancel', end);
+        doc.removeEventListener('click', click, true);
     };
 }

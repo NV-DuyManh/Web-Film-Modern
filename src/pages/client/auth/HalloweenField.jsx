@@ -7,6 +7,7 @@ import { readAuthNight } from './authTheme';
 import { bindFlashlightPointer } from './halloweenControls';
 
 const owlHues = [0, 35, 85, 145, 190, 235, 280, 320, 115, 210];
+const activeLights = new WeakMap();
 const EmailOwls = memo(function EmailOwls() {
     return <div className="mfilm-owl-perch" aria-hidden="true">
         {owlHues.map((hue, index) => <span key={hue} className="email-owl"
@@ -23,8 +24,9 @@ function PasswordLight({ field, value }) {
     useEffect(() => {
         const input = field.current.querySelector('input');
         const button = field.current.querySelector('.eye');
-        const pad = field.current.querySelector('.mfilm-light-pad');
         const root = input.closest('.mfilm-halloween');
+        activeLights.set(root, (activeLights.get(root) || 0) + 1);
+        root.classList.add('mfilm-light-steering');
         const owls = [...root.querySelectorAll('.email-owl')];
         const characters = [...overlay.current.querySelectorAll('.reveal-char')];
         const reactions = [...root.querySelectorAll('.pumpkin-reaction, .summit-stage')];
@@ -89,7 +91,7 @@ function PasswordLight({ field, value }) {
         };
         const controller = new AbortController();
         const options = { signal: controller.signal, passive: true };
-        const unbindPointer = bindFlashlightPointer({ root, pad, onAim: point => { pointer.current = point; schedule(); } });
+        const unbindPointer = bindFlashlightPointer({ root, onAim: point => { pointer.current = point; schedule(); } });
         window.addEventListener('resize', schedule, options);
         window.visualViewport?.addEventListener('resize', schedule, options);
         window.visualViewport?.addEventListener('scroll', schedule, options);
@@ -101,6 +103,9 @@ function PasswordLight({ field, value }) {
         return () => {
             controller.abort();
             unbindPointer();
+            const remainingLights = (activeLights.get(root) || 1) - 1;
+            activeLights.set(root, remainingLights);
+            if (!remainingLights) root.classList.remove('mfilm-light-steering');
             resize.disconnect();
             cancelAnimationFrame(queued);
             owls.forEach(owl => {
@@ -129,9 +134,14 @@ export default function HalloweenField({ label, name, type = 'text', value, onCh
     const password = type === 'password';
     useEffect(() => {
         const root = field.current.closest('.mfilm-halloween');
+        let wasNight = root.classList.contains('night');
         const observer = new MutationObserver(() => {
-            setNight(root.classList.contains('night'));
-            setReveal(false);
+            const nextNight = root.classList.contains('night');
+            if (wasNight !== nextNight) {
+                wasNight = nextNight;
+                setNight(nextNight);
+                setReveal(false);
+            }
         });
         observer.observe(root, { attributes: true, attributeFilter: ['class'] });
         return () => observer.disconnect();
@@ -149,9 +159,7 @@ export default function HalloweenField({ label, name, type = 'text', value, onCh
                 onClick={() => setReveal(current => !current)}>{reveal ? <IoEyeOffOutline /> : <IoEyeOutline />}</button>}
         </div>
         {error && <p className="mfilm-field-error" id={`${id}-error`} role="alert">{error}</p>}
-        {lit && <button type="button" className="mfilm-light-pad" aria-label="Chạm và kéo tại đây để hướng đèn pin">
-            <span aria-hidden="true">✧</span> Chạm và kéo để hướng đèn
-        </button>}
+        {lit && <p className="mfilm-light-hint">Chạm hoặc giữ và kéo để hướng đèn</p>}
         {lit && <PasswordLight field={field} value={value} />}
     </div>;
 }

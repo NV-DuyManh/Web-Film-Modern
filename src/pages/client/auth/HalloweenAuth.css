@@ -153,23 +153,18 @@
 @container mfilm-email (max-width: 290px) { .mfilm-owl-perch .email-owl:nth-child(n + 5) { display: none; } }
 @container mfilm-email (max-width: 244px) { .mfilm-owl-perch .email-owl:nth-child(n + 4) { display: none; } }
 @container mfilm-email (max-width: 198px) { .mfilm-owl-perch .email-owl:nth-child(n + 3) { display: none; } }
-.mfilm-halloween-spider { position: fixed; z-index: 4; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity .45s; }
+.mfilm-halloween-spider { position: fixed; z-index: 8; inset: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity .45s; }
 .mfilm-halloween-spider.is-active { opacity: 1; }
 .mfilm-halloween .form-panel { z-index: 5; }
 .mfilm-halloween .halloween-vines { z-index: 6; }
-.mfilm-halloween .mfilm-motion-controls { display: none; position: absolute; z-index: 7; top: 12px; left: 12px; max-width: calc(100% - 82px); }
-.mfilm-halloween .mfilm-motion-actions { display: flex; align-items: center; gap: 5px; }
-.mfilm-halloween .mfilm-motion-actions button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; min-height: 44px; padding: 7px 10px; border: 1px solid #e6b87466; border-radius: 13px; background: #1b1129e6; color: #ffdb9f; font: 600 10px/1.4 Inter, system-ui, sans-serif; touch-action: manipulation; }
-.mfilm-halloween .mfilm-motion-actions button:disabled { opacity: .75; }
-.mfilm-halloween .mfilm-motion-actions svg { flex: none; width: 17px; height: 17px; }
-.mfilm-halloween .mfilm-motion-controls [role='status'] { display: block; padding: 4px 3px; color: #ffe7be; font-size: 9px; line-height: 1.4; text-shadow: 0 1px 3px #160b20; }
-.mfilm-halloween .mfilm-light-pad { display: none; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 58px; margin-top: 10px; border: 1px dashed #e5b97866; border-radius: 13px; background: radial-gradient(ellipse at center, #efbd6424, #20162a88); color: #f3cf97; font: 500 11px/1.4 Inter, system-ui, sans-serif; touch-action: none; user-select: none; -webkit-user-select: none; cursor: crosshair; }
-.mfilm-halloween .mfilm-light-pad:active { border-color: #ffe1a5; background-color: #efbd6424; }
-.mfilm-halloween .mfilm-light-pad > span { font-size: 22px; }
+.mfilm-halloween .mfilm-light-hint { display: none; margin: 8px 0 0; color: #f3cf97; font: 500 10px/1.5 Inter, system-ui, sans-serif; pointer-events: none; }
 
 @media (any-pointer: coarse), (max-width: 700px) {
-    .mfilm-halloween .mfilm-motion-controls { display: block; }
-    .mfilm-halloween .mfilm-light-pad { display: flex; }
+    .mfilm-halloween .mfilm-light-hint { display: block; }
+    /* Decide touch ownership before pointerdown, so the browser does not cancel
+       an aiming drag to scroll. Turning the light off restores native scrolling. */
+    .mfilm-halloween.mfilm-light-steering { touch-action: none; user-select: none; -webkit-user-select: none; }
+    .mfilm-halloween.mfilm-light-steering input, .mfilm-halloween.mfilm-light-steering textarea { user-select: text; -webkit-user-select: text; }
     .mfilm-halloween .mfilm-input-wrap .eye { width: 44px; height: 44px; right: 2px; touch-action: manipulation; }
     /* Avoid browser zoom changing the aim when focusing an iPhone input. */
     .mfilm-halloween .mfilm-auth-field input, .mfilm-halloween .password-reveal { font-size: 16px; }
@@ -234,6 +229,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .mfilm-halloween .mfilm-motion-controls { display: none; }
     .mfilm-halloween *, .mfilm-halloween *::before, .mfilm-halloween *::after { animation: none !important; transition-duration: .01ms !important; }
 }

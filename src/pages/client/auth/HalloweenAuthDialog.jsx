@@ -1,6 +1,6 @@
 import { memo, useEffect, useId, useRef, useState } from 'react';
 import { Dialog } from '@mui/material';
-import { IoClose, IoMoonOutline, IoSunnyOutline, IoPhonePortraitOutline } from 'react-icons/io5';
+import { IoClose, IoMoonOutline, IoSunnyOutline } from 'react-icons/io5';
 import panelDay from '../../../assets/auth-halloween/images/panel-day.svg';
 import panelNight from '../../../assets/auth-halloween/images/panel-night.svg';
 import witch from '../../../assets/auth-halloween/images/witch.svg';
@@ -180,12 +180,9 @@ const Wolf = memo(function Wolf({ night }) {
 function HalloweenContent({ mode, onClose, children }) {
     const [night, setNight] = useState(readAuthNight);
     const root = useRef(null);
-    const spider = useRef(null);
-    const [motionState, setMotionState] = useState('idle');
     useEffect(() => {
-        const controls = startHalloweenSpider(root.current, setMotionState);
-        spider.current = controls;
-        return () => { spider.current = null; controls.destroy(); };
+        const controls = startHalloweenSpider(root.current);
+        return () => controls.destroy();
     }, []);
     const toggleTheme = () => {
         const nextNight = !night;
@@ -201,19 +198,6 @@ function HalloweenContent({ mode, onClose, children }) {
                     <Landscape />
                     <NightMeteors night={night} />
                     <Wolf night={night} />
-                    {night && <div className="mfilm-motion-controls">
-                        <div className="mfilm-motion-actions">
-                            <button type="button" disabled={['requesting', 'calibrating'].includes(motionState)}
-                                onClick={() => spider.current?.enableTilt()}>
-                                <IoPhonePortraitOutline aria-hidden="true" />
-                                {motionState === 'enabled' ? 'Cân bằng lại' : motionState === 'requesting' ? 'Đang xin quyền…'
-                                    : motionState === 'calibrating' ? 'Giữ máy thoải mái…' : 'Bật nhện theo độ nghiêng'}
-                            </button>
-                            {motionState === 'enabled' && <button type="button" onClick={() => spider.current?.disableTilt()}>Tắt</button>}
-                        </div>
-                        <span role="status">{motionState === 'enabled' ? 'Nghiêng nhẹ điện thoại để dẫn nhện'
-                            : ['denied', 'unavailable'].includes(motionState) ? 'Chạm vào khung cảnh để dẫn nhện' : ''}</span>
-                    </div>}
                     <button className="theme-toggle" type="button" onClick={toggleTheme}
                         aria-pressed={night} aria-label={night ? 'Chuyển sang ban ngày' : 'Bật đêm Halloween'}>
                         <span className="theme-toggle-thumb" /><IoSunnyOutline className="theme-sun" /><IoMoonOutline className="theme-moon" />

@@ -1,7 +1,7 @@
 import { createSpiderTilt } from './halloweenControls.js';
 
 // Canvas artwork adapted from the reviewed demo, with scoped DOM access and effect cleanup.
-export function startHalloweenSpider(root, onMotionState = () => {}) {
+export function startHalloweenSpider(root) {
   const controller = new AbortController();
   const listen = (target, event, handler, options = {}) => target.addEventListener(event, handler, { ...options, signal: controller.signal });
   const canvas = root.querySelector('.mfilm-halloween-spider');
@@ -14,7 +14,6 @@ export function startHalloweenSpider(root, onMotionState = () => {}) {
   const tilt = { x: 0, y: 0 };
   const tiltControl = createSpiderTilt({
     onDirection: direction => { tiltTarget = direction; if (!direction) { tilt.x = 0; tilt.y = 0; } },
-    onState: onMotionState,
   });
   let dimensions = { w: innerWidth, h: innerHeight };
   let legs = [];
@@ -34,8 +33,10 @@ export function startHalloweenSpider(root, onMotionState = () => {}) {
   const bodyScale = () => innerWidth < 640 ? .42 : .56;
   const travelBounds = () => {
     if (coarsePointer.matches || innerWidth < 700) {
-      const scene = root.querySelector('.scene-panel').getBoundingClientRect();
-      return { left: scene.left+5, right: scene.right-5, top: scene.top+5, bottom: scene.bottom-5 };
+      const viewport = window.visualViewport;
+      const left = viewport?.offsetLeft || 0, top = viewport?.offsetTop || 0;
+      return { left: left+38, right: left+(viewport?.width || dimensions.w)-38,
+        top: top+38, bottom: top+(viewport?.height || dimensions.h)-38 };
     }
     return { left: 65, right: dimensions.w-65, top: 65, bottom: dimensions.h-65 };
   };
@@ -334,33 +335,40 @@ export function startHalloweenSpider(root, onMotionState = () => {}) {
     const dt = Math.min((now-previous)/1000, .04);
     previous = now;
     simTime+=dt;
-    let tiltAmount = 1;
+    const previousX = spider.x, previousY = spider.y;
     if (tiltTarget) {
       const bounds = travelBounds();
-      const smoothing = 1-Math.exp(-dt*10);
+      const smoothing = 1-Math.exp(-dt*14);
       tilt.x = mix(tilt.x, tiltTarget.x, smoothing);
       tilt.y = mix(tilt.y, tiltTarget.y, smoothing);
-      tiltAmount = Math.hypot(tilt.x, tilt.y);
-      const reach = tiltAmount > .015 ? 160 + 38 / tiltAmount : 0;
-      spider.tx = clamp(spider.x + tilt.x * reach, bounds.left, bounds.right);
-      spider.ty = clamp(spider.y + tilt.y * reach, bounds.top, bounds.bottom);
-    }
-    const dx = spider.tx-spider.x, dy = spider.ty-spider.y, distance = Math.hypot(dx, dy);
-    const facing = Math.atan2(dy, dx)+Math.PI/2;
-    const turn = Math.atan2(Math.sin(facing-spider.angle), Math.cos(facing-spider.angle));
-    if (distance>39)spider.angle+=clamp(turn, -dt*3.8, dt*3.8);
-    const alignment = Math.max(0, Math.cos(turn));
-    const desiredSpeed = distance>39?Math.min(tiltTarget ? 175*tiltAmount : 225, (distance-38)*6)*alignment*alignment:0;
-    spider.speed = mix(spider.speed, desiredSpeed, 1-Math.exp(-dt*9));
-    const travel = Math.min(spider.speed*dt, Math.max(0, distance-38));
-    const previousX = spider.x, previousY = spider.y;
-    if (travel>0) {
-      spider.x+=Math.sin(spider.angle)*travel;
-      spider.y-=Math.cos(spider.angle)*travel;
+      // Steering follows the tilt vector immediately. Turning the artwork must
+      // never stall travel, especially when reversing at an edge.
+      spider.x = clamp(spider.x + tilt.x * 230 * dt, bounds.left, bounds.right);
+      spider.y = clamp(spider.y + tilt.y * 230 * dt, bounds.top, bounds.bottom);
+      if (Math.hypot(tilt.x, tilt.y) > .02) {
+        const facing = Math.atan2(tilt.y, tilt.x)+Math.PI/2;
+        const turn = Math.atan2(Math.sin(facing-spider.angle), Math.cos(facing-spider.angle));
+        spider.angle += turn * (1-Math.exp(-dt*12));
+      }
+      spider.tx = spider.x;
+      spider.ty = spider.y;
+    } else {
+      const dx = spider.tx-spider.x, dy = spider.ty-spider.y, distance = Math.hypot(dx, dy);
+      const facing = Math.atan2(dy, dx)+Math.PI/2;
+      const turn = Math.atan2(Math.sin(facing-spider.angle), Math.cos(facing-spider.angle));
+      if (distance>39)spider.angle+=clamp(turn, -dt*3.8, dt*3.8);
+      const alignment = Math.max(0, Math.cos(turn));
+      const desiredSpeed = distance>39?Math.min(225, (distance-38)*6)*alignment*alignment:0;
+      spider.speed = mix(spider.speed, desiredSpeed, 1-Math.exp(-dt*9));
+      const travel = Math.min(spider.speed*dt, Math.max(0, distance-38));
+      if (travel>0) {
+        spider.x+=Math.sin(spider.angle)*travel;
+        spider.y-=Math.cos(spider.angle)*travel;
+      }
     }
     spider.vx = (spider.x-previousX)/Math.max(dt, .001);
     spider.vy = (spider.y-previousY)/Math.max(dt, .001);
-    updateFeet(dt, travel>.06);
+    updateFeet(dt, Math.hypot(spider.x-previousX, spider.y-previousY)>.06);
     render();
     animationFrame = requestAnimationFrame(tick);
   }
@@ -374,7 +382,10 @@ export function startHalloweenSpider(root, onMotionState = () => {}) {
       spider.ty = clamp(card.bottom-85, 65, innerHeight-65);
       return;
     }
-    if (enabled===active)return;
+    if (enabled===active) {
+      if (active && coarsePointer.matches && !reducedMotion.matches) tiltControl.start();
+      return;
+    }
     active = enabled;
     cancelAnimationFrame(animationFrame);
     canvas.classList.toggle('is-active', active);
@@ -396,6 +407,7 @@ export function startHalloweenSpider(root, onMotionState = () => {}) {
     initializeFeet();
     previous = performance.now();
     render();
+    if (coarsePointer.matches && !reducedMotion.matches) tiltControl.start();
     if (!reducedMotion.matches)animationFrame = requestAnimationFrame(tick);
   }
   const point = event => {
@@ -415,6 +427,7 @@ export function startHalloweenSpider(root, onMotionState = () => {}) {
   listen(reducedMotion, 'change', () => {
     cancelAnimationFrame(animationFrame);
     if (reducedMotion.matches) tiltControl.disable();
+    else if (active && coarsePointer.matches) tiltControl.start();
     previous = performance.now();
     if (active && !reducedMotion.matches)animationFrame = requestAnimationFrame(tick);
   });
@@ -425,7 +438,7 @@ export function startHalloweenSpider(root, onMotionState = () => {}) {
   listen(window, 'resize', resize);
   resize();
   syncMode();
-  return { enableTilt: () => { if (active && !reducedMotion.matches) return tiltControl.enable(); }, disableTilt: () => tiltControl.disable(), destroy: () => {
+  return { destroy: () => {
     tiltControl.destroy();
     controller.abort();
     modeObserver.disconnect();
