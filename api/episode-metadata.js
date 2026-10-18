@@ -1,7 +1,7 @@
 import process from 'node:process';
 import { accountServices } from '../server/accounts/firebase.js';
 import { initializeApp, getApps } from 'firebase/app';
-import { getFirestore, doc, getDoc, getDocs, collection, query, where, setDoc } from 'firebase/firestore';
+import { getFirestore, doc, getDoc, getDocs, collection, query, where } from 'firebase/firestore';
 import { normalizeEpisodes } from '../src/utils/episodes.js';
 
 export const config = { maxDuration: 60 };
@@ -18,7 +18,7 @@ export function createEpisodeMetadataHandler({
     readMovie = async id => process.env.SECURE_ACCOUNTS_ENABLED === 'true' ? (await accountServices().db.collection('Movies').doc(id).get()).data() : (await getDoc(doc(db(), 'Movies', id))).data(),
     readCache = async id => process.env.SECURE_ACCOUNTS_ENABLED === 'true' ? (await accountServices().db.collection('Settings').doc(`EpisodeMetadata_${id}`).get()).data() : (await getDoc(doc(db(), 'Settings', `EpisodeMetadata_${id}`))).data(),
     readEpisodes = async id => (process.env.SECURE_ACCOUNTS_ENABLED === 'true' ? await accountServices().db.collection('Episodes').where('movieID', '==', id).get() : await getDocs(query(collection(db(), 'Episodes'), where('movieID', '==', id)))).docs.map(item => ({ ...item.data(), id: item.id })),
-    saveCache = (id, values) => process.env.SECURE_ACCOUNTS_ENABLED === 'true' ? accountServices().db.collection('Settings').doc(`EpisodeMetadata_${id}`).set(values) : setDoc(doc(db(), 'Settings', `EpisodeMetadata_${id}`), values), now = Date.now,
+    now = Date.now,
 } = {}) {
     const memory = new Map(), pending = new Map();
     return async (req, res) => {
@@ -35,10 +35,9 @@ export function createEpisodeMetadataHandler({
                         if (!movie) return { items: [], missing: true };
                         if (previous?.version === stamp(movie) && previous.refreshAfter > now() && Array.isArray(previous.items)) return { items: previous.items };
                         const items = publicEpisodeMetadata(await readEpisodes(id));
-                        // This is an application cache, not a paid Firestore TTL/backup feature.
-                        if (new TextEncoder().encode(JSON.stringify(items)).length < 700000) {
-                            try { await saveCache(id, { version: stamp(movie), items, refreshAfter: now() + 86400000 }); } catch { /* Memory/CDN cache still works if persistence is unavailable. */ }
-                        }
+                        // GET must never wait for a Firestore write. The SDK can
+                        // retry quota-exhausted writes beyond the request timeout.
+                        // Shared memory/CDN caches below already cache this list.
                         return { items };
                     })().finally(() => pending.delete(id));
                     pending.set(id, loading);
