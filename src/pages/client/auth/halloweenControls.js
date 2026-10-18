@@ -91,7 +91,7 @@ export function bindFlashlightPointer({ root, onAim, doc = document }) {
         const eye = event.target.closest('.eye');
         lampDrag = eye && event.pointerType === 'touch'
             ? { eye, id: event.pointerId, x: event.clientX, y: event.clientY, moved: false } : null;
-        if (event.pointerType === 'touch' && !event.target.closest('input, textarea, button, a, [contenteditable="true"]')) {
+        if (event.pointerType === 'touch' && !event.target.closest('input, textarea, button, label, a, [contenteditable="true"]')) {
             capturedID = event.pointerId;
             root.setPointerCapture(event.pointerId);
         }
