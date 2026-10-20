@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- generatedAt: 2026-10-20T21:31:18.230Z -->
+<!-- generatedAt: 2026-10-20T21:46:55.612Z -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url><loc>https://www.mfilm.online/</loc></url>
   <url><loc>https://www.mfilm.online/film-new</loc></url>
@@ -1244,6 +1244,8 @@
   <url><loc>https://www.mfilm.online/phim/tenzing-vuon-toi-dinh-everest</loc><lastmod>2026-10-19T22:32:05.622Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261019/tenzing-vuon-toi-dinh-everest-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/phim/gia-thuyet-tinh-yeu</loc><lastmod>2026-10-19T22:32:09.738Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261019/gia-thuyet-tinh-yeu-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/phim/nu-luat-su-ky-la-minami</loc><lastmod>2026-10-20T02:57:42.000Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261020/nu-luat-su-ky-la-minami-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/tinh-yeu-trong-vo-boc-tinh-yeu-nguy-trang</loc><lastmod>2026-10-20T21:46:32.149Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261020/tinh-yeu-trong-vo-boc-tinh-yeu-nguy-trang-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/chuyen-tinh-havard</loc><lastmod>2026-10-20T21:46:51.416Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261021/chuyen-tinh-havard-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/dien-vien/shin-jun-seop</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/garth-breytenbach</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/richard-roxburgh</loc></url>
@@ -7290,7 +7292,7 @@
   <url><loc>https://www.mfilm.online/dien-vien/matsuoka-yoshitsugu</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/wasu-srimook</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/kan-tanaka</loc></url>
-  <url><loc>https://www.mfilm.online/dien-vien/park-jun-myun</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/park-jun-myun-2</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/saya-fukuzumi</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/yasuhiro-mamiya</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/craig-baxley-jr</loc></url>
@@ -9179,6 +9181,25 @@
   <url><loc>https://www.mfilm.online/dien-vien/kami-hiraiwa</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/akihiro-kakuta</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/sakura-takeuchi</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/seorina</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/kim-jung-hyun</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/yeon-woo</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/ryu-seung-soo</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/park-jun-myun</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/jeong-han-seol</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/kim-do-yoon</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/kim-ki-bang</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/nam-hae-jun</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/ahn-sang-woo</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/hong-eun-hee</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/kim-rae-won</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/kim-tae-hee</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/lee-jung-jin</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/kang-nam-gil</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/joo-hyun</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/ben-wells</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/frank-gorshin</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/seo-ji-hee</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/cho-yong-won</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/larry-ditillio</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/pham-ngoc-tuan</loc><lastmod>2026-08-03T16:15:12.244Z</lastmod></url>
@@ -10455,6 +10476,7 @@
   <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=10</loc></url>
   <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=11</loc></url>
   <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=12</loc></url>
+  <url><loc>https://www.mfilm.online/topic/phieu-luu-sinh-ton?page=13</loc></url>
   <url><loc>https://www.mfilm.online/topic/gia-dinh-am-ap?page=2</loc></url>
   <url><loc>https://www.mfilm.online/topic/gia-dinh-am-ap?page=3</loc></url>
   <url><loc>https://www.mfilm.online/topic/phim-han-chon-loc?page=2</loc></url>
@@ -10631,6 +10653,7 @@
   <url><loc>https://www.mfilm.online/category/Phi%C3%AAu%20L%C6%B0u?page=10</loc></url>
   <url><loc>https://www.mfilm.online/category/Phi%C3%AAu%20L%C6%B0u?page=11</loc></url>
   <url><loc>https://www.mfilm.online/category/Phi%C3%AAu%20L%C6%B0u?page=12</loc></url>
+  <url><loc>https://www.mfilm.online/category/Phi%C3%AAu%20L%C6%B0u?page=13</loc></url>
   <url><loc>https://www.mfilm.online/category/Ch%C3%ADnh%20K%E1%BB%8Bch?page=2</loc></url>
   <url><loc>https://www.mfilm.online/category/Ch%C3%ADnh%20K%E1%BB%8Bch?page=3</loc></url>
   <url><loc>https://www.mfilm.online/category/Ch%C3%ADnh%20K%E1%BB%8Bch?page=4</loc></url>
