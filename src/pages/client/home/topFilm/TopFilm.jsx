@@ -1,8 +1,10 @@
 import { getPlanAppearance } from '../../../../utils/planAppearance.js';
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import useDailyMovieRanking from '../../../../hooks/useDailyMovieRanking';
+import useHomeMovies from '../../../../hooks/useHomeMovies';
+import { withDailyRankingFallback } from '../../../../utils/dailyMovieRanking';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -14,7 +16,9 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
 function TopFilm() {
-    const { items: topMovies, status } = useDailyMovieRanking();
+    const { items: dailyMovies } = useDailyMovieRanking();
+    const previousTop = useHomeMovies('top');
+    const topMovies = useMemo(() => withDailyRankingFallback(dailyMovies, previousTop || []), [dailyMovies, previousTop]);
 
     const plans = useContext(PlanContext);
 
@@ -22,14 +26,14 @@ function TopFilm() {
         <div className='bg-[#111827] w-full text-white py-10 px-6 md:px-10 overflow-hidden'>
             <div className='mb-5'>
                 <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>Top 10 phim hot hôm nay</h2>
-                <p className="mt-2 text-xs md:text-sm text-slate-400">Từ lượt bấm, mở và xem phim của mọi người trong ngày.</p>
+                <p className="mt-2 text-xs md:text-sm text-slate-400">{dailyMovies.length > 0
+                    ? 'Từ lượt bấm, mở và xem phim của mọi người trong ngày.'
+                    : 'Đang cập nhật hôm nay · Tạm xếp theo lượt xem tích lũy.'}</p>
             </div>
 
             {topMovies.length === 0 ? (
-                <div role="status" className="flex min-h-48 items-center justify-center rounded-2xl border border-white/10 bg-white/3 px-6 text-center text-sm text-slate-400">
-                    {status === 'loading' ? 'Đang cập nhật bảng xếp hạng hôm nay…' : status === 'error'
-                        ? 'Bảng xếp hạng đang tạm gián đoạn. Vui lòng quay lại sau ít phút.'
-                        : 'Hôm nay chưa có lượt tương tác. Những phim được quan tâm sẽ xuất hiện tại đây.'}
+                <div role="status" aria-label="Đang tải phim" className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6">
+                    {Array.from({ length: 6 }, (_, index) => <div key={index} className="aspect-2/3 animate-pulse rounded-xl bg-white/5" />)}
                 </div>
             ) : <>
 
@@ -163,8 +167,8 @@ function TopFilm() {
                                                     <FaListUl /> {e.endEpisode} Tập
                                                 </span>
                                             )}
-                                            <span title={`${e.dailyActivity.click} lượt bấm · ${e.dailyActivity.open} lượt mở · ${e.dailyActivity.watch} lượt xem hôm nay`} className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] whitespace-nowrap">
-                                                <FaEye /> {e.dailyActivity.watch} hôm nay
+                                            <span title={e.dailyActivity ? `${e.dailyActivity.click} lượt bấm · ${e.dailyActivity.open} lượt mở · ${e.dailyActivity.watch} lượt xem hôm nay` : 'Lượt xem tích lũy'} className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] whitespace-nowrap">
+                                                <FaEye /> {e.dailyActivity ? `${e.dailyActivity.watch} hôm nay` : `${Number(e.views) || 0} lượt xem`}
                                             </span>
                                         </div>
                                     </div>

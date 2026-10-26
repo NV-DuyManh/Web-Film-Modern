@@ -4,8 +4,10 @@ The homepage ranks all movies using activity from 00:00–24:00 in Vietnam
 (`Asia/Ho_Chi_Minh`), independently of lifetime `Movies.views` and admin `isHot`.
 Scores are `click + 2 × open + 5 × watch`. A watch requires 30 seconds of actual
 playback; seeking and paused time do not qualify. The public eye badge is today's
-qualified watch count, without a fabricated offset. Movies without activity are
-not padded into the top ten. A new installation starts collecting from deployment.
+qualified watch count, without a fabricated offset. If fewer than ten movies have
+daily activity, fill from the previous homepage top list sorted by lifetime views,
+without duplicates. These fallback cards label their count as lifetime views;
+they never claim daily interactions. A new installation starts collecting from deployment.
 
 Guests and members use the same anonymous browser identifier. No account, email,
 authentication token or raw IP is stored in activity records. The server hashes
@@ -25,8 +27,8 @@ Each batch writes one receipt plus at most one shard per affected day, rather
 than editing movie metadata per view. Eight counter shards avoid one global hot
 document. Homepage reads use a shared 60-second server cache and CDN cache; a
 visible tab refreshes each minute, so changes normally appear within two minutes.
-Midnight limits both cache lifetime and client state. Failures show an unavailable
-state rather than lifetime scores labelled as today's activity.
+Midnight limits both cache lifetime and client state. On an empty day or API failure,
+the client uses the previous list until daily results become available.
 
 Firestore's existing free quotas still apply. Counter documents and anonymous
 receipts persist; no paid TTL feature or billing upgrade is enabled. Receipts

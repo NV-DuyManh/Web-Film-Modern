@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { FieldValue } from 'firebase-admin/firestore';
-import { ACTIVITY_COOLDOWN_MS, createWatchMeter, rankDailyMovies, vietnamDay } from '../src/utils/dailyMovieRanking.js';
+import { ACTIVITY_COOLDOWN_MS, createWatchMeter, rankDailyMovies, vietnamDay, withDailyRankingFallback } from '../src/utils/dailyMovieRanking.js';
 import { createDailyActivityStore } from '../server/analytics/dailyActivity.js';
 import { createDailyRankingHandler } from '../server/analytics/dailyRankingHandler.js';
 import { createMovieActivityTracker } from '../src/services/dailyMovieActivity.js';
@@ -65,6 +65,21 @@ test('ranking uses only counted daily signals, weights viewing higher, merges sh
     assert.deepEqual(rows.map(row => [row.movieId, row.score]), [['watch', 15], ['open', 6], ['click', 4]]);
     assert.equal(rankDailyMovies([{ movies: Object.fromEntries(Array.from({ length: 15 }, (_, i) => [`m${i}`, { open: i + 1 }])) }]).length, 10);
     assert.deepEqual(rankDailyMovies([{ movies: { zero: { views: 999999 } } }]), []);
+});
+
+test('empty daily rankings use the previous list by descending views, partial rankings fill ten without duplicating or fabricating daily counts', () => {
+    const previous = Array.from({ length: 10 }, (_, index) => ({ id: `m${index}`, views: index + 1 }));
+    const original = structuredClone(previous);
+    const empty = withDailyRankingFallback([], previous);
+    assert.equal(empty.length, 10);
+    assert.deepEqual(empty.map(movie => movie.views), [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]);
+    assert.ok(empty.every(movie => movie.dailyActivity === null));
+    const daily = [{ id: 'm1', dailyActivity: { score: 9, watch: 1 } }, { id: 'new', dailyActivity: { score: 3, watch: 0 } }];
+    const filled = withDailyRankingFallback(daily, previous);
+    assert.equal(filled.length, 10);
+    assert.equal(new Set(filled.map(movie => movie.id)).size, 10);
+    assert.deepEqual(filled.slice(0, 2), daily);
+    assert.deepEqual(previous, original);
 });
 
 test('watching requires 30 elapsed playback seconds; seeking, paused time and repeated callbacks do not inflate it', () => {

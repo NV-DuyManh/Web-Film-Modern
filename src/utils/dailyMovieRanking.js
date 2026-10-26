@@ -26,6 +26,14 @@ export function rankDailyMovies(shards, limit = 10) {
         .slice(0, limit);
 }
 
+export function withDailyRankingFallback(daily = [], previous = [], limit = 10) {
+    const selected = new Map();
+    for (const movie of daily) if (movie?.id && !selected.has(movie.id)) selected.set(movie.id, movie);
+    const fallback = [...previous].sort((a, b) => (Number(b.views) || 0) - (Number(a.views) || 0) || String(a.id).localeCompare(String(b.id)));
+    for (const movie of fallback) if (movie?.id && !selected.has(movie.id)) selected.set(movie.id, { ...movie, dailyActivity: null });
+    return [...selected.values()].slice(0, limit);
+}
+
 // Count playback, not a seek to second 30 or time spent paused/buffering.
 export function createWatchMeter(now = Date.now) {
     let previous, watched = 0, sent = false;
