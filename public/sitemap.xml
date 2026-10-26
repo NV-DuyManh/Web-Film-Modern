@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- generatedAt: 2026-10-26T21:51:27.534Z -->
+<!-- generatedAt: 2026-10-26T22:49:28.359Z -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url><loc>https://www.mfilm.online/</loc></url>
   <url><loc>https://www.mfilm.online/film-new</loc></url>
@@ -1307,6 +1307,13 @@
   <url><loc>https://www.mfilm.online/phim/dau-vet-phong-sinh</loc><lastmod>2026-10-26T13:26:29.000Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261025/dau-vet-phong-sinh-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/phim/hau-due-mat-troi</loc><lastmod>2026-10-26T00:59:27.000Z</lastmod><image:image><image:loc>https://phimimg.com/upload/vod/20240814-1/babd321c8a7bedc86b09fead89459ed8.jpg</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/phim/quy-ong-hoan-hao-va-co-nang-tam-duoc</loc><lastmod>2026-10-26T01:23:15.000Z</lastmod><image:image><image:loc>https://phimimg.com/upload/vod/20240116-1/9df6b55da47fc43179bfc9466e78c573.jpg</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/sieu-trom-lupin-phan-1</loc><lastmod>2026-10-26T22:47:22.319Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261024/lupin-phan-1-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/sieu-trom-lupin-phan-2</loc><lastmod>2026-10-26T22:47:24.978Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261024/lupin-phan-2-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/sieu-trom-lupin-phan-3</loc><lastmod>2026-10-26T22:47:29.177Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261024/lupin-phan-3-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/sieu-trom-lupin-phan-4</loc><lastmod>2026-10-26T22:47:32.399Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261024/lupin-phan-4-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/ky-tuc-xa-lam-chieu-ky-tuc-xa-ba-dao</loc><lastmod>2026-10-26T22:48:02.674Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20260921/ky-tuc-xa-lam-chieu-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/quy-bat-hon</loc><lastmod>2026-10-26T22:48:59.393Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261026/quy-bat-hon-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/cuoc-chien-am-thuc</loc><lastmod>2026-10-26T22:49:05.433Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261026/cuoc-chien-am-thuc-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/dien-vien/shin-jun-seop</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/garth-breytenbach</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/richard-roxburgh</loc></url>
@@ -9584,6 +9591,25 @@
   <url><loc>https://www.mfilm.online/dien-vien/nguy-triet-minh</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/tu-nhuoc-ham</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/dai-van-pham</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/quang-tuan</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/dinh-y-nhung</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/anh-pham</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/la-thanh</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/uy-tran</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/quoc-tan</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/gia-phong</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/huy-anh</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/ngan-quynh</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/sy-toan</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/ahn-hyo-seop</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/hong-hwa-yeon</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/chang-ryul</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/eugene-jung</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/jang-young-nam</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/cha-ji-yeon</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/lee-je-hyeong</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/bret-allan-lindquist</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/kwak-min-ho</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/cho-yong-won</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/larry-ditillio</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/pham-ngoc-tuan</loc><lastmod>2026-08-03T16:15:12.244Z</lastmod></url>
@@ -10219,6 +10245,7 @@
   <url><loc>https://www.mfilm.online/tac-gia/takeshi-kitano</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/%E1%84%8B%E1%85%B5%E1%84%8B%E1%85%B3%E1%86%BC%E1%84%87%E1%85%A9%E1%86%A8</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/ly-sang</loc></url>
+  <url><loc>https://www.mfilm.online/tac-gia/bui-van-hai</loc></url>
   <url><loc>https://www.mfilm.online/nhan-vat/la-tieu-hac</loc></url>
   <url><loc>https://www.mfilm.online/nhan-vat/banana</loc><lastmod>2026-08-03T16:21:53.458Z</lastmod></url>
   <url><loc>https://www.mfilm.online/nhan-vat/hwang-geum-yee</loc></url>
@@ -10864,6 +10891,7 @@
   <url><loc>https://www.mfilm.online/actors?page=245</loc></url>
   <url><loc>https://www.mfilm.online/actors?page=246</loc></url>
   <url><loc>https://www.mfilm.online/actors?page=247</loc></url>
+  <url><loc>https://www.mfilm.online/actors?page=248</loc></url>
   <url><loc>https://www.mfilm.online/topic/tu-tien-co-trang?page=2</loc></url>
   <url><loc>https://www.mfilm.online/topic/anime-hanh-dong?page=2</loc></url>
   <url><loc>https://www.mfilm.online/topic/anime-hanh-dong?page=3</loc></url>
