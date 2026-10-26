@@ -19,5 +19,5 @@ export function movieSummary(movie) {
     return { ...summary, ...(description ? { description: String(description).slice(0, 400) } : {}) };
 }
 export function movieIndexRecord(movie) {
-    return Object.fromEntries(['id', 'name', 'otherName', 'slug', 'routeSlug', 'updatedAt', 'seriesMode', 'seriesTitle', 'seriesKey', 'seasonNumber', 'watchOrder', 'aliases'].filter(key => movie[key] !== undefined).map(key => [key, movie[key]]));
+    return Object.fromEntries(['id', 'name', 'otherName', 'slug', 'routeSlug', 'updatedAt', 'isHot', 'seriesMode', 'seriesTitle', 'seriesKey', 'seasonNumber', 'watchOrder', 'aliases'].filter(key => movie[key] !== undefined).map(key => [key, movie[key]]));
 }

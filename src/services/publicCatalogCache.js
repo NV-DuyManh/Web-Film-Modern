@@ -173,7 +173,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
                     }
                 }
                 // Keep confirmed admin edits visible while the daily CDN publication catches up.
-                const fields = Object.fromEntries(['id', 'name', 'otherName', 'slug', 'routeSlug', 'updatedAt', 'seriesMode', 'seriesTitle', 'seriesKey', 'seasonNumber', 'watchOrder'].filter(field => item[field] !== undefined).map(field => [field, item[field]]));
+                const fields = Object.fromEntries(['id', 'name', 'otherName', 'slug', 'routeSlug', 'updatedAt', 'isHot', 'seriesMode', 'seriesTitle', 'seriesKey', 'seasonNumber', 'watchOrder'].filter(field => item[field] !== undefined).map(field => [field, item[field]]));
                 if (removed || Object.keys(fields).length > 1) indexEdits.set(item.id, { item: { ...indexEdits.get(item.id)?.item, ...fields }, removed, at: now() });
                 const index = records.get('MovieIndex');
                 if (Array.isArray(index?.items)) {

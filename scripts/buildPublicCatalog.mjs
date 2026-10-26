@@ -11,7 +11,7 @@ import { uniqueKkphimMovies } from '../src/utils/kkphimIdentity.js';
 export async function buildPublicCatalog() {
     const snapshot = JSON.parse(await readFile(new URL('../server/seo/catalog.json', import.meta.url), 'utf8'));
     snapshot.catalog.Movies = uniqueKkphimMovies(snapshot.catalog.Movies);
-    const version = createHash('sha256').update('home-index-v6-movie-parts:' + JSON.stringify(snapshot)).digest('hex').slice(0, 16);
+    const version = createHash('sha256').update('home-index-v7-admin-hot:' + JSON.stringify(snapshot)).digest('hex').slice(0, 16);
     const output = new URL(`../public/catalog/${version}/`, import.meta.url);
     await mkdir(output, { recursive: true });
     const manifest = { version, generatedAt: snapshot.generatedAt, collections: {} };

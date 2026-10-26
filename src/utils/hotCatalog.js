@@ -13,6 +13,12 @@ export function applyHotFlags(movies, edits = {}) {
         ? { ...movie, isHot: edits[movie.id].isHot } : movie);
 }
 
+// Admin lists need every Hot movie before pagination, with no banner limit.
+// Stable sorting preserves the catalog order within each group.
+export function prioritizeHotMovies(movies = [], edits = {}) {
+    return applyHotFlags(movies, edits).sort((a, b) => Number(b.isHot === true) - Number(a.isHot === true));
+}
+
 // Explicit admin choices override the deployment snapshot, including false.
 export function hotCatalogMovies(movies, edits = {}) {
     const byID = new Map(movies.map(movie => [movie.id, movie]));

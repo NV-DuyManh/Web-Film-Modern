@@ -19,6 +19,7 @@ import { resolveMovieImages } from '../../../../utils/movieImages';
 import MovieImage from '../../../../components/MovieImage';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { prioritizeHotMovies } from '../../../../utils/hotCatalog';
 
 
 const getStatusStyle = (status) => {
@@ -51,10 +52,12 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
     
     
     const categories = useContext(CategoryContext);
+    const hotControls = useLiveDocuments('PublicCatalogControls', ['home']);
+    const hotEdits = hotControls[0]?.hot;
 
     const dataSearch = useMemo(() =>
-        movies?.filter(e => searchTV(e?.name).includes(searchTV(search)) || searchTV(e?.otherName).includes(searchTV(search))),
-        [search, movies]
+        prioritizeHotMovies(movies, hotEdits).filter(e => searchTV(e?.name).includes(searchTV(search)) || searchTV(e?.otherName).includes(searchTV(search))),
+        [search, movies, hotEdits]
     );
 
     const page = Math.min(pagination.search === search ? pagination.page : 1, Math.max(1, Math.ceil((dataSearch?.length || 0) / rowsPerPage)));
