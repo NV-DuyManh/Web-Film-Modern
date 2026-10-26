@@ -154,10 +154,10 @@ function TopFilm() {
 
                                             <div className="flex flex-1 flex-col min-w-0 mt-1">
                                                 <h3 className="text-white font-bold text-xs md:text-sm truncate transition-colors group-hover:text-[#facc15]">
-                                                    {e.name || e.otherName}
+                                                    {e.otherName || e.name}
                                                 </h3>
                                                 <p className="text-slate-400 text-[9px] md:text-[11px] truncate mt-0.5 transition-colors group-hover:text-slate-200">
-                                                    {e.otherName || e.name}
+                                                    {e.name || e.otherName}
                                                 </p>
                                             </div>
                                         </div>
