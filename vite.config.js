@@ -103,9 +103,18 @@ function vercelAiDevPlugin() {
 
 function publicCatalogDevPlugin() {
     const install = server => {
-        for (const name of ['catalog-page', 'public-catalog', 'episode-metadata', 'home-hot', 'chat-rankings']) server.middlewares.use(`/api/${name}`, async (req, res) => {
+        for (const name of ['catalog-page', 'public-catalog', 'episode-metadata', 'home-hot', 'chat-rankings', 'daily-ranking']) server.middlewares.use(`/api/${name}`, async (req, res) => {
             try {
-                const { default: handler } = await import(pathToFileURL(resolve(process.cwd(), 'api', `${name}.js`)).href);
+                if (req.method === 'POST') {
+                    let body = '';
+                    for await (const chunk of req) {
+                        body += chunk;
+                        if (body.length > 12000) { res.statusCode = 413; res.end(); return; }
+                    }
+                    req.body = body ? JSON.parse(body) : {};
+                }
+                const modulePath = name === 'daily-ranking' ? 'server/analytics/dailyRankingHandler.js' : `api/${name}.js`;
+                const { default: handler } = await import(pathToFileURL(resolve(process.cwd(), modulePath)).href);
                 await handler(req, { setHeader: (key, value) => res.setHeader(key, value),
                     status(code) { res.statusCode = code; return this; }, end(body) { res.end(body); } });
             } catch { res.statusCode = 503; res.end('Public catalog unavailable'); }

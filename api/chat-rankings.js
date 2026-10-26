@@ -1,4 +1,5 @@
 import { accountServices } from '../server/accounts/firebase.js';
+import dailyRankingHandler from '../server/analytics/dailyRankingHandler.js';
 
 export const config = { maxDuration: 15 };
 
@@ -51,4 +52,8 @@ export function createChatRankingsHandler({ readRows = async type => {
         }
     };
 }
-export default createChatRankingsHandler();
+const chatRankingsHandler = createChatRankingsHandler();
+export default function handler(req, res) {
+    return new URL(req.url, 'https://mfilm.online').searchParams.get('type') === 'daily'
+        ? dailyRankingHandler(req, res) : chatRankingsHandler(req, res);
+}

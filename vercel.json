@@ -1,5 +1,8 @@
 {
   "functions": {
+    "api/chat-rankings.js": {
+      "includeFiles": "server/seo/catalog.json"
+    },
     "api/home-hot.js": {
       "includeFiles": "server/seo/catalog.json"
     },
@@ -17,6 +20,10 @@
     }
   },
   "routes": [
+    {
+      "src": "/api/daily-ranking",
+      "dest": "/api/chat-rankings?type=daily"
+    },
     {
       "src": "/catalog/[a-f0-9]{16}/(.*)",
       "headers": {

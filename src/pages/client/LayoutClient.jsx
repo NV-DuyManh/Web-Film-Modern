@@ -1,17 +1,18 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import HeaderClient from '../../components/client/header/HeaderClient';
 import ClientRouters from '../../routers/ClientRouters';
 import FooterClient from '../../components/client/footer/FooterClient';
 import LoadingScreen from '../../components/client/loadingScreen/LoadingScreen';
 import ChatLauncher from '../../components/client/chatBot/ChatLauncher';
+import { startDailyMovieActivity } from '../../services/dailyMovieActivity';
 // import GeminiChatBot from '../../components/client/chatBot/GeminiChatBot';
 
 function LayoutClient() {
     const location = useLocation();
-    const navigate = useNavigate();
     const scrollMap = useRef({});
     const prevPath = useRef(location.pathname);
+    useEffect(() => startDailyMovieActivity(), []);
 
     useEffect(() => {
         const handleScroll = () => {

@@ -28,6 +28,7 @@ import Swal from 'sweetalert2';
 import ListEpisodes from '../playfilm/ListEpisodes';
 import Comment from './Comment';
 import SEO from '../../../../components/SEO';
+import { trackDailyMovieActivity } from '../../../../services/dailyMovieActivity';
 import { trackEvent } from '../../../../services/eventTracker';function DetailFilm() {
     const { slug } = useParams();
     const [activeTab, setActiveTab] = useState('episodes');
@@ -67,6 +68,7 @@ import { trackEvent } from '../../../../services/eventTracker';function DetailFi
 
     useEffect(() => {
         if (realMovieId) {
+            trackDailyMovieActivity(realMovieId, 'open');
             trackEvent('movie_view', realMovieId);
         }
     }, [realMovieId, isLogin?.id]);

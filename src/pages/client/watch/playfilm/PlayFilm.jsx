@@ -15,7 +15,6 @@ import { Link, useParams, useNavigate, useSearchParams } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion';
 import { FaChevronLeft, FaPlay, FaClosedCaptioning, FaMicrophone, FaBell, FaHistory, FaBolt } from 'react-icons/fa';
 import { getObjectById } from '../../../../services/firebaseResponse';
-import { updateDocument } from '../../../../services/firebaseService';
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import ListEpisodes from './ListEpisodes';
 import { saveResume, clearResume, formatTime, timeAgo } from '../../../../utils/watchHistory';
@@ -32,6 +31,8 @@ import SEO from '../../../../components/SEO';
 import PageLoadingSpinner from '../../../../components/common/PageLoadingSpinner';
 import { trackEvent } from '../../../../services/eventTracker';
 import { flushActiveResumeSync } from '../../../../services/resumeSyncService';
+import { trackDailyMovieActivity } from '../../../../services/dailyMovieActivity';
+import { createWatchMeter } from '../../../../utils/dailyMovieRanking';
 
 
 function PlayFilm() {
@@ -47,6 +48,7 @@ function PlayFilm() {
     const lastProgressTimeRef = useRef(0);
     const completedEpisodeRef = useRef(null);
     const playerRef = useRef(null);
+    const dailyWatchMeter = useRef(createWatchMeter());
     const { isLogin } = useContext(AuthContext);
     const subscriptions = useSubscriptions();
     const rentals = useRentMovies();
@@ -83,13 +85,12 @@ function PlayFilm() {
     const activeServer = serverParam === '2' && playEpisodes.url2 ? 2 : 1;
     const nextPrompt = pendingNext?.fromEpisodeId === playEpisodes.id ? pendingNext : null;
     const nextPartPrompt = nextPartAfterCompletion(finished, movie, playEpisodes, episodeShow, partGroup, canWatch);
-    useEffect(() => { lastProgressTimeRef.current = 0; completedEpisodeRef.current = null; }, [realMovieId, playEpisodes?.id]);
+    useEffect(() => { lastProgressTimeRef.current = 0; completedEpisodeRef.current = null; dailyWatchMeter.current.reset(); }, [realMovieId, playEpisodes?.id]);
 
     useEffect(() => {
         if (!realMovieId) return;
 
-        const currentViews = movie?.views || 0;
-        updateDocument("Movies", { id: realMovieId, views: currentViews + 1 }, true).catch(e => console.error(e));
+        trackDailyMovieActivity(realMovieId, 'open');
 
         // Big Data Telemetry: Emit movie_view event
         trackEvent('movie_view', realMovieId, playEpisodes?.id, {
@@ -111,6 +112,7 @@ function PlayFilm() {
 
 
     const handleTimeUpdate = useCallback((currentSeconds, playerDurationSeconds) => {
+        if (realMovieId && playEpisodes?.id && dailyWatchMeter.current.sample(currentSeconds)) trackDailyMovieActivity(realMovieId, 'watch');
         if (playEpisodes?.id && realMovieId && currentSeconds > 0 && completedEpisodeRef.current !== playEpisodes.id) {
             saveResume(realMovieId, {
                 episodeId: playEpisodes.id,

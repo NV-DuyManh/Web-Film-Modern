@@ -1,8 +1,8 @@
 import { getPlanAppearance } from '../../../../utils/planAppearance.js';
 import MovieImage from '../../../../components/MovieImage';
 import { routeSegment } from '../../../../utils/nameRoutes';
-import React, { useContext, useMemo, useState, useEffect } from 'react';
-import useHomeMovies from '../../../../hooks/useHomeMovies';
+import React, { useContext } from 'react';
+import useDailyMovieRanking from '../../../../hooks/useDailyMovieRanking';
 import { Swiper, SwiperSlide } from '../../../../components/common/VisibleSwiper';
 import { Navigation } from 'swiper/modules';
 import 'swiper/css';
@@ -14,70 +14,24 @@ import { PlanContext } from '../../../../contexts/PlanProvider';
 import { Link } from 'react-router-dom';
 
 function TopFilm() {
-    const movies = useHomeMovies('top');
-    const [realtimeTrending, setRealtimeTrending] = useState(null);
-    const REALTIME_TRENDING_ENABLED = import.meta.env?.VITE_REALTIME_TRENDING_ENABLED === 'true';
-    const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
-
-    useEffect(() => {
-        if (!REALTIME_TRENDING_ENABLED) return;
-
-        let isMounted = true;
-        fetch(`${API_BASE_URL.replace(/\/+$/, '')}/analytics/trending?limit=10`)
-            .then(res => res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`)))
-            .then(json => {
-                if (isMounted && Array.isArray(json.data) && json.data.length > 0) {
-                    setRealtimeTrending(json.data);
-                }
-            })
-            .catch(() => {
-                // Silently fallback to local score calculation
-            });
-
-        return () => { isMounted = false; };
-    }, [REALTIME_TRENDING_ENABLED, API_BASE_URL]);
-
-    const topMovies = useMemo(() => {
-        if (!movies) return [];
-
-        // If real-time trending is active and returned data, map and preserve full movie objects
-        if (realtimeTrending && realtimeTrending.length > 0) {
-            const mapped = realtimeTrending
-                .map(item => movies.find(m => m.id === item.movieId || m.slug === item.slug) || item)
-                .filter(Boolean);
-            if (mapped.length > 0) return mapped;
-        }
-
-        const calculateTrendingScore = (movie) => {
-            const views = Number(movie.views) || 0;
-            const createdAt = movie.createdAt ? new Date(movie.createdAt).getTime() : new Date('2024-01-01').getTime();
-            const ageInDays = Math.max(1, (new Date().getTime() - createdAt) / (1000 * 60 * 60 * 24));
-            const velocity = views / ageInDays;
-
-            let engagementBonus = 1.0;
-            if (movie.planID) engagementBonus += 0.2;
-            if (movie.rent) engagementBonus += 0.3;
-
-            return (views * 0.3 + velocity * 0.7) * engagementBonus;
-        };
-
-        return [...movies].sort((a, b) => calculateTrendingScore(b) - calculateTrendingScore(a)).slice(0, 10);
-    }, [movies, realtimeTrending]);
+    const { items: topMovies, status } = useDailyMovieRanking();
 
     const plans = useContext(PlanContext);
 
     return (
         <div className='bg-[#111827] w-full text-white py-10 px-6 md:px-10 overflow-hidden'>
-            <div className='mb-2 flex items-center justify-between'>
-                <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>Top 10 phim bộ hôm nay</h2>
-                {realtimeTrending && (
-                    <span className='hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-semibold'>
-                        <span className='w-2 h-2 rounded-full bg-green-400 animate-pulse'></span>
-                        Real-Time Stream
-                    </span>
-                )}
+            <div className='mb-5'>
+                <h2 className='font-bold text-2xl md:text-3xl glow-text-multi'>Top 10 phim hot hôm nay</h2>
+                <p className="mt-2 text-xs md:text-sm text-slate-400">Từ lượt bấm, mở và xem phim của mọi người trong ngày.</p>
             </div>
 
+            {topMovies.length === 0 ? (
+                <div role="status" className="flex min-h-48 items-center justify-center rounded-2xl border border-white/10 bg-white/3 px-6 text-center text-sm text-slate-400">
+                    {status === 'loading' ? 'Đang cập nhật bảng xếp hạng hôm nay…' : status === 'error'
+                        ? 'Bảng xếp hạng đang tạm gián đoạn. Vui lòng quay lại sau ít phút.'
+                        : 'Hôm nay chưa có lượt tương tác. Những phim được quan tâm sẽ xuất hiện tại đây.'}
+                </div>
+            ) : <>
 
             <div className="movie-slider-wrapper relative group/slider">
                 <button aria-label="Previous" className="movie-nav-btn movie-nav-btn--prev top-prev-btn" draggable="false">
@@ -196,10 +150,10 @@ function TopFilm() {
 
                                             <div className="flex flex-1 flex-col min-w-0 mt-1">
                                                 <h3 className="text-white font-bold text-xs md:text-sm truncate transition-colors group-hover:text-[#facc15]">
-                                                    {e.otherName}
+                                                    {e.name || e.otherName}
                                                 </h3>
                                                 <p className="text-slate-400 text-[9px] md:text-[11px] truncate mt-0.5 transition-colors group-hover:text-slate-200">
-                                                    {e.name}
+                                                    {e.otherName || e.name}
                                                 </p>
                                             </div>
                                         </div>
@@ -209,8 +163,8 @@ function TopFilm() {
                                                     <FaListUl /> {e.endEpisode} Tập
                                                 </span>
                                             )}
-                                            <span className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] whitespace-nowrap">
-                                                <FaEye /> {(Number(e.views) || 0) + 100}
+                                            <span title={`${e.dailyActivity.click} lượt bấm · ${e.dailyActivity.open} lượt mở · ${e.dailyActivity.watch} lượt xem hôm nay`} className="flex items-center gap-1.5 text-white bg-linear-to-r from-purple-500 to-fuchsia-600 px-2.5 py-0.5 rounded-full shadow-md transition hover:scale-105 hover:shadow-[0_0_15px_rgba(192,38,211,0.6)] whitespace-nowrap">
+                                                <FaEye /> {e.dailyActivity.watch} hôm nay
                                             </span>
                                         </div>
                                     </div>
@@ -225,6 +179,7 @@ function TopFilm() {
                     <FaChevronRight />
                 </button>
             </div>
+            </>}
         </div>
     );
 }
