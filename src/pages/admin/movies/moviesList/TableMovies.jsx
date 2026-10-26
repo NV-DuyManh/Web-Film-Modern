@@ -19,6 +19,7 @@ import { resolveMovieImages } from '../../../../utils/movieImages';
 import MovieImage from '../../../../components/MovieImage';
 import { searchTV } from '../../../../components/admin/search/SearchTV';
 import { getOptimizedUrl } from '../../../../utils/cloudinary';
+import { getDefaultAvatar, getSafeEntityAvatar } from '../../../../utils/appUtils';
 import { prioritizeHotMovies } from '../../../../utils/hotCatalog';
 
 
@@ -107,13 +108,27 @@ function TableMovies({ movies, search, handleEdit, handleDelete, handleView }) {
         const tooltipWidth = totalItems <= 1 ? "w-36" : totalItems === 2 ? "w-47.5" : totalItems <= 4 ? "w-65" : "w-95";
 
         const renderItem = (item, type) => {
+            const avatar = getSafeEntityAvatar(item.imgUrl, item.sexID);
+            const optimizedAvatar = getOptimizedUrl(avatar, 200, 200, 'avatar');
+            const fallbackAvatar = getDefaultAvatar(item.sexID);
             const hoverRing = type === 'actor' ? 'group-hover:ring-green-400 group-hover:shadow-[0_0_15px_rgba(74,222,128,0.6)]' : type === 'author' ? 'group-hover:ring-amber-400 group-hover:shadow-[0_0_15px_rgba(251,191,36,0.6)]' : 'group-hover:ring-pink-400 group-hover:shadow-[0_0_15px_rgba(244,114,182,0.6)]';
             const hoverText = type === 'actor' ? 'group-hover:text-green-300 group-hover:drop-shadow-[0_0_5px_rgba(74,222,128,0.8)]' : type === 'author' ? 'group-hover:text-amber-300 group-hover:drop-shadow-[0_0_5px_rgba(251,191,36,0.8)]' : 'group-hover:text-pink-300 group-hover:drop-shadow-[0_0_5px_rgba(244,114,182,0.8)]';
 
             return (
                 <div key={item.id} className="group flex w-17 flex-col items-center cursor-pointer">
                     <div className="relative h-12 w-12">
-                        <img src={getOptimizedUrl(item.imgUrl, 200, 200)} alt={item.name} className={`h-12 w-12 rounded-full object-cover ring-2 ring-white/10 transition-all duration-300 group-hover:scale-110 ${hoverRing}`} />
+                        <img
+                            key={`${avatar}:${item.sexID}`}
+                            src={optimizedAvatar}
+                            alt={item.name}
+                            onError={event => {
+                                const image = event.currentTarget;
+                                const source = image.getAttribute('src');
+                                if (source === optimizedAvatar && optimizedAvatar !== avatar) image.src = avatar;
+                                else if (source !== fallbackAvatar) image.src = fallbackAvatar;
+                            }}
+                            className={`h-12 w-12 rounded-full object-cover ring-2 ring-white/10 transition-all duration-300 group-hover:scale-110 ${hoverRing}`}
+                        />
                     </div>
                     <p className={`mt-1.5 max-w-16.5 truncate text-center text-[11px] font-semibold text-gray-200 transition-all duration-300 ${hoverText}`}>{item.name}</p>
                 </div>
