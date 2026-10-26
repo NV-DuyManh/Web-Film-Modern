@@ -94,6 +94,14 @@ test('watching requires 30 elapsed playback seconds; seeking, paused time and re
     meter.reset(); at += 1000; assert.equal(meter.sample(1832), false);
 });
 
+test('the player cadence also qualifies slow playback without counting a large seek or a long pause', () => {
+    let at = 1000;
+    const meter = createWatchMeter(() => at);
+    meter.sample(0);
+    for (let i = 1; i < 10; i++) { at += 6000; assert.equal(meter.sample(i * 3), false); }
+    at += 6000; assert.equal(meter.sample(30), true);
+});
+
 test('guest and signed-in browser activity uses the same store, resolves slugs, rejects duplicates across concurrent cold functions', async () => {
     const f = fixture(), first = f.create(), second = f.create();
     const payload = f.body([['film-0', 'click'], ['movie-0', 'open'], ['movie-0', 'open'], ['movie-1', 'watch']]);

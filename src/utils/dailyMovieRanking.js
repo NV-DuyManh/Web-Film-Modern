@@ -45,7 +45,7 @@ export function createWatchMeter(now = Date.now) {
             if (previous) {
                 const wall = (at - previous.at) / 1000;
                 const delta = position - previous.position;
-                if (wall > 0 && wall < 5 && delta > 0 && delta <= wall * 2.5 + 1) watched += Math.min(delta, wall);
+                if (wall > 0 && wall <= 15 && delta > 0 && delta <= wall * 2.5 + 1) watched += Math.min(delta, wall);
             }
             previous = { at, position };
             if (!sent && watched >= 30) { sent = true; return true; }
