@@ -37,7 +37,7 @@ function LoadingScreen({ onFinished }) {
     const [brandReady, setBrandReady] = useState(false);
     const [burst, setBurst] = useState(false);
 
-    const movies = useHomeMovies('new');
+    const movies = useHomeMovies('new', !hidden);
     const categories = useContext(CategoryContext);
     const movieStatus = useCatalogStatus('Movies');
     const categoryStatus = useCatalogStatus('Categories');

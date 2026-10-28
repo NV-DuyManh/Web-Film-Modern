@@ -10,6 +10,7 @@ import { reportCatalogStatus } from '../utils/catalogStatus';
 import { resolveMovieImages } from '../utils/movieImages';
 import Logo5 from '../assets/Logo5.png';
 import Logo6 from '../assets/Logo6.png';
+import { SectionVisibilityContext } from '../contexts/SectionVisibilityContext';
 
 const POSTGRES_CATALOG_ENABLED = import.meta.env?.VITE_POSTGRES_CATALOG_ENABLED === 'true';
 const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://localhost:4000/api/v1';
@@ -23,12 +24,14 @@ const CATALOG_ENDPOINT_MAP = {
 function createCollectionHook(cacheKey, collectionName, processData) {
     return function useCollection(enabled = true) {
         const { isLogin } = useContext(AuthContext) || {};
+        const nearby = useContext(SectionVisibilityContext);
+        const publicRead = ['Movies', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes'].includes(collectionName);
         const isAdmin = isLogin?.role === 'admin';
         const privateCollection = ['Subscriptions', 'RentMovies'].includes(collectionName);
         const key = privateCollection ? `${cacheKey}:${isAdmin ? 'admin' : isLogin?.id || 'guest'}` : `${cacheKey}:${isAdmin ? 'admin' : 'public'}`;
         const [state, setState] = useState(() => ({ key, data: getCachedData(key) ?? [] }));
         useEffect(() => {
-            if (!enabled) return;
+            if (!enabled || (publicRead && !nearby)) return;
             let isMounted = true;
             let fallbackUnsubscribe;
             const setData = data => { if (isMounted) setState({ key, data }); };
@@ -68,7 +71,7 @@ function createCollectionHook(cacheKey, collectionName, processData) {
 
             const unsubscribe = subscribeToCollection(key, collectionName, setData, fetchDocumentsRealtime, processData);
             return () => { isMounted = false; unsubscribe(); };
-        }, [enabled, isAdmin, isLogin?.id, key, privateCollection]);
+        }, [enabled, isAdmin, isLogin?.id, key, privateCollection, publicRead, nearby]);
         return state.key === key ? state.data : [];
     };
 }

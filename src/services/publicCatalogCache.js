@@ -1,12 +1,14 @@
 import { hotCatalogEdit, hotCatalogMovies } from '../utils/hotCatalog.js';
 import { applyRecentHome, applyRecentMovies, recentMoviesSince } from '../utils/recentCatalog.js';
 import { startVisiblePolling } from '../utils/visiblePolling.js';
+import { createSharedCatalogPolling } from '../utils/sharedCatalogPolling.js';
+import { publicRequestCache } from './publicRequestCache.js';
 
 const allowed = ['Movies', 'Actors', 'Authors', 'Characters', 'Topics', 'Categories', 'CategoryTypes'];
 const MAX_AGE = 5 * 60000;
 
 // Only public metadata is cached here. Account, payment, progress and AI memory data never enters this cache.
-export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, storage = null, loadUpdates = null } = {}) {
+export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, storage = null, loadUpdates = null, readDynamic = null } = {}) {
     const records = new Map();
     const listeners = new Map();
     const indexEdits = new Map();
@@ -30,6 +32,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
         if (!response.ok) throw new Error(`Public catalog HTTP ${response.status}`);
         return response.json();
     };
+    const dynamicJson = (url, options) => readDynamic ? readDynamic(url, options) : json(url);
     const manifest = () => {
         if (now() - manifestAt >= MAX_AGE) { manifestLoading = null; manifestAt = now(); }
         return manifestLoading ||= json('/catalog/manifest.json');
@@ -47,7 +50,7 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
             const loading = (async () => {
                 let items;
                 try {
-                    const result = await json('/api/home-hot');
+                    const result = await dynamicJson('/api/home-hot', { maxAgeMs: 60000, accept: value => Array.isArray(value?.items) });
                     if (!Array.isArray(result.items)) throw new Error('Invalid Hot catalog');
                     if (!result.stale) for (const [id, edit] of hotEdits) {
                         if (result.items.some(item => item.id === id && item.isHot === true) === edit.isHot) hotEdits.delete(id);
@@ -194,15 +197,14 @@ export function createPublicCatalogCache({ fetchFn = fetch, now = Date.now, stor
 
 let browserStorage;
 try { browserStorage = typeof window === 'undefined' ? null : window.localStorage; } catch { browserStorage = null; }
-export const publicCatalogCache = createPublicCatalogCache({ storage: browserStorage, loadUpdates: async () => {
-    const response = await fetch('/api/public-catalog?updates=1', { signal: AbortSignal.timeout(5000) });
-    if (!response.ok) throw new Error('Catalog updates unavailable');
-    return response.json();
+export const publicCatalogCache = createPublicCatalogCache({ storage: browserStorage, readDynamic: (url, options) => publicRequestCache.read(url, options), loadUpdates: async () => {
+    return publicRequestCache.read('/api/public-catalog?updates=1', { maxAgeMs: 60000, timeoutMs: 5000, accept: value => Array.isArray(value?.updates) });
 } });
+const sharedSubscribe = createSharedCatalogPolling({
+    load: name => publicCatalogCache.load(name),
+    subscribe: (name, callback) => publicCatalogCache.subscribe(name, callback),
+    startPolling: startVisiblePolling,
+});
 export function subscribePublicCatalog(name, callback, onError) {
-    let active = true;
-    const update = () => publicCatalogCache.load(name).then(items => { if (active) callback(items); }).catch(error => { if (active) onError?.(error); });
-    const unsubscribe = publicCatalogCache.subscribe(name, items => { if (active) callback(items); });
-    const stop = startVisiblePolling(update, { intervalMs: ['Movies', 'MovieIndex'].includes(name) ? 60000 : MAX_AGE });
-    return () => { active = false; stop(); unsubscribe(); };
+    return sharedSubscribe(name, callback, onError, ['Home', 'Hot', 'Movies', 'MovieIndex'].includes(name) ? 60000 : MAX_AGE);
 }

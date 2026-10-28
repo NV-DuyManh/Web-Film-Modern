@@ -26,9 +26,15 @@ collections are not accessible through the application's root-collection rules.
 Each batch writes one receipt plus at most one shard per affected day, rather
 than editing movie metadata per view. Eight counter shards avoid one global hot
 document. Homepage reads use a shared 60-second server cache and CDN cache; a
-visible tab refreshes each minute, so changes normally appear within two minutes.
+visible section refreshes each minute, so changes normally appear within two minutes.
 Midnight limits both cache lifetime and client state. On an empty day or API failure,
 the client uses the previous list until daily results become available.
+
+Public ranking GETs share their existing one-minute freshness window across
+components and, where supported, tabs through Web Locks and a bounded public-only
+browser cache. Activity POSTs and private data are never cached this way. Sections
+retain their rendered data offscreen and resume polling 300 pixels before returning
+to view; a hidden browser tab remains paused as before.
 
 Firestore's existing free quotas still apply. Counter documents and anonymous
 receipts persist; no paid TTL feature or billing upgrade is enabled. Receipts

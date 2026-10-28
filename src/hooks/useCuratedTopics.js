@@ -4,6 +4,7 @@ import { AuthContext } from '../contexts/AuthProvider';
 import { db } from '../config/firebaseConfig';
 import { CURATED_TOPICS, curatedTopics } from '../utils/curatedTopics';
 import { startVisiblePolling } from '../utils/visiblePolling';
+import { publicRequestCache } from '../services/publicRequestCache';
 
 // A single small control document stores visibility. The fixed definitions and
 // film selection rules are shared by the client, admin and SEO renderer.
@@ -19,9 +20,8 @@ export default function useCuratedTopics(enabled = true) {
         }, error => console.warn('Topic controls unavailable:', error.code));
         const refresh = async () => {
             try {
-                const response = await fetch('/api/topics', { signal: AbortSignal.timeout(6000) });
-                if (!response.ok) throw new Error('Topic controls unavailable');
-                const data = await response.json();
+                const data = await publicRequestCache.read('/api/topics', { maxAgeMs: 30000, timeoutMs: 6000,
+                    accept: value => Array.isArray(value?.items) && CURATED_TOPICS.every(topic => value.items.some(item => item.id === topic.id && typeof item.enabled === 'boolean')) });
                 if (active && Array.isArray(data.items) && CURATED_TOPICS.every(topic => data.items.some(item => item.id === topic.id && typeof item.enabled === 'boolean'))) setTopics(curatedTopics(Object.fromEntries(data.items.map(item => [item.id, item.enabled]))));
             } catch { /* Keep the last confirmed state during network interruptions. */ }
         };

@@ -17,7 +17,7 @@ const Anime = lazyRetry(() => import('./anime/Anime'));
 const FilmHongKong = lazyRetry(() => import('./filmHongKong/FilmHongKong'));
 
 
-function Home(props) {
+function Home() {
     return (
         <div>
             <h1 className="sr-only">MFILM - Phim online chất lượng cao</h1>
@@ -26,10 +26,10 @@ function Home(props) {
                 description="MFILM - Trang xem phim online chất lượng cao, cập nhật phim mới nhanh nhất 2026. Phim lẻ, phim bộ, phim chiếu rạp, anime, phim Hàn Quốc, Trung Quốc, Nhật Bản vietsub."
                 url="/"
             />
-            <Banner />
-            <CategoriesFilm />
-            <FilmNew />
-            <ErrorBoundary><Suspense fallback={null}><ForYou /></Suspense></ErrorBoundary>
+            <LazySection eager><Banner /></LazySection>
+            <LazySection eager><CategoriesFilm /></LazySection>
+            <LazySection eager><FilmNew /></LazySection>
+            <LazySection eager><ErrorBoundary><Suspense fallback={null}><ForYou /></Suspense></ErrorBoundary></LazySection>
             <LazySection minHeight="900px">
                 <div className="bg-[#111827] px-6 md:px-10 py-3">
                     <div className="rounded-xl border border-white/10 shadow-[0_0_30px_rgba(96,165,250,0.06)]">
