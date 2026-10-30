@@ -18,7 +18,7 @@ export function createPublicProfileReader({ db, now = Date.now, read = readSnaps
     let planCache, planPending;
     const plans = () => {
         if (planCache && now() - planCache.at < 60000) return Promise.resolve(planCache.items);
-        return planPending ||= read(db.collection('Plans').select('name', 'level').limit(50)).then(items => {
+        return planPending ||= read(db.collection('Plans').limit(50)).then(items => {
             planCache = { at: now(), items }; return items;
         }).finally(() => { planPending = null; });
     };
@@ -32,8 +32,10 @@ export function createPublicProfileReader({ db, now = Date.now, read = readSnaps
             const key = missing.join(',');
             if (!pending.has(key)) pending.set(key, (async () => {
                 const [users, subscriptions, availablePlans] = await Promise.all([
-                    read(db.collection('Users').where(FieldPath.documentId(), 'in', missing).select(...PUBLIC_FIELDS)),
-                    read(db.collection('Subscriptions').where('userID', 'in', missing).select('userID', 'planID', 'status', 'startDate', 'expiryDate').limit(1000)),
+                    // Listen queries do not support select() field masks. Read
+                    // only these authors, then enforce the response allowlist below.
+                    read(db.collection('Users').where(FieldPath.documentId(), 'in', missing)),
+                    read(db.collection('Subscriptions').where('userID', 'in', missing).limit(1000)),
                     plans(),
                 ]);
                 if (subscriptions.length >= 1000 || !availablePlans.length) throw new Error('Incomplete public membership data');

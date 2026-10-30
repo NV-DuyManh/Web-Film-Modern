@@ -30,14 +30,15 @@ export default async function handler(req, res) {
     try {
         if (req.method !== 'POST') fail(405, 'POST required');
         if (!String(req.headers['content-type'] || '').startsWith('application/json')) fail(415, 'JSON required');
+        const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+        if (!body || JSON.stringify(body).length > 200_000) fail(400, 'Invalid request');
         const origin = req.headers.origin;
         if (origin) {
             const host = new URL(origin).host;
             const allowed = new Set(['mfilm.online', 'www.mfilm.online', process.env.VERCEL_URL, ...(process.env.NODE_ENV !== 'production' ? ['localhost:5173', '127.0.0.1:5173'] : [])]);
-            if (!allowed.has(host) && !(process.env.NODE_ENV !== 'production' && /^(localhost|127\.0\.0\.1):\d+$/.test(host))) fail(403, 'Origin not allowed');
+            const sameOriginPublicRead = body.action === 'public-profiles' && host === req.headers.host;
+            if (!allowed.has(host) && !sameOriginPublicRead && !(process.env.NODE_ENV !== 'production' && /^(localhost|127\.0\.0\.1):\d+$/.test(host))) fail(403, 'Origin not allowed');
         }
-        const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
-        if (!body || JSON.stringify(body).length > 200_000) fail(400, 'Invalid request');
         // Public badges work in both legacy and migrated account modes. No
         // authentication, private account fields or encryption key is required.
         if (body.action === 'public-profiles') {
