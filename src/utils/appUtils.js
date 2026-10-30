@@ -1,8 +1,7 @@
-import { getPlanAppearance } from './planAppearance.js';
 import MALE_AVATAR from '../assets/Male.png';
 import FEMALE_AVATAR from '../assets/Female.png';
 import OTHER_AVATAR from '../assets/Other.png';
-import { getObjectById } from '../services/firebaseResponse';
+import { resolveMembership } from './membership.js';
 
 export { MALE_AVATAR, FEMALE_AVATAR, OTHER_AVATAR };
 
@@ -53,33 +52,7 @@ export const getExpiryDate = (p) => {
     return new Date(p.expiryDate);
 };
 
-export const getUserPlanInfo = (user, subscriptions, plans) => {
-    if (!user) return { name: 'FREE', level: 0, theme: getPlanAppearance().theme };
-    if (user.role === 'admin') return { name: 'ADMIN', level: 999, theme: 'admin' };
-
-    let highestPlan = null;
-    
-    if (user.planID) {
-        highestPlan = getObjectById(plans, user.planID);
-    }
-
-    if (!highestPlan) {
-        const userSubs = subscriptions.filter(p => p.userID === user.id && getExpiryDate(p) > new Date());
-        if (userSubs.length === 0) return { name: 'FREE', level: 0, theme: getPlanAppearance().theme };
-
-        const highestSub = userSubs.reduce((max, item) => {
-            const currentPlan = getObjectById(plans, item.planID);
-            const maxPlan = getObjectById(plans, max.planID);
-            return (currentPlan?.level || 0) > (maxPlan?.level || 0) ? item : max;
-        }, userSubs[0]);
-
-        highestPlan = getObjectById(plans, highestSub.planID);
-    }
-
-    if (!highestPlan) return { name: 'VIP', level: 1, theme: 'cyan' };
-
-    return { name: highestPlan.name, level: highestPlan.level, theme: getPlanAppearance(highestPlan).theme };
-};
+export const getUserPlanInfo = resolveMembership;
 
 export const getThemeBadgeStyle = (theme) => {
     switch (theme) {

@@ -1,12 +1,11 @@
 import MovieImage from '../../../../components/MovieImage';
 import PlanBadge from '../../../../components/PlanBadge';
 import FramedUserAvatar from '../../../../components/FramedUserAvatar';
-import { PlanContext } from '../../../../contexts/PlanProvider';
-import { AuthContext } from '../../../../contexts/AuthProvider';
-import { getUserPlanInfo } from '../../../../utils/appUtils';
+import { resolveCommentMember } from '../../../../utils/membership';
 import { routeSegment } from '../../../../utils/nameRoutes';
 import React, { useContext, useMemo, useState } from 'react';
-import { useComments, useMovies, useSubscriptions } from '../../../../hooks/useCollections';
+import { UserContext } from '../../../../contexts/UserProvider';
+import { useComments, useMovies } from '../../../../hooks/useCollections';
 import { FaHeart, FaBolt, FaMinus, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { FaArrowTrendUp } from 'react-icons/fa6';
 import { BiSolidMoviePlay } from 'react-icons/bi';
@@ -18,13 +17,13 @@ import { getObjectById } from '../../../../services/firebaseResponse';
 import { timeAgo } from '../../../../utils/watchHistory';
 import { useNavigate } from 'react-router-dom';
 
+const EMPTY = [];
+
 function Comment() {
-    const movies = useMovies() || [];
-    const comments = useComments() || [];
-    const plans = useContext(PlanContext) || [];
-    const { isLogin } = useContext(AuthContext) || {};
-    const subscriptions = useSubscriptions() || [];
+    const movies = useMovies() || EMPTY;
+    const comments = useComments() || EMPTY;
     const [publicFavorites, setPublicFavorites] = useState({});
+    const legacyUsers = useContext(UserContext) || EMPTY;
     React.useEffect(() => {
         if (!SECURE_ACCOUNTS_ENABLED) return;
         getDoc(doc(db, 'PublicStats', 'Favorites')).then(snapshot => setPublicFavorites(snapshot.data()?.counts || {})).catch(() => {});
@@ -49,7 +48,7 @@ function Comment() {
     const favoriteCounts = useMemo(() => {
         if (SECURE_ACCOUNTS_ENABLED) return publicFavorites;
         const counts = {};
-        users.forEach(user => {
+        legacyUsers.forEach(user => {
             if (user.listFavorite && Array.isArray(user.listFavorite)) {
                 user.listFavorite.forEach(movieId => {
                     counts[movieId] = (counts[movieId] || 0) + 1;
@@ -57,7 +56,7 @@ function Comment() {
             }
         });
         return counts;
-    }, [users, publicFavorites]);
+    }, [legacyUsers, publicFavorites]);
 
     const topLovedMovies = useMemo(() => {
         return [...movies].sort((a, b) => {
@@ -174,13 +173,7 @@ function Comment() {
                         <div className="flex flex-col gap-6 flex-1">
                             {latestComments.length > 0 ? latestComments.slice(0, visibleComments).map((comment, index) => {
                                 const profile = getObjectById(users, comment.userID);
-                                const user = { ...comment.author, ...profile, ...(comment.userID === isLogin?.id ? isLogin : {}) };
-                                const assignedPlan = getObjectById(plans, user?.planID);
-                                const plan = user?.role === 'admin'
-                                    ? getUserPlanInfo(user, subscriptions, plans)
-                                    : assignedPlan || (comment.author
-                                        ? { name: comment.author.planName, level: comment.author.level }
-                                        : getUserPlanInfo(user, subscriptions, plans));
+                                const { user, plan } = resolveCommentMember(comment, profile);
                                 const movie = getObjectById(movies, comment.movieID);
                                 return (
                                     <div key={comment.id || index} onClick={() => navigate(`/phim/${routeSegment(movie)}`)} className="flex gap-3 group cursor-pointer">

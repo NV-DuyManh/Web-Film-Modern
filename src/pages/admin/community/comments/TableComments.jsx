@@ -3,6 +3,7 @@ import { useComments, useMovies, useSubscriptions } from '../../../../hooks/useC
 import { PlanContext } from '../../../../contexts/PlanProvider';
 import PlanBadge from '../../../../components/PlanBadge';
 import { getUserPlanInfo } from '../../../../utils/appUtils';
+import { resolveCommentMember } from '../../../../utils/membership';
 import { commentTime, commentLikes } from '../../../../utils/commentThreads';
 import { CiEdit } from 'react-icons/ci';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
@@ -138,7 +139,7 @@ function TableComments({ handleClickOpen, setComment, comment, search }) {
                                         {getUserName(row)}
                                         <div className="mt-1"><PlanBadge plan={(() => {
                                             const user = users?.find(item => item.id === row.userID);
-                                            return user ? getUserPlanInfo(user, subscriptions, plans) : { name: row.author?.planName || 'Free', level: row.author?.level || 0 };
+                                            return user ? getUserPlanInfo(user, subscriptions, plans) : resolveCommentMember(row).plan;
                                         })()} /></div>
                                     </td>
                                     <td className="table-cell text-center font-bold text-fuchsia-400">

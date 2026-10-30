@@ -1,28 +1,35 @@
 import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../contexts/UserProvider';
-import { SECURE_ACCOUNTS_ENABLED, accountRequest } from '../services/accountService';
+import { accountRequest } from '../services/accountService';
 import { resolveAccountAvatar } from '../utils/accountAvatar';
+import { SectionVisibilityContext } from '../contexts/SectionVisibilityContext';
+import { createPublicMemberCache } from '../services/publicMemberProfiles';
+import { startVisiblePolling } from '../utils/visiblePolling';
 
-const cache = new Map();
+const cache = createPublicMemberCache({ request: ids => accountRequest('public-profiles', { ids }, false) });
 export default function usePublicUsers(ids) {
     const legacy = useContext(UserContext) || [];
+    const nearby = useContext(SectionVisibilityContext);
     const key = [...new Set(ids.filter(Boolean))].sort().join(',');
     const [state, setState] = useState({ key: '', data: [] });
     useEffect(() => {
-        if (!SECURE_ACCOUNTS_ENABLED) return;
+        if (!nearby || !key) return;
         let active = true;
-        const all = key ? key.split(',') : [];
-        const missing = all.filter(id => !cache.has(id) || cache.get(id).expiresAt < Date.now());
         const load = async () => {
-            for (let i = 0; i < missing.length; i += 30) {
-                const users = await accountRequest('public-profiles', { ids: missing.slice(i, i + 30) }, false);
-                if (!active) return;
-                for (const user of users) cache.set(user.id, { profile: resolveAccountAvatar(user), expiresAt: Date.now() + 300_000 });
-            }
-            if (active) setState({ key, data: all.map(id => cache.get(id)?.profile).filter(Boolean) });
+            try {
+                const profiles = await cache.load(key.split(','));
+                if (active) setState({ key, data: profiles.map(resolveAccountAvatar) });
+            } catch { /* Keep confirmed profiles during temporary failures; never invent Free. */ }
         };
-        load().catch(() => { if (active) setState({ key, data: [] }); });
-        return () => { active = false; };
-    }, [key]);
-    return SECURE_ACCOUNTS_ENABLED ? (state.key === key ? state.data : []) : legacy;
+        const stop = startVisiblePolling(load);
+        const changed = () => { cache.clear(); void load(); };
+        window.addEventListener('mfilm_account_changed', changed);
+        return () => { active = false; stop(); window.removeEventListener('mfilm_account_changed', changed); };
+    }, [key, nearby]);
+    const publicProfiles = state.key === key ? state.data : [];
+    return key.split(',').filter(Boolean).map(id => {
+        const profile = publicProfiles.find(user => user.id === id);
+        const fallback = legacy.find(user => user.id === id);
+        return profile || (fallback ? { id, name: fallback.name, fullName: fallback.fullName, avatarUrl: fallback.avatarUrl, sexID: fallback.sexID, selectedFrame: fallback.selectedFrame } : null);
+    }).filter(Boolean);
 }

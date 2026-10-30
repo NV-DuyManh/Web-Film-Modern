@@ -8,6 +8,7 @@ import PlanBadge from '../../../../components/PlanBadge';
 import Avatar from '../../../../components/FramedUserAvatar';
 import { getObjectById } from '../../../../services/firebaseResponse';
 import { getUserPlanInfo } from '../../../../utils/appUtils';
+import { resolveCommentMember } from '../../../../utils/membership';
 import { buildCommentThreads, commentLikes, commentTime, commentErrorMessage } from '../../../../utils/commentThreads';
 import { timeAgo } from '../../../../utils/watchHistory';
 import { trackEvent } from '../../../../services/eventTracker';
@@ -78,16 +79,10 @@ function CommentSection({ isLogin, onOpenLogin, movieId }) {
     const currentPlan = getUserPlanInfo(isLogin, subscriptions, plans);
     const displayUser = comment => {
         const profile = getObjectById(users, comment.userID);
-        if (comment.userID === isLogin?.id) return { ...comment.author, ...profile, ...isLogin };
-        return profile ? { ...comment.author, ...profile } : comment.author || { name: 'Thành viên' };
+        return resolveCommentMember(comment, profile).user;
     };
     const displayPlan = comment => {
-        const user = displayUser(comment);
-        const assignedPlan = getObjectById(plans, user?.planID);
-        if (user?.role === 'admin') return { name: 'Admin', level: 999 };
-        if (assignedPlan) return assignedPlan;
-        if (comment.author) return { name: comment.author.planName, level: comment.author.level };
-        return getUserPlanInfo(user, subscriptions, plans);
+        return resolveCommentMember(comment, getObjectById(users, comment.userID)).plan;
     };
     const askLogin = () => { if (!isLogin?.id) { onOpenLogin?.(); return true; } return false; };
     const handleSend = async parent => {

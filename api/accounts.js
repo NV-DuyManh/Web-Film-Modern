@@ -4,6 +4,9 @@ import { accountServices } from '../server/accounts/firebase.js';
 import { createAccountService, fail } from '../server/accounts/service.js';
 import { validWorkerSecret, encryptedBackup, migrateAccounts } from '../server/accounts/worker.js';
 import { createPaymentService } from '../server/accounts/payments.js';
+import { createPublicProfileReader } from '../server/accounts/publicProfiles.js';
+
+let publicProfileReader;
 
 const PRIVATE_ACTIONS = new Set(['me', 'directory', 'profiles', 'get', 'save', 'delete', 'change-password', 'migrate', 'backup', 'payment-demo']);
 
@@ -25,7 +28,6 @@ export default async function handler(req, res) {
     res.setHeader('Vary', 'Authorization');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     try {
-        if (process.env.SECURE_ACCOUNTS_ENABLED !== 'true') fail(503, 'Account service is not enabled');
         if (req.method !== 'POST') fail(405, 'POST required');
         if (!String(req.headers['content-type'] || '').startsWith('application/json')) fail(415, 'JSON required');
         const origin = req.headers.origin;
@@ -36,6 +38,13 @@ export default async function handler(req, res) {
         }
         const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
         if (!body || JSON.stringify(body).length > 200_000) fail(400, 'Invalid request');
+        // Public badges work in both legacy and migrated account modes. No
+        // authentication, private account fields or encryption key is required.
+        if (body.action === 'public-profiles') {
+            publicProfileReader ||= createPublicProfileReader({ db: accountServices().db });
+            return res.status(200).json({ data: await publicProfileReader(body.ids) });
+        }
+        if (process.env.SECURE_ACCOUNTS_ENABLED !== 'true') fail(503, 'Account service is not enabled');
         const { db, auth } = accountServices();
         const service = createAccountService({ db, auth, encryptionKey: process.env.ACCOUNT_ENCRYPTION_KEY });
         const action = body.action;
@@ -48,12 +57,7 @@ export default async function handler(req, res) {
         else if (action === 'login') result = await service.login(body.email, body.password);
         else if (action === 'register') result = await service.register(body);
         else if (action === 'google') result = await service.google(body.token);
-        else if (action === 'public-profiles') {
-            const ids = [...new Set(body.ids || [])];
-            if (ids.length > 30 || ids.some(id => typeof id !== 'string' || !/^[\w-]{1,128}$/.test(id))) fail(400, 'At most 30 profile IDs allowed');
-            const docs = ids.length ? await db.getAll(...ids.map(id => db.collection('PublicUsers').doc(id))) : [];
-            result = docs.filter(doc => doc.exists).map(doc => doc.data());
-        } else if (PRIVATE_ACTIONS.has(action)) {
+        else if (PRIVATE_ACTIONS.has(action)) {
             const token = /^Bearer (.+)$/.exec(req.headers.authorization || '')?.[1];
             const identity = await service.identify(token);
             if (action === 'me') result = await service.get(identity, identity.user.id);
