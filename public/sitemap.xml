@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- generatedAt: 2026-11-26T00:23:04.765Z -->
+<!-- generatedAt: 2026-11-26T01:54:04.147Z -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url><loc>https://www.mfilm.online/</loc></url>
   <url><loc>https://www.mfilm.online/film-new</loc></url>
@@ -1617,6 +1617,11 @@
   <url><loc>https://www.mfilm.online/phim/than-nguyen-vi-be-ha</loc><lastmod>2026-11-24T04:01:23.551Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261123/than-nguyen-vi-be-ha-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/phim/day-cuong-duc-vong-troi-buoc-duc-vong</loc><lastmod>2026-11-24T04:01:25.617Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261123/day-cuong-duc-vong-troi-buoc-duc-vong-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/phim/chiara-ferragni-truc-dien</loc><lastmod>2026-11-24T07:23:52.000Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261124/chiara-ferragni-truc-dien-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/don-cuoi-cung</loc><lastmod>2026-11-26T01:53:41.954Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261125/don-cuoi-cung-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/rob-lowe-ke-ngoai-dao</loc><lastmod>2026-11-26T01:53:49.454Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261125/rob-lowe-ke-ngoai-dao-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/vu-an-karen-read</loc><lastmod>2026-11-26T01:53:55.653Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261125/vu-an-karen-read-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/thu-nu</loc><lastmod>2026-11-26T01:53:57.903Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261125/thu-nu-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/moi-tinh-troi-ban</loc><lastmod>2026-11-26T01:54:00.327Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261125/moi-tinh-troi-ban-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/dien-vien/shin-jun-seop</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/garth-breytenbach</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/richard-roxburgh</loc></url>
@@ -11982,6 +11987,13 @@
   <url><loc>https://www.mfilm.online/dien-vien/lee-yoon-jeong</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/haley-kalil</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/chiara-ferragni</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/sighle-williams</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/rob-lowe</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/karen-read</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/richard-li</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/wang-junbi</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/edison-song</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/james-wen</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/cho-yong-won</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/larry-ditillio</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/pham-ngoc-tuan</loc><lastmod>2026-08-03T16:15:12.244Z</lastmod></url>
@@ -12801,6 +12813,9 @@
   <url><loc>https://www.mfilm.online/tac-gia/gabriel-martins</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/ma-boyong</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/leandro-manuel-emede</loc></url>
+  <url><loc>https://www.mfilm.online/tac-gia/lauren-defilippo</loc></url>
+  <url><loc>https://www.mfilm.online/tac-gia/sam-soko</loc></url>
+  <url><loc>https://www.mfilm.online/tac-gia/chris-smith</loc></url>
   <url><loc>https://www.mfilm.online/nhan-vat/la-tieu-hac</loc></url>
   <url><loc>https://www.mfilm.online/nhan-vat/banana</loc><lastmod>2026-08-03T16:21:53.458Z</lastmod></url>
   <url><loc>https://www.mfilm.online/nhan-vat/hwang-geum-yee</loc></url>
@@ -13560,6 +13575,7 @@
   <url><loc>https://www.mfilm.online/actors?page=303</loc></url>
   <url><loc>https://www.mfilm.online/actors?page=304</loc></url>
   <url><loc>https://www.mfilm.online/actors?page=305</loc></url>
+  <url><loc>https://www.mfilm.online/actors?page=306</loc></url>
   <url><loc>https://www.mfilm.online/topic/tu-tien-co-trang?page=2</loc></url>
   <url><loc>https://www.mfilm.online/topic/anime-hanh-dong?page=2</loc></url>
   <url><loc>https://www.mfilm.online/topic/anime-hanh-dong?page=3</loc></url>
@@ -13880,6 +13896,7 @@
   <url><loc>https://www.mfilm.online/category/Ch%C3%ADnh%20K%E1%BB%8Bch?page=36</loc></url>
   <url><loc>https://www.mfilm.online/category/Ch%C3%ADnh%20K%E1%BB%8Bch?page=37</loc></url>
   <url><loc>https://www.mfilm.online/category/Ch%C3%ADnh%20K%E1%BB%8Bch?page=38</loc></url>
+  <url><loc>https://www.mfilm.online/category/Ch%C3%ADnh%20K%E1%BB%8Bch?page=39</loc></url>
   <url><loc>https://www.mfilm.online/category/Tr%E1%BA%BB%20Em?page=2</loc></url>
   <url><loc>https://www.mfilm.online/category/T%C3%ACnh%20C%E1%BA%A3m?page=2</loc></url>
   <url><loc>https://www.mfilm.online/category/T%C3%ACnh%20C%E1%BA%A3m?page=3</loc></url>
