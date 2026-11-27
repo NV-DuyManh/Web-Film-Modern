@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- generatedAt: 2026-11-26T18:40:36.401Z -->
+<!-- generatedAt: 2026-11-27T01:51:35.156Z -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url><loc>https://www.mfilm.online/</loc></url>
   <url><loc>https://www.mfilm.online/film-new</loc></url>
@@ -1622,6 +1622,11 @@
   <url><loc>https://www.mfilm.online/phim/vu-an-karen-read</loc><lastmod>2026-11-26T01:53:55.653Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261125/vu-an-karen-read-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/phim/thu-nu</loc><lastmod>2026-11-26T15:30:01.000Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261125/thu-nu-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/phim/moi-tinh-troi-ban</loc><lastmod>2026-11-26T01:54:00.327Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261125/moi-tinh-troi-ban-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/tran-bong-cuoi-cung</loc><lastmod>2026-11-27T01:50:52.921Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261126/tran-bong-cuoi-cung-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/cau-chuyen-khong-ai-biet</loc><lastmod>2026-11-27T01:51:21.323Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261126/cau-chuyen-khong-ai-biet-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/coc-vu</loc><lastmod>2026-11-27T01:51:24.021Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261126/coc-vu-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/tam-co</loc><lastmod>2026-11-27T01:51:28.011Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261126/tam-co-poster.webp</image:loc></image:image></url>
+  <url><loc>https://www.mfilm.online/phim/vu-tan-cong-cung-tu-phap</loc><lastmod>2026-11-27T01:51:31.404Z</lastmod><image:image><image:loc>https://phimimg.com/uploads/movies/20261126/vu-tan-cong-cung-tu-phap-poster.webp</image:loc></image:image></url>
   <url><loc>https://www.mfilm.online/dien-vien/shin-jun-seop</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/garth-breytenbach</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/richard-roxburgh</loc></url>
@@ -11994,6 +11999,50 @@
   <url><loc>https://www.mfilm.online/dien-vien/wang-junbi</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/edison-song</loc></url>
   <url><loc>https://www.mfilm.online/dien-vien/james-wen</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/nicholas-galitzine</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/bill-skarsgard</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/ray-nicholson</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/tom-francis</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/brent-comer</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/jack-ingram</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/ella-newton</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/peter-berg</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/lola-bond</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/stacy-clausen</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/billy-smith</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/steve-sammut</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/blake-erickson</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/claudia-ware</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/huang-xuan</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/jin-chen</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/yue-man-lok</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/victor-liu</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/zhang-songwen</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/sun-yizhou</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/sui-junbo</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/sophie-zhang</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/an-chun-peng</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/lewis-chang</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/yu-qing-kai</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/chu-de-kang</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/candy-yang</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/chao-yi-lan</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/gabriel-lan</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/wang-hsin-yuan</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/alexei-huang</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/chien-shao-feng</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/wang-wei-chung</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/chin-yun</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/wayne-song</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/chen-liang-che</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/natalia-reyes</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/luna-baxter</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/mariana-gomez</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/robinson-diaz</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/carlos-manuel-vesga</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/santiago-alarcon</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/camilo-amores</loc></url>
+  <url><loc>https://www.mfilm.online/dien-vien/santiago-londono</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/cho-yong-won</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/larry-ditillio</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/pham-ngoc-tuan</loc><lastmod>2026-08-03T16:15:12.244Z</lastmod></url>
@@ -12816,6 +12865,9 @@
   <url><loc>https://www.mfilm.online/tac-gia/lauren-defilippo</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/sam-soko</loc></url>
   <url><loc>https://www.mfilm.online/tac-gia/chris-smith</loc></url>
+  <url><loc>https://www.mfilm.online/tac-gia/peter-berg</loc></url>
+  <url><loc>https://www.mfilm.online/tac-gia/natalia-santa</loc></url>
+  <url><loc>https://www.mfilm.online/tac-gia/mariana-berenguer</loc></url>
   <url><loc>https://www.mfilm.online/nhan-vat/la-tieu-hac</loc></url>
   <url><loc>https://www.mfilm.online/nhan-vat/banana</loc><lastmod>2026-08-03T16:21:53.458Z</lastmod></url>
   <url><loc>https://www.mfilm.online/nhan-vat/hwang-geum-yee</loc></url>
@@ -13576,6 +13628,7 @@
   <url><loc>https://www.mfilm.online/actors?page=304</loc></url>
   <url><loc>https://www.mfilm.online/actors?page=305</loc></url>
   <url><loc>https://www.mfilm.online/actors?page=306</loc></url>
+  <url><loc>https://www.mfilm.online/actors?page=307</loc></url>
   <url><loc>https://www.mfilm.online/topic/tu-tien-co-trang?page=2</loc></url>
   <url><loc>https://www.mfilm.online/topic/anime-hanh-dong?page=2</loc></url>
   <url><loc>https://www.mfilm.online/topic/anime-hanh-dong?page=3</loc></url>
